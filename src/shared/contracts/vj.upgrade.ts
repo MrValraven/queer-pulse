@@ -8,6 +8,7 @@
 
 import type { VjEffectId, VjEffectSetting } from "./vj.effects";
 import { VJ_LIMITS } from "./vj.lists";
+import { createVjSetlistPlayback } from "./vj.sequence";
 import { createVjStageState } from "./vj.state";
 
 /** A plain object read as a record; anything else answers null. */
@@ -195,4 +196,17 @@ export function upgradeVjStageFieldsV1(
   upgradeVjShuffleAndTempoV1(upgraded, now);
   fillMissingVjStageFieldsV2(upgraded, now);
   return upgraded;
+}
+
+/** Fills setlistPlayback on a record saved before sequences; any other record comes back unchanged.
+ *  A second pass after upgradeVjStageFieldsV1: a v2 record has `tempo`, so the
+ *  v1 pass returns it untouched, and this pass fills the new field for v1 and
+ *  v2 records alike. */
+export function upgradeVjStageFieldsV2(
+  value: Record<string, unknown>,
+): Record<string, unknown> {
+  if ("setlistPlayback" in value) {
+    return value;
+  }
+  return { ...value, setlistPlayback: createVjSetlistPlayback(false) };
 }

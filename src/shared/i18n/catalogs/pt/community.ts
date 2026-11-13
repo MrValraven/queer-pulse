@@ -18,7 +18,7 @@ import type { Catalog } from "../../types";
 export const community: Catalog = {
   // ── Caregivers page (CaregiversPage.tsx) ──────────────────────────────────
   "caregivers.hero.eyebrow":
-    "Para pais e mães · parceires · irmãos e irmãs · amigues · para quem estiver presente",
+    "Para mães e pais · parceires · irmãos e irmãs · amizades · quem quer estar presente",
   "caregivers.hero.title":
     "Estar presente <em>como deve ser</em>, quando importa.",
   "caregivers.hero.lead":
@@ -30,7 +30,7 @@ export const community: Catalog = {
   "caregivers.persona.youthWorker": "Trabalho com jovens",
   "caregivers.outro.title": "Não tens de <em>acertar sempre.</em>",
   "caregivers.outro.sub":
-    "Tens de continuar a aparecer. Este espaço também é para ti.",
+    "Só tens de continuar presente. Este espaço também é para ti.",
   "caregivers.outro.cta": "Encontrar apoio entre pares",
 
   // Caregivers — Start Here (five short reads)
@@ -41,48 +41,48 @@ export const community: Catalog = {
   "caregivers.lesson.listen.body":
     "A primeira conversa importa menos do que pensas e mais do que pensas. <em>Uma coisa a fazer; três coisas a não fazer.</em>",
   "caregivers.lesson.wrongThing.title":
-    "O que dizer <em>quando dizes asneira</em>",
+    "O que dizer <em>quando dizes algo errado</em>",
   "caregivers.lesson.wrongThing.body":
-    "Vais dizer. Toda a gente diz. <em>O que importa é reparar.</em> Um pequeno guião e um pedido de desculpas com calma.",
+    "Vai acontecer. Acontece a toda a gente. <em>O que importa é reparar.</em> Um pequeno guião e um pedido de desculpas sem pressa.",
   "caregivers.lesson.pronouns.title":
     "Pronomes & <em>nomes</em>, de forma simples",
   "caregivers.lesson.pronouns.body":
-    "O que fazer, o que não fazer, o que fazer quando te enganas. <em>Um texto prático, sobre o que fazer na verdade.</em>",
+    "O que fazer, o que não fazer, o que fazer quando te enganas. <em>Um texto prático, centrado no que fazer de facto.</em>",
   "caregivers.lesson.transitioning.title":
-    "Se a tua pessoa está a <em>fazer transição médica</em>",
+    "Se a pessoa que amas está a <em>fazer transição médica</em>",
   "caregivers.lesson.transitioning.body":
-    "O que perguntar, o que não perguntar, para que te prepares. Aborda terapia hormonal, cirurgias de afirmação de género e especificidades do sistema de saúde português.",
+    "O que perguntar, o que não perguntar, para o que te preparar. Aborda terapia hormonal, cirurgias de afirmação de género e especificidades do sistema de saúde português.",
   "caregivers.lesson.familyPullsAway.title":
     "Quando a família <em>puxa para o lado contrário</em>",
   "caregivers.lesson.familyPullsAway.body":
-    "Quando avós, sogros e primos tornam tudo mais difícil. <em>Como manter a posição sem incendiar a casa toda.</em>",
+    "Quando avós, sogras e sogros, primas e primos tornam tudo mais difícil. <em>Como manter-te firme sem deitar a casa abaixo.</em>",
 
   // Caregivers — Common questions (FAQ accordion)
   "caregivers.commonQuestions.title": "Perguntas <em>frequentes</em>",
   "caregivers.faq.childCameOut.q":
     "O meu filho ou filha acabou de sair do armário e não sei o que dizer. <em>Ajuda.</em>",
   "caregivers.faq.childCameOut.a":
-    '<strong>Respira fundo. Diz "obrigade por me teres contado." Depois pergunta "há alguma coisa de que precises de mim agora?"</strong> É só isso. Não precisas de saber a linguagem certa. Não precisas de ter um plano. <em>Esta é uma conversa longa, que continua no tempo.</em> Volta mais tarde com perguntas. Vão estar prontas para as ouvir, e este espaço também está aqui.',
+    '<strong>Respira fundo. Diz "agradeço-te por me teres contado." Depois pergunta "há alguma coisa de que precises de mim agora?"</strong> É só isso. Não precisas de saber a linguagem certa. Não precisas de ter um plano. <em>É uma conversa longa, que vai continuando.</em> Volta mais tarde com perguntas. Vai haver abertura do outro lado, e este espaço também está aqui.',
   "caregivers.faq.partnerTransitioning.q":
     "O meu par está em transição e tenho medo que nos afastemos.",
   "caregivers.faq.partnerTransitioning.a":
-    "Muitas pessoas na tua posição sentem o mesmo medo, e não há vergonha nenhuma nisso. <em>Tens todo o direito de o sentir.</em> O que ajuda: falar com outros pares que já passaram por isto. O apoio entre pares é um bom sítio por onde começar. Também ajuda: continuar a fazer as pequenas coisas que sempre foram vossas, juntes. A transição muda muita coisa. Não tem de mudar tudo.",
+    "Muitas pessoas na tua posição sentem o mesmo medo, e não há vergonha nenhuma nisso. <em>Tens todo o direito de o sentir.</em> O que ajuda: falar com outras pessoas cujo par também fez a transição. O apoio entre pares é um bom sítio por onde começar. Também ajuda: continuar a fazer as pequenas coisas que sempre fizeram em conjunto. A transição muda muita coisa. Não tem de mudar tudo.",
   "caregivers.faq.wrongPronouns.q":
     "Continuo a usar os pronomes errados. O meu amigue vai perdoar-me?",
   "caregivers.faq.wrongPronouns.a":
-    'Provavelmente. O que mais ajuda: corrige-te <em>sem tornar isto sobre ti</em>. "Ela (desculpa, elu) disse." Segue em frente. Não peças desculpa outra vez três frases depois. Não peças que te absolvam. Continua só a praticar. <strong>O esforço é o que vão lembrar-se.</strong>',
+    'Provavelmente. O que mais ajuda: corrige-te <em>sem te pores no centro</em>. "Ela (desculpa, elu) disse." Segue em frente. Não peças desculpa outra vez três frases depois. Não peças que te absolvam. Continua só a praticar. <strong>É do esforço que se vão lembrar.</strong>',
   "caregivers.faq.grandchildQueer.q":
-    "O meu neto ou neta é queer e os meus filhos não lhe falam. <em>O que faço?</em>",
+    "O meu neto ou neta é queer e os meus filhos e filhas não lhe falam. <em>O que faço?</em>",
   "caregivers.faq.grandchildQueer.a":
-    "Mantém-te em contacto com o teu neto ou neta. <em>Cada relação direta conta.</em> Não deixes que carreguem o conflito familiar. Sê a voz constante a quem podem voltar.",
+    "Mantém-te em contacto com o teu neto ou neta. <em>Cada relação direta conta.</em> Não lhe ponhas o conflito familiar às costas. Sê a voz constante a que pode sempre voltar.",
 
   // Caregivers — Don't say / Do say
   "caregivers.dontDoSay.eyebrow": "Uma pequena lista",
   "caregivers.dontDoSay.heading": "Não digas isto. <em>Diz isto.</em>",
   "caregivers.dontDoSay.lead":
-    "Algumas das coisas que gostaríamos que nos tivessem dito. Só alguns primeiros passos que ajudam, oferecidos com leveza.",
+    "Algumas coisas que gostávamos que toda a gente tivesse ouvido. Só alguns primeiros passos que ajudam, oferecidos com leveza.",
   "caregivers.dontDoSay.dontHeading": "Não <em>digas</em>",
-  "caregivers.dontDoSay.doHeading": "<em>Diz</em> antes",
+  "caregivers.dontDoSay.doHeading": "Experimenta <em>dizer</em>",
   "caregivers.dontSay.1": '"Tens a certeza?"',
   "caregivers.dontSay.2": '"Como é que sabes?"',
   "caregivers.dontSay.3": '"Não digas à tua avó."',
@@ -90,24 +90,24 @@ export const community: Catalog = {
   "caregivers.dontSay.5": '"Não pareces queer."',
   "caregivers.dontSay.6": '"Adoro-te mas não concordo."',
   "caregivers.dontSay.7": '"O que é que eu fiz de errado?"',
-  "caregivers.doSay.1": '"Obrigade por me teres contado."',
+  "caregivers.doSay.1": '"Agradeço-te por me teres contado."',
   "caregivers.doSay.2": '"O que precisas de mim agora?"',
   "caregivers.doSay.3": '"Quero fazer isto bem. <em>Posso enganar-me.</em>"',
   "caregivers.doSay.4": '"Diz-me que nome e pronomes usar."',
   "caregivers.doSay.5": '"A quem mais contaste? A quem não devo contar?"',
   "caregivers.doSay.6": '"Adoro-te. O resto vamos resolvendo."',
   "caregivers.doSay.7":
-    '"Vou fazer a minha própria aprendizagem, para não teres de me ensinar."',
+    '"Vou aprender por mim, para não teres de ser tu a ensinar-me."',
 
   // ── Change Makers directory (ChangemakersPage.tsx) ────────────────────────
   "changemakers.hero.cat": "Agentes de Mudança",
   "changemakers.hero.title":
-    "Pessoas que tornam o futuro <em>vivível</em> para toda a gente.",
+    "Pessoas que tornam o futuro <em>habitável</em> para toda a gente.",
   "changemakers.hero.lead":
     "Têm empregos, famílias, projetos e vidas para lá do ativismo. Mas são também as pessoas que aparecem quando é preciso mudar alguma coisa.",
   "changemakers.hero.meet":
     "Conhece quem põe esse cuidado em prática por Lisboa.",
-  "changemakers.stat.profiled": "Agentes de mudança já retratados",
+  "changemakers.stat.profiled": "Perfis de agentes de mudança até agora",
   "changemakers.stat.causeAreas": "Áreas de causa ativas em Lisboa",
   "changemakers.stat.peopleHelped":
     "Pessoas diretamente ajudadas pelo trabalho delas",
@@ -115,9 +115,9 @@ export const community: Catalog = {
   "changemakers.featured.label": "Agente de mudança em destaque",
   "changemakers.featured.readStoryCta": "Lê a história dela",
   "changemakers.featured.connectCta": "Fala com a equipa sobre esta pessoa",
-  "changemakers.empty.title": "Ainda não há agentes de mudança retratados",
+  "changemakers.empty.title": "Ainda não há perfis de agentes de mudança",
   "changemakers.empty.description":
-    "É aqui que celebramos quem está, em silêncio, a tornar as coisas melhores. Conheces alguém a fazer esse trabalho? Nomeia essa pessoa abaixo e começamos a história.",
+    "É aqui que celebramos quem melhora as coisas sem fazer alarido. Conheces alguém a fazer esse trabalho? Nomeia essa pessoa abaixo e começamos a história.",
   "changemakers.card.readMoreCta": "Ler mais",
 
   // Change Makers — nominate form
@@ -133,14 +133,14 @@ export const community: Catalog = {
   "changemakers.nominate.stepHear": "Recebes uma notificação com a decisão.",
   "changemakers.nominate.formTitle": "Nomear alguém",
   "changemakers.nominate.nameLabel": "O nome dessa pessoa",
-  "changemakers.nominate.namePlaceholder": "O nome pelo qual é conhecida",
+  "changemakers.nominate.namePlaceholder": "O nome que usa",
   "changemakers.nominate.nameError":
     "Escreve o nome da pessoa que estás a nomear.",
   "changemakers.nominate.memberLabel": "Já está na QueerPulse?",
-  "changemakers.nominate.memberPlaceholder": "Procurar membros pelo nome",
-  "changemakers.nominate.memberSearchAria": "Procurar membros pelo nome",
+  "changemakers.nominate.memberPlaceholder": "Pesquisa pessoas pelo nome",
+  "changemakers.nominate.memberSearchAria": "Pesquisar pessoas pelo nome",
   "changemakers.nominate.memberHelper":
-    "Opcional. Salta isto se ainda não se juntou.",
+    "Opcional. Salta este passo se a pessoa ainda não aderiu.",
   "changemakers.nominate.memberClearAria": "Retirar {name} desta nomeação",
   "changemakers.nominate.contactLabel":
     "Onde mais podemos encontrar esta pessoa?",
@@ -154,15 +154,16 @@ export const community: Catalog = {
   "changemakers.nominate.reasonError":
     "Escreve uma frase sobre porque é que esta pessoa devia estar aqui.",
   "changemakers.nominate.privacyNote": "A pessoa nomeada não é avisada.",
-  "changemakers.nominate.submitCta": "Nomear",
+  "changemakers.nominate.submitCta": "Enviar nomeação",
   "changemakers.nominate.submitPending": "A enviar…",
-  "changemakers.nominate.successToast": "Obrigade. Vamos investigar {name}.",
+  "changemakers.nominate.successToast":
+    "Agradecemos. Vamos conhecer melhor o trabalho de {name}.",
   "changemakers.nominate.errorToast":
     "Não foi possível enviar a tua nomeação. Tenta novamente.",
   "changemakers.nominate.errorSelf":
-    "Não te podes nomear a ti. Nomeia outra pessoa que esteja a mudar as coisas na nossa comunidade.",
+    "Não podes nomear-te. Nomeia outra pessoa que esteja a mudar as coisas na nossa comunidade.",
   "changemakers.nominate.errorMemberGone":
-    "Não encontrámos esse membro, por isso a nomeação não foi enviada. Pesquisa outra vez ou escreve o nome.",
+    "Não encontrámos essa pessoa, por isso a nomeação não foi enviada. Pesquisa outra vez ou escreve o nome.",
 
   // ── Change Maker story page (ChangemakerStoryPage.tsx) ────────────────────
   "changemakerStory.backCta": "Agentes de Mudança",
@@ -171,7 +172,7 @@ export const community: Catalog = {
   "changemakerStory.outro.title":
     "Queres apoiar o trabalho <em>de {name}?</em>",
   "changemakerStory.outro.sub":
-    "As pessoas agentes de mudança fazem isto para além do trabalho do dia a dia. Uma mensagem, uma apresentação ou uma hora do teu tempo valem mais do que imaginas.",
+    "Quem é agente de mudança faz isto a par do emprego. Uma mensagem, uma apresentação ou uma hora do teu tempo valem mais do que imaginas.",
   "changemakerStory.outro.connectCta": "Fala com a equipa sobre esta pessoa",
   "changemakerStory.outro.moreCta": "Conhecer mais agentes de mudança",
   "changemakerStory.moreLabel": "Mais agentes de mudança",
@@ -200,7 +201,7 @@ export const community: Catalog = {
   "changemakers.admin.cancelCta": "Cancelar",
   "changemakers.admin.deleteConfirmTitle": "Eliminar este perfil?",
   "changemakers.admin.deleteConfirmBody":
-    "Isto remove {name} do diretório definitivamente. Não é possível desfazer.",
+    "Vais remover {name} do diretório de vez. Não é possível desfazer.",
   "changemakers.admin.deleteConfirmCta": "Eliminar perfil",
   "changemakers.admin.deletedToast": "Perfil eliminado.",
   "changemakers.admin.publishedToast": "Perfil publicado.",
@@ -216,11 +217,11 @@ export const community: Catalog = {
   "changemakers.admin.editor.tintPlum": "Ameixa",
   "changemakers.admin.editor.tagsLabel": "Etiquetas",
   "changemakers.admin.editor.tagsHint":
-    "Separadas por vírgula, por ex. Advocacia, Entreajuda",
+    "Separadas por vírgula, por ex. Defesa de direitos, Entreajuda",
   "changemakers.admin.editor.summaryLabel": "Resumo",
   "changemakers.admin.editor.imageUrlLabel": "URL da imagem",
   "changemakers.admin.editor.impactLabel": "Impacto",
-  "changemakers.admin.editor.impactHint": "Uma linha de impacto por linha.",
+  "changemakers.admin.editor.impactHint": "Um ponto de impacto por linha.",
   "changemakers.admin.editor.bylineLabel": "Assinatura",
   "changemakers.admin.editor.heroNoteLabel": "Nota do destaque",
   "changemakers.admin.editor.leadLabel": "Introdução",
@@ -242,10 +243,10 @@ export const community: Catalog = {
   "comingOut.hero.title":
     "Um lugar para o dizeres <em>antes de o dizeres.</em>",
   "comingOut.hero.lead":
-    'Um ponto de partida sem pressão para quem está a navegar o processo de sair do armário, no trabalho, à família ou a si próprie. Não precisas de estar "fora do armário" para usar a QueerPulse, e ler esta página não deixa nada no teu perfil.',
+    'Um ponto de partida sem pressão para quem está a lidar com a saída do armário, no trabalho, na família ou dentro de si. Não precisas de estar "fora do armário" para usar a QueerPulse, e ler esta página não deixa nada no teu perfil.',
   "comingOut.privacy.heading": "O que fica <em>contigo.</em>",
   "comingOut.privacy.lead":
-    "Sair do armário acontece ao teu ritmo. Quem é membro de uma comunidade vê quem mais faz parte dela, e nenhuma definição impede alguém de repetir o que leu, por isso partilha apenas o que te deixa confortável.",
+    "Sair do armário acontece ao teu ritmo. Quem faz parte de uma comunidade vê quem mais lá está, e nenhuma definição impede alguém de repetir o que leu, por isso partilha apenas o que te deixa confortável.",
   "comingOut.privacy.hidden.title": "As comunidades privadas ficam escondidas",
   "comingOut.privacy.hidden.body":
     "Uma comunidade privada não aparece na exploração nem na pesquisa para quem está fora dela, e só se entra por convite. Para as restantes pessoas, é como se não existisse.",
@@ -267,29 +268,29 @@ export const community: Catalog = {
     "Há pessoas que só leem. É uma forma completa e válida de estar aqui, e nada na QueerPulse exige que publiques.",
   "comingOut.stage.saySafely.title": "Diz-o a quem percebe",
   "comingOut.stage.saySafely.body":
-    "Experimenta as palavras antes de as dizeres a sério. Pergunta no fórum, onde algumas categorias permitem assinatura anónima, ou escreve a uma pessoa com quem tenhas ligação. Qualquer pessoa no fórum pode ler um tópico, por isso partilha apenas o que te deixa confortável.",
-  "comingOut.stage.moveOn.title": "Passa por aqui, e segue",
+    "Experimenta as palavras antes de as dizeres a sério. Pergunta no fórum, onde algumas categorias permitem assinatura anónima, ou escreve a uma pessoa das tuas conexões. Qualquer pessoa no fórum pode ler um tópico, por isso partilha apenas o que te deixa confortável.",
+  "comingOut.stage.moveOn.title": "Passa por aqui e segue em frente",
   "comingOut.stage.moveOn.body":
     "Há quem precise disto uma semana e quem precise durante anos. Afasta-te quando quiseres e volta quando precisares.",
-  "comingOut.outro.title": "Não deves <em>um discurso perfeito.</em>",
+  "comingOut.outro.title": "Não deves a ninguém <em>um discurso perfeito.</em>",
   "comingOut.outro.sub":
-    "Dizer a verdade de forma imperfeita continua a ser dizer a verdade. O nosso guia de apoio entre pares explica como pedir esse apoio, e podes sair no momento em que quiseres.",
+    "Dizer a verdade de forma imperfeita continua a ser dizer a verdade. O nosso guia de apoio entre pares explica como pedir esse apoio, e podes afastar-te quando quiseres.",
   "comingOut.outro.enterCta": "Ver como funciona o apoio entre pares",
   "comingOut.outro.communitiesCta": "Ver todas as comunidades",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
   "dating.hero.cat": "Namoro e Relações · Lisboa",
-  "dating.hero.title": "Ligação, <em>nos teus próprios termos.</em>",
+  "dating.hero.title": "Ligação, <em>à tua maneira.</em>",
   "dating.hero.sub":
     "O panorama das aplicações, a cultura de namoro em Lisboa, as estruturas de relação, o reconhecimento legal, e onde a comunidade se encontra mesmo, fora do ecrã do telemóvel.",
 
   "dating.apps.heading": "Aplicações em <em>Lisboa</em>",
   "dating.apps.lead":
-    "Um olhar direto às aplicações usadas em Lisboa e a quem se destina cada uma.",
-  "dating.app.grindr.audience": "Homens gays e bi · Trans masculinidades",
+    "Um olhar sem rodeios sobre as aplicações usadas em Lisboa e a quem se destina cada uma.",
+  "dating.app.grindr.audience": "Homens gays e bi · Pessoas trans masculinas",
   "dating.app.grindr.body":
     "Continua a ser a aplicação com mais utilizadores gays e bi em Lisboa. Funciona. A cultura varia imenso consoante quem está online em cada momento.",
-  "dating.app.grindr.tag1": "Orientada a convívios casuais",
+  "dating.app.grindr.tag1": "Foco em encontros casuais",
   "dating.app.grindr.tag2": "Muito movimento",
   "dating.app.grindr.tag3": "Cultura variável",
   "dating.app.scruff.audience":
@@ -299,9 +300,9 @@ export const community: Catalog = {
   "dating.app.scruff.tag1": "Funcionalidades de comunidade",
   "dating.app.scruff.tag2": "Foco em conversar primeiro",
   "dating.app.scruff.tag3": "Bears e perfil masculino",
-  "dating.app.her.audience": "Mulheres queer · Pessoas não-binárias",
+  "dating.app.her.audience": "Mulheres queer · Pessoas não binárias",
   "dating.app.her.body":
-    "A principal aplicação para mulheres queer e pessoas não-binárias em Lisboa. Grupo mais pequeno mas genuinamente orientada para a comunidade: tem listas de eventos e grupos para além do namoro.",
+    "A principal aplicação para mulheres queer e pessoas não binárias em Lisboa. Menos gente, mas genuinamente virada para a comunidade: tem listas de eventos e grupos para além do namoro.",
   "dating.app.her.tag1": "Comunidade em primeiro lugar",
   "dating.app.her.tag2": "Eventos e grupos",
   "dating.app.her.tag3": "Todo o tipo de relações",
@@ -312,16 +313,16 @@ export const community: Catalog = {
   "dating.app.feeld.tag1": "Não-monogamia ética",
   "dating.app.feeld.tag2": "Próxima do kink",
   "dating.app.feeld.tag3": "Inclusiva quanto à identidade",
-  "dating.app.feeld.tag4": "Casais e solteires",
+  "dating.app.feeld.tag4": "Casais e pessoas solteiras",
   "dating.app.hornet.audience": "Homens gays e bi · Foco na comunidade",
   "dating.app.hornet.body":
     "Mais orientada para a comunidade do que o Grindr: tem notícias, histórias e funcionalidades de grupo. Melhor para quem quer conhecer a cidade além de namorar nela.",
   "dating.app.hornet.tag1": "Funcionalidades de comunidade",
   "dating.app.hornet.tag2": "Notícias locais",
-  "dating.app.hornet.tag3": "Mais do que convívios casuais",
+  "dating.app.hornet.tag3": "Mais do que encontros casuais",
   "dating.app.okcupid.audience": "Todos os géneros · Relações",
   "dating.app.okcupid.body":
-    "As melhores opções de identidade e pronomes de qualquer aplicação mainstream. O sistema de perguntas faz com que chegues às conversas já a saber que tens algo em comum. Ritmo mais lento, melhor para relações do que para convívios casuais.",
+    "As melhores opções de identidade e pronomes de qualquer aplicação mainstream. O sistema de perguntas faz com que chegues às conversas já a saber que tens algo em comum. Ritmo mais lento, melhor para relações do que para encontros casuais.",
   "dating.app.okcupid.tag1": "Melhores opções de identidade",
   "dating.app.okcupid.tag2": "Foco em relações",
   "dating.app.okcupid.tag3": "Ritmo mais lento",
@@ -331,17 +332,17 @@ export const community: Catalog = {
     "Coisas que vale a pena saber antes de começares a namorar aqui.",
   "dating.culture.smallCommunity.title": "É uma comunidade pequena",
   "dating.culture.smallCommunity.text":
-    "A comunidade queer de Lisboa é íntima. Vais encontrar as mesmas pessoas em eventos, nas aplicações e através de amigues, semanas depois de chegares. Isto é, na maior parte, maravilhoso. Mas também significa que a forma como tratas as pessoas ecoa. Sê gentil.",
+    "A comunidade queer de Lisboa é íntima. Poucas semanas depois de chegares, vais encontrar as mesmas pessoas em eventos, nas aplicações e através de amizades. Na maior parte das vezes, isto é maravilhoso. Mas também significa que a forma como tratas as pessoas acaba por se saber. Sê gentil.",
   "dating.culture.slowerPace.title": "O ritmo é mais lento",
   "dating.culture.slowerPace.text":
-    "A cultura social e de namoro portuguesa é, em geral, mais lenta do que as normas do norte da Europa ou da América do Norte. Conta com períodos de aquecimento mais longos, mais ênfase na química presencial e menos pressão para definir tudo depressa. Isto faz parte do encanto.",
+    "A cultura social e de namoro portuguesa é, em geral, mais lenta do que as normas do norte da Europa ou da América do Norte. Conta com fases de aproximação mais longas, mais ênfase na química presencial e menos pressão para definir tudo depressa. Isto faz parte do encanto.",
   "dating.culture.languageGap.title": "A barreira da língua é real",
   "dating.culture.languageGap.text":
-    "Namorar através de uma barreira linguística é uma experiência específica. Há quem ache libertador; outres acham cansativo. A comunidade queer de expatriades é suficientemente grande para namorares dentro dela. Mas vais perder a comunidade mais alargada se só namorares com outres expatriades.",
+    "Namorar através de uma barreira linguística é uma experiência específica. Há quem ache libertador e há quem ache cansativo. A comunidade queer expatriada é grande o suficiente para namorares dentro dela sem problema. Mas, se só namorares com outras pessoas expatriadas, perdes o resto da comunidade.",
   "dating.culture.eventsMatter.title":
     "Os eventos são uma forma fácil de conhecer pessoas",
   "dating.culture.eventsMatter.text":
-    "As aplicações são uma das formas de conhecer pessoas aqui. Os eventos, as apresentações em comum e o fórum são outras, e dão à conversa um começo fácil. Vê o calendário e aparece.",
+    "As aplicações são uma das formas de conhecer pessoas aqui. Os eventos, as apresentações através de amizades em comum e o fórum são outras, e dão à conversa um começo fácil. Vê o calendário e aparece.",
 
   "dating.structures.heading": "<em>Estruturas</em> de relação",
   "dating.structures.lead":
@@ -353,11 +354,11 @@ export const community: Catalog = {
   "dating.structure.enm.label": "Não-monogamia ética",
   "dating.structure.enm.title": "Relações abertas",
   "dating.structure.enm.text":
-    'A não-monogamia ética cobre um leque amplo, desde "abertos mas juntos" até relações totalmente independentes com várias pessoas. O Feeld é um ponto de entrada comum, e o fórum é um bom sítio para pedir dicas locais.',
+    'A não-monogamia ética cobre um leque amplo, desde "relação aberta, mas a dois" até relações totalmente independentes com várias pessoas. O Feeld é um ponto de entrada comum, e o fórum é um bom sítio para pedir dicas locais.',
   "dating.structure.polyamory.label": "Poliamor",
   "dating.structure.polyamory.title": "Várias relações de amor",
   "dating.structure.polyamory.text":
-    "Uma cultura distinta da não-monogamia ética, mais focada em várias relações de compromisso do que em estruturas abertas ou casuais. Quem vive em poliamor é bem-vinde aqui, e o fórum está aberto a perguntas e apoio. Legalmente complexo em Portugal, sobretudo em questões de habitação, saúde e situações familiares.",
+    "Uma cultura distinta da não-monogamia ética, mais focada em várias relações de compromisso do que em estruturas abertas ou casuais. Quem vive em poliamor tem lugar aqui, e o fórum está aberto a perguntas e apoio. Em Portugal, a situação legal é complexa, sobretudo em questões de habitação, saúde e família.",
   "dating.structure.relationshipAnarchy.label": "Anarquia relacional",
   "dating.structure.relationshipAnarchy.title": "Sem hierarquia, sem regras",
   "dating.structure.relationshipAnarchy.text":
@@ -384,14 +385,14 @@ export const community: Catalog = {
   "dating.recognition.civilPartnership.status": "Reconhecimento total",
   "dating.recognition.nonMonogamous.title": "Relações não-monógamas",
   "dating.recognition.nonMonogamous.text":
-    "Sem reconhecimento legal para relações com vários parceiros. Existem soluções práticas (testamentos, procurações, acordos de coabitação) mas exigem planeamento legal deliberado.",
+    "Sem reconhecimento legal para relações com mais de duas pessoas. Existem soluções práticas (testamentos, procurações, acordos de coabitação), mas exigem planeamento legal deliberado.",
   "dating.recognition.nonMonogamous.status":
     "Sem reconhecimento automático: planeia com antecedência",
   "dating.recognition.legalCta": "Aconselhamento jurídico para relações",
 
   "dating.social.heading": "Conhece pessoas <em>presencialmente.</em>",
   "dating.social.lead":
-    "As aplicações estão bem. O calendário lista eventos onde podes conhecer pessoas cara a cara, com algo para fazer em conjunto. Menos transacional do que uma aplicação de namoro e mais honesto sobre aquilo que procuras.",
+    "As aplicações têm o seu lugar. O calendário lista eventos onde podes conhecer pessoas cara a cara, com algo para fazer em conjunto. São menos transacionais do que uma aplicação de namoro e mais honestos sobre o que te leva lá.",
   "dating.social.upcomingEventsCta": "Ver próximos eventos",
   "dating.social.forumThreadCta": "Tópico social no fórum",
 
@@ -406,9 +407,9 @@ export const community: Catalog = {
   "family.hero.sub":
     "Informação prática e honesta sobre adoção, reprodução assistida, coparentalidade e parentalidade legal em Portugal. Da comunidade, para a comunidade.",
   "family.hero.legalNote":
-    "Informação da comunidade para começar. As leis mudam, por isso confirma sempre com um ou uma especialista.",
+    "Informação da comunidade para começar. As leis mudam, por isso confirma sempre com especialistas.",
 
-  "family.situations.heading": "De onde <em>estás a partir?</em>",
+  "family.situations.heading": "Qual é o teu <em>ponto de partida?</em>",
   "family.situations.lead":
     "Opcional: escolhe uma situação para destacar o que é mais relevante, ou explora tudo abaixo. Não precisas de decidir nada para poderes ler.",
   "family.situation.twoWomen.name": "Duas mulheres",
@@ -421,7 +422,7 @@ export const community: Catalog = {
   "family.situation.twoMen.to": "Ver: Adoção e Coparentalidade",
   "family.situation.singleWoman.name": "Mulher solteira",
   "family.situation.singleWoman.desc":
-    "FIV ou IIU a solo disponível através do SNS e clínicas privadas.",
+    "FIV ou IIU a solo, disponíveis no SNS e em clínicas privadas.",
   "family.situation.singleWoman.to": "Ver: FIV e Reprodução Assistida",
   "family.situation.singleMan.name": "Homem solteiro",
   "family.situation.singleMan.desc":
@@ -431,9 +432,9 @@ export const community: Catalog = {
   "family.situation.transParent.desc":
     "Parentalidade legal, registo de nascimento e reprodução assistida para pessoas trans.",
   "family.situation.transParent.to": "Ver: Parentalidade Legal",
-  "family.situation.lookingForCoparent.name": "À procura de um coparente",
+  "family.situation.lookingForCoparent.name": "À procura de coparente",
   "family.situation.lookingForCoparent.desc":
-    "Coparentalidade feita através da comunidade, enquadramentos legais, guarda partilhada.",
+    "Coparentalidade com pessoas da comunidade, enquadramentos legais, guarda partilhada.",
   "family.situation.lookingForCoparent.to": "Ver: Coparentalidade",
   "family.browseFreely.cta": "Só estou a explorar, mostra-me tudo",
 
@@ -446,7 +447,7 @@ export const community: Catalog = {
 
   "family.tab.adoption.headTitle": "Adoção em <em>Portugal</em>",
   "family.tab.adoption.headText":
-    "Os casais do mesmo sexo têm direitos de adoção plenos em Portugal desde outubro de 2016, incluindo adoção conjunta e adoção de enteados. O processo é longo mas percorrível. Eis o que a comunidade já aprendeu.",
+    "Os casais do mesmo sexo têm direitos de adoção plenos em Portugal desde outubro de 2016, incluindo adoção conjunta e adoção de enteados. O processo é longo, mas é possível chegar ao fim. Eis o que a comunidade já aprendeu.",
   "family.tab.adoption.card.law.eyebrow": "A lei",
   "family.tab.adoption.card.law.title": "Quem pode adotar",
   "family.tab.adoption.card.law.body":
@@ -454,38 +455,36 @@ export const community: Catalog = {
   "family.tab.adoption.card.process.eyebrow": "O processo",
   "family.tab.adoption.card.process.title": "Como funciona",
   "family.tab.adoption.card.process.body":
-    "Os pedidos são feitos através da SCML (Santa Casa da Misericórdia de Lisboa) ou do centro de Segurança Social da tua área. Vais ter entrevistas, um estudo ao domicílio e verificações de antecedentes. O processo é o mesmo para casais do mesmo sexo, ainda que as experiências variem.",
+    "Os pedidos são feitos através da SCML (Santa Casa da Misericórdia de Lisboa) ou do centro de Segurança Social da tua área. Vais ter entrevistas, visitas domiciliárias e verificação de antecedentes. O processo é o mesmo para casais do mesmo sexo, ainda que as experiências variem.",
   "family.tab.adoption.card.process.note": "Prazo habitual: 12 a 36 meses",
   "family.tab.adoption.card.international.eyebrow": "Adoção internacional",
-  "family.tab.adoption.card.international.title":
-    "Adotar a partir do estrangeiro",
+  "family.tab.adoption.card.international.title": "Adotar no estrangeiro",
   "family.tab.adoption.card.international.body":
     "A adoção internacional é significativamente mais complexa e a maioria dos países que a permitem não estende a elegibilidade a casais do mesmo sexo. Há algumas exceções. Procura aconselhamento jurídico especializado antes de iniciares este caminho.",
   "family.tab.adoption.card.international.linkLabel":
-    "Falar com um ou uma especialista jurídica",
+    "Falar com especialista em direito",
   "family.tab.adoption.card.stepchild.eyebrow": "Adoção de enteado",
-  "family.tab.adoption.card.stepchild.title":
-    "Adotar o filho ou filha do teu par",
+  "family.tab.adoption.card.stepchild.title": "Adotar a criança do teu par",
   "family.tab.adoption.card.stepchild.body":
-    "Se o teu par já tem um filho ou filha, podes adotar como segundo progenitor. Isto é normalmente mais rápido do que a adoção conjunta de uma criança sem relação familiar prévia. A parentalidade legal também já é possível desde o nascimento, sem adoção (ver separador Parentalidade Legal).",
+    "Se o teu par já tem um filho ou filha, podes adotar e passar a partilhar a parentalidade legal. Costuma ser mais rápido do que a adoção conjunta de uma criança sem relação familiar prévia. A parentalidade legal também já é possível desde o nascimento, sem adoção (ver separador Parentalidade Legal).",
   "family.tab.adoption.noteLabel": "Da comunidade:",
   "family.tab.adoption.reviewHead":
-    "<em>Técnicos/as sociais e agências</em> avaliades pela comunidade",
+    "<em>Assistentes sociais e agências</em> com avaliações da comunidade",
 
   "family.tab.ivf.headTitle": "FIV e <em>Reprodução Assistida</em>",
   "family.tab.ivf.headText":
-    "Portugal tem uma das leis de reprodução assistida mais progressistas da Europa. Desde 2016, a FIV e a IIU estão disponíveis para todas as mulheres, incluindo mulheres solteiras e casais de mulheres do mesmo sexo, através do SNS e de clínicas privadas.",
+    "Portugal tem algumas das leis de reprodução assistida mais progressistas da Europa. Desde 2016, a FIV e a IIU estão disponíveis para todas as mulheres, incluindo mulheres solteiras e casais de mulheres do mesmo sexo, através do SNS e de clínicas privadas.",
   "family.tab.ivf.card.public.eyebrow": "Público (SNS)",
   "family.tab.ivf.card.public.title": "O que o Estado cobre",
   "family.tab.ivf.card.public.body":
     "O SNS cobre reprodução assistida (FIV, IIU) para mulheres até aos 40 anos, incluindo casais de mulheres do mesmo sexo. O tratamento é fortemente subsidiado. As listas de espera podem ser longas: 12 a 24 meses em Lisboa. O Hospital de Santa Maria e a Maternidade Alfredo da Costa são os principais centros.",
   "family.tab.ivf.card.public.note":
-    "Comparticipação média: 200–600 € por ciclo",
+    "Valor médio a pagar: 200 a 600 € por ciclo",
   "family.tab.ivf.card.private.eyebrow": "Clínicas privadas",
   "family.tab.ivf.card.private.title": "Optar pelo privado",
   "family.tab.ivf.card.private.body":
     "As clínicas privadas são significativamente mais rápidas e oferecem mais flexibilidade no tratamento. Os custos variam entre 3000 e 7000 € por ciclo de FIV, menos para IIU. Várias clínicas em Lisboa são conhecidas pela experiência com pacientes LGBTQ+: recomendações da comunidade abaixo.",
-  "family.tab.ivf.card.private.note": "IIU: 800–1500 € · FIV: 3000–7000 €",
+  "family.tab.ivf.card.private.note": "IIU: 800 a 1500 € · FIV: 3000 a 7000 €",
   "family.tab.ivf.card.transMen.eyebrow": "Homens trans",
   "family.tab.ivf.card.transMen.title":
     "Se ainda não fizeste cirurgia reprodutiva",
@@ -501,7 +500,7 @@ export const community: Catalog = {
   "family.tab.ivf.reviewHead": "<em>Clínicas</em> recomendadas pela comunidade",
 
   "family.tab.coparenting.headTitle":
-    "Coparentalidade: <em>juntes, de forma diferente</em>",
+    "Coparentalidade: <em>em conjunto, de outra forma</em>",
   "family.tab.coparenting.headText":
     "Coparentalidade significa criar uma criança com alguém com quem não tens uma relação romântica. Pode funcionar lindamente com acordos claros, comunicação honesta e enquadramentos legais que protejam todas as pessoas, incluindo a criança.",
   "family.tab.coparenting.card.whatItMeans.eyebrow": "O que significa",
@@ -509,19 +508,18 @@ export const community: Catalog = {
     "Como funciona a coparentalidade",
   "family.tab.coparenting.card.whatItMeans.body":
     "Duas ou mais pessoas concordam em criar uma criança juntas sem serem casal. Os acordos variam imenso: desde uma casa principal única com visitas regulares, até à guarda totalmente partilhada 50/50. O que importa é que os acordos sejam claros, documentados e juridicamente sólidos antes de a criança nascer.",
-  "family.tab.coparenting.card.findingCoparent.eyebrow":
-    "Encontrar um coparente",
+  "family.tab.coparenting.card.findingCoparent.eyebrow": "Encontrar coparente",
   "family.tab.coparenting.card.findingCoparent.title": "Dentro da comunidade",
   "family.tab.coparenting.card.findingCoparent.body":
-    "A QueerPulse tem um mural de Ligações para Coparentalidade para quem quer encontrar um coparente dentro da comunidade. É um mural de anúncios. Publica as tuas intenções, conhece pessoas com o tempo, tem conversas honestas antes de decidires seja o que for.",
+    "A QueerPulse tem um mural de Conexões para Coparentalidade para quem quer encontrar coparente dentro da comunidade. É um mural de anúncios. Publica as tuas intenções, conhece pessoas com o tempo, tem conversas honestas antes de decidires seja o que for.",
   "family.tab.coparenting.card.findingCoparent.linkLabel":
-    "Mural de Ligações para Coparentalidade",
+    "Mural de Conexões para Coparentalidade",
   "family.tab.coparenting.card.legalFrameworks.eyebrow":
     "Enquadramentos legais",
   "family.tab.coparenting.card.legalFrameworks.title":
     "Proteger todas as pessoas envolvidas",
   "family.tab.coparenting.card.legalFrameworks.body":
-    "Em Portugal, ambos os progenitores podem ser registados legalmente à nascença se forem dadores conhecidos ou coparentes e tiverem um acordo legal prévio. Um acordo de coparentalidade é fortemente recomendado. Envolve um ou uma advogada de direito da família desde cedo.",
+    "Em Portugal, ambos os progenitores podem ser registados legalmente à nascença se forem dadores conhecidos ou coparentes e tiverem um acordo legal prévio. Um acordo de coparentalidade é fortemente recomendado. Envolve desde cedo um escritório de advocacia especializado em direito da família.",
   "family.tab.coparenting.card.legalFrameworks.note":
     "Deixa isto tratado antes da conceção",
   "family.tab.coparenting.card.international.eyebrow":
@@ -540,7 +538,7 @@ export const community: Catalog = {
   "family.tab.donors.card.knownVsUnknown.eyebrow": "Conhecido vs. anónimo",
   "family.tab.donors.card.knownVsUnknown.title": "Uma escolha fundamental",
   "family.tab.donors.card.knownVsUnknown.body":
-    "Um dador anónimo significa que a clínica trata de tudo; a parentalidade legal não recai sobre o dador. Um dador conhecido é legalmente mais complexo: pode ou não ter direitos parentais, consoante os acordos existentes antes da doação. É aqui que o aconselhamento jurídico é mais importante.",
+    "Com um dador anónimo, a clínica trata de tudo; a parentalidade legal não recai sobre o dador. Um dador conhecido é legalmente mais complexo: pode ou não ter direitos parentais, consoante os acordos existentes antes da doação. É aqui que o aconselhamento jurídico é mais importante.",
   "family.tab.donors.card.spermDonation.eyebrow": "Doação de esperma",
   "family.tab.donors.card.spermDonation.title": "Opções em Portugal",
   "family.tab.donors.card.spermDonation.body":
@@ -549,11 +547,12 @@ export const community: Catalog = {
   "family.tab.donors.card.eggDonation.title":
     "Para casais do mesmo sexo e homens solteiros",
   "family.tab.donors.card.eggDonation.body":
-    "A doação de óvulos está disponível através de clínicas privadas licenciadas em Portugal. Os dadores são anónimos ao abrigo da lei portuguesa. Os tempos de espera para encontrar dadoras variam: 3 a 12 meses é o habitual. A mãe gestante (ou gestante de substituição) é a mãe legal, a menos que se estabeleça um caminho legal alternativo.",
+    "A doação de óvulos está disponível através de clínicas privadas licenciadas em Portugal. As dadoras são anónimas ao abrigo da lei portuguesa. Os tempos de espera para encontrar dadoras variam: 3 a 12 meses é o habitual. A mãe gestante (ou gestante de substituição) é a mãe legal, a menos que se estabeleça um caminho legal alternativo.",
   "family.tab.donors.card.legalParenthood.eyebrow": "Parentalidade legal",
-  "family.tab.donors.card.legalParenthood.title": "Quem é o progenitor legal?",
+  "family.tab.donors.card.legalParenthood.title":
+    "Quem tem a parentalidade legal?",
   "family.tab.donors.card.legalParenthood.body":
-    "No caso de dadores usados através de clínicas licenciadas, o dador não tem direitos parentais. No caso de dadores conhecidos, isto depende inteiramente de acordos escritos prévios e de a doação ter sido feita através de uma clínica. Um ou uma especialista em direito da família deve rever a tua situação antes de avançares.",
+    "Quando a doação passa por uma clínica licenciada, o dador não tem direitos parentais. No caso de dadores conhecidos, isto depende inteiramente de acordos escritos prévios e de a doação ter sido feita através de uma clínica. Pede a especialistas em direito da família que revejam a tua situação antes de avançares.",
   "family.tab.donors.card.legalParenthood.linkLabel":
     "Obter aconselhamento jurídico",
   "family.tab.donors.noteLabel": "Da comunidade:",
@@ -568,17 +567,17 @@ export const community: Catalog = {
     "Desde uma atualização legislativa de 2022, uma criança nascida de um casal do mesmo sexo (casado ou em união de facto) pode ter ambos os progenitores registados na certidão de nascimento sem necessitar de adoção do segundo progenitor. Isto aplica-se a crianças nascidas por reprodução assistida em clínicas licenciadas.",
   "family.tab.legal.card.birthRegistration.note":
     "Só para casais casados ou em união de facto",
-  "family.tab.legal.card.unmarried.eyebrow": "Se não és casade",
+  "family.tab.legal.card.unmarried.eyebrow": "Se não houver casamento",
   "family.tab.legal.card.unmarried.title": "Casais não casados",
   "family.tab.legal.card.unmarried.body":
-    "Se não és casade nem estás em união de facto, o progenitor que não deu à luz não tem parentalidade legal automática. Vais precisar de adoção do segundo progenitor ou de um acordo legal estabelecido antes do nascimento. Isto também é relevante para coparentes e situações de dador conhecido.",
+    "Se não houver casamento nem união de facto, a pessoa que não deu à luz não tem parentalidade legal automática. Vais precisar de adoção do segundo progenitor ou de um acordo legal estabelecido antes do nascimento. Isto também é relevante para coparentes e situações de dador conhecido.",
   "family.tab.legal.card.unmarried.linkLabel":
     "Informação sobre casamento e união de facto",
-  "family.tab.legal.card.transParents.eyebrow": "Progenitores trans",
+  "family.tab.legal.card.transParents.eyebrow": "Parentalidade trans",
   "family.tab.legal.card.transParents.title":
     "Reconhecimento de género e parentalidade",
   "family.tab.legal.card.transParents.body":
-    "Um homem trans que dá à luz é legalmente o pai se o seu género legal já tiver sido alterado para masculino. Uma mulher trans cuja parceira leva a criança pode ser registada como mãe. A lei portuguesa já contempla estas situações, ainda que a prática administrativa varie. Documenta tudo.",
+    "Um homem trans que dá à luz é legalmente o pai se o seu género legal já tiver sido alterado para masculino. Uma mulher trans cuja parceira engravida pode ser registada como mãe. A lei portuguesa já contempla estas situações, ainda que a prática administrativa varie. Documenta tudo.",
   "family.tab.legal.card.transParents.linkLabel":
     "Recursos jurídicos do Trans Hub",
   "family.tab.legal.card.secondParentAdoption.eyebrow":
@@ -588,9 +587,9 @@ export const community: Catalog = {
   "family.tab.legal.card.secondParentAdoption.body":
     "A adoção do segundo progenitor continua disponível e é por vezes a opção mais clara, sobretudo para crianças nascidas antes das alterações de 2022, ou em situações internacionais complexas. Também se aplica a crianças nascidas noutros países cuja parentalidade Portugal possa não reconhecer automaticamente.",
   "family.tab.legal.step.legalStatus.title":
-    "Estabelece o teu estatuto legal como casal",
+    "Formaliza a vossa situação legal de casal",
   "family.tab.legal.step.legalStatus.text":
-    "O casamento ou a união de facto são o caminho mais claro para a parentalidade conjunta automática à nascença. Isto pode ser feito rapidamente na conservatória.",
+    "O casamento ou a união de facto são o caminho mais claro para a parentalidade conjunta automática à nascença. Na conservatória, isto resolve-se depressa.",
   "family.tab.legal.step.notifyClinic.title":
     "Avisa a clínica antes da conceção",
   "family.tab.legal.step.notifyClinic.text":
@@ -599,33 +598,33 @@ export const community: Catalog = {
   "family.tab.legal.step.registerBirth.title":
     "Regista o nascimento com ambos os progenitores",
   "family.tab.legal.step.registerBirth.text":
-    "No hospital ou na conservatória, no prazo de 20 dias. Leva a documentação do casamento ou da união de facto. Se houver complicações, um ou uma advogada pode acompanhar-te.",
+    "No hospital ou na conservatória, no prazo de 20 dias. Leva a documentação do casamento ou da união de facto. Se houver complicações, podes pedir a um escritório de advocacia que te acompanhe.",
   "family.tab.legal.step.registerBirth.time":
     "No prazo de 20 dias após o nascimento",
   "family.tab.legal.step.willGuardianship.title":
-    "Considera um testamento e um documento de tutela",
+    "Pondera fazer um testamento e um documento de tutela",
   "family.tab.legal.step.willGuardianship.text":
-    "Mesmo com parentalidade legal plena, vale a pena ter um testamento que especifique a tutela em caso de morte. Um ou uma advogada de família pode redigir isto em poucas horas.",
+    "Mesmo com parentalidade legal plena, vale a pena ter um testamento que especifique a tutela em caso de morte. Um escritório de advocacia de família consegue redigi-lo em poucas horas.",
   "family.review.starsAriaLabel": "{stars} em 5",
-  "family.review.liveEmpty.title": "Avaliações da comunidade a chegar em breve",
+  "family.review.liveEmpty.title": "Avaliações da comunidade em breve",
   "family.review.liveEmpty.description":
     "Ainda ninguém partilhou avaliações de clínicas, agências e assistentes sociais aqui. À medida que as pessoas passam pelo processo, as suas recomendações vão aparecer aqui.",
-  "family.note.liveEmpty.title": "Histórias da comunidade a chegar em breve",
+  "family.note.liveEmpty.title": "Histórias da comunidade em breve",
   "family.note.liveEmpty.description":
-    "Assim que os membros contarem como a sua própria família se formou, as palavras deles vão aparecer aqui.",
+    "Assim que as pessoas da comunidade contarem como a sua família se formou, as palavras delas vão aparecer aqui.",
 
   "family.talk.heading": "Fala com quem já <em>passou por isto.</em>",
   "family.talk.body":
     "A Rede de Pais e Mães Queer liga quem está a construir família com pessoas da comunidade que já passaram por isto: os mesmos caminhos, situações semelhantes. São pessoas que já o fizeram e querem ajudar.",
-  "family.talk.findMentorCta": "Encontrar um mentor ou mentora",
+  "family.talk.findMentorCta": "Encontrar uma pessoa mentora",
   "family.talk.networkCta": "Rede de Pais e Mães Queer",
   "family.talk.forumCta.heading":
-    "Perguntas que esta página <em>não responde?</em>",
+    "Perguntas a que esta página <em>não responde?</em>",
   "family.talk.forumCta.body":
     "O tópico do fórum sobre Construir Família é onde a comunidade partilha experiências atuais, faz perguntas e se apoia mutuamente ao longo de um processo que nenhum guia consegue captar por completo.",
   "family.talk.forumCta.openForumCta": "Abrir o tópico do fórum",
   "family.talk.forumCta.legalResourcesCta": "Recursos jurídicos",
-  "family.talk.liveEmpty.title": "Mentores parentais a chegar em breve",
+  "family.talk.liveEmpty.title": "Mentoria parental em breve",
   "family.talk.liveEmpty.description":
     "Ainda ninguém se ofereceu para partilhar a sua experiência. Já estás a criar uma família? Deixa o teu nome e ajuda quem está agora a começar.",
 
@@ -635,20 +634,20 @@ export const community: Catalog = {
   "family.outro.cta": "Junta-te à QueerPulse",
 
   // ── Queer Parent Network section (ParentNetwork.tsx) ──────────────────────
-  "parentNetwork.eyebrow": "Rede de Pais e Mães Queer · Já és pai ou mãe?",
+  "parentNetwork.eyebrow": "Rede de Pais e Mães Queer · Já tens filhos?",
   "parentNetwork.heading":
     "Para as famílias <em>muitas vezes esquecidas</em> em espaços queer.",
   "parentNetwork.lead":
-    "Pais e mães LGBTQ+, coparentes e pessoas a navegar a parentalidade: biológica, adotiva, escolhida e tudo o que está entre isso. Mais do que um fórum, é um acordo permanente entre famílias que se ajudam mutuamente, tanto no prático como no mais pesado.",
+    "Pais e mães LGBTQ+, coparentes e pessoas a viver a parentalidade: biológica, adotiva, escolhida e tudo o que fica pelo meio. Funciona como um pacto permanente entre famílias que se ajudam mutuamente, tanto nas questões práticas como nas mais pesadas.",
   "parentNetwork.stat.parents": "pais, mães e coparentes",
   "parentNetwork.stat.meetups": "eventos por mês",
   "parentNetwork.stat.kids": "crianças no grupo de brincadeiras",
   "parentNetwork.offer.healthcare.title": "Cuidados de saúde afirmativos",
   "parentNetwork.offer.healthcare.body":
-    "Uma lista partilhada e verificada de pediatras e médicos de família que tratam duas mães, dois pais e qualquer família na ficha de admissão com a maior naturalidade.",
+    "Uma lista partilhada e verificada de pediatras e profissionais de medicina geral e familiar que tratam duas mães, dois pais e qualquer família na ficha de admissão com a maior naturalidade.",
   "parentNetwork.offer.schools.title": "Escolas e burocracia",
   "parentNetwork.offer.schools.body":
-    "Que escolas fazem bem feito, como lidar com formulários que presumem uma mãe e um pai, e pessoas da comunidade que já passaram pelas mesmas candidaturas.",
+    "Que escolas fazem as coisas bem, como lidar com formulários que presumem uma mãe e um pai, e pessoas da comunidade que já passaram pelos mesmos processos de inscrição.",
   "parentNetwork.offer.playdates.title": "Brincadeiras e apoio às crianças",
   "parentNetwork.offer.playdates.body":
     "Um grupo permanente de brincadeiras, troca de cuidados entre pessoas de confiança da comunidade, e eventos de fim de semana onde ninguém tem de explicar a própria família.",
@@ -657,22 +656,22 @@ export const community: Catalog = {
     "Logística da coparentalidade, percursos de gestação de substituição e adoção, e as pequenas coisas do dia a dia, com pessoas que realmente entendem.",
   "parentNetwork.comingUp.heading": "Para <em>breve.</em>",
   "parentNetwork.comingUp.lead":
-    "A maioria dos meses traz uma manhã de brincadeiras e uma noite para os adultos. Crianças bem-vindas, salvo aviso em contrário.",
+    "Quase todos os meses há brincadeiras durante o dia e um serão para gente crescida. Crianças bem-vindas, salvo aviso em contrário.",
   "parentNetwork.comingUp.liveEmpty.title": "Ainda não há eventos marcados",
   "parentNetwork.comingUp.liveEmpty.description":
-    "Não há nada no calendário de momento. As brincadeiras e os serões para adultos vão aparecer aqui à medida que os membros os organizam.",
+    "Não há nada no calendário de momento. As brincadeiras e os serões para gente crescida vão aparecer aqui à medida que a comunidade os organiza.",
   "parentNetwork.tag.playdate": "Brincadeiras",
-  "parentNetwork.tag.social": "Evento",
+  "parentNetwork.tag.social": "Convívio",
   "parentNetwork.tag.workshop": "Workshop",
-  "parentNetwork.resource.legalRights": "Direitos legais como família queer",
+  "parentNetwork.resource.legalRights": "Direitos legais das famílias queer",
   "parentNetwork.resource.healthcareGuides": "Guias de saúde e documentação",
 
   // ── Reading Groups page (ReadingGroupsPage.tsx + sub-components) ──────────
   "readingGroups.hero.eye": "Comunidade · Leitura",
-  "readingGroups.hero.titleLine1": "Ler juntes.",
+  "readingGroups.hero.titleLine1": "Ler em conjunto.",
   "readingGroups.hero.titleLine2": "<em>Confiar mais depressa.</em>",
   "readingGroups.hero.sub":
-    "Grupos pequenos, um livro, um mês. Sem ansiedade de trabalhos de casa, sem gatekeeping. A melhor forma de encontrar a tua gente numa cidade nova é discutir um livro com elas.",
+    "Grupos pequenos, um livro, um mês. Sem ansiedade de trabalhos de casa, sem gatekeeping. A melhor forma de encontrar a tua gente numa cidade nova é discutir um livro com ela.",
   "readingGroups.why.curated.title": "Livros com curadoria queer",
   "readingGroups.why.curated.desc":
     "Cada grupo escolhe a sua própria leitura. Não te dizemos o que importa.",
@@ -688,7 +687,7 @@ export const community: Catalog = {
   "readingGroups.filterBar.count_other": "{count} grupos",
   "readingGroups.genre.all": "Todos",
   "readingGroups.genre.fiction": "Ficção",
-  "readingGroups.genre.nonfiction": "Não-ficção",
+  "readingGroups.genre.nonfiction": "Não ficção",
   "readingGroups.genre.theory": "Teoria",
   "readingGroups.genre.poetry": "Poesia",
   "readingGroups.genre.memoir": "Memórias",
@@ -703,7 +702,7 @@ export const community: Catalog = {
   "readingGroups.empty.clearFiltersCta": "Limpar filtros",
   "readingGroups.liveEmpty.title": "Ainda não há grupos de leitura",
   "readingGroups.liveEmpty.description":
-    "Ainda não foi criado nenhum grupo. Sê o primeiro: propõe um aqui em baixo e junta a tua gente à volta de um livro.",
+    "Ainda não foi criado nenhum grupo. Começa tu: propõe um aqui em baixo e junta a tua gente à volta de um livro.",
   "readingGroups.outro.title": "Os livros constroem <em>comunidade.</em>",
   "readingGroups.outro.sub":
     "Os grupos de leitura da QueerPulse são um lugar para ler em conjunto, falar sobre o que fica contigo e conhecer pessoas com quem talvez nunca te tivesses cruzado.",
@@ -727,9 +726,9 @@ export const community: Catalog = {
 
   "readingGroups.listGroup.heading": "Cria o <em>teu próprio grupo.</em>",
   "readingGroups.listGroup.lead":
-    "Dá um nome ao teu grupo, se quiseres, e escolhe o primeiro livro. Diz quantas pessoas queres e nós publicamos aqui e ligamos-te a pessoas da comunidade que querem ler a mesma coisa.",
+    "Dá um nome ao teu grupo, se quiseres, e escolhe o primeiro livro. Diz quantas pessoas queres e nós publicamo-lo aqui e juntamos-te a pessoas da comunidade que querem ler a mesma coisa.",
   "readingGroups.listGroup.leadLive":
-    "Dá um nome ao teu grupo, se quiseres, escolhe o primeiro livro e diz quantas pessoas queres. Envia-nos e voltamos a falar contigo sobre começar o grupo e encontrar quem vai ler contigo.",
+    "Dá um nome ao teu grupo, se quiseres, escolhe o primeiro livro e diz quantas pessoas queres. Envia-nos a proposta e entramos em contacto contigo para começar o grupo e encontrar quem vai ler contigo.",
   "readingGroups.listGroup.clubLabel": "Nome do grupo",
   "readingGroups.listGroup.optional": "opcional",
   "readingGroups.listGroup.clubPlaceholder": "ex.: Clube de Fantasia QPOC",
@@ -749,21 +748,21 @@ export const community: Catalog = {
   "readingGroups.listGroup.submitProposeCta": "Enviar a minha proposta",
   "readingGroups.listGroup.submitProposePending": "A enviar…",
   "readingGroups.listGroup.successToast":
-    "Grupo publicado. Vamos encontrar os teus leitores",
+    "Grupo publicado. Vamos encontrar quem leia contigo",
   "readingGroups.listGroup.proposalToast":
     "Proposta recebida. Entramos em contacto",
   "readingGroups.listGroup.proposalHeading": "Proposta <em>recebida.</em>",
   "readingGroups.listGroup.proposalBody":
-    "Temos a tua proposta para <strong>{name}</strong>. Ainda não há nada publicado no diretório: alguém vai lê-la e falar contigo sobre começar o grupo.",
+    "Temos a tua proposta para <strong>{name}</strong>. Ainda não há nada publicado no diretório: a nossa equipa vai lê-la e falar contigo sobre começar o grupo.",
   "readingGroups.listGroup.proposeAnotherCta": "Propor outro grupo",
   "readingGroups.listGroup.errorToast":
     "Não foi possível publicar o teu grupo. Tenta novamente.",
   "readingGroups.listGroup.successHeading":
     "O teu grupo está <em>publicado.</em>",
   "readingGroups.listGroup.successBody":
-    "<strong>{name}</strong> já está visível no topo do diretório. Vamos começar a ligar-te a pessoas que querem ler a mesma coisa.",
+    "<strong>{name}</strong> já está visível no topo do diretório. Vamos começar a juntar-te a pessoas que querem ler a mesma coisa.",
   "readingGroups.listGroup.newGroupDesc":
-    "Um grupo de leitura novo, acabado de publicar. As pessoas vão ser associadas em breve.",
+    "Um grupo de leitura novo, acabado de publicar. Em breve juntamos pessoas ao grupo.",
   "readingGroups.listGroup.listAnotherCta": "Publicar outro grupo",
   "readingGroups.listGroup.defaultName": "O teu novo grupo",
   "readingGroups.listGroup.defaultAuthor": "Tu",
@@ -774,19 +773,19 @@ export const community: Catalog = {
 
   // ── Diretório ao vivo (um grupo de leitura É uma comunidade `book-club`) ──
   "readingGroups.card.formatPrefix.either": "Presencial ou online · ",
-  "readingGroups.card.members_one": "{count} membro",
-  "readingGroups.card.members_other": "{count} membros",
+  "readingGroups.card.members_one": "{count} pessoa",
+  "readingGroups.card.members_other": "{count} pessoas",
   "readingGroups.card.openGroupCta": "Abrir o grupo",
   "readingGroups.card.requestPendingCta": "A enviar…",
   "readingGroups.card.requestSentCta": "Pedido enviado",
-  "readingGroups.card.joinedToast": "Estás dentro. Diz olá no grupo",
+  "readingGroups.card.joinedToast": "Já fazes parte. Diz olá no grupo",
   "readingGroups.card.requestedToast":
     "Pedido enviado. Quem organiza o grupo decide quem entra",
   "readingGroups.card.joinErrorToast":
     "Não foi possível enviar o teu pedido. Tenta de novo.",
   "readingGroups.liveError.title": "O diretório não carregou",
   "readingGroups.liveError.description":
-    "Algo correu mal ao procurar os grupos. Normalmente é momentâneo.",
+    "Algo correu mal ao carregar os grupos. Normalmente é passageiro.",
   "readingGroups.liveError.retryCta": "Tentar de novo",
   // OPS-05, a janela "Oferecer apoio" da consola de administração.
   "supportOffer.admin.sendingCta": "A enviar…",

@@ -1,6 +1,7 @@
 // The demo VJ server runner: the pure stage reducer plus its timers and the
 // demo channel. One demo tab (the Web Lock holder) runs it at a time.
 
+import { apiErrorCode } from "../../../shared/api/causeErrorKey";
 import {
   VJ_LIBRARY_CHANGE_KINDS,
   type VjLibraryChange,
@@ -29,13 +30,17 @@ import {
   syncVjDemoAttachedAt,
   type VjDemoLiveHost,
 } from "./vjDemoLive";
+import type { VjDemoSetlistLoopingWrite } from "./vjDemoSceneCommands";
 import { readVjRecord } from "./vjDemoStageCommands";
 import type { VjDemoLibraryLookup } from "./vjDemoStore";
+import { demoUpdateVjSetlist } from "./vjDemoStoreSetlists";
 import { createVjDemoStageTimers } from "./vjDemoTimers";
 
 export interface VjDemoServerOptions {
   channel: VjDemoChannel;
   library: VjDemoLibraryLookup;
+  /** Saves Loop for `stage:setlistSetLooping`; the demo store's PATCH by default. */
+  writeSetlistLooping?: VjDemoSetlistLoopingWrite;
   now?: () => number;
   newEpoch?: () => string;
   serverId?: string;
@@ -46,6 +51,24 @@ export interface VjDemoServerOptions {
    */
   onYield?: () => void;
 }
+
+/** Saves Loop through the demo store's PATCH (sequences contract 5.6): a
+ *  missing set list refuses vj_setlist_not_found, any other failure
+ *  vj_server_error. The write posts `setlist_updated`, which every tab's
+ *  library and this stage hear. */
+export const writeVjDemoSetlistLooping: VjDemoSetlistLoopingWrite = (
+  setlistId,
+  isLooping,
+) => {
+  try {
+    demoUpdateVjSetlist(setlistId, { isLooping });
+    return null;
+  } catch (error) {
+    return apiErrorCode(error) === "VJ_SETLIST_NOT_FOUND"
+      ? "vj_setlist_not_found"
+      : "vj_server_error";
+  }
+};
 
 /** How often offline screens older than the retention are dropped. */
 const VJ_DEMO_PRUNE_INTERVAL_MS = 60_000;
@@ -100,6 +123,8 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
   stop(): void;
 } {
   const { channel, library } = options;
+  const writeSetlistLooping =
+    options.writeSetlistLooping ?? writeVjDemoSetlistLooping;
   const now = options.now ?? Date.now;
   const serverId = options.serverId ?? createVjDemoUuid();
   const epoch = (options.newEpoch ?? createVjDemoUuid)();
@@ -111,9 +136,9 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
   let pendingScreensUpdate: VjDemoOutgoing | null = null;
   let isStopped = false;
   let lastHeartbeatAt = Number.NEGATIVE_INFINITY;
-  // Contract 7.14: the strobe cap, overlay auto-hide and countdown hold, each
-  // armed for its server time; a fire reduces its stage event, which syncs
-  // the timers again.
+  // Contract 7.14 and sequences 5.7: the strobe cap, overlay auto-hide,
+  // countdown hold and step timer, each armed for its server time; a fire
+  // reduces its stage event, which syncs the timers again.
   const timers = createVjDemoStageTimers(now, (kind) => dispatch({ kind }));
 
   const post = (message: Omit<VjDemoMessage, "direction" | "tabId">) => {
@@ -150,7 +175,11 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
     reply?: { requestId: string; tabId: string },
   ) => {
     if (isStopped) return;
-    const result = reduceVjDemoStage(stage, event, { now: now(), library });
+    const result = reduceVjDemoStage(stage, event, {
+      now: now(),
+      library,
+      writeSetlistLooping,
+    });
     stage = result.stage;
     syncVjDemoAttachedAt(attachedAt, stage.attached, now());
     if (result.ack !== null && reply !== undefined) {
@@ -170,6 +199,10 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
       else postOutgoing(frame);
     }
     timers.sync(stage.state);
+    // A step read that failed tries again later (sequences 5.7).
+    if (result.setlistTimerRetryAt !== undefined) {
+      timers.retry("setlistTimer", result.setlistTimerRetryAt);
+    }
   };
 
   // Live connections in the VJ library: list and stop (vjDemoLive.ts).
@@ -191,6 +224,8 @@ export function startVjDemoServer(options: VjDemoServerOptions): {
       if (screensUpdateTimer !== null) clearTimeout(screensUpdateTimer);
       screensUpdateTimer = null;
       pendingScreensUpdate = null;
+      // A new stageEpoch starts with fresh timers and no fired memory.
+      timers.clear();
       timers.sync(stage.state);
     },
   };

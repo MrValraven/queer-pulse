@@ -1,11 +1,12 @@
 import { AnimatePresence } from "motion/react";
-import { useId, type MouseEvent } from "react";
+import { useId, useState, type MouseEvent } from "react";
 import {
-  FiChevronLeft,
-  FiChevronRight,
+  FiAlertTriangle,
+  FiChevronDown,
+  FiEdit2,
   FiList,
   FiPlay,
-  FiSquare,
+  FiSkipForward,
 } from "react-icons/fi";
 import {
   Button,
@@ -13,173 +14,177 @@ import {
   CollapseListItem,
 } from "../../../../../shared/components/ui";
 import type {
+  VjClipDTO,
   VjSceneDTO,
   VjSetlistDTO,
   VjStageState,
 } from "../../../../../shared/contracts/vj";
+import type { TranslateOptions } from "../../../../../shared/i18n/types";
 import { useTranslation } from "../../../../../shared/i18n/useTranslation";
 import { useVjSetlistMutations } from "../../../api/useVjSetlistMutations";
-import type { VjCommandOutcome } from "../../../live/vjStageCommands";
-import type {
-  VjRun,
-  VjSceneFlashConsentRequest,
-  VjScenesSheetFeedback,
-} from "./VjSceneRow";
+import type { VjRemoteSetlistControls } from "../../page/VjRemoteShell";
+import { isVjSetlistPlayable } from "../../rules/vjSetlistPlayback";
+import type { VjSceneMutations, VjScenesSheetFeedback } from "./VjSceneRow";
+import { VjSetlistActiveControls } from "./VjSetlistActiveControls";
+import { VjSetlistStepsPanel } from "./VjSetlistStepsPanel";
 import styles from "./VjScenesSheet.module.css";
 
-const SETLIST_PENDING_KEY = "setlist";
-
-/** What a set list button needs to ask the flash warning for the scene it lands on. */
-interface VjSetlistFlashCheck {
+/** What every sequence row reads from the sheet. */
+interface VjSetlistRowContext {
+  state: VjStageState;
+  scenes: readonly VjSceneDTO[];
   scenesById: ReadonlyMap<string, VjSceneDTO>;
-  requestSceneFlashConsent: VjSceneFlashConsentRequest;
+  clipsById: ReadonlyMap<string, VjClipDTO>;
+  controls: VjRemoteSetlistControls;
+  activePackId: string | null;
+  createScene: VjSceneMutations["createScene"];
+  feedback: VjScenesSheetFeedback;
+}
+
+/** What a press saw: the refusal standing when it happened, if any. */
+interface VjRowPress {
+  standingStamp: object | null;
 }
 
 /**
- * Runs `send` once the scene at `itemIndex` may play: through the flash
- * warning when its look flashes, at once otherwise. A scene the library has
- * not loaded has no look to check, so its send goes straight out and the
- * stage plays what the server holds.
+ * The stage's refusal for a press in this row: only one newer than the
+ * press (its stamp differs from the one standing at the press), so a
+ * refusal already on the status line never shows under a fresh tap, and
+ * a landed command, which clears the stamp, folds it away.
  */
-function sendVjSetlistStep(
-  setlist: VjSetlistDTO,
-  itemIndex: number,
-  flashCheck: VjSetlistFlashCheck,
-  anchor: HTMLElement,
-  send: () => void,
-): void {
-  const sceneId = setlist.items[itemIndex]?.sceneId;
-  const scene =
-    sceneId === undefined ? undefined : flashCheck.scenesById.get(sceneId);
-  if (scene === undefined) {
-    send();
-    return;
-  }
-  flashCheck.requestSceneFlashConsent(scene, anchor, send);
+function useVjRowRefusal(controls: VjRemoteSetlistControls) {
+  const [press, setPress] = useState<VjRowPress | null>(null);
+  const { errorKey, errorValues, refusalStamp } = controls;
+  const isNewer =
+    press !== null &&
+    refusalStamp !== null &&
+    refusalStamp !== press.standingStamp;
+  return {
+    notePress: () => setPress({ standingStamp: refusalStamp }),
+    errorKey: isNewer ? errorKey : null,
+    errorValues: isNewer && errorValues !== null ? { ...errorValues } : {},
+  };
 }
 
-/** The playing set list's controls: where the show stands, then Previous
- *  scene, Next scene and Stop set list. */
-function VjActiveSetlistControls({
-  setlist,
-  setlistIndex,
-  run,
-  flashCheck,
-  feedback,
+/**
+ * The row's refusal line. It carries no live role: the dock's status line
+ * already announces the same refusal, so a screen reader hears it once.
+ * It keeps the last words while it folds away.
+ */
+function VjSetlistRefusalLine({
+  errorKey,
+  values,
 }: {
-  setlist: VjSetlistDTO;
-  setlistIndex: number | null;
-  run: VjRun;
-  flashCheck: VjSetlistFlashCheck;
-  feedback: VjScenesSheetFeedback;
+  errorKey: string | null;
+  values: TranslateOptions;
 }) {
   const { t } = useTranslation();
-  const isHeld = feedback.isBlocked || feedback.pendingKey !== null;
-  const isBusy = feedback.pendingKey === SETLIST_PENDING_KEY;
-  const itemCount = setlist.items.length;
-  const isAtStart = setlistIndex === null || setlistIndex <= 0;
-  const isAtEnd = setlistIndex !== null && setlistIndex >= itemCount - 1;
-  const send = (
-    isAllowed: boolean,
-    command: () => Promise<VjCommandOutcome>,
-  ) => {
-    if (isHeld || !isAllowed) return;
-    feedback.runCommand(SETLIST_PENDING_KEY, command);
-  };
-  // A step recalls the scene it lands on, so it asks the flash warning first.
-  const sendStep = (
-    isAllowed: boolean,
-    targetIndex: number,
-    anchor: HTMLElement,
-    command: () => Promise<VjCommandOutcome>,
-  ) => {
-    if (isHeld || !isAllowed) return;
-    sendVjSetlistStep(setlist, targetIndex, flashCheck, anchor, () =>
-      feedback.runCommand(SETLIST_PENDING_KEY, command),
-    );
-  };
+  const [shown, setShown] = useState({ errorKey, values });
+  if (errorKey !== null && errorKey !== shown.errorKey) {
+    setShown({ errorKey, values });
+  }
+  return (
+    <Collapse isOpen={errorKey !== null}>
+      <p className={styles.rowRefusal} data-vj-setlist-refusal="">
+        <FiAlertTriangle
+          aria-hidden
+          fill="none"
+          className={styles.rowRefusalIcon}
+        />
+        <span>
+          {shown.errorKey === null ? "" : t(shown.errorKey, shown.values)}
+        </span>
+      </p>
+    </Collapse>
+  );
+}
 
+/**
+ * Play sequence and Step through for a sequence that rests; an empty one
+ * holds both and says why. Each keeps its visible words as its name and
+ * takes the sequence's name as its description.
+ */
+function VjSetlistRestingControls({
+  setlist,
+  nameId,
+  context,
+  onPress,
+}: {
+  setlist: VjSetlistDTO;
+  nameId: string;
+  context: VjSetlistRowContext;
+  onPress: () => void;
+}) {
+  const { t } = useTranslation();
+  const emptyReasonId = useId();
+  const { actions, isCommandPending } = context.controls;
+  const isPlayable = isVjSetlistPlayable(setlist);
+  const isPending =
+    isCommandPending("setlistSelect") || isCommandPending("setlistSetPlaying");
+  const isHeld = context.feedback.isBlocked || isPending || !isPlayable;
+  const describedBy = isPlayable ? nameId : `${nameId} ${emptyReasonId}`;
+  const press =
+    (send: (anchor: HTMLElement) => void) =>
+    (event: MouseEvent<HTMLButtonElement>) => {
+      if (isHeld) return;
+      onPress();
+      send(event.currentTarget);
+    };
   return (
     <div className={styles.setlistControls}>
-      <p className={styles.setlistPosition}>
-        {setlistIndex === null
-          ? t("vj:scenes.setlistCount", { count: itemCount })
-          : t("vj:strip.setlistPosition", {
-              position: setlistIndex + 1,
-              total: itemCount,
-            })}
-      </p>
       <div className={styles.stepButtons}>
-        <Button
-          variant="stage-ghost"
-          size="sm"
-          aria-disabled={isHeld || isAtStart || undefined}
-          aria-busy={isBusy || undefined}
-          onClick={(event: MouseEvent<HTMLButtonElement>) =>
-            sendStep(
-              !isAtStart,
-              (setlistIndex ?? 0) - 1,
-              event.currentTarget,
-              () => run("setlistPrevious"),
-            )
-          }
-        >
-          <FiChevronLeft aria-hidden fill="none" />
-          {t("vj:strip.setlistPrevious")}
-        </Button>
         <Button
           variant="stage"
           size="sm"
-          aria-disabled={isHeld || isAtEnd || undefined}
-          aria-busy={isBusy || undefined}
-          onClick={(event: MouseEvent<HTMLButtonElement>) =>
-            sendStep(
-              !isAtEnd,
-              setlistIndex === null ? 0 : setlistIndex + 1,
-              event.currentTarget,
-              () => run("setlistNext"),
-            )
-          }
+          aria-describedby={describedBy}
+          aria-disabled={isHeld || undefined}
+          onClick={press((anchor) => actions.setlist.play(setlist.id, anchor))}
         >
-          {t("vj:strip.setlistNext")}
-          <FiChevronRight aria-hidden fill="none" />
+          <FiPlay aria-hidden fill="none" />
+          {t("vj:scenes.playSetlist")}
+        </Button>
+        <Button
+          variant="stage-ghost"
+          size="sm"
+          aria-describedby={describedBy}
+          aria-disabled={isHeld || undefined}
+          onClick={press((anchor) =>
+            actions.setlist.stepThrough(setlist.id, anchor),
+          )}
+        >
+          <FiSkipForward aria-hidden fill="none" />
+          {t("vj:scenes.startSetlist")}
         </Button>
       </div>
-      <Button
-        variant="stage-ghost"
-        size="sm"
-        aria-disabled={isHeld || undefined}
-        onClick={() => send(true, () => run("setlistSelect", null, null))}
-      >
-        <FiSquare aria-hidden fill="none" />
-        {t("vj:scenes.stopSetlist")}
-      </Button>
+      <Collapse isOpen={!isPlayable}>
+        <p id={emptyReasonId} className={styles.empty}>
+          {t("vj:scenes.setlistEmptyReason")}
+        </p>
+      </Collapse>
     </div>
   );
 }
 
-/** One set list: its name and scene count, Start set list while it rests,
- *  and the step controls folding open once it plays. */
+/**
+ * One sequence: its name and step count; Play sequence and Step through
+ * while it rests, the active controls once it is on stage; Edit steps folds
+ * the steps panel open under it. The stage's refusal for a press here shows
+ * in the row itself, beside the control that was pressed.
+ */
 function VjSetlistRow({
   setlist,
-  isActive,
-  setlistIndex,
-  run,
-  flashCheck,
-  feedback,
+  context,
 }: {
   setlist: VjSetlistDTO;
-  isActive: boolean;
-  setlistIndex: number | null;
-  run: VjRun;
-  flashCheck: VjSetlistFlashCheck;
-  feedback: VjScenesSheetFeedback;
+  context: VjSetlistRowContext;
 }) {
   const { t } = useTranslation();
   const nameId = useId();
-  const isEmpty = setlist.items.length === 0;
-  const isStartHeld =
-    feedback.isBlocked || feedback.pendingKey !== null || isEmpty;
+  const stepsPanelId = useId();
+  const [isEditing, setIsEditing] = useState(false);
+  const refusal = useVjRowRefusal(context.controls);
+  const { state } = context;
+  const isActive = state.activeSetlistId === setlist.id;
 
   return (
     <div
@@ -191,39 +196,63 @@ function VjSetlistRow({
         <p id={nameId} className={styles.rowName}>
           {setlist.name}
         </p>
-        <p className={styles.rowMeta}>
-          {t("vj:scenes.setlistCount", { count: setlist.items.length })}
-        </p>
+        {/* On stage the position line says the count, so it folds away. */}
+        <Collapse isOpen={!isActive}>
+          <p className={styles.rowMeta}>
+            {t("vj:scenes.setlistCount", { count: setlist.items.length })}
+          </p>
+        </Collapse>
       </div>
       <Collapse isOpen={!isActive}>
-        <Button
-          variant="stage-ghost"
-          size="sm"
-          className={styles.wideButton}
-          aria-describedby={nameId}
-          aria-disabled={isStartHeld || undefined}
-          onClick={(event: MouseEvent<HTMLButtonElement>) => {
-            if (isStartHeld) return;
-            // Starting recalls item 0, so its scene's look is the one to check.
-            sendVjSetlistStep(setlist, 0, flashCheck, event.currentTarget, () =>
-              feedback.runCommand(SETLIST_PENDING_KEY, () =>
-                run("setlistSelect", setlist.id, 0),
-              ),
-            );
-          }}
-        >
-          <FiPlay aria-hidden fill="none" />
-          {t("vj:scenes.startSetlist")}
-        </Button>
+        <VjSetlistRestingControls
+          setlist={setlist}
+          nameId={nameId}
+          context={context}
+          onPress={refusal.notePress}
+        />
       </Collapse>
       <Collapse isOpen={isActive}>
-        <VjActiveSetlistControls
+        <VjSetlistActiveControls
           setlist={setlist}
-          setlistIndex={setlistIndex}
-          run={run}
-          flashCheck={flashCheck}
-          feedback={feedback}
+          state={state}
+          scenesById={context.scenesById}
+          clipsById={context.clipsById}
+          controls={context.controls}
+          isBlocked={context.feedback.isBlocked}
+          onPress={refusal.notePress}
         />
+      </Collapse>
+      <VjSetlistRefusalLine
+        errorKey={refusal.errorKey}
+        values={refusal.errorValues}
+      />
+      <Button
+        variant="stage-ghost"
+        size="sm"
+        className={styles.wideButton}
+        aria-describedby={nameId}
+        aria-expanded={isEditing}
+        aria-controls={isEditing ? stepsPanelId : undefined}
+        onClick={() => setIsEditing((wasEditing) => !wasEditing)}
+      >
+        <FiEdit2 aria-hidden fill="none" />
+        {t("vj:scenes.editSteps")}
+        <FiChevronDown aria-hidden fill="none" className={styles.editChevron} />
+      </Button>
+      <Collapse isOpen={isEditing}>
+        <div id={stepsPanelId}>
+          <VjSetlistStepsPanel
+            setlist={setlist}
+            state={state}
+            scenes={context.scenes}
+            scenesById={context.scenesById}
+            clipsById={context.clipsById}
+            activePackId={context.activePackId}
+            createScene={context.createScene}
+            announce={context.feedback.announce}
+            onClose={() => setIsEditing(false)}
+          />
+        </div>
       </Collapse>
     </div>
   );
@@ -234,42 +263,55 @@ export interface VjSetlistSectionProps {
   state: VjStageState;
   /** The scenes the sheet shows (this pack's, then any pack's), in order. */
   sceneIdsForNewSetlist: readonly string[];
-  /** "Set list 3": the next default name no set list holds yet. */
+  /** "Sequence 3": the next default name no sequence holds yet. */
   nextSetlistName: string;
-  /** Every scene the library holds, by id: a set list step checks its look. */
+  /** Every scene the library holds: step names, and the names Add live look must not take. */
+  scenes: readonly VjSceneDTO[];
   scenesById: ReadonlyMap<string, VjSceneDTO>;
-  run: VjRun;
-  /** Asks the flash warning first for a look that flashes. */
-  requestSceneFlashConsent: VjSceneFlashConsentRequest;
+  /** Every clip the remote knows, by id: a clip step's title. */
+  clipsById: ReadonlyMap<string, VjClipDTO>;
+  controls: VjRemoteSetlistControls;
+  activePackId: string | null;
+  createScene: VjSceneMutations["createScene"];
   feedback: VjScenesSheetFeedback;
 }
 
 /**
- * The set lists: each one with its scene count and Start set list; the one
- * playing shows its position with Previous scene, Next scene and Stop set
- * list. Starting or stepping onto a scene whose look flashes asks the flash
- * warning first. Make a set list from these scenes posts the sheet's scenes
- * in order.
+ * The sequences: each with its step count, Play sequence, Step through and
+ * Edit steps; the one on stage shows its position, why it paused, the play
+ * button, the steps, Loop and Stop sequence. Every play and step goes
+ * through the remote's sequence actions, so a flashing step asks the flash
+ * warning first. Make a sequence from these scenes posts the sheet's
+ * scenes in order.
  */
 export function VjSetlistSection({
   setlists,
   state,
   sceneIdsForNewSetlist,
   nextSetlistName,
+  scenes,
   scenesById,
-  run,
-  requestSceneFlashConsent,
+  clipsById,
+  controls,
+  activePackId,
+  createScene,
   feedback,
 }: VjSetlistSectionProps) {
   const { t } = useTranslation();
-  const flashCheck: VjSetlistFlashCheck = {
-    scenesById,
-    requestSceneFlashConsent,
-  };
   const headingId = useId();
   const { createSetlist } = useVjSetlistMutations();
   const isMakeHeld =
     createSetlist.isPending || sceneIdsForNewSetlist.length === 0;
+  const rowContext: VjSetlistRowContext = {
+    state,
+    scenes,
+    scenesById,
+    clipsById,
+    controls,
+    activePackId,
+    createScene,
+    feedback,
+  };
 
   const makeSetlist = () => {
     if (isMakeHeld) return;
@@ -298,14 +340,7 @@ export function VjSetlistSection({
         <AnimatePresence initial={false}>
           {setlists.map((setlist) => (
             <CollapseListItem key={setlist.id}>
-              <VjSetlistRow
-                setlist={setlist}
-                isActive={state.activeSetlistId === setlist.id}
-                setlistIndex={state.setlistIndex}
-                run={run}
-                flashCheck={flashCheck}
-                feedback={feedback}
-              />
+              <VjSetlistRow setlist={setlist} context={rowContext} />
             </CollapseListItem>
           ))}
         </AnimatePresence>

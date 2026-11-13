@@ -32,8 +32,8 @@ function demoLibrary(): VjDemoLibraryLookup {
       new Set(clipIds.filter((clipId) => clipIdsInPack.has(clipId))),
     readPackClipForAdvance: () => ({ isFavorite: false }),
     readSceneLook: () => null,
-    readSetlistItem: () => null,
-    setlistItemCount: () => null,
+    readSetlist: () => null,
+    readSetlistFollow: () => null,
   };
 }
 

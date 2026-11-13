@@ -91,7 +91,9 @@ describe("StudioBuyAmountField", () => {
     expect(input).toHaveValue("2,50");
     expect(input).toHaveAttribute("aria-invalid", "true");
     expect(
-      screen.getByText("O valor está abaixo do mínimo definido"),
+      screen.getByText(
+        "O valor está abaixo do mínimo que a pessoa artista definiu",
+      ),
     ).toBeInTheDocument();
   });
 });

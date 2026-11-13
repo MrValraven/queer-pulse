@@ -5,7 +5,8 @@
 // goClip, goGenerator), vj-look-rules.ts (setTransition, setOverlay),
 // vj-effects-rules.ts (setStrobe) and readVjImmediateFlag of vj-rule-kit.ts,
 // in the same check order (backend plan note 19): the field rules,
-// isImmediate, then the library reads.
+// isImmediate, then the library reads. The manual picks take a running
+// sequence over as stage/vj-command-rules.ts does (sequences contract 5.4).
 
 import {
   VJ_COLOR_TOKENS,
@@ -14,7 +15,11 @@ import {
   VJ_OVERLAY_STYLES,
   VJ_TRANSITION_IDS,
   isSameVjStageContent,
+  vjSetlistTakeoverState,
   type VjOverlay,
+  type VjSetlistClockStamp,
+  type VjSetlistPlaybackStatus,
+  type VjSetlistRead,
   type VjSocketErrorCode,
   type VjStageState,
   type VjTransition,
@@ -41,6 +46,10 @@ import {
   applySetlistNext,
   applySetlistPrevious,
   applySetlistSelect,
+  applySetlistSetLooping,
+  applySetlistSetPlaying,
+  type VjDemoSetlistCommandContext,
+  type VjDemoSetlistOutcome,
 } from "./vjDemoSceneCommands";
 import {
   applySetCountdown,
@@ -73,6 +82,10 @@ export type VjStageCommandResult =
       stamps: VjDemoStamps;
       isLookSwitch: boolean;
       isImmediate: boolean;
+      /** The clock the landing stamps (sequences contract 3.5). */
+      setlistClock: VjSetlistClockStamp;
+      /** The set list reads the rule made, for the stage's setlistItemIds. */
+      setlistReads: readonly (VjSetlistRead | null)[];
     }
   | { error: VjSocketErrorCode };
 
@@ -362,8 +375,8 @@ export function applySetStrobe(
 type VjDemoCommandRule = (
   state: VjStageState,
   record: Record<string, unknown>,
-  context: VjDemoCommandContext,
-) => VjDemoCommandOutcome;
+  context: VjDemoSetlistCommandContext,
+) => VjDemoSetlistOutcome;
 
 /** Every stamped command (contract 9.3) to its rule. */
 export const VJ_DEMO_COMMAND_RULES: Readonly<
@@ -388,33 +401,85 @@ export const VJ_DEMO_COMMAND_RULES: Readonly<
     applySetlistNext(state, context, record),
   "stage:setlistPrevious": (state, record, context) =>
     applySetlistPrevious(state, context, record),
+  "stage:setlistSetPlaying": applySetlistSetPlaying,
+  "stage:setlistSetLooping": applySetlistSetLooping,
   "stage:setCountdown": applySetCountdown,
   "stage:setLogo": applySetLogo,
   "stage:setEventCard": applySetEventCard,
 };
 
-/** C 7.4 step 2: scene recalls and set list steps land on the grid, and a set
- *  list select only when it recalls an item (a non-null index). */
-export function isVjDemoLookSwitch(
-  name: VjCommandFrameName,
-  record: Record<string, unknown>,
-): boolean {
-  if (name === "stage:setlistSelect") {
-    return record.index !== null && record.index !== undefined;
-  }
-  return (
-    name === "stage:recallScene" ||
-    name === "stage:setlistNext" ||
-    name === "stage:setlistPrevious"
-  );
+/** C 7.4 step 2 for a rule that does not say: a scene recall lands on the
+ *  grid. Every set list rule answers its own flag (sequences contract 5.3:
+ *  a transition that shows a step is a look switch). */
+export function isVjDemoLookSwitch(name: VjCommandFrameName): boolean {
+  return name === "stage:recallScene";
 }
 
-/** C 7.5 and 7.6 rules for one stamped command; the result is unsettled (T16 settles it). */
+/** The manual picks that take a running sequence over (sequences contract
+ *  5.4, design 13.1): a clip, a generator, a pack, the mix swap, a scene
+ *  recalled outside the sequence and shuffle turned on. */
+export const VJ_DEMO_SETLIST_TAKEOVER_COMMANDS: readonly VjCommandFrameName[] =
+  [
+    "stage:setPack",
+    "stage:goClip",
+    "stage:goGenerator",
+    "stage:swapMix",
+    "stage:recallScene",
+    "stage:setShuffle",
+  ];
+
+/** The statuses a manual pick takes over; manual, takenOver and finished never change. */
+const VJ_DEMO_TAKEOVER_STATUSES: readonly VjSetlistPlaybackStatus[] = [
+  "playing",
+  "paused",
+  "needsFlashConsent",
+];
+
+/** A scene recalled by hand takes the sequence over whatever it changes
+ *  (design 13.1), a look with no source included. Index, itemId,
+ *  isFlashConfirmed and isLooping are kept; every clock field is cleared. */
+function vjDemoSceneTakeoverState(next: VjStageState): VjStageState {
+  if (!VJ_DEMO_TAKEOVER_STATUSES.includes(next.setlistPlayback.status)) {
+    return next;
+  }
+  return {
+    ...next,
+    setlistPlayback: {
+      ...next.setlistPlayback,
+      status: "takenOver",
+      stepStartedAt: null,
+      stepEndsAt: null,
+      stepDurationMs: null,
+      pausedRemainingMs: null,
+    },
+  };
+}
+
+/** A takeover command's accepted state with the sequence taken over
+ *  (backend withVjSetlistTakeover): `stage:recallScene` always takes a
+ *  playing, paused or needsFlashConsent sequence over; the other five go
+ *  through vjSetlistTakeoverState (the live source moved, or shuffle went
+ *  from off to on). Other commands come back as they are. */
+export function withVjDemoSetlistTakeover(
+  name: VjCommandFrameName,
+  previous: VjStageState,
+  next: VjStageState,
+): VjStageState {
+  if (!VJ_DEMO_SETLIST_TAKEOVER_COMMANDS.includes(name)) return next;
+  return name === "stage:recallScene"
+    ? vjDemoSceneTakeoverState(next)
+    : vjSetlistTakeoverState(previous, next);
+}
+
+/** C 7.5 and 7.6 rules for one stamped command, the sequence takeover
+ *  applied; the result is unsettled (the landing settles it). A change that
+ *  stamps the set list clock skips the early noop compare, so the landing
+ *  compares the stamped state as the backend does. */
 export function applyVjStageCommand(
   state: VjStageState,
   name: VjCommandFrameName,
   payload: unknown,
-  context: VjDemoCommandContext,
+  context: VjDemoSetlistCommandContext,
 ): VjStageCommandResult {
   const record = readVjRecord(payload);
   const outcome = VJ_DEMO_COMMAND_RULES[name](state, record, context);
@@ -422,21 +487,33 @@ export function applyVjStageCommand(
   // Plan call 4: isImmediate is checked after the command's own rules.
   const immediate = readVjImmediateFlag(name, record);
   if ("error" in immediate) return immediate;
-  const isLookSwitch = isVjDemoLookSwitch(name, record);
-  if (!outcome.isAlwaysChange && isSameVjStageContent(outcome.next, state)) {
+  const next = withVjDemoSetlistTakeover(name, state, outcome.next);
+  const isLookSwitch = outcome.isLookSwitch ?? isVjDemoLookSwitch(name);
+  const setlistClock = outcome.setlistClock ?? { kind: "keep" };
+  const setlistReads = outcome.setlistReads ?? [];
+  const isClockKept = setlistClock.kind === "keep";
+  if (
+    isClockKept &&
+    !outcome.isAlwaysChange &&
+    isSameVjStageContent(next, state)
+  ) {
     return {
       state,
       isNoop: true,
       stamps: NO_VJ_DEMO_STAMPS,
       isLookSwitch,
       isImmediate: immediate.isImmediate,
+      setlistClock,
+      setlistReads,
     };
   }
   return {
-    state: outcome.next,
+    state: next,
     isNoop: false,
     stamps: outcome.stamps,
     isLookSwitch,
     isImmediate: immediate.isImmediate,
+    setlistClock,
+    setlistReads,
   };
 }

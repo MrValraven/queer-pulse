@@ -71,12 +71,29 @@
   white-space: pre-line;
 }
 
+/* Follow and the page link share one row: Follow keeps its width, the
+   link takes the rest and ellipsizes a label too long for the rail. */
 .actions {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin-top: 8px;
+}
+
+.actions > * {
+  flex-shrink: 0;
+}
+
+.actions > .openLink {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding-inline: 12px;
+}
+
+.openLinkLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* The skeleton's rows take the line box of the type they stand in for

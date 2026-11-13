@@ -166,6 +166,7 @@ function restoreAt(revision: number): VjStageRestore {
     shuffle: state.shuffle,
     activeSetlistId: state.activeSetlistId,
     setlistIndex: state.setlistIndex,
+    setlistPlayback: state.setlistPlayback,
   };
 }
 

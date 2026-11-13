@@ -205,6 +205,16 @@ export function canonicalVjStageState(state: VjStageState): VjStageState {
     screenOverrides: canonicalVjScreenOverrides(state.screenOverrides),
     activeSetlistId: lowercaseVjId(state.activeSetlistId),
     setlistIndex: state.setlistIndex,
+    setlistPlayback: {
+      status: state.setlistPlayback.status,
+      itemId: lowercaseVjId(state.setlistPlayback.itemId),
+      isFlashConfirmed: state.setlistPlayback.isFlashConfirmed,
+      stepStartedAt: state.setlistPlayback.stepStartedAt,
+      stepEndsAt: state.setlistPlayback.stepEndsAt,
+      stepDurationMs: state.setlistPlayback.stepDurationMs,
+      pausedRemainingMs: state.setlistPlayback.pausedRemainingMs,
+      isLooping: state.setlistPlayback.isLooping,
+    },
     updatedAt: state.updatedAt,
   };
 }

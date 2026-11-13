@@ -66,6 +66,19 @@ export interface VjImmediateOption {
   isImmediate?: boolean;
 }
 
+/** stage:setlistSelect extras (sequences 5.1): isPlaying starts the clock on
+ *  the picked step; isFlashConfirmed records the flash warning consent. */
+export interface VjSetlistSelectOptions {
+  isPlaying?: boolean;
+  isFlashConfirmed?: boolean;
+}
+
+/** stage:setlistNext and stage:setlistPrevious extras: isFlashConfirmed
+ *  records the flash warning consent for the step the tap lands. */
+export interface VjSetlistStepOptions {
+  isFlashConfirmed?: boolean;
+}
+
 export interface VjStageCommands {
   setPack(packId: string | null): Promise<VjCommandOutcome>;
   goClip(clipId: string | null): Promise<VjCommandOutcome>;
@@ -100,12 +113,23 @@ export interface VjStageCommands {
   ): Promise<VjCommandOutcome>;
   resetLook(options?: VjImmediateOption): Promise<VjCommandOutcome>;
   recallScene(sceneId: string): Promise<VjCommandOutcome>;
+  /** Each option travels only when given. */
   setlistSelect(
     setlistId: string | null,
     index: number | null,
+    options?: VjSetlistSelectOptions,
   ): Promise<VjCommandOutcome>;
-  setlistNext(): Promise<VjCommandOutcome>;
-  setlistPrevious(): Promise<VjCommandOutcome>;
+  /** isFlashConfirmed travels only when given. */
+  setlistNext(options?: VjSetlistStepOptions): Promise<VjCommandOutcome>;
+  /** isFlashConfirmed travels only when given. */
+  setlistPrevious(options?: VjSetlistStepOptions): Promise<VjCommandOutcome>;
+  /** Play, Pause, Resume and Play again; isFlashConfirmed travels only when given. */
+  setlistSetPlaying(
+    isPlaying: boolean,
+    isFlashConfirmed?: boolean,
+  ): Promise<VjCommandOutcome>;
+  /** Saves Loop on the active set list. */
+  setlistSetLooping(isLooping: boolean): Promise<VjCommandOutcome>;
   setCountdown(
     patch: VjCommandPatch<"stage:setCountdown">,
   ): Promise<VjCommandOutcome>;
@@ -395,17 +419,43 @@ function scalarCommandsOf(
       run("stage:recallScene", (stamp) =>
         transport.send("stage:recallScene", { sceneId, ...stamp }),
       ),
-    setlistSelect: (setlistId, index) =>
+    setlistSelect: (setlistId, index, options) =>
       run("stage:setlistSelect", (stamp) =>
-        transport.send("stage:setlistSelect", { setlistId, index, ...stamp }),
+        transport.send("stage:setlistSelect", {
+          setlistId,
+          index,
+          ...definedFieldsOf({
+            isPlaying: options?.isPlaying,
+            isFlashConfirmed: options?.isFlashConfirmed,
+          }),
+          ...stamp,
+        }),
       ),
-    setlistNext: () =>
+    setlistNext: (options) =>
       run("stage:setlistNext", (stamp) =>
-        transport.send("stage:setlistNext", stamp),
+        transport.send("stage:setlistNext", {
+          ...definedFieldsOf({ isFlashConfirmed: options?.isFlashConfirmed }),
+          ...stamp,
+        }),
       ),
-    setlistPrevious: () =>
+    setlistPrevious: (options) =>
       run("stage:setlistPrevious", (stamp) =>
-        transport.send("stage:setlistPrevious", stamp),
+        transport.send("stage:setlistPrevious", {
+          ...definedFieldsOf({ isFlashConfirmed: options?.isFlashConfirmed }),
+          ...stamp,
+        }),
+      ),
+    setlistSetPlaying: (isPlaying, isFlashConfirmed) =>
+      run("stage:setlistSetPlaying", (stamp) =>
+        transport.send("stage:setlistSetPlaying", {
+          isPlaying,
+          ...(isFlashConfirmed === undefined ? {} : { isFlashConfirmed }),
+          ...stamp,
+        }),
+      ),
+    setlistSetLooping: (isLooping) =>
+      run("stage:setlistSetLooping", (stamp) =>
+        transport.send("stage:setlistSetLooping", { isLooping, ...stamp }),
       ),
   };
 }

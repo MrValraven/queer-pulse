@@ -1,5 +1,6 @@
 import {
   upgradeVjStageFieldsV1,
+  upgradeVjStageFieldsV2,
   type VjClipDTO,
   type VjPackDTO,
 } from "../../../shared/contracts/vj";
@@ -74,7 +75,8 @@ function upgradeVjLiveClipV1(value: unknown): VjClipDTO | null | undefined {
  * A parsed v1 record as a v2 record, or null when any part is unreadable.
  * The state goes through `upgradeVjStageFieldsV1` with `savedAt` as now,
  * so the fresh tempo's downbeat and a live clip's `liveSince` sit at the
- * moment the look was saved.
+ * moment the look was saved, then through `upgradeVjStageFieldsV2`, which
+ * fills the default setlistPlayback.
  */
 export function upgradeVjScreenRecordV1(value: unknown): VjScreenRecord | null {
   if (
@@ -85,7 +87,9 @@ export function upgradeVjScreenRecordV1(value: unknown): VjScreenRecord | null {
     return null;
   }
   const savedAt = value.savedAt;
-  const state = upgradeVjStageFieldsV1(value.state, savedAt);
+  const state = upgradeVjStageFieldsV2(
+    upgradeVjStageFieldsV1(value.state, savedAt),
+  );
   const pack = value.pack === null ? null : upgradeVjPackV1(value.pack);
   const clips = upgradeVjClipListV1(value.clips);
   const liveClip = upgradeVjLiveClipV1(value.liveClip);

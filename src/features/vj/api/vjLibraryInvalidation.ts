@@ -41,7 +41,8 @@ function targetsOfChange(change: VjLibraryChange): VjInvalidationTarget[] {
     case "pack_clips_changed":
       return packClipsTargetsOf(change);
     // The other v1 kinds read the whole library again; `root` also covers the
-    // scenes a clip delete may have rewritten (contract 9.3).
+    // scenes a clip delete may have rewritten (contract 9.3) and the set lists
+    // whose clip steps it removed (sequences contract 4.6, `setlistIds`).
     case "pack_created":
     case "pack_renamed":
     case "pack_deleted":
@@ -65,14 +66,17 @@ function targetsOfChange(change: VjLibraryChange): VjInvalidationTarget[] {
     // The server drops the scene from every set list that held it.
     case "scene_deleted":
       return [SCENES, SETLISTS];
-    case "setlist_created":
-    case "setlist_renamed":
+    // `setlist_updated` covers every PATCH: name, Loop and the default length.
+    case "setlist_updated":
     case "setlists_reordered":
       return [SETLISTS];
-    // Scenes carry `setlistItemCount`, which these two change (library call 15).
+    // Scenes and clips carry `setlistItemCount`, which these change (library
+    // call 15, sequences contract 4.6); a pack's clip list shows the clip
+    // count too. A create may hold steps, so it counts here as well.
+    case "setlist_created":
     case "setlist_items_changed":
     case "setlist_deleted":
-      return [SETLISTS, SCENES];
+      return [SETLISTS, SCENES, CLIPS, PACK_CLIPS_ROOT];
     default: {
       const unhandledKind: never = kind;
       throw new Error(

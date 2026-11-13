@@ -56,6 +56,11 @@ export const VJ_REFUSAL_CODES = [
   "VJ_SETLIST_REORDER_MISMATCH",
   "VJ_SETLIST_ITEMS_INVALID",
   "VJ_SETLIST_FULL",
+  "VJ_SETLIST_STEP_INVALID",
+  "VJ_SETLIST_STEP_DURATION_INVALID",
+  "VJ_SETLIST_ITEM_NOT_FOUND",
+  "VJ_SETLIST_LOOP_INVALID",
+  "VJ_SETLIST_PATCH_EMPTY",
   "VJ_CONNECTION_NOT_FOUND",
   "VJ_CONNECTION_NOT_YOURS",
 ] as const;
@@ -171,5 +176,6 @@ export const VJ_SOCKET_ERROR_CODES = [
   "vj_stopped",
   "vj_render_mode_invalid",
   "vj_no_screens_connected",
+  "vj_setlist_flash_unconfirmed",
 ] as const;
 export type VjSocketErrorCode = (typeof VJ_SOCKET_ERROR_CODES)[number];

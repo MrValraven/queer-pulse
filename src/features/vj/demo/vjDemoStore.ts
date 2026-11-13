@@ -8,7 +8,10 @@
  * stage reads (contract 7.7).
  */
 import {
+  DEFAULT_VJ_STEP_DURATION,
   VJ_LIMITS,
+  isVjStepDuration,
+  vjResolvedStepDuration,
   type VjClipDTO,
   type VjClipListDTO,
   type VjClipMimeType,
@@ -18,7 +21,11 @@ import {
   type VjPackDeletedDTO,
   type VjPackListDTO,
   type VjPackMediaDTO,
-  type VjSceneLook,
+  type VjSetlistFollowRead,
+  type VjSetlistRead,
+  type VjSetlistReadPosition,
+  type VjSetlistStepRead,
+  type VjStepDuration,
 } from "../../../shared/contracts/vj";
 import { createVjDemoUuid } from "./vjDemoChannel";
 import type { VjDemoLibraryLookup } from "./vjDemoCommandKit";
@@ -47,6 +54,8 @@ import {
   type StoredVjDemoClip as StoredClip,
   type StoredVjDemoLibrary as StoredLibrary,
   type StoredVjDemoPack as StoredPack,
+  type StoredVjDemoSetlist as StoredSetlist,
+  type StoredVjDemoSetlistItem as StoredSetlistItem,
 } from "./vjDemoStorePersistence";
 
 export { configureVjDemoStore } from "./vjDemoStorePersistence";
@@ -272,39 +281,112 @@ function lowercaseUniqueUuids(ids: readonly string[]): string[] {
   return [...new Set(ids.filter(rules.isVjUuid).map((id) => id.toLowerCase()))];
 }
 
-/** Whether a set list index is one the item read can offset by. */
-function isItemIndex(index: number | null): index is number {
-  return index !== null && Number.isSafeInteger(index) && index >= 0;
+/** The set list with this id, compared lowercased; null for a malformed id
+ *  or a miss (no query, as the backend reads answer). */
+function readStoredSetlist(
+  library: StoredLibrary,
+  setlistId: string,
+): StoredSetlist | null {
+  if (!rules.isVjUuid(setlistId)) return null;
+  const wantedId = setlistId.toLowerCase();
+  return library.setlists.find((setlist) => setlist.id === wantedId) ?? null;
 }
 
-/** Set list recall and steps (backend `readSetlistItem`): null when no set
- *  list has the id; a null index answers the count alone; an index answers
- *  the item there with its scene's look, both null past the last item. */
-function readSetlistItem(
-  setlistId: string,
-  index: number | null,
-): {
-  itemCount: number;
-  sceneId: string | null;
-  look: VjSceneLook | null;
-} | null {
-  if (!rules.isVjUuid(setlistId)) return null;
-  const library = loadLibrary();
-  const wantedId = setlistId.toLowerCase();
-  const setlist = library.setlists.find(
-    (candidate) => candidate.id === wantedId,
+/** The index a read position points at (VJ_STAGE_SETLIST_READ_SQL's CASE):
+ *  'count' none; 'index' that step, else step 0 past the end when
+ *  wrapsToFirst; 'last' the final step. Null when no step sits there. An
+ *  index that is no whole number at or above 0 reads no step before any
+ *  wrap, as the backend reads it as 'count' (`vjSetlistReadParameters`). */
+function readIndexOf(
+  position: VjSetlistReadPosition,
+  itemCount: number,
+): number | null {
+  if (position.kind === "count") return null;
+  let index = itemCount - 1;
+  if (position.kind === "index") {
+    const isWholeIndex =
+      Number.isSafeInteger(position.index) && position.index >= 0;
+    if (!isWholeIndex) return null;
+    const isInList = position.index < itemCount;
+    index = isInList ? position.index : position.wrapsToFirst ? 0 : -1;
+  }
+  return Number.isSafeInteger(index) && index >= 0 && index < itemCount
+    ? index
+    : null;
+}
+
+/** One stored step as a read hands it back: ids lowercased, a scene step's
+ *  look through the read normaliser, the length resolved against the
+ *  sequence default (a stored length out of range reads as the default). */
+function toSetlistStepRead(
+  library: StoredLibrary,
+  item: StoredSetlistItem,
+  index: number,
+  sequenceDefault: VjStepDuration,
+): VjSetlistStepRead | null {
+  const duration = vjResolvedStepDuration(
+    isVjStepDuration(item.duration) ? item.duration : null,
+    sequenceDefault,
   );
-  if (setlist === undefined) return null;
-  const itemCount = setlist.items.length;
-  const item = isItemIndex(index) ? setlist.items[index] : undefined;
-  if (item === undefined) return { itemCount, sceneId: null, look: null };
-  const scene = library.scenes.find(
-    (candidate) => candidate.id === item.sceneId,
-  );
+  const itemId = item.id.toLowerCase();
+  if (item.kind === "clip") {
+    if (item.clipId === null) return null;
+    return {
+      kind: "clip",
+      itemId,
+      index,
+      clipId: item.clipId.toLowerCase(),
+      duration,
+    };
+  }
+  if (item.sceneId === null) return null;
+  const sceneId = item.sceneId.toLowerCase();
+  const scene = library.scenes.find((candidate) => candidate.id === sceneId);
   return {
-    itemCount,
-    sceneId: item.sceneId.toLowerCase(),
+    kind: "scene",
+    itemId,
+    index,
+    sceneId,
     look: normalizeStoredVjSceneLook(scene?.look),
+    duration,
+  };
+}
+
+/** Set list recall, steps, the step timer and the restore (backend
+ *  `readSetlist`, sequences contract 5.8): every item id in play order,
+ *  Loop, the default length (DEFAULT_VJ_STEP_DURATION when the stored one
+ *  is out of range) and the step at `position`. */
+function readSetlist(
+  setlistId: string,
+  position: VjSetlistReadPosition,
+): VjSetlistRead | null {
+  const library = loadLibrary();
+  const setlist = readStoredSetlist(library, setlistId);
+  if (setlist === null) return null;
+  const stepDuration = isVjStepDuration(setlist.stepDuration)
+    ? { ...setlist.stepDuration }
+    : { ...DEFAULT_VJ_STEP_DURATION };
+  const index = readIndexOf(position, setlist.items.length);
+  const item = index === null ? undefined : setlist.items[index];
+  return {
+    setlistId: setlist.id,
+    isLooping: setlist.isLooping,
+    stepDuration,
+    itemIds: setlist.items.map((stored) => stored.id.toLowerCase()),
+    step:
+      item === undefined || index === null
+        ? null
+        : toSetlistStepRead(library, item, index, stepDuration),
+  };
+}
+
+/** The follow read after a library change (backend `readSetlistFollow`). */
+function readSetlistFollow(setlistId: string): VjSetlistFollowRead | null {
+  const setlist = readStoredSetlist(loadLibrary(), setlistId);
+  if (setlist === null) return null;
+  return {
+    itemIds: setlist.items.map((stored) => stored.id.toLowerCase()),
+    isLooping: setlist.isLooping,
   };
 }
 
@@ -354,9 +436,8 @@ export const vjDemoLibraryLookup: VjDemoLibraryLookup = {
     );
     return scene === undefined ? null : normalizeStoredVjSceneLook(scene.look);
   },
-  readSetlistItem,
-  setlistItemCount: (setlistId) =>
-    readSetlistItem(setlistId, null)?.itemCount ?? null,
+  readSetlist,
+  readSetlistFollow,
 };
 
 /** Puts the seed back, saves it, and tells every tab the packs changed. The

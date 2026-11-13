@@ -8,10 +8,14 @@ import {
   VJ_CLIP_MIME_TYPES,
   VJ_FIT_MODES,
   VJ_LIMITS,
+  VJ_SETLIST_ITEM_KINDS,
+  isVjStepDuration,
   type VjClipMimeType,
   type VjFitMode,
   type VjMediaKind,
   type VjRefusalCode,
+  type VjSetlistItemKind,
+  type VjStepDuration,
 } from "../../../shared/contracts/vj";
 import { vjRefusal } from "./vjDemoRefusals";
 
@@ -163,11 +167,11 @@ export function isVjUuidList(value: unknown, max: number): value is string[] {
   );
 }
 
-/** A set list's `sceneIds` (backend normalizeSetlistSceneIds): uuid strings,
+/** A create's `sceneIds` (backend normalizeSetlistSceneIds): uuid strings,
  *  lowercased, in order, a repeat kept. Anything but such an array answers
  *  VJ_SETLIST_ITEMS_INVALID; over 100 entries then answers VJ_SETLIST_FULL
  *  with `setlistId` when the set list exists. A create with no `sceneIds`
- *  passes `[]` itself. */
+ *  passes `[]` itself. The PUT reads `items` (normalizeVjSetlistItems). */
 export function normalizeVjSetlistSceneIds(
   value: unknown,
   setlistId: string | null,
@@ -179,6 +183,126 @@ export function normalizeVjSetlistSceneIds(
     throw vjRefusal("VJ_SETLIST_FULL", { setlistId: setlistId ?? undefined });
   }
   return value.map((sceneId) => sceneId.toLowerCase());
+}
+
+/** A step length (a sequence default or a step override), copied to a fresh
+ *  `{ kind, value }` (backend normalizeStepDuration). Answers
+ *  VJ_SETLIST_STEP_DURATION_INVALID for anything isVjStepDuration refuses. */
+export function normalizeVjStepDuration(value: unknown): VjStepDuration {
+  if (!isVjStepDuration(value)) {
+    throw vjRefusal("VJ_SETLIST_STEP_DURATION_INVALID");
+  }
+  return { kind: value.kind, value: value.value };
+}
+
+/** A sequence's Loop switch (backend normalizeSetlistLooping). Answers
+ *  VJ_SETLIST_LOOP_INVALID for a non-boolean. */
+export function normalizeVjSetlistLooping(value: unknown): boolean {
+  if (typeof value !== "boolean") {
+    throw vjRefusal("VJ_SETLIST_LOOP_INVALID");
+  }
+  return value;
+}
+
+/** One step entry, lowercased ids; absent duration reads as null. */
+export interface VjSetlistItemEntry {
+  id: string | null;
+  kind: VjSetlistItemKind;
+  sceneId: string | null;
+  clipId: string | null;
+  duration: VjStepDuration | null;
+}
+
+/** The own keys a step entry may carry. */
+const SETLIST_ITEM_ENTRY_KEYS: ReadonlySet<string> = new Set([
+  "id",
+  "kind",
+  "sceneId",
+  "clipId",
+  "duration",
+]);
+
+/** Whether a value is an object literal as JSON parses it: no array, no
+ *  null, no class instance. */
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+  const prototype: unknown = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+/** A present step `id`, lowercased: a uuid the body has not used yet. An
+ *  `id` sent as null is present, so it answers VJ_SETLIST_STEP_INVALID; only
+ *  a missing `id` asks for a new item. */
+function readEntryItemId(
+  value: Record<string, unknown>,
+  seenItemIds: Set<string>,
+): string | null {
+  if (value.id === undefined) return null;
+  if (!isVjUuid(value.id)) throw vjRefusal("VJ_SETLIST_STEP_INVALID");
+  const itemId = value.id.toLowerCase();
+  if (seenItemIds.has(itemId)) throw vjRefusal("VJ_SETLIST_STEP_INVALID");
+  seenItemIds.add(itemId);
+  return itemId;
+}
+
+/** One step entry with the backend's VJ_SETLIST_STEP_INVALID rules, in
+ *  order: a plain object, only the five keys, a listed kind, the kind's
+ *  target a uuid and the other target absent or null, a present `id` a
+ *  uuid, then an `id` the body already used. The duration comes last and
+ *  answers VJ_SETLIST_STEP_DURATION_INVALID. */
+function normalizeSetlistItemEntry(
+  value: unknown,
+  seenItemIds: Set<string>,
+): VjSetlistItemEntry {
+  if (!isPlainRecord(value)) throw vjRefusal("VJ_SETLIST_STEP_INVALID");
+  if (Object.keys(value).some((key) => !SETLIST_ITEM_ENTRY_KEYS.has(key))) {
+    throw vjRefusal("VJ_SETLIST_STEP_INVALID");
+  }
+  const kind = VJ_SETLIST_ITEM_KINDS.find(
+    (candidate) => candidate === value.kind,
+  );
+  if (kind === undefined) throw vjRefusal("VJ_SETLIST_STEP_INVALID");
+  const isOtherTargetSet =
+    kind === "scene"
+      ? value.clipId !== undefined && value.clipId !== null
+      : value.sceneId !== undefined && value.sceneId !== null;
+  const target = kind === "scene" ? value.sceneId : value.clipId;
+  if (!isVjUuid(target) || isOtherTargetSet) {
+    throw vjRefusal("VJ_SETLIST_STEP_INVALID");
+  }
+  const itemId = readEntryItemId(value, seenItemIds);
+  const duration =
+    value.duration === undefined || value.duration === null
+      ? null
+      : normalizeVjStepDuration(value.duration);
+  const targetId = target.toLowerCase();
+  return {
+    id: itemId,
+    kind,
+    sceneId: kind === "scene" ? targetId : null,
+    clipId: kind === "clip" ? targetId : null,
+    duration,
+  };
+}
+
+/** The `items` of a whole-list write (backend normalizeSetlistItems): not an
+ *  array answers VJ_SETLIST_ITEMS_INVALID; over 100 entries answers
+ *  VJ_SETLIST_FULL with `setlistId` when known; then each entry in list
+ *  order answers VJ_SETLIST_STEP_INVALID or VJ_SETLIST_STEP_DURATION_INVALID.
+ *  Ids come back lowercased; a scene or clip may repeat. */
+export function normalizeVjSetlistItems(
+  value: unknown,
+  setlistId: string | null,
+): VjSetlistItemEntry[] {
+  if (!Array.isArray(value)) throw vjRefusal("VJ_SETLIST_ITEMS_INVALID");
+  const entries = value as unknown[];
+  if (entries.length > VJ_LIMITS.setlistItemsMax) {
+    throw vjRefusal("VJ_SETLIST_FULL", { setlistId: setlistId ?? undefined });
+  }
+  const seenItemIds = new Set<string>();
+  return entries.map((entry) => normalizeSetlistItemEntry(entry, seenItemIds));
 }
 
 /** Whether a reorder list names every expected id exactly once. */

@@ -1,8 +1,8 @@
 /**
  * Seed of the demo VJ library: three packs over the eight generated clips of
- * `vjDemoMedia.data.ts`, two scenes and one set list (C 9.5). Ids are fixed
- * v4-shaped uuids so the shared uuid checks pass; clips follow the
- * generator's slug order. Pack, scene and set list names are English data
+ * `vjDemoMedia.data.ts`, two scenes and one set list of scene and clip steps
+ * (C 9.5, sequences contract 10.5). Ids are fixed v4-shaped uuids so the
+ * shared uuid checks pass; clips follow the generator's slug order. Pack, scene and set list names are English data
  * (user content).
  */
 import type {
@@ -12,6 +12,7 @@ import type {
   VjMix,
   VjSceneLook,
   VjSpeed,
+  VjStepDuration,
 } from "../../../shared/contracts/vj";
 import { VJ_DEMO_EVENT_IDS } from "./vjDemoEvents.data";
 
@@ -44,10 +45,17 @@ export interface VjDemoSceneSeed {
   creator: "marta" | "rafa";
 }
 
+/** One seed step; a null duration plays the sequence default. */
+export type VjDemoSetlistItemSeed =
+  | { kind: "scene"; sceneId: string; duration: VjStepDuration | null }
+  | { kind: "clip"; clipId: string; duration: VjStepDuration | null };
+
 export interface VjDemoSetlistSeed {
   id: string;
   name: string;
-  sceneIds: string[];
+  isLooping: boolean;
+  stepDuration: VjStepDuration;
+  items: VjDemoSetlistItemSeed[];
   creator: "marta" | "rafa";
 }
 
@@ -245,11 +253,24 @@ export const VJ_DEMO_SCENE_SEEDS: readonly VjDemoSceneSeed[] = [
   },
 ];
 
+/** "Friday set" loops on 8 s steps: a scene, a clip, a scene held for 16
+ *  beats, a clip (sequences contract 10.5). */
 export const VJ_DEMO_SETLIST_SEEDS: readonly VjDemoSetlistSeed[] = [
   {
     id: "00000000-0000-4000-8000-0000000000b1",
     name: "Friday set",
-    sceneIds: [WARM_UP_SCENE_ID, PEAK_SCENE_ID],
+    isLooping: true,
+    stepDuration: { kind: "seconds", value: 8 },
+    items: [
+      { kind: "scene", sceneId: WARM_UP_SCENE_ID, duration: null },
+      { kind: "clip", clipId: PINK_TUNNEL_ID, duration: null },
+      {
+        kind: "scene",
+        sceneId: PEAK_SCENE_ID,
+        duration: { kind: "beats", value: 16 },
+      },
+      { kind: "clip", clipId: DISCO_DOTS_ID, duration: null },
+    ],
     creator: "rafa",
   },
 ];

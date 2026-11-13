@@ -35,7 +35,7 @@ describe("StudioOffAirPage in Portuguese", () => {
     ).toBeInTheDocument();
     expect(
       await screen.findByText(
-        "Ambient e composição trans · 90 minutos · legendas ao vivo",
+        "Ambient e pessoas compositoras trans · 90 minutos · legendas ao vivo",
       ),
     ).toBeInTheDocument();
     expect(

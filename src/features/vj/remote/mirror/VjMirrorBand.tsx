@@ -1,6 +1,13 @@
 import type { JSX } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiSkipForward } from "react-icons/fi";
+import type { IconType } from "react-icons";
+import {
+  FiAlertTriangle,
+  FiCheck,
+  FiPause,
+  FiPauseCircle,
+  FiSkipForward,
+} from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import type {
   VjClipDTO,
@@ -28,13 +35,25 @@ import {
   vjMirrorNextCopy,
   vjMirrorPendingOf,
   vjMirrorQuantizeKey,
+  vjMirrorSequenceCopy,
   type VjMirrorLive,
+  type VjMirrorSequenceStatus,
 } from "./vjMirrorStyle";
 import styles from "./VjMirror.module.css";
 
 /** The app's ease token (--ease) at its base duration (--dur-base). */
 const VJ_BAND_MOTION = { duration: 0.25, ease: [0.22, 0.68, 0.16, 1] as const };
 const VJ_BAND_INSTANT = { duration: 0 };
+
+/** The mark that takes the ring's place while a sequence stands still. */
+const VJ_SEQUENCE_STATUS_ICONS: Readonly<
+  Record<VjMirrorSequenceStatus["kind"], IconType>
+> = {
+  paused: FiPause,
+  takenOver: FiPauseCircle,
+  waitingFlash: FiAlertTriangle,
+  finished: FiCheck,
+};
 
 /** The words for a clip, a generator or a black screen on the Live and Next lines. */
 function vjMirrorLiveText(live: VjMirrorLive, t: TFunction): string {
@@ -118,6 +137,113 @@ export interface VjMirrorBandProps {
   isBlocked: boolean;
   /** The status line naming why the controls are blocked, for aria-describedby. */
   blockedReasonId?: string;
+  /**
+   * Why the active sequence stands still (paused, taken over, waiting
+   * before a flashing step, finished); null while it plays, steps by hand
+   * or none is active. The Next line then says so and opens the sequence.
+   */
+  sequenceStatus?: VjMirrorSequenceStatus | null;
+  /** Opens the scenes sheet at the active sequence's row. */
+  onOpenSequence?: () => void;
+}
+
+/**
+ * The Next line while a sequence stands still: its short status as one
+ * button that opens the sequence in the scenes sheet, with a 44px hit area
+ * inside the 20px line.
+ */
+function VjMirrorSequenceLine({
+  status,
+  onOpenSequence,
+  motionTransition,
+}: {
+  status: VjMirrorSequenceStatus;
+  onOpenSequence: () => void;
+  motionTransition: typeof VJ_BAND_MOTION | typeof VJ_BAND_INSTANT;
+}): JSX.Element {
+  const { t } = useTranslation();
+  const helpDescribedBy = useVjHelpDescribedBy();
+  const copy = vjMirrorSequenceCopy(status);
+  const text = t(copy.key, copy.values);
+  return (
+    <p className={styles.line} data-vj-mirror-next="sequence">
+      <AnimatePresence mode="wait" initial={false}>
+        <m.span
+          key={text}
+          className={styles.sequenceSlot}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={motionTransition}
+        >
+          <button
+            type="button"
+            className={styles.sequenceStatus}
+            data-vj-mirror-sequence={status.kind}
+            aria-describedby={helpDescribedBy("nextUp")}
+            onClick={onOpenSequence}
+          >
+            <span className={styles.sequenceText}>{text}</span>
+          </button>
+        </m.span>
+      </AnimatePresence>
+    </p>
+  );
+}
+
+/** The ring's cell: the countdown, or the sequence's status mark while it stands still. */
+function VjMirrorRingCell({
+  ring,
+  sequenceStatus,
+  motionTransition,
+}: {
+  ring: VjMirrorRingValue;
+  sequenceStatus: VjMirrorSequenceStatus | null;
+  motionTransition: typeof VJ_BAND_MOTION | typeof VJ_BAND_INSTANT;
+}): JSX.Element {
+  // A pause keeps its ring, which holds the time left; any other stop shows its mark.
+  const isMarkShown =
+    sequenceStatus !== null &&
+    !(sequenceStatus.kind === "paused" && ring.kind === "setlist");
+  const StatusIcon =
+    sequenceStatus === null
+      ? null
+      : VJ_SEQUENCE_STATUS_ICONS[sequenceStatus.kind];
+  return (
+    <m.div
+      layout="position"
+      transition={{ layout: motionTransition }}
+      className={styles.ringCell}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {isMarkShown && StatusIcon !== null ? (
+          <m.span
+            key={`mark-${sequenceStatus?.kind ?? ""}`}
+            className={styles.sequenceMark}
+            data-kind={sequenceStatus?.kind}
+            aria-hidden="true"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={motionTransition}
+          >
+            <StatusIcon focusable="false" fill="none" />
+          </m.span>
+        ) : (
+          <m.span
+            key="ring"
+            className={styles.ringHolder}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={motionTransition}
+          >
+            <VjMirrorRing ring={ring} />
+          </m.span>
+        )}
+      </AnimatePresence>
+    </m.div>
+  );
 }
 
 /**
@@ -145,6 +271,8 @@ export function VjMirrorBand({
   onSkip,
   isBlocked,
   blockedReasonId,
+  sequenceStatus = null,
+  onOpenSequence,
 }: VjMirrorBandProps): JSX.Element {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -168,6 +296,9 @@ export function VjMirrorBand({
     pending === null
       ? t(nextCopy.key, nextCopy.values)
       : vjMirrorLiveText(pending, t);
+  // A waiting quantized change still names what lands; otherwise a
+  // sequence that stands still says why on the Next line.
+  const isSequenceLineShown = sequenceStatus !== null && pending === null;
   const fadeMotion = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -211,44 +342,52 @@ export function VjMirrorBand({
               </m.span>
             </AnimatePresence>
           </p>
-          <p
-            className={styles.line}
-            data-vj-mirror-next={pending === null ? nextUp.kind : "pending"}
-          >
-            <span className={styles.lineLabel}>{t("vj:mirror.next")}</span>
-            <AnimatePresence initial={false}>
-              {quantizeKey !== null ? (
+          {sequenceStatus !== null &&
+          isSequenceLineShown &&
+          onOpenSequence !== undefined ? (
+            <VjMirrorSequenceLine
+              status={sequenceStatus}
+              onOpenSequence={onOpenSequence}
+              motionTransition={motionTransition}
+            />
+          ) : (
+            <p
+              className={styles.line}
+              data-vj-mirror-next={pending === null ? nextUp.kind : "pending"}
+            >
+              <span className={styles.lineLabel}>{t("vj:mirror.next")}</span>
+              <AnimatePresence initial={false}>
+                {quantizeKey !== null ? (
+                  <m.span
+                    key={quantizeKey}
+                    className={styles.pendingChip}
+                    data-vj-mirror-pending={pendingQuantize}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={motionTransition}
+                  >
+                    {t(quantizeKey)}
+                  </m.span>
+                ) : null}
+              </AnimatePresence>
+              <AnimatePresence mode="wait" initial={false}>
                 <m.span
-                  key={quantizeKey}
-                  className={styles.pendingChip}
-                  data-vj-mirror-pending={pendingQuantize}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={motionTransition}
+                  key={nextText}
+                  className={styles.lineText}
+                  {...fadeMotion}
                 >
-                  {t(quantizeKey)}
+                  {nextText}
                 </m.span>
-              ) : null}
-            </AnimatePresence>
-            <AnimatePresence mode="wait" initial={false}>
-              <m.span
-                key={nextText}
-                className={styles.lineText}
-                {...fadeMotion}
-              >
-                {nextText}
-              </m.span>
-            </AnimatePresence>
-          </p>
+              </AnimatePresence>
+            </p>
+          )}
         </m.div>
-        <m.div
-          layout="position"
-          transition={{ layout: motionTransition }}
-          className={styles.ringCell}
-        >
-          <VjMirrorRing ring={ring} />
-        </m.div>
+        <VjMirrorRingCell
+          ring={ring}
+          sequenceStatus={sequenceStatus}
+          motionTransition={motionTransition}
+        />
         <AnimatePresence initial={false}>
           {canSkip ? (
             <m.div

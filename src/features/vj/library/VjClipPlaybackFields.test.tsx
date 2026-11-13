@@ -51,6 +51,7 @@ function buildClip(overrides: Partial<VjClipDTO> = {}) {
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: null,
+    setlistItemCount: 0,
     ...overrides,
   } satisfies VjClipDTO;
 }

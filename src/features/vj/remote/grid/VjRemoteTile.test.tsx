@@ -41,6 +41,7 @@ const CLIP: VjClipDTO = {
   loopOutMs: null,
   loopMode: "loop",
   previewUrl: "/files/neon-rain-preview.mp4",
+  setlistItemCount: 0,
 };
 
 const READY_STATE: VjTileState = {

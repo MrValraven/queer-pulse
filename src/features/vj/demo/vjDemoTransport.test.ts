@@ -48,8 +48,8 @@ const library: VjDemoLibraryLookup = {
   readPackClipForAdvance: (packId, clipId) =>
     clipsInPack(packId, [clipId]).size > 0 ? { isFavorite: false } : null,
   readSceneLook: () => null,
-  readSetlistItem: () => null,
-  setlistItemCount: () => null,
+  readSetlist: () => null,
+  readSetlistFollow: () => null,
 };
 
 /** A Web Lock stand-in: the first request is granted at once, later ones wait for grantNext. */

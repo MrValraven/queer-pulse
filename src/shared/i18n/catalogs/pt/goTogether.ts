@@ -38,7 +38,7 @@ export const goTogether: Catalog = {
   "questionnaire.humour.h3.a":
     "Já escolhi a playlist do meu funeral. Assim, pelo menos, toda a gente dança.",
   "questionnaire.humour.h3.b":
-    "Vi um cão com uma gabardina minúscula esta manhã. A semana está salva.",
+    "Esta manhã vi um cão com uma gabardina minúscula. Ganhei a semana.",
   // h4 autodepreciativo / observacional
   "questionnaire.humour.h4.a":
     "Tenho tão pouco sentido de orientação que uma vez me perdi na minha própria rua.",
@@ -58,7 +58,7 @@ export const goTogether: Catalog = {
   "questionnaire.humour.h7.a":
     "O que diz uma impressora à outra? Essa folha é tua ou é impressão minha?",
   "questionnaire.humour.h7.b":
-    "Porque é que toda a gente vira especialista em meteorologia mal chove em Lisboa?",
+    "Porque é que toda a gente passa a ser especialista em meteorologia mal chove em Lisboa?",
   // h8 ternurento / autodepreciativo
   "questionnaire.humour.h8.a":
     "A avó da porta ao lado ensinou-me a fazer pão. Agora apresenta-me como aprendiz dela.",
@@ -72,7 +72,7 @@ export const goTogether: Catalog = {
   "questionnaire.interests.family.make": "Fazer e criar",
   "questionnaire.interests.family.learn": "Aprender e conversar",
   "questionnaire.interests.family.watch": "Ver e ouvir",
-  "questionnaire.interests.family.move": "Mexer e ar livre",
+  "questionnaire.interests.family.move": "Movimento e ar livre",
   "questionnaire.interests.family.care": "Cuidar e apoiar",
   "questionnaire.interests.family.organise": "Organizar e agir",
 
@@ -227,24 +227,25 @@ export const goTogether: Catalog = {
   "band.good": "Boa afinidade",
 
   // ── Razões do grupo ───────────────────────────────────────────────────────
-  "reason.interestsEveryone": "Todes vocês escolheram {tags}",
+  "reason.interestsEveryone": "No grupo, toda a gente escolheu {tags}",
   "reason.interestsSome": "{count} de vocês escolheram {tags}",
-  "reason.musicEveryone": "Todes vocês ouvem {tags}",
+  "reason.musicEveryone": "No grupo, toda a gente ouve {tags}",
   "reason.musicSome": "{count} de vocês ouvem {tags}",
   "reason.energy.calm": "Energia parecida: noites calmas e de boa conversa",
   "reason.energy.balanced":
     "Energia parecida: um pouco de conversa, um pouco de dança",
   "reason.energy.lively": "Energia parecida: com vontade de dançar até tarde",
-  "reason.areaEveryone": "Todes vocês vivem na mesma zona: {area}",
+  "reason.areaEveryone": "No grupo, toda a gente vive na mesma zona: {area}",
   "reason.areaSome": "{count} de vocês vivem na mesma zona: {area}",
-  "reason.hostQuestion": "Todes vocês responderam “{option}” a “{prompt}”",
+  "reason.hostQuestion":
+    "No grupo, toda a gente respondeu “{option}” a “{prompt}”",
 
   // ── Quebra-gelos: perguntas leves para o cartão do grupo ──────────────────
   "icebreaker.1": "Qual é a tua forma preferida de passar um domingo?",
   "icebreaker.2": "Que pequena coisa te fez feliz esta semana?",
   "icebreaker.3": "Qual foi a última coisa que aprendeste só por gosto?",
   "icebreaker.4":
-    "Se pudesses dominar uma competência de um dia para o outro, qual seria?",
+    "Se pudesses aprender qualquer coisa na perfeição de um dia para o outro, o que seria?",
   "icebreaker.5": "Que música deixas sempre tocar até ao fim?",
   "icebreaker.6": "Qual foi a melhor coisa que comeste ultimamente?",
   "icebreaker.7":
@@ -256,7 +257,8 @@ export const goTogether: Catalog = {
   "icebreaker.12": "Que coisa boa tens à tua espera este mês?",
 
   // UI copy for the card, questionnaire, group, feedback, host and settings surfaces.
-  "card.body": "Junta-te a um grupo pequeno para irem juntes.",
+  "card.body":
+    "Juntamos-te a um grupo pequeno para irem ao evento em conjunto.",
   "card.closed.note": "O Vamos juntes já fechou para este evento.",
   "card.error.alreadyGrouped": "Já estás num grupo para este evento.",
   "card.error.generic":
@@ -264,77 +266,77 @@ export const goTogether: Catalog = {
   "error.refused":
     "Os nossos servidores recusaram o pedido. Tenta outra vez daqui a pouco e escreve-nos se continuar a acontecer.",
   "card.error.ineligible":
-    "Vamos juntes não está disponível na tua conta neste momento.",
+    "O Vamos juntes não está disponível na tua conta neste momento.",
   "card.error.invalidAnswers":
     "As perguntas de quem organiza mudaram. Responde outra vez a cada uma e confirma.",
   "card.error.lensConsent":
     "Marca a caixa para confirmar a tua lente, ou escolhe Sem lente.",
   "card.error.lensMismatch":
-    "Este par não pode avançar com essa escolha de lente. Escolhe outra, ou vai sozinhe.",
+    "Este par não pode avançar com essa escolha de lente. Escolhe outra ou vai a solo.",
   "card.error.locked": "Os grupos já se formaram para este evento.",
   "card.error.partnerUnavailable":
-    "Essa pessoa não pode ir contigo a este evento. Talvez ainda não tenha confirmado presença. Escolhe outra pessoa ou vai sozinhe.",
+    "Essa pessoa não pode formar par contigo neste evento. Talvez ainda não tenha confirmado presença. Escolhe outra pessoa ou vai a solo.",
   "card.error.profileNeeded":
     "Responde primeiro às perguntas do Vamos juntes e depois volta para entrar.",
   "card.error.unavailable":
     "O Vamos juntes já não está a funcionar para este evento.",
   "card.ineligible.unavailableBody":
-    "Continuas bem-vinde a este evento, tal como estás.",
+    "A tua presença neste evento continua a ser bem-vinda, tal como estás.",
   "card.ineligible.unavailableTitle":
-    "Vamos juntes não está disponível na tua conta neste momento",
+    "O Vamos juntes não está disponível na tua conta neste momento",
   "card.ineligible.verifyBody":
-    "Vamos juntes é para membros verificades, para que todes no grupo saibam que as outras pessoas são quem dizem ser.",
+    "O Vamos juntes é só para contas verificadas, para que toda a gente no grupo saiba que as outras pessoas são quem dizem ser.",
   "card.ineligible.verifyCta": "Verificar a minha conta",
   "card.ineligible.verifyTitle": "Verifica a tua conta para entrar",
   "card.lens.consent":
-    "Escolho esta lente por mim. A QueerPulse usa-a só para me juntar a um grupo neste evento e apaga-a quando o evento terminar.",
+    "Esta lente é escolha minha. A QueerPulse usa-a só para me juntar a um grupo neste evento e apaga-a quando o evento terminar.",
   "card.lens.hint":
     "Só tu vês esta escolha. Com uma lente, ficas num grupo só com pessoas que escolheram a mesma.",
   "card.lens.none.description": "Junta-me a qualquer pessoa que vá.",
   "card.lens.none.label": "Sem lente",
   "card.lens.title": "Escolhe uma lente, se quiseres",
   "card.mode.pair.description":
-    "Tu e uma conexão que também vai, juntes num grupo como par.",
+    "Tu e uma conexão que também vai ao evento entram no mesmo grupo, como par.",
   "card.mode.pair.label": "Com uma pessoa amiga",
   "card.mode.solo.description": "Só tu. Conheces o grupo todo ao mesmo tempo.",
-  "card.mode.solo.label": "Sozinhe",
-  "card.mode.title": "Como vais?",
+  "card.mode.solo.label": "A solo",
+  "card.mode.title": "Como queres ir?",
   "card.optIn.cancel": "Voltar",
   "card.optIn.confirm": "Conta comigo",
   "card.optIn.sending": "A guardar",
   "card.pairInvite.accept": "Aceitar",
   "card.pairInvite.body":
-    "Se aceitares, ficam juntes num grupo pequeno para este evento.",
+    "Se aceitares, entram em par num grupo pequeno para este evento.",
   "card.pairInvite.confirm": "Ir com {name}",
   "card.pairInvite.decline": "Recusar",
   "card.pairInvite.title": "{name} quer ir contigo",
   "card.partner.empty":
-    "Ainda não tens conexões para escolher. Podes ir sozinhe e conhecer o grupo.",
+    "Ainda não tens conexões para escolher. Podes ir a solo e conhecer o grupo.",
   "card.partner.hint":
-    "Escolhe uma conexão que também vai. Recebe um convite para ir contigo.",
+    "Escolhe uma conexão que também vai. Essa pessoa recebe um convite para ir contigo.",
   "card.partner.loadError": "As tuas conexões não carregaram.",
   "card.partner.loading": "A carregar as tuas conexões",
-  "card.partner.search": "Procurar nas tuas conexões",
+  "card.partner.search": "Pesquisar nas tuas conexões",
   "card.partner.title": "Com quem vais?",
   "card.questionnaire.body":
-    "Primeiro, umas perguntas sobre o que gostas e como gostas de estar com pessoas. Respondes uma vez e usamos as respostas em todos os eventos.",
+    "Primeiro, umas perguntas sobre aquilo de que gostas e a forma como preferes passar tempo com outras pessoas. Respondes uma vez e usamos as respostas em todos os eventos.",
   "card.questionnaire.cta": "Responder às perguntas",
   "card.questionnaire.refreshBody":
     "Algumas perguntas mudaram desde a última vez que respondeste. Atualiza-as e já podes entrar.",
   "card.questionnaire.refreshCta": "Atualizar as minhas respostas",
-  "card.title": "Vais sozinhe ou com uma pessoa amiga?",
+  "card.title": "Vais a solo ou com uma pessoa amiga?",
   "card.unmatched.body":
     "Se mais pessoas entrarem, continuamos a tentar juntar-te a um grupo até 6 horas antes do início.",
   "card.unmatched.title": "Ainda não há pessoas suficientes para um grupo",
   "card.waiting.body":
     "Estás dentro. Avisamos-te assim que o teu grupo estiver pronto.",
-  "card.waiting.change": "Mudar como vou",
+  "card.waiting.change": "Mudar a forma como vou",
   "card.waiting.demoReveal": "Revelar o meu grupo de demonstração",
   "card.waiting.leave": "Deixar de procurar grupo",
   "card.waiting.pairAccepted":
     "Vais com {name}. Vamos juntar-vos ao mesmo grupo.",
   "card.waiting.pairPending":
-    "À espera que {name} aceite. Se não aceitar até lá, juntamos-te a um grupo sozinhe.",
+    "À espera que {name} aceite. Se não aceitar até lá, entras num grupo a solo.",
   "card.waiting.saveChange": "Guardar alterações",
   "card.waiting.title": "Conheces o teu grupo: {day}, às {time}",
   "card.waiting.titleSoon": "Conheces o teu grupo em breve",
@@ -349,7 +351,7 @@ export const goTogether: Catalog = {
   "feedback.closed.title": "Este período de feedback já fechou",
   "feedback.confirmation.body":
     "Se alguém também disse que sim, ficam as duas pessoas a saber.",
-  "feedback.confirmation.title": "Obrigade por",
+  "feedback.confirmation.title": "Ainda bem que",
   "feedback.goAgain.ariaLabel": "Vamos juntes outra vez",
   "feedback.goAgain.description":
     "Se duas ou mais pessoas do grupo entrarem noutro evento, juntamos-vos outra vez.",
@@ -360,8 +362,7 @@ export const goTogether: Catalog = {
   "feedback.option.maybe": "Talvez",
   "feedback.option.no": "Não",
   "feedback.option.yes": "Sim",
-  "feedback.privateNote":
-    "Só tu vês isto. Não voltas a ser agrupade com esta pessoa.",
+  "feedback.privateNote": "Só tu vês isto. Não voltam a ficar no mesmo grupo.",
   "feedback.row.ariaLabel": "Voltar a encontrar {name}?",
   "feedback.saveCta": "Guardar",
   "feedback.saveError": "Não foi possível guardar. Tenta outra vez.",
@@ -372,18 +373,19 @@ export const goTogether: Catalog = {
   "group.avatarsLabel_other": "{count} pessoas no teu grupo",
   "group.bannerLabel": "O teu grupo do Vamos juntes para {title}",
   "group.checkIn.here": "Já cheguei",
-  "group.checkIn.hint": "Só o teu grupo vê isto. Nada é publicado na conversa.",
+  "group.checkIn.hint": "Só o teu grupo vê isto. Não aparece nada na conversa.",
   "group.checkIn.left": "Já saí",
   "group.checkIn.statusHere": "O teu grupo vê que já chegaste.",
   "group.checkIn.statusLeft": "O teu grupo vê que já saíste.",
   "group.dissolved": "Este grupo terminou.",
   "group.entryTitle": "O teu grupo para este evento",
   "group.error.checkInClosed": "O check-in já fechou para este evento.",
-  "group.error.generic": "Não deu. Tenta outra vez daqui a pouco.",
+  "group.error.generic":
+    "Não foi possível concluir. Tenta outra vez daqui a pouco.",
   "group.error.mergeExpired":
     "Esse grupo encheu ou fechou. Continuas no teu grupo atual.",
   "group.feedbackCta": "Conta-nos como correu",
-  "group.icebreakers.title": "Algo para começar",
+  "group.icebreakers.title": "Para começar a conversa",
   "group.leave": "Sair do grupo",
   "group.leaveConfirm.confirm": "Sair do grupo",
   "group.leaveConfirm.description":
@@ -401,7 +403,7 @@ export const goTogether: Catalog = {
   "group.pairPartner": "Vem contigo",
   "group.reasonsHeading": "O que têm em comum",
   "group.report": "Denunciar este grupo",
-  "group.reportAria": "Denunciar este grupo: conversa de {title}",
+  "group.reportAria": "Denunciar a conversa do grupo de {title}",
   "group.bannerTitle": "O teu grupo do Vamos juntes",
   "group.seeGroup": "Ver o teu grupo",
   "group.sharePlans": "Diz a alguém onde vais estar",
@@ -412,18 +414,18 @@ export const goTogether: Catalog = {
   "host.closedNote":
     "Os pedidos para este evento já fecharam, por isso estas definições já não podem mudar.",
   "host.create.description":
-    "Quem vem sozinhe ou com uma pessoa amiga pode entrar num pequeno grupo para chegarem juntes. Adiciona perguntas e um ponto de encontro em Gerir.",
-  "host.create.title": "Oferecer o Vamos juntes",
+    "Quem vem sem companhia ou com uma pessoa amiga pode entrar num grupo pequeno para chegar ao evento em conjunto. Adiciona perguntas e um ponto de encontro em Gerir.",
+  "host.create.title": "Disponibilizar o Vamos juntes",
   "host.cutoff.error": "Escolhe uma hora dentro do intervalo acima.",
   "host.cutoff.hint":
     "Por defeito, 48 horas antes do início. Podes escolher qualquer hora entre {earliest} e {latest}.",
   "host.cutoff.label": "Quando se formam os grupos",
   "host.enable.description":
     "Quem vai pode pedir para entrar num grupo até os grupos se formarem, 48 horas antes do início, a não ser que escolhas outra hora.",
-  "host.enable.title": "Oferecer o Vamos juntes",
+  "host.enable.title": "Disponibilizar o Vamos juntes",
   "host.heading": "Vamos juntes",
   "host.intro":
-    "Quem vem sozinhe ou com uma pessoa amiga pode entrar num pequeno grupo para chegarem juntes.",
+    "Quem vem sem companhia ou com uma pessoa amiga pode entrar num grupo pequeno para chegar ao evento em conjunto.",
   "host.loadError": "Não foi possível carregar as definições do Vamos juntes",
   "host.lockedNote":
     "Os grupos deste evento já foram formados, por isso estas definições estão bloqueadas.",
@@ -444,7 +446,7 @@ export const goTogether: Catalog = {
     "Se mudares ou juntares uma pergunta, quem já está à espera responde no cartão.",
   "host.offConfirm.title": "Desligar o Vamos juntes?",
   "host.offConfirm.description":
-    "Quem está à espera de um grupo é avisade de que não há grupo desta vez. Os grupos já formados continuam. Se voltares a ligar, tem de pedir para entrar outra vez.",
+    "Quem está à espera de um grupo recebe um aviso de que não há grupo desta vez. Os grupos já formados continuam. Se voltares a ligar, essas pessoas têm de pedir para entrar outra vez.",
   "host.offConfirm.confirm": "Desligar",
   "host.offConfirm.cancel": "Manter ligado",
   "host.questions.promptPlaceholder": "Manta de piquenique ou pista de dança?",
@@ -456,7 +458,7 @@ export const goTogether: Catalog = {
   "host.summary.groups_other": "grupos formados",
   "host.summary.heading": "Até agora",
   "host.summary.note":
-    "Só vês números. Quem pediu para entrar fica em privado.",
+    "Só vês números. Os nomes de quem pediu para entrar ficam privados.",
   "host.summary.waiting_one": "pessoa à espera",
   "host.summary.waiting_other": "pessoas à espera",
   "host.toast.badCutoff":
@@ -477,7 +479,7 @@ export const goTogether: Catalog = {
   "questionnaire.area.groupWide": "Outras zonas",
   "questionnaire.area.label": "A tua zona",
   "questionnaire.area.placeholder": "Escolhe um bairro ou zona",
-  "questionnaire.area.search": "Procurar zonas",
+  "questionnaire.area.search": "Pesquisar zonas",
   "questionnaire.area.skip": "Limpar e saltar",
   "questionnaire.consent.agree":
     "Aceito que a QueerPulse use estas respostas para me sugerir grupos.",
@@ -486,27 +488,26 @@ export const goTogether: Catalog = {
   "questionnaire.consent.private":
     "Quem organiza e as outras pessoas nunca veem as tuas respostas.",
   "questionnaire.consent.reasons":
-    "Quando o teu grupo se forma, só os interesses, a música, a energia e a zona que tens em comum podem aparecer como motivos para estarem juntes.",
+    "Quando o teu grupo se forma, só os interesses, a música, a energia e a zona que tens em comum podem aparecer como motivos para estarem no mesmo grupo.",
   "questionnaire.consent.retention":
     "Se passarem 12 meses sem as editares nem te inscreveres no Vamos juntes, apagamo-las.",
   "questionnaire.consent.use":
     "Usamos as tuas respostas para te sugerir um grupo pequeno quando entras no Vamos juntes de um evento.",
-  "questionnaire.drinking.label": "Como te sentes em relação ao álcool?",
+  "questionnaire.drinking.label": "E quanto ao álcool?",
   "questionnaire.energy.nightShape.prompt": "O teu tipo de noite",
-  "questionnaire.energy.planner.prompt": "Quando se trata de planos",
+  "questionnaire.energy.planner.prompt": "No que toca a planos",
   "questionnaire.energy.talker.prompt": "Numa conversa em grupo",
   "questionnaire.error.consent":
     "Marca a caixa de consentimento e guarda outra vez.",
   "questionnaire.error.generic":
     "As tuas respostas não foram guardadas. Tenta outra vez daqui a pouco.",
   "questionnaire.error.invalid":
-    "Algumas respostas não passaram. Revê os passos e tenta outra vez.",
-  "questionnaire.frequency.label":
-    "Com que frequência gostavas de te encontrar?",
+    "Algumas respostas não foram aceites. Revê os passos e tenta outra vez.",
+  "questionnaire.frequency.label": "Com que frequência gostavas de sair?",
   "questionnaire.humour.pairLabel": "Par {position} de {total}",
   "questionnaire.intent.label": "Que tipo de amizade procuras?",
   "questionnaire.language.hint":
-    "Escolhe pelo menos uma. Todes no teu grupo vão ter uma língua em comum contigo.",
+    "Escolhe pelo menos uma. Toda a gente no teu grupo vai ter uma língua em comum contigo.",
   "questionnaire.language.label": "Línguas em que gostas de conversar",
   "questionnaire.likert.anchored": "{position} de {total}: {anchor}",
   "questionnaire.likert.position": "{position} de {total}",
@@ -528,9 +529,9 @@ export const goTogether: Catalog = {
   "questionnaire.page.stepOf": "Passo {step} de {total}: {label}",
   "questionnaire.pickCount": "Escolheste {count} de {max}.",
   "questionnaire.pickLimitReached":
-    "Chegaste ao máximo. Desmarca uma para trocar.",
+    "Chegaste ao máximo. Desmarca uma opção para trocar.",
   "questionnaire.step.area.intro":
-    "Opcional. Viverem perto torna mais fácil voltarem a encontrar-se.",
+    "Opcional. Se viverem perto, fica mais fácil combinarem outra vez.",
   "questionnaire.step.area.short": "Zona",
   "questionnaire.step.area.title": "A tua zona",
   "questionnaire.step.consent.intro":
@@ -554,7 +555,7 @@ export const goTogether: Catalog = {
   "questionnaire.step.intent.short": "Intenções",
   "questionnaire.step.intent.title": "O que procuras",
   "questionnaire.step.interests.intro":
-    "Escolhe de 1 a 8 coisas que farias com gosto com amigues novos.",
+    "Escolhe de 1 a 8 coisas que farias com gosto com novas amizades.",
   "questionnaire.step.interests.short": "Interesses",
   "questionnaire.step.interests.title": "Aquilo de que gostas",
   "questionnaire.step.music.intro":
@@ -571,15 +572,15 @@ export const goTogether: Catalog = {
   "settings.data.card.title": "As tuas respostas do Vamos juntes",
   "settings.data.delete.cta": "Eliminar as minhas respostas",
   "settings.data.delete.description":
-    "Isto remove as tuas respostas por completo e tira-te do Vamos juntes em qualquer evento cujo grupo ainda não se formou. Podes sempre responder outra vez mais tarde.",
+    "Remove as tuas respostas de vez e tira-te do Vamos juntes em qualquer evento cujo grupo ainda não se tenha formado. Podes sempre responder outra vez mais tarde.",
   "settings.data.delete.title": "As tuas respostas, eliminadas para sempre",
   "settings.data.deleteConfirm.body":
-    "Eliminar remove as tuas respostas por completo e tira-te do Vamos juntes em qualquer evento cujo grupo ainda não se formou. Podes responder às perguntas outra vez quando quiseres.",
+    "Ao eliminar, as tuas respostas desaparecem de vez e sais do Vamos juntes em qualquer evento cujo grupo ainda não se tenha formado. Podes responder às perguntas outra vez quando quiseres.",
   "settings.data.deleteConfirm.confirm": "Eliminar as minhas respostas",
   "settings.data.deleteConfirm.title":
     "Eliminar as tuas respostas do Vamos juntes?",
   "settings.data.deleteError":
-    "Não foi possível eliminar as tuas respostas. Tenta novamente daqui a pouco.",
+    "Não foi possível eliminar as tuas respostas. Tenta outra vez daqui a pouco.",
   "settings.data.deleted": "As tuas respostas foram eliminadas.",
   "settings.data.empty.cta": "Responder às perguntas",
   "settings.data.empty.description":
@@ -594,13 +595,13 @@ export const goTogether: Catalog = {
   "card.optIn.hint.lensConsent": "Marca a caixa para confirmar a tua lente.",
   "card.optIn.hint.partner": "Escolhe uma pessoa amiga para continuar.",
   "card.answerAgain.body":
-    "Continuas na lista. Responde outra vez para te juntarmos ao grupo certo.",
+    "Continuas à espera de um grupo. Responde outra vez para encontrarmos o grupo certo para ti.",
   "card.loadError.retryFailed":
     "O Vamos juntes continua sem carregar. Tenta outra vez daqui a pouco.",
   "card.answerAgain.error.invalidAnswers":
     "As perguntas de quem organiza voltaram a mudar. Responde outra vez e guarda.",
   "card.answerAgain.bodyMany":
-    "Continuas na lista. Responde outra vez a cada uma para te juntarmos ao grupo certo.",
+    "Continuas à espera de um grupo. Responde outra vez a cada uma para encontrarmos o grupo certo para ti.",
   "card.answerAgain.save": "Guardar a minha resposta",
   "card.answerAgain.saveMany": "Guardar as minhas respostas",
   "card.answerAgain.title": "Quem organiza mudou uma pergunta",
@@ -610,10 +611,10 @@ export const goTogether: Catalog = {
   "card.loadError.retry": "Tentar outra vez",
   "card.loadError.retrying": "A tentar outra vez",
   "card.loadError.title": "O Vamos juntes não carregou",
-  "feedback.confirmation.titleEm": "nos contares",
+  "feedback.confirmation.titleEm": "nos contaste",
   "feedback.privacyLine":
     "As tuas respostas ficam privadas. Sem nomes, ajudam-nos a formar grupos melhores.",
-  "group.feedbackEditCta": "Mudar o que respondeste sobre o grupo",
+  "group.feedbackEditCta": "Editar o que respondeste",
   "group.member.optionsLabel": "Opções para {name}",
   "group.member.block": "Bloquear {name}",
   "group.member.report": "Denunciar {name}",

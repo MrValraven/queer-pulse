@@ -7,7 +7,9 @@
  * `stage.latestState`, the mirror reads the applied frames.
  */
 import {
+  createContext,
   useCallback,
+  useContext,
   useMemo,
   useState,
   type CSSProperties,
@@ -17,12 +19,16 @@ import {
 import { AnimatePresence } from "motion/react";
 import {
   vjSceneLookOf,
+  type VjClipDTO,
+  type VjSetlistDTO,
   type VjStageState,
 } from "../../../../shared/contracts/vj";
 import { MAIN_CONTENT_ID } from "../../../../shared/components/layout/SkipToContentLink";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { PageMeta } from "../../../../shared/seo/PageMeta";
 import { QuizshowBackdrop } from "../../../quizshow/stage/QuizshowBackdrop";
+import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
+import { useVjClips } from "../../api/useVjClips";
 import { useVjPackEvent } from "../../api/useVjPackEvent";
 import { useVjSceneMutations } from "../../api/useVjSceneMutations";
 import { useVjScenes } from "../../api/useVjScenes";
@@ -50,13 +56,26 @@ import type { VjRemoteLayout } from "../hooks/useVjRemoteLayout";
 import type { UseVjMidiResult } from "../midi/useVjMidi";
 import type { UseVjMidiMappingsResult } from "../midi/useVjMidiMappings";
 import { VjMirrorBand } from "../mirror/VjMirrorBand";
-import { vjMirrorRingOf, type VjMirrorRing } from "../rules/vjMirrorRing";
+import {
+  isVjMirrorRingCounting,
+  vjMirrorRingOf,
+  type VjMirrorRing,
+} from "../rules/vjMirrorRing";
 import { vjNextUpOf, type VjNextUp } from "../rules/vjNextUp";
+import {
+  VJ_SETLIST_STEP_GONE_KEYS,
+  vjSetlistFlashingIndexOf,
+  vjSetlistStepNameOf,
+} from "../rules/vjSetlistPlayback";
+import {
+  vjMirrorRingWithinStep,
+  type VjMirrorSequenceStatus,
+} from "../mirror/vjMirrorStyle";
 import { VjStrips } from "../strips/VjStrips";
 import { useVjPackSwitch } from "../top/useVjPackSwitch";
 import { VjPackSwitchConfirm } from "../top/VjPackSwitchConfirm";
 import { VjRemoteTopRow, type VjGridSource } from "../top/VjRemoteTopRow";
-import type { VjRun } from "../useVjCommandRunner";
+import type { VjCommandName, VjRun } from "../useVjCommandRunner";
 import type { VjRemoteOfflineReason } from "../vjRemoteOffline";
 import { useVjSceneRecall, type VjRemoteActions } from "./useVjRemoteActions";
 import type { VjRemoteLibrary } from "./useVjRemoteLibrary";
@@ -84,6 +103,8 @@ export interface VjRemoteSession {
   latestState: VjStageState | null;
   stateRevision: number | null;
   run: VjRun;
+  /** The command runner's own pending check: a control holds while its command waits for the ack. */
+  isCommandPending: (name: VjCommandName) => boolean;
   clock: VjRemoteClock;
   frames: VjMirrorFrames;
   layout: VjRemoteLayout;
@@ -106,6 +127,8 @@ export interface VjRemoteSession {
   errorKey: string | null;
   /** The {max} or {min} `errorKey` interpolates; null when it takes none. */
   errorValues: VjErrorValues | null;
+  /** A new object for each refusal the dispatcher named; null when none holds. */
+  refusalStamp: object | null;
   onRefused: (errorKey: string | null) => void;
 }
 
@@ -113,23 +136,175 @@ interface VjRemoteBandProps {
   session: VjRemoteSession;
 }
 
+/**
+ * What the scenes sheet's sequence section reads from the page: the
+ * sequence actions (every Play, Resume and step asks the flash warning
+ * through them), the clips by id (a clip step's title, Add live clip),
+ * which commands wait for their ack and the refusal the dock's status line
+ * names, so the sheet can name it beside the control that was pressed.
+ * The shell provides it around the sheets host, the same way the help
+ * captions reach the sheets.
+ */
+export interface VjRemoteSetlistControls {
+  actions: Pick<
+    VjRemoteActions,
+    "setlist" | "setlistLoopIsOn" | "isSetlistLoopPending"
+  >;
+  clipsById: ReadonlyMap<string, VjClipDTO>;
+  isCommandPending: (name: VjCommandName) => boolean;
+  /** The synced clock, so the active controls can count a playing step down. */
+  clock: VjRemoteClock;
+  /** The status line's refusal copy key; null when none holds. */
+  errorKey: string | null;
+  errorValues: VjErrorValues | null;
+  /**
+   * A new object for each refusal the dispatcher named, null when none
+   * holds: a row compares it with the one it saw at its press, so a refusal
+   * already standing before the press never shows under it.
+   */
+  refusalStamp: object | null;
+}
+
+export const VjRemoteSetlistContext =
+  createContext<VjRemoteSetlistControls | null>(null);
+
+/** The sequence controls; only the remote's shell provides them. */
+export function useVjRemoteSetlistControls(): VjRemoteSetlistControls {
+  const controls = useContext(VjRemoteSetlistContext);
+  if (controls === null) {
+    throw new Error(
+      "useVjRemoteSetlistControls needs the remote shell's VjRemoteSetlistContext",
+    );
+  }
+  return controls;
+}
+
 const NO_RING: VjMirrorRing = { kind: "none" };
 const NO_NEXT_UP: VjNextUp = { kind: "none" };
 
-/** The next-up line's title: the cued or shuffle clip's title, or the next scene's name. */
+/**
+ * The next-up line's title: the cued or shuffle clip's title, or the next
+ * step's scene name or clip title. A step whose scene or clip left the
+ * library reads as gone.
+ */
 function useVjNextUpTitle(nextUp: VjNextUp, session: VjRemoteSession) {
+  const { t } = useTranslation();
   const isSetlistNext = nextUp.kind === "setlist";
   const scenesQuery = useVjScenes({ isEnabled: isSetlistNext });
+  const scenesById = useMemo(
+    () => new Map((scenesQuery.data ?? []).map((scene) => [scene.id, scene])),
+    [scenesQuery.data],
+  );
+  const { clipsById: shownClipsById } = session.library;
+  // A clip step outside the active pack reads its title from the library.
+  const nextClipId =
+    nextUp.kind === "setlist" && nextUp.item.kind === "clip"
+      ? nextUp.item.clipId
+      : null;
+  const isLibraryClipNeeded =
+    nextClipId !== null && !shownClipsById.has(nextClipId);
+  const libraryClipsQuery = useVjClips({ isEnabled: isLibraryClipNeeded });
+  const clipsById = useMemo(
+    () =>
+      isLibraryClipNeeded && libraryClipsQuery.data !== undefined
+        ? new Map(libraryClipsQuery.data.map((clip) => [clip.id, clip]))
+        : shownClipsById,
+    [isLibraryClipNeeded, libraryClipsQuery.data, shownClipsById],
+  );
   if (nextUp.kind === "cue" || nextUp.kind === "shuffle") {
-    return session.library.clipsById.get(nextUp.clipId)?.title ?? null;
+    return shownClipsById.get(nextUp.clipId)?.title ?? null;
   }
   if (nextUp.kind === "setlist") {
-    const scene = scenesQuery.data?.find(
-      (candidate) => candidate.id === nextUp.sceneId,
+    // While the library loads, the step waits for its name.
+    const isNameLoading =
+      nextUp.item.kind === "scene"
+        ? scenesQuery.data === undefined
+        : isLibraryClipNeeded && libraryClipsQuery.data === undefined;
+    if (isNameLoading) return null;
+    return (
+      vjSetlistStepNameOf(nextUp.item, scenesById, clipsById) ??
+      t(VJ_SETLIST_STEP_GONE_KEYS[nextUp.item.kind])
     );
-    return scene?.name ?? null;
   }
   return null;
+}
+
+/** How many frames the scenes sheet gets to draw the row it opens at. */
+const VJ_REVEAL_ROW_FRAMES = 30;
+
+/**
+ * Scrolls the sequence's row into view once the scenes sheet has drawn it,
+ * so the band's status line opens the sheet at the sequence it names.
+ */
+function revealVjSetlistRow(setlistId: string, isReducedMotion: boolean) {
+  let framesLeft = VJ_REVEAL_ROW_FRAMES;
+  const tryReveal = () => {
+    const row = document.querySelector<HTMLElement>(
+      `[data-vj-scenes-sheet] [data-vj-setlist-row="${setlistId}"]`,
+    );
+    if (row !== null) {
+      row.scrollIntoView({
+        block: "center",
+        behavior: isReducedMotion ? "auto" : "smooth",
+      });
+      return;
+    }
+    framesLeft -= 1;
+    if (framesLeft > 0) requestAnimationFrame(tryReveal);
+  };
+  requestAnimationFrame(tryReveal);
+}
+
+/**
+ * Why the active sequence stands still, for the band: paused, taken over,
+ * waiting before a flashing step (named) or finished; null while it plays,
+ * steps by hand or none is active.
+ */
+function useVjMirrorSequenceStatus(
+  state: VjStageState | null,
+  activeSetlist: VjSetlistDTO | null,
+  clipsById: ReadonlyMap<string, VjClipDTO>,
+): VjMirrorSequenceStatus | null {
+  const { t } = useTranslation();
+  const status =
+    state === null || state.activeSetlistId === null
+      ? null
+      : state.setlistPlayback.status;
+  const scenesQuery = useVjScenes({
+    isEnabled: status === "needsFlashConsent",
+  });
+  switch (status) {
+    case "paused":
+      return { kind: "paused" };
+    case "takenOver":
+      return { kind: "takenOver" };
+    case "finished":
+      return { kind: "finished" };
+    case "needsFlashConsent": {
+      const flashingIndex =
+        state === null || activeSetlist === null
+          ? null
+          : vjSetlistFlashingIndexOf(state, activeSetlist);
+      const flashingItem =
+        flashingIndex === null
+          ? undefined
+          : activeSetlist?.items[flashingIndex];
+      if (flashingItem === undefined) {
+        return { kind: "waitingFlash", stepName: t("vj:strip.setlistNext") };
+      }
+      const scenesById = new Map(
+        (scenesQuery.data ?? []).map((scene) => [scene.id, scene]),
+      );
+      return {
+        kind: "waitingFlash",
+        stepName:
+          vjSetlistStepNameOf(flashingItem, scenesById, clipsById) ??
+          t(VJ_SETLIST_STEP_GONE_KEYS[flashingItem.kind]),
+      };
+    }
+    default:
+      return null;
+  }
 }
 
 /**
@@ -161,20 +336,41 @@ function VjRemoteMirror({ session }: VjRemoteBandProps): JSX.Element {
           activeSetlist,
         });
   const nextUpTitle = useVjNextUpTitle(nextUp, session);
+  const sequenceStatus = useVjMirrorSequenceStatus(
+    latestState,
+    activeSetlist,
+    library.clipsById,
+  );
+  const { reducedMotion } = useMotionPrefs();
+  const openSequence = () => {
+    session.sheets.open("scenes");
+    if (activeSetlistId !== null) {
+      revealVjSetlistRow(activeSetlistId, reducedMotion);
+    }
+  };
   const isRingCounting =
-    frames.nextApplyAt !== null || (shownState?.shuffle.isOn ?? false);
+    shownState !== null &&
+    isVjMirrorRingCounting({
+      nextApplyAt: frames.nextApplyAt,
+      shuffle: shownState.shuffle,
+      setlistPlayback: shownState.setlistPlayback,
+    });
   const syncedNow = useVjSyncedNow(clock, { isEnabled: isRingCounting });
   const ring =
     shownState === null
       ? NO_RING
-      : vjMirrorRingOf({
-          serverNowMs: syncedNow,
-          nextApplyAt: frames.nextApplyAt,
-          frameReceivedAt: frames.frameReceivedAt,
-          shuffle: shownState.shuffle,
-          tempo: shownState.tempo,
-          liveSince: shownState.liveSince,
-        });
+      : vjMirrorRingWithinStep(
+          vjMirrorRingOf({
+            serverNowMs: syncedNow,
+            nextApplyAt: frames.nextApplyAt,
+            frameReceivedAt: frames.frameReceivedAt,
+            shuffle: shownState.shuffle,
+            tempo: shownState.tempo,
+            liveSince: shownState.liveSince,
+            setlistPlayback: shownState.setlistPlayback,
+          }),
+          shownState.setlistPlayback.stepDurationMs,
+        );
   const leadNextClipId = library.leadNextClipId;
   const canSkip =
     leadNextClipId !== null && (latestState?.shuffle.isOn ?? false);
@@ -204,6 +400,8 @@ function VjRemoteMirror({ session }: VjRemoteBandProps): JSX.Element {
       }}
       isBlocked={isBlocked}
       blockedReasonId={session.blockedReasonId}
+      sequenceStatus={sequenceStatus}
+      onOpenSequence={openSequence}
     />
   );
 }
@@ -316,6 +514,10 @@ function VjRemoteStripsBand({ session }: VjRemoteBandProps): JSX.Element {
     setlistsQuery.data?.find((setlist) => setlist.id === activeSetlistId) ??
     null;
   const { dispatch } = actions;
+  const setlistPlayback = latestState?.setlistPlayback ?? null;
+  const isSetlistPlayPending =
+    session.isCommandPending("setlistSetPlaying") ||
+    session.isCommandPending("setlistSelect");
 
   // The flash warning, when the look flashes, sits on the tapped chip.
   const recallSceneById = (sceneId: string) => {
@@ -359,6 +561,15 @@ function VjRemoteStripsBand({ session }: VjRemoteBandProps): JSX.Element {
           onSetlistNext: () => dispatch({ kind: "setlistNext" }, "press"),
           onSetlistPrevious: () =>
             dispatch({ kind: "setlistPrevious" }, "press"),
+          setlistStatus: setlistPlayback?.status ?? "manual",
+          isSetlistLooping:
+            activeSetlistId !== null &&
+            actions.setlistLoopIsOn(
+              activeSetlistId,
+              setlistPlayback?.isLooping ?? false,
+            ),
+          isSetlistPlayPending,
+          onSetlistTogglePlaying: actions.setlist.togglePlaying,
           // A set list names its own current scene; a one-off recall is tracked here.
           liveSceneId: activeSetlistId === null ? recalledSceneId : undefined,
           onOpenScenesSheet: () => session.sheets.open("scenes"),
@@ -514,6 +725,32 @@ export function VjRemoteShell({
 }: VjRemoteShellProps): JSX.Element {
   const { t } = useTranslation();
   const isPhone = session.layout.layout === "phone";
+  const { setlist, setlistLoopIsOn, isSetlistLoopPending } = session.actions;
+  const { clipsById } = session.library;
+  const { isCommandPending, errorKey, errorValues, refusalStamp, clock } =
+    session;
+  const setlistControls = useMemo<VjRemoteSetlistControls>(
+    () => ({
+      actions: { setlist, setlistLoopIsOn, isSetlistLoopPending },
+      clipsById,
+      isCommandPending,
+      clock,
+      errorKey,
+      errorValues,
+      refusalStamp,
+    }),
+    [
+      setlist,
+      setlistLoopIsOn,
+      isSetlistLoopPending,
+      clipsById,
+      isCommandPending,
+      clock,
+      errorKey,
+      errorValues,
+      refusalStamp,
+    ],
+  );
   // The measured dock, so the grid's last row always clears it.
   const pageStyle =
     isPhone && dockHeight > 0
@@ -522,32 +759,36 @@ export function VjRemoteShell({
 
   // The help captions provider wraps the dock too: on a phone the dock
   // portals itself, and the "?" toggle still reaches it through context.
+  // The sequence controls reach the scenes sheet in the sheets host the
+  // same way.
   return (
     <VjHelpCaptionsProvider>
-      <div
-        className={styles.page}
-        style={pageStyle}
-        data-theme="dark"
-        data-vj-remote=""
-        data-layout={session.layout.layout}
-      >
-        <div className={styles.backdrop}>
-          <QuizshowBackdrop variant="phone" />
+      <VjRemoteSetlistContext.Provider value={setlistControls}>
+        <div
+          className={styles.page}
+          style={pageStyle}
+          data-theme="dark"
+          data-vj-remote=""
+          data-layout={session.layout.layout}
+        >
+          <div className={styles.backdrop}>
+            <QuizshowBackdrop variant="phone" />
+          </div>
+          <PageMeta title={t("vj:remote.metaTitle")} noIndex />
+          <div className={styles.frame}>
+            <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
+              <h1 className={styles.visuallyHidden}>
+                {t("vj:remote.metaTitle")}
+              </h1>
+              <VjRemoteHeader session={session} />
+              <VjRemoteStripsBand session={session} />
+              <VjRemoteGridBand session={session} />
+            </main>
+            {dock}
+          </div>
         </div>
-        <PageMeta title={t("vj:remote.metaTitle")} noIndex />
-        <div className={styles.frame}>
-          <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.main}>
-            <h1 className={styles.visuallyHidden}>
-              {t("vj:remote.metaTitle")}
-            </h1>
-            <VjRemoteHeader session={session} />
-            <VjRemoteStripsBand session={session} />
-            <VjRemoteGridBand session={session} />
-          </main>
-          {dock}
-        </div>
-      </div>
-      {children}
+        {children}
+      </VjRemoteSetlistContext.Provider>
     </VjHelpCaptionsProvider>
   );
 }

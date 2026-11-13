@@ -32,6 +32,19 @@ export type VjRemoteAction =
   | { kind: "previous" }
   | { kind: "setlistNext" }
   | { kind: "setlistPrevious" }
+  /** A sequence row's Play sequence: step 1, playing by itself. */
+  | { kind: "setlistPlay"; setlistId: string }
+  /** A sequence row's Step through: step 1, moved on by hand. */
+  | { kind: "setlistStepThrough"; setlistId: string }
+  /** The active sequence's Play, Pause, Resume or Play again, by its status. */
+  | { kind: "setlistTogglePlaying" }
+  | { kind: "setlistSetLooping"; isLooping: boolean }
+  /** Stop sequence: clears the selection. */
+  | { kind: "setlistStop" }
+  /** From needsFlashConsent: plays the step the timer held back. */
+  | { kind: "setlistPlayFlashing" }
+  /** From needsFlashConsent: plays on from the next step that does not flash. */
+  | { kind: "setlistSkipFlashing" }
   | { kind: "openShortcuts" };
 
 /**

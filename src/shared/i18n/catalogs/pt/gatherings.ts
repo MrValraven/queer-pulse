@@ -23,7 +23,7 @@ export const gatherings: Catalog = {
   "landing.ways.browse.cta": "Ver todos os eventos",
   "landing.ways.calendar.title": "A vista de calendário",
   "landing.ways.calendar.body":
-    "O mês inteiro num relance, com as tuas inscrições e os eventos perto de ti em destaque.",
+    "O mês inteiro num relance, com as presenças que confirmaste e os eventos perto de ti em destaque.",
   "landing.ways.calendar.cta": "Abrir o calendário",
   "landing.ways.host.title": "Organiza o teu",
   "landing.ways.host.body":
@@ -49,8 +49,8 @@ export const gatherings: Catalog = {
   "spots.spotsLeft_other": "Restam {count} vagas",
   "spots.going_one": "{count} pessoa vai",
   "spots.going_other": "{count} pessoas vão",
-  "spots.goingSoFar_one": "{count} pessoa vai até agora",
-  "spots.goingSoFar_other": "{count} pessoas vão até agora",
+  "spots.goingSoFar_one": "Para já vai {count} pessoa",
+  "spots.goingSoFar_other": "Para já vão {count} pessoas",
   "spots.goingWithWaitlist_one":
     "{count} pessoa vai · {waitlist} em lista de espera",
   "spots.goingWithWaitlist_other":
@@ -89,10 +89,11 @@ export const gatherings: Catalog = {
   "rsvpControl.pendingCta": "Um momento…",
   "rsvpControl.hostingTitle": "És tu quem <em>organiza</em>",
   "rsvpControl.hostingNote":
-    "Também estás na lista de convidados, por isso ocupas um dos lugares.",
-  "rsvpControl.hostingNoteUncapped": "Também estás na lista de convidados.",
+    "Também estás na lista de quem vai, por isso ocupas um dos lugares.",
+  "rsvpControl.hostingNoteUncapped": "Também estás na lista de quem vai.",
   "rsvpControl.hostingCount_one": "Por agora, só tu.",
-  "rsvpControl.hostingCount_other": "{count} vão até agora, contando contigo.",
+  "rsvpControl.hostingCount_other":
+    "Para já vão {count} pessoas, contando contigo.",
   "rsvpControl.hostingManageCta": "Gerir evento",
   "rsvpControl.goingTitle": "Vais <em>estar lá</em>",
   "rsvpControl.waitlistTitle": "Estás na <em>lista de espera</em>",
@@ -133,17 +134,17 @@ export const gatherings: Catalog = {
   "gathering.spotsRemainingLabel": "vagas restantes",
   "gathering.hostedWithHeading": "Organizado com",
   "gathering.hostedWithRole": "Comunidade",
-  "gathering.spotsUrgencyNote": "Não percas tempo se isto te chamar",
+  "gathering.spotsUrgencyNote": "Se te interessa, não demores",
   "gathering.spotsHostNote": "Ainda livres para quem vier",
   "gathering.locationHostNote":
     "Quem confirmar que vai passa a ver a morada completa.",
   "gathering.locationNote":
-    "A localização completa é partilhada com quem confirmar presença.",
+    "Vês a localização completa depois de confirmares presença.",
   "gathering.moreTitle": "Mais <em>eventos</em>",
   "gathering.coverAlt": "Foto de capa de {title}",
   "gathering.notFoundTitle": "Não encontrámos este evento",
   "gathering.notFoundDescription":
-    "Pode ter sido cancelado, ou o link pode estar desatualizado.",
+    "Pode ter sido cancelado ou o link pode estar desatualizado.",
 
   // GoingAttendeesPreview (MSG-12)
   "gathering.attendeesPreview.heading": "Quem vai",
@@ -170,7 +171,7 @@ export const gatherings: Catalog = {
 
   // RsvpPage (reading-group RSVP confirmation)
   "rsvp.eyebrow": "Vais participar",
-  "rsvp.title": "Estás <em>dentro.</em>",
+  "rsvp.title": "Está <em>combinado.</em>",
   "rsvp.details.dateTime": "Data e hora",
   "rsvp.details.location": "Localização",
   "rsvp.details.host": "Organização",
@@ -187,20 +188,21 @@ export const gatherings: Catalog = {
   "rsvp.inviteCopiedToast":
     "Link de convite copiado. Partilha-o com alguém que devia vir.",
   "rsvp.inviteCopyFailedToast":
-    "Não conseguimos aceder à área de transferência. Copia o link a partir da barra de endereço.",
+    "Não conseguimos aceder à área de transferência. Copia o link na barra de endereço.",
   "rsvp.coc.title": "O que <em>esperar</em>",
   "rsvp.coc.affirming.strong": "Este é um espaço de afirmação.",
   "rsvp.coc.affirming.rest":
-    "Traz-te por inteiro, incluindo as partes que normalmente deixas à porta. Identidade queer, vivência trans, neurodivergência, deficiência: és bem-vinde como és.",
+    "Traz-te por inteiro, incluindo as partes que normalmente deixas à porta. Identidade queer, vivência trans, neurodivergência, deficiência: aqui há lugar para ti tal como és.",
   "rsvp.coc.consent.strong": "Praticamos o consentimento ativo.",
   "rsvp.coc.consent.rest":
     "Pergunta antes de tocar, confirma antes de partilhar fotografias e presta atenção às outras pessoas. Na dúvida, pergunta.",
   "rsvp.coc.privacy.strong": "O que acontece aqui fica aqui.",
   "rsvp.coc.privacy.rest":
-    "Esta é uma comunidade privada. Por favor não partilhes informação pessoal, histórias ou fotografias dos eventos sem consentimento.",
-  "rsvp.coc.organiser.strong": "Se algo não parecer bem, avisa a organização.",
+    "Esta é uma comunidade privada. Pedimos que não partilhes informação pessoal, histórias ou fotografias dos eventos sem consentimento.",
+  "rsvp.coc.organiser.strong":
+    "Se alguma coisa não te parecer bem, avisa a organização.",
   "rsvp.coc.organiser.rest":
-    "{host} está lá para que o espaço funcione para todas as pessoas. Não precisas de gerir isto sozinho.",
+    "{host} está lá para que o espaço funcione para toda a gente. Não tens de lidar com isto por tua conta.",
   "rsvp.footer.membership": "Confirmaste presença como pessoa da QueerPulse.",
   "rsvp.footer.cancelCta": "Cancelar presença",
   "rsvp.footer.cancelledToast": "A tua presença foi cancelada.",
@@ -214,16 +216,16 @@ export const gatherings: Catalog = {
   // (`cohost-invite-options.ts`); o texto é do frontend e vive aqui.
   "cohostInvite.role.greeter.label": "Acolhimento",
   "cohostInvite.role.greeter.description":
-    "Receber as pessoas à porta e ajudar quem chega sozinho a encontrar o seu lugar.",
+    "Receber as pessoas à porta e ajudar quem chega sem companhia a encontrar o seu lugar.",
   "cohostInvite.role.room_lead.label": "Responsável de sala",
   "cohostInvite.role.room_lead.description":
-    "Ficar atento ao espaço: montagem, fluxo e arrumação no fim.",
+    "Tomar conta do espaço: montagem, circulação e arrumação no fim.",
   "cohostInvite.role.comoderator.label": "Comoderação",
   "cohostInvite.role.comoderator.description":
-    "Segurar os limites do espaço com quem organiza e intervir se algo precisar de ser tratado.",
+    "Zelar pelos limites do espaço com quem organiza e intervir quando for preciso.",
   "cohostInvite.role.page_editor.label": "Edição da página",
   "cohostInvite.role.page_editor.description":
-    "Manter a página do evento certa: detalhes, fotos e as respostas que as pessoas procuram.",
+    "Manter a página do evento em dia: detalhes, fotos e as respostas que as pessoas procuram.",
   "cohostInvite.commitment.light.label": "Só no próprio dia",
   "cohostInvite.commitment.light.description":
     "Uma ajuda no dia, sem nada a fazer antes.",
@@ -234,62 +236,62 @@ export const gatherings: Catalog = {
   "cohostInvite.commitment.full_event.description": "Da montagem à arrumação.",
   "cohostInvite.commitment.ongoing.label": "Contínuo",
   "cohostInvite.commitment.ongoing.description":
-    "Este e os seguintes, como coanfitrião regular.",
-  "cohostInvite.notFoundTitle": "Este convite já não está aqui",
+    "Este e os seguintes, como pessoa coanfitriã regular.",
+  "cohostInvite.notFoundTitle": "Este convite já não está disponível",
   "cohostInvite.notFoundDescription":
     "Pode ter sido retirado, ou o evento a que pertencia deixou de existir. Não foi nada que tenhas feito.",
   "cohostInvite.alreadyRespondedTitle": "Já respondeste a este convite",
   "cohostInvite.alreadyAcceptedDescription":
-    "Estás a coanfitriar com {host}. As ferramentas de anfitrião estão abertas para ti.",
+    "Estás a coorganizar com {host}. Tens acesso às ferramentas de organização.",
   "cohostInvite.alreadyDeclinedDescription":
     "Recusaste este. {host} pode sempre convidar-te para o próximo.",
-  "cohostInvite.eyebrow": "Convite para co-organizar",
-  "cohostInvite.title": "{host} quer que <em>co-organizes</em> com ela.",
+  "cohostInvite.eyebrow": "Convite para coorganizar",
+  "cohostInvite.title": "{host} convida-te para <em>coorganizar</em>.",
   "cohostInvite.hostedCount_one": "Organizou {count} evento",
   "cohostInvite.hostedCount_other": "Organizou {count} eventos",
-  "cohostInvite.mutualsCount_one": "{count} contacto em comum",
-  "cohostInvite.mutualsCount_other": "{count} contactos em comum",
+  "cohostInvite.mutualsCount_one": "{count} conexão em comum",
+  "cohostInvite.mutualsCount_other": "{count} conexões em comum",
   "cohostInvite.replyBy": "Responde até {date}",
   "cohostInvite.rsvpsAndWaitlist":
     "{rsvps} confirmações · {waitlist} em lista de espera",
-  "cohostInvite.rolesTitle": "O que significa <em>co-organizar</em>",
+  "cohostInvite.rolesTitle": "O que significa <em>coorganizar</em>",
   "cohostInvite.declineCta": "Recusar com delicadeza",
-  "cohostInvite.acceptCta": "Sim, co-organizar com {host}",
+  "cohostInvite.acceptCta": "Sim, coorganizar com {host}",
   "cohostInvite.acceptedToast":
-    "Estás a co-organizar com {host}. Ferramentas de organização desbloqueadas",
+    "Estás a coorganizar com {host}. Ferramentas de organização desbloqueadas",
   "cohostInvite.declinedToast":
     "Recusa enviada a {host}. Ela vai encontrar outra ajuda.",
   "cohostInvite.permissionsNote":
-    "Ao aceitares, podes editar a página, enviar mensagens às pessoas convidadas e gerir as inscrições. <b>Cancelar o evento e o fundo da pessoa anfitriã ficam com {host}.</b>",
+    "Ao aceitares, podes editar a página, enviar mensagens às pessoas convidadas e gerir as confirmações. <b>Só {host} pode cancelar o evento e gerir o fundo da pessoa anfitriã.</b>",
 
   // GatheringCancelledPage
   "cancelled.back": "Voltar ao calendário",
   "cancelled.stampTitle": "Este evento foi cancelado.",
   "cancelled.stampBody":
-    "Estavas na lista. Aqui está tudo o que acontece a seguir.",
+    "Estavas na lista. Fica a saber o que acontece a seguir.",
   // Apenas em modo real: sem "cancelado há N horas" nem motivo inventados,
   // o backend não regista um motivo de cancelamento, por isso fica genérico.
   "cancelled.stampBodyLive":
-    "Aqui estão os detalhes, e onde encontrar o que se segue.",
+    "Ficam aqui os detalhes e onde encontrar os próximos eventos.",
   "cancelled.explainerTitle": "Porque foi cancelado",
   "cancelled.hostSentLabel": "organização · enviou o cancelamento",
   "cancelled.sendWellWishesCta": "Enviar votos de melhoras",
-  "cancelled.infoTitle": "O que acontece <em>contigo</em>",
+  "cancelled.infoTitle": "O que muda <em>para ti</em>",
   "cancelled.refundTitle":
-    "O teu bilhete de {price} é reembolsado, automaticamente",
-  "cancelled.headcountTitle": "Foste removide da contagem",
+    "O teu bilhete de {price} é reembolsado automaticamente",
+  "cancelled.headcountTitle": "Saíste da contagem de presenças",
   "cancelled.headcountBody":
     "O estúdio sabia exatamente quem vinha. Não há mais nada a fazer.",
   "cancelled.rescheduleTitle": "A visita de {date} está aberta a confirmações",
   "cancelled.rescheduleBody":
-    "Podes garantir já o dia {date}. Normalmente {host} abre isto mais tarde, mas adiantámos por causa disto. <a>Salta para lá</a>",
-  "cancelled.concernTitle": "Algo não parece bem?",
+    "Podes garantir já o dia {date}. {host} costuma abrir as confirmações mais tarde, mas desta vez antecipámos. <a>Salta para lá</a>",
+  "cancelled.concernTitle": "Alguma coisa não te parece bem?",
   "cancelled.concernBody":
-    "Se tens preocupações sobre o cancelamento ou queres assinalar um padrão, fala com a equipa",
+    "Se o cancelamento te preocupa ou queres assinalar um padrão, fala com a nossa equipa",
   "cancelled.noteEyebrow": "Uma nota breve · de {host}",
   "cancelled.noteSentVia":
     "enviada {time} através das ferramentas de organização",
-  "cancelled.altHeading": "Próxima visita, ou outra coisa este fim de semana",
+  "cancelled.altHeading": "Próxima visita ou outro plano este fim de semana",
   "cancelled.altRsvpsOpen": "Confirmações abertas",
   "cancelled.calendarCta": "Calendário",
   "cancelled.rsvpCta": "Confirmar para {date}",
@@ -301,7 +303,7 @@ export const gatherings: Catalog = {
   "calendar.upcomingTitle": "Todos os próximos eventos",
   "calendar.emptyTitle": "Sem eventos marcados",
   "calendar.emptyDescription":
-    "O calendário está calmo por agora. Explora o que está a acontecer na comunidade, ou sê tu a começar algo.",
+    "Para já, o calendário está calmo. Explora o que se passa na comunidade ou sê tu a começar alguma coisa.",
   "calendar.browseEventsCta": "Explorar eventos",
   "calendar.selectedDayLabel": "Dia selecionado",
   "calendar.selectDayPrompt": "Clica num dia com eventos para ver os detalhes",
@@ -314,12 +316,12 @@ export const gatherings: Catalog = {
   // Events
   "events.eyebrow": "O que se passa",
   "events.subtitle":
-    "Cada evento aqui é organizado pela QueerPulse ou por pessoas da comunidade. Explora a temporada e encontra a tua gente.",
+    "Todos os eventos daqui são organizados pela QueerPulse ou por pessoas da comunidade. Explora a temporada e encontra a tua gente.",
   "events.kindEvent": "Evento",
   "events.kindGathering": "Evento",
   "events.ticketedTag": "Com bilhete",
   "events.priceSingle": "{price}",
-  "events.priceRange": "{min}–{max}",
+  "events.priceRange": "{min} a {max}",
 
   // Recap
   "recap.eyebrow": "Resumo do evento",
@@ -338,8 +340,8 @@ export const gatherings: Catalog = {
   "recap.whoWasThereEyebrow": "Quem esteve presente",
   "recap.attendedHeading_one": "{count} pessoa <em>esteve presente</em>",
   "recap.attendedHeading_other": "{count} pessoas <em>estiveram presentes</em>",
-  "recap.moreAttended_one": "+ {count} pessoa esteve presente",
-  "recap.moreAttended_other": "+ {count} pessoas estiveram presentes",
+  "recap.moreAttended_one": "+ {count} pessoa também esteve presente",
+  "recap.moreAttended_other": "+ {count} pessoas também estiveram presentes",
   "recap.eventDetailsLabel": "Detalhes do evento",
   "recap.dateLabel": "Data",
   "recap.venueLabel": "Local",
@@ -395,10 +397,10 @@ export const gatherings: Catalog = {
   "photos.policyBody1":
     "Todas as fotos aqui foram tiradas por uma pessoa presente, com consentimento das pessoas fotografadas. <b>Os rostos são desfocados por predefinição</b>, a menos que a pessoa tenha optado por aparecer identificada. É assim que garantimos que as pessoas voltam da próxima vez.",
   "photos.policyBody2":
-    'Se te vires numa foto e quiseres que seja removida (ou desfocada), envia um email para <mailLink>hello@queerpulse.com</mailLink>. Tratamos disso em 24 horas, sem perguntas. <em>Também podes desativar globalmente "aparecer em fotos de eventos"</em> nas <privLink>Definições de privacidade</privLink>.',
+    'Se te vires numa foto e quiseres que seja removida (ou que deixe de estar desfocada), envia um email para <mailLink>hello@queerpulse.com</mailLink>. Tratamos disso em 24 horas, sem perguntas. <em>Também podes desativar globalmente "aparecer em fotos de eventos"</em> nas <privLink>Definições de privacidade</privLink>.',
   "photos.photographersTitle": "Quem fotografou <em>este evento</em>",
   "photos.readRecapCta": "Ler o resumo",
-  "photos.nextClinicCta": "Próxima clínica · {date}",
+  "photos.nextClinicCta": "Próximo balcão de apoio · {date}",
   "photos.flagCta": "Sinalizar uma foto",
   "photos.viewerAriaLabel": "Visualizador de fotos",
   "photos.pauseSlideshowAriaLabel": "Pausar apresentação",
@@ -418,11 +420,11 @@ export const gatherings: Catalog = {
   "catalog.family.make.name": "Fazer e criar",
   "catalog.family.learn.name": "Aprender e conversar",
   "catalog.family.watch.name": "Ver e ouvir",
-  "catalog.family.move.name": "Mexer e ar livre",
+  "catalog.family.move.name": "Movimento e ar livre",
   "catalog.family.care.name": "Cuidar e apoiar",
   "catalog.family.organise.name": "Organizar e agir",
 
-  "catalog.format.mixer.name": "Mixer",
+  "catalog.format.mixer.name": "Convívio",
   "catalog.format.mixer.sub": "Conhecer gente nova, sem pressão",
   "catalog.format.meetup.name": "Encontro",
   "catalog.format.meetup.sub": "Um encontro regular",
@@ -453,7 +455,7 @@ export const gatherings: Catalog = {
   "catalog.format.house-party.name": "Festa em casa",
   "catalog.format.house-party.sub": "Em casa de alguém, traz quem quiseres",
   "catalog.format.club-night.name": "Noite de discoteca",
-  "catalog.format.club-night.sub": "Até tarde, alto, a dançar",
+  "catalog.format.club-night.sub": "Até tarde, som alto, muita dança",
   "catalog.format.listening-party.name": "Sessão de escuta",
   "catalog.format.listening-party.sub": "Um disco, do início ao fim",
   "catalog.format.karaoke.name": "Karaoke",
@@ -477,7 +479,7 @@ export const gatherings: Catalog = {
     "Escrever em conjunto, partilhar se te apetecer",
   "catalog.format.jam-session.name": "Jam session",
   "catalog.format.jam-session.sub": "Traz um instrumento",
-  "catalog.format.studio-visit.name": "Visita ao atelier",
+  "catalog.format.studio-visit.name": "Visita ao ateliê",
   "catalog.format.studio-visit.sub": "Abre o teu espaço",
 
   "catalog.format.workshop.name": "Oficina",
@@ -493,7 +495,7 @@ export const gatherings: Catalog = {
     "Praticas português, ofereces a tua língua",
   "catalog.format.discussion.name": "Grupo de discussão",
   "catalog.format.discussion.sub": "Leitura em grupo, debate",
-  "catalog.format.info-night.name": "Noite de esclarecimento",
+  "catalog.format.info-night.name": "Sessão de esclarecimento",
   "catalog.format.info-night.sub": "Respostas práticas sobre um tema",
 
   "catalog.format.screening.name": "Sessão de cinema",
@@ -534,7 +536,7 @@ export const gatherings: Catalog = {
   "catalog.format.office-hours.sub": "Aparece com uma dúvida",
 
   "catalog.format.meeting.name": "Reunião",
-  "catalog.format.meeting.sub": "Uma agenda e decisões",
+  "catalog.format.meeting.sub": "Ordem de trabalhos e decisões",
   "catalog.format.assembly.name": "Assembleia",
   "catalog.format.assembly.sub": "Aberta a toda a gente, grandes questões",
   "catalog.format.volunteer-shift.name": "Turno de voluntariado",
@@ -558,9 +560,9 @@ export const gatherings: Catalog = {
     "Diz já se há verificação de idade à porta.",
   "catalog.details.isSoberFriendly.label": "Bom para quem não bebe",
   "catalog.details.isSoberFriendly.hint":
-    "Há boas bebidas sem álcool e ninguém é pressionado.",
+    "Há boas bebidas sem álcool e ninguém te pressiona a beber.",
   "catalog.details.terrain.label": "Terreno",
-  "catalog.details.terrain.hint": "Como é o piso debaixo dos pés.",
+  "catalog.details.terrain.hint": "Quão inclinado e regular é o piso.",
   "catalog.details.terrain.flat": "Plano",
   "catalog.details.terrain.mixed": "Misto",
   "catalog.details.terrain.steep": "Íngreme",
@@ -571,7 +573,7 @@ export const gatherings: Catalog = {
   "catalog.details.runtimeMinutes.hint":
     "Quanto tempo dura o filme, o set ou o espetáculo.",
 
-  "catalog.goodToKnow.title": "Bom saber",
+  "catalog.goodToKnow.title": "Convém saber",
   "catalog.goodToKnow.adultsOnly": "Só maiores de 18",
   "catalog.goodToKnow.soberFriendly": "Bom para quem não bebe",
   "catalog.goodToKnow.beginnerFriendly": "Bom para quem começa",
@@ -602,7 +604,7 @@ export const gatherings: Catalog = {
   "extras.theme.queerParents": "Parentalidade queer",
   "extras.theme.migrantsAndRefugees": "Pessoas migrantes e refugiadas",
   "extras.theme.questioningWelcome": "Para quem se está a questionar",
-  "extras.theme.alliesWelcome": "Aliades bem-vindes",
+  "extras.theme.alliesWelcome": "Pessoas aliadas bem-vindas",
   "extras.theme.inPortuguese": "Em português",
   "extras.theme.inEnglish": "Em inglês",
   "extras.theme.portugueseAndEnglish": "Português e inglês",
@@ -615,7 +617,7 @@ export const gatherings: Catalog = {
   "extras.theme.mostlySeated": "Quase tudo sentado",
   "extras.theme.captioned": "Com legendas",
   "extras.theme.masksRequested": "Pede-se máscara",
-  "extras.theme.childcareOnSite": "Cuidado de crianças no local",
+  "extras.theme.childcareOnSite": "Há quem cuide das crianças",
   "extras.theme.greeterAtTheDoor": "Alguém te recebe à porta",
   "extras.theme.phoneFree": "Sem telemóveis",
   "extras.theme.noPhotos": "Sem fotografias",
@@ -626,7 +628,7 @@ export const gatherings: Catalog = {
   "extras.theme.flirtingWelcome": "Flirt à vontade",
   "extras.theme.lowKey": "Descontraído",
   "extras.theme.highEnergy": "Muita energia",
-  "extras.theme.dressUp": "Vem produzide",
+  "extras.theme.dressUp": "Look produzido",
   "extras.theme.kinkFriendly": "Aberto a kink",
   "extras.theme.drag": "Drag",
   "extras.theme.ballroom": "Ballroom",
@@ -658,7 +660,7 @@ export const gatherings: Catalog = {
 
   // ── Create-gathering wizard + host guide ──────────────────────────────────
   // steps/FormatPicker.tsx: escolher família e formato
-  "create.step1.searchLabel": "Procurar em todos os formatos",
+  "create.step1.searchLabel": "Pesquisar em todos os formatos",
   "create.step1.searchPlaceholder": "Piquenique, karaoke, clube de leitura",
   "create.step1.searchResultsLabel": "Formatos correspondentes",
   "create.step1.searchEmpty":
@@ -679,7 +681,7 @@ export const gatherings: Catalog = {
     "{count} é o tamanho habitual para este formato. Muda à vontade.",
   "create.step3.attendeeCountLabel": "Mostrar quantas pessoas vão",
   "create.step3.attendeeCountHint":
-    "A maioria dos eventos mostra a contagem. Os de cuidar e apoiar começam com ela escondida.",
+    "A maioria dos eventos mostra a contagem. Nos eventos de cuidar e apoiar, começa escondida.",
 
   // BrowseFilterBar.tsx: a fila de chips de família
   "hub.browse.familyLabel": "Tipo de evento",
@@ -712,7 +714,7 @@ export const gatherings: Catalog = {
   "create.toast.venueRefused":
     "O teu evento ainda não está no ar. Já não dá para associar o local que escolheste, por isso escolhe outro.",
   "create.toast.runByRefused":
-    "Esse negócio não pode aparecer como organizador deste evento. Escolhe outro, ou nenhum.",
+    "Esse negócio não pode aparecer como responsável por este evento. Escolhe outro, ou nenhum.",
   "create.toast.published": "O teu evento está no ar",
   "create.success.title": "O teu evento <em>está no ar.</em>",
   "create.success.viewCta": "Ver no quadro",
@@ -758,9 +760,9 @@ export const gatherings: Catalog = {
 
   // usePublishGathering.ts: a co-host invite that did not go out after publishing
   "create.v2.toast.cohostInviteFailed_one":
-    "O teu evento está no ar, mas 1 convite de coanfitrião não foi enviado. Podes voltar a convidar na página de gestão.",
+    "O teu evento está no ar, mas 1 convite para coorganizar não foi enviado. Podes voltar a convidar na página de gestão.",
   "create.v2.toast.cohostInviteFailed_other":
-    "O teu evento está no ar, mas {count} convites de coanfitrião não foram enviados. Podes voltar a convidar na página de gestão.",
+    "O teu evento está no ar, mas {count} convites para coorganizar não foram enviados. Podes voltar a convidar na página de gestão.",
 
   // CreateGatheringChapter.tsx / createGathering.data.ts: the six chapter heads
   "create.v2.chapter.what.title": "O que vais <em>organizar?</em>",
@@ -774,7 +776,7 @@ export const gatherings: Catalog = {
     "Define um limite realista. É mais fácil abrir mais lugares do que mandar pessoas embora à porta.",
   "create.v2.chapter.access.title": "Toda a gente <em>consegue entrar?</em>",
   "create.v2.chapter.access.intro":
-    "Marca só o que consegues confirmar. Um “não” é tão útil como um “sim”: as pessoas planeiam com ambos. “Ainda não sei” fica visível no teu evento, para as pessoas saberem que ainda está em aberto.",
+    "Marca só o que consegues confirmar. Um “não” é tão útil como um “sim”: as pessoas organizam-se com base nos dois. “Ainda não sei” fica visível no teu evento, para as pessoas saberem que ainda está em aberto.",
   "create.v2.chapter.care.title": "Cuidar de quem <em>vem.</em>",
   "create.v2.chapter.care.intro":
     "Duas linhas que dão o tom. Aparecem na página do teu evento, para as pessoas saberem o que esperar antes de confirmarem presença.",
@@ -794,7 +796,7 @@ export const gatherings: Catalog = {
   "create.v2.need.joinLink":
     "um link de entrada começado por http:// ou https://",
   "create.v2.need.paymentLink": "um link de pagamento que comece por https://",
-  "create.v2.need.recurrence": "uma repetição completa",
+  "create.v2.need.recurrence": "um calendário de repetição completo",
 
   // createGatheringChapters.ts: the one-line summary of a closed chapter
   "create.v2.summary.what.empty": "Formato e nome",
@@ -802,11 +804,11 @@ export const gatherings: Catalog = {
   "create.v2.summary.who.spots_one": "{count} lugar",
   "create.v2.summary.who.spots_other": "{count} lugares",
   "create.v2.summary.who.noCap": "Sem limite de lugares",
-  "create.v2.summary.who.cohosts_one": "+{count} coanfitrião",
-  "create.v2.summary.who.cohosts_other": "+{count} coanfitriões",
+  "create.v2.summary.who.cohosts_one": "+{count} pessoa coanfitriã",
+  "create.v2.summary.who.cohosts_other": "+{count} pessoas coanfitriãs",
   "create.v2.summary.access.answered":
     "{confirmed} confirmadas · {answered} de {total} respondidas",
-  "create.v2.summary.access.empty": "Nada respondido ainda",
+  "create.v2.summary.access.empty": "Ainda sem respostas",
   "create.v2.summary.care.houseRules": "Regras da casa",
   "create.v2.summary.care.contentNotes_one": "{count} aviso de conteúdo",
   "create.v2.summary.care.contentNotes_other": "{count} avisos de conteúdo",
@@ -822,7 +824,7 @@ export const gatherings: Catalog = {
   "create.v2.review.group.whenWhere": "Quando e onde",
   "create.v2.review.group.who": "Para quem",
   "create.v2.review.group.access": "Acesso",
-  "create.v2.review.group.care": "Cuidado",
+  "create.v2.review.group.care": "Cuidar",
   "create.v2.review.edit": "Editar",
   "create.v2.review.editLabel": "Editar: {section}",
   "create.v2.review.notAdded": "Por preencher",
@@ -838,7 +840,7 @@ export const gatherings: Catalog = {
   "create.v2.review.row.spots": "Lugares",
   "create.v2.review.row.visibility": "Quem pode ver",
   "create.v2.review.row.community": "Comunidade",
-  "create.v2.review.row.cohosts": "Coanfitriões",
+  "create.v2.review.row.cohosts": "Pessoas coanfitriãs",
   "create.v2.review.row.houseRules": "Regras da casa",
   "create.v2.review.row.contentNotes": "Avisos de conteúdo",
   "create.v2.review.row.rsvpQuestions": "Perguntas ao confirmar",
@@ -846,7 +848,7 @@ export const gatherings: Catalog = {
   "create.v2.review.value.oneDate": "Só uma data",
   "create.v2.review.value.on": "Ligada",
   "create.v2.review.value.off": "Desligada",
-  "create.v2.review.value.alwaysAsked": "{question} (pergunta-se sempre)",
+  "create.v2.review.value.alwaysAsked": "{question} (perguntamos sempre)",
   "create.v2.review.value.quoted": "“{text}”",
   // CreateGatheringReview.tsx: the list above the pledges
   "create.v2.review.missingLabel": "Falta para publicares",
@@ -858,9 +860,10 @@ export const gatherings: Catalog = {
   "create.v2.ready.item.joinLink":
     "O link de entrada começa por http:// ou https://",
   "create.v2.ready.item.paymentLink": "O link de pagamento começa por https://",
-  "create.v2.ready.item.recurrence": "Repetição completa",
+  "create.v2.ready.item.recurrence": "Calendário de repetição completo",
   "create.v2.ready.item.hood": "Bairro escolhido",
-  "create.v2.ready.item.accessibility": "Acessibilidade respondida",
+  "create.v2.ready.item.accessibility":
+    "Perguntas de acessibilidade respondidas",
   "create.v2.ready.item.cover": "Imagem de capa adicionada",
   "create.v2.ready.optional": "(opcional)",
   "create.v2.ready.itemDone": "Feito:",
@@ -869,7 +872,7 @@ export const gatherings: Catalog = {
   "create.v2.ready.jumpHint": "Ir para este campo.",
   "create.v2.ready.pledgesLabel": "Antes de publicares",
   "create.v2.ready.hintReady":
-    "Fica no quadro de imediato. Podes editar ou cancelar na página do teu evento.",
+    "Aparece no quadro de imediato. Podes editar ou cancelar na página do teu evento.",
   "create.v2.ready.hintDetails_one": "Falta {count} detalhe",
   "create.v2.ready.hintDetails_other": "Faltam {count} detalhes",
   "create.v2.ready.hintConfirms_one": "{count} confirmação por marcar",
@@ -941,7 +944,7 @@ export const gatherings: Catalog = {
 
   // steps/WhatChapter.tsx, TitleField.tsx, CoverImageField.tsx, titleSuggestions.ts: chapter 1
   "create.v2.what.titleHint":
-    "Diz claramente o que é: “Jantar de quinta, 8 lugares” vale mais do que “Uma noite de ligação”.",
+    "Diz claramente o que é: “Jantar de quinta, 8 lugares” vale mais do que “Uma noite de conexão”.",
   "create.v2.what.suggestionsLabel": "Experimenta:",
   "create.v2.what.suggestion.atVenue": "{format} em {venue}",
   "create.v2.what.suggestion.weekday_one":
@@ -972,7 +975,7 @@ export const gatherings: Catalog = {
   "create.v2.when.addressNote": "só partilhada com quem confirmar",
   "create.v2.when.addressNoteLinkedVenue":
     "pública, já está na página do negócio",
-  "create.v2.when.addressFromListing": "Da ficha de {name}",
+  "create.v2.when.addressFromListing": "Do anúncio de {name}",
   "create.v2.when.directionsLabel": "Como chegar",
 
   // steps/DateNotes.tsx: chapter 2, notes on the chosen date
@@ -1023,13 +1026,14 @@ export const gatherings: Catalog = {
   // steps/WhoChapter.tsx, CapacityStepperField.tsx, CostKindField.tsx, CohostPickerField.tsx: chapter 3
   "create.v2.who.capacityDecrease": "Menos lugares",
   "create.v2.who.capacityIncrease": "Mais lugares",
-  "create.v2.who.costDetailLabel": "O que as pessoas devem esperar pagar",
+  "create.v2.who.costDetailLabel": "Quanto as pessoas devem contar pagar",
   "create.v2.who.costPlaceholderPayWhatYouCan":
     "ex. 5 a 15 EUR, escala variável",
   "create.v2.who.costPlaceholderFixed": "ex. 8 EUR à porta",
-  "create.v2.who.costHint": "Nas tuas palavras. Ninguém paga pela QueerPulse.",
-  "create.v2.who.cohostsLabel": "Coanfitriões",
-  "create.v2.who.cohostsPlaceholder": "Procura na tua rede",
+  "create.v2.who.costHint":
+    "Nas tuas palavras. Ninguém paga através da QueerPulse.",
+  "create.v2.who.cohostsLabel": "Pessoas coanfitriãs",
+  "create.v2.who.cohostsPlaceholder": "Pesquisa na tua rede",
   "create.v2.who.cohostsHint":
     "Recebem um convite para coorganizar assim que publicares.",
   "create.v2.who.cohostsResultsLabel": "Pessoas da tua rede",
@@ -1038,7 +1042,7 @@ export const gatherings: Catalog = {
     "As tuas conexões aparecem aqui assim que tiveres algumas.",
   "create.v2.who.cohostsLoading": "A carregar a tua rede…",
   "create.v2.who.cohostsLoadError": "A tua rede não carregou.",
-  "create.v2.who.cohostsPickedLabel": "Coanfitriões que escolheste",
+  "create.v2.who.cohostsPickedLabel": "Pessoas coanfitriãs que escolheste",
   "create.v2.who.cohostRemove": "Remover {name}",
   "create.v2.who.waitlistTitle": "Lista de espera quando esgotar",
   "create.v2.who.waitlistDescription":
@@ -1047,10 +1051,10 @@ export const gatherings: Catalog = {
   "create.v2.who.communityLabel": "Organizar com uma comunidade",
   "create.v2.who.runByLabel": "Dinamizado por um dos teus negócios",
   "create.v2.who.runByHint":
-    "A página do evento liga ao negócio que escolheres.",
+    "A página do evento tem um link para o negócio que escolheres.",
   "create.v2.who.runByNone": "Nenhum negócio",
   "create.v2.who.runByPrefilled":
-    "Preenchemos o ponto de encontro de {name}. Podes mudá-lo.",
+    "Usámos {name} como ponto de encontro. Podes mudá-lo.",
   "create.v2.who.runByVenueLinked":
     "Usámos o local e a morada de {name}. Podes mudá-los.",
   "create.v2.who.runByRefused":
@@ -1096,7 +1100,7 @@ export const gatherings: Catalog = {
   "create.v2.success.lead":
     "Já está no quadro. As confirmações aparecem nas tuas notificações e a morada completa só vai para quem confirmar presença.",
   "create.v2.success.leadSeries":
-    "{dateCount} datas estão no quadro. As confirmações aparecem nas tuas notificações e a morada completa só vai para quem confirmar presença.",
+    "Já estão {dateCount} datas no quadro. As confirmações aparecem nas tuas notificações e a morada completa só vai para quem confirmar presença.",
   "create.v2.success.shareLabel": "Partilha o teu evento",
   "create.v2.success.copyLink": "Copiar link",
   "create.v2.success.linkCopied": "Link copiado",
@@ -1133,10 +1137,10 @@ export const gatherings: Catalog = {
     "Escolhe um tipo de evento para veres os formatos.",
   "create.step1.titleLabel": "Título do evento",
   "create.step1.titlePlaceholder":
-    "Um título claro e específico que diz exatamente o que é",
+    "Um título claro e específico que diga exatamente o que é",
   "create.step1.descLabel": "Descrição breve",
   "create.step1.descPlaceholder":
-    "O que é que as pessoas vão fazer? O que devem esperar? O que torna este evento digno de participar?",
+    "O que é que as pessoas vão fazer? O que devem esperar? O que faz este evento valer a pena?",
 
   // steps/ScheduleFields.tsx, PlaceFields.tsx: capítulo 2, data e local
   "create.step2.dateLabel": "Começa",
@@ -1150,7 +1154,7 @@ export const gatherings: Catalog = {
   "create.step2.venueLabel": "Nome do espaço",
   "create.step2.addressPlaceholder": "Morada",
   "create.step2.directionsPlaceholder":
-    "ex.: Toca a campainha da esquerda, 5 min a pé do metro do Intendente",
+    "ex. Toca a campainha da esquerda, 5 min a pé do metro do Intendente",
 
   // steps/RepeatsFields.tsx: capítulo 2, repetições (MSG-10)
   "create.step2b.toggle": "Este evento repete-se",
@@ -1171,7 +1175,7 @@ export const gatherings: Catalog = {
   // EditDetailsModal.tsx: capítulos 3 e 4
   "create.step3.capLabel": "Capacidade",
   "create.step3.capPlaceholder": "Sem limite",
-  "create.step3.langLabel": "Idioma",
+  "create.step3.langLabel": "Língua",
   "create.step3.notesPlaceholder":
     "Mais alguma coisa que as pessoas devam saber: degraus, estacionamento, nível de som…",
   "create.step3.communityLabel": "Organizar com uma comunidade (opcional)",
@@ -1189,18 +1193,18 @@ export const gatherings: Catalog = {
     "Qualquer pessoa na QueerPulse pode encontrar isto e confirmar presença.",
   "audienceScope.extendedNetwork.label": "Conexões das tuas conexões",
   "audienceScope.extendedNetwork.helper":
-    "Pessoas que as tuas conexões conhecem podem encontrar isto: apenas amigos de amigos.",
-  "audienceScope.network.label": "Só a rede",
+    "Só as tuas conexões e as pessoas que elas conhecem podem encontrar isto.",
+  "audienceScope.network.label": "Só a tua rede",
   "audienceScope.network.helper": "Só pessoas com quem já tens uma conexão.",
-  "audienceScope.community.label": "Membros da comunidade",
+  "audienceScope.community.label": "Pessoas da comunidade",
   "audienceScope.community.helper":
-    "Só membros da comunidade com quem o organizas.",
+    "Só quem faz parte da comunidade com que organizas o evento.",
   "audienceScope.inviteOnly.label": "Só por convite",
   "audienceScope.inviteOnly.helper": "Só as pessoas que convidares.",
 
   // hostPage.data.ts — type cards (step 1)
   "host.typeCard.supperClub.body":
-    "Íntimo, feito em tua casa ou numa cozinha emprestada. 8–14 pessoas. O modelo que o Tomás usa, e funciona porque é pessoal.",
+    "Íntimo, feito em tua casa ou numa cozinha emprestada. De 8 a 14 pessoas. O modelo que o Tomás usa, e funciona porque é pessoal.",
   "host.typeCard.studioVisit.body":
     "Abre o teu espaço de trabalho a quem realmente gostaria de o ver. Pouca logística, grande valor. Funciona particularmente bem para quem cria com as mãos.",
   "host.typeCard.skillsSession.body":
@@ -1212,18 +1216,18 @@ export const gatherings: Catalog = {
   "host.hero.eyebrow": "Para pessoas da comunidade",
   "host.hero.title": "Organiza um evento <em>para a tua comunidade.</em>",
   "host.hero.lead":
-    "Não precisas de orçamento para um espaço, de uma comissão, nem de um plano. Precisas de uma data, de algumas cadeiras e de um motivo que valha a pena reunir pessoas. Este guia ajuda-te com o resto.",
+    "Não precisas de orçamento para um espaço, de uma comissão, nem de um plano. Precisas de uma data, de algumas cadeiras e de um bom motivo para juntar pessoas. Este guia ajuda-te com o resto.",
   "host.outro.title": "Os melhores eventos são os <em>que acontecem.</em>",
-  "host.outro.sub": "Começa pequeno, começa em breve. A comunidade está aqui.",
+  "host.outro.sub": "Começa com pouco, começa já. A comunidade está aqui.",
   "host.createGatheringCta": "Cria o teu evento",
 
   // HostSteps.tsx — step 1
   "host.step1.title": "Decide que tipo de <em>evento</em> queres",
   "host.step1.body":
     "O formato molda tudo o resto. Um jantar para oito pessoas é um projeto completamente diferente de uma oficina para trinta. Começa pelo que fazes bem e pelo que consegues gerir sem ajuda.",
-  "host.step1.tip.head": "Começa mais pequeno do que imaginas",
+  "host.step1.tip.head": "Começa com menos gente do que imaginas",
   "host.step1.tip.body":
-    "Qualquer pessoa com experiência a organizar eventos te dirá o mesmo: o teu primeiro evento deve ter metade do tamanho que imaginas. Seis pessoas já chega. Acerta o formato e depois cresce.",
+    "Qualquer pessoa com experiência a organizar eventos te dirá o mesmo: o teu primeiro evento deve ter metade do tamanho que imaginas. Seis pessoas chegam perfeitamente. Acerta o formato e depois cresce.",
 
   // HostSteps.tsx — step 2
   "host.step2.title": "Encontra o <em>espaço certo</em>",
@@ -1232,7 +1236,7 @@ export const gatherings: Catalog = {
   "host.step2.list.small":
     "<b>Até 12 pessoas:</b> casa ou atelier é ideal. Pergunta no quadro se precisas de uma cozinha ou de um projetor que não tens.",
   "host.step2.list.medium":
-    "<b>12–30 pessoas:</b> espaços parceiros na Mouraria, Príncipe Real e Marvila. Publica no quadro a pedir sugestões.",
+    "<b>De 12 a 30 pessoas:</b> espaços parceiros na Mouraria, no Príncipe Real e em Marvila. Publica no quadro a pedir sugestões.",
   "host.step2.list.large":
     "<b>Mais de 30:</b> fala primeiro connosco. Podemos ajudar-te a encontrar espaços e talvez coorganizar contigo.",
   "host.step2.tip.head": "Publica no quadro",
@@ -1242,7 +1246,7 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 3
   "host.step3.title": "Convida pessoas <em>com intenção</em>",
   "host.step3.body":
-    'Os eventos funcionam porque a sala é bem escolhida, seja qual for o seu tamanho. Pensa em quem convidas e porquê: foca-te em "quem ganharia algo por estar nesta sala junto" mais do que em "a quem devo um convite".',
+    'Os eventos resultam quando a escolha de quem vem é cuidada, seja qual for o tamanho. Pensa em quem convidas e porquê: pergunta-te "quem ganha alguma coisa por estar aqui com estas pessoas" e deixa de lado "a quem devo um convite".',
   "host.step3.list.clear":
     "Explica claramente o que é o evento, quanto tempo dura, e o que as pessoas devem trazer ou esperar.",
   "host.step3.list.location":
@@ -1253,13 +1257,13 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 4
   "host.step4.title": "No <em>dia</em>",
   "host.step4.body":
-    "O que mais importa é o ambiente quando as pessoas chegam, mais do que a logística. Os primeiros dez minutos determinam se a pessoa sente que pertence ali ou que entrou na sala errada.",
+    "O que mais importa é o ambiente quando as pessoas chegam, mais do que a logística. Os primeiros dez minutos determinam se a pessoa sente que pertence ali ou que entrou no sítio errado.",
   "host.step4.list.greet":
     "Recebe as pessoas à porta. Apresenta-as umas às outras pelo nome e com um motivo.",
   "host.step4.list.activity":
     "Tem algo para as pessoas fazerem ou terem nas mãos nos primeiros cinco minutos.",
   "host.step4.list.dontManage":
-    "Não tentes gerir demasiado a conversa. Abre a sala; não conduzas um painel.",
+    "Não tentes controlar demasiado a conversa. Dá o pontapé de saída e deixa as pessoas falarem.",
   "host.step4.tip.head": "Sobre segurança nos eventos",
   "host.step4.tip.body":
     "Se estás a organizar em tua casa, tens o direito de pedir a qualquer pessoa que saia, a qualquer momento, por qualquer motivo. Aplica-se o Código de Cuidado da QueerPulse.",
@@ -1267,13 +1271,13 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 5
   "host.step5.title": "Depois de <em>terminar</em>",
   "host.step5.body1":
-    "Escreve uma nota breve no anúncio do evento: o que aconteceu, como correu. Isto ajuda quem não pôde ir e dá a futuras pessoas organizadoras uma ideia do que funciona.",
+    "Escreve uma nota breve no anúncio do evento: o que aconteceu, como correu. Isto ajuda quem não pôde ir e dá a quem organizar no futuro uma ideia do que funciona.",
   "host.step5.body2":
     "Se queres torná-lo recorrente, publica-o no quadro de eventos da QueerPulse. Ajudamos-te a encontrar participantes e a construir o tipo de evento de confiança que se torna uma referência no calendário da comunidade.",
   "host.step5.cta": "Conta-nos como correu",
 
   // HostSidebar.tsx
-  "host.sidebar.readyTitle": "Já podes publicar o teu evento?",
+  "host.sidebar.readyTitle": "Tudo pronto para publicar o teu evento?",
   "host.sidebar.readyBody":
     "Assim que tiveres uma data, um formato e uma ideia de quem vais convidar, podes publicá-lo na página de eventos da QueerPulse.",
   "host.sidebar.spacesTitle": "Espaços parceiros",
@@ -1291,8 +1295,8 @@ export const gatherings: Catalog = {
   "addMonth.page.title": "Adicionar um mês de eventos",
   "addMonth.page.lede":
     "Define os detalhes partilhados uma vez e depois dá a cada data o seu título, descrição e foto.",
-  "addMonth.noAccess.backToHost": "Voltar a organizar",
-  "addMonth.draft.title": "Continuar o teu mês onde ficaste?",
+  "addMonth.noAccess.backToHost": "Voltar ao guia para organizar",
+  "addMonth.draft.title": "Continuar o teu mês onde o deixaste?",
   "addMonth.draft.label_one": "{count} data",
   "addMonth.draft.label_other": "{count} datas",
   "addMonth.template.heading": "Começa a partir de um evento",
@@ -1320,10 +1324,10 @@ export const gatherings: Catalog = {
   "addMonth.template.summary.row.cost": "Preço",
   "addMonth.template.summary.row.payment": "Como se paga",
   "addMonth.template.summary.row.rsvpCutoff": "As inscrições fecham",
-  "addMonth.template.summary.row.capacity": "Lotação",
+  "addMonth.template.summary.row.capacity": "Capacidade",
   "addMonth.template.summary.row.visibility": "Quem pode ver",
   "addMonth.template.summary.row.community": "Comunidade",
-  "addMonth.template.summary.row.runBy": "Organizado por",
+  "addMonth.template.summary.row.runBy": "Dinamizado por",
   "addMonth.template.summary.row.careNotes": "Notas de cuidado",
   "addMonth.template.summary.row.houseRules": "Regras da casa",
   "addMonth.template.summary.row.accessibility": "Acessibilidade",
@@ -1339,15 +1343,15 @@ export const gatherings: Catalog = {
   "addMonth.template.summary.editElsewhereUnnamed":
     "Para mudar mais alguma coisa, edita primeiro o evento de origem, ou edita cada evento depois de publicar.",
   "addMonth.template.summary.notCopied":
-    "Coanfitriões, comunidades convidadas, quizzes e Vamos juntes definem-se em cada evento depois de publicar.",
+    "Pessoas coanfitriãs, comunidades convidadas, quizzes e Vamos juntes definem-se em cada evento depois de publicar.",
   "addMonth.template.notice.runBy.notManager":
-    "Estes eventos não vão ser organizados por {name}, porque não geres esse espaço.",
+    "Estes eventos não vão ser dinamizados por {name}, porque não geres esse negócio.",
   "addMonth.template.notice.runBy.notManagerUnnamed":
-    "Estes eventos não vão ser organizados pelo negócio do evento de origem, porque não geres esse espaço.",
+    "Estes eventos não vão ser dinamizados pelo negócio do evento de origem, porque não o geres.",
   "addMonth.template.notice.runBy.unavailable":
-    "Estes eventos não vão ser organizados por {name}, porque já não está aberto no diretório.",
+    "Estes eventos não vão ser dinamizados por {name}, porque já não está ativo no diretório.",
   "addMonth.template.notice.runBy.unavailableUnnamed":
-    "Estes eventos não vão ser organizados pelo negócio do evento de origem, porque já não está aberto no diretório.",
+    "Estes eventos não vão ser dinamizados pelo negócio do evento de origem, porque já não está ativo no diretório.",
   "addMonth.template.notice.community.notModerator":
     "Estes eventos não vão ser publicados em {name}, porque não fazes parte da moderação.",
   "addMonth.template.notice.community.notModeratorUnnamed":
@@ -1362,7 +1366,7 @@ export const gatherings: Catalog = {
     "O local do evento de origem saiu do diretório, por isso estes eventos mostram o nome do local sem ligação ao diretório.",
   "addMonth.edit.placeHeading": "Local",
   "addMonth.edit.costHeading": "Preço",
-  "addMonth.edit.resetToTemplate": "Repor o local e o preço",
+  "addMonth.edit.resetToTemplate": "Usar o local e o preço do evento de origem",
   "addMonth.dates.heading": "Escolhe as datas",
   "addMonth.dates.lede":
     "Toca em cada data em que queres um evento. Também podes passar para o mês seguinte.",
@@ -1373,13 +1377,13 @@ export const gatherings: Catalog = {
   "addMonth.calendar.cap": "Podes adicionar até {limit} datas de cada vez.",
   "addMonth.calendar.windowHint":
     "Podes escolher datas de hoje até {lastDate}.",
-  "addMonth.times.heading": "Hora de todas as datas",
+  "addMonth.times.heading": "Hora para todas as datas",
   "addMonth.times.startLabel": "Começa às",
   "addMonth.times.endLabel": "Termina às",
   "addMonth.times.endsNextDay": "Termina no dia seguinte",
   "addMonth.times.zoneNote":
     "As horas estão em {timezone}, o fuso horário do evento de origem.",
-  "addMonth.cover.heading": "Foto de capa de todas as datas",
+  "addMonth.cover.heading": "Foto de capa para todas as datas",
   "addMonth.cover.fromTemplate": "A capa de {title}",
   "addMonth.cover.none":
     "{title} não tem capa, por isso as datas sem foto própria são publicadas sem capa.",
@@ -1417,7 +1421,7 @@ export const gatherings: Catalog = {
   "addMonth.publish.publishing_one": "A publicar {count} evento",
   "addMonth.publish.publishing_other": "A publicar {count} eventos",
   "addMonth.publish.allTogether":
-    "Todas as datas são publicadas juntas. Se uma não puder, nenhuma é publicada.",
+    "Todas as datas são publicadas ao mesmo tempo. Se uma falhar, nenhuma é publicada.",
   "addMonth.publish.pledges.codeOfCare":
     "Estes eventos seguem o Código de Cuidado da QueerPulse.",
   "addMonth.publish.pledges.accessibility":
@@ -1439,7 +1443,7 @@ export const gatherings: Catalog = {
   "addMonth.results.title_one": "{count} evento <em>publicado</em>",
   "addMonth.results.title_other": "{count} eventos <em>publicados</em>",
   "addMonth.results.lede":
-    "Cada um é agora um evento independente. Edita, cancela ou apaga qualquer um na sua própria página.",
+    "Cada um é agora um evento independente. Edita, cancela ou elimina qualquer um deles na respetiva página.",
   "addMonth.results.goToEvents": "Ir para os teus eventos",
   "addMonth.results.addAnother": "Adicionar outro mês",
   "addMonth.results.titleUnlisted": "O teu mês está <em>publicado</em>",
@@ -1451,13 +1455,13 @@ export const gatherings: Catalog = {
   "addMonth.toast.published_one": "{count} evento publicado",
   "addMonth.toast.published_other": "{count} eventos publicados",
   "addMonth.error.noAccess":
-    "Adicionar um mês de eventos está a ser ativado membro a membro enquanto o testamos. Pede à nossa equipa para o ativar para ti.",
+    "Estamos a testar a opção de adicionar um mês de eventos e ativamo-la pessoa a pessoa. Pede à nossa equipa para a ativar para ti.",
   "addMonth.error.templateNotFound":
     "O evento de onde partiste já não pode ser usado. Pode ter sido cancelado ou retirado, ou já não o organizas nem coorganizas. Escolhe outro evento.",
   "addMonth.error.communityOnly":
-    "O evento de onde partiste é só para membros de {communityName}, e só a moderação dessa comunidade pode publicar eventos lá. Escolhe outro evento.",
+    "O evento de onde partiste é só para quem faz parte de {communityName}, e só a moderação dessa comunidade pode publicar eventos lá. Escolhe outro evento.",
   "addMonth.error.communityOnlyUnnamed":
-    "O evento de origem é só para membros de uma comunidade onde já não podes publicar, por isso estes eventos não podem ser publicados.",
+    "O evento de origem é só para quem faz parte de uma comunidade onde já não podes publicar, por isso estes eventos não podem ser publicados.",
   "addMonth.error.tooManyDates":
     "Podes adicionar até {limit} datas de cada vez. Remove algumas datas e publica outra vez.",
   "addMonth.error.duplicateDate":
@@ -1467,25 +1471,25 @@ export const gatherings: Catalog = {
   "addMonth.error.dateTooFar":
     "{date} fica a mais de 12 meses. A última data que podes adicionar é {lastDate}.",
   "addMonth.error.rowInvalid":
-    "As horas de {date} não funcionam: o fim tem de vir depois do início.",
+    "As horas de {date} não batem certo: o fim tem de ser depois do início.",
   "addMonth.error.venueNotFound":
     "O local que escolheste já não está no diretório. Escolhe outro local ou escreve o nome.",
   "addMonth.error.restricted":
     "A tua conta está restrita neste momento, por isso não podes publicar eventos. As tuas notificações explicam porquê.",
   "addMonth.error.membershipInactive":
-    "A tua conta de membro não está ativa neste momento, por isso não podes publicar eventos.",
+    "A tua adesão não está ativa neste momento, por isso não podes publicar eventos.",
   "addMonth.error.coverNotYours":
     "Uma das fotos foi carregada por outra pessoa, por isso nada foi publicado. Carrega tu essa foto e publica outra vez.",
   "addMonth.error.rateLimited":
     "Publicaste vários meses em pouco tempo. Espera uns minutos e publica outra vez.",
   "addMonth.error.invalid":
-    "Algo na página não passou nas nossas verificações, provavelmente os links do local ou do pagamento, um título ou uma descrição, por isso revê isso e publica outra vez.",
+    "Há algo na página que não passou nas nossas verificações, provavelmente os links do local ou do pagamento, um título ou uma descrição. Revê isso e publica outra vez.",
   "addMonth.error.signedOut":
     "A tua sessão terminou. Inicia sessão outra vez e publica. As tuas datas estão guardadas neste dispositivo.",
   "addMonth.error.offline":
     "Estás offline, por isso este mês pode não ter chegado até nós. Quando tiveres ligação, vê os teus eventos antes de publicar outra vez.",
   "addMonth.error.unreachable":
-    "Não conseguimos chegar ao QueerPulse, por isso este mês pode ou não estar publicado. Vê os teus eventos antes de publicar outra vez.",
+    "Não conseguimos chegar à QueerPulse, por isso este mês pode ou não estar publicado. Vê os teus eventos antes de publicar outra vez.",
   "addMonth.error.server":
     "O nosso servidor teve um problema, por isso este mês pode ou não estar publicado. Vê os teus eventos antes de publicar outra vez.",
   "addMonth.error.refused":
@@ -1497,7 +1501,7 @@ export const gatherings: Catalog = {
   "addMonth.error.read.offline":
     "Não conseguimos carregar o evento de origem porque estás sem ligação. Verifica a tua ligação e tenta outra vez.",
   "addMonth.error.read.unreachable":
-    "Não conseguimos carregar o evento de origem porque não foi possível chegar ao QueerPulse. Tenta outra vez.",
+    "Não conseguimos carregar o evento de origem porque não foi possível chegar à QueerPulse. Tenta outra vez.",
   "addMonth.error.read.server":
     "Não conseguimos carregar o evento de origem porque o nosso servidor teve um problema. Tenta outra vez.",
   "addMonth.error.read.signedOut":
@@ -1507,7 +1511,7 @@ export const gatherings: Catalog = {
   "addMonth.error.read.refused":
     "O servidor recusou carregar o evento de origem (erro {status}). Tenta outra vez ou escolhe outro evento.",
   "addMonth.error.read.timedOut":
-    "Carregar o evento de origem demorou demasiado. Tenta outra vez.",
+    "O evento de origem demorou demasiado a carregar. Tenta outra vez.",
   "addMonth.error.plain.duplicateDate":
     "Uma das datas aparece duas vezes. Cada data tem um só evento.",
   "addMonth.error.plain.dateInPast":
@@ -1515,7 +1519,7 @@ export const gatherings: Catalog = {
   "addMonth.error.plain.dateTooFar":
     "Uma das datas fica a mais de 12 meses. Escolhe datas dentro dos próximos 12 meses.",
   "addMonth.error.plain.rowInvalid":
-    "As horas de uma das datas não funcionam: o fim tem de vir depois do início.",
+    "As horas de uma das datas não batem certo: o fim tem de ser depois do início.",
   "addMonth.error.tooLarge":
     "Este mês tem texto a mais para publicar de uma vez. Encurta algumas descrições, ou publica algumas datas agora e as restantes depois.",
 
@@ -1523,12 +1527,10 @@ export const gatherings: Catalog = {
 
   // ── Manage page header (ManageGatheringPage) ────────────────────────────────
   "manage.eyebrow": "A organizar",
-  "manage.status.approvedDaysToGo_one":
-    "Aprovação concluída · falta {count} dia",
-  "manage.status.approvedDaysToGo_other":
-    "Aprovação concluída · faltam {count} dias",
+  "manage.status.approvedDaysToGo_one": "Aprovado · falta {count} dia",
+  "manage.status.approvedDaysToGo_other": "Aprovado · faltam {count} dias",
   "manage.actions.editDetails": "Editar detalhes",
-  "manage.actions.messageAttendees": "Enviar mensagem às pessoas",
+  "manage.actions.messageAttendees": "Enviar mensagem a quem vai",
   "manage.actions.openCheckin": "Abrir check-in",
   "manage.linkCopiedToast": "Link copiado!",
   "manage.linkCopyFailedToast":
@@ -1557,7 +1559,7 @@ export const gatherings: Catalog = {
   "manage.overview.lastEdited": "Última edição {time}",
 
   // ── Manage: attendees tab ────────────────────────────────────────────────────
-  "manage.attendees.searchPlaceholder": "Procurar pessoas…",
+  "manage.attendees.searchPlaceholder": "Pesquisar pessoas…",
   "manage.attendees.exportCta": "Exportar lista",
   "manage.attendees.exportedToast": "CSV exportado",
   "manage.attendees.inviteCta": "Convidar pessoas",
@@ -1578,13 +1580,13 @@ export const gatherings: Catalog = {
   "manage.attendees.promotedToast":
     "{name} entrou na lista de pessoas convidadas",
   "manage.attendees.actionErrorToast":
-    "Isso não foi possível. Tenta outra vez.",
+    "Não conseguimos fazer isso. Tenta outra vez.",
   "manage.attendees.invitedBy": "Convite de {name}",
 
   // ── Manage: requests (pessoas a pedir para trazer uma conexão) ──────────────
   "manage.requests.heading": "Pedidos",
   "manage.requests.sub":
-    "Pessoas que vêm a este evento pediram para trazer uma conexão. A conexão só é avisada se aprovares.",
+    "Há pessoas que vêm a este evento e pediram para trazer uma conexão. A conexão só é avisada se aprovares.",
   "manage.requests.tabBadge_one": "{count} pedido por rever",
   "manage.requests.tabBadge_other": "{count} pedidos por rever",
   "manage.requests.row": "<b>{inviter}</b> quer trazer <b>{invitee}</b>",
@@ -1596,7 +1598,7 @@ export const gatherings: Catalog = {
 
   // ── Manage: messages tab ─────────────────────────────────────────────────────
   "manage.messages.composerLabel_one":
-    "Enviar mensagem a todas as pessoas ({count} vão)",
+    "Enviar mensagem a todas as pessoas ({count} vai)",
   "manage.messages.composerLabel_other":
     "Enviar mensagem a todas as pessoas ({count} vão)",
   "manage.writeUpdatePlaceholder":
@@ -1607,7 +1609,7 @@ export const gatherings: Catalog = {
   "manage.messages.previousHeading": "Mensagens anteriores",
   "manage.messages.emptyTitle": "Ainda não enviaste mensagens",
   "manage.messages.emptyDescription":
-    "Quando enviares uma novidade, ela aparece aqui. Um olá rápido ou uma nota sobre o que esperar ajuda as pessoas convidadas a sentirem-se prontas.",
+    "Quando enviares uma novidade, aparece aqui. Um olá rápido ou uma nota sobre o que esperar ajuda as pessoas convidadas a sentirem-se prontas.",
   "manage.messages.justNow": "agora mesmo",
   "manage.messages.openedOf": "{opened} / {total} abriram",
   "manage.messages.sentToast_one": "Novidade enviada a {count} pessoa",
@@ -1625,11 +1627,11 @@ export const gatherings: Catalog = {
   "manage.settings.dangerZoneHeading": "Zona de risco",
   "manage.settings.cancelLabel": "Cancelar este evento",
   "manage.settings.cancelText":
-    "Todas as pessoas serão avisadas e as inscrições serão libertadas. Isto não pode ser desfeito. Será enviada automaticamente uma mensagem de cancelamento.",
+    "Todas as pessoas inscritas recebem um aviso e as inscrições são libertadas. Não dá para desfazer. Enviamos automaticamente uma mensagem de cancelamento.",
   "manage.settings.cancelCta": "Cancelar evento",
   "manage.settings.deleteLabel": "Eliminar este evento",
   "manage.settings.deleteText":
-    "Remove o evento com as inscrições, as fotografias e os avisos dele, para sempre. Ninguém é notificado. Se já há pessoas inscritas, cancela-o primeiro para que sejam avisadas.",
+    "Elimina de vez o evento, com as inscrições, as fotografias e os comunicados. Não enviamos nenhum aviso. Se já há pessoas inscritas, cancela-o primeiro para que fiquem a saber.",
   "manage.settings.deleteCta": "Eliminar evento",
 
   // ── Manage: sidebar ───────────────────────────────────────────────────────────
@@ -1654,7 +1656,7 @@ export const gatherings: Catalog = {
   // ── Manage: edit-details modal ────────────────────────────────────────────────
   "manage.editModal.title": "Atualiza o teu evento",
   "manage.editModal.sub":
-    "As alterações ficam logo visíveis na página pública. Quem vai é avisado quando mudas a hora de início ou o local.",
+    "As alterações ficam logo visíveis na página pública. Quem vai recebe um aviso quando mudas a hora de início ou o local.",
   "manage.editModal.section.gathering": "O evento",
   "manage.editModal.section.whenWhere": "Quando e onde",
   "manage.editModal.section.audience": "Para quem é",
@@ -1665,7 +1667,7 @@ export const gatherings: Catalog = {
   "manage.editModal.fieldEndAt": "Fim (opcional)",
   "manage.editModal.endSummary": "Decorre {date} · {time}",
   "manage.editModal.endBeforeStartError":
-    "O fim tem de vir depois do início. Recua o início, adia o fim ou limpa-o.",
+    "O fim tem de vir depois do início. Antecipa o início, adia o fim ou apaga a hora de fim.",
   "manage.editModal.endSpanError":
     "Um evento pode durar até {days} dias. Aproxima o fim do início.",
   "manage.editModal.capacityLowerHint":
@@ -1687,9 +1689,9 @@ export const gatherings: Catalog = {
   "manage.editModal.notifiedToast_other": "Guardado · {count} pessoas avisadas",
   "manage.editModal.navLabel": "Secções",
   "manage.editModal.sectionHint.gathering":
-    "O que as pessoas veem primeiro na listagem e no cartão.",
+    "O que as pessoas veem primeiro na página do evento e no cartão.",
   "manage.editModal.sectionHint.whenWhere":
-    "Quem vai é avisado quando mudas a hora de início ou o local.",
+    "Quem vai recebe um aviso quando mudas a hora de início ou o local.",
   "manage.editModal.sectionHint.audience":
     "Quem o pode encontrar e quantas pessoas podem ir.",
   "manage.editModal.sectionHint.care":
@@ -1702,7 +1704,7 @@ export const gatherings: Catalog = {
   "manage.editModal.status.clean": "Ainda sem alterações",
   "manage.editModal.status.changed_one": "{count} secção alterada",
   "manage.editModal.status.changed_other": "{count} secções alteradas",
-  "manage.editModal.status.notify": "Quem vai é avisado",
+  "manage.editModal.status.notify": "Quem vai recebe um aviso",
   "manage.editModal.status.blocked": "Corrige um campo para guardar",
   "manage.editModal.titleRequiredError": "Dá um título ao evento",
   "manage.editModal.startRequiredError": "Escolhe quando começa",
@@ -1724,14 +1726,14 @@ export const gatherings: Catalog = {
   "manage.seriesScope.eyebrow": "Evento recorrente",
   "manage.seriesScope.edit.title": "Aplicar esta <em>alteração</em> a…",
   "manage.seriesScope.edit.sub":
-    "Este evento repete-se. Escolhe se a tua alteração se aplica só a esta data ou a todas as datas seguintes. Cada data futura recebe o título, a descrição, o público, o formato, os cuidados e as definições de confirmações desta data, no lugar do que tinha. O local, a capa, o custo, a capacidade e a comunidade só mudam se os mudaste aqui.",
+    "Este evento repete-se. Escolhe se a alteração vale só para esta data ou para todas as que ainda faltam. Cada data futura passa a ter o título, a descrição, o público, o formato, os cuidados e as definições de confirmação desta data, que substituem o que tinha antes. O local, a capa, o preço, a capacidade e a comunidade só mudam se os alteraste aqui.",
   "manage.seriesScope.editField.sub":
     "Este evento repete-se. Escolhe se esta alteração vale só para esta data ou para todas as que ainda faltam.",
   "manage.seriesScope.edit.thisCta": "Só a esta data",
   "manage.seriesScope.edit.futureCta": "A esta e a todas as datas futuras",
   "manage.seriesScope.cancel.title": "Cancelar <em>que datas?</em>",
   "manage.seriesScope.cancel.sub":
-    "Este evento repete-se. Escolhe se queres cancelar só esta data ou toda a série fixa.",
+    "Este evento repete-se. Escolhe se queres cancelar só esta data ou a série inteira.",
   "manage.seriesScope.cancel.thisCta": "Só esta data",
   "manage.seriesScope.cancel.futureCta": "Esta e todas as datas futuras",
 
@@ -1757,7 +1759,7 @@ export const gatherings: Catalog = {
   "manage.invite.title": "Traz as <em>pessoas certas</em>",
   "manage.invite.sub":
     "Escolhe as pessoas que gostavas de ter neste evento. Vão receber um convite caloroso que podem aceitar ou não, sem pressão.",
-  "manage.invite.searchLabel": "Procurar pessoas para convidar",
+  "manage.invite.searchLabel": "Pesquisar pessoas para convidar",
   "manage.invite.loadingPeople": "A procurar as pessoas com quem tens conexão.",
   "manage.invite.noConnections":
     "Podes convidar as pessoas com quem tens conexão. Assim que tiveres conexões, aparecem aqui.",
@@ -1790,14 +1792,14 @@ export const gatherings: Catalog = {
     "Todas as pessoas que confirmaram presença ou foram convidadas são avisadas quando o local muda.",
   "manage.fieldEditor.runBySub": "Escolhe um dos teus negócios, ou nenhum.",
   "manage.fieldEditor.runByReadOnly":
-    "{name} organiza este evento. Só quem gere esse negócio o pode mudar.",
+    "{name} dinamiza este evento. Só quem gere esse negócio o pode mudar.",
   "manage.fieldEditor.capacitySub":
     "Define quantas pessoas podem dizer que vão.",
   "manage.fieldEditor.descriptionSub": "Aparece na página pública.",
   "manage.fieldEditor.descriptionLeft_one": "Falta {count} carácter",
   "manage.fieldEditor.descriptionLeft_other": "Faltam {count} caracteres",
   "manage.fieldEditor.capacityUnlimitedHint":
-    "Qualquer pessoa pode confirmar presença.",
+    "Qualquer pessoa pode confirmar presença. Não há limite.",
   "manage.fieldEditor.descriptionCount_one": "{length} carácter",
   "manage.fieldEditor.descriptionCount_other": "{length} caracteres",
   "manage.fieldEditor.saveShortcut": "<kbd>{keys}</kbd> para guardar",
@@ -1806,7 +1808,7 @@ export const gatherings: Catalog = {
   //    create-gathering wizard's place fields (steps/PlaceFields.tsx) ──────
   "venuePicker.searchPlaceholder": "Pesquisar no diretório local",
   "venuePicker.noResults": "Sem correspondências. Tenta outra pesquisa.",
-  "venuePicker.enterManually": "Não encontras? Escreve tu",
+  "venuePicker.enterManually": "Não encontras? Escreve o nome",
   "venuePicker.searchInstead": "Pesquisar no diretório",
   "venuePicker.freeTextPlaceholder": "Nome do local",
   "venuePicker.fromDirectory": "Do diretório local",
@@ -1824,7 +1826,7 @@ export const gatherings: Catalog = {
   "venuePicker.refusedError":
     "Já não dá para associar este local a um evento. Toca em Alterar para escolher outro ou escrever tu o nome.",
   "venuePicker.runByHint":
-    "Vais fazer isto como visita ou serviço ao domicílio? Escolhe o teu negócio em “Dinamizado por um dos teus negócios”.",
+    "Vais fazer isto como visita guiada ou serviço ao domicílio? Escolhe o teu negócio em “Dinamizado por um dos teus negócios”.",
 
   // ── Cohosts (CohostManager / AddCohostModal) ─────────────────────
   "cohost.panelTitle": "Pessoas coanfitriãs",
@@ -1832,9 +1834,9 @@ export const gatherings: Catalog = {
   "cohost.panelDesc":
     "Uma pessoa coanfitriã pode editar este evento, enviar mensagens às pessoas convidadas e gerir as inscrições. Continuas como a pessoa anfitriã principal. Cancelar o evento e o fundo da pessoa anfitriã ficam contigo.",
   "cohost.emptyState":
-    "Ainda não tens nenhuma pessoa coanfitriã. Adicionar uma significa teres companhia para a noite.",
+    "Ainda não tens pessoas coanfitriãs. Com alguém a coorganizar, a noite não fica toda às tuas costas.",
   "cohost.roleCohost": "Pessoa coanfitriã",
-  "cohost.inviteSentToast": "Convite para co-organizar enviado a {name}",
+  "cohost.inviteSentToast": "Convite para coorganizar enviado a {name}",
   "cohost.removedToast": "{name} deixou de ser pessoa coanfitriã",
   "cohost.confirmPrompt": "Remover?",
   "cohost.confirmYes": "Sim, remover",
@@ -1842,21 +1844,20 @@ export const gatherings: Catalog = {
   "cohost.removeCta": "Remover",
   "cohost.removeAria": "Remover {name} como pessoa coanfitriã",
   "cohost.addModal.eyebrow": "Adicionar pessoa coanfitriã",
-  "cohost.addModal.title": "Reparte a <em>carga</em>",
+  "cohost.addModal.title": "Divide o <em>trabalho</em>",
   "cohost.addModal.sub":
     "Uma pessoa coanfitriã pode editar a página, enviar mensagens às pessoas convidadas e gerir as inscrições contigo. Escolhe alguém em quem confies. Vai receber um pedido para aceitar.",
-  "cohost.addModal.searchLabel":
-    "Procurar pessoas para adicionar como coanfitriã",
+  "cohost.addModal.searchLabel": "Pesquisar pessoas para a coorganização",
   "cohost.addModal.allListedCohosting":
-    "Quem corresponde à pesquisa já está a co-organizar.",
-  "cohost.addModal.step2Eyebrow": "Convite para co-organizar",
+    "Quem corresponde à pesquisa já está a coorganizar.",
+  "cohost.addModal.step2Eyebrow": "Convite para coorganizar",
   "cohost.addModal.step2Title": "Convidar <em>{name}</em>",
   "cohost.addModal.step2Sub":
     "Diz em que gostavas de ter ajuda e quanto tempo é preciso. A pessoa pode aceitar ou recusar, e nada muda até aceitar.",
   "cohost.addModal.roleLabel": "Em que vai ajudar",
   "cohost.addModal.rolePlaceholder": "Escolhe uma função",
   "cohost.addModal.commitmentLabel": "Quanto tempo é preciso",
-  "cohost.addModal.commitmentPlaceholder": "Escolhe um compromisso",
+  "cohost.addModal.commitmentPlaceholder": "Escolhe quanto tempo",
   "cohost.addModal.messageLabel": "Um recado",
   "cohost.addModal.messageHelper":
     "Opcional. Aparece no topo do convite da pessoa.",
@@ -1876,9 +1877,9 @@ export const gatherings: Catalog = {
     "A compactar {count} fotografias e a aplicar desfoque com base no consentimento.",
   "album.success.title": "Álbum <em>pronto.</em>",
   "album.success.sub_one":
-    "Compactámos <b>{count} fotografia</b> no ficheiro <b>album.zip</b> e a transferência já começou. Os rostos ficam desfocados a não ser que a pessoa tenha optado por aparecer com o nome. Isso está incluído na exportação.",
+    "Compactámos <b>{count} fotografia</b> no ficheiro <b>album.zip</b> e a transferência já começou. Os rostos ficam desfocados a não ser que a pessoa tenha optado por aparecer com o nome. Isso já vem aplicado na exportação.",
   "album.success.sub_other":
-    "Compactámos <b>{count} fotografias</b> no ficheiro <b>album.zip</b> e a transferência já começou. Os rostos ficam desfocados a não ser que a pessoa tenha optado por aparecer com o nome. Isso está incluído na exportação.",
+    "Compactámos <b>{count} fotografias</b> no ficheiro <b>album.zip</b> e a transferência já começou. Os rostos ficam desfocados a não ser que a pessoa tenha optado por aparecer com o nome. Isso já vem aplicado na exportação.",
   "album.success.meta_one": "album.zip · {count} fotografia",
   "album.success.meta_other": "album.zip · {count} fotografias",
   "album.success.doneCta": "Concluído",
@@ -1911,21 +1912,21 @@ export const gatherings: Catalog = {
   "hub.browse.loadMore": "Mostrar mais",
   "hub.browse.monthCount_one": "{count} evento",
   "hub.browse.monthCount_other": "{count} eventos",
-  "hub.browse.searchLabel": "Procurar eventos",
-  "hub.browse.searchPlaceholder": "Procura por nome ou zona",
+  "hub.browse.searchLabel": "Pesquisar eventos",
+  "hub.browse.searchPlaceholder": "Pesquisa por nome ou bairro",
   "hub.browse.noMatch.title": "Nada corresponde a esses filtros.",
   "hub.browse.noMatch.body":
     "Experimenta um intervalo de datas maior, outro bairro, ou qualquer tipo de evento.",
   "hub.calendar.heading": "O mês de relance",
   "hub.host.title": "Estás a <em>organizar</em> algo?",
   "hub.host.body":
-    "Um jantar, uma leitura, um protesto, uma festa: seja o que for que organizes, ajudamos a que te encontrem.",
-  "hub.host.cta": "Organiza um evento",
+    "Um jantar, uma leitura, um protesto, uma festa: seja o que for que organizes, ajudamos as pessoas a encontrá-lo.",
+  "hub.host.cta": "Organizar um evento",
   "hub.ways.heading": "Formas de te juntares",
   "hub.empty.title": "Ainda nada no calendário.",
   "hub.empty.body":
-    "Aparecem coisas novas por aqui a toda a hora. Podias organizar a primeira.",
-  "hub.card.cta": "Vê",
+    "Estão sempre a aparecer eventos novos por aqui. Podias organizar o primeiro.",
+  "hub.card.cta": "Ver",
   "hub.card.moreThemes": "+{count}",
   "hub.card.runBy": "Dinamizado por {name}",
   "hub.loading": "A ver o que há…",
@@ -1943,15 +1944,15 @@ export const gatherings: Catalog = {
   "lineup.roleLabel": "O papel da pessoa",
   "lineup.removeAria": "Remover {name} do lineup",
   "lineup.pickerTitle": "Convidar para o lineup",
-  "lineup.pickerSub": "Convida as tuas ligações ou quem vai a este evento.",
-  "lineup.pickerSearchPlaceholder": "Procurar pessoas",
+  "lineup.pickerSub": "Convida as tuas conexões ou quem vai a este evento.",
+  "lineup.pickerSearchPlaceholder": "Pesquisar pessoas",
   "lineup.pickerEmpty":
-    "Ninguém com esse nome entre as tuas ligações ou quem vai.",
+    "Ninguém com esse nome entre as tuas conexões ou quem vai.",
   "lineup.removedToast": "{name} saiu do lineup",
   "lineup.pickerAllListed":
     "Todas as pessoas que podes convidar já estão no lineup.",
   "lineup.pickerLoadError":
-    "Não conseguimos carregar as tuas ligações. Quem vai continua na lista.",
+    "Não conseguimos carregar as tuas conexões. Quem vai continua na lista.",
   "lineup.roleStepTitle": "O que vai fazer esta pessoa?",
   "lineup.roleStepBack": "Escolher outra pessoa",
   "lineup.sendCta": "Enviar convite",
@@ -1975,7 +1976,7 @@ export const gatherings: Catalog = {
   "lineupInvite.eyebrow": "Convite para o lineup",
   "lineupInvite.title": "<em>{host}</em> quer-te no lineup",
   "lineupInvite.titleNoInviter": "Tens um convite para o lineup",
-  "lineupInvite.roleLine": "Ficas no cartaz, na área de {role}.",
+  "lineupInvite.roleLine": "Ficas no lineup como {role}.",
   "lineupInvite.acceptCta": "Entrar no lineup",
   "lineupInvite.declineCta": "Recusar",
   "lineupInvite.acceptedToast": "Estás no lineup",
@@ -1993,15 +1994,14 @@ export const gatherings: Catalog = {
     "Verifica a tua ligação e tenta outra vez daqui a pouco.",
   "lineupInvite.openGathering": "Abrir o evento",
   "lineupInvite.back": "Voltar às notificações",
-  "lineupInvite.bannerText":
-    "Tens um convite para o lineup, na área de {role}.",
-  "lineupInvite.onLineupText": "Estás no lineup, na área de {role}.",
+  "lineupInvite.bannerText": "Tens um convite para o lineup como {role}.",
+  "lineupInvite.onLineupText": "Estás no lineup como {role}.",
   "lineupInvite.leaveCta": "Sair do lineup",
   "lineupInvite.leaveConfirmTitle": "Sair do lineup?",
   "lineupInvite.leaveConfirmBody":
     "Deixas de aparecer no lineup deste evento. Quem organiza pode convidar-te outra vez.",
   "lineupInvite.leftToast": "Saíste do lineup",
-  "lineupInvite.errorToast": "Não deu. Tenta outra vez.",
+  "lineupInvite.errorToast": "Não resultou. Tenta outra vez.",
 
   "performerNudge.body":
     "Atuaste como {name}, {craft}. Queres uma página para isso?",
@@ -2033,7 +2033,7 @@ export const gatherings: Catalog = {
     "À medida que as pessoas confirmam presença aparecem aqui, prontas para registar a entrada.",
   // Ver a nota em EN: substitui o número de chegadas quando o convívio já
   // passou o prazo de conservação das presenças.
-  "door.checkInsNotKept": "Já não guardamos",
+  "door.checkInsNotKept": "Entradas já apagadas",
   "door.checkInsNotKeptNote":
     "As entradas já não são guardadas em eventos passados. Apagamo-las 30 dias depois de o evento terminar.",
   // Ver a nota em EN: a mesma ausência, dita onde estavam os filtros de
@@ -2045,7 +2045,7 @@ export const gatherings: Catalog = {
   "door.scan.eyebrow": "Registar entrada",
   "door.scan.title": "Ler um cartão de membro",
   "door.scan.viewfinderAria": "Vista da câmara para ler um cartão de membro",
-  "door.scan.startingHint": "A acordar a câmara…",
+  "door.scan.startingHint": "A ligar a câmara…",
   "door.scan.pointHint": "Coloca o código do cartão dentro do quadro",
   "door.scan.deniedHint":
     "Este navegador não recebeu acesso à câmara. Escreve antes o código do cartão.",
@@ -2054,7 +2054,7 @@ export const gatherings: Catalog = {
   "door.scan.failedHint":
     "A câmara não arrancou. Escreve antes o código do cartão.",
   "door.scan.cardUnreadableHint":
-    "Não foi possível ler esse cartão. Procura-a na lista de pessoas convidadas.",
+    "Não foi possível ler esse cartão. Procura a pessoa na lista de pessoas convidadas.",
   "door.scan.checkInWaitlistedHint":
     "Esta pessoa está na lista de espera. Promove-a primeiro e depois regista a entrada.",
   "door.scan.checkInMaybeHint":
@@ -2063,7 +2063,7 @@ export const gatherings: Catalog = {
     "Esta pessoa não está na lista de pessoas convidadas.",
   "door.scan.codeLabel": "Código do cartão",
   "door.scan.codeHelper":
-    "Todos os cartões de membro têm este código por baixo. Colar ou escrever funciona da mesma maneira.",
+    "Vem em todos os cartões de membro, por baixo do código. Cola-o ou escreve-o, funciona da mesma maneira.",
   "door.scan.codePlaceholder": "Cola ou escreve o código",
   "door.scan.checkInCta": "Registar entrada",
   "door.scan.doneCta": "Pronto",
@@ -2086,8 +2086,8 @@ export const gatherings: Catalog = {
   "checkin.state.startsInMinutes_other": "Começa daqui a {count} minutos",
   "checkin.state.live": "A decorrer",
   "checkin.state.ended": "Terminou",
-  "checkin.toolbar.searchLabel": "Procurar pessoas convidadas",
-  "checkin.toolbar.searchPlaceholder": "Procurar pessoas convidadas…",
+  "checkin.toolbar.searchLabel": "Pesquisar pessoas convidadas",
+  "checkin.toolbar.searchPlaceholder": "Pesquisar pessoas convidadas…",
   "checkin.toolbar.clearSearch": "Limpar pesquisa",
   "checkin.toolbar.scanCta": "Ler cartão",
   "checkin.toolbar.focusCta": "Modo foco",
@@ -2095,7 +2095,7 @@ export const gatherings: Catalog = {
   "checkin.focus.regionLabel": "Check-in, modo foco",
   "checkin.groups.expected_one": "Ainda por chegar ({count})",
   "checkin.groups.expected_other": "Ainda por chegar ({count})",
-  "checkin.groups.arrived_one": "Chegaram ({count})",
+  "checkin.groups.arrived_one": "Chegou ({count})",
   "checkin.groups.arrived_other": "Chegaram ({count})",
   "checkin.groups.nobodyLeft": "Já não falta ninguém.",
   "checkin.row.guests_one": "+{count} acompanhante",
@@ -2108,13 +2108,13 @@ export const gatherings: Catalog = {
   "checkin.details.stillToArrive": "Ainda por chegar",
   "checkin.details.backCta": "Voltar",
   "checkin.details.checkInCta": "Registar entrada",
-  "checkin.notOnList.title": 'Ninguém com o nome "{query}" vai',
+  "checkin.notOnList.title": 'Ninguém com o nome "{query}" confirmou presença',
   "checkin.notOnList.description":
-    "Se ainda não confirmaram, podem fazê-lo agora no telemóvel.",
+    "Se a pessoa ainda não confirmou presença, pode fazê-lo agora no próprio telemóvel.",
   "checkin.notOnList.showCodeCta": "Mostrar código para confirmar",
   "checkin.notOnList.codeTitle": "Lê para confirmar",
   "checkin.notOnList.codeLabel": "Código que abre a página deste evento",
-  "checkin.scan.welcome": "Bem-vinde, {name}",
+  "checkin.scan.welcome": "Boas-vindas, {name}",
   "checkin.scan.repeat": "{name} chegou às {time}",
   "checkin.scan.refusedTitle": "Não dá para fazer check-in",
   "checkin.scan.ready": "A postos para o próximo cartão",
@@ -2127,9 +2127,9 @@ export const gatherings: Catalog = {
   "gathering.where.placeLabel": "Onde",
   "gathering.where.addressLabel": "Morada",
   "gathering.where.addressMissing":
-    "A morada exata ainda não foi adicionada. É aqui que quem vai a procura.",
+    "A morada exata ainda não foi adicionada. Quem vai ao evento procura-a aqui.",
   "gathering.where.addressWithheld":
-    "A morada exata é partilhada com quem vai. Confirma presença e aparece aqui.",
+    "A morada exata é partilhada com quem vai. Confirma presença para a veres aqui.",
   "gathering.where.arrivalLabel": "Encontrar a porta",
   "gathering.where.languageLabel": "Língua",
   "gathering.where.costLabel": "Custo",
@@ -2169,7 +2169,7 @@ export const gatherings: Catalog = {
   "manage.announcements.previousHeading": "O que já enviaste",
   "manage.announcements.emptyTitle": "Ainda não enviaste nada",
   "manage.announcements.emptyDescription":
-    "O que enviares fica também aqui, para as pessoas voltarem a encontrar à porta.",
+    "O que enviares fica também aqui, para as pessoas o encontrarem outra vez à porta.",
   "manage.announcements.reached_one": "Chegou a 1 pessoa",
   "manage.announcements.reached_other": "Chegou a {count} pessoas",
   "manage.messageModal.bodyHelper":
@@ -2181,9 +2181,9 @@ export const gatherings: Catalog = {
   // ── LOC-07: o que as pessoas disseram, e quantos lugares isso ocupa ───────
   "manage.attendees.seatsFilled": "{seats} de {capacity} lugares ocupados",
   "manage.attendees.seatsFromGuests_one":
-    "1 pessoa confirmada, acompanhantes incluídos",
+    "1 pessoa confirmada, incluindo acompanhantes",
   "manage.attendees.seatsFromGuests_other":
-    "{count} pessoas confirmadas, acompanhantes incluídos",
+    "{count} pessoas confirmadas, incluindo acompanhantes",
   "manage.attendees.needs.privateLabel": "Privado, só para a organização",
   "manage.attendees.needs.guests_one": "Traz 1 acompanhante",
   "manage.attendees.needs.guests_other": "Traz {count} acompanhantes",
@@ -2208,15 +2208,15 @@ export const gatherings: Catalog = {
   "manage.bans.barringCta": "A impedir…",
   "manage.bans.barShortCta": "Impedir",
   "manage.bans.barAria": "Impedir {name} de vir a este evento",
-  "manage.bans.barredToast": "{name} está impedida de vir a este evento",
+  "manage.bans.barredToast": "{name} já não pode vir a este evento",
   "manage.bans.errorToast": "Não resultou. Tenta outra vez daqui a pouco.",
-  "manage.bans.listHeading_one": "Impedidas (1)",
-  "manage.bans.listHeading_other": "Impedidas ({count})",
-  "manage.bans.emptyTitle": "Ninguém está impedido",
+  "manage.bans.listHeading_one": "Pessoas impedidas (1)",
+  "manage.bans.listHeading_other": "Pessoas impedidas ({count})",
+  "manage.bans.emptyTitle": "Não impediste ninguém",
   "manage.bans.emptyDescription":
     "Se alguma vez precisares de manter alguém longe deste evento, podes fazê-lo na linha dessa pessoa acima.",
-  "manage.bans.barredOn": "Impedida a {date}",
-  "manage.bans.liftCta": "Levantar",
+  "manage.bans.barredOn": "Impedimento a {date}",
+  "manage.bans.liftCta": "Readmitir",
   "manage.bans.liftAria": "Levantar o impedimento de {name}",
   "manage.bans.liftedToast": "{name} pode voltar a confirmar presença",
   "rsvpControl.refusedToast": "Quem organiza retirou-te deste evento.",
@@ -2232,13 +2232,13 @@ export const gatherings: Catalog = {
   "rsvpControl.fullToast":
     "Este evento ficou cheio enquanto decidias. Atualiza para ver se há um lugar livre na lista de espera.",
   "rsvpDetails.notEnoughRoomToast":
-    "Já não há lugares para tantas pessoas convidadas. Diminui o número e guarda outra vez.",
+    "Já não há lugares para esse número de acompanhantes. Diminui o número e guarda outra vez.",
   "rsvpDetails.noActiveRsvpToast":
-    "Não tens uma presença ativa neste evento, por isso não há nada para atualizar. Confirma primeiro a presença e depois acrescenta os detalhes.",
+    "Não tens presença confirmada neste evento, por isso não há nada para atualizar. Confirma primeiro a presença e depois acrescenta os teus detalhes.",
   "rsvpInvites.needRsvpToast":
     "Confirma primeiro que vais ou que talvez vás, e só depois podes convidar as tuas conexões.",
   "rsvpInvites.withdrawNotOpenToast":
-    "Esse convite já foi respondido ou retirado, por isso não há nada para retirar. A tua lista vai atualizar.",
+    "Esse convite já foi respondido ou retirado, por isso não há nada para retirar. A tua lista vai atualizar-se.",
   "actionError.hostAlwaysGoing":
     "Organizas este evento, por isso estás sempre presente. Não há nada para mudar aqui.",
   "actionError.hostOnly":
@@ -2252,7 +2252,7 @@ export const gatherings: Catalog = {
   "actionError.atCapacity":
     "Todos os lugares estão ocupados, por isso ninguém pode subir da lista de espera. Aumenta a capacidade ou retira primeiro uma pessoa.",
   "actionError.cannotBanYourself":
-    "Não é possível impedires a tua própria entrada no teu evento.",
+    "Não podes impedir-te de vir ao teu próprio evento.",
   "actionError.cannotBanHost":
     "A pessoa que organiza não pode ser impedida de vir ao próprio evento.",
   "actionError.cannotBanCohost":
@@ -2260,27 +2260,27 @@ export const gatherings: Catalog = {
   "actionError.hostSeatHeld":
     "O lugar de quem organiza fica reservado durante todo o evento, por isso não pode ser retirado nem mudado.",
   "actionError.requestNotOpen":
-    "Este pedido já foi respondido ou retirado. A lista vai atualizar para mostrar como está.",
+    "Este pedido já foi respondido ou retirado. A lista vai atualizar-se para mostrar como está.",
   "sharePlans.errorNotConnected":
-    "Só podes partilhar planos com conexões aceites, e ainda não tens ligação com esta pessoa.",
+    "Só podes partilhar planos com conexões aceites, e esta pessoa ainda não é uma conexão tua.",
   "sharePlans.errorCannotMessage":
-    "Não podes enviar mensagem a este membro neste momento, por isso os teus planos não seguiram.",
+    "Não podes enviar mensagem a esta pessoa neste momento, por isso os teus planos não foram enviados.",
   "photos.removeNotAllowed":
     "Só quem carregou esta foto ou quem organiza o evento a pode remover.",
-  "photos.removeGone": "Essa foto já foi removida. O álbum vai atualizar.",
+  "photos.removeGone": "Essa foto já foi removida. O álbum vai atualizar-se.",
   "photos.attachHostOnly":
     "Só quem organiza ou coorganiza pode adicionar fotos a este álbum.",
   "photos.attachConflict":
-    "Essa foto já está num outro evento ou já não está disponível. Escolhe-a outra vez para carregar uma cópia nova.",
+    "Essa foto já está noutro evento ou já não está disponível. Escolhe-a outra vez para carregar uma cópia nova.",
   "sharePlans.openCta": "Partilhar os meus planos",
   "sharePlans.eyebrow": "Só entre vocês",
   "sharePlans.title": "Diz a alguém <em>onde vais estar</em>",
   "sharePlans.sub":
-    "Escolhe uma das tuas conexões. Recebe como mensagem normal, que ficam ambas a poder reler.",
-  "sharePlans.searchLabel": "Procurar nas tuas conexões",
+    "Escolhe uma das tuas conexões. A pessoa recebe uma mensagem normal, que podem reler mais tarde.",
+  "sharePlans.searchLabel": "Pesquisar nas tuas conexões",
   "sharePlans.loadingConnections": "A procurar as tuas conexões…",
   "sharePlans.noConnections":
-    "Ainda não tens conexões. Conecta-te a alguém e essa pessoa aparece aqui.",
+    "Ainda não tens conexões. Cria uma conexão com alguém e essa pessoa aparece aqui.",
   "sharePlans.recipientLabel": "Quem recebe",
   "sharePlans.messageLabel": "O que essa pessoa vai receber",
   "sharePlans.messageHint": "Muda o texto como quiseres antes de enviar.",
@@ -2288,10 +2288,10 @@ export const gatherings: Catalog = {
   "sharePlans.sendingCta": "A enviar…",
   "sharePlans.errorToast": "Não foi enviado. Tenta outra vez daqui a pouco.",
   "sharePlans.successTitle": "Já <em>sabe</em>",
-  "sharePlans.successSub": "{name} tem os teus planos para este.",
+  "sharePlans.successSub": "{name} já tem os teus planos para este evento.",
   "sharePlans.successMeta":
     "Está nas tuas mensagens, se quiseres acrescentar alguma coisa.",
-  "sharePlans.template.opening": "Vou a {title} em {when}.",
+  "sharePlans.template.opening": "Vou a {title}, {when}.",
   "sharePlans.template.place": "É em {place}.",
   "sharePlans.template.link": "Detalhes: {link}",
 
@@ -2318,7 +2318,7 @@ export const gatherings: Catalog = {
   "photos.removeAriaLabel": "Remover esta foto do álbum",
   "photos.removeConfirmTitle": "Remover esta foto?",
   "photos.removeConfirmBody":
-    "Isto tira a foto do álbum para toda a gente que a consegue ver. Não dá para anular.",
+    "A foto sai do álbum para toda a gente que a pode ver. Não dá para anular.",
   "photos.removeConfirmCta": "Remover foto",
   "photos.removedToast": "Foto removida do álbum.",
   "photos.removeError":
@@ -2334,10 +2334,9 @@ export const gatherings: Catalog = {
   // PHOTO-REPORT — PHOTO-REPORT - the per-photo report control on a gathering album tile (live mode only). Sits beside the existing photos.removeAriaLabel take-down control. The captioned variant gives each tile a distinct accessible name; the plain one covers a photo with no caption. reportSubjectName is what the report modal calls the subject when the photo carries no caption of its own.
   // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.
   "photos.reportCta": "Denunciar",
-  "photos.reportAriaLabel": "Denunciar esta fotografia",
-  "photos.reportCaptionedAriaLabel":
-    "Denunciar a fotografia com a legenda {caption}",
-  "photos.reportSubjectName": "Fotografia de {gathering}",
+  "photos.reportAriaLabel": "Denunciar esta foto",
+  "photos.reportCaptionedAriaLabel": "Denunciar a foto com a legenda {caption}",
+  "photos.reportSubjectName": "Foto de {gathering}",
 
   // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
 
@@ -2347,7 +2346,7 @@ export const gatherings: Catalog = {
   // PRD-182
   "gathering.where.joinLinkLabel": "Link de entrada",
   "gathering.where.joinLinkMissing":
-    "Ainda não adicionaste um link de entrada. É aqui que quem vai o procura.",
+    "Ainda não adicionaste um link de entrada. Quem vai ao evento procura-o aqui.",
   "gathering.where.joinLinkWithheld":
     "O link de entrada é partilhado com quem vai.",
   "gathering.joinLinkHostNote":
@@ -2369,15 +2368,15 @@ export const gatherings: Catalog = {
 
   // PRD-188
   "rsvpControl.maybeCta": "Talvez",
-  "rsvpControl.maybeTitle": "Estás em <em>talvez</em>",
+  "rsvpControl.maybeTitle": "Respondeste <em>talvez</em>",
   "rsvpControl.maybeNote":
     "Ainda não ocupaste um lugar. Muda para vou quando souberes.",
-  "rsvpControl.maybeToast": "Marcado como talvez",
+  "rsvpControl.maybeToast": "Respondeste talvez",
   "rsvpControl.switchToGoingCta": "Eu vou",
 
   // ENG-140
   "rsvpControl.goingCountHidden":
-    "Quem organiza desativou a lista de convidados deste evento, por isso ninguém vê quem mais vai.",
+    "Quem organiza desativou a lista de pessoas convidadas deste evento, por isso ninguém vê quem mais vai.",
 
   // PRD-187
   "rsvpControl.yourDetailsCta": "Os teus detalhes",
@@ -2409,19 +2408,19 @@ export const gatherings: Catalog = {
   "rsvpDetails.eyebrow": "A tua presença",
   "rsvpDetails.title": "Há alguma coisa que devamos <em>saber</em>?",
   "rsvpDetails.sub": "Quem organiza lê isto. Mais ninguém tem de ler.",
-  "rsvpDetails.guestsLabel": "Pessoas sem conta no QueerPulse",
+  "rsvpDetails.guestsLabel": "Pessoas sem conta na QueerPulse",
   "rsvpDetails.guestOption_one": "Eu e mais {count}",
   "rsvpDetails.guestOption_other": "Eu e mais {count}",
   "rsvpDetails.guestsJustMe": "Só eu",
-  "rsvpDetails.addGuest": "Adicionar um convidado",
-  "rsvpDetails.removeGuest": "Remover um convidado",
+  "rsvpDetails.addGuest": "Adicionar acompanhante",
+  "rsvpDetails.removeGuest": "Remover acompanhante",
   "rsvpDetails.guestsHint":
-    "Os lugares contam por pessoa. As pessoas do QueerPulse podem receber o seu próprio convite.",
+    "Os lugares contam por pessoa. As pessoas da QueerPulse podem receber o seu próprio convite.",
   "rsvpDetails.guestsClosedHint":
     "As confirmações já fecharam. Ainda podes levar menos pessoas do que disseste a quem organiza.",
   "rsvpDetails.guestsClosedNoneHint":
     "As confirmações já fecharam, por isso já não dá para acrescentar pessoas.",
-  "rsvpDetails.accessLabel": "Necessidades de acesso",
+  "rsvpDetails.accessLabel": "Necessidades de acessibilidade",
   "rsvpDetails.accessPlaceholder":
     "Entrada sem degraus, um lugar perto da porta, um canto sossegado…",
   "rsvpDetails.dietaryLabel": "Comida e bebida",
@@ -2436,7 +2435,7 @@ export const gatherings: Catalog = {
   "rsvpDetails.visibility.connections": "As minhas conexões",
   "rsvpDetails.visibility.justMe": "Só quem organiza",
   "rsvpDetails.visibility.everyoneDesc":
-    "Membros que podem ver a lista de quem vai",
+    "Pessoas que podem ver a lista de quem vai",
   "rsvpDetails.visibility.connectionsDesc": "As tuas conexões veem o teu nome",
   "rsvpDetails.visibility.justMeDesc":
     "O teu nome fica fora da lista de quem vai",
@@ -2450,7 +2449,7 @@ export const gatherings: Catalog = {
 
   // rsvpInvites/*: levar conexões do QueerPulse dentro do modal de detalhes
   // da presença. Cada pessoa responde por si.
-  "rsvpInvites.label": "Levar pessoas do QueerPulse",
+  "rsvpInvites.label": "Levar pessoas da QueerPulse",
   "rsvpInvites.hint_one":
     "Podes convidar mais {count} conexão. A pessoa responde por si.",
   "rsvpInvites.hint_other":
@@ -2461,12 +2460,13 @@ export const gatherings: Catalog = {
     "As confirmações já fecharam, por isso já não podes convidar ninguém.",
   "rsvpInvites.openPickerCta": "Convidar conexões",
   "rsvpInvites.closePickerCta": "Fechar a lista",
-  "rsvpInvites.searchLabel": "Procura nas tuas conexões",
+  "rsvpInvites.searchLabel": "Pesquisar nas tuas conexões",
   "rsvpInvites.picksTrimmedHint_one":
     "As pessoas que levas ocuparam um lugar, por isso tirámos {count} pessoa da seleção.",
   "rsvpInvites.picksTrimmedHint_other":
     "As pessoas que levas ocuparam lugares, por isso tirámos {count} pessoas da seleção.",
-  "rsvpInvites.allInvited": "Já convidaste todas as pessoas que aparecem aqui.",
+  "rsvpInvites.allInvited":
+    "Já convidaste todas as pessoas que correspondem à pesquisa.",
   "rsvpInvites.listLoadError": "Os teus convites não carregaram.",
   "rsvpInvites.sentToast_one": "Convite enviado",
   "rsvpInvites.sentToast_other": "{count} convites enviados",
@@ -2479,7 +2479,7 @@ export const gatherings: Catalog = {
   "rsvpInvites.notInvitableToast_other":
     "Não dá para convidar {count} pessoas para este evento",
   "rsvpInvites.capToast":
-    "Isso passa de {max} pessoas numa confirmação. Baixa o número de pessoas ou retira um convite.",
+    "Isso passa de {max} pessoas numa confirmação. Baixa o número de acompanhantes ou retira um convite.",
   "rsvpInvites.sendErrorToast":
     "Não conseguimos enviar os convites. Tenta outra vez.",
   "rsvpInvites.listLabel": "Os teus convites",
@@ -2525,19 +2525,19 @@ export const gatherings: Catalog = {
   "hostBar.deleteCta": "Eliminar evento",
   "hostBar.cancelTitle": "Cancelar {title}?",
   "hostBar.cancelBody_one":
-    "Fica no quadro marcado como cancelado, e {count} pessoa com lugar é avisada.",
+    "Continua visível, marcado como cancelado, e {count} pessoa com lugar recebe aviso.",
   "hostBar.cancelBody_other":
-    "Fica no quadro marcado como cancelado, e {count} pessoas com lugar são avisadas.",
+    "Continua visível, marcado como cancelado, e {count} pessoas com lugar recebem aviso.",
   "hostBar.cancelConfirmCta": "Cancelar o evento",
-  "hostBar.cancelKeepCta": "Manter de pé",
+  "hostBar.cancelKeepCta": "Manter o evento",
   "hostBar.deleteTitle": "Eliminar {title}?",
   "hostBar.deleteBody":
-    "Isto remove o evento e as inscrições, as fotografias e os avisos dele, para sempre. Ninguém é notificado e não há como voltar atrás. Para avisares quem se inscreveu, cancela-o.",
+    "O evento é eliminado para sempre, com as confirmações, as fotos e os avisos. Ninguém recebe aviso e não dá para anular. Para avisares quem se inscreveu, cancela-o.",
   "hostBar.deleteConfirmCta": "Eliminar para sempre",
   "hostBar.deleteKeepCta": "Manter",
   "hostBar.deletedToast": "{title} foi eliminado.",
   "hostBar.deleteBlockedToast":
-    "Já há pessoas inscritas neste evento. Cancela-o primeiro para que sejam avisadas, e só depois o elimines.",
+    "Já há pessoas inscritas neste evento. Cancela-o primeiro para que sejam avisadas e depois elimina-o.",
   "hostBar.deleteHostOnlyToast":
     "Só a pessoa anfitriã pode eliminar um evento. Como pessoa coanfitriã podes cancelá-lo.",
   "hostBar.deleteGoneToast": "Esse evento já não existe.",
@@ -2571,7 +2571,7 @@ export const gatherings: Catalog = {
   // Um convívio pode passar da meia-noite ou durar vários dias, por isso um
   // único formatador constrói as datas e as horas para todos os ecrãs.
   "common.dateRange": "{start} a {end}",
-  "common.timeRange": "{start} – {end}",
+  "common.timeRange": "{start} a {end}",
   "common.nextDayNote": "(no dia seguinte)",
 
   // ── Os quatro campos de horário do assistente (steps/ScheduleFields.tsx) ──
@@ -2590,25 +2590,25 @@ export const gatherings: Catalog = {
     "Um evento pode durar até {days} dias. Aproxima o fim do início.",
 
   // ── Host guest preview (GatheringPreviewBar) ────────────────────────────────
-  "preview.menuCta": "Ver como convidado",
+  "preview.menuCta": "Ver como pessoa convidada",
   "preview.barLabel": "A ver como",
   "preview.role.member": "Membro",
   "preview.role.going": "Vai",
   "preview.role.waitlisted": "Em lista de espera",
   "preview.exitCta": "Sair da pré-visualização",
   "preview.caption":
-    "Rostos e números são o que vê um membro com quem não tens conexão.",
+    "Rostos e números aparecem como os vê uma pessoa com quem não tens conexão.",
   "preview.inertToast":
-    "Isto é uma pré-visualização. Os convidados podem tocar aqui.",
+    "É só uma pré-visualização. As pessoas convidadas podem tocar aqui.",
   "preview.errorTitle": "A pré-visualização não carregou",
   "preview.errorBody":
-    "O teu evento está bem. Tenta outra vez daqui a pouco, ou volta à tua vista de anfitrião.",
+    "O teu evento está bem. Tenta outra vez daqui a pouco, ou volta à vista de quem organiza.",
 
   // ── Comunidades convidadas: editor, assistente, página, convite ───────────
   "guestCommunities.label": "Comunidades convidadas",
   "guestCommunities.labelOptional": "Comunidades convidadas (opcional)",
   "guestCommunities.hint":
-    "Convida outras comunidades para organizarem isto contigo. A equipa de cada uma aceita antes de o nome aparecer no evento.",
+    "Convida outras comunidades para organizarem este evento contigo. A equipa de cada uma aceita antes de o nome aparecer no evento.",
   "guestCommunities.lockedHint":
     "Escolhe primeiro a comunidade com que organizas. As comunidades convidadas juntam-se a um evento que já tem uma.",
   "guestCommunities.lockedHintWithRows":
@@ -2632,9 +2632,9 @@ export const gatherings: Catalog = {
   "guestCommunities.saveFailed_other":
     "{count} alterações às comunidades convidadas não ficaram guardadas. Abre Editar detalhes para tentares outra vez.",
   "guestCommunities.inviteFailed_one":
-    "{count} convite a uma comunidade não seguiu. Convida outra vez em Editar detalhes.",
+    "{count} convite a uma comunidade não seguiu. Volta a convidá-la em Editar detalhes.",
   "guestCommunities.inviteFailed_other":
-    "{count} convites a comunidades não seguiram. Convida outra vez em Editar detalhes.",
+    "{count} convites a comunidades não seguiram. Volta a convidá-las em Editar detalhes.",
   "guestCommunities.reviewValue":
     "{names}. Os convites seguem quando publicares.",
 
@@ -2716,9 +2716,9 @@ export const gatherings: Catalog = {
   "hiddenCommunities.error.rateLimited":
     "São muitas alterações seguidas. Espera um minuto e tenta outra vez.",
   "hiddenCommunities.error.hideUnreachable":
-    "Não conseguimos chegar ao QueerPulse para esconder os eventos de {name}. Verifica a tua ligação e tenta outra vez.",
+    "Não conseguimos chegar à QueerPulse para esconder os eventos de {name}. Verifica a tua ligação e tenta outra vez.",
   "hiddenCommunities.error.unhideUnreachable":
-    "Não conseguimos chegar ao QueerPulse para voltar a mostrar os eventos de {name}. Verifica a tua ligação e tenta outra vez.",
+    "Não conseguimos chegar à QueerPulse para voltar a mostrar os eventos de {name}. Verifica a tua ligação e tenta outra vez.",
   "hiddenCommunities.error.hideFailed":
     "Não foi possível esconder os eventos de {name}",
   "hiddenCommunities.error.unhideFailed":
@@ -2726,9 +2726,9 @@ export const gatherings: Catalog = {
   "hiddenCommunities.refine.label": "Comunidades",
   "hiddenCommunities.refine.note":
     "Os eventos das comunidades que escondes deixam de aparecer em Destaques, Explorar e no calendário, a menos que uma comunidade que ainda vês os organize também. As publicações delas no teu feed ficam como estão.",
-  "hiddenCommunities.refine.searchLabel": "Procurar comunidades para esconder",
+  "hiddenCommunities.refine.searchLabel": "Pesquisar comunidades para esconder",
   "hiddenCommunities.refine.searchPlaceholder":
-    "Procura pelo nome da comunidade",
+    "Pesquisa pelo nome da comunidade",
   "hiddenCommunities.refine.hideCta": "Esconder eventos",
   "hiddenCommunities.refine.unhideCta": "Voltar a mostrar",
   "hiddenCommunities.refine.unhideLabel": "Voltar a mostrar eventos de {name}",

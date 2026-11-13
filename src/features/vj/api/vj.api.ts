@@ -9,8 +9,10 @@ import type {
   CreateVjClipBody,
   CreateVjSceneBody,
   CreateVjSetlistBody,
+  SetVjSetlistItemsBody,
   UpdateVjClipBody,
   UpdateVjSceneBody,
+  UpdateVjSetlistBody,
   VjClipDTO,
   VjClipDeletedDTO,
   VjClipListDTO,
@@ -261,9 +263,11 @@ export function createVjSetlist(
   return apiPost<VjSetlistDTO>(`${VJ_BASE}/setlists`, body);
 }
 
-export function renameVjSetlist(
+/** Changes a set list's name, Loop or default step length; the body names
+ *  at least one field. */
+export function updateVjSetlist(
   setlistId: string,
-  body: { name: string },
+  body: UpdateVjSetlistBody,
 ): Promise<VjSetlistDTO> {
   return apiPatch<VjSetlistDTO>(setlistPath(setlistId), body);
 }
@@ -274,11 +278,12 @@ export function reorderVjSetlists(body: {
   return apiPatch<VjSetlistListDTO>(`${VJ_BASE}/setlists/reorder`, body);
 }
 
-/** Replaces the whole item list. The server re-creates every item id, and a
- *  scene may appear more than once. */
+/** Writes the whole step list. An entry with an `id` keeps that stored item;
+ *  one without becomes a new item; a stored item the list leaves out is
+ *  deleted. A scene or clip may appear more than once. */
 export function setVjSetlistItems(
   setlistId: string,
-  body: { sceneIds: string[] },
+  body: SetVjSetlistItemsBody,
 ): Promise<VjSetlistDTO> {
   return apiPut<VjSetlistDTO>(`${setlistPath(setlistId)}/items`, body);
 }

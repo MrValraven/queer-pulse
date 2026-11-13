@@ -11,6 +11,8 @@ import {
   vjMirrorPendingOf,
   vjMirrorQuantizeKey,
   vjMirrorRingCopy,
+  vjMirrorRingWithinStep,
+  vjMirrorSequenceCopy,
   vjMirrorUndrawnCount,
   vjStrobeSecondsLeft,
 } from "./vjMirrorStyle";
@@ -130,7 +132,19 @@ describe("vjMirrorNextCopy", () => {
     });
     expect(
       vjMirrorNextCopy(
-        { kind: "setlist", sceneId: "s", position: 3, total: 8 },
+        {
+          kind: "setlist",
+          item: {
+            id: "i",
+            position: 2,
+            kind: "scene",
+            sceneId: "s",
+            clipId: null,
+            duration: null,
+          },
+          position: 3,
+          total: 8,
+        },
         "Peak",
       ),
     ).toEqual({
@@ -143,6 +157,13 @@ describe("vjMirrorNextCopy", () => {
     });
     expect(vjMirrorNextCopy({ kind: "none" }, null)).toEqual({
       key: "vj:mirror.nextNone",
+      values: {},
+    });
+  });
+
+  it("reads Last step on the last step of a sequence without Loop", () => {
+    expect(vjMirrorNextCopy({ kind: "setlistLast" }, null)).toEqual({
+      key: "vj:mirror.nextSetlistLast",
       values: {},
     });
   });
@@ -163,5 +184,85 @@ describe("vjMirrorQuantizeKey and vjMirrorRingCopy", () => {
       vjMirrorRingCopy({ kind: "shuffle", progress: 0.1, msLeft: 7000 }),
     ).toEqual({ key: "vj:mirror.ringShuffle", values: { seconds: 7 } });
     expect(vjMirrorRingCopy({ kind: "none" })).toBeNull();
+  });
+
+  it("counts a playing sequence's step down to the next step", () => {
+    expect(
+      vjMirrorRingCopy({
+        kind: "setlist",
+        progress: 0.25,
+        msLeft: 6100,
+        isPaused: false,
+      }),
+    ).toEqual({ key: "vj:mirror.ringSetlist", values: { seconds: 7 } });
+  });
+
+  it("names the time a paused sequence's step has left", () => {
+    expect(
+      vjMirrorRingCopy({
+        kind: "setlist",
+        progress: 0.5,
+        msLeft: 4000,
+        isPaused: true,
+      }),
+    ).toEqual({ key: "vj:mirror.ringSetlistPaused", values: { seconds: 4 } });
+  });
+});
+
+describe("vjMirrorSequenceCopy", () => {
+  it("names why the sequence stopped moving", () => {
+    expect(vjMirrorSequenceCopy({ kind: "paused" })).toEqual({
+      key: "vj:mirror.sequencePaused",
+      values: {},
+    });
+    expect(vjMirrorSequenceCopy({ kind: "takenOver" })).toEqual({
+      key: "vj:mirror.sequenceTakenOver",
+      values: {},
+    });
+    expect(
+      vjMirrorSequenceCopy({ kind: "waitingFlash", stepName: "Strobe drop" }),
+    ).toEqual({
+      key: "vj:mirror.sequenceWaitingFlash",
+      values: { step: "Strobe drop" },
+    });
+    expect(vjMirrorSequenceCopy({ kind: "finished" })).toEqual({
+      key: "vj:mirror.sequenceFinished",
+      values: {},
+    });
+  });
+});
+
+describe("vjMirrorRingWithinStep", () => {
+  it("never counts a playing step past its own length", () => {
+    const ring = vjMirrorRingWithinStep(
+      { kind: "setlist", progress: 0, msLeft: 8_300, isPaused: false },
+      8_000,
+    );
+    expect(ring).toEqual({
+      kind: "setlist",
+      progress: 0,
+      msLeft: 8_000,
+      isPaused: false,
+    });
+    expect(vjMirrorRingCopy(ring)).toEqual({
+      key: "vj:mirror.ringSetlist",
+      values: { seconds: 8 },
+    });
+  });
+
+  it("leaves other rings and an unknown length alone", () => {
+    const shuffleRing = {
+      kind: "shuffle",
+      progress: 0.1,
+      msLeft: 9_000,
+    } as const;
+    expect(vjMirrorRingWithinStep(shuffleRing, 8_000)).toBe(shuffleRing);
+    const setlistRing = {
+      kind: "setlist",
+      progress: 0,
+      msLeft: 8_300,
+      isPaused: false,
+    } as const;
+    expect(vjMirrorRingWithinStep(setlistRing, null)).toBe(setlistRing);
   });
 });

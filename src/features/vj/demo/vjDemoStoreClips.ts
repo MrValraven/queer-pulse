@@ -199,20 +199,57 @@ function rewriteScenesNamingClip(library: StoredLibrary, clipId: string): void {
   }
 }
 
-/** Deletes a clip from the library and every pack, rewrites the scene looks
- *  naming it, forgets its preview and posts one `clip_deleted`. */
+/** Drops every clip step playing the deleted clip (sequences contract 4.5);
+ *  the steps after it close up. Answers the set lists that held it, in id
+ *  order, and how many steps went. Set list `updatedAt` stays, as the
+ *  backend's cascade and densify leave it. */
+function dropClipSteps(
+  library: StoredLibrary,
+  clipId: string,
+): { setlistIds: string[]; removedFromSetlistCount: number } {
+  const holdingSetlists = library.setlists.filter((setlist) =>
+    setlist.items.some((item) => item.clipId === clipId),
+  );
+  let removedFromSetlistCount = 0;
+  for (const setlist of holdingSetlists) {
+    const keptItems = setlist.items.filter((item) => item.clipId !== clipId);
+    removedFromSetlistCount += setlist.items.length - keptItems.length;
+    setlist.items = keptItems;
+  }
+  const setlistIds = holdingSetlists
+    .map((setlist) => setlist.id)
+    .sort((left, right) => (left === right ? 0 : left < right ? -1 : 1));
+  return { setlistIds, removedFromSetlistCount };
+}
+
+/** Deletes a clip from the library, every pack and every set list, rewrites
+ *  the scene looks naming it, forgets its preview and posts one
+ *  `clip_deleted` naming every pack and set list that held it. */
 export function demoDeleteVjClip(clipId: string): VjClipDeletedDTO {
   const library = loadLibrary();
   const clip = findClip(library, clipId.toLowerCase());
   const packIds = packIdsOfClip(library, clip.id);
   rewriteScenesNamingClip(library, clip.id);
+  const { setlistIds, removedFromSetlistCount } = dropClipSteps(
+    library,
+    clip.id,
+  );
   for (const pack of library.packs) {
     pack.clipIds = pack.clipIds.filter((candidate) => candidate !== clip.id);
   }
   library.clips = library.clips.filter((candidate) => candidate !== clip);
   forgetVjDemoPreviewUrl(clip.id);
-  commit(library, { kind: "clip_deleted", clipId: clip.id, packIds });
-  return { deletedClipId: clip.id, removedFromPackCount: packIds.length };
+  commit(library, {
+    kind: "clip_deleted",
+    clipId: clip.id,
+    packIds,
+    setlistIds,
+  });
+  return {
+    deletedClipId: clip.id,
+    removedFromPackCount: packIds.length,
+    removedFromSetlistCount,
+  };
 }
 
 /** The `clipIds` query lowercased, a repeat kept once at its first place. */

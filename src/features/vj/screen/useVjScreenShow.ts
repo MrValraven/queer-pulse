@@ -648,15 +648,16 @@ export function useVjScreenShow(isFullscreen: boolean): VjScreenShow {
 
   const displayState = stage.state ?? record?.state ?? null;
   const packId = displayState?.activePackId ?? null;
-  const setlistSceneClipIds = useVjScreenSetlistClips(
+  const setlistClipIds = useVjScreenSetlistClips(
     displayState?.activeSetlistId ?? null,
+    displayState?.setlistIndex ?? null,
   );
   const preload = useVjScreenPreload({
     packId,
     record,
     stage,
     screenId,
-    setlistSceneClipIds,
+    setlistClipIds,
   });
   const { clipById } = preload;
   const isFavorite = useCallback(

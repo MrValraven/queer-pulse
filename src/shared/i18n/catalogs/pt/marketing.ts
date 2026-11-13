@@ -17,23 +17,23 @@ import type { Catalog } from "../../types";
 export const marketing: Catalog = {
   // ── Sobre ──────────────────────────────────────────────────────────────
   "about.meta.title":
-    "Sobre a QueerPulse: uma rede pequena e gerida por pessoas",
+    "Sobre a QueerPulse: uma rede pequena, gerida por quem faz parte dela",
   "about.meta.description":
-    "A QueerPulse é uma pequena plataforma comunitária queer em Lisboa, feita de votos de confiança: sem anúncios, sem algoritmo, sem crescimento pelo crescimento. Eis o que acreditamos, e quem a gere.",
+    "A QueerPulse é uma pequena plataforma comunitária queer em Lisboa, feita de votos de confiança: sem anúncios, sem algoritmo, sem crescimento pelo crescimento. Aquilo em que acreditamos, e quem a gere.",
   "about.hero.eyebrow": "Sobre",
-  "about.hero.title": "Uma plataforma construída <em>de propósito.</em>",
+  "about.hero.title": "Uma plataforma construída <em>com propósito.</em>",
   "about.hero.sub":
-    "Um espaço calmo que respeita a tua atenção. Um lugar pequeno e deliberado, feito para acolher esta comunidade e para lhe devolver algo.",
+    "Um espaço calmo que respeita a tua atenção. Um lugar pequeno e pensado com cuidado, feito para acolher esta comunidade e retribuir-lhe.",
   "about.why.eyebrow": "Porque existimos",
   "about.why.title": "Construímos aquilo <em>de que precisávamos.</em>",
   "about.why.p1":
-    "A QueerPulse começou como uma frustração que tínhamos de resolver. Todas as plataformas onde tentámos construir comunidade estavam desenhadas para prender a nossa atenção e otimizadas para tempo de ecrã, indiferentes a se nos encontrávamos mesmo.",
+    "A QueerPulse começou como uma frustração que tínhamos de resolver. Todas as plataformas onde tentámos construir comunidade estavam desenhadas para prender a nossa atenção e otimizadas para o tempo passado na app, sem querer saber se nos encontrávamos de facto.",
   "about.why.p2":
-    "Por isso, um pequeno grupo (profissionais, organizadores, artistas) decidiu construir a alternativa: uma rede pensada para a confiança, onde o objetivo é a conexão.",
-  "about.why.p3": "Cresce mais devagar assim. Isso é o desenho.",
+    "Por isso, um pequeno grupo de nós (profissionais, pessoas que organizam, artistas) decidiu construir a alternativa com as próprias mãos: uma rede pensada para a confiança, onde o objetivo é a conexão.",
+  "about.why.p3": "Assim cresce mais devagar. É mesmo essa a ideia.",
   "about.difference.eyebrow": "A diferença",
   "about.difference.title": "O que <em>não estamos a construir.</em>",
-  "about.contrast.them.label": "Em todo o lado",
+  "about.contrast.them.label": "Noutros sítios",
   "about.contrast.us.label": "QueerPulse",
   "about.contrast.them.attention": "Otimizado para prender a tua atenção",
   "about.contrast.them.algorithm": "Um algoritmo decide o que vês",
@@ -43,7 +43,7 @@ export const marketing: Catalog = {
   "about.contrast.us.noTracking":
     "Não rastreamos o que clicas nem quanto tempo ficas",
   "about.contrast.us.feedIsYours":
-    "O teu feed é exatamente as comunidades a que te juntaste",
+    "O teu feed mostra só as comunidades a que te juntaste",
   "about.contrast.us.vouched":
     "Cada pessoa entra com um voto de confiança de alguém que já está cá",
   "about.contrast.us.growthPace":
@@ -52,47 +52,48 @@ export const marketing: Catalog = {
     "A adesão não tem custo, e não vendemos nada sobre ti",
   "about.beliefs.eyebrow": "No que acreditamos",
   "about.beliefs.title": "Os valores por trás de <em>cada decisão.</em>",
-  "about.values.smallByDesign.title": "Pequeno por design",
+  "about.values.smallByDesign.title": "Pequena por opção",
   "about.values.smallByDesign.body":
     "Preferimos continuar a ser uma comunidade que funciona a tornarmo-nos uma plataforma que não funciona. O crescimento nunca é o objetivo por si só.",
   "about.values.infrastructure.title": "Construímos infraestrutura",
   "about.values.infrastructure.body":
-    "Estamos a construir a canalização de que a comunidade queer precisa: apresentações, espaços seguros, entreajuda.",
+    "Estamos a construir a estrutura de base de que a comunidade queer precisa: apresentações, espaços seguros, entreajuda.",
   "about.values.communityEconomy.title": "Uma economia comunitária",
   "about.values.communityEconomy.body":
-    "O dinheiro entre membros vai diretamente para quem se destina. A música comprada no Studio é paga diretamente a quem a criou, e a QueerPulse nunca fica com o dinheiro.",
+    "O dinheiro entre pessoas da comunidade vai diretamente para quem se destina. A música comprada no Studio é paga diretamente a quem a criou, e o dinheiro nunca passa pela QueerPulse.",
   "about.values.communityOwns.title": "A comunidade é dona do seu espaço",
   "about.values.communityOwns.body":
     "As decisões sobre esta plataforma são tomadas às claras, com quem a usa.",
   "about.values.noDataEconomy.title": "Sem economia de dados",
   "about.values.noDataEconomy.body":
     "Não vendemos atenção nem dados pessoais a anunciantes. Não há terceiros para quem estejamos a construir isto.",
-  "about.values.accessNotEarned.title": "O acesso não se ganha a atuar",
+  "about.values.accessNotEarned.title":
+    "O acesso não se ganha a dar espetáculo",
   "about.values.accessNotEarned.body":
-    "Entras com um voto de confiança ou com um convite de alguém que já cá está.",
+    "Entras pela confiança: um voto de confiança, ou um convite de alguém que já cá está.",
   "about.stand.eyebrow": "Onde nos posicionamos",
   "about.stand.title": "A libertação queer é <em>indivisível.</em>",
   "about.stand.p1":
     "A interseccionalidade é a totalidade da política queer. Raça, classe, deficiência, estatuto migratório e género determinam quem tem segurança e a quem se pede que espere por ela. Uma plataforma que serve apenas pessoas queer brancas, cis, sem deficiência, com documentos e com conforto material percebeu mal a palavra comunidade.",
   "about.stand.p2":
-    "Pomos isto em prática em quem convidamos, em quem modera, nas queixas que levamos a sério e nas lutas que nomeamos em voz alta, mesmo quando isso nos custa dinheiro ou pessoas membras.",
+    "Pomos isto em prática em quem convidamos, em quem modera, nas queixas que levamos a sério e nas lutas que nomeamos em voz alta, mesmo quando isso nos faz perder dinheiro ou pessoas da comunidade.",
   "about.stand.intersectionalityLink":
-    "Lê como as pessoas membras descrevem viver nestas interseções",
+    "Lê como as pessoas da comunidade descrevem a vida nestas interseções",
   "about.stand.trans.title": "Sobre as vidas trans",
   "about.stand.trans.p1":
-    "As mulheres trans são mulheres. Os homens trans são homens. As pessoas não-binárias são não-binárias, e as pessoas intersexo existem. Nada disto está em debate aqui.",
+    "As mulheres trans são mulheres. Os homens trans são homens. As pessoas não binárias são não binárias, e as pessoas intersexo existem. Nada disto está em debate aqui.",
   "about.stand.trans.p2":
-    "Há um projeto que diz falar em nome das pessoas LGB enquanto faz pressão contra o T. Costuma apresentar-se como proteção das mulheres, das crianças ou da atração pelo mesmo sexo, e pede a toda a gente que trate o lugar das pessoas trans nesta comunidade como uma questão em aberto. Para nós, é assunto arrumado. Um grupo que trabalha para separar o T do resto de nós está a trabalhar contra as nossas pessoas membras, e vamos dizê-lo.",
+    "Há um projeto que diz falar em nome das pessoas LGB enquanto faz pressão contra o T. Costuma apresentar-se como proteção das mulheres, das crianças ou da atração pelo mesmo sexo, e pede a toda a gente que trate o lugar das pessoas trans nesta comunidade como uma questão em aberto. Para nós, é assunto arrumado. Um grupo que trabalha para separar o T do resto de nós está a trabalhar contra as pessoas da nossa comunidade, e vamos dizê-lo.",
   "about.stand.trans.p3":
     "Funciona como o pinkwashing. O pinkwashing usa os nossos direitos para fazer um Estado parecer civilizado, e isto usa a segurança das mulheres para fazer a exclusão das pessoas trans parecer proteção.",
   "about.stand.trans.commitment.notADebate.title":
     "A presen\u00e7a de pessoas trans n\u00e3o \u00e9 tema de debate.",
   "about.stand.trans.commitment.notADebate.body":
-    "N\u00e3o acolhemos discuss\u00f5es dos \u201cdois lados\u201d sobre se as pessoas membras merecem direitos, nem as abrimos em nome do equil\u00edbrio.",
+    "Não acolhemos discussões dos “dois lados” sobre se as pessoas da comunidade merecem direitos, nem as abrimos em nome do equilíbrio.",
   "about.stand.trans.commitment.exclusion.title":
     "A defesa da exclus\u00e3o de pessoas trans \u00e9 uma violação do C\u00f3digo de Conduta.",
   "about.stand.trans.commitment.exclusion.body":
-    'Criticar um Estado é discurso político. Fazer campanha para pôr pessoas membras trans de fora viola o Código de Conduta, chame-se o que se chamar, "crítica de género" incluída.',
+    'Criticar um Estado é discurso político. Fazer campanha para afastar pessoas trans da comunidade viola o Código de Conduta, chame-se o que se chamar, "crítica de género" incluída.',
   "about.stand.trans.commitment.exclusion.link": "L\u00ea as diretrizes",
   "about.stand.trans.commitment.selfId.title":
     "A autodetermina\u00e7\u00e3o \u00e9 a norma aqui.",
@@ -102,7 +103,7 @@ export const marketing: Catalog = {
     "L\u00ea o guia de sa\u00fade trans",
   "about.stand.position.sexWork.title": "Trabalho sexual \u00e9 trabalho.",
   "about.stand.position.sexWork.body":
-    "As pessoas trabalhadoras do sexo são membras aqui nos mesmos termos que toda a gente. Defendemos a descriminalização porque é o que as mantém vivas. Quem as quer fora dos espaços queer costuma querer as pessoas trans fora também, e usa os mesmos argumentos.",
+    "As pessoas trabalhadoras do sexo fazem parte da comunidade nos mesmos termos que toda a gente. Defendemos a descriminalização porque é o que as mantém vivas. Quem as quer fora dos espaços queer costuma querer as pessoas trans fora também, e usa os mesmos argumentos.",
   "about.stand.position.migration.title":
     "A migra\u00e7\u00e3o \u00e9 uma quest\u00e3o queer.",
   "about.stand.position.migration.body":
@@ -112,11 +113,11 @@ export const marketing: Catalog = {
   "about.stand.position.hiv.title":
     "I = I, e a serofobia \u00e9 discrimina\u00e7\u00e3o.",
   "about.stand.position.hiv.body":
-    "Indetet\u00e1vel significa intransmiss\u00edvel. O estado serol\u00f3gico de cada pessoa pertence-lhe, a revela\u00e7\u00e3o nunca \u00e9 devida a ningu\u00e9m, e tratar a serologia como motivo de exclus\u00e3o cai na mesma linha vermelha que qualquer outra discrimina\u00e7\u00e3o.",
+    "Indetetável significa intransmissível. O estado serológico de cada pessoa pertence-lhe, ninguém tem o direito de exigir que o revele, e tratar o estado serológico como motivo de exclusão ultrapassa a mesma linha vermelha que qualquer outra discriminação.",
   "about.stand.position.hiv.link": "Recursos de sa\u00fade sexual",
   "about.stand.principle.title": "Quando falamos, e quando n\u00e3o falamos",
   "about.stand.principle.body":
-    "Falamos quando a nossa comunidade é diretamente afetada, ou quando alguém usa a identidade queer para disfarçar o mal que faz. É por isso que estas posições estão nesta página e a maior parte das notícias não está. Se achas que nos calámos sobre alguma coisa quando devíamos ter falado, pede-nos contas com este teste.",
+    "Falamos quando a nossa comunidade é diretamente afetada, ou quando alguém usa a identidade queer para disfarçar o mal que faz. É por isso que estas posições estão nesta página e a maior parte das notícias não está. Se achas que nos calámos sobre alguma coisa quando devíamos ter falado, pede-nos contas com base neste critério.",
   "about.stand.palestine.title": "Sobre a Palestina",
   "about.stand.palestine.p1":
     "Israel está a cometer um genocídio contra o povo palestiniano em Gaza. Dizemo-lo com todas as letras porque há muita pressão para suavizar isto. A QueerPulse está ao lado do povo palestiniano, e de toda a gente que trabalha pelo fim da ocupação e do cerco.",
@@ -142,18 +143,18 @@ export const marketing: Catalog = {
   "about.linkModal.intersections.lead":
     "O guia em que esta posição assenta: como a raça, a fé, a classe e a deficiência se cruzam com a experiência queer em Lisboa, nas palavras de quem a vive.",
   "about.linkModal.intersections.p1":
-    "Ser queer e pessoa racializada, queer e religiosa, queer e da classe trabalhadora, queer e com deficiência: estas identidades não se empilham de forma arrumada. O guia existe para as pessoas membras que vivem isso, e como compromisso visível de que ser queer abrange muitos tipos de pessoa.",
+    "Ser queer e uma pessoa racializada, queer e crente, queer e da classe trabalhadora, queer e com deficiência: estas identidades não se empilham de forma arrumada. O guia existe para as pessoas da comunidade que vivem isso, e como compromisso visível de que ser queer abrange muitos tipos de pessoa.",
   "about.linkModal.intersections.p2":
-    "É construído a partir de vozes da comunidade, com organizações e recursos ligados a cada secção, e cresce à medida que as pessoas membras lhe acrescentam coisas.",
+    "É construído a partir de vozes da comunidade, com organizações e recursos ligados a cada secção, e cresce à medida que a comunidade o vai completando.",
   "about.linkModal.intersections.point.race.title": "Raça e etnia.",
   "about.linkModal.intersections.point.race.body":
     "A história colonial de Portugal molda esta cidade de formas que são óbvias para quem as vive. A secção fala de atravessar espaços queer como pessoa racializada, e dos grupos QTIPOC que existem por cá.",
   "about.linkModal.intersections.point.faith.title": "Fé e religião.",
   "about.linkModal.intersections.point.faith.body":
-    "Um contexto católico em mudança, outras tradições, e as pessoas membras que conciliam fé e experiência queer. Ser laica também cabe aqui.",
+    "Um contexto católico em mudança, outras tradições, e as pessoas da comunidade que conciliam fé e experiência queer. A laicidade também cabe aqui.",
   "about.linkModal.intersections.point.class.title": "Classe e economia.",
   "about.linkModal.intersections.point.class.body":
-    "A vida social queer carrega um carácter de classe que ninguém nomeia. A secção nomeia a subida de custos em Lisboa e o que fazemos quanto ao acesso: eventos que quem organiza pode oferecer gratuitos ou a pagar o que puderes, um fórum gratuito, e uma adesão sem custo.",
+    "A vida social queer tem um carácter de classe de que ninguém fala. A secção aponta a subida de custos em Lisboa e o que fazemos quanto ao acesso: eventos que quem organiza pode tornar gratuitos ou de contribuição livre, um fórum gratuito e uma adesão sem custo.",
   "about.linkModal.intersections.cta":
     "Lê o guia completo de interseccionalidade",
 
@@ -166,11 +167,11 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.p1":
     "Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado. Passa a ser uma violação do Código de Conduta quando se dirige a uma pessoa.",
   "about.linkModal.guidelinesExclusion.p2":
-    "Fazer campanha para retirar pessoas trans desta comunidade é uma violação do Código de Conduta, com o vocabulário que for.",
+    "Fazer campanha para retirar pessoas trans desta comunidade é uma violação do Código de Conduta, seja qual for a formulação.",
   "about.linkModal.guidelinesExclusion.point.hardLines.title":
     "Sempre uma violação do Código de Conduta.",
   "about.linkModal.guidelinesExclusion.point.hardLines.body":
-    "Assédio, divulgação de dados pessoais, expor a orientação ou identidade de alguém sem consentimento, ameaças, partilhar conversas ou fotografias privadas, e discriminação em qualquer base protegida.",
+    "Assédio, divulgação de dados pessoais, expor a orientação ou identidade de alguém sem consentimento, ameaças, partilhar conversas ou fotos privadas, e discriminação em qualquer base protegida.",
   "about.linkModal.guidelinesExclusion.point.bothDirections.title":
     "Um teste, aplicado pela moderação.",
   "about.linkModal.guidelinesExclusion.point.bothDirections.body":
@@ -178,7 +179,7 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.point.reporting.title":
     "Quem denuncia tem apoio.",
   "about.linkModal.guidelinesExclusion.point.reporting.body":
-    "A moderação lê todas as denúncias. As violações confirmadas levam a advertência, suspensão ou expulsão, e quem denunciou é informado em cada etapa.",
+    "A moderação lê todas as denúncias. As violações confirmadas levam a um aviso, suspensão ou remoção, e quem denunciou recebe atualizações em cada etapa.",
   "about.linkModal.guidelinesExclusion.cta": "Lê as diretrizes completas",
 
   "about.linkModal.transHealthcare.eyebrow": "Saúde trans · Portugal",
@@ -186,9 +187,9 @@ export const marketing: Catalog = {
   "about.linkModal.transHealthcare.title":
     "O teu percurso, <em>passo a passo.</em>",
   "about.linkModal.transHealthcare.lead":
-    "Um guia prático de cuidados de saúde de afirmação de género em Portugal, feito de conhecimento comunitário e mantido atual pelas pessoas membras.",
+    "Um guia prático de cuidados de saúde de afirmação de género em Portugal, feito de conhecimento comunitário e mantido atual pela comunidade.",
   "about.linkModal.transHealthcare.p1":
-    "Percorre os caminhos reais: hormonoterapia pelo SNS, hormonoterapia no privado, mudança legal de nome, menção de género e acesso a cirurgia. Cada um está dividido nos passos que dás mesmo, com o que levar, a quem ligar e o que esperar em cada consulta.",
+    "Percorre os caminhos reais: hormonoterapia pelo SNS, hormonoterapia no privado, mudança legal de nome, menção de género e acesso a cirurgia. Cada um está dividido nos passos que vais mesmo dar, com o que levar, a quem ligar e o que esperar em cada consulta.",
   "about.linkModal.transHealthcare.p2":
     "Reflete o sistema tal como estava em junho de 2026 e é conhecimento comunitário, por isso confirma os tempos de espera atuais com a ILGA Portugal ou com o teu médico de família. A ILGA Portugal também oferece acompanhamento jurídico gratuito no processo do SNS, e o guia diz isso em todos os caminhos.",
   "about.linkModal.transHealthcare.point.hrt.title":
@@ -202,7 +203,7 @@ export const marketing: Catalog = {
   "about.linkModal.transHealthcare.point.clinicians.title":
     "Profissionais que afirmam quem és.",
   "about.linkModal.transHealthcare.point.clinicians.body":
-    "Contactos essenciais, mais o Registo de Preços Solidários para médicos de família e psiquiatras trans-afirmativos.",
+    "Contactos essenciais, mais o Registo de Preços Solidários com profissionais de medicina geral e familiar e de psiquiatria que afirmam pessoas trans.",
   "about.linkModal.transHealthcare.cta": "Lê o guia completo de saúde trans",
 
   "about.linkModal.guidelinesSpeech.eyebrow": "Diretrizes da comunidade",
@@ -218,11 +219,11 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesSpeech.point.antisemitism.title":
     "Removemos o antissemitismo.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.body":
-    "Inclui teorias da conspiração sobre pessoas judias e culpar pessoas membras judias pelo que Israel faz.",
+    "Inclui as teorias da conspiração sobre pessoas judias e a culpabilização de pessoas judias da comunidade pelo que Israel faz.",
   "about.linkModal.guidelinesSpeech.point.antiPalestinian.title":
     "Removemos o racismo antipalestiniano.",
   "about.linkModal.guidelinesSpeech.point.antiPalestinian.body":
-    "Inclui tratar pessoas membras palestinianas ou árabes como suspeitas e assediar qualquer pessoa pela sua nacionalidade, etnia ou religião.",
+    "Inclui tratar pessoas palestinianas ou árabes da comunidade como suspeitas e assediar qualquer pessoa pela sua nacionalidade, etnia ou religião.",
   "about.linkModal.guidelinesSpeech.point.test.title": "Uma pergunta decide.",
   "about.linkModal.guidelinesSpeech.point.test.body":
     "A moderação pergunta a quem a publicação se dirige. Um Estado, um governo ou um exército pode ser criticado. Uma pessoa não pode ser atacada por quem é.",
@@ -237,14 +238,14 @@ export const marketing: Catalog = {
   "about.linkModal.migration.p1":
     "Ser uma pessoa queer racializada em Lisboa significa atravessar duas coisas ao mesmo tempo que os espaços dominantes raramente pensam em conjunto. A história colonial de Portugal molda esta cidade de formas visíveis para quem as vive e invisíveis para quem não as vive.",
   "about.linkModal.migration.p2":
-    "O guia fala do que é preciso saber ao chegar, do que acontece quando os espaços queer tratam a raça como pormenor, e dos grupos comunitários que existem para pessoas membras QTIPOC.",
+    "O guia fala do que é preciso saber ao chegar, do que acontece quando os espaços queer tratam a raça como algo secundário, e dos grupos comunitários que existem para pessoas QTIPOC da comunidade.",
   "about.linkModal.migration.point.queerSpaces.title":
     "Quando ser queer não chega.",
   "about.linkModal.migration.point.queerSpaces.body":
-    "O que as pessoas membras descrevem sobre o racismo dentro dos espaços queer daqui, e as diretrizes que tornam isso denunciável.",
+    "O que as pessoas da comunidade descrevem sobre o racismo dentro dos espaços queer daqui, e as diretrizes que tornam isso denunciável.",
   "about.linkModal.migration.point.arriving.title": "Chegar a Portugal.",
   "about.linkModal.migration.point.arriving.body":
-    "A história colonial, como ela cai sobre pessoas membras brasileiras, dos PALOP e do sul da Ásia, e onde encontrar quem já fez este caminho antes de ti.",
+    "A história colonial, como pesa sobre pessoas brasileiras, dos PALOP e do sul da Ásia, e onde encontrar quem já fez este caminho antes de ti.",
   "about.linkModal.migration.point.cost.title": "O custo como barreira.",
   "about.linkModal.migration.point.cost.body":
     "A subida de custos em Lisboa, o carácter de classe da vida social queer, e as medidas de acesso a que nos obrigamos.",
@@ -278,21 +279,21 @@ export const marketing: Catalog = {
   "about.linkModal.governanceOverview.lead":
     "Como a QueerPulse funciona hoje: quem modera, como funcionam as moções e o que ainda está a ser redigido.",
   "about.linkModal.governanceOverview.p1":
-    "O funcionamento do dia a dia, moderação incluída, está a cargo da equipa de voluntários. Qualquer decisão de moderação pode ser contestada uma vez, no prazo de 14 dias, e o recurso é analisado por uma pessoa moderadora que não fez parte da decisão original. Queremos decidir cada recurso em 7 dias.",
+    "O funcionamento do dia a dia, moderação incluída, está a cargo da equipa voluntária. Qualquer decisão de moderação pode ser contestada uma vez, no prazo de 14 dias, e o recurso é analisado por uma pessoa moderadora que não fez parte da decisão original. Queremos decidir cada recurso no prazo de 7 dias.",
   "about.linkModal.governanceOverview.p2":
     "Queremos responder a cada denúncia dentro de um prazo definido pela sua gravidade: 1 hora, 24 horas, 3 dias ou 7 dias. O Relatório de Transparência publica os números de moderação de cada trimestre civil.",
   "about.linkModal.governanceOverview.point.council.title":
     "O conselho consultivo.",
   "about.linkModal.governanceOverview.point.council.body":
-    "Um conselho consultivo está a ser nomeado. Os seus lugares aparecem na página de Governação assim que forem preenchidos.",
+    "Está a ser nomeado um conselho consultivo. Os seus lugares aparecem na página de Governação assim que forem preenchidos.",
   "about.linkModal.governanceOverview.point.finances.title":
     "Contas às claras.",
   "about.linkModal.governanceOverview.point.finances.body":
-    "As receitas e despesas aparecem na secção de Finanças da página de Governação quando a equipa de voluntários as introduz. As regras sobre como o dinheiro é recebido e gasto estão a ser redigidas.",
+    "As receitas e despesas aparecem na secção de Finanças da página de Governação quando a equipa voluntária as introduz. As regras sobre como o dinheiro é recebido e gasto estão a ser redigidas.",
   "about.linkModal.governanceOverview.point.proposals.title":
     "Moções e votações.",
   "about.linkModal.governanceOverview.point.proposals.body":
-    "As pessoas-membro podem abrir uma moção na página de Governação. Precisa de coassinaturas de outras pessoas-membro e de uma análise da nossa equipa para chegar a votação, e cada moção mostra a sua contagem e o seu resultado.",
+    "As pessoas da comunidade podem abrir uma moção na página de Governação. Precisa de coassinaturas de outras pessoas da comunidade e de uma análise da nossa equipa para chegar a votação, e cada moção mostra a sua contagem e o seu resultado.",
   "about.linkModal.governanceOverview.cta":
     "Vê a página de governação completa",
 
@@ -301,23 +302,23 @@ export const marketing: Catalog = {
   "about.who.p1":
     "A QueerPulse é gerida por quem a usa: uma pequena equipa fundadora e um círculo crescente de pessoas que ajudam a definir o que vem a seguir.",
   "about.who.p2":
-    "Não temos capital de risco à procura de retorno. A QueerPulse é um coletivo de voluntários e a adesão não tem custo.",
-  "about.contactStrip.title": "Perguntas? <em>Estamos contactáveis.</em>",
+    "Não temos capital de risco à procura de retorno. A QueerPulse é um coletivo voluntário e a adesão não tem custo.",
+  "about.contactStrip.title": "Perguntas? <em>Estamos por cá.</em>",
   "about.contactStrip.body":
     "Sem pedidos de suporte perdidos numa fila. A nossa equipa lê o que envias.",
   "about.contactStrip.contactCta": "Contacta-nos",
-  "about.contactStrip.governanceCta": "Lê a nossa governação",
+  "about.contactStrip.governanceCta": "Lê como nos governamos",
   "about.outro.title": "Vem ver <em>com os teus próprios olhos.</em>",
   "about.outro.sub":
     "A melhor forma de perceber a QueerPulse é fazer parte dela.",
   "about.outro.cta": "Pedir um convite",
 
   // ── Ativismo ───────────────────────────────────────────────────────────
-  "activism.backToVolunteer": "Voltar a Voluntariado",
+  "activism.backToVolunteer": "Voltar ao voluntariado",
   "activism.meta.title":
     "Ativismo com a QueerPulse: formas de te envolveres em Lisboa",
   "activism.meta.description":
-    "Um guia prático de ativismo queer em Lisboa: por onde começar, o que uma competência pode fazer, como mobilizar, e as organizações parceiras que já estão no terreno.",
+    "Um guia prático de ativismo queer em Lisboa: por onde começar, o que uma competência pode fazer, como mobilizar e as organizações parceiras que já estão no terreno.",
   "activism.hero.eyebrow": "Ativismo",
   "activism.hero.title": "Cuidar da comunidade é <em>político.</em>",
   "activism.hero.sub":
@@ -327,7 +328,7 @@ export const marketing: Catalog = {
   "activism.nav.local": "Localmente",
   "activism.nav.skills": "Traz uma competência",
   "activism.nav.mobilise": "Mobilizar",
-  "activism.nav.feel": "Como se sente",
+  "activism.nav.feel": "Como te sentes",
   "activism.nav.orgs": "Organizações parceiras",
   "activism.nav.volunteer": "Voluntariado",
   "activism.conviction.local.word": "Local.",
@@ -354,19 +355,19 @@ export const marketing: Catalog = {
     "Design, código, cozinha, trabalho de cuidado: as organizações precisam de tudo isso, cada competência conta.",
   "activism.start.step4.title": "Compromete-te",
   "activism.start.step4.body":
-    "Entra numa direção, lidera uma campanha, orienta alguém mais novo na organização.",
+    "Entra para a direção de uma associação, lidera uma campanha, orienta quem está a começar no ativismo.",
   "activism.local.title": "Localmente, <em>em Lisboa</em>",
   "activism.local.p1":
     "As lutas mais próximas de casa raramente fazem manchete: habitação, acesso a cuidados de saúde, um espaço ameaçado.",
   "activism.skills.title": "Traz uma <em>competência</em>",
   "activism.skills.p1":
-    "Cada organização abaixo precisa de mais do que voluntários com cartazes. Precisa do teu ofício.",
+    "Cada organização abaixo precisa de mais do que gente de cartaz na mão. Precisa daquilo que sabes mesmo fazer.",
   "activism.skills.design.title": "Design",
   "activism.skills.design.body":
-    "Materiais de campanha, zines, sinalética: trabalho visual que faz um argumento chegar.",
+    "Materiais de campanha, zines, sinalética: trabalho visual que faz passar a mensagem.",
   "activism.skills.tech.title": "Tecnologia",
   "activism.skills.tech.body":
-    "Sites, bases de dados, segurança digital para quem organiza e precisa de estar seguro online.",
+    "Sites, bases de dados, segurança digital para quem organiza e precisa de se proteger online.",
   "activism.skills.food.title": "Comida",
   "activism.skills.food.body":
     "Cozinhar para eventos, angariações de fundos e programas de refeições de entreajuda.",
@@ -375,16 +376,16 @@ export const marketing: Catalog = {
     "Apoio entre pares, guarda de crianças durante reuniões, ver como estão as pessoas em dificuldade.",
   "activism.mobilise.title": "Como <em>mobilizar</em>",
   "activism.mobilise.p1":
-    "<b>Mobiliza em conjunto.</b> Traz alguém contigo. Os números mudam o que é politicamente possível.",
+    "<b>Aparece em força.</b> Traz alguém contigo. Os números mudam o que é politicamente possível.",
   "activism.mobilise.p2":
-    "<b>Documenta o que vês.</b> Fotografias e notas de uma ação importam mais tarde, para responsabilização e para a história.",
+    "<b>Documenta o que vês.</b> Fotos e notas de uma ação contam mais tarde, para pedir responsabilidades e para a história.",
   "activism.mobilise.p3":
-    "<b>Continua o trabalho depois da marcha.</b> O trabalho que se segue a uma manifestação é onde acontece a maior parte da mudança real.",
-  "activism.feel.title": "Como se <em>sente</em>",
+    "<b>Continua depois da marcha.</b> É no trabalho que se segue a uma manifestação que acontece a maior parte da mudança.",
+  "activism.feel.title": "Como te <em>sentes</em>",
   "activism.feel.p1":
-    "O esgotamento é real. Um ativismo que só exige e nunca repõe não é sustentável, nem para ti nem para o movimento.",
+    "O esgotamento é real. Um ativismo que só tira e nada devolve não se aguenta, nem para ti nem para o movimento.",
   "activism.feel.p2":
-    "Está tudo bem em recuar. Está tudo bem em fazer menos do que achas que devias. Descansar faz parte do trabalho.",
+    "Não faz mal recuar. Não faz mal fazeres menos do que achas que devias. Descansar faz parte do trabalho.",
   "activism.feel.banner.title": "Se estás perto do esgotamento",
   "activism.feel.banner.body":
     "Fala com o apoio entre pares antes de desapareceres de vez. Recuar com um plano é melhor do que desaparecer sem nenhum.",
@@ -394,11 +395,11 @@ export const marketing: Catalog = {
   "activism.volunteer.title": "Vagas <em>abertas</em>",
   "activism.volunteer.p1":
     "Oportunidades de voluntariado atuais das nossas organizações parceiras, atualizadas regularmente.",
-  "activism.volunteer.seeRoleCta": "Ver a função",
+  "activism.volunteer.seeRoleCta": "Ver a vaga",
   "activism.volunteer.seeAllCta": "Ver todas as vagas de voluntariado",
   "activism.outro.title": "Escolhe um degrau. <em>Começa hoje.</em>",
   "activism.outro.sub":
-    "O Quadro é onde vive cada vaga listada, atualizado à medida que as organizações publicam novas.",
+    "Todas as vagas estão no Quadro, que se atualiza à medida que as organizações publicam novas.",
   "activism.outro.seeBoardCta": "Ver o quadro de voluntariado",
 
   // ── Código de Conduta ──────────────────────────────────────────────────
@@ -415,7 +416,7 @@ export const marketing: Catalog = {
     "O <b>Código de Conduta</b>: o que é de cumprimento obrigatório, o que acontece quando é violado, como recorrer.",
   "coc.distinction.sister.title": "O seu documento irmão",
   "coc.distinction.sister.body":
-    "As <b>Diretrizes da Comunidade</b> descrevem a cultura que estamos a construir. Esta página é aquilo sobre o qual agimos.",
+    "As <b>Diretrizes da Comunidade</b> descrevem a cultura que estamos a construir. Esta página é a base da nossa atuação.",
   "coc.toc.scope": "Âmbito",
   "coc.toc.pact": "O pacto",
   "coc.toc.harm": "Sobre o que agimos",
@@ -424,19 +425,19 @@ export const marketing: Catalog = {
   "coc.toc.offplatform": "Conduta fora da plataforma",
   "coc.scope.title": "§01 <em>Âmbito</em>",
   "coc.scope.p1":
-    "Este Código aplica-se a tudo na QueerPulse (<strong>publicações, mensagens, eventos, comentários, perfis</strong>) e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
+    "Este Código aplica-se a tudo na QueerPulse (<strong>publicações, mensagens, eventos, comentários, perfis</strong>) e à conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
   "coc.scope.p2":
-    "Aplica-se a todas as pessoas, <em>sem exceção</em>, incluindo fundadores, equipa e moderação.",
+    "Aplica-se a todas as pessoas, <em>sem exceção</em>, incluindo quem fundou a plataforma, a equipa e a moderação.",
   "coc.scope.p3":
     "Não se aplica ao próprio desacordo. Estar em erro, ou ser impopular, não é uma violação. <em>Causar dano, é.</em>",
   "coc.pact.title": "§02 O <em>pacto</em>",
   "coc.pact.lead": "Seis compromissos que cada pessoa assume ao entrar.",
   "coc.pact.item01.title": "Mostramo-nos como somos",
   "coc.pact.item01.body":
-    "Traz a tua identidade inteira. Ninguém aqui tem de representar uma versão mais palatável de si próprio.",
+    "Traz a tua identidade inteira. Ninguém aqui tem de representar uma versão mais palatável de si.",
   "coc.pact.item02.title": "Perguntamos antes de presumir",
   "coc.pact.item02.body":
-    "Pronomes, limites, níveis de conforto: confirma, não adivinhes.",
+    "Pronomes, limites, níveis de conforto: pergunta e confirma.",
   "coc.pact.item03.title": "Mantemos este espaço privado",
   "coc.pact.item03.body":
     "O que acontece aqui fica aqui, a menos que a pessoa envolvida diga o contrário.",
@@ -450,12 +451,12 @@ export const marketing: Catalog = {
   "coc.pact.item06.body":
     "Se algo estiver errado, avisa alguém que possa agir.",
   "coc.pact.closing":
-    "Ninguém acerta nisto sempre. O pacto é o padrão a que nos responsabilizamos mutuamente quando falhamos.",
+    "Ninguém acerta nisto sempre. O pacto é o padrão pelo qual nos pedimos contas mutuamente quando falhamos.",
   "coc.harm.title": "§03 Sobre o que <em>agimos</em>",
   "coc.harm.actOnHeading": "Sobre o que agimos",
   "coc.harm.actOn.personalAttacks.lead": "Ataques pessoais.",
   "coc.harm.actOn.personalAttacks.rest":
-    "Insultos, rotular alguém, ou atacar a pessoa em vez do seu argumento.",
+    "Insultos, chamar nomes, ou visar a pessoa e deixar o argumento de lado.",
   "coc.harm.actOn.sustainedHarassment.lead": "Assédio continuado.",
   "coc.harm.actOn.sustainedHarassment.rest":
     "Contacto indesejado e repetido depois de se pedir para parar.",
@@ -472,7 +473,7 @@ export const marketing: Catalog = {
   "coc.harm.friction.disagreement.lead": "Desacordo.",
   "coc.harm.friction.disagreement.rest":
     "Incluindo desacordo <em>forte</em>, expresso com respeito.",
-  "coc.harm.friction.hurtFeelings.lead": "Sentir-se magoade, por si só.",
+  "coc.harm.friction.hurtFeelings.lead": "A mágoa, por si só.",
   "coc.harm.friction.hurtFeelings.rest":
     "O desconforto não é o mesmo que dano. Olhamos para o que foi realmente dito ou feito.",
   "coc.harm.friction.criticism.lead": "Críticas à plataforma.",
@@ -501,10 +502,10 @@ export const marketing: Catalog = {
     "Perda de acesso a um evento, comunidade ou canal específico, enquanto o resto da plataforma continua aberto.",
   "coc.ladder.step5.title": "Remoção da QueerPulse",
   "coc.ladder.step5.body":
-    "Reservado para violações graves ou repetidas. <em>Sempre revisível em recurso.</em>",
+    "Reservada para violações graves ou repetidas. <em>Sempre passível de recurso.</em>",
   "coc.report.title": "Como <em>denunciar</em>",
   "coc.report.body":
-    "Toda a denúncia é lida por uma pessoa, nunca resolvida automaticamente. Procuramos responder dentro de um prazo definido pela gravidade, de 1 hora nas denúncias mais urgentes a 7 dias nas de menor gravidade.",
+    "Cada denúncia é lida e tratada por uma pessoa. Procuramos responder dentro de um prazo definido pela gravidade, de 1 hora nas denúncias mais urgentes a 7 dias nas de menor gravidade.",
   "coc.report.fileCta": "Fazer uma denúncia",
   "coc.appeal.title": "§05 <em>Recursos</em>",
   "coc.appeal.p1":
@@ -519,7 +520,7 @@ export const marketing: Catalog = {
     "Assédio que começou aqui e continua noutra plataforma, dirigido a uma pessoa da QueerPulse.",
   "coc.offplatform.case2.lead": "Conduta pública que põe pessoas em risco.",
   "coc.offplatform.case2.rest":
-    "Declarações ou ações públicas que tornariam <em>insegura a presença de alguém razoável num evento contigo</em>.",
+    "Declarações ou ações públicas que fariam qualquer pessoa razoável <em>sentir-se insegura num evento contigo</em>.",
   "coc.offplatform.closing":
     "Isto é usado <em>raramente e com cuidado</em>. Nunca é uma licença geral para policiar a vida de alguém fora da plataforma.",
   "coc.version.downloadCta": "descarregar como texto",
@@ -534,10 +535,10 @@ export const marketing: Catalog = {
   "coc.download.section05": "Recursos",
   "coc.download.section06": "Conduta fora da plataforma",
   "coc.download.mockNote":
-    "(Este é um descarregável de protótipo. O ficheiro de produção corresponderá exatamente à página web.)",
+    "(Este ficheiro é um protótipo. O ficheiro final vai corresponder exatamente à página web.)",
 
   // ── Cookies ────────────────────────────────────────────────────────────
-  "cookies.meta.title": "Política de Cookies da QueerPulse e preferências",
+  "cookies.meta.title": "Política de Cookies e preferências da QueerPulse",
   "cookies.meta.description":
     "Todos os cookies que a QueerPulse usa e tudo o que guarda no teu dispositivo, com o nome completo, o que cada um faz e quanto tempo dura. Sem cookies de publicidade nem de análise.",
   "cookies.eyebrow": "Cookies",
@@ -595,19 +596,19 @@ export const marketing: Catalog = {
     "Corrige informação sobre ti que esteja incorreta ou incompleta.",
   "dsar.rights.rectification.formTitle": "Pedir uma correção",
   "dsar.rights.rectification.formSub":
-    "Diz-nos o que está errado e o que deve constar em vez disso.",
+    "Diz-nos o que está errado e qual deve ser a informação correta.",
   "dsar.rights.erasure.label": "Direito ao <em>apagamento</em>",
   "dsar.rights.erasure.desc":
     "Pede-nos para eliminar os teus dados pessoais, dentro dos limites legais de retenção.",
   "dsar.rights.erasure.formTitle": "Pedir a eliminação dos teus dados",
   "dsar.rights.erasure.formSub":
-    "Isto é diferente de eliminar a conta. Diz-nos exatamente o que queres removido.",
+    "Isto é diferente de eliminar a conta. Diz-nos exatamente o que queres que seja removido.",
   "dsar.rights.objection.label": "Direito de <em>oposição</em>",
   "dsar.rights.objection.desc":
     "Opõe-te a uma forma específica de usarmos os teus dados, como a monitorização de erros.",
   "dsar.rights.objection.formTitle": "Opor-te a um uso dos teus dados",
   "dsar.rights.objection.formSub":
-    "Diz-nos a que processamento te estás a opor.",
+    "Diz-nos a que tratamento de dados te opões.",
   "dsar.artPrefix": "Artigo {number}",
   "dsar.toast.showingForm": "A mostrar o formulário do Artigo {article}",
   "dsar.requestLabel": "Pedido:",
@@ -617,7 +618,7 @@ export const marketing: Catalog = {
     "Dá o máximo de detalhe possível. Isso acelera a análise.",
   "dsar.form.whatChanged.placeholder":
     "Descreve o que deve ser corrigido, eliminado, ou a que te opões",
-  "dsar.form.scopeLabel": "Que dados abrange isto?",
+  "dsar.form.scopeLabel": "Que dados abrange este pedido?",
   "dsar.scopes.profile.b": "Perfil",
   "dsar.scopes.profile.s": "Nome, biografia, fotos, pronomes",
   "dsar.scopes.connections.b": "Conexões",
@@ -627,14 +628,13 @@ export const marketing: Catalog = {
   "dsar.scopes.membership.b": "Adesão",
   "dsar.scopes.membership.s": "A tua data de entrada e quem te convidou",
   "dsar.scopes.moderation.b": "Moderação",
-  "dsar.scopes.moderation.s":
-    "Denúncias que fizeste ou em que foste mencionade",
+  "dsar.scopes.moderation.s": "Denúncias que fizeste ou que te mencionam",
   "dsar.form.contextLabel": "Mais alguma coisa que devamos saber?",
   "dsar.form.contextPlaceholder": "Contexto adicional para a nossa equipa",
   "dsar.legalStrip":
     "Respondemos no prazo de <b>30 dias</b>, como a lei exige. Vê <link>retenção de dados</link> para saber por quanto tempo guardamos as coisas por norma.",
   "dsar.actions.info":
-    "Os pedidos são revistos por uma pessoa da nossa equipa de privacidade, <b>nunca totalmente automatizado</b>.",
+    "Cada pedido é revisto por uma pessoa da nossa equipa de privacidade. <b>O processo nunca é totalmente automatizado.</b>",
   "dsar.actions.submit": "Submeter pedido",
   "dsar.actions.submitting": "A enviar…",
   "dsar.past.heading": "Os teus pedidos anteriores",
@@ -661,22 +661,23 @@ export const marketing: Catalog = {
     "Um pedido fica associado à conta com que tens sessão iniciada, para sabermos de quem são os dados. Inicia sessão e voltas diretamente a esta página.",
   "dsar.signedOut.signInCta": "Iniciar sessão",
   "dsar.signedOut.noAccount":
-    "<b>Não tens conta connosco?</b> Se pediste um convite, nos escreveste ou já foste membro, envia o teu pedido pelo formulário de contacto e diz-nos o email que usaste.",
+    "<b>Não tens conta connosco?</b> Se pediste um convite, se nos escreveste ou se já fizeste parte da comunidade, envia o teu pedido pelo formulário de contacto e diz-nos o email que usaste.",
   "dsar.signedOut.contactCta": "Escreve-nos sobre os teus dados",
 
   // ── Diretrizes da Comunidade ───────────────────────────────────────────
   "guidelines.meta.title": "Diretrizes da Comunidade QueerPulse",
   "guidelines.meta.description":
-    "A cultura que estamos a construir juntes na QueerPulse: como te mostrares, discordares bem, e manteres o espaço seguro, distinto do Código de Conduta de cumprimento obrigatório.",
+    "A cultura que estamos a construir em conjunto na QueerPulse: como mostrar quem és, discordar bem e manter o espaço seguro. É distinta do Código de Conduta, que é de cumprimento obrigatório.",
   "guidelines.hero.eyebrow": "Diretrizes da Comunidade",
-  "guidelines.hero.title": "A cultura que estamos a <em>construir juntes.</em>",
+  "guidelines.hero.title":
+    "A cultura que estamos a <em>construir em conjunto.</em>",
   "guidelines.hero.sub":
-    "Estas não são regras de cumprimento obrigatório. Isso é o Código de Conduta. Isto é como é o bom aqui.",
+    "As regras de cumprimento obrigatório estão no Código de Conduta. Aqui fica o que é fazer as coisas bem nesta comunidade.",
   "guidelines.updatedMeta": "Última revisão em {date}",
   "guidelines.clause01.titlePre": "Mostra-te como ",
   "guidelines.clause01.titleEm": "és",
   "guidelines.clause01.p1":
-    "Não há código de vestir para a identidade aqui. Como quer que te apresentes hoje, já chega.",
+    "Aqui, a identidade não tem código de vestuário. Venhas como vieres hoje, chega.",
   "guidelines.clause01.p2":
     "Isso inclui não teres a certeza, estares em dúvida, ou algures entre rótulos. Ninguém precisa de uma resposta fechada para pertencer.",
   "guidelines.clause02.titlePre": "Presume ",
@@ -686,14 +687,14 @@ export const marketing: Catalog = {
   "guidelines.clause02.li1":
     "Lê uma mensagem duas vezes antes de reagir a ela.",
   "guidelines.clause02.li2":
-    "Faz uma pergunta de clarificação em vez de presumir a intenção.",
+    "Faz uma pergunta para esclarecer antes de presumir a intenção.",
   "guidelines.clause02.li3":
     "Dá espaço para alguém formular algo de forma desajeitada.",
-  "guidelines.clause02.li4": "Presume que podes estar sem contexto.",
+  "guidelines.clause02.li4": "Presume que te pode faltar contexto.",
   "guidelines.clause02.li5":
     "Discorda do argumento, e trata a pessoa com respeito.",
   "guidelines.clause02.p2":
-    "A boa-fé não é infinita. Comportamento mau repetido deixa de merecer o benefício da dúvida.",
+    "A boa-fé não é infinita. O mau comportamento repetido deixa de merecer o benefício da dúvida.",
   "guidelines.clause03.titlePre": "Ocupa o ",
   "guidelines.clause03.titleEm": "espaço certo",
   "guidelines.clause03.p1":
@@ -706,10 +707,10 @@ export const marketing: Catalog = {
   "guidelines.clause04.titlePre": "Mantém o espaço ",
   "guidelines.clause04.titleEm": "privado",
   "guidelines.clause04.p1":
-    "O que se partilha num evento, num espaço de apoio, ou numa comunidade privada, fica lá, a menos que a pessoa diga o contrário.",
+    "O que se partilha num evento, num espaço de apoio ou numa comunidade privada fica lá, a menos que a pessoa diga o contrário.",
   "guidelines.clause04.p2":
     "Isto inclui capturas de ecrã. Pergunta antes de partilhares algo que veio de dentro da QueerPulse.",
-  "guidelines.clause05.titlePre": "Repara para além do ",
+  "guidelines.clause05.titlePre": "Reparar vai além do ",
   "guidelines.clause05.titleEm": "pedido de desculpa",
   "guidelines.clause05.p1":
     "Um bom pedido de desculpa nomeia o que aconteceu, reconhece o impacto e muda o comportamento daí em diante.",
@@ -718,13 +719,13 @@ export const marketing: Catalog = {
   "guidelines.clause06.titlePre": "Descansar faz ",
   "guidelines.clause06.titleEm": "parte disto",
   "guidelines.clause06.p1":
-    "Ninguém deve disponibilidade constante a esta comunidade. Recua quando precisares.",
+    "Ninguém deve disponibilidade constante a esta comunidade. Dá um passo atrás quando precisares.",
   "guidelines.clause06.p2":
     "Uma comunidade saudável tem espaço para as pessoas entrarem e saírem sem explicações.",
   "guidelines.clause07.titlePre": "Conhece as ",
   "guidelines.clause07.titleEm": "linhas vermelhas",
   "guidelines.clause07.p1":
-    "As Diretrizes descrevem cultura. Algumas coisas cruzam para o Código de Conduta, território de cumprimento obrigatório:",
+    "As Diretrizes descrevem cultura. Algumas coisas entram no território do Código de Conduta, que é de cumprimento obrigatório:",
   "guidelines.clause07.hardLinesHead":
     "Sempre uma violação do Código de Conduta",
   "guidelines.clause07.li1": "Assédio ou ataques pessoais dirigidos",
@@ -734,12 +735,12 @@ export const marketing: Catalog = {
     "Revelar a orientação ou identidade de alguém sem o seu consentimento",
   "guidelines.clause07.li4": "Ameaças ou intimidação",
   "guidelines.clause07.li5":
-    "Partilhar conversas ou fotografias privadas sem consentimento",
+    "Partilhar conversas ou fotos privadas sem consentimento",
   "guidelines.clause07.li6":
     "Discriminação com base em qualquer característica protegida",
   "guidelines.clause07.reportLead": "Denuncia. Vais ter apoio.",
   "guidelines.clause07.reportBody":
-    "Se alguém ultrapassar uma destas linhas, denuncia essa pessoa ou a publicação a partir do menu. A moderação lê todas as denúncias, e nunca ficas com isto sozinhe. Infrações confirmadas levam a um aviso, suspensão ou remoção, e cooperamos com as autoridades quando a segurança de alguém está em risco. Nunca estás a exagerar por denunciar.",
+    "Se alguém ultrapassar uma destas linhas, denuncia essa pessoa ou a publicação a partir do menu. A moderação lê todas as denúncias e vais ter sempre apoio. As infrações confirmadas levam a um aviso, suspensão ou remoção, e cooperamos com as autoridades quando a segurança de alguém está em risco. Denunciar nunca é exagerar.",
   "guidelines.clause08.titlePre": "O discurso pol\u00edtico ",
   "guidelines.clause08.titleEm": "continua pol\u00edtico",
   "guidelines.clause08.p1":
@@ -752,29 +753,30 @@ export const marketing: Catalog = {
   "guidelines.clause08.li1":
     "Culpar pessoas judias pelo que Israel faz, ou espalhar teorias da conspiração sobre pessoas judias",
   "guidelines.clause08.li2":
-    "Tratar pessoas membras palestinianas ou árabes como suspeitas",
+    "Tratar pessoas palestinianas ou árabes da comunidade como suspeitas",
   "guidelines.clause08.li3":
     "Assediar alguém pela sua nacionalidade, etnia ou religião",
   "guidelines.clause08.p3Lead": "O critério é a quem a publicação se dirige.",
   "guidelines.clause08.p3Rest":
-    "A crítica a um Estado, a um governo ou a um exército fica publicada. O ataque a uma pessoa por causa de quem ela é sai.",
-  "guidelines.final.p2": "Obrigade por construíres isto connosco.",
+    "A crítica a um Estado, a um governo ou a um exército fica publicada. Atacar uma pessoa por ser quem é leva à remoção da publicação.",
+  "guidelines.final.p2": "Agradecemos-te por construíres isto connosco.",
   "guidelines.modalDone": "Li tudo, concluir",
   "guidelines.modalScrollHint": "Desliza até ao fim para continuar.",
   "guidelines.outro.title": "Agora já conheces <em>a cultura.</em>",
   "guidelines.outro.sub":
-    "O Código de Conduta cobre o que acontece se for violada.",
+    "O Código de Conduta explica o que acontece se não for respeitada.",
   "guidelines.outro.backCta": "Voltar ao início",
 
   // ── Ajuda ──────────────────────────────────────────────────────────────
-  "help.meta.title": "Central de ajuda da QueerPulse: convites, segurança",
+  "help.meta.title":
+    "Centro de ajuda da QueerPulse: convites, segurança, eventos",
   "help.meta.description":
-    "Respostas às perguntas mais comuns sobre a QueerPulse: como funcionam os convites, gerir a tua conta, confirmações e eventos, denúncias e recursos, e quanto custa a adesão.",
+    "Respostas às perguntas mais comuns sobre a QueerPulse: como funcionam os convites, gerir a tua conta, confirmar presença e organizar eventos, denúncias e recursos, e quanto custa a adesão.",
   "help.hero.eyebrow": "Ajuda",
   "help.hero.title": "Perguntas, <em>respondidas.</em>",
   "help.hero.sub": "Pesquisa abaixo, ou navega por tema.",
   // PRD-271: ver a nota no catálogo EN.
-  "help.search.label": "Pesquisa no centro de ajuda",
+  "help.search.label": "Pesquisar no centro de ajuda",
   "help.search.placeholder": "Pesquisa todas as respostas",
   "help.search.summary_one":
     "1 resposta corresponde a \u201c{query}\u201d, em todos os temas.",
@@ -818,14 +820,13 @@ export const marketing: Catalog = {
   "help.qa.unknownSession.q":
     "Não reconheço um dispositivo nas minhas sessões ativas. E agora?",
   "help.qa.unknownSession.a":
-    "Termina essa sessão em <sessionsLink>sessões ativas</sessionsLink>. Inicias sessão com a Google ou com um código enviado para o teu email, por isso revê também a segurança dessa conta Google e dessa caixa de correio, já que quem tiver acesso a qualquer uma delas consegue entrar aqui. Depois <contactLink>conta-nos o que aconteceu</contactLink> e ajudamos-te a proteger a tua conta.",
+    "Termina essa sessão nas <sessionsLink>tuas sessões ativas</sessionsLink>. Inicias sessão com o Google ou com um código enviado para o teu email, por isso revê também a segurança dessa conta Google e dessa caixa de correio, já que quem tiver acesso a qualquer uma delas consegue entrar aqui. Depois <contactLink>conta-nos o que aconteceu</contactLink> e ajudamos-te a proteger a tua conta.",
   "help.qa.deleteAccount.q": "Como elimino a minha conta?",
   "help.qa.deleteAccount.a":
-    "Em <settingsLink>Definições</settingsLink> e depois Conta, mais abaixo. Isto é permanente. Vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
-  "help.qa.levels.q":
-    "O que significam os diferentes níveis de pessoa da comunidade?",
+    "Em <settingsLink>Definições</settingsLink> e depois Conta, no fundo da página. A eliminação é permanente. Vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
+  "help.qa.levels.q": "O que significam os diferentes níveis na comunidade?",
   "help.qa.levels.a":
-    "Os níveis refletem há quanto tempo entraste na comunidade com um voto de confiança e a tua atividade. São um sinal de confiança, sem qualquer barreira de pagamento.",
+    "Os níveis refletem há quanto tempo entraste na comunidade com um voto de confiança e a tua atividade. São um sinal de confiança, e tudo continua gratuito.",
   "help.qa.rsvp.q": "Como funcionam as confirmações de presença?",
   "help.qa.rsvp.a":
     "Confirma na página do evento através do <calendarLink>calendário</calendarLink> ou do quadro de eventos. <strong>As vagas são limitadas</strong> na maioria dos eventos, por isso confirma cedo.",
@@ -833,12 +834,12 @@ export const marketing: Catalog = {
   "help.qa.hostGathering.a":
     "Sim, vê o <hostLink>guia de organização</hostLink> para um passo a passo completo.",
   "help.qa.cantMakeIt.q":
-    "Confirmei presença mas afinal não posso ir. O que faço?",
+    "Confirmei presença, mas afinal não posso ir. O que faço?",
   "help.qa.cantMakeIt.a":
     "Cancela a tua confirmação na página do evento assim que souberes, para que alguém na lista de espera possa ficar com o teu lugar.",
   "help.qa.waitlist.q": "Como funciona a lista de espera?",
   "help.qa.waitlist.a":
-    "És avisade automaticamente assim que surge uma vaga, com uma janela curta para a garantires antes de passar para a pessoa seguinte.",
+    "Recebes um aviso automático assim que surge uma vaga, com um prazo curto para a garantires antes de passar para a pessoa seguinte.",
   "help.qa.reportMember.q": "Como denuncio outra pessoa da comunidade?",
   "help.qa.reportMember.a":
     "No perfil da pessoa, numa publicação ou numa mensagem, usa a opção de denúncia. Cada denúncia vai para a moderação da nossa equipa.",
@@ -847,7 +848,7 @@ export const marketing: Catalog = {
     "Procuramos responder dentro de um prazo definido pela gravidade da denúncia: 1 hora, 24 horas, 3 dias ou 7 dias. <strong>Tens sempre resposta</strong>, mesmo que decidamos que não é necessária qualquer ação.",
   "help.qa.appeal.q": "Posso recorrer de uma decisão de moderação?",
   "help.qa.appeal.a":
-    "Sim, toda a decisão pode ser contestada uma vez, revista por uma pessoa moderadora diferente. Vê <governanceLink>Governação</governanceLink> para o processo completo.",
+    "Sim, podes recorrer de qualquer decisão uma vez, e o recurso é analisado por outra pessoa moderadora. Vê <governanceLink>Governação</governanceLink> para o processo completo.",
   "help.qa.blockMute.q": "Qual a diferença entre bloquear e silenciar?",
   "help.qa.blockMute.a":
     "<strong>Bloquear</strong> remove todo o contacto nos dois sentidos. <strong>Silenciar</strong> só esconde alguém do teu feed. A outra pessoa não sabe que aconteceu nenhum dos dois.",
@@ -860,14 +861,14 @@ export const marketing: Catalog = {
     "Quando dás um voto de confiança a alguém, estás a dizer à comunidade que confias que essa pessoa deve estar aqui. É um sinal real, com peso.",
   "help.qa.cost.q": "A adesão custa alguma coisa?",
   "help.qa.cost.a":
-    "A adesão não tem custo nem escalões, por isso todas as pessoas membras têm o mesmo estatuto. A música que compras a um artista no Studio é paga diretamente a esse artista, e a QueerPulse nunca fica com o dinheiro.",
+    "A adesão não tem custo nem escalões, por isso todas as pessoas têm o mesmo estatuto. Quando compras música no Studio, pagas diretamente a quem a fez, e o dinheiro nunca passa pela QueerPulse.",
   "help.qa.emailNotifications.q": "Como controlo as notificações?",
   "help.qa.emailNotifications.a":
     "Em <settingsLink>Definições</settingsLink> e depois Notificações, ativa ou desativa cada categoria em separado. A QueerPulse avisa-te dentro da aplicação e, se autorizares, por push. As notificações nunca vão por email.",
   "help.qa.browserSupport.q": "Que navegadores é que a QueerPulse suporta?",
   "help.qa.browserSupport.a":
     "Versões atuais do Chrome, Firefox, Safari e Edge. Navegadores mais antigos podem ter problemas de visualização.",
-  "help.qa.somethingBroken.q": "Alguma coisa está avariada. O que faço?",
+  "help.qa.somethingBroken.q": "Algo não está a funcionar. O que faço?",
   "help.qa.somethingBroken.a":
     "Tenta atualizar a página primeiro. Se continuar, <contactLink>avisa-nos</contactLink> com o máximo de detalhe possível.",
   "help.stillStuck.title": "Continuas com dúvidas?",
@@ -891,42 +892,43 @@ export const marketing: Catalog = {
   "listBusiness.wizard.pill.review": "Revisão",
 
   // ── Parceiros ──────────────────────────────────────────────────────────
-  "partners.meta.title": "As organizações parceiras da QueerPulse",
+  "partners.meta.title": "As organizações parceiras da QueerPulse em Portugal",
   "partners.meta.description":
     "As organizações com quem a QueerPulse faz parceria em Portugal e mais além, cada uma analisada pela nossa equipa antes de ser listada.",
-  "partners.hero.eyebrow": "Parceiros",
-  "partners.hero.title": "Organizações com quem <em>estamos.</em>",
+  "partners.hero.eyebrow": "Parcerias",
+  "partners.hero.title": "Organizações ao lado de quem <em>estamos.</em>",
   "partners.hero.sub":
-    "Parceiros em Portugal e mais além, a trabalhar lado a lado com a QueerPulse no terreno.",
-  "partners.section.title": "Os nossos <em>parceiros</em>",
+    "Organizações parceiras em Portugal e mais além, a trabalhar lado a lado com a QueerPulse no terreno.",
+  "partners.section.title": "As nossas <em>parcerias</em>",
   "partners.section.sub":
     "Ainda não há filtro disponível. Aqui está a lista completa.",
   "partners.card.viewCta": "Ver perfil",
-  "partners.empty.title": "Ainda não há parceiros listados",
+  "partners.empty.title": "Ainda não há parcerias listadas",
   "partners.empty.body":
     "Estamos a construir a lista. Se a tua organização trabalha connosco no terreno, candidata-te e avaliamos o alinhamento antes de a listar aqui.",
-  "partners.loadingMore": "A carregar mais parceiros…",
-  "partners.loadMoreCta": "Carregar mais parceiros",
+  "partners.loadingMore": "A carregar mais parcerias…",
+  "partners.loadMoreCta": "Carregar mais parcerias",
   "partners.why.title": "Porque fazemos <em>parcerias</em>",
   "partners.why.p1": "Há coisas maiores do que a QueerPulse.",
   "partners.why.p2":
-    "Apoio jurídico, saúde, trabalho com jovens e outros serviços especializados são melhor tratados por organizações com experiência para os fazer bem. Preferimos ligar-te a pessoas que conhecemos e em quem confiamos a mandar-te procurar por ti.",
+    "Apoio jurídico, saúde, trabalho com jovens e outros serviços especializados ficam em melhores mãos com organizações que têm experiência para os fazer bem. Preferimos ligar-te a pessoas que conhecemos e em quem confiamos a mandar-te procurar por ti.",
   "partners.why.p3":
     "Quando fazemos parceria com uma organização, queremos que a relação seja nos dois sentidos. Encaminhamentos, pessoas voluntárias, recursos partilhados e, por vezes, financiamento ajudam a transformar uma listagem em algo mais útil.",
-  "partners.become.title": "Queres <em>ser nosso parceiro?</em>",
+  "partners.become.title": "Queres <em>fazer parceria connosco?</em>",
   "partners.become.body":
     "Se a tua organização faz um trabalho alinhado em Lisboa ou arredores, gostaríamos de saber de ti.",
-  "partners.become.applyCta": "Candidatar como parceiro",
+  "partners.become.applyCta": "Candidatar a parceria",
   "partners.become.contactCta": "Fala connosco primeiro",
   "partners.outro.title":
     "Conheces uma organização que <em>devia estar aqui?</em>",
   "partners.outro.sub":
-    "Diz-nos. Estamos sempre à procura de parceiros alinhados.",
+    "Diz-nos. Estamos sempre à procura de novas parcerias alinhadas.",
 
   // ── Kit de Imprensa ────────────────────────────────────────────────────
-  "pressKit.meta.title": "Kit de imprensa da QueerPulse: logótipos, factos",
+  "pressKit.meta.title":
+    "Kit de imprensa da QueerPulse: logótipos, factos e textos",
   "pressKit.meta.description":
-    "Tudo o que uma pessoa jornalista precisa para escrever sobre a QueerPulse: texto institucional já autorizado, marcas, factos-chave e um contacto direto.",
+    "Tudo o que uma pessoa jornalista precisa para escrever sobre a QueerPulse: texto institucional já autorizado, marcas, factos-chave e um contacto direto para a imprensa.",
   "pressKit.hero.eyebrow": "Imprensa",
   "pressKit.hero.title":
     "Tudo o que precisas para <em>escrever sobre nós.</em>",
@@ -934,7 +936,7 @@ export const marketing: Catalog = {
     "Texto institucional, marcas, cor e factos, <b>já autorizados</b> para uso direto, sem necessidade de aprovação.",
   "pressKit.hero.downloadKitCta": "Descarregar o kit completo",
   "pressKit.hero.askPersonCta": "Falar com a nossa equipa",
-  "pressKit.contact.deskLabel": "<b>Contacto de imprensa:</b>",
+  "pressKit.contact.deskLabel": "<b>Gabinete de imprensa:</b>",
   "pressKit.contact.phoneLabel": "<b>Por telefone</b>, a pedido",
   "pressKit.contact.responseLabel": "A nossa equipa lê <b>todos os pedidos</b>",
   "pressKit.contact.languagesLabel": "<b>PT / EN</b>",
@@ -943,14 +945,14 @@ export const marketing: Catalog = {
     "Todos os materiais aqui são disponibilizados sob licença <a>CC BY 4.0</a> para uso editorial.",
   "pressKit.footerNote.commercial":
     "Para uso comercial, <a>contacta-nos</a> primeiro.",
-  "pressKit.outro.title": "Precisas de <em>algo específico?</em>",
+  "pressKit.outro.title": "Ainda precisas de <em>algo específico?</em>",
   "pressKit.outro.sub":
-    "Contacta diretamente o gabinete de imprensa e a nossa equipa pega no teu pedido.",
-  "pressKit.outro.askCta": "Fala com a redação de imprensa",
+    "Contacta diretamente o gabinete de imprensa e a nossa equipa trata do teu pedido.",
+  "pressKit.outro.askCta": "Fala com o gabinete de imprensa",
   "pressKit.downloadModal.eyebrow": "Kit completo · ZIP",
   "pressKit.downloadModal.title": "Descarrega o <em>kit completo.</em>",
   "pressKit.downloadModal.lead":
-    "Todos os materiais de marca desta página num só arquivo, <b>com um leia-me e a licença</b>, pronto para o teu CMS.",
+    "Todos os materiais de marca desta página num só ficheiro ZIP, <b>com um leia-me e a licença</b>, pronto para o teu CMS.",
   "pressKit.downloadModal.buttonLabel": "Descarregar · ZIP",
   "pressKit.subpageIndex.title": "Relacionado",
   "pressKit.subpageIndex.archive.label": "Arquivo de imprensa",
@@ -974,37 +976,37 @@ export const marketing: Catalog = {
     "512 px, tal como fica instalado nos dispositivos",
   "pressKit.preview.brandReference.title": "Referência de cor e tipografia",
   "pressKit.preview.brandReference.desc":
-    "PDF pronto a imprimir, tirado dos tokens de design",
+    "PDF pronto a imprimir, gerado diretamente a partir dos tokens de design",
   "pressKit.preview.colour.title": "Cores da marca",
   "pressKit.preview.colour.desc": "Todos os valores hex e RGB em texto simples",
   "pressKit.boiler.short.wc": "32 palavras · 224 carateres",
   "pressKit.boiler.short.text":
-    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, a ligar profissionais, criativos, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
+    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, a ligar profissionais, pessoas criativas, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
   "pressKit.boiler.med.wc": "72 palavras · 434 carateres",
   "pressKit.boiler.med.text":
-    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa entra com um voto de confiança de alguém que já está cá. Sem capital de risco por trás, a plataforma não cobra adesão e publica uma revista para a sua comunidade.",
+    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por profissionais, pessoas organizadoras e artistas que constroem uma alternativa às redes movidas pela atenção: sem publicidade, sem um algoritmo a decidir o que as pessoas veem. Cada pessoa entra com um voto de confiança de alguém que já está cá. Sem capital de risco por trás, a plataforma não cobra adesão e publica uma revista para a sua comunidade.",
 
   // ── Explicador de Comunidades ──────────────────────────────────────────
-  "communitiesAbout.meta.title": "Como funcionam as comunidades no QueerPulse",
+  "communitiesAbout.meta.title": "Como funcionam as comunidades na QueerPulse",
   "communitiesAbout.hero.eyebrow": "Comunidades",
   "communitiesAbout.hero.title":
     "Como funcionam as comunidades, e porque <em>importam</em>",
   "communitiesAbout.hero.sub":
-    "A comunidade é a espinha dorsal da vida queer. Cuidamos uns dos outros, e isso só funciona quando aparecemos juntos. Eis como encontrar a tua, em três passos.",
+    "A comunidade é a espinha dorsal da vida queer. Cuidamos de toda a gente, e isso só funciona quando aparecemos lado a lado. Eis como encontrar a tua, em três passos.",
   "communitiesAbout.how.find.title": "Encontra a tua gente",
   "communitiesAbout.how.find.body":
     "Explora comunidades por interesse, cena ou bairro até uma parecer tua.",
   "communitiesAbout.how.welcome.title": "Recebe boas-vindas a sério",
   "communitiesAbout.how.welcome.body":
     "Quem a organiza diz olá e mostra-te tudo, para nunca começares do nada.",
-  "communitiesAbout.how.belong.title": "Aparece e pertence",
+  "communitiesAbout.how.belong.title": "Aparece e faz parte",
   "communitiesAbout.how.belong.body":
     "Entra na conversa, vai aos eventos e torna-te uma cara que as pessoas gostam de ver.",
   "communitiesAbout.outro.title": "A tua gente já está aqui.",
   "communitiesAbout.outro.sub":
-    "Pede um convite e mostramos-te as comunidades que parecem casa.",
+    "Pede um convite e mostramos-te as comunidades onde te vais sentir em casa.",
   "communitiesAbout.outro.subSignedIn":
-    "Explora-as e junta-te às que parecem casa.",
+    "Explora-as e junta-te àquelas onde te sentes em casa.",
   "communitiesAbout.outro.viewCommunitiesCta": "Ver comunidades",
 
   // ── Política de Privacidade ────────────────────────────────────────────
@@ -1026,7 +1028,7 @@ export const marketing: Catalog = {
     "Acede, corrige ou elimina os teus dados pessoais ao abrigo do RGPD.",
   "privacy.whoWeAre.title": "Quem somos",
   "privacy.whoWeAre.p1":
-    "A QueerPulse é mantida por um grupo de voluntários que constroem e cuidam do queerpulse.com. Ainda não existe nenhuma empresa ou organização registada por trás dela. Esta política explica como tratamos os teus dados pessoais em toda a plataforma.",
+    "A QueerPulse é mantida por um grupo de pessoas voluntárias que constroem e cuidam do queerpulse.com. Ainda não existe nenhuma empresa ou organização registada por trás dela. Esta política explica como tratamos os teus dados pessoais em toda a plataforma.",
   "privacy.whoWeAre.p2":
     "Se algo aqui não estiver claro, contacta-nos diretamente. Preferimos explicar a deixar-te adivinhar.",
   "privacy.whatWeCollect.title": "O que recolhemos",
@@ -1039,7 +1041,7 @@ export const marketing: Catalog = {
     "<strong>Dados de adesão</strong>: a tua data de entrada, quem te convidou e quem te deu um voto de confiança.",
   "privacy.whatWeCollect.signInHeading": "Como inicias sessão",
   "privacy.whatWeCollect.signInBody":
-    "Inicias sessão com <strong>um código que te enviamos por email</strong> ou com o <strong>Google</strong>. Não há uma palavra-passe QueerPulse para gerir. Se usares o Google, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
+    "Inicias sessão com <strong>um código que te enviamos por email</strong> ou com o <strong>Google</strong>. Não há palavra-passe da QueerPulse para gerir. Se usares o Google, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
   "privacy.whatWeCollect.deviceHeading": "Dados de dispositivo e técnicos",
   "privacy.whatWeCollect.device.item1":
     "<strong>O navegador e o dispositivo</strong> a partir dos quais inicias sessão, guardados com as tuas sessões ativas para as poderes ver e terminar à distância.",
@@ -1053,13 +1055,13 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.activity.item2":
     "<strong>O que faz o chat funcionar</strong>: quem está numa conversa, confirmações de entrega e de leitura, reações, e quem bloqueaste. Quem está a escrever e quem está online não é guardado, existe apenas em tempo real.",
   "privacy.whatWeCollect.activity.item3":
-    "<strong>Confirmações e presenças em eventos</strong>, para os eventos poderem planear-se conforme o número de pessoas.",
+    "<strong>Confirmações e presenças em eventos</strong>, para quem organiza poder planear consoante o número de pessoas.",
   "privacy.whatWeCollect.activity.item4":
     "<strong>Uma localização geral</strong> que escolheres adicionar, uma cidade ou zona, e a área do mapa que exploras no diretório. Nunca lemos a localização precisa do teu dispositivo.",
   "privacy.whatWeCollect.activity.item5":
     "<strong>Totais diários de quantas vezes cada parte da plataforma é usada</strong>, para sabermos onde investir esforço. São contagens sem o nome de ninguém associado, e nada nelas aponta de volta para ti.",
   "privacy.whatWeCollect.activity.item6":
-    "<strong>Música que compras ou vendes no Studio</strong>: o que cada compra inclui, o valor, o código de referência e o estado, o nome opcional no pagamento e a tua escolha no mural de apoio, e as ligações de pagamento, números MB WAY ou IBAN que cada artista indica para receber. O dinheiro passa fora do QueerPulse, por isso não guardamos dados de cartão nem bancários de quem compra.",
+    "<strong>Música que compras ou vendes no Studio</strong>: o que cada compra inclui, o valor, o código de referência e o estado, o nome opcional no pagamento e a tua escolha no mural de apoio, e as ligações de pagamento, números MB WAY ou IBAN que cada artista indica para receber. O dinheiro passa fora da QueerPulse, por isso não guardamos dados de cartão nem bancários de quem compra.",
   "privacy.whatWeCollect.notCollectedHeading": "O que não recolhemos",
   "privacy.whatWeCollect.notCollectedBody":
     "Não te seguimos noutros sites, não vendemos dados a anunciantes, nem construímos um perfil publicitário sobre ti. Não há aqui rede publicitária para alimentar.",
@@ -1111,7 +1113,7 @@ export const marketing: Catalog = {
   "privacy.retention.clears.cardVerification":
     "<strong>Registos de verificação de cartão</strong>: 90 dias.",
   "privacy.retention.clears.export":
-    "<strong>Uma exportação de dados que pediste</strong>: a ligação de descarga funciona durante 7 dias, e a cópia é eliminada ao fim de 30.",
+    "<strong>Uma exportação de dados que pediste</strong>: a ligação para descarregar funciona durante 7 dias, e a cópia é eliminada ao fim de 30.",
   "privacy.retention.clears.sessions":
     "<strong>Sessões</strong>: 30 dias depois de terminares sessão ou de expirarem.",
   "privacy.retention.clears.invites":
@@ -1120,7 +1122,7 @@ export const marketing: Catalog = {
     "<strong>Anúncios de alojamento</strong>: deixam de aparecer nas pesquisas ao fim de 60 dias. Nunca são eliminados, e podes prolongar ou voltar a publicar.",
   "privacy.retention.deleteHeading": "Se eliminares a tua conta",
   "privacy.retention.p2":
-    "Eliminar a tua conta abre um período de tolerância de 30 dias, e podes cancelar a qualquer momento dentro dele bastando iniciar sessão outra vez. Avisamos-te 3 dias antes do prazo. Depois disso, a tua conta e os dados a ela associados são apagados de forma permanente, incluindo os ficheiros que enviaste.",
+    "Eliminar a tua conta abre um período de tolerância de 30 dias, e podes cancelar a eliminação a qualquer momento durante esse período: basta voltares a iniciar sessão. Avisamos-te 3 dias antes do prazo. Depois disso, a tua conta e os dados a ela associados são apagados de forma permanente, incluindo os ficheiros que enviaste.",
   "privacy.retention.deleted.keptIntro":
     "Três coisas são deliberadamente mantidas:",
   "privacy.retention.deleted.keptModeration":
@@ -1139,13 +1141,13 @@ export const marketing: Catalog = {
   "privacy.yourRights.item2":
     "<strong>Retificação</strong>: corrigir o que estiver errado",
   "privacy.yourRights.item3":
-    "<strong>Apagamento</strong>: pedir-nos para eliminar os teus dados",
+    "<strong>Apagamento</strong>: pedir-nos que eliminemos os teus dados",
   "privacy.yourRights.item4":
     "<strong>Oposição</strong>: opor-te a um uso específico dos teus dados",
   "privacy.yourRights.item5":
     "<strong>Portabilidade</strong>: receber os teus dados num formato portátil",
   "privacy.yourRights.item6":
-    "<strong>Limitação</strong>: limitar como processamos os teus dados enquanto um litígio é resolvido",
+    "<strong>Limitação</strong>: limitar o tratamento dos teus dados enquanto um litígio é resolvido",
   "privacy.yourRights.item7":
     "<strong>Retirar o consentimento</strong>: desativar aquilo em que tenhas consentido",
   "privacy.yourRights.howHeading": "Como exercer cada um",
@@ -1214,7 +1216,7 @@ export const marketing: Catalog = {
     "Nunca partilhamos os teus dados com corretores de dados nem redes publicitárias.",
   "privacy.changes.title": "Alterações a esta política",
   "privacy.changes.p1":
-    "Avisamos as pessoas da comunidade sobre alterações relevantes através de um aviso na aplicação, antes de entrarem em vigor.",
+    "Publicamos as alterações relevantes num aviso na aplicação antes de entrarem em vigor.",
   "privacy.changes.p2":
     "Clarificações menores podem ser publicadas sem aviso prévio. O número de versão e a data no topo desta página refletem sempre o texto atual.",
   "privacy.contactSection.title": "Contacto",
@@ -1237,7 +1239,7 @@ export const marketing: Catalog = {
   "terms.eligibility.p1":
     "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que seja convidada ou entre na comunidade com um voto de confiança.",
   "terms.eligibility.why":
-    "É só para adultos por uma razão: muito do que acontece aqui (conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos) não é adequado a menores, e misturar as duas coisas poria em risco a segurança de todos. Quem tem menos de 18 anos também merece comunidade queer; só que este ainda não é o espaço certo para isso.",
+    "É só para pessoas adultas por uma razão: muito do que acontece aqui (conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre pessoas adultas) não é adequado a menores, e misturar as duas coisas poria em risco a segurança de toda a gente. Quem tem menos de 18 anos também merece comunidade queer; só que este ainda não é o espaço certo para isso.",
   "terms.eligibility.p2":
     "Ao entrares, confirmas que <strong>a informação no teu perfil é exata</strong>, tanto quanto sabes.",
   "terms.eligibility.p3":
@@ -1262,7 +1264,7 @@ export const marketing: Catalog = {
     "Tentar contornar a nossa segurança ou controlos de acesso",
   "terms.conduct.item6": "Violar o Código de Conduta de qualquer outra forma",
   "terms.conduct.highlight":
-    "As violações podem resultar num aviso, suspensão ou remoção, segundo a escada de aplicação do nosso Código de Conduta.",
+    "As violações podem resultar num aviso, suspensão ou remoção, segundo a escala de sanções do nosso Código de Conduta.",
   "terms.content.title": "Conteúdo",
   "terms.content.p1":
     "Manténs a titularidade de tudo o que publicas. Ao publicares, concedes à QueerPulse uma <strong>licença limitada</strong> para o mostrar na plataforma.",
@@ -1277,7 +1279,7 @@ export const marketing: Catalog = {
   "terms.events.p1":
     "Os eventos são organizados por pessoas da comunidade e pela QueerPulse; cada um tem os seus próprios termos de presença e cancelamento, indicados na página do evento.",
   "terms.events.p2":
-    "Quem organiza pode indicar um preço na página do evento, como preço fixo, pague o que puder ou escala progressiva, com as suas próprias palavras. A QueerPulse não processa pagamentos e não fica com nenhuma percentagem do que quem organiza cobra.",
+    "Quem organiza pode indicar um preço na página do evento, como preço fixo, paga o que puderes ou escala progressiva, com as suas próprias palavras. A QueerPulse não processa pagamentos e não fica com nenhuma percentagem do que quem organiza cobra.",
   "terms.events.p3":
     "Espera-se que sigas o Código de Conduta e quaisquer regras específicas do espaço em cada evento.",
   "terms.events.p4":
@@ -1295,16 +1297,16 @@ export const marketing: Catalog = {
     "Também podes encerrar a tua conta voluntariamente, a qualquer momento.",
   "terms.liability.title": "Responsabilidade",
   "terms.liability.p1":
-    "A QueerPulse é fornecida “tal como está”. Trabalhamos para a manter a funcionar bem, mas não podemos garantir que esteja sempre disponível ou sem erros.",
+    "A QueerPulse é fornecida “tal como está”. Esforçamo-nos por a manter a funcionar bem, mas não podemos garantir que esteja sempre disponível ou sem erros.",
   "terms.liability.p2":
-    "Não somos responsáveis pela conduta das pessoas nos eventos, embora levemos as denúncias a sério e ajamos sobre elas.",
+    "Não somos responsáveis pela conduta das pessoas da comunidade nos eventos, embora levemos as denúncias a sério e atuemos em conformidade.",
   "terms.liability.p3":
-    "Na medida permitida por lei, a nossa responsabilidade limita-se ao montante que nos pagaste nos últimos 12 meses, se algum.",
+    "Na medida permitida por lei, a nossa responsabilidade limita-se ao montante que nos tenhas pago nos últimos 12 meses, caso exista.",
   "terms.liability.highlight":
     "Nada nestes termos limita a responsabilidade por algo que não possa legalmente ser limitado, incluindo negligência grave ou conduta dolosa.",
   "terms.changesTerms.title": "Alterações a estes termos",
   "terms.changesTerms.p1":
-    "Avisamos as pessoas da comunidade sobre alterações relevantes através de um aviso na aplicação, antes de entrarem em vigor.",
+    "Publicamos as alterações relevantes num aviso na aplicação antes de entrarem em vigor.",
   "terms.changesTerms.p2":
     "Continuar a usar a QueerPulse depois de as alterações entrarem em vigor significa que aceitas os termos atualizados.",
   "terms.law.title": "Lei aplicável",
@@ -1320,14 +1322,14 @@ export const marketing: Catalog = {
   // registada. Quando isso mudar, acrescenta aqui os dados de registo confirmados.
   "imprint.meta.title": "Informação legal · QueerPulse",
   "imprint.meta.description":
-    "Quem gere a QueerPulse: os voluntários por trás da plataforma, como falar com a nossa equipa, e a lei que nos rege.",
+    "Quem gere a QueerPulse: as pessoas voluntárias por trás da plataforma, como falar com a nossa equipa, e a lei que nos rege.",
   "imprint.meta.lastReviewed": "Revisto pela última vez a 1 de junho de 2026",
   "imprint.title": "Informação <em>legal</em>",
   "imprint.plain.text":
     "A versão simples: a QueerPulse é construída e mantida por um grupo de pessoas voluntárias, a título pessoal. Esta página diz-te quem está por trás dela, como nos contactar, e a lei que nos rege.",
   "imprint.operator.title": "Quem gere a QueerPulse",
   "imprint.operator.p1":
-    "A QueerPulse é construída e mantida por um grupo de voluntários. Ainda não existe nenhuma empresa ou organização registada por trás dela. Quando isso mudar, publicaremos aqui os dados de registo.",
+    "A QueerPulse é construída e mantida por um grupo de pessoas voluntárias. Ainda não existe nenhuma empresa ou organização registada por trás dela. Se isso mudar, publicamos aqui os dados de registo.",
   "imprint.contact.title": "Como nos contactar",
   "imprint.contact.p1":
     "Para qualquer coisa nesta página, ou para o que for, envia um email para <a>{email}</a> e alguém da nossa equipa responde.",
@@ -1335,7 +1337,7 @@ export const marketing: Catalog = {
     "Respondemos em inglês ou português, normalmente dentro de dois dias úteis.",
   "imprint.representation.title": "Responsável pelo conteúdo",
   "imprint.representation.p1":
-    "Os voluntários que gerem a QueerPulse são responsáveis pelas páginas que a própria QueerPulse publica: os textos deste site, a revista e os guias. Cada membro é responsável pelo que publica. Se algo publicado por um membro precisar de atenção, denuncia na aplicação ou envia-nos um email, e alguém da nossa equipa vai ver.",
+    "As pessoas voluntárias que gerem a QueerPulse são responsáveis pelas páginas que a própria QueerPulse publica: os textos deste site, a revista e os guias. Cada pessoa da comunidade é responsável pelo que publica. Se algo publicado por alguém da comunidade precisar de atenção, denuncia-o na aplicação ou envia-nos um email, e alguém da nossa equipa vai analisar.",
   "imprint.hosting.title": "Alojamento",
   "imprint.hosting.p1":
     "A plataforma corre em alojamento e armazenamento na cloud. A tua sessão e os teus dados são tratados como descrito na nossa Política de Privacidade.",
@@ -1366,10 +1368,10 @@ export const marketing: Catalog = {
     "130 palavras · para reportagens longas, secções “sobre”",
   "pressKit.boiler.long.wc": "127 palavras",
   "pressKit.boiler.long.text":
-    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam: uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa entra com um voto de confiança de alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno, e a adesão não tem custo. A música comprada no Studio é paga diretamente a quem a criou, e a plataforma já publica uma revista para os seus membros.",
+    "A QueerPulse é uma pequena plataforma comunitária queer, feita de votos de confiança, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, pessoas organizadoras e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam: uma pequena equipa fundadora e um círculo crescente de pessoas da comunidade que ajudam a definir o que vem a seguir. Cada pessoa entra com um voto de confiança de alguém que já está cá, e a comunidade cresce ao ritmo desses votos. A QueerPulse não tem capital de risco à procura de retorno, e a adesão não tem custo. A música comprada no Studio é paga diretamente a quem a criou, e a plataforma já publica uma revista para quem faz parte, com mais infraestrutura partilhada prevista à medida que for crescendo.",
   "pressKit.mark.section.title": "A <em>marca</em> e como usá-la",
   "pressKit.mark.section.lead":
-    "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral, exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
+    "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral, exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não uses o ponto em nenhuma outra cor.",
   "pressKit.mark.logo.light.meta":
     "<b>Principal · clara</b> · para fundos creme/brancos",
   "pressKit.mark.logo.plum.meta":
@@ -1383,7 +1385,7 @@ export const marketing: Catalog = {
     "O que vês abaixo é o próprio ficheiro: <b>{filename}</b>, 2048 px de largura, com fundo transparente e a tipografia real do logótipo.",
   "pressKit.mark.modal.buttonLabel": "Descarregar · PNG",
   "pressKit.mark.usageNote":
-    "<b>Espaçamento:</b> deixa sempre a altura de um <em>P</em> inteiro de espaço livre à volta da marca. <b>Tamanho mínimo:</b> 88px de largura no ecrã, 18 mm em impressão. <b>Não:</b> estiques, recolores, coloques sobre fotografias carregadas, nem juntes a gradientes arco-íris que não fizemos.",
+    "<b>Espaçamento:</b> deixa sempre a altura de um <em>P</em> inteiro de espaço livre à volta da marca. <b>Tamanho mínimo:</b> 88px de largura no ecrã, 18 mm em impressão. <b>Evita:</b> esticar, mudar a cor, colocar sobre fotos carregadas ou juntar a gradientes arco-íris que não fizemos.",
   "pressKit.colour.section.title": "Cor, <em>sistema completo</em>",
   "pressKit.colour.section.lead":
     "Toda a marca assenta em quatro tons. Não introduzimos cores de destaque adicionais, incluindo as específicas de campanhas.",
@@ -1392,12 +1394,12 @@ export const marketing: Catalog = {
     "Destaque · CTAs, ênfase em itálico, o ponto de pulso",
   "pressKit.colour.cream.meta": "Fundo da página · nunca branco puro",
   "pressKit.colour.jade.meta": "Verificado · ao vivo · sucesso",
-  "pressKit.team.section.title": "<em>Porta-vozes</em> identificades",
+  "pressKit.team.section.title": "<em>Porta-vozes</em> com nome",
   "pressKit.team.section.lead":
     "Três pessoas fundadoras estão disponíveis para comentário à imprensa. Cita-as sobre os temas indicados; não parafraseies. <em>As restantes pessoas da comunidade não estão disponíveis sem consentimento explícito</em>. Por favor não as contactes diretamente através da plataforma.",
   "pressKit.facts.section.title": "<em>Factos</em> rápidos · a {date}",
   "pressKit.facts.section.lead":
-    "Contagem em direto da plataforma. <em>Por favor liga à página de transparência quando citares.</em>",
+    "Contagem em direto da plataforma. <em>Quando citares, inclui um link para a página de transparência.</em>",
   "pressKit.facts.founded": "Fundada · Lisboa",
   "pressKit.facts.activeMembers": "Pessoas ativas hoje",
   "pressKit.facts.communities": "Comunidades na plataforma",
@@ -1406,8 +1408,8 @@ export const marketing: Catalog = {
   "pressKit.facts.magazineIssues": "Edições da revista até hoje",
   "pressKit.coverage.section.title": "<em>Cobertura</em> recente",
   "pressKit.coverage.section.lead":
-    "Peças selecionadas em inglês e português, de 2024 a 2026. <em>Contagens de visitas são bem-vindas mas não necessárias</em>. Liga antes à página de Imprensa.",
-  "pressKit.downloads.section.title": "<em>Descarregáveis</em>",
+    "Peças selecionadas em inglês e português, de 2024 a 2026. <em>As contagens de visitas são opcionais</em>. De preferência, inclui um link para a página de Imprensa.",
+  "pressKit.downloads.section.title": "<em>Transferências</em>",
   "pressKit.downloads.section.lead":
     "Links diretos para os ficheiros, servidos a partir do próprio site. O kit completo junta tudo o que está abaixo, com um leia-me e a licença.",
   "pressKit.downloads.completeKit.title": "Kit de imprensa completo",
@@ -1429,7 +1431,7 @@ export const marketing: Catalog = {
     "PDF pronto a imprimir, com todos os valores tirados dos tokens de design",
   "pressKit.downloads.modal.eyebrow": "Descarregar · {format}",
   "pressKit.downloads.modal.lead":
-    "{desc}. O descarregável é o ficheiro <b>{filename}</b> real, servido a partir do próprio site.",
+    "{desc}. O ficheiro que descarregas é o verdadeiro <b>{filename}</b>, servido diretamente pelo site.",
   "pressKit.downloads.modal.buttonLabel": "Descarregar · {format}",
 
   // ── Anunciar o teu negócio — assistente ───────────────────────────────
@@ -1439,9 +1441,9 @@ export const marketing: Catalog = {
   "listBusiness.hero.backCta": "Voltar ao diretório",
   "listBusiness.hero.eyebrow": "O diretório · adicionar um anúncio",
   "listBusiness.hero.title":
-    "Adiciona um negócio ao <em>diretório das pessoas.</em>",
+    "Adiciona um negócio ao <em>diretório da comunidade.</em>",
   "listBusiness.hero.lead":
-    "Queer-owned ou queer-friendly, grande ou pequenino, com porta na rua ou loja online: se é bom para a nossa gente, pertence aqui. Conta-nos e a equipa da comunidade trata do resto. <b>A nossa equipa lê cada anúncio antes de ficar no ar.</b>",
+    "Queer-owned ou queer-friendly, grande ou pequenino, com porta na rua ou loja online: se é bom para a nossa gente, tem lugar aqui. Conta-nos e a equipa da comunidade trata do resto. <b>A nossa equipa lê cada anúncio antes de ficar no ar.</b>",
   "listBusiness.wizard.stepAria": "Passo {number}: {label}",
   "listBusiness.wizard.stepAriaDone": "Passo {number}: {label} (concluído)",
   "listBusiness.wizard.stepAriaCurrent": "Passo {number}: {label} (atual)",
@@ -1450,7 +1452,7 @@ export const marketing: Catalog = {
   "listBusiness.wizard.stepOf": "Passo {number} de {total}: {label}",
   "listBusiness.wizard.draftSaved": "Rascunho guardado",
   "listBusiness.draftBanner.text":
-    "<b>Tens um rascunho guardado.</b> Continuar de onde ficaste?",
+    "<b>Tens um rascunho guardado.</b> Queres continuar onde ficaste?",
   "listBusiness.draftBanner.startFresh": "Começar de novo",
   "listBusiness.draftBanner.resume": "Retomar rascunho",
   "listBusiness.paneActions.back": "Voltar",
@@ -1461,8 +1463,8 @@ export const marketing: Catalog = {
     "Preenche os campos obrigatórios para continuar",
   "listBusiness.next.basics": "A seguir: o básico",
   "listBusiness.next.story": "A seguir: a história",
-  "listBusiness.next.practical": "A seguir: o prático",
-  "listBusiness.next.photos": "A seguir: fotos e tu",
+  "listBusiness.next.practical": "A seguir: a parte prática",
+  "listBusiness.next.photos": "A seguir: fotos e sobre ti",
   "listBusiness.next.review": "Rever o teu anúncio",
   "listBusiness.next.send": "Enviar à equipa",
   "listBusiness.next.continue": "Continuar",
@@ -1470,14 +1472,14 @@ export const marketing: Catalog = {
   "listBusiness.toast.submitted":
     "O teu anúncio está com a equipa da comunidade",
   "listBusiness.toast.submitError":
-    "Não conseguimos enviar o teu espaço agora. Os teus dados ficaram guardados. Tenta de novo.",
+    "Não conseguimos enviar o teu anúncio agora. Os teus dados ficaram guardados. Tenta de novo.",
   "listBusiness.toast.submitErrorTitle":
     "Não conseguimos enviar o teu anúncio e os teus dados ficaram guardados",
   "listBusiness.toast.withdrawn": "Anúncio retirado",
   // Validação do servidor (item #4)
   "listBusiness.serverError.title":
     "O sistema da equipa da comunidade assinalou isto",
-  "listBusiness.serverError.dismiss": "Dispensar esta mensagem",
+  "listBusiness.serverError.dismiss": "Fechar esta mensagem",
   // Guardar e terminar mais tarde + rascunhos entre dispositivos (item #11)
   "listBusiness.saveLater.cta": "Guardar e terminar mais tarde",
   "listBusiness.saveLater.saving": "A guardar…",
@@ -1493,7 +1495,7 @@ export const marketing: Catalog = {
   "listBusiness.drafts.title": "Retoma onde ficaste",
   "listBusiness.drafts.count": "{count} em curso",
   "listBusiness.drafts.teamNote":
-    "A nossa equipa vê os dados do negócio no teu rascunho e até onde chegaste, nunca as tuas respostas sobre ti. Se encontrares alguma dificuldade, podemos oferecer ajuda ou terminar o registo para tu aceitares.",
+    "A nossa equipa vê os dados do negócio no teu rascunho e até onde chegaste. As tuas respostas sobre ti ficam privadas. Se precisares, podemos dar uma ajuda ou terminar o anúncio para depois o aceitares.",
   "listBusiness.drafts.untitled": "Anúncio sem título",
   "listBusiness.drafts.updated": "Última edição {when}",
   "listBusiness.drafts.resume": "Retomar",
@@ -1509,21 +1511,21 @@ export const marketing: Catalog = {
   "listBusiness.step0.title": "Como é que",
   "listBusiness.step0.em": "o conheces?",
   "listBusiness.step0.sub":
-    "Ambos os percursos são bem-vindos, e ambos passam pela mesma revisão da comunidade. Só muda um par de perguntas mais à frente.",
+    "Os dois percursos são bem-vindos e passam pela mesma revisão da comunidade. Só mudam algumas perguntas mais à frente.",
   "listBusiness.step0.pathAria": "A tua relação com este negócio",
   "listBusiness.step0.claim.title": "Sou eu que o giro",
   "listBusiness.step0.claim.desc":
-    "És dono, lideras, ou trabalhas aqui. Vamos pedir-te para verificares a propriedade, para o diretório continuar de confiança.",
-  "listBusiness.step0.suggest.title": "Estou a sugerir algo de que gosto",
+    "É teu, lideras a equipa ou trabalhas lá. Vamos pedir-te que confirmes a propriedade, para o diretório continuar de confiança.",
+  "listBusiness.step0.suggest.title": "Quero sugerir um sítio que adoro",
   "listBusiness.step0.suggest.desc":
-    "Um negócio que tem sido bom para ti, presencialmente ou online. A equipa revê o anúncio, e a QueerPulse cuida dele até o negócio o reclamar. Não vais aparecer nele.",
+    "Um sítio que te tem tratado bem, presencialmente ou online. A equipa revê o anúncio e a QueerPulse cuida dele até o negócio o reivindicar. O teu nome não aparece nele.",
   "listBusiness.step0.signedInAs":
-    "Tens sessão iniciada como <b>{name}</b>. Vamos associar esta submissão ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
+    "Tens sessão iniciada como <b>{name}</b>. Vamos associar este anúncio ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
   "listBusiness.step0.signedInAsSuggest":
     "Tens sessão iniciada como <b>{name}</b>. Se a equipa tiver alguma pergunta sobre a tua sugestão, recebes uma notificação.",
   "listBusiness.step0.whereFound.label": "Onde é que as pessoas o encontram?",
   "listBusiness.step0.whereFound.helper":
-    "Isto decide as categorias e as perguntas práticas que vêm a seguir.",
+    "Daqui dependem as categorias e as perguntas práticas que vêm a seguir.",
   "listBusiness.step0.whereFound.aria": "Onde as pessoas o encontram",
   "listBusiness.step0.whereFound.place.title": "Um lugar que se visita",
   "listBusiness.step0.whereFound.place.desc":
@@ -1533,17 +1535,18 @@ export const marketing: Catalog = {
     "As pessoas compram, marcam ou acompanham através de um site, de uma loja online ou das redes.",
   "listBusiness.step0.whereFound.mobile.title": "Itinerante",
   "listBusiness.step0.whereFound.mobile.desc":
-    "Visitas guiadas, cabeleireiros ao domicílio, fotógrafos, mudanças: encontras as pessoas num sítio ou vais ter com elas.",
+    "Visitas guiadas, cabeleireiro ao domicílio, fotografia, mudanças: encontras as pessoas num sítio ou vais ter com elas.",
   // Passo 1 — básico
   "listBusiness.step1.title": "Começa com",
   "listBusiness.step1.em": "o básico.",
   "listBusiness.step1.sub":
     "O suficiente para pôr o teu lugar no mapa. No passo seguinte podes fazê-lo brilhar.",
   "listBusiness.step1.subOnline":
-    "O suficiente para as pessoas te encontrarem. No passo seguinte podes fazê-lo brilhar.",
+    "O suficiente para as pessoas te encontrarem. No passo seguinte há espaço para brilhar.",
   "listBusiness.step1.nameLabel": "Como se chama?",
-  "listBusiness.step1.nameHelper": "O nome tal como as pessoas o procurariam.",
-  "listBusiness.step1.namePlaceholder": "ex.: o nome que os habituais usam",
+  "listBusiness.step1.nameHelper": "O nome tal como as pessoas o pesquisariam.",
+  "listBusiness.step1.namePlaceholder":
+    "ex.: o nome que a clientela habitual usa",
   "listBusiness.step1.dupHead":
     "Talvez já exista um negócio com este nome no diretório:",
   "listBusiness.step1.catsLabel": "Que tipo de lugar é? Escolhe até 2",
@@ -1556,11 +1559,11 @@ export const marketing: Catalog = {
   "listBusiness.step1.cityLabel": "Com base em",
   "listBusiness.step1.cityHelper":
     "Opcional. A cidade a partir da qual trabalhas. O teu cartão mostra-a a seguir a Online.",
-  "listBusiness.step1.cityPlaceholder": "p. ex. Porto",
+  "listBusiness.step1.cityPlaceholder": "ex.: Porto",
   "listBusiness.step1.onlineToggle.sub":
     "Sem morada nem horário. As pessoas compram ou marcam através dos teus links.",
   "listBusiness.step1.kindChoice.helper":
-    "Mudar guarda o que escreveste para as outras respostas, por isso podes voltar atrás.",
+    "Se mudares, o que escreveste nas outras respostas fica guardado e podes voltar atrás.",
   "listBusiness.step1.whereYouWork.label": "Onde trabalhas",
   "listBusiness.step1.whereYouWork.helper":
     "Toda a Lisboa, ou só as freguesias onde trabalhas.",
@@ -1575,32 +1578,32 @@ export const marketing: Catalog = {
     "Nenhuma freguesia chamada {query}",
   "listBusiness.step1.alsoTravelsTo.label": "Também te deslocas a",
   "listBusiness.step1.alsoTravelsTo.helper":
-    "Opcional. Concelhos perto de Lisboa onde também vais.",
-  "listBusiness.step1.alsoTravelsTo.aria": "Concelhos onde também vais",
+    "Opcional. Concelhos perto de Lisboa a que também te deslocas.",
+  "listBusiness.step1.alsoTravelsTo.aria": "Concelhos a que também te deslocas",
   "listBusiness.step1.adultTerms.title": "Aceito as regras para 18+",
   "listBusiness.step1.adultTerms.sub":
-    "O QueerPulse lista produtos e conteúdos. Não são permitidos serviços sexuais, e as fotos da tua página têm de ser seguras para ver em público.",
+    "A QueerPulse lista produtos e conteúdos. Não são permitidos serviços sexuais, e as fotos da tua página têm de ser seguras para ver em público.",
   "listBusiness.step1.adultTerms.note":
-    "Só membros com sessão iniciada que ativem as lojas 18+ veem este anúncio. Quem não tem sessão iniciada nunca o vê.",
+    "Só pessoas com sessão iniciada que ativem as lojas 18+ veem este anúncio. Quem não tem sessão iniciada nunca o vê.",
   "listBusiness.step1.badgeLabel": "Quem o gere?",
   "listBusiness.step1.badgeHelper":
-    "Queer-owned, ou um negócio que nos acolhe genuinamente? Ambos pertencem aqui. Isto é um acolhimento, aberto a toda a gente.",
+    "Queer-owned ou um negócio que nos acolhe de verdade? Os dois têm lugar aqui. É um diretório de portas abertas a toda a gente.",
   "listBusiness.step1.badgeAria": "Propriedade",
   "listBusiness.step1.owned.tag": "Queer-owned",
-  "listBusiness.step1.owned.title": "Gerido ou liderado pela nossa comunidade",
+  "listBusiness.step1.owned.title": "Detido ou liderado pela nossa comunidade",
   "listBusiness.step1.owned.desc":
     "Tu, quem partilha a propriedade contigo, ou a liderança são LGBTQ+.",
   "listBusiness.step1.friendly.tag": "Acolhe pessoas LGBTQ+",
   "listBusiness.step1.friendly.title": "Um sítio que nos acolhe",
   "listBusiness.step1.friendly.desc":
-    "Não é queer-owned, mas é ativamente seguro e afirmativo.",
+    "Ativamente seguro e afirmativo, mesmo sem ser queer-owned.",
   "listBusiness.step1.evidenceLabel":
-    "Só um toque leve: em que sentido é queer-owned?",
+    "Só uma pergunta rápida: em que sentido é queer-owned?",
   "listBusiness.step1.evidenceHelp":
-    "Sem documentos. Só uma frase que quem revê possa confirmar. É isto que mantém o distintivo com significado.",
+    "Sem documentos. Só uma frase que quem revê possa confirmar. É assim que o selo mantém o seu valor.",
   "listBusiness.step1.evidencePlaceholder":
     "ex.: Propriedade partilhada entre mim (Sandra, ela/dela) e o Rui (ele/dele) desde 2019",
-  "listBusiness.step1.priceLabel": "Mais ou menos, que preço?",
+  "listBusiness.step1.priceLabel": "Que preço, mais ou menos?",
   "listBusiness.step1.priceAria": "Escalão de preço",
   "listBusiness.step1.blurbLabel": "Descrição curta",
   "listBusiness.step1.blurbHelper":
@@ -1619,19 +1622,19 @@ export const marketing: Catalog = {
   "listBusiness.step2.title": "Agora,",
   "listBusiness.step2.em": "a história.",
   "listBusiness.step2.sub":
-    "É isto que preenche a tua página de detalhe. Escreve como o descreverias a alguém que acabou de chegar à cidade.",
+    "É isto que preenche a página do teu anúncio. Escreve como o descreverias a alguém que acabou de chegar à cidade.",
   "listBusiness.step2.taglineLabel": "Lema",
   "listBusiness.step2.taglineHelper":
-    "Uma única linha, mostrada em grande e em itálico no topo da tua página. <em>Faz dela o coração do que fazes.</em>",
+    "Uma única linha, mostrada em grande e em itálico no topo da tua página. <em>Põe nela o essencial do que fazes.</em>",
   "listBusiness.step2.taglinePlaceholder":
-    "Ninguém é tratado no género errado. A sala das traseiras é sempre tua.",
+    "Aqui ninguém te trata pelo género errado. A sala das traseiras é sempre tua.",
   "listBusiness.step2.taglinePlaceholderMobile":
-    "Ninguém é tratado no género errado. Vem como és e anda ao teu ritmo.",
+    "Aqui ninguém te trata pelo género errado. Vem como és e anda ao teu ritmo.",
   "listBusiness.step2.descriptionLabel": "Descrição",
   "listBusiness.step2.descriptionHelper":
-    "O que alguém de fora devia saber antes de entrar ou encomendar. Usa a barra de ferramentas para negrito, listas e links.",
+    "O que convém saber antes de entrar ou encomendar pela primeira vez. Usa a barra de ferramentas para negrito, listas e links.",
   "listBusiness.step2.descriptionHelperMobile":
-    "O que alguém de fora devia saber antes de marcar ou participar. Usa a barra de ferramentas para negrito, listas e links.",
+    "O que convém saber antes de marcar ou participar pela primeira vez. Usa a barra de ferramentas para negrito, listas e links.",
   "listBusiness.step2.descriptionPlaceholder":
     "ex.: Um café de bairro com galão, pastéis e dois pratos do dia.",
   "listBusiness.step2.descriptionPlaceholderMobile":
@@ -1645,7 +1648,7 @@ export const marketing: Catalog = {
     "O que se aplica ao que ofereces",
   "listBusiness.step2.attributes.helper":
     "Marca tudo o que se aplica. A maioria são filtros do diretório, por isso cada um ajuda as pessoas certas a encontrar-te.",
-  "listBusiness.step2.attributes.searchPlaceholder": "Procura detalhes",
+  "listBusiness.step2.attributes.searchPlaceholder": "Pesquisar detalhes",
   "listBusiness.step2.attributes.availableLabel":
     "Escolhe entre o que se aplica às tuas categorias",
   "listBusiness.step2.attributes.chosenCount_one": "{count} marcado",
@@ -1677,7 +1680,7 @@ export const marketing: Catalog = {
     "Confirma o link: deve ser algo como oteusite.pt/politica.",
   "listBusiness.step2.langs.commonAria": "Idiomas mais comuns",
   "listBusiness.step2.langs.moreLabel": "Mais idiomas",
-  "listBusiness.step2.langs.morePlaceholder": "Procura idiomas",
+  "listBusiness.step2.langs.morePlaceholder": "Pesquisar idiomas",
   "listBusiness.step2.langs.moreNoMatch":
     "Nenhum idioma corresponde a “{query}”",
   "listBusiness.step2.langs.otherLabel": "Mais algum?",
@@ -1819,13 +1822,13 @@ export const marketing: Catalog = {
   "listingFacts.practice.saferSpacePolicy":
     "Tem uma política de espaço seguro pública",
   "listingFacts.practice.saferSpacePolicyHelp":
-    "Escreveste regras de convivência que qualquer pessoa pode ler antes de vir. Cola o link no campo em baixo.",
+    "Uma política escrita que qualquer pessoa pode ler antes de vir. Cola o link no campo em baixo.",
   "listingFacts.practice.namedContact": "Tem uma pessoa de contacto no local",
   "listingFacts.practice.namedContactHelp":
     "Em cada turno, uma pessoa da equipa resolve qualquer problema, e quem vem sabe a quem se dirigir.",
   "listingFacts.practice.harmReduction": "Redução de riscos disponível",
   "listingFacts.practice.harmReductionHelp":
-    "Água, preservativos, testes ou naloxona à mão, e uma equipa que sabe onde estão.",
+    "Água, preservativos, tiras de teste ou naloxona à mão, e uma equipa que sabe onde estão.",
   // Os endónimos ficam iguais; só os Sinais Internacionais se traduzem.
   "listingFacts.language.pt": "Português",
   "listingFacts.language.ptBR": "Português (Brasil)",
@@ -1847,16 +1850,16 @@ export const marketing: Catalog = {
   "listingFacts.nif.yes": "Sim",
   "listingFacts.nif.no": "Não",
   // Passo 3 — prático
-  "listBusiness.step3.title": "O",
-  "listBusiness.step3.em": "prático",
+  "listBusiness.step3.title": "A parte",
+  "listBusiness.step3.em": "prática",
   "listBusiness.step3.sub":
-    "Como as pessoas te encontram, quando estás aberto, e onde te contactar. Partilha só o que quiseres público.",
+    "Como as pessoas te encontram, o horário e onde te contactar. Partilha só o que quiseres tornar público.",
   "listBusiness.step3.onlineOnly.title": "Este negócio é só online",
   "listBusiness.step3.onlineOnly.note":
     "Não precisas de morada. Adiciona o teu site ou redes sociais abaixo para que saibam como te contactar.",
   "listBusiness.step3.addressLabel": "Morada",
   "listBusiness.step3.addressHelper":
-    "Rua e número chega. Colocamos o pino a partir daí.",
+    "Basta a rua e o número. Colocamos o pino a partir daí.",
   "listBusiness.step3.addressPlaceholder":
     "R. Antero de Quental 26, 1170-024 Lisboa",
   "listBusiness.step3.locateAddress": "Localizar esta morada",
@@ -1874,7 +1877,7 @@ export const marketing: Catalog = {
   "listBusiness.step3.resolveError":
     "Não conseguimos ler esse link. Cola um link de um local do Google Maps e tenta de novo.",
   "listBusiness.step3.unsupportedLinkDemo":
-    "No modo demo, cola o link completo google.com/maps/… Os links curtos precisam do site em produção.",
+    "No modo demo, cola o link completo google.com/maps/… Os links curtos só funcionam fora do modo demo.",
   "listBusiness.step3.pinPlaced": "Pino colocado perto de {place}",
   "listBusiness.step3.usePlaceName": "Usar “{place}” como morada",
   "listBusiness.step3.mapAria":
@@ -1904,7 +1907,7 @@ export const marketing: Catalog = {
     "Fechado à segunda. A sala das traseiras reserva-se à parte.",
   "listBusiness.step3.hoursNotePlaceholderMobile":
     "Folga à segunda. Os grupos privados marcam-se à parte.",
-  "listBusiness.step3.onlineHeading": "Encontrar-te online",
+  "listBusiness.step3.onlineHeading": "Onde te encontrar online",
   "listBusiness.step3.onlineHeadingOnline": "Outras formas de te contactar",
   "listBusiness.step3.onlineHint":
     "És tu que escolhes o que é público. Deixa em branco o que preferires manter fora do anúncio.",
@@ -1921,7 +1924,8 @@ export const marketing: Catalog = {
   "listBusiness.step3.cover.timeError":
     "Indica até que horas a entrada é livre.",
   "listBusiness.step3.pay.label": "Formas de pagamento no local",
-  "listBusiness.step3.pay.helper": "Marca todas as formas como te podem pagar.",
+  "listBusiness.step3.pay.helper":
+    "Marca todas as formas de pagamento que aceitas.",
   "listBusiness.step3.nif.label": "Faturas com NIF",
   "listBusiness.step3.nif.helper":
     "As pessoas podem pedir fatura com o número de contribuinte?",
@@ -1944,7 +1948,7 @@ export const marketing: Catalog = {
   "listBusiness.online.moreLinks.helper":
     "Até 4. Escolhe a plataforma, para a tua página mostrar o nome dela.",
   "listBusiness.online.moreLinks.platformLabel": "Plataforma",
-  "listBusiness.online.moreLinks.platformPlaceholder": "Plataforma",
+  "listBusiness.online.moreLinks.platformPlaceholder": "Escolhe uma plataforma",
   "listBusiness.online.moreLinks.urlLabel": "Link",
   "listBusiness.online.moreLinks.urlLabelRow": "Link {position}",
   "listBusiness.online.moreLinks.platformLabelRow":
@@ -1958,7 +1962,7 @@ export const marketing: Catalog = {
   "listBusiness.online.moreLinks.addCta": "Adicionar um link",
   "listBusiness.online.moreLinks.remove": "Remover o link {position}",
   "listBusiness.online.moreLinks.ceilingHint":
-    "Esse é o limite de {count} links.",
+    "Chegaste ao limite de {count} links.",
   "listBusiness.online.platform.etsy": "Etsy",
   "listBusiness.online.platform.vinted": "Vinted",
   "listBusiness.online.platform.bandcamp": "Bandcamp",
@@ -1970,13 +1974,13 @@ export const marketing: Catalog = {
   "listBusiness.online.platform.other": "Outro site",
   "listBusiness.online.fulfilment.label": "Como é que as pessoas o recebem",
   "listBusiness.online.fulfilment.helperClaim":
-    "Escolhe todas as que se aplicam. Um formato de sessão mais abaixo também conta.",
+    "Escolhe todas as opções que se aplicam. Um formato de sessão mais abaixo também conta.",
   "listBusiness.online.fulfilment.helperClaimNoSessions":
-    "Escolhe todas as que se aplicam. É preciso pelo menos uma.",
+    "Escolhe todas as opções que se aplicam. É preciso pelo menos uma.",
   "listBusiness.online.fulfilment.helperSuggest":
     "Opcional. Escolhe o que souberes.",
   "listBusiness.online.fulfilment.helperPlace":
-    "Escolhe todas as formas de encomendar online.",
+    "Escolhe todas as formas de te encomendarem online.",
   "listBusiness.online.fulfilment.shipsPortugal": "Envia para Portugal",
   "listBusiness.online.fulfilment.shipsEu": "Envia para toda a UE",
   "listBusiness.online.fulfilment.shipsWorldwide": "Envia para todo o mundo",
@@ -2008,8 +2012,8 @@ export const marketing: Catalog = {
   "listBusiness.online.session.inPerson": "Presencial em Lisboa",
   "listBusiness.online.registration.label": "Registo profissional",
   "listBusiness.online.registration.helper":
-    "Opcional. A tua página mostra-o tal como o indicas. O QueerPulse não verifica registos.",
-  "listBusiness.online.registration.bodyLabel": "Registo na",
+    "Opcional. A tua página mostra-o tal como o indicas. A QueerPulse não verifica registos.",
+  "listBusiness.online.registration.bodyLabel": "Entidade de registo",
   "listBusiness.online.registration.body.none": "Sem registo",
   "listBusiness.online.registration.body.opp": "OPP (Ordem dos Psicólogos)",
   "listBusiness.online.registration.body.ordemMedicos": "Ordem dos Médicos",
@@ -2017,13 +2021,13 @@ export const marketing: Catalog = {
   "listBusiness.online.registration.numberLabel": "Número de registo",
   "listBusiness.online.replyNote.label": "Quando respondes e envias",
   "listBusiness.online.replyNote.placeholder":
-    "Encomendas embaladas às terças e sextas. Mensagens respondidas no prazo de um dia.",
+    "Embalamos encomendas às terças e sextas. Respondemos a mensagens em menos de um dia.",
   "listBusiness.online.alsoSells.title": "Também vendemos online",
   "listBusiness.online.alsoSells.sub":
     "Acrescenta o link da loja e como se encomenda. O teu cartão ganha a etiqueta Também online.",
   "listBusiness.online.alsoSells.heading": "Vender online",
   "listBusiness.step3.meetingPoint.title":
-    "As pessoas encontram-nos num sítio combinado",
+    "As pessoas vêm ter connosco a um sítio fixo",
   "listBusiness.step3.meetingPoint.sub":
     "Deixa desligado se vais ter com as pessoas. A tua página não mostra mapa nem morada.",
   "listBusiness.step3.meetingPoint.note":
@@ -2032,7 +2036,7 @@ export const marketing: Catalog = {
   "listBusiness.step3.byAppointment.sub":
     "Sem horário fixo. As pessoas contactam-te para marcar.",
   "listBusiness.step3.byAppointment.linked":
-    "Isto também define como as pessoas entram: Só por marcação.",
+    "Isto também muda “Como se entra” para “Só por marcação”.",
   "listBusiness.social.instagram.placeholder": "Instagram · @nome",
   "listBusiness.social.website.placeholder": "Site · oteulugar.pt",
   "listBusiness.social.website.err": "Isso não parece um endereço web.",
@@ -2052,7 +2056,7 @@ export const marketing: Catalog = {
   "listBusiness.step4.title": "Fotos, e",
   "listBusiness.step4.em": "um pouco sobre ti.",
   "listBusiness.step4.sub":
-    "As imagens ajudam as pessoas a sentir a sala antes de chegarem. E gostamos de saber quem está por trás da porta.",
+    "As fotos ajudam as pessoas a sentir o ambiente antes de chegarem. E gostamos de saber quem abre a porta.",
   "listBusiness.step4.photosLabel": "Algumas fotos (opcional)",
   "listBusiness.step4.coverLabel": "Foto de capa (opcional)",
   "listBusiness.step4.coverHelper":
@@ -2062,7 +2066,7 @@ export const marketing: Catalog = {
   "listBusiness.step4.cover.placeholder": "Aparece no teu cartão do diretório",
   "listBusiness.step4.alt.cover": "Capa · texto alternativo",
   "listBusiness.step4.photosHelper":
-    "Mostra o espaço, alguns detalhes e as pessoas que lhe dão vida. Horizontal funciona melhor · idealmente ≥1200px de largura · sem gráficos carregados de texto.",
+    "Mostra o espaço, alguns detalhes e as pessoas que lhe dão vida. O formato horizontal resulta melhor · idealmente ≥1200px de largura · sem gráficos carregados de texto.",
   "listBusiness.step4.gallery.wide": "Plano geral do espaço",
   "listBusiness.step4.gallery.detail": "Um detalhe",
   "listBusiness.step4.gallery.vibe": "Pessoas / ambiente",
@@ -2091,17 +2095,17 @@ export const marketing: Catalog = {
   "listBusiness.step4.alt.vibe": "Ambiente · texto alternativo",
   "listBusiness.step4.alt.forCaption": "{caption} · texto alternativo",
   "listBusiness.step4.altPlaceholder":
-    "Descreve para quem é cega ou tem baixa visão",
+    "Descreve a imagem para pessoas cegas ou com baixa visão",
   "listBusiness.step4.altPlaceholderRequired":
-    "Obrigatório: descreve para quem é cega ou tem baixa visão",
+    "Obrigatório: descreve a imagem para pessoas cegas ou com baixa visão",
   "listBusiness.step4.photo.upload": "Carregar",
   "listBusiness.step4.photo.change": "Trocar",
   "listBusiness.step4.photo.remove": "Remover foto",
   "listBusiness.step4.photo.serverRejected":
     "Não conseguimos guardar esta foto. Carrega-a de novo ou escolhe outra.",
   "listBusiness.step4.aboutYouHeading": "Um pouco sobre ti",
-  "listBusiness.step4.relLabel": "A tua ligação ao negócio",
-  "listBusiness.step4.relAria": "A tua ligação",
+  "listBusiness.step4.relLabel": "A tua relação com o negócio",
+  "listBusiness.step4.relAria": "A tua relação",
   "listBusiness.step4.ownerNameLabel": "O teu nome",
   "listBusiness.step4.ownerNamePlaceholder": "ex.: Sandra Lopes",
   "listBusiness.step4.ownerNameFromAccount": "O nome da tua conta.",
@@ -2117,13 +2121,13 @@ export const marketing: Catalog = {
   "listBusiness.step4.visLabel": "Quem pode ver o teu nome?",
   "listBusiness.step4.visAria": "Visibilidade do nome",
   "listBusiness.step4.linkProfileLabel": "Ligar ao teu perfil? (opcional)",
-  "listBusiness.step4.linkProfileTitle": "Mostrar que sou da QueerPulse",
+  "listBusiness.step4.linkProfileTitle": "Mostrar que faço parte da QueerPulse",
   "listBusiness.step4.linkProfileDesc":
     "Põe um rosto familiar e verificado no anúncio. Tens sessão iniciada como {name}.",
   "listBusiness.step4.linkProfileToggleLabel": "Ligar ao perfil",
   "listBusiness.step4.ownedByLabel": "De quem é e quem o gere? (opcional)",
   "listBusiness.step4.ownedByHelper":
-    "Marca o que se aplicar, ou nada. Cada uma aparece como etiqueta no anúncio, e dá para filtrar o diretório por ela.",
+    "Marca as opções que se aplicam, ou nenhuma. Cada uma aparece como etiqueta no anúncio, e as pessoas podem filtrar o diretório por ela.",
   "listBusiness.step4.ownedByAria": "De quem é e quem o gere",
   "listBusiness.step4.ownedBy.women.title": "Mulheres",
   "listBusiness.step4.ownedBy.women.sub":
@@ -2140,12 +2144,12 @@ export const marketing: Catalog = {
   "listBusiness.step4.ownedBy.migrant.sub":
     "Pessoas que vieram de outro país para Portugal.",
   "listBusiness.step4.ownedByPublicNote":
-    "Estas etiquetas são públicas, mesmo que mantenhas o teu nome privado. Num negócio pequeno, uma etiqueta pode apontar diretamente para ti, por isso marca só o que te sentes bem em que toda a gente saiba. Podes mudar isto quando quiseres.",
-  "listBusiness.step4.loopHeading": "Manteres-te a par",
+    "Estas etiquetas são públicas, mesmo que mantenhas o teu nome privado. Num negócio pequeno, uma etiqueta pode apontar diretamente para ti, por isso marca só o que não te importas que toda a gente saiba. Podes mudar isto quando quiseres.",
+  "listBusiness.step4.loopHeading": "Fica a par",
   "listBusiness.step4.notifyNote":
     "Uma notificação da QueerPulse avisa-te quando o teu anúncio ficar no ar, e as perguntas da equipa chegam por mensagem na QueerPulse.",
   "listBusiness.step4.consent":
-    "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anónime” acima. Não há problema nenhum.",
+    "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anonimato” acima. Não há problema nenhum.",
   "listBusiness.step4.suggest.title": "Algumas",
   "listBusiness.step4.suggest.em": "fotos.",
   "listBusiness.step4.suggest.sub":
@@ -2155,41 +2159,40 @@ export const marketing: Catalog = {
   "listBusiness.step4.suggest.subMobile":
     "As fotos ajudam as pessoas a imaginar o trabalho e quem vão conhecer. Partilha as que tiveres, e o negócio pode juntar as suas mais tarde.",
   // Opções de ligação
-  "listBusiness.ownerRole.owner": "Dono/a",
-  "listBusiness.ownerRole.coOwner": "Codono/a",
-  "listBusiness.ownerRole.founder": "Fundador/a",
-  "listBusiness.ownerRole.coFounder": "Cofundador/a",
+  "listBusiness.ownerRole.owner": "Pessoa proprietária",
+  "listBusiness.ownerRole.coOwner": "Pessoa coproprietária",
+  "listBusiness.ownerRole.founder": "Pessoa fundadora",
+  "listBusiness.ownerRole.coFounder": "Pessoa cofundadora",
   "listBusiness.ownerRole.manager": "Gerente",
   "listBusiness.ownerRole.headChef": "Chef",
-  "listBusiness.ownerRole.host": "Anfitrião/ã",
-  "listBusiness.ownerRole.teamMember": "Membro da equipa",
-  "listBusiness.rel.own.label": "Sou dono ou codono",
-  "listBusiness.rel.own.desc": "És quem tem a propriedade.",
+  "listBusiness.ownerRole.host": "Pessoa anfitriã",
+  "listBusiness.ownerRole.teamMember": "Pessoa da equipa",
+  "listBusiness.rel.own.label": "É meu, ou em parte meu",
+  "listBusiness.rel.own.desc": "O negócio pertence-te, no todo ou em parte.",
   "listBusiness.rel.run.label": "Faço a gestão ou ajudo a gerir",
   "listBusiness.rel.run.desc": "No dia a dia, é em parte teu.",
   "listBusiness.rel.work.label": "Trabalho aqui",
   "listBusiness.rel.work.desc":
-    "Equipa, com a bênção de quem gere para anunciar.",
+    "Fazes parte da equipa e tens luz verde da pessoa proprietária para anunciar.",
   "listBusiness.rel.regular.label": "Sou cliente habitual e adoro",
-  "listBusiness.rel.regular.desc":
-    "A sugerir um negócio que tem sido bom para ti.",
+  "listBusiness.rel.regular.desc": "Sugeres um negócio que te tem tratado bem.",
   // Opções de visibilidade
   "listBusiness.vis.public.label": "O meu nome e o meu papel",
   "listBusiness.vis.public.desc": "Ambos aparecem no anúncio.",
   "listBusiness.vis.role.label": "Só o meu papel",
-  "listBusiness.vis.role.desc": "“Dono”, mas sem nome.",
-  "listBusiness.vis.anon.label": "Manter-me anónime",
+  "listBusiness.vis.role.desc": "“Pessoa proprietária”, mas sem nome.",
+  "listBusiness.vis.anon.label": "Manter o anonimato",
   "listBusiness.vis.anon.desc": "Visível só para a equipa da comunidade.",
   // Passo 5 — revisão
   "listBusiness.step5.title": "Uma última vista de olhos",
   "listBusiness.step5.em": "antes de ir para a equipa.",
   "listBusiness.step5.sub":
-    "Aqui está tudo o que nos contaste. Edita qualquer parte voltando atrás. Nada fica fechado até enviares.",
+    "Aqui está tudo o que nos contaste. Volta atrás para editar qualquer parte. Nada fica fechado até enviares.",
   "listBusiness.step5.edit.title": "Uma última vista de olhos",
   "listBusiness.step5.edit.em": "às tuas alterações.",
   "listBusiness.step5.edit.sub":
-    "É assim que o espaço vai ficar depois de guardares. Volta atrás para mudar qualquer parte.",
-  "listBusiness.step5.slugLabel": "O teu anúncio vai viver em",
+    "É assim que o anúncio vai ficar depois de guardares. Volta atrás para mudar qualquer parte.",
+  "listBusiness.step5.slugLabel": "O teu anúncio vai ficar em",
   "listBusiness.step5.slugDomain": "queerpulse.app/directory/",
   "listBusiness.step5.editCta": "Editar",
   "listBusiness.step5.notAdded": "Por preencher",
@@ -2238,7 +2241,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.listingAs.suggest": "A sugerir um negócio de que gosto",
   "listBusiness.step5.nameShown.public": "O meu nome e o meu papel",
   "listBusiness.step5.nameShown.role": "Só o meu papel",
-  "listBusiness.step5.nameShown.anon": "Anónime",
+  "listBusiness.step5.nameShown.anon": "Anonimato",
   "listBusiness.step5.online.instagram": "Instagram",
   "listBusiness.step5.online.website": "Site",
   "listBusiness.step5.online.email": "Email",
@@ -2249,15 +2252,15 @@ export const marketing: Catalog = {
   "listBusiness.step5.consentOuting.title":
     "Percebo que este anúncio vai ser público e pesquisável.",
   "listBusiness.step5.consentOuting.sub":
-    "Anunciar um negócio como queer-owned, com um nome associado, é uma divulgação pública. Escolhi acima o que fica visível e estou de acordo com isso andar pelo mundo.",
+    "Anunciar um negócio como queer-owned, com um nome associado, é uma divulgação pública. Escolhi acima o que fica visível e aceito que isto fique à vista de toda a gente.",
   "listBusiness.step5.consentGuide.title":
     "Está tudo aqui correto, tanto quanto sei.",
   "listBusiness.step5.consentGuide.sub":
-    "Li as diretrizes da comunidade e como os meus dados são usados.",
+    "Li as diretrizes da comunidade e a forma como os meus dados são usados.",
   "listBusiness.step5.submitNote":
     "<b>A nossa equipa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias, e a QueerPulse avisa-te quando ficar no ar (ou a equipa manda-te mensagem se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
   "listBusiness.step5.suggestNote":
-    "<b>A nossa equipa revê cada anúncio.</b> A QueerPulse cuida deste até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação quando estiver no ar.",
+    "<b>A nossa equipa revê cada anúncio.</b> A QueerPulse cuida deste até o negócio o reivindicar, e o teu nome fica de fora. Recebes uma notificação quando estiver no ar.",
   // Painel de sucesso
   "listBusiness.success.stage.review": "Em revisão",
   "listBusiness.success.stage.question": "Pergunta rápida",
@@ -2271,15 +2274,15 @@ export const marketing: Catalog = {
   "listBusiness.success.title.suggestLive.text": "Está",
   "listBusiness.success.title.suggestLive.em": "no mapa.",
   "listBusiness.success.note.review":
-    "Agradecemos o contributo para o diretório. <b>A nossa equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e recebes uma notificação da QueerPulse assim que estiver no ar.",
+    "Agradecemos o contributo para o diretório. <b>A nossa equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso selo de verificação pela comunidade. Revemos em <b>poucos dias</b> e recebes uma notificação da QueerPulse assim que estiver no ar.",
   "listBusiness.success.note.question":
     "<b>A equipa tem uma pequena pergunta</b> antes de ficar no ar. Está à tua espera nas mensagens da QueerPulse. Não se passa nada de errado; basta uma resposta rápida e segue tudo em frente.",
   "listBusiness.success.note.live":
-    "<b>Já está no ar no diretório.</b> O teu anúncio já pode ser encontrado pela comunidade. Agradecemos por tornares o diretório um bocadinho mais completo.",
+    "<b>Já está no ar no diretório.</b> O teu anúncio já pode ser encontrado pela comunidade. Agradecemos a ajuda a tornar o diretório um bocadinho mais completo.",
   "listBusiness.success.note.suggestReview":
-    "Agradecemos a sugestão. <b>A nossa equipa da comunidade lê cada anúncio</b> antes de ficar no ar. A QueerPulse cuida dele até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação assim que estiver no ar.",
+    "Agradecemos a sugestão. <b>A nossa equipa da comunidade lê cada anúncio</b> antes de ficar no ar. A QueerPulse cuida dele até o negócio o reivindicar, e o teu nome fica de fora. Recebes uma notificação assim que estiver no ar.",
   "listBusiness.success.note.suggestLive":
-    "<b>Já está no ar no diretório.</b> Agradecemos por tornares o diretório um bocadinho mais completo. Se afinal és tu que geres este negócio, podes reclamá-lo a partir da página dele.",
+    "<b>Já está no ar no diretório.</b> Agradecemos a ajuda a tornar o diretório um bocadinho mais completo. Se afinal és tu que geres este negócio, podes reivindicá-lo a partir da página dele.",
   "listBusiness.success.fallbackName": "O teu negócio",
   "listBusiness.success.withdrawConfirm":
     "Retirar <b>{name}</b>? Isto tira-o da revisão. Podes sempre anunciá-lo outra vez mais tarde.",
@@ -2366,12 +2369,12 @@ export const marketing: Catalog = {
   "listBusiness.preview.fullDisabledTitle":
     "Indica primeiro um nome para pré-visualizares a página completa",
   "listBusiness.preview.foot":
-    "Isto é uma pré-visualização. O teu anúncio só fica no ar depois de a equipa da comunidade o rever.",
+    "Estás a ver uma pré-visualização. O teu anúncio só fica no ar depois de a equipa da comunidade o rever.",
   // Legendas dos campos da pré-visualização em direto (editor + assistente)
   "listBusiness.livePreview.caption.idle":
     "Toca ou clica num campo para veres onde aparece.",
   "listBusiness.livePreview.caption.path":
-    "Isto diz à equipa de revisão como conheces o negócio. Fica fora do teu anúncio.",
+    "Serve para a equipa de revisão saber como conheces o negócio. Não aparece no teu anúncio.",
   "listBusiness.livePreview.caption.name":
     "O nome do teu negócio aparece aqui, por baixo da foto do teu cartão.",
   "listBusiness.livePreview.caption.cats":
@@ -2379,9 +2382,9 @@ export const marketing: Catalog = {
   "listBusiness.livePreview.caption.hood":
     "O teu bairro aparece aqui, ao lado da categoria.",
   "listBusiness.livePreview.caption.badge":
-    "O teu distintivo aparece aqui, na foto do teu cartão.",
+    "O teu selo aparece aqui, na foto do teu cartão.",
   "listBusiness.livePreview.caption.evidence":
-    "Só quem gere este anúncio e a equipa de revisão veem isto. Dá sentido ao distintivo.",
+    "Só quem gere este anúncio e a equipa de revisão veem isto. Serve para comprovar o selo.",
   "listBusiness.livePreview.caption.price":
     "O teu escalão de preço aparece aqui, na primeira etiqueta do cartão.",
   "listBusiness.livePreview.caption.blurb":
@@ -2415,7 +2418,7 @@ export const marketing: Catalog = {
   "listBusiness.livePreview.caption.gettingInOnline":
     "Um anúncio online não tem porta, por isso a tua página deixa isto de fora.",
   "listBusiness.livePreview.caption.address":
-    "A tua morada aparece na página completa, com um mapa. Abre-a para veres.",
+    "A tua morada aparece na página completa, com um mapa. Abre-a para veres onde.",
   "listBusiness.livePreview.caption.hours":
     "O teu horário: aberto ou fechado no cartão, e a semana na tua página.",
   "listBusiness.livePreview.caption.hoursExceptions":
@@ -2439,9 +2442,9 @@ export const marketing: Catalog = {
   "listBusiness.livePreview.caption.services":
     "O que ofereces e quanto custa aparece na tua página completa.",
   "listBusiness.livePreview.caption.accessibility":
-    'As respostas aparecem na página completa. As que são "sim" vão também ao cartão.',
+    'As respostas aparecem na página completa. As respostas "sim" aparecem também no cartão.',
   "listBusiness.livePreview.caption.affirmingBaseline":
-    "Todos os anúncios fazem esta promessa, e a tua página completa di-lo.",
+    "Todos os anúncios fazem esta promessa, e a tua página completa mostra-o.",
   "listBusiness.livePreview.placeholder.whatItIs":
     "A tua descrição vai aparecer aqui.",
   "listBusiness.livePreview.placeholder.languages":
@@ -2469,9 +2472,9 @@ export const marketing: Catalog = {
   "listBusiness.livePreview.caption.ownerRoleInPlace":
     "O teu papel aparece aqui, no lugar do teu nome.",
   "listBusiness.livePreview.caption.ownerRoleAnon":
-    "O anonimato tira o teu papel do anúncio. Quem o gere e a equipa de revisão veem-no.",
+    "O anonimato tira o teu papel do anúncio. Quem gere o anúncio e a equipa de revisão continuam a vê-lo.",
   "listBusiness.livePreview.caption.ownerRoleCoManager":
-    "Este papel aparece aqui, a menos que quem é proprietário tenha escolhido o anonimato.",
+    "Este papel aparece aqui, a menos que a pessoa proprietária tenha escolhido o anonimato.",
   "listBusiness.livePreview.caption.ownerBio":
     "A tua página não mostra isto por agora. Fica guardado com o anúncio.",
   "listBusiness.livePreview.caption.ownerVisibility":
@@ -2479,15 +2482,15 @@ export const marketing: Catalog = {
   "listBusiness.livePreview.caption.ownerVisibilityAnon":
     "O anonimato tira-te do anúncio. A equipa de revisão continua a ver o teu nome.",
   "listBusiness.livePreview.caption.linkProfile":
-    "O cartão mostra o teu primeiro nome, a etiqueta da comunidade e a foto, se visível.",
+    "O cartão mostra o teu primeiro nome, a etiqueta Gerido por uma pessoa da comunidade e a tua foto, se a mostrares.",
   "listBusiness.livePreview.caption.ownedBy":
-    "As tuas etiquetas aparecem aqui e na página do anúncio, seja qual for a escolha que fizeste para o teu nome.",
+    "As tuas etiquetas aparecem aqui e na página do anúncio, seja qual for a tua escolha para o nome.",
   "listBusiness.livePreview.caption.linkProfileUnused":
     "Isto só conta quando mostras o teu nome. Por agora, nada liga ao teu perfil.",
   "listBusiness.livePreview.caption.pricingMode":
     "A tua página completa mostra a lista que escolheres. A outra fica guardada.",
   "listBusiness.livePreview.caption.operatingState":
-    "Uma mudança aparece aqui e na tua página. Fechado de vez sai das listas do diretório.",
+    "Qualquer alteração aparece aqui e na tua página. Fechado de vez sai das listas do diretório.",
   "listBusiness.livePreview.caption.directoryVisibility":
     "Pausar tira o teu cartão e a tua página do diretório até voltares a mostrá-los.",
   "listBusiness.livePreview.caption.accessibilityCard":
@@ -2517,16 +2520,16 @@ export const marketing: Catalog = {
   "listBusiness.livePreview.placeholder.ordering":
     "Aqui vai aparecer como te compram.",
   "listBusiness.livePreview.placeholder.ownerCoManaged":
-    "Na página real, o nome ou o papel da pessoa dona do anúncio aparece aqui, como ela escolheu partilhar.",
+    "Na página real, o nome ou o papel da pessoa proprietária aparece aqui, como ela escolheu partilhar.",
   "listBusiness.livePreview.hours.dayRange": "de {from} a {to}",
   "listBusiness.livePreview.hours.pair": "{first} e {second}",
   "listBusiness.livePreview.hours.group": "{days}: {hours}",
   "listBusiness.livePreview.caption.hoursOnline":
-    "As listagens online não mostram horário. O teu cartão diz como as pessoas recebem o que vendes.",
+    "Os anúncios online não mostram horário. O teu cartão diz como as pessoas recebem o que vendes.",
   "listBusiness.livePreview.caption.hoursNoteOnline":
     "Online, a página deixa o horário de fora, por isso esta nota não aparece por agora.",
   "listBusiness.livePreview.caption.hoursExceptionsOnline":
-    "As listagens online não mostram datas especiais.",
+    "Os anúncios online não mostram datas especiais.",
   "listBusiness.livePreview.caption.whereYouWork":
     "O teu cartão diz onde trabalhas. A tua página mostra-o em Onde trabalha.",
   "listBusiness.livePreview.caption.whereYouWorkPage":
@@ -2561,23 +2564,23 @@ export const marketing: Catalog = {
   "listBusiness.edit.saving": "A guardar as alterações…",
   "listBusiness.edit.saved": "O teu anúncio foi atualizado.",
   "listBusiness.edit.savedInReview":
-    "As tuas alterações foram guardadas. O anúncio continua em análise.",
+    "As tuas alterações foram guardadas. O anúncio continua em revisão.",
   "listBusiness.edit.status.liveBody":
     "Este anúncio está ativo. Guardar as alterações atualiza a página pública de imediato.",
   "listBusiness.edit.status.reviewBody":
     "Este anúncio ainda não é público. A moderação está a lê-lo, e guardar atualiza o que a equipa vê.",
   "listBusiness.edit.status.questionBody":
     "A moderação tem uma pergunta sobre este anúncio antes de poder ficar ativo. Guardar atualiza o que a equipa vê.",
-  "listBusiness.edit.verifiedBadge.title": "Selo de negócio queer verificado",
+  "listBusiness.edit.verifiedBadge.title": "Selo queer-owned verificado",
   "listBusiness.edit.verifiedBadge.body":
     "A moderação confirmou este selo para o negócio tal como está hoje. Alterar o nome do negócio, o selo Queer-owned ou LGBTQ+ friendly, ou a ligação deste anúncio ao teu perfil, remove o selo até a moderação confirmar o negócio outra vez. Tudo o resto que editares aqui não lhe toca.",
   "listBusiness.edit.saveError":
     "Não conseguimos guardar as alterações. Tenta de novo.",
   "listBusiness.edit.saveErrorTitle": "Não conseguimos guardar o teu anúncio",
   "listBusiness.edit.cause.ownerOnly":
-    "Só o dono pode alterar os dados pessoais do dono, como o nome, a bio e os consentimentos. Repõe esses campos como estavam e guarda outra vez.",
+    "Só a pessoa proprietária pode alterar os dados dela, como o nome, a bio e os consentimentos. Repõe esses campos como estavam e guarda outra vez.",
   "listBusiness.edit.cause.gone":
-    "Este anúncio já não é teu para editar ou foi removido. Atualiza a página para veres como está.",
+    "Já não podes editar este anúncio, ou ele foi removido. Atualiza a página para veres o estado dele.",
   "listBusiness.edit.cause.tooLarge":
     "Este anúncio é demasiado grande para enviar de uma vez. Remove algumas fotos ou encurta descrições longas e tenta outra vez.",
   "listBusiness.edit.discardConfirm":
@@ -2591,7 +2594,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.section.permissions": "Permissões",
   "listBusiness.editor.nav.label": "Ir para",
   "listBusiness.editor.nav.aria": "Ir para uma secção do teu anúncio",
-  "listBusiness.editor.nav.missingCount": "Faltam {count}",
+  "listBusiness.editor.nav.missingCount": "Por preencher: {count}",
   "listBusiness.editor.unsavedChanges": "Tens alterações por guardar.",
   "listBusiness.editor.noChanges": "Está tudo guardado.",
   "listBusiness.editor.previewCta": "Pré-visualizar página",
@@ -2613,11 +2616,11 @@ export const marketing: Catalog = {
   "listBusiness.editor.section.tradingAndVisibility":
     "Atividade e visibilidade",
   "listBusiness.editor.section.whoCanEdit": "Quem pode editar",
-  "listBusiness.editor.section.roleOnListing": "Função mostrada na página",
+  "listBusiness.editor.section.roleOnListing": "Papel mostrado no anúncio",
   "listBusiness.editor.section.dangerZone": "Zona de perigo",
   "listBusiness.editor.section.history": "Histórico",
   "listBusiness.editor.history.intro":
-    "As alterações a este anúncio, das mais recentes para as mais antigas: o que tu e a tua equipa editaram e o que a moderação do QueerPulse fez.",
+    "As alterações a este anúncio, das mais recentes para as mais antigas: o que tu e a tua equipa editaram e o que a moderação da QueerPulse fez.",
   "listBusiness.editor.history.empty.title": "Ainda não há nada registado",
   "listBusiness.editor.history.empty.description":
     "As alterações a este anúncio vão aparecer aqui. As tuas edições e as da tua equipa ficam registadas assim que o anúncio estiver ativo.",
@@ -2626,10 +2629,11 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.olderError":
     "Não conseguimos carregar as alterações mais antigas.",
   "listBusiness.editor.history.moderatorNote":
-    "Alguém da moderação acrescentou uma nota sobre isto. Foi enviada nas Mensagens a quem era proprietário do anúncio na altura.",
+    "Alguém da moderação acrescentou uma nota sobre isto. Foi enviada nas Mensagens à pessoa proprietária do anúncio na altura.",
   "listBusiness.editor.history.actor.unknownTeamMember": "Alguém da equipa",
-  "listBusiness.editor.history.actor.previousTeam": "Alguém da equipa anterior",
-  "listBusiness.editor.history.actor.moderation": "A moderação do QueerPulse",
+  "listBusiness.editor.history.actor.previousTeam":
+    "Alguém que já fez parte da equipa",
+  "listBusiness.editor.history.actor.moderation": "A moderação da QueerPulse",
   "listBusiness.editor.history.event.ownerEdited":
     "<strong>{actor}</strong> alterou {fields}",
   "listBusiness.editor.history.event.staffEdited":
@@ -2643,7 +2647,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.event.teamChanged":
     "<strong>{actor}</strong> alterou quem pode editar este anúncio",
   "listBusiness.editor.history.event.statusUpdated":
-    "<strong>{actor}</strong> atualizou o estado de análise do anúncio",
+    "<strong>{actor}</strong> atualizou o estado de revisão do anúncio",
   "listBusiness.editor.history.event.removed":
     "<strong>{actor}</strong> removeu o anúncio",
   "listBusiness.editor.history.event.questionAsked":
@@ -2663,7 +2667,8 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.field.timezone": "o fuso horário",
   "listBusiness.editor.history.field.badge":
     "o selo Queer-owned ou LGBTQ+ friendly",
-  "listBusiness.editor.history.field.evidence": "as provas por trás do selo",
+  "listBusiness.editor.history.field.evidence":
+    "as provas que sustentam o selo",
   "listBusiness.editor.history.field.price": "o escalão de preço",
   "listBusiness.editor.history.field.blurb": "a descrição curta",
   "listBusiness.editor.history.field.tagline": "o lema",
@@ -2678,7 +2683,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.field.menu": "o menu",
   "listBusiness.editor.history.field.pricingMode":
     "se o anúncio mostra serviços ou um menu",
-  "listBusiness.editor.history.field.langs": "as línguas faladas",
+  "listBusiness.editor.history.field.langs": "os idiomas falados",
   "listBusiness.editor.history.field.attributes": "os detalhes e comodidades",
   "listBusiness.editor.history.field.highlights": "os destaques do cartão",
   "listBusiness.editor.history.field.entryMode": "como se entra",
@@ -2695,31 +2700,32 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.field.langsOther": "os outros idiomas falados",
   "listBusiness.editor.history.field.online": "a opção só online",
   "listBusiness.editor.history.field.address": "a morada",
-  "listBusiness.editor.history.field.mapPin": "o pino no mapa",
+  "listBusiness.editor.history.field.mapPin": "o marcador no mapa",
   "listBusiness.editor.history.field.hours": "o horário",
   "listBusiness.editor.history.field.hoursNote": "a nota sobre o horário",
   "listBusiness.editor.history.field.hoursExceptions":
     "o horário de feriados e datas especiais",
   "listBusiness.editor.history.field.social": "os contactos e as redes sociais",
   "listBusiness.editor.history.field.photoGallery": "as fotos",
-  "listBusiness.editor.history.field.photoFraming": "as posições das fotos",
+  "listBusiness.editor.history.field.photoFraming": "o enquadramento das fotos",
   "listBusiness.editor.history.field.coverPhoto": "a foto de capa",
-  "listBusiness.editor.history.field.rel": "a ligação ao negócio",
+  "listBusiness.editor.history.field.rel": "a relação com o negócio",
   "listBusiness.editor.history.field.ownerName":
-    "o nome de quem é proprietário",
+    "o nome da pessoa proprietária",
   "listBusiness.editor.history.field.ownerRole": "a função mostrada no anúncio",
-  "listBusiness.editor.history.field.ownerBio": "a bio de quem é proprietário",
+  "listBusiness.editor.history.field.ownerBio": "a bio da pessoa proprietária",
   "listBusiness.editor.history.field.visibility":
-    "o que o anúncio mostra sobre quem é proprietário",
+    "o que o anúncio mostra sobre a pessoa proprietária",
   "listBusiness.editor.history.field.linkToProfile":
-    "a ligação ao perfil de quem é proprietário",
-  "listBusiness.editor.history.field.ownedBy": "quem é dono e gere o negócio",
+    "a ligação ao perfil da pessoa proprietária",
+  "listBusiness.editor.history.field.ownedBy":
+    "de quem é o negócio e quem o gere",
   "listBusiness.editor.history.field.hasOnlineShop":
     "a opção de também vender online",
   "listBusiness.editor.history.field.onlineDetails": "como te compram",
   "listBusiness.editor.history.field.shopItems": "os artigos da loja",
   "listBusiness.editor.history.field.mobile": "o modo itinerante",
-  "listBusiness.editor.history.field.mobileDetails": "onde trabalha",
+  "listBusiness.editor.history.field.mobileDetails": "onde trabalhas",
   "listBusiness.editor.history.field.contactEmail": "o email de contacto",
   "listBusiness.editor.history.field.consentOuting":
     "a confirmação de anúncio público",
@@ -2738,7 +2744,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.event.statusQuestion":
     "<strong>{actor}</strong> parou a análise para fazer uma pergunta",
   "listBusiness.editor.dangerZone.body":
-    "Eliminar este anúncio é permanente. Se preferires afastar-te, podes escondê-lo ou marcá-lo como fechado, ambas as opções em Atividade e visibilidade, mais acima.",
+    "Eliminar este anúncio é permanente. Se preferires dar um passo atrás, podes escondê-lo ou marcá-lo como fechado: as duas opções estão em Atividade e visibilidade, mais acima.",
   "listBusiness.editor.dangerZone.deleteCta": "Eliminar este anúncio",
   "listBusiness.editor.dangerZone.deletedToast": "Anúncio eliminado: {name}.",
   "listBusiness.deleteFlow.title": "Eliminar {name}?",
@@ -2749,14 +2755,15 @@ export const marketing: Catalog = {
   "listBusiness.deleteFlow.losses.intro.moderator":
     "Eliminar o anúncio de outra pessoa remove-o de vez, com tudo o que lhe está associado:",
   "listBusiness.deleteFlow.losses.reviews":
-    "As avaliações e as respostas a elas",
+    "As avaliações e as respostas que receberam",
   "listBusiness.deleteFlow.losses.enquiries":
     "A caixa de entrada do negócio: pedidos de contacto e todas as conversas lá dentro",
-  "listBusiness.deleteFlow.losses.coManagers": "O acesso dos cogestores",
+  "listBusiness.deleteFlow.losses.coManagers": "O acesso de quem ajuda a gerir",
   "listBusiness.deleteFlow.losses.offers":
     "Ofertas de posse pendentes e sugestões de edição",
   "listBusiness.deleteFlow.losses.photos": "As fotos",
-  "listBusiness.deleteFlow.losses.publicPage": "A página pública e o link dela",
+  "listBusiness.deleteFlow.losses.publicPage":
+    "A página pública e o respetivo link",
   "listBusiness.deleteFlow.losses.gatheringsStay":
     "Os eventos ligados ficam, mas sem o local associado.",
   "listBusiness.deleteFlow.losses.noUndo.owner":
@@ -2777,11 +2784,11 @@ export const marketing: Catalog = {
   "listBusiness.deleteFlow.acknowledge.intro":
     "Tudo isto acontece no momento em que eliminas.",
   "listBusiness.deleteFlow.acknowledge.permanent":
-    "Isto é permanente e não pode ser desfeito.",
+    "É permanente e não há forma de desfazer.",
   "listBusiness.deleteFlow.acknowledge.reviewsAndEnquiries":
-    "As avaliações e os pedidos de contacto são eliminados com ele.",
+    "As avaliações e os pedidos de contacto são eliminados com o anúncio.",
   "listBusiness.deleteFlow.acknowledge.coManagers":
-    "Os cogestores perdem o acesso.",
+    "Quem ajuda a gerir perde o acesso.",
   "listBusiness.deleteFlow.acknowledge.ownerMessage":
     "A pessoa dona do anúncio recebe uma mensagem com o meu motivo.",
   "listBusiness.deleteFlow.reason.heading":
@@ -2800,7 +2807,7 @@ export const marketing: Catalog = {
   "listBusiness.deleteFlow.error":
     "Não foi possível eliminar o anúncio. Tenta outra vez daqui a pouco.",
   "listBusiness.deleteFlow.cause.gone":
-    "Este anúncio já não existe, por isso não há nada para eliminar. Atualiza a página para veres como está.",
+    "Este anúncio já não existe, por isso não há nada para eliminar. Atualiza a página para veres em que ponto está.",
   "listBusiness.deleteFlow.hint.acknowledge":
     "Marca as três caixas para continuar.",
   "listBusiness.deleteFlow.hint.reason": "Escreve um motivo para continuar.",
@@ -2815,18 +2822,18 @@ export const marketing: Catalog = {
   // ── Cogestão. Quem mais pode editar uma página, e o convite que os leva lá.
   //    Só para membros: nada disto chega à página pública.
   "listBusiness.coManagers.introOwner":
-    "Gerir um espaço raramente é trabalho para uma pessoa só. Convida alguém de confiança para ajudar a manter esta página atualizada. Essa pessoa pode alterar tudo sobre o negócio. Os teus dados pessoais, e quem pode editar, continuam contigo.",
+    "Gerir um espaço raramente é trabalho para uma pessoa só. Convida alguém de confiança para ajudar a manter este anúncio atualizado. Essa pessoa pode alterar tudo sobre o negócio. Os teus dados pessoais e a decisão sobre quem pode editar continuam contigo.",
   "listBusiness.coManagers.introCoManager":
-    "Quem trata desta página. Só quem é proprietário pode convidar pessoas ou retirar um lugar.",
+    "Todas as pessoas que tratam deste anúncio. Só a pessoa proprietária pode convidar pessoas ou tirar o lugar a alguém.",
   "listBusiness.coManagers.status.active": "Pode editar",
   "listBusiness.coManagers.status.invited": "À espera de resposta",
   "listBusiness.coManagers.formerMember": "Alguém que entretanto saiu",
   "listBusiness.coManagers.invitedOn": "Convite enviado a {date}",
-  "listBusiness.coManagers.editingSince": "Ajuda desde {date}",
+  "listBusiness.coManagers.editingSince": "A ajudar desde {date}",
   "listBusiness.coManagers.removeCta": "Retirar",
   "listBusiness.coManagers.cancelInviteCta": "Cancelar convite",
   "listBusiness.coManagers.removeConfirm":
-    "Retirar <b>{name}</b> desta página? Fica tudo o que essa pessoa acrescentou, e podes voltar a convidá-la quando quiseres.",
+    "Retirar <b>{name}</b> deste anúncio? Fica tudo o que essa pessoa acrescentou, e podes voltar a convidá-la quando quiseres.",
   "listBusiness.coManagers.cancelInviteConfirm":
     "Cancelar o convite para <b>{name}</b>? Podes voltar a enviá-lo quando quiseres.",
   "listBusiness.coManagers.keepCta": "Voltar atrás",
@@ -2834,15 +2841,15 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.cancelInviteYes": "Cancelar convite",
   "listBusiness.coManagers.empty.title": "Por agora, só tu",
   "listBusiness.coManagers.empty.descriptionOwner":
-    "Ainda não há mais ninguém a editar esta página. Convida alguém aqui em baixo quando quiseres uma ajuda.",
+    "Ainda não há mais ninguém a editar este anúncio. Convida alguém aqui em baixo quando quiseres ajuda.",
   "listBusiness.coManagers.empty.descriptionCoManager":
-    "Neste momento não há mais ninguém a tratar desta página.",
+    "Neste momento não há mais ninguém a tratar deste anúncio.",
   "listBusiness.coManagers.removedToast":
-    "Essa pessoa deixou de editar esta página.",
+    "Essa pessoa deixou de editar este anúncio.",
   "listBusiness.coManagers.removeError":
     "Não conseguimos fazer essa alteração agora. Tenta outra vez.",
   "listBusiness.coManagers.removeErrorTitle":
-    "Não conseguimos remover essa pessoa",
+    "Não conseguimos retirar essa pessoa",
   "listBusiness.coManagers.cause.gone":
     "Esse lugar já não existe. Atualiza a página para veres quem ajuda a gerir este anúncio agora.",
   "listBusiness.coManagers.inviteHeading": "Convidar alguém para ajudar",
@@ -2853,38 +2860,38 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.seatsFullNotice":
     "Os lugares estão todos ocupados. Retira alguém, ou cancela um convite, para libertar um.",
   "listBusiness.coManagers.searchPlaceholder":
-    "Procurar nas tuas conexões pelo nome",
+    "Pesquisar nas tuas conexões pelo nome",
   "listBusiness.coManagers.loadingConnections":
     "A procurar as pessoas com quem tens conexão.",
   "listBusiness.coManagers.noConnections":
     "Podes convidar qualquer pessoa com quem tens conexão. Assim que tiveres conexões, aparecem aqui.",
   "listBusiness.coManagers.allListedHelping":
-    "Quem corresponde à pesquisa já ajuda a gerir esta página ou tem um convite à espera.",
+    "Quem corresponde à pesquisa já ajuda a gerir este anúncio ou tem um convite à espera.",
   "listBusiness.coManagers.connectionsLoadError":
-    "As tuas conexões não carregaram.",
+    "Não conseguimos carregar as tuas conexões.",
   "listBusiness.coManagers.sendCta": "Enviar convite",
   "listBusiness.coManagers.sendingCta": "A enviar...",
   "listBusiness.coManagers.invitedToast": "Convite enviado.",
-  "listBusiness.coManagers.error.self": "Esta página já é tua para editar.",
+  "listBusiness.coManagers.error.self": "Já podes editar este anúncio.",
   "listBusiness.coManagers.error.seatsFull":
     "Os lugares estão todos ocupados. Retira alguém, ou cancela um convite, para libertar um.",
   "listBusiness.coManagers.error.alreadyThere":
     "Essa pessoa já tem lugar aqui, ou um convite à espera.",
   "listBusiness.coManagers.error.generic":
     "Não conseguimos enviar esse convite. Tenta outra vez.",
-  "listBusiness.coManagers.stepDownHeading": "Deixar de gerir esta página",
+  "listBusiness.coManagers.stepDownHeading": "Deixar de gerir este anúncio",
   "listBusiness.coManagers.stepDownIntro":
-    "Podes devolvê-la quando quiseres. Tudo o que acrescentaste fica com a página.",
+    "Podes devolver este lugar quando quiseres. Tudo o que acrescentaste fica no anúncio.",
   "listBusiness.coManagers.stepDownCta": "Deixar de gerir",
   "listBusiness.coManagers.stepDownConfirm":
-    "Deixar de ajudar com {name}? O teu acesso termina de imediato, e só quem é proprietário te pode trazer de volta.",
+    "Deixar de ajudar a gerir {name}? O teu acesso termina de imediato, e só a pessoa proprietária te pode voltar a dar acesso.",
   "listBusiness.coManagers.stepDownCancel": "Voltar atrás",
   "listBusiness.coManagers.stepDownYes": "Sim, deixar de gerir",
-  "listBusiness.coManagers.leftToast": "Já não ajudas com {name}.",
+  "listBusiness.coManagers.leftToast": "Já não ajudas a gerir {name}.",
   "listBusiness.coManagers.leaveError":
     "Não conseguimos fazer isso agora. Tenta outra vez.",
   "listBusiness.coManagers.leaveErrorTitle":
-    "Não conseguimos terminar a tua ajuda",
+    "Não conseguimos registar a tua saída",
   "listBusiness.coManagerInvites.errorTitle":
     "Não conseguimos enviar a tua resposta",
   "listBusiness.coManagerInvites.cause.gone":
@@ -2899,16 +2906,16 @@ export const marketing: Catalog = {
     "Esta oferta já foi respondida. Atualiza a página para veres em que ponto está.",
   "listBusiness.ownerOffers.cause.claimedSince":
     "Outra pessoa reivindicou este anúncio depois de a oferta ser feita, por isso já não pode ser aceite. Recusa-a para a tirares da tua lista.",
-  "listBusiness.coManagers.banner.title": "Ajudas a gerir esta página",
+  "listBusiness.coManagers.banner.title": "Ajudas a gerir este anúncio",
   "listBusiness.coManagers.banner.titleNamed":
     "Ajudas {name} a gerir {listing}",
   "listBusiness.coManagers.banner.body":
-    "Podes alterar tudo sobre o negócio: o que diz, os horários, as fotografias, os serviços, as respostas de acessibilidade, e as respostas a avaliações. Os dados de contacto e as escolhas de perfil de quem é proprietário ficam privados, e apagar a página ou mudar quem pode editar também fica com essa pessoa.",
-  "listBusiness.coManagers.roleFieldLabel": "Função mostrada na página",
+    "Podes alterar tudo sobre o negócio: o que diz, os horários, as fotos, os serviços, as respostas de acessibilidade e as respostas a avaliações. Os dados de contacto e as escolhas de perfil da pessoa proprietária são privados, e só ela pode eliminar o anúncio ou mudar quem o pode editar.",
+  "listBusiness.coManagers.roleFieldLabel": "Função mostrada no anúncio",
   "listBusiness.coManagers.roleFieldHelper":
     "O cargo apresentado ao lado do negócio na página pública.",
   "listBusiness.coManagers.ownerPrivateNotice":
-    "O nome, a apresentação, o email de contacto e as escolhas de perfil de quem é proprietário são privados. Não aparecem aqui, e nada do que guardares os altera.",
+    "O nome, a bio, o email de contacto e as escolhas de perfil da pessoa proprietária são privados. Não aparecem aqui e nada do que guardares os altera.",
 
   // ── Vocabulário de acessibilidade. As seis perguntas são fixas e
   //    partilhadas com a API, que guarda os slugs tal e qual.
@@ -2932,15 +2939,15 @@ export const marketing: Catalog = {
   "listBusiness.accessibility.question.accessibleToilet.help":
     "Uma casa de banho com o espaço e os apoios de que uma pessoa em cadeira de rodas precisa.",
   "listBusiness.accessibility.question.genderNeutralToilet.label":
-    "Casa de banho neutra",
+    "Casa de banho sem género",
   "listBusiness.accessibility.question.genderNeutralToilet.help":
-    "Pelo menos uma casa de banho para a qual ninguém tem de escolher uma porta com género.",
+    "Pelo menos uma casa de banho onde ninguém tem de escolher uma porta marcada por género.",
   "listBusiness.accessibility.question.quietHours.label":
-    "Horas calmas, de baixo estímulo",
+    "Horas calmas, com poucos estímulos",
   "listBusiness.accessibility.question.quietHours.help":
     "Horários regulares com a música baixa e as luzes suaves.",
   "listBusiness.accessibility.question.quietHours.labelMobile":
-    "Opção calma, de baixo estímulo",
+    "Opção calma, com poucos estímulos",
   "listBusiness.accessibility.question.quietHours.helpMobile":
     "Um horário mais calmo ou uma versão mais sossegada que se pode pedir.",
   "listBusiness.accessibility.question.assistanceAnimals.label":
@@ -2950,7 +2957,7 @@ export const marketing: Catalog = {
   "listBusiness.accessibility.question.assistanceAnimals.helpMobile":
     "Cães-guia e outros animais de assistência podem vir também.",
   "listBusiness.accessibility.introOnline":
-    "Quatro perguntas sobre a facilidade de te comprar ou participar. Responde ao que souberes.",
+    "Quatro perguntas sobre como é fácil comprar-te algo ou participar. Responde ao que souberes.",
   "listBusiness.accessibility.introMobile":
     "Quatro perguntas que alguém pode precisar de ver respondidas antes de decidir se consegue participar. Responde ao que souberes.",
   "listBusiness.accessibility.question.imageDescriptions.label":
@@ -2989,11 +2996,11 @@ export const marketing: Catalog = {
   "listBusiness.accessibility.noteLabel":
     "Mais alguma coisa que valha a pena saber",
   "listBusiness.accessibility.noteHint":
-    "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar à porta.",
+    "Os detalhes que não cabem numa lista. Diz o que uma pessoa vai mesmo encontrar à porta.",
   "listBusiness.accessibility.noteHintOnline":
-    "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar quando te compra algo ou participa.",
+    "Os detalhes que não cabem numa lista. Diz o que uma pessoa vai mesmo encontrar quando te compra algo ou participa.",
   "listBusiness.accessibility.noteHintMobile":
-    "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar no dia.",
+    "Os detalhes que não cabem numa lista. Diz o que uma pessoa vai mesmo encontrar no dia.",
   "listBusiness.accessibility.notePlaceholder":
     "Dois degraus à porta da frente e a equipa ajuda com a rampa. Toca à campainha da esquerda.",
   "listBusiness.accessibility.notePlaceholderOnline":
@@ -3003,9 +3010,9 @@ export const marketing: Catalog = {
 
   // ── Serviços com preço, do lado de quem gere.
   "listBusiness.services.intro":
-    "O que vendes e quanto custa. A tua faixa de preço continua a ser o sinal rápido; aqui dizes o que ela compra. Deixa vazio se os preços não funcionarem assim contigo.",
+    "O que vendes e quanto custa. O teu escalão de preço dá a ideia rápida; aqui dizes o que se paga com ele. Deixa em branco se os teus preços não funcionarem assim.",
   "listBusiness.services.empty":
-    "Ainda não há nada. Adiciona uma linha por cada coisa para a qual queres mostrar um preço.",
+    "Ainda não há nada. Adiciona uma linha para cada coisa cujo preço queres mostrar.",
   "listBusiness.services.addCta": "Adicionar um serviço",
   "listBusiness.services.addHint":
     "Opcional. A maioria dos anúncios fica bem com meia dúzia.",
@@ -3014,7 +3021,7 @@ export const marketing: Catalog = {
   "listBusiness.services.nameLabel": "O que é",
   "listBusiness.services.namePlaceholder": "Consulta, primeira sessão",
   "listBusiness.services.nameError":
-    "Dá um nome a esta linha, ou limpa o preço para a remover.",
+    "Dá um nome a esta linha, ou apaga o preço para a remover.",
   "listBusiness.services.priceLabel": "Quanto custa",
   "listBusiness.services.pricePlaceholder": "Desde 25 EUR, escala variável",
   "listBusiness.services.priceError":
@@ -3024,8 +3031,8 @@ export const marketing: Catalog = {
   "listBusiness.services.notePlaceholder":
     "45 minutos, inclui mensagem de seguimento",
   "listBusiness.services.unnamedRow": "linha {position}",
-  "listBusiness.services.moveUp": "Mover {name} para cima",
-  "listBusiness.services.moveDown": "Mover {name} para baixo",
+  "listBusiness.services.moveUp": "Subir {name}",
+  "listBusiness.services.moveDown": "Descer {name}",
   "listBusiness.services.remove": "Remover {name}",
 
   // ── Serviços ou menu, do lado de quem gere.
@@ -3040,7 +3047,7 @@ export const marketing: Catalog = {
   "listBusiness.shop.addCta": "Adicionar um artigo",
   "listBusiness.shop.addHint":
     "Opcional. Uma foto ajuda o artigo a destacar-se na tua página.",
-  "listBusiness.shop.ceilingHint": "Esse é o limite de {count} artigos.",
+  "listBusiness.shop.ceilingHint": "Chegaste ao limite de {count} artigos.",
   "listBusiness.shop.nameLabel": "Artigo",
   "listBusiness.shop.namePlaceholder": "Zine em risografia, número 4",
   "listBusiness.shop.nameError": "Dá um nome a este artigo.",
@@ -3059,14 +3066,14 @@ export const marketing: Catalog = {
 
   // ── O menu, do lado de quem gere.
   "listBusiness.menu.intro":
-    "O que serves e quanto custa. Agrupa como o teu menu se lê: bebidas, petiscos, brunch. Escolhe uma moeda para o menu todo e escreve cada preço como número.",
+    "O que serves e quanto custa. Agrupa tudo como no teu menu: bebidas, petiscos, brunch. Escolhe uma moeda para o menu todo e escreve cada preço como número.",
   "listBusiness.menu.currencyLabel": "Moeda do menu todo",
   "listBusiness.menu.currencyHint": "Todos os preços abaixo usam esta moeda.",
   "listBusiness.menu.empty":
-    "Ainda sem secções. Junta uma para cada parte do teu menu, como bebidas ou brunch.",
+    "Ainda sem secções. Adiciona uma para cada parte do teu menu, como bebidas ou brunch.",
   "listBusiness.menu.addSectionCta": "Adicionar secção",
   "listBusiness.menu.addSectionHint":
-    "Opcional. Também podes saltar a escrita e juntar o teu menu como ficheiro ou link aqui em baixo.",
+    "Opcional. Também podes poupar a escrita e adicionar o teu menu como ficheiro ou link aqui em baixo.",
   "listBusiness.menu.sectionCeilingHint":
     "Chegaste ao limite de {count} secções.",
   "listBusiness.menu.itemCeilingHint":
@@ -3105,9 +3112,9 @@ export const marketing: Catalog = {
   "listBusiness.menu.priceGlassBottleGroup":
     "Preço ao copo e à garrafa, ambos opcionais",
   "listBusiness.menu.itemPriceGlassFormatError":
-    "Escreve os algarismos do preço ao copo, como 4,50.",
+    "Escreve o preço ao copo em algarismos, como 4,50.",
   "listBusiness.menu.itemPriceBottleFormatError":
-    "Escreve os algarismos do preço à garrafa, como 22,00.",
+    "Escreve o preço à garrafa em algarismos, como 22,00.",
   "listBusiness.menu.addItemCta": "Adicionar item",
   "listBusiness.menu.itemNameLabel": "O que é",
   "listBusiness.menu.itemNamePlaceholder": "Galão",
@@ -3132,7 +3139,7 @@ export const marketing: Catalog = {
   "listBusiness.menu.moveItemUp": "Subir {name}",
   "listBusiness.menu.moveItemDown": "Descer {name}",
   "listBusiness.menu.removeItem": "Remover {name}",
-  "listBusiness.menu.dietaryLabel": "Sempre verdade neste item",
+  "listBusiness.menu.dietaryLabel": "Sempre válido para este item",
   "listBusiness.menu.dietaryHint":
     "Marca só o que é sempre verdade. 'Sem glúten a pedido' vai na linha de detalhe.",
   "listBusiness.menu.dietary.vegan": "Vegano",
@@ -3141,16 +3148,16 @@ export const marketing: Catalog = {
   "listBusiness.menu.dietary.alcoholFree": "Sem álcool",
   "listBusiness.menu.fileHeading": "O teu menu completo",
   "listBusiness.menu.fileHint":
-    "Tens o menu em PDF ou uma foto do quadro? Junta aqui, e as pessoas podem abrir tudo.",
+    "Tens o menu em PDF ou uma foto do quadro? Adiciona-o aqui para as pessoas poderem ver o menu completo.",
   "listBusiness.menu.fileAddCta": "Adicionar PDF ou foto",
   "listBusiness.menu.fileReplaceCta": "Substituir",
   "listBusiness.menu.fileRemoveCta": "Remover",
-  "listBusiness.menu.fileUploading": "A carregar",
+  "listBusiness.menu.fileUploading": "A enviar",
   "listBusiness.menu.fileError.type":
     "Esse tipo de ficheiro não funciona. Usa PDF, JPG, PNG ou WebP.",
   "listBusiness.menu.fileError.size":
     "Esse ficheiro passa dos {max}. Experimenta um PDF mais pequeno ou uma foto.",
-  "listBusiness.menu.fileError.upload": "O envio não passou. Tenta outra vez.",
+  "listBusiness.menu.fileError.upload": "O envio falhou. Tenta outra vez.",
   "listBusiness.menu.fileError.rejected":
     "O nosso armazenamento não aceitou este ficheiro. Usa um PDF, JPG, PNG ou WebP e tenta outra vez.",
   "listBusiness.menu.fileError.tooManyUploads":
@@ -3169,7 +3176,7 @@ export const marketing: Catalog = {
   "listBusiness.visibility.intro":
     "Retira o teu anúncio do diretório durante um tempo e volta a pô-lo quando quiseres. Fica tudo onde está enquanto estiver fora.",
   "listBusiness.visibility.distinction":
-    "Isto é diferente do estado de atividade acima. Fechado temporariamente mantém-te no diretório e diz às pessoas que estás fechado por agora. Pausar tira o anúncio da exploração, da pesquisa e do mapa, e não diz nada sobre se estás aberto.",
+    "É diferente do estado de atividade acima. Fechado temporariamente mantém-te no diretório e diz às pessoas que o negócio está fechado por agora. Pausar tira o anúncio da exploração, da pesquisa e do mapa, e não diz nada sobre se o negócio está aberto.",
   "listBusiness.visibility.state.showing.title":
     "O teu anúncio está a aparecer",
   "listBusiness.visibility.state.showing.sub":
@@ -3183,7 +3190,7 @@ export const marketing: Catalog = {
   "listBusiness.visibility.kept.content":
     "Fotografias, horários, contactos e os selos que tiveres ficam todos guardados.",
   "listBusiness.visibility.kept.reversible":
-    "Podes voltar a pô-lo quando quiseres, e ele regressa inteiro.",
+    "Podes voltar a pô-lo quando quiseres, e volta tal como estava.",
   "listBusiness.visibility.hideCta": "Pôr este anúncio em pausa",
   "listBusiness.visibility.showCta": "Voltar a mostrar",
   "listBusiness.visibility.applying": "A atualizar…",
@@ -3220,7 +3227,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.sub":
     "Guardámo-las como rascunho. O teu anúncio publicado não mudou.",
   "listBusiness.editor.restore.serverChanged":
-    "Atenção: este anúncio foi atualizado depois de essas alterações terem sido guardadas, por isso reposicioná-las substituiria o texto mais recente.",
+    "Atenção: este anúncio foi atualizado depois de essas alterações terem sido guardadas, por isso repô-las substituiria o texto mais recente.",
   "listBusiness.editor.restore.restoreCta": "Repor",
   "listBusiness.editor.restore.discardCta": "Descartar",
   "listBusiness.editor.restore.justNow": "há instantes",
@@ -3255,17 +3262,17 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.review.status.removed": "Removido",
   "listBusiness.editor.restore.review.status.changed": "Alterado",
   "listBusiness.editor.restore.review.paragraph": "Parágrafo {position}",
-  "listBusiness.editor.restore.review.keepCta": "Mantém o que está aqui",
-  "listBusiness.editor.restore.review.confirmAll": "Traz tudo de volta",
+  "listBusiness.editor.restore.review.keepCta": "Manter o que está aqui",
+  "listBusiness.editor.restore.review.confirmAll": "Trazer tudo de volta",
   "listBusiness.editor.restore.review.confirmNone":
     "Marca uma área para a trazer de volta",
   "listBusiness.editor.restore.review.confirmSome_one":
-    "Traz de volta {count} área",
+    "Trazer de volta {count} área",
   "listBusiness.editor.restore.review.confirmSome_other":
-    "Traz de volta {count} áreas",
+    "Trazer de volta {count} áreas",
   "listBusiness.editor.restore.review.emptyState":
     "Nada aqui difere do que está agora no ecrã.",
-  "listBusiness.editor.restore.review.discardCta": "Descarta a cópia guardada",
+  "listBusiness.editor.restore.review.discardCta": "Descartar a cópia guardada",
   "listBusiness.editor.restore.review.closeCta": "Fechar",
   "listBusiness.editor.restore.diff.field.name": "Nome do negócio",
   "listBusiness.editor.restore.diff.field.cats": "Categorias",
@@ -3311,7 +3318,7 @@ export const marketing: Catalog = {
     "Respostas de acessibilidade",
   "listBusiness.editor.restore.diff.field.photos": "Fotos",
   "listBusiness.editor.restore.diff.field.coverPhoto": "Foto de capa",
-  "listBusiness.editor.restore.diff.field.rel": "A tua ligação ao negócio",
+  "listBusiness.editor.restore.diff.field.rel": "A tua relação com o negócio",
   "listBusiness.editor.restore.diff.field.ownerName": "O teu nome",
   "listBusiness.editor.restore.diff.field.ownerRole":
     "Função mostrada no anúncio",
@@ -3392,7 +3399,7 @@ export const marketing: Catalog = {
     "Fechado temporariamente",
   "listBusiness.trading.state.temporarilyClosed.desc":
     "Continua listado em todo o lado, com um aviso de fecho na tua página.",
-  "listBusiness.trading.state.moved.label": "Mudou de sítio",
+  "listBusiness.trading.state.moved.label": "Mudou de morada",
   "listBusiness.trading.state.moved.desc":
     "Continua listado em todo o lado, com a morada nova na tua página.",
   "listBusiness.trading.state.permanentlyClosed.label": "Fechado de vez",
@@ -3400,17 +3407,17 @@ export const marketing: Catalog = {
     "Retirado da exploração, da pesquisa e do mapa.",
   "listBusiness.trading.noteLabel": "O que é que as pessoas devem saber?",
   "listBusiness.trading.noteHint":
-    "Aparece no teu anúncio, por isso mantém curto e simples.",
+    "Aparece no teu anúncio: escreve algo curto e simples.",
   "listBusiness.trading.notePlaceholder":
-    "Fechado para obras, de volta em setembro.",
+    "Fechado para obras, reabrimos em setembro.",
   "listBusiness.trading.movedToLabel": "Onde é que te encontram agora?",
   "listBusiness.trading.movedToHint":
-    "Uma mudança sem destino não diz a quem lê nada que já não tivesse percebido à porta.",
+    "Sem a nova morada, quem lê fica a saber o mesmo que já tinha percebido à porta.",
   "listBusiness.trading.movedToPlaceholder": "Rua da Prata 42, Baixa",
   "listBusiness.trading.applyCta": "Atualizar estado",
   "listBusiness.trading.applying": "A atualizar…",
   "listBusiness.trading.applyHint":
-    "Isto aplica-se sozinho, separado do botão de guardar abaixo.",
+    "Isto aplica-se logo, independentemente do botão de guardar abaixo.",
   "listBusiness.trading.saveError":
     "Não foi possível atualizar o estado. Tenta novamente.",
   "listBusiness.trading.saved.open":
@@ -3424,13 +3431,13 @@ export const marketing: Catalog = {
   "listBusiness.trading.closeConfirm.title":
     "Marcar {name} como fechado de vez?",
   "listBusiness.trading.closeConfirm.lead":
-    "Este é o único estado que tira o teu negócio dos resultados do diretório. É isto que acontece.",
+    "Este é o único estado que tira o teu negócio dos resultados do diretório. Acontece exatamente o seguinte.",
   "listBusiness.trading.closeConfirm.removed":
     "Deixa de aparecer na exploração, na pesquisa, no mapa e nos resultados de espaços seguros.",
   "listBusiness.trading.closeConfirm.kept":
-    "A tua página continua acessível, por isso links guardados, avaliações e o teu aviso de fecho mantêm-se.",
+    "A tua página continua acessível, por isso os links guardados, as avaliações e o teu aviso de fecho mantêm-se.",
   "listBusiness.trading.closeConfirm.reversible":
-    "Podes voltar a pôr aberto quando quiseres. Não se apaga nada.",
+    "Podes voltar a marcá-lo como aberto quando quiseres. Não se apaga nada.",
   "listBusiness.trading.closeConfirm.cancel": "Manter listado",
   "listBusiness.trading.closeConfirm.confirm": "Sim, fechar de vez",
 
@@ -3440,25 +3447,26 @@ export const marketing: Catalog = {
   "listBusiness.confirmDetails.title.fresh": "Estes dados estão confirmados",
   "listBusiness.confirmDetails.title.ageing": "Estes dados continuam certos?",
   "listBusiness.confirmDetails.title.stale":
-    "Já ninguém verifica estes dados há algum tempo",
-  "listBusiness.confirmDetails.lastConfirmed": "Última confirmação {when}.",
+    "Há algum tempo que ninguém verifica estes dados",
+  "listBusiness.confirmDetails.lastConfirmed":
+    "Confirmados pela última vez {when}.",
   "listBusiness.confirmDetails.never":
-    "Nunca os confirmaste, por isso quem visita só tem o dia em que os escreveste.",
+    "Nunca os confirmaste, por isso quem visita só conta com a data em que os escreveste.",
   "listBusiness.confirmDetails.scope":
     "Isto inclui o horário, a morada, os contactos, as comodidades e como se entra.",
   "listBusiness.confirmDetails.justNow": "há instantes",
   "listBusiness.confirmDetails.unknownWhen": "há algum tempo",
-  "listBusiness.confirmDetails.cta": "Continua certo",
+  "listBusiness.confirmDetails.cta": "Continua tudo certo",
   "listBusiness.confirmDetails.saving": "A guardar…",
   "listBusiness.confirmDetails.toast":
-    "Obrigade. O teu anúncio fica carimbado como verificado hoje.",
+    "Agradecemos. O teu anúncio fica marcado como verificado hoje.",
   "listBusiness.confirmDetails.error":
     "Não foi possível registar isso agora. Tenta novamente.",
   "listBusiness.confirmDetails.errorTitle":
     "Não conseguimos confirmar os teus dados",
 
   // ── Exceções por data ao horário semanal (só no editor de quem gere).
-  "listBusiness.hoursExceptions.heading": "Datas que são diferentes",
+  "listBusiness.hoursExceptions.heading": "Datas com horário diferente",
   "listBusiness.hoursExceptions.hint":
     "Feriados, pausa de verão, uma noite mais longa. Cada data aqui substitui o horário semanal nesse dia.",
   "listBusiness.hoursExceptions.empty":
@@ -3478,11 +3486,11 @@ export const marketing: Catalog = {
   "listBusiness.hoursExceptions.notePlaceholder":
     "Véspera de Natal, fecha mais cedo",
   "listBusiness.hoursExceptions.problem.date":
-    "Indica uma data real do calendário, como 2026-12-24.",
+    "Indica uma data válida do calendário, como 2026-12-24.",
   "listBusiness.hoursExceptions.problem.duplicate":
-    "Já existe uma entrada para esta data. Edita essa em vez de criar outra.",
+    "Já existe uma entrada para esta data. Edita essa entrada.",
   "listBusiness.hoursExceptions.problem.intervals":
-    "Uma data aberta precisa de pelo menos uma janela, e as horas não podem ser iguais nem sobrepor-se.",
+    "Uma data aberta precisa de pelo menos um horário, e as horas não podem coincidir nem sobrepor-se.",
 
   // ── Etiqueta partilhada de regresso ao hub (secção Governação) ─────────
   "hub.governanceLabel": "Governação",
@@ -3522,6 +3530,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-13.headline":
+    "Cria sequências VJ de clips e cenas que tocam e repetem sozinhas.",
   "changelog.releases.2026-11-09.headline":
     "Para todos os ecrãs VJ ativos de uma vez, ou passa-os para um renderizador simples no comando.",
   "changelog.releases.2026-11-08.headline":
@@ -3889,6 +3899,9 @@ export const marketing: Catalog = {
     "Cartões de parceiros mais ricos no diretório",
   "changelog.entries.partner-cards-redesign.body":
     "Os negócios parceiros têm um cartão largo com a foto, uma etiqueta de parceria e a nota da nossa equipa.",
+  "changelog.entries.vj-sequences.title": "Sequências VJ que tocam sozinhas",
+  "changelog.entries.vj-sequences.body":
+    "Alinha clips e cenas com a duração de cada passo, carrega em Tocar e deixa-as correr e repetir.",
   "changelog.entries.vj-simple-renderer.title":
     "Renderizador simples para os ecrãs VJ",
   "changelog.entries.vj-simple-renderer.body":
@@ -10149,13 +10162,13 @@ export const marketing: Catalog = {
   //    backlog em direto — ficam em inglês; ver o relatório da varredura.
   "roadmap.meta.title": "O roteiro da QueerPulse: lançado, em curso, planeado",
   "roadmap.meta.description":
-    "Vê o que a QueerPulse já lançou, o que uma pequena equipa em Lisboa está a construir agora, e o que está planeado a seguir, além de como submeter e votar ideias.",
+    "Vê o que a QueerPulse já lançou, o que uma pequena equipa em Lisboa está a construir agora e o que está planeado a seguir, e como submeter ideias e votar nelas.",
   "roadmap.hero.eyebrow": "O que estamos a construir",
   "roadmap.hero.title": "O <em>roteiro</em>",
   "roadmap.hero.sub":
-    "A QueerPulse é feita por uma pequena equipa em Lisboa. Eis o que estamos a fazer, o que já lançámos, e no que podes votar a seguir.",
-  "roadmap.hero.stat.shipped_one": "entregue este ano",
-  "roadmap.hero.stat.shipped_other": "entregues este ano",
+    "A QueerPulse é feita por uma pequena equipa em Lisboa. Aqui fica o que estamos a fazer, o que já lançámos e aquilo em que podes votar a seguir.",
+  "roadmap.hero.stat.shipped_one": "lançada este ano",
+  "roadmap.hero.stat.shipped_other": "lançadas este ano",
   "roadmap.hero.stat.building_one": "em curso",
   "roadmap.hero.stat.building_other": "em curso",
   "roadmap.hero.stat.planned_one": "planeada",
@@ -10163,12 +10176,12 @@ export const marketing: Catalog = {
   "roadmap.col.done": "Feito",
   "roadmap.col.buildingNow": "Em construção",
   "roadmap.col.planned": "Planeado",
-  "roadmap.card.memberRequested": "Pedido por uma pessoa da comunidade",
+  "roadmap.card.memberRequested": "Pedido pela comunidade",
   "roadmap.card.progressAria": "Progresso de {name}",
   "roadmap.card.mostWanted": "Mais pedido",
   "roadmap.card.votesSuffix": "votos",
-  "roadmap.card.committed": "Compromisso",
-  "roadmap.card.slipNote": "Adiado de {from} para {to}: {reason}",
+  "roadmap.card.committed": "Confirmado",
+  "roadmap.card.slipNote": "Passou de {from} para {to}: {reason}",
   "roadmap.card.plannedFeatures": "Funcionalidades planeadas",
   "roadmap.shape.title": "Tens uma <em>ideia?</em>",
   "roadmap.shape.sub":
@@ -10180,7 +10193,7 @@ export const marketing: Catalog = {
   "roadmap.submitIdea.cta": "Submeter ideia",
   "roadmap.submitIdea.toast.empty": "Escreve primeiro algumas palavras",
   "roadmap.submitIdea.toast.submitted":
-    "Obrigade, enviámos à equipa para revisão",
+    "Agradecemos. Enviámos à equipa para revisão",
   "roadmap.submitIdea.toast.error":
     "Não foi possível submeter a tua ideia. Tenta de novo",
   "roadmap.submitIdea.toast.errorTitle": "Não conseguimos enviar a tua ideia",
@@ -10194,50 +10207,50 @@ export const marketing: Catalog = {
   "roadmap.howWeDecide.title": "Como <em>decidimos</em>",
   "roadmap.howWeDecide.memberVotes.title": "Votos da comunidade",
   "roadmap.howWeDecide.memberVotes.desc":
-    "As funcionalidades em que votas sobem ao topo. Vemos isto semanalmente.",
+    "As funcionalidades em que votas sobem ao topo. Revemos isto todas as semanas.",
   "roadmap.howWeDecide.safetyFirst.title": "Segurança em primeiro lugar",
   "roadmap.howWeDecide.safetyFirst.desc":
-    "Cada funcionalidade é revista quanto ao modo como poderia ser usada de forma abusiva numa comunidade como esta.",
+    "Analisamos cada funcionalidade a pensar em como poderia ser mal usada numa comunidade como esta.",
   "roadmap.howWeDecide.smallTeam.title": "Equipa pequena, ritmo cuidado",
   "roadmap.howWeDecide.smallTeam.desc":
     "Somos duas pessoas de engenharia e uma de design. Preferimos construir devagar e acertar.",
-  "roadmap.someday.title": "Um dia, <em>com honestidade</em>",
+  "roadmap.someday.title": "Um dia, <em>sinceramente</em>",
   "roadmap.someday.sub":
-    "Sem data aqui, porque uma data seria uma promessa que ainda não podemos cumprir. Continua no nosso radar: vota para ajudar uma ideia a subir.",
+    "Aqui não há datas, porque uma data seria uma promessa que ainda não podemos cumprir. Continua tudo no nosso radar: vota para ajudar uma ideia a subir.",
   "roadmap.notBuilding.title": "O que não vamos construir, e <em>porquê</em>",
   "roadmap.notBuilding.sub":
-    "A lista que a maioria das plataformas esconde. Se dizemos que não, recebes uma razão.",
+    "A lista que a maioria das plataformas esconde. Quando dizemos que não, explicamos porquê.",
   "roadmap.notBuilding.votesAsked_one": "{count} pessoa tinha pedido",
   "roadmap.notBuilding.votesAsked_other": "{count} pessoas tinham pedido",
   "roadmap.notBuilding.reason.scope.label": "Fora do que estamos a construir",
   "roadmap.notBuilding.reason.unsafe.label":
     "Não conseguimos construir isto com segurança",
   "roadmap.notBuilding.reason.capacity.label":
-    "Sem capacidade, com honestidade",
+    "Sinceramente, não temos capacidade",
   "roadmap.notBuilding.reason.exists.label": "Já existe noutro lugar",
   "roadmap.notBuilding.reason.harm.label": "O risco supera o valor",
   "roadmap.subpageIndex.title": "Já lançado",
   "roadmap.subpageIndex.changelog.label": "Registo de alterações",
   "roadmap.subpageIndex.changelog.blurb":
-    "Todos os lançamentos, datados: o que já lançámos até agora.",
+    "Cada versão, com data: tudo o que lançámos até agora.",
 
   // ── Arquivo de Imprensa — chrome da página. Títulos/fontes/autores da
   //    cobertura são peças de imprensa de terceiros reais (palavras de
   //    outras pessoas) e ficam em inglês, o mesmo precedente da secção de
   //    cobertura do Press Kit.
-  "pressArchive.hero.backLabel": "Press Kit",
+  "pressArchive.hero.backLabel": "Kit de imprensa",
   "pressArchive.meta.title":
     "Arquivo de imprensa da QueerPulse: tudo o que já escreveram sobre nós",
   "pressArchive.meta.description":
-    "Cobertura da QueerPulse em publicações de terceiros, indexada por ano, incluindo as críticas com as quais discordámos.",
+    "Cobertura da QueerPulse em publicações de terceiros, indexada por ano, incluindo as críticas das quais discordámos.",
   "pressArchive.hero.eyebrow": "Arquivo de cobertura · desde 2024",
   "pressArchive.hero.title": "Tudo o que já escreveram <em>sobre nós.</em>",
   "pressArchive.hero.sub":
-    "Peças sobre a QueerPulse em publicações de terceiros, indexadas por ano. <em>Inclui críticas com as quais discordámos.</em>",
-  "pressArchive.stats.allTime": "Peças, desde sempre",
+    "Peças sobre a QueerPulse em publicações de terceiros, indexadas por ano. <em>Inclui críticas das quais discordámos.</em>",
+  "pressArchive.stats.allTime": "Peças no total",
   "pressArchive.stats.languages": "Idiomas",
   "pressArchive.stats.thisYear": "Este ano",
-  "pressArchive.search.placeholder": "Pesquisar título, fonte, autor",
+  "pressArchive.search.placeholder": "Pesquisa por título, fonte ou autoria",
   "pressArchive.chip.all": "Todas · {count}",
   "pressArchive.chip.features": "Reportagens · {count}",
   "pressArchive.chip.interviews": "Entrevistas · {count}",
@@ -10248,8 +10261,7 @@ export const marketing: Catalog = {
   "pressArchive.loadingMore": "A carregar peças mais antigas…",
   "pressArchive.loadMoreCta": "Carregar cobertura mais antiga",
   "pressArchive.endOfArchive": "É este o arquivo completo, de 2022 até hoje.",
-  "pressArchive.noResults":
-    "Nenhuma cobertura corresponde a esses filtros ainda.",
+  "pressArchive.noResults": "Ainda não há cobertura com esses filtros.",
   "pressArchive.live.title": "O arquivo de imprensa está a ser reunido",
   "pressArchive.live.body":
     "Estamos a reunir a cobertura como deve ser antes de a publicarmos aqui. A preparar um artigo? Fala com a equipa através do kit de imprensa.",
@@ -10300,18 +10312,18 @@ export const marketing: Catalog = {
   "volunteer.hero.eyebrow": "Voluntariado",
   "volunteer.hero.title": "Dá o teu tempo à <em>comunidade</em> à tua volta.",
   "volunteer.hero.sub":
-    "Não precisas de ser ativista. Precisas de duas horas livres e vontade de aparecer. Abaixo estão organizações em Lisboa genuinamente à procura de pessoas como tu.",
+    "Não precisas de ser ativista. Precisas de duas horas livres e vontade de aparecer. Aqui em baixo há organizações de Lisboa que procuram mesmo pessoas como tu.",
   "volunteer.hero.note":
     "As oportunidades são publicadas por quem as organiza. Se alguma te parecer estranha, denuncia-a",
   "volunteer.hero.postCta": "Publicar uma oportunidade",
-  "volunteer.guide.eyebrow": "Novo no ativismo?",
+  "volunteer.guide.eyebrow": "Primeiros passos no ativismo?",
   "volunteer.guide.title": "Queres fazer <em>mais</em> do que um turno?",
   "volunteer.guide.body":
-    "O nosso guia para organizar melhor leva-te de aparecer uma vez a trazer uma competência, sem experiência necessária.",
+    "O nosso guia para organizar melhor leva-te desde a primeira vez que apareces até trazeres uma competência. Não precisas de experiência.",
   "volunteer.guide.cta": "Ler o guia de ativismo",
   "volunteer.empty.noneTitle": "Ainda não há oportunidades publicadas",
   "volunteer.empty.noneDescription":
-    "Ainda nenhuma organização publicou vagas aqui. Se a tua precisa de ajuda, sê a primeira a lançar o convite.",
+    "Ainda nenhuma organização publicou vagas aqui. Se a tua precisa de mãos, lança tu o primeiro apelo.",
   "volunteer.empty.noneCta": "Publicar uma oportunidade",
   "volunteer.empty.filteredTitle":
     "Ainda não há oportunidades com estes filtros",
@@ -10320,10 +10332,10 @@ export const marketing: Catalog = {
   "volunteer.empty.clearCta": "Limpar filtros",
   "volunteer.card.commitLow": "Compromisso baixo",
   "volunteer.card.commitMedium": "Compromisso médio",
-  "volunteer.card.seeRole": "Ver a função",
+  "volunteer.card.seeRole": "Ver a vaga",
   "volunteer.loadingMore": "A carregar mais oportunidades…",
   "volunteer.loadMoreCta": "Carregar mais oportunidades",
-  "volunteer.outro.title": "Queres ligar-te <em>mais a fundo?</em>",
+  "volunteer.outro.title": "Queres envolver-te <em>mais a fundo?</em>",
   "volunteer.outro.sub":
     "Encontra quem já está a trabalhar nas causas que te importam.",
   "volunteer.outro.cta": "Conhece quem faz a mudança",
@@ -10336,14 +10348,14 @@ export const marketing: Catalog = {
   "volunteer.signups.closing": "A encerrar…",
   "volunteer.signups.closeCta": "Encerrar oportunidade",
   "volunteer.signups.reviewCta": "{count} para rever",
-  "volunteer.signups.memberFallback": "Um membro",
+  "volunteer.signups.memberFallback": "Uma pessoa da comunidade",
 
   // ── A contribuição confirmada da própria pessoa (SUS-05). Sessões e horas
   // confirmadas por quem publicou, nunca autodeclaradas.
   "volunteer.contribution.title": "O que já contribuíste",
   "volunteer.contribution.loading": "A carregar o teu voluntariado…",
   "volunteer.contribution.sessions": "sessões confirmadas",
-  "volunteer.contribution.hours": "horas contribuídas",
+  "volunteer.contribution.hours": "horas dadas",
   "volunteer.contribution.lastOne": "Sessão confirmada mais recente: {when}",
   "volunteer.contribution.awaiting_one":
     "1 candidatura aceite está à espera de que quem publicou confirme a sessão.",
@@ -10352,11 +10364,11 @@ export const marketing: Catalog = {
   "volunteer.contribution.empty":
     "Ainda não há nada confirmado. Assim que alguém registar uma sessão em que compareceste, as horas aparecem aqui.",
   "volunteer.contribution.note":
-    "As horas são confirmadas por quem publicou a oportunidade, por isso este registo tem outra pessoa a garanti-lo.",
+    "As horas são confirmadas por quem publicou a oportunidade, por isso é um registo validado por outra pessoa.",
   "volunteer.hero.manageCta": "Gerir candidaturas",
   "volunteerManage.title": "Gerir candidaturas",
   "volunteerManage.sub":
-    "Revê e decide sobre quem se inscreveu nas oportunidades que publicaste, ou que uma comunidade que organizas publicou.",
+    "Revê quem se inscreveu nas oportunidades publicadas por ti ou por uma comunidade que organizas, e decide.",
   "volunteerManage.loading": "A carregar as tuas oportunidades…",
   "volunteerManage.empty":
     "Ainda não publicaste nenhuma oportunidade de voluntariado, e as comunidades que organizas também não.",
@@ -10376,7 +10388,7 @@ export const marketing: Catalog = {
   "volunteerManage.completion.attendedLabel": "Compareceu?",
   "volunteerManage.completion.attendedYes": "Compareceu",
   "volunteerManage.completion.attendedNo": "Não compareceu",
-  "volunteerManage.completion.hoursLabel": "Horas contribuídas",
+  "volunteerManage.completion.hoursLabel": "Horas dadas",
   "volunteerManage.completion.hoursHelper":
     "Até 24 numa sessão. Podes usar quartos de hora.",
   "volunteerManage.completion.confirm": "Confirmar sessão",
@@ -10399,13 +10411,13 @@ export const marketing: Catalog = {
   "postOpportunity.hero.eyebrow": "Voluntariado · Publicar uma vaga",
   "postOpportunity.hero.title": "Publica uma <em>oportunidade.</em>",
   "postOpportunity.hero.sub":
-    "Precisas de pessoas para dar o tempo delas? Descreve a vaga com honestidade (as horas, o compromisso, para quem é indicada) e fica logo visível no quadro de voluntariado.",
+    "Procuras pessoas que queiram dar o seu tempo? Descreve a vaga com honestidade (as horas, o compromisso, para quem é indicada) e ela aparece logo no quadro de voluntariado.",
   "postOpportunity.toast.error":
     "Não foi possível publicar a tua oportunidade. Tenta outra vez.",
   "postOpportunity.toast.errorTitle":
     "Não conseguimos publicar a tua oportunidade",
   "postOpportunity.cause.invalid":
-    "Alguns detalhes não foram aceites. Uma oportunidade pode ligar a um parceiro ou a uma comunidade. Confirma essa ligação e os outros campos e tenta outra vez.",
+    "Alguns detalhes não foram aceites. Uma oportunidade só pode estar associada a uma organização parceira ou a uma comunidade. Confirma essa associação e os outros campos e tenta outra vez.",
   "postOpportunity.success.title": "A tua oportunidade está",
   "postOpportunity.success.em": "publicada.",
   "postOpportunity.success.closeLabel": "Ver o quadro de voluntariado",
@@ -10415,19 +10427,19 @@ export const marketing: Catalog = {
   "postOpportunity.success.step3":
     "Vais ver todas as inscrições na página da vaga",
   "postOpportunity.success.body":
-    "Obrigade por abrires espaço para alguém ajudar. Quem estiver interessade já pode encontrar a tua vaga e mostrar interesse.",
+    "Agradecemos teres aberto espaço para alguém ajudar. Quem tiver interesse já pode encontrar a tua vaga e candidatar-se.",
   "postOpportunity.actions.posting": "A publicar…",
   "postOpportunity.actions.submit": "Publicar oportunidade",
   "postOpportunity.actions.cancel": "Cancelar",
-  "postOpportunity.tip1.title": "Sê honesto sobre o pedido",
+  "postOpportunity.tip1.title": "Sê transparente no que pedes",
   "postOpportunity.tip1.body":
-    "As pessoas voluntárias ficam quando o compromisso corresponde ao que prometeste. Explica as horas, a duração, e qualquer formação, logo à partida.",
+    "As pessoas voluntárias ficam quando o compromisso corresponde ao que prometeste. Deixa claras logo à partida as horas, a duração e qualquer formação.",
   "postOpportunity.tip2.title": "Diz para quem é indicada",
   "postOpportunity.tip2.body":
     "As melhores vagas descrevem a pessoa de que precisam: o temperamento tanto como o currículo. Ajuda as pessoas certas a identificarem-se.",
   "postOpportunity.tip3.title": "O que acontece depois de publicares",
   "postOpportunity.tip3.body":
-    "A tua vaga aparece imediatamente no quadro de voluntariado. As pessoas interessadas inscrevem-se a partir da ficha, e vês a lista ali.",
+    "A tua vaga aparece logo no quadro de voluntariado. Quem tiver interesse inscreve-se na ficha da vaga, e é aí que vês a lista de inscrições.",
   "postOpportunity.commit.low.label": "Compromisso baixo",
   "postOpportunity.commit.low.hint":
     "Umas horas flexíveis por semana, sem prazo fixo.",
@@ -10449,17 +10461,16 @@ export const marketing: Catalog = {
     "Associada agora a esta publicação",
   "postOpportunity.core.orgRequiredNote": "Obrigatório",
   "postOpportunity.core.roleLabel": "Título da função",
-  "postOpportunity.core.rolePlaceholder":
-    "ex.: Voluntário de Sensibilização Comunitária",
+  "postOpportunity.core.rolePlaceholder": "ex.: Sensibilização Comunitária",
   "postOpportunity.core.causeLabel": "Causa",
   "postOpportunity.core.causeHelper":
     "Escolhe até {max}. A primeira que escolheres é a que aparece à frente no teu cartão.",
   "postOpportunity.core.causeHelperLead":
     "Escolhe até {max}. O teu cartão abre com {cause}.",
   "postOpportunity.core.commitLabel": "Nível de compromisso",
-  "postOpportunity.core.timePlaceHeading": "Tempo e local",
-  "postOpportunity.core.timeLabel": "Disponibilidade de tempo",
-  "postOpportunity.core.timePlaceholder": "ex.: 2–4 h/semana",
+  "postOpportunity.core.timePlaceHeading": "Quando e onde",
+  "postOpportunity.core.timeLabel": "Tempo necessário",
+  "postOpportunity.core.timePlaceholder": "ex.: 2 a 4 h/semana",
   "postOpportunity.core.locationLabel": "Local",
   "postOpportunity.core.locationPlaceholder": "ex.: Presencial · Lisboa",
   "postOpportunity.core.spotsLabel": "Vagas disponíveis",
@@ -10471,29 +10482,29 @@ export const marketing: Catalog = {
   "postOpportunity.core.descHelper":
     "Uma ou duas frases mostradas no cartão da vaga.",
   "postOpportunity.core.descPlaceholder":
-    "Com o que é que a pessoa voluntária vai ajudar, em linguagem simples.",
+    "Em que é que a pessoa voluntária vai ajudar, em linguagem simples.",
   "postOpportunity.core.skillsLabel": "Competências",
   "postOpportunity.core.skillsHelper":
     "Separadas por vírgulas, mostradas como hashtags no cartão. Até {maxCount}, {maxLength} carateres cada.",
   "postOpportunity.core.skillsPlaceholder":
     "Comunicação, Idiomas, Apoio a eventos",
   "postOpportunity.edit.eyebrow": "Voluntariado · Editar",
-  "postOpportunity.edit.title": "Editar esta <em>oportunidade.</em>",
+  "postOpportunity.edit.title": "Edita esta <em>oportunidade.</em>",
   "postOpportunity.edit.sub":
-    "Atualiza os detalhes que as pessoas voluntárias veem no anúncio.",
+    "Atualiza os detalhes que as pessoas voluntárias veem na ficha da vaga.",
   "postOpportunity.edit.saveCta": "Guardar alterações",
   "postOpportunity.missing.taskTitle": "Título da tarefa {index}",
   "postOpportunity.missing.commitmentLabel": "Título do compromisso {index}",
   "postOpportunity.missing.heading_one":
     "Falta preencher {count} campo para continuares:",
   "postOpportunity.missing.heading_other":
-    "Faltam preencher {count} campos para continuares:",
+    "Falta preencher {count} campos para continuares:",
   "postOpportunity.edit.saving": "A guardar…",
   "postOpportunity.edit.saveAndCloseCta": "Guardar e fechar",
   "postOpportunity.edit.noChanges": "Ainda não há alterações para guardar.",
   "postOpportunity.edit.successToast": "As tuas alterações estão guardadas.",
   "postOpportunity.edit.errorToast":
-    "Não foi possível guardar as alterações. Tenta novamente.",
+    "Não foi possível guardar as alterações. Tenta outra vez.",
   "postOpportunity.edit.errorTitle": "Não conseguimos guardar as alterações",
   "postOpportunity.cause.notPoster":
     "Só quem publicou esta oportunidade a pode alterar.",
@@ -10507,7 +10518,7 @@ export const marketing: Catalog = {
   "postOpportunity.rich.whyHelper":
     "Um parágrafo por linha. Até {maxCount} parágrafos, {maxLength} carateres cada.",
   "postOpportunity.rich.whyPlaceholder":
-    "O que muda porque alguém apareceu para isto.",
+    "O que muda quando alguém aparece para isto.",
   "postOpportunity.rich.goodForLabel": "Para quem é indicada",
   "postOpportunity.rich.goodForHelper":
     "Um parágrafo por linha. Até {maxCount} parágrafos, {maxLength} carateres cada.",
@@ -10521,7 +10532,7 @@ export const marketing: Catalog = {
   "postOpportunity.rich.taskRemoveAria": "Remover tarefa {index}",
   "postOpportunity.rich.addTask": "Adicionar uma tarefa",
   "postOpportunity.rich.commitmentsHeading": "O compromisso, com honestidade",
-  "postOpportunity.rich.commitLabelAria": "Etiqueta do compromisso {index}",
+  "postOpportunity.rich.commitLabelAria": "Título do compromisso {index}",
   "postOpportunity.rich.commitLabelPlaceholder": "ex.: formação de 6 horas",
   "postOpportunity.rich.commitDetailAria": "Detalhe do compromisso {index}",
   "postOpportunity.rich.commitDetailPlaceholder":
@@ -10531,16 +10542,16 @@ export const marketing: Catalog = {
   "postOpportunity.rich.teamHeading": "Equipa e contacto",
   "postOpportunity.rich.teamIntroLabel": "Apresentação da equipa",
   "postOpportunity.rich.teamIntroPlaceholder":
-    "ex.: 18 voluntários de sensibilização ativos este trimestre.",
-  "postOpportunity.rich.teamLabel": "Membros da equipa",
+    "ex.: 18 pessoas voluntárias ativas na sensibilização este trimestre.",
+  "postOpportunity.rich.teamLabel": "Pessoas da equipa",
   "postOpportunity.rich.teamHelper":
     "Escolhe entre as tuas conexões ou as comunidades a que pertences.",
   "postOpportunity.rich.teamPlaceholder": "Selecionar conexões ou comunidades",
   "postOpportunity.rich.teamGroupConnections": "Conexões",
   "postOpportunity.rich.teamGroupCommunities": "Comunidades",
   "postOpportunity.rich.teamEmpty":
-    "Ligue-se a pessoas ou junte-se a uma comunidade para as adicionar aqui.",
-  "postOpportunity.rich.applyRoleLabel": "Etiqueta da função ao candidatar-se",
+    "Cria conexões com pessoas ou junta-te a uma comunidade para as adicionares aqui.",
+  "postOpportunity.rich.applyRoleLabel": "Nome da função na candidatura",
   "postOpportunity.rich.applyRoleHelper":
     "Por predefinição, “Função · Organização”.",
   "postOpportunity.rich.applyRolePlaceholder":
@@ -10582,22 +10593,22 @@ export const marketing: Catalog = {
     "O <em>compromisso</em>, com honestidade",
   "volunteerDetail.main.goodForTitle": "Para <em>quem é indicada</em>",
   "volunteerDetail.main.teamTitle": "Quem <em>já está cá</em>",
-  "volunteerDetail.main.teamSignedOutCta": "Vê quem está na equipa",
+  "volunteerDetail.main.teamSignedOutCta": "Ver quem está na equipa",
   "volunteerDetail.sidebar.appliedTitle": "Estás <em>na lista.</em>",
   // PRD-262 / PRD-260: ver a nota no catálogo EN.
-  "volunteerDetail.sidebar.connectToMessage": "Conectar com a equipa",
+  "volunteerDetail.sidebar.connectToMessage": "Criar conexão com a equipa",
   "volunteerDetail.sidebar.signInToApply": "Inicia sessão para te candidatares",
   "volunteerDetail.sidebar.messageTeam": "Enviar mensagem à equipa",
   "volunteerDetail.sidebar.withdrawing": "A retirar…",
   "volunteerDetail.sidebar.withdraw": "Retirar o meu interesse",
-  "volunteerDetail.sidebar.applyHeading": "Candidatar",
+  "volunteerDetail.sidebar.applyHeading": "Candidatura",
   "volunteerDetail.sidebar.spotsFilled": "Vagas ocupadas",
-  "volunteerDetail.sidebar.roleFull": "Esta função está completa",
+  "volunteerDetail.sidebar.roleFull": "Esta função já não tem vagas",
   "volunteerDetail.sidebar.sending": "A enviar a tua candidatura…",
-  "volunteerDetail.sidebar.applyCta": "Candidatar",
+  "volunteerDetail.sidebar.applyCta": "Candidatar-me",
   "volunteerDetail.sidebar.askTeam": "Perguntar à equipa",
   "volunteerDetail.sidebar.footNote":
-    "Pessoas voluntárias antigas: <a>usa o perfil do ano passado</a> · salta este ecrã.",
+    "Já fizeste voluntariado connosco? <a>Usa o perfil do ano passado</a> · salta este ecrã.",
   "volunteerDetail.sidebar.partnershipLabel": "Em parceria com",
   "volunteerDetail.sidebar.partnershipLink": "Sobre a parceria",
   "volunteerDetail.sidebar.communityLabel": "Organizado com",
@@ -10605,16 +10616,17 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.editCta": "Editar esta oportunidade",
   "volunteerDetail.sidebar.notRightFit": "Não é a vaga certa para ti?",
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
-  "volunteerDetail.signupModal.ariaLabel": "Candidatar a {role}",
+  "volunteerDetail.signupModal.ariaLabel":
+    "Candidatura de voluntariado para {role}",
   "volunteerDetail.signupModal.eyebrow": "A tua candidatura",
   "volunteerDetail.signupModal.title":
     "Conta-nos porque serias uma boa escolha",
   "volunteerDetail.signupModal.sub":
     "Algumas frases já chegam: a equipa lê todas as candidaturas.",
   "volunteerDetail.signupModal.noteLabel":
-    "Porque queres ser voluntário/a nesta função?",
+    "Porque queres fazer voluntariado nesta função?",
   "volunteerDetail.signupModal.notePlaceholder":
-    "Partilha o que te atrai nisto, ou experiência relevante…",
+    "Partilha o que te atrai nesta vaga ou alguma experiência relevante…",
   "volunteerDetail.signupModal.cancel": "Cancelar",
   "volunteerDetail.signupModal.submit": "Enviar candidatura",
   "volunteerDetail.signupModal.sending": "A enviar…",
@@ -10638,18 +10650,18 @@ export const marketing: Catalog = {
   "volunteerExplainer.title": "A organização acontece <em>na comunidade</em>",
   "volunteerExplainer.titlePlain": "A organização acontece na comunidade",
   "volunteerExplainer.lede":
-    "Qualquer pessoa pode ver as funções aqui. Publicar uma e conhecer quem faz a mudança acontece quando já fazes parte. Eis o que esse lado oferece, e como podes entrar.",
+    "Qualquer pessoa pode ver aqui as vagas. Publicar uma e conhecer quem faz a mudança fica para quem já faz parte. Eis o que esse lado oferece e como podes entrar.",
   "volunteerExplainer.pillars.post.title":
     "Publica uma oportunidade, revê quem se candidata",
   "volunteerExplainer.pillars.post.body":
     "Lança um apelo pela tua organização ou comunidade, lê a nota de cada candidatura e aceita ou recusa a partir de um só painel.",
   "volunteerExplainer.pillars.record.title": "Um registo do que deste",
   "volunteerExplainer.pillars.record.body":
-    "Cada sessão que quem publicou confirma soma-se à tua contagem de sessões e horas, guardada com a tua conta.",
+    "Cada sessão confirmada por quem publicou a vaga soma-se à tua contagem de sessões e horas, guardada na tua conta.",
   "volunteerExplainer.pillars.changemakers.title":
     "Perfis de quem faz o trabalho",
   "volunteerExplainer.pillars.changemakers.body":
-    "Lê como quem faz a mudança em Lisboa começou, e nomeia alguém cujo trabalho merece estar lá.",
+    "Lê como começou quem faz a mudança em Lisboa e propõe alguém cujo trabalho merece estar lá.",
   "volunteerExplainer.requestInviteCta": "Pedir um convite",
   "volunteerExplainer.signInCta": "Já faço parte",
 
@@ -10659,7 +10671,7 @@ export const marketing: Catalog = {
   //    (partnerDetails.dataA/B.tsx) — ficam em inglês, o mesmo precedente da
   //    página de listagem de Parceiros.
   "partnerDetail.loadError":
-    "Não conseguimos carregar este parceiro agora. Tenta outra vez.",
+    "Não conseguimos carregar esta organização parceira agora. Tenta outra vez.",
   "partnerDetail.backCta": "Todos os parceiros",
   "partnerDetail.meta.title": "{name}: uma organização parceira da QueerPulse",
   "partnerDetail.meta.loadingTitle": "A carregar um parceiro · QueerPulse",
@@ -10667,23 +10679,24 @@ export const marketing: Catalog = {
   "partnerDetail.tab.about": "Sobre",
   "partnerDetail.tab.work": "Trabalho conjunto",
   "partnerDetail.tab.timeline": "Linha do tempo",
-  "partnerDetail.tab.how": "Como trabalhamos juntos",
+  "partnerDetail.tab.how": "Como trabalhamos em conjunto",
   "partnerDetail.sidebar.atGlance": "De relance",
   "partnerDetail.sidebar.contactDirectly": "Contacta {name} diretamente",
-  "partnerDetail.sidebar.becomeTitle": "Torna-te parceiro",
+  "partnerDetail.sidebar.becomeTitle": "Faz parceria connosco",
   "partnerDetail.sidebar.becomeBody":
-    "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos pequenos e lentos nisto, escreve-nos.",
+    "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos uma equipa pequena e vamos com calma nisto, escreve-nos.",
   "partnerDetail.sidebar.becomeCta": "Entra em contacto",
 
   // ── Contacto — chrome da página. Todo o conteúdo é escrito pela plataforma
   //    (formulário/vias de contacto).
-  "contact.meta.title": "Contacta a QueerPulse: geral, segurança, imprensa",
+  "contact.meta.title":
+    "Contacta a QueerPulse: geral, segurança, imprensa, parcerias",
   "contact.meta.description":
     "Fala com a QueerPulse, uma equipa pequena que lê e responde a cada mensagem pessoalmente. Vias para perguntas gerais, preocupações de segurança, imprensa e parcerias.",
   "contact.eyebrow": "Lemos tudo",
   "contact.hero.title": "Fala <em>connosco.</em>",
   "contact.hero.body":
-    "Somos uma equipa pequena e respondemos às mensagens nós próprios. Não é um sistema automático, nem uma fila de suporte. Escolhe a via que faz mais sentido para o que precisas de dizer.",
+    "Somos uma equipa pequena e respondemos às mensagens pela nossa mão, de pessoa para pessoa. Escolhe a via que faz mais sentido para o que precisas de dizer.",
   "contact.routes.cta": "Escreve-nos",
   "contact.routes.general.title": "Contacto geral",
   "contact.routes.general.desc":
@@ -10696,7 +10709,7 @@ export const marketing: Catalog = {
     "Jornalistas, equipas de investigação, documentaristas. Temos todo o gosto em falar sobre o que estamos a construir e porquê. Pedimos que partilhes o teu rascunho antes da publicação.",
   "contact.routes.partnerships.title": "Parcerias",
   "contact.routes.partnerships.desc":
-    "Organizações, espaços e comunidades que querem trabalhar com a QueerPulse. Somos seletivos, mas genuinamente interessados nas colaborações certas.",
+    "Organizações, espaços e comunidades que querem trabalhar com a QueerPulse. Escolhemos com cuidado, mas temos interesse genuíno nas colaborações certas.",
   "contact.sent.body": "Vamos lê-la e responder.",
   "contact.sent.safetyBody":
     "Está na fila prioritária da equipa, onde as mensagens de segurança são lidas primeiro. Vamos responder com total discrição.",
@@ -10731,11 +10744,11 @@ export const marketing: Catalog = {
   "contact.form.sendCta": "Enviar",
   "contact.form.sendingCta": "A enviar…",
   "contact.form.error":
-    "Algo correu mal ao enviar. Tenta novamente ou escreve-nos diretamente.",
+    "Algo correu mal ao enviar. Tenta novamente ou envia-nos um email diretamente.",
   "contact.form.errorTitle": "Não conseguimos enviar a tua mensagem",
   "contact.cause.rateLimited":
     "Enviaste várias mensagens no último minuto. Espera um minuto e envia outra vez.",
-  "contact.outro.title": "Construído em Lisboa, <em>com cuidado.</em>",
+  "contact.outro.title": "Feita em Lisboa, <em>com cuidado.</em>",
   "contact.outro.sub":
     "A QueerPulse é uma rede pequena, sustentada pelas pessoas que a usam. O teu feedback ajuda a mantê-la boa.",
   "contact.outro.backCta": "Voltar ao início",
@@ -10744,18 +10757,19 @@ export const marketing: Catalog = {
   //    de PARTNERS (nome/tempo de parceria/descrição) e o testemunho de
   //    Filipa Mendes são conteúdo próprio de cada organização — ficam em
   //    inglês, o mesmo precedente da página de listagem de Parceiros.
-  "forOrgs.meta.title": "Parcerias com a QueerPulse: parcerias operacionais",
+  "forOrgs.meta.title": "Parcerias operacionais com a QueerPulse",
   "forOrgs.meta.description":
     "Como as organizações podem fazer parceria com a QueerPulse através de colaborações operacionais assentes em trabalho partilhado, e como o processo começa.",
   "forOrgs.hero.eyebrow": "Para organizações · parcerias",
-  "forOrgs.hero.title": "Trabalha <em>connosco,</em> não <em>sobre nós.</em>",
+  "forOrgs.hero.title":
+    "Trabalha <em>connosco,</em> <em>de igual para igual.</em>",
   "forOrgs.hero.dek":
-    "As parcerias da QueerPulse são <b>operacionais e práticas</b>. Não vendemos acesso, não fazemos conteúdo patrocinado, nem co-branding pelo simples efeito. <em>Construímos ligações entre organizações que já fazem este trabalho.</em> Abaixo: como são essas ligações na prática, com quem já trabalhamos, e como começar uma conversa.",
+    "As parcerias da QueerPulse são <b>operacionais e práticas</b>. Não vendemos acesso, não fazemos conteúdo patrocinado nem co-branding só por fazer. <em>Construímos ligações entre organizações que já fazem este trabalho.</em> Abaixo: como são essas ligações na prática, com quem já trabalhamos, e como começar uma conversa.",
   "forOrgs.hero.notDoTitle": "O que não fazemos",
   "forOrgs.notDo.prideCampaigns":
     "<b>Campanhas no mês do Orgulho.</b> Nunca as fazemos, em junho ou em qualquer mês. As pessoas da comunidade sairiam, e com razão.",
   "forOrgs.notDo.sellList":
-    "<b>Vender a nossa lista de pessoas.</b> Sem segmentação, sem apresentações pagas.",
+    "<b>Vender a lista de pessoas da comunidade.</b> Sem publicidade direcionada, sem segmentação, sem apresentações pagas.",
   "forOrgs.notDo.sponsoredPosts":
     '<b>"Publicações patrocinadas" ou conteúdo de marca</b> na revista, no feed, ou no podcast.',
   "forOrgs.notDo.rainbowLogos":
@@ -10764,37 +10778,37 @@ export const marketing: Catalog = {
     "<b>Recrutar em teu nome.</b> As empresas publicam vagas no quadro de Vagas como toda a gente.",
   "forOrgs.process.title": "Como é que as parcerias <em>realmente começam</em>",
   "forOrgs.process.sub":
-    "Devagar. Conversado. Muitas vezes por telefone antes de uma proposta escrita. Todo o processo demora normalmente 6 a 10 semanas.",
+    "Com calma. À base de conversa. Muitas vezes com um telefonema antes de qualquer proposta escrita. Todo o processo demora normalmente 6 a 10 semanas.",
   "forOrgs.process.step1.title": "Email ou uma chamada",
   "forOrgs.process.step1.body":
     "Diz-nos o que fazes, o que gostarias, o que não é negociável do teu lado. <em>30 minutos, sem compromisso.</em>",
   "forOrgs.process.step2.title": "Uma reunião presencial",
   "forOrgs.process.step2.body":
-    "Café em Lisboa se estiveres cá, ou vídeo. Falamos sobre como a ligação funcionaria na prática.",
+    "Café em Lisboa se estiveres cá, ou videochamada. Falamos sobre como a ligação funcionaria na prática.",
   "forOrgs.process.step3.title": "Proposta de duas páginas",
   "forOrgs.process.step3.body":
-    "Um de nós faz o rascunho; ambos os lados editam. Inclui <b>condições de saída</b>, cláusulas de discordância pública, e o fluxo de dinheiro.",
+    "Uma das partes escreve o rascunho e ambas editam. Inclui <b>condições de saída</b>, cláusulas de discordância pública, e o fluxo de dinheiro.",
   "forOrgs.process.step4.title": "Aprovação da equipa",
   "forOrgs.process.step4.body":
-    "A nossa equipa analisa cada parceria antes de ela ser listada. <em>Qualquer das partes pode, ainda assim, discordar publicamente.</em>",
+    "A nossa equipa analisa cada parceria antes de a publicar. <em>Qualquer das partes pode, ainda assim, discordar publicamente depois.</em>",
   "forOrgs.proof.title": "Já a trabalhar <em>connosco</em>",
   "forOrgs.proof.sub":
-    "Quatro parceiros representativos, cada um num nível diferente. A lista completa está em Parceiros.",
+    "Quatro parcerias representativas, cada uma num nível diferente. A lista completa está em Parceiros.",
   "forOrgs.proof.viewCta": "Ver parceiro",
   "forOrgs.tiers.title": "O que <em>oferecemos</em>",
   "forOrgs.tiers.sub":
-    "Cada nível é um tipo diferente de relação. Cada candidatura é analisada pela nossa equipa antes de qualquer coisa ser listada.",
+    "Cada nível é um tipo diferente de relação. A nossa equipa analisa cada candidatura antes de publicarmos seja o que for.",
   "forOrgs.tiers.featuredBadge": "Mais escolhido",
   // PRD-266: ver a nota no catálogo EN.
   "forOrgs.apply.lead":
     "Diz-nos quem és e levamos-te à candidatura de parceria. É um formulário só, entra na fila de parcerias, e podes ver em que ponto está a partir da tua conta quando quiseres.",
   "forOrgs.apply.note":
-    "Lemos todas as candidaturas, por mais rascunho que sejam. A resposta chega dentro da app, na tua página de submissões e nas notificações. As decisões nunca vão por email.",
+    "Lemos todas as candidaturas, mesmo as menos polidas. A resposta chega dentro da app, na tua página de submissões e nas notificações. As decisões nunca vão por email.",
   "forOrgs.cta.title": "Começa uma <em>conversa.</em>",
   "forOrgs.cta.list1": "Para parcerias, normalmente ligamos antes de escrever",
   "forOrgs.cta.list2":
     "Candidaturas a financiamento: inclui uma página de resumo",
-  "forOrgs.cta.pressInquiry": "Pedidos de imprensa: <a>Kit de Imprensa</a>",
+  "forOrgs.cta.pressInquiry": "Pedidos de imprensa: <a>Kit de imprensa</a>",
   "forOrgs.cta.partnerQuestion":
     "Já tens uma parceria connosco e alguma pergunta? <a>Contacta-nos</a>",
   "forOrgs.form.orgLabel": "Organização",
@@ -10818,9 +10832,9 @@ export const marketing: Catalog = {
   // diretório, que os fluxos de reivindicação, confirmação e contestação
   // sustentam mesmo.
   "directory.hero.note":
-    "Verificado pela comunidade · mantido por membros e pelos próprios negócios",
+    "Verificado pela comunidade · mantido pelas pessoas da comunidade e pelos próprios negócios",
   "directory.hero.cta": "Regista o teu negócio",
-  "directory.search.placeholder": "Pesquisa por nome, bairro, ou tipo…",
+  "directory.search.placeholder": "Pesquisa por nome, bairro ou tipo…",
   "directory.cat.all": "Tudo",
   "directory.cat.food": "Comida e bebida",
   "directory.cat.design": "Design e artesanato",
@@ -10828,8 +10842,8 @@ export const marketing: Catalog = {
   "directory.cat.space": "Espaços",
   "directory.cat.culture": "Cultura",
   "directory.cat.tech": "Tecnologia",
-  "directory.cat.grooming": "Barbearia e Salão",
-  "directory.cat.fitness": "Ginásio e Fitness",
+  "directory.cat.grooming": "Barbearia e salão",
+  "directory.cat.fitness": "Ginásio e fitness",
   "directory.cat.apparel": "Roupa e acessórios",
   "directory.cat.handmade": "Arte e artesanato",
   "directory.cat.booksMusic": "Livros, zines e música",
@@ -10869,10 +10883,10 @@ export const marketing: Catalog = {
   "directory.countOnline_other":
     "A mostrar <b>{shown}</b> de {total} negócios online",
   // O painel de constelação do separador Online e os seus cartões.
-  "directory.online.eyebrow": "Vendem online",
+  "directory.online.eyebrow": "À venda online",
   "directory.online.title": "Negócios que vão até <em>ti</em>.",
   "directory.online.body":
-    "Lojas, estúdios e consultórios queer e queer-friendly que vivem online, analisados pela nossa equipa como os lugares do mapa.",
+    "Lojas, estúdios e consultórios queer e queer-friendly que funcionam online, analisados pela nossa equipa tal como os lugares do mapa.",
   "directory.online.stat.businesses": "negócios online",
   "directory.online.stat.businesses_one": "negócio online",
   "directory.online.stat.businesses_other": "negócios online",
@@ -10881,7 +10895,7 @@ export const marketing: Catalog = {
   "directory.online.stat.kinds_one": "tipo de trabalho",
   "directory.online.stat.kinds_other": "tipos de trabalho",
   "directory.online.constellationLabel":
-    "Negócios que vendem online à volta da comunidade QueerPulse",
+    "Negócios da comunidade QueerPulse que vendem online",
   "directory.online.nodeLabel": "{name}, {category}",
   "directory.online.more": "+{count} mais abaixo",
   "directory.online.reach": "Encontra-os em",
@@ -10889,7 +10903,7 @@ export const marketing: Catalog = {
   "directory.online.adultRetry": "Carregar de novo as lojas 18+",
   "directory.online.empty.title": "Ainda não há negócios online",
   "directory.online.empty.body":
-    "Tens uma loja, estúdio ou consultório queer que vive online? Adiciona-o e aparece aqui para toda a comunidade.",
+    "Tens uma loja, estúdio ou consultório queer que funciona online? Adiciona-o e aparece aqui para toda a comunidade.",
   "directory.online.emptyFiltered.title": "Nenhum negócio online corresponde",
   "directory.online.emptyFiltered.body":
     "Tenta outra categoria ou outra pesquisa, ou limpa os filtros para ver todos os negócios online.",
@@ -10907,13 +10921,13 @@ export const marketing: Catalog = {
     "Nenhum dos {loaded} lugares carregados até agora corresponde a esses filtros, e ainda estão a chegar mais. Espera um momento, ou limpa os filtros para ver tudo.",
   "directory.noListings.title": "Ainda não há lugares",
   "directory.noListings.body":
-    "Este diretório cresce a partir da comunidade. Se tens ou conheces um lugar queer-owned ou queer-friendly em Lisboa, sê o primeiro a adicioná-lo.",
+    "Este diretório cresce a partir da comunidade. Se tens ou conheces um lugar queer ou queer-friendly em Lisboa, sê a primeira pessoa a adicioná-lo.",
   // Mostrado quando a leitura do diretório falhou. Separado do `noListings`
   // acima: uma falha apresentada como estado vazio diria a quem lê que Lisboa
   // não tem lugares queer-owned (DES-25).
   "directory.loadError.title": "Não foi possível carregar o <em>diretório</em>",
   "directory.loadError.body":
-    "Os lugares não chegaram desta vez. Os teus filtros continuam ativos, por isso tenta novamente daqui a pouco.",
+    "Desta vez os lugares não carregaram. Os teus filtros continuam ativos, por isso tenta novamente daqui a pouco.",
   "directory.clearFilters": "Limpar filtros",
   "directory.clearAll": "Limpar tudo",
   "directory.activeFilters": "Filtrado por",
@@ -10924,7 +10938,7 @@ export const marketing: Catalog = {
   // A mesma opção, com outro nome enquanto a localização está ligada: com uma
   // posição conhecida, a ordem em destaque É a ordem por proximidade.
   "directory.sort.nearest": "Mais perto primeiro",
-  "directory.sort.name": "A–Z",
+  "directory.sort.name": "De A a Z",
   "directory.sort.hood": "Por bairro",
   "directory.badge.queerOwnedVerified": "Negócio queer verificado",
   "directory.badge.queerOwned": "Negócio queer",
@@ -10936,7 +10950,7 @@ export const marketing: Catalog = {
   "directory.ownedBy.bipoc": "Negócio de pessoas BIPOC",
   "directory.ownedBy.migrant": "Negócio de pessoas migrantes",
   "directory.card.badge.openLate": "Aberto até tarde",
-  "directory.card.badge.openSundays": "Aberto ao domingo",
+  "directory.card.badge.openSundays": "Aberto aos domingos",
   "directory.card.badge.hostsGatherings": "Organiza eventos",
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
@@ -10960,7 +10974,7 @@ export const marketing: Catalog = {
     "Espaço seguro verificado, com a verificação anual pendente",
   "directory.card.safeSpacePausedBadge":
     "Selo de espaço seguro em pausa enquanto voltamos a verificar",
-  "directory.card.photoComing": "Foto brevemente",
+  "directory.card.photoComing": "Foto em breve",
   "directory.card.openTill": "Aberto até às {time}",
   "directory.card.closedNow": "Fechado",
   "directory.card.openNow": "Aberto agora",
@@ -10971,7 +10985,7 @@ export const marketing: Catalog = {
   // The city name on listing pages, for a stored "Lisbon" or no city.
   "directory.city.lisbon": "Lisboa",
   "directory.card.saveAriaLabel": "Guardar {name}",
-  "directory.card.unsaveAriaLabel": "Remover {name} das guardadas",
+  "directory.card.unsaveAriaLabel": "Remover {name} dos guardados",
   // As necessidades a que um local respondeu SIM, no cartão da grelha. Nunca
   // uma lista completa: um "não" e um "ninguém nos disse" são respostas
   // diferentes e ambas precisam do espaço que a página do local lhes dá.
@@ -10984,22 +10998,22 @@ export const marketing: Catalog = {
   "directory.submitStrip.title":
     "Conheces um lugar que devia estar <em>aqui?</em>",
   "directory.submitStrip.body":
-    "Se tens ou conheces um negócio queer ou queer-friendly em Lisboa que pertence a este diretório, conta-nos. Revemos todas as sugestões antes de as publicar.",
+    "Se tens ou conheces um negócio queer ou queer-friendly em Lisboa que devia estar neste diretório, conta-nos. Revemos todas as sugestões antes de as publicar.",
   "directory.submitStrip.cta": "Regista o teu negócio",
   "directory.verify.eyebrow": "Verificado pela comunidade",
   "directory.verify.title": "Como funciona a <em>verificação.</em>",
   "directory.verify.lead":
-    "O selo de verificação ganha-se em revisão. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada selo volta à fila de revisão um ano depois de ser atribuído, por isso também o pode perder.",
-  "directory.verify.cta": "Ver a história de confiança completa",
-  "directory.verify.pillar.nominate.title": "Proposto por membros",
+    "O selo de verificação ganha-se na revisão. Uma pessoa da comunidade propõe um espaço, outras visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada selo volta a ser revisto um ano depois de ser atribuído, por isso um espaço também o pode perder.",
+  "directory.verify.cta": "Saber tudo sobre a verificação",
+  "directory.verify.pillar.nominate.title": "Proposto pela comunidade",
   "directory.verify.pillar.nominate.body":
-    "Qualquer membro pode propor um espaço para avaliação.",
+    "Qualquer pessoa da comunidade pode propor um espaço para avaliação.",
   "directory.verify.pillar.review.title": "Avaliado de forma independente",
   "directory.verify.pillar.review.body":
-    "Membros verificados visitam-no e avaliam-no segundo os mesmos critérios: casas de banho, pessoal, acessibilidade e avaliações reais.",
+    "Pessoas verificadas visitam-no e avaliam-no segundo os mesmos critérios: casas de banho, pessoal, acessibilidade e avaliações reais.",
   "directory.verify.pillar.recheck.title": "Reavaliado todos os anos",
   "directory.verify.pillar.recheck.body":
-    "Nenhum selo é permanente. Qualquer membro pode sinalizar um espaço, e o selo pode ser retirado.",
+    "Nenhum selo é permanente. Qualquer pessoa da comunidade pode sinalizar um espaço, e o selo pode ser retirado.",
   "directory.detail.breadcrumbAria": "Trilho de navegação",
   "directory.detail.breadcrumbHome": "Diretório",
   "directory.detail.relatedTitleOnline": "Mais {category} para descobrir",
@@ -11017,7 +11031,7 @@ export const marketing: Catalog = {
   "directory.detail.whatsHere.titleElsewhere": "O que <em>esperar</em>",
   "directory.detail.whatsHere.practicesTitle": "Práticas de inclusão",
   "directory.detail.whatsHere.policyLink": "Ler a política de espaço seguro",
-  "directory.detail.gettingIn.title": "Antes de <em>ir</em>",
+  "directory.detail.gettingIn.title": "Antes de <em>ires</em>",
   "directory.detail.gettingIn.titleOnline": "Convém <em>saber</em>",
   "directory.detail.gettingIn.entry": "Como se entra",
   "directory.detail.gettingIn.cover": "Entrada",
@@ -11046,14 +11060,14 @@ export const marketing: Catalog = {
   "directory.detail.operating.permanently_closed.title":
     "Fechado definitivamente",
   "directory.detail.operating.permanently_closed.lead":
-    "Este negócio fechou de vez. A página fica aqui para que as avaliações, as fotografias e a história que os membros construíram à volta dele se mantenham.",
+    "Este negócio fechou de vez. A página fica aqui para que as avaliações, as fotografias e a história que a comunidade construiu à volta dele se mantenham.",
   "directory.detail.operating.permanently_closed.since": "Fechou a {date}",
   "directory.detail.operating.moved.title": "Este negócio mudou de morada",
   "directory.detail.operating.moved.lead":
     "Já não funciona na morada indicada nesta página.",
   "directory.detail.operating.moved.since": "Mudou a {date}",
   "directory.detail.operating.moved.newAddress": "Nova morada: {address}",
-  "directory.detail.operating.moved.seeSuccessor": "Ver a página de {name}",
+  "directory.detail.operating.moved.seeSuccessor": "Ver o anúncio de {name}",
   "directory.detail.exceptions.title": "Alterações previstas",
   "directory.detail.freshness.confirmedBy":
     "Dados confirmados por {name} a {date}",
@@ -11065,7 +11079,7 @@ export const marketing: Catalog = {
   "directory.detail.freshness.unconfirmedOnline":
     "Ainda ninguém confirmou estes dados. Vale a pena confirmar antes de encomendar ou marcar.",
   "directory.detail.freshness.unconfirmed":
-    "Ainda ninguém confirmou estes dados. Vale a pena confirmar antes de se deslocar.",
+    "Ainda ninguém confirmou estes dados. Vale a pena confirmar antes de ires.",
   "directory.detail.reviewsTitle":
     "Avaliações da comunidade · <em>{count}</em>",
   "directory.detail.reviews.emptySub":
@@ -11076,19 +11090,19 @@ export const marketing: Catalog = {
   "directory.detail.review.starsAria": "A tua avaliação",
   "directory.detail.review.starAria": "{count} de 5 estrelas",
   "directory.detail.review.placeholder":
-    "Conta como foi a tua visita: o que resultou e para quem é.",
+    "Conta como foi a tua visita, o que correu bem e para quem é.",
   "directory.detail.review.starsRequiredHint":
     "Escolhe uma classificação em estrelas para desbloquear o botão.",
   "directory.detail.review.submit": "Publicar avaliação",
   "directory.detail.review.submitting": "A publicar…",
   "directory.detail.review.successToast":
-    "Obrigade. A tua avaliação está publicada.",
+    "Agradecemos. A tua avaliação já está publicada.",
   "directory.detail.review.errorToast":
     "Não foi possível publicar a tua avaliação. Tenta novamente.",
   "directory.detail.review.errorTitle":
     "Não conseguimos publicar a tua avaliação",
   "directory.detail.review.cause.ownListing":
-    "Não podes avaliar um espaço que giras tu.",
+    "Não podes avaliar um espaço gerido por ti.",
   "directory.detail.review.cause.incomplete":
     "A tua avaliação precisa de uma classificação e de algumas palavras. Confirma as duas coisas e tenta outra vez.",
   "directory.detail.review.cause.alreadyReviewed":
@@ -11136,9 +11150,9 @@ export const marketing: Catalog = {
   "directory.detail.reviews.sortNewest": "Mais recentes",
   "directory.detail.reviews.sortHighest": "Melhor avaliadas",
   "directory.detail.reviews.sortLowest": "Pior avaliadas",
-  "directory.detail.reviews.sortedByNewest": "Ordenado por mais recentes.",
-  "directory.detail.reviews.sortedByHighest": "Ordenado por melhor avaliadas.",
-  "directory.detail.reviews.sortedByLowest": "Ordenado por pior avaliadas.",
+  "directory.detail.reviews.sortedByNewest": "Mais recentes primeiro.",
+  "directory.detail.reviews.sortedByHighest": "Melhor avaliadas primeiro.",
+  "directory.detail.reviews.sortedByLowest": "Pior avaliadas primeiro.",
   "directory.detail.reviews.filterAria":
     "Filtrar avaliações por número de estrelas",
   "directory.detail.reviews.filterAll": "Todas as avaliações",
@@ -11161,9 +11175,9 @@ export const marketing: Catalog = {
   "directory.detail.reviews.photoAlt": "Foto da avaliação de {name}",
   "directory.detail.reviews.photoOpen": "Abrir a foto da avaliação de {name}",
   "directory.detail.reviews.sortHelpful": "Mais úteis",
-  "directory.detail.reviews.sortedByHelpful": "Ordenado por mais úteis.",
+  "directory.detail.reviews.sortedByHelpful": "Mais úteis primeiro.",
   "directory.detail.reviews.sortOldest": "Mais antigas",
-  "directory.detail.reviews.sortedByOldest": "Ordenado por mais antigas.",
+  "directory.detail.reviews.sortedByOldest": "Mais antigas primeiro.",
   "directory.detail.reviews.filterContentAria":
     "Filtrar avaliações pelo que incluem",
   "directory.detail.reviews.filterPhotos": "Com fotos",
@@ -11173,8 +11187,7 @@ export const marketing: Catalog = {
   "directory.detail.reviews.clearFilters": "Limpar filtros",
   "directory.detail.reviews.noStarReviews":
     "Ainda não há avaliações de {count} estrelas.",
-  "directory.detail.reviews.ratingAria":
-    "Classificado com {count} em 5 estrelas",
+  "directory.detail.reviews.ratingAria": "Classificação: {count} de 5 estrelas",
   "directory.detail.reviews.readMore": "Ler mais",
   "directory.detail.reviews.showLess": "Mostrar menos",
   "directory.detail.visitTitle": "Onde fica",
@@ -11185,9 +11198,9 @@ export const marketing: Catalog = {
   "directory.detail.mobile.alsoTravelsTo": "Também se desloca a {places}",
   "directory.detail.mobile.meetingPoint": "Ponto de encontro",
   "directory.detail.byAppointmentOnly": "Só por marcação",
-  "directory.detail.accessTitle": "Entrar e ser compreendido",
-  "directory.detail.accessTitleMobile": "Participar e ser compreendido",
-  "directory.detail.accessTitleOnline": "Acesso online e línguas",
+  "directory.detail.accessTitle": "Entrar e fazer-te entender",
+  "directory.detail.accessTitleMobile": "Participar e fazer-te entender",
+  "directory.detail.accessTitleOnline": "Acesso online e idiomas",
   "directory.detail.accessSub":
     "Conforme {name} declarou. Pergunta se precisares de ter a certeza.",
 
@@ -11280,12 +11293,12 @@ export const marketing: Catalog = {
   "directory.detail.baseline.lead":
     "Todos os negócios aqui se comprometeram a acolher e <em>servir pessoas LGBTQ+.</em>",
   "directory.detail.baseline.condition":
-    "Concordar com isso é a condição para sequer aparecer nesta lista. Todos os negócios do diretório assumiram o mesmo compromisso, por isso não vais encontrar isto assinalado numas páginas e ausente noutras.",
+    "Aceitá-lo é a condição para aparecer aqui. Todos os negócios do diretório assumiram o mesmo compromisso, por isso não o vais ver assinalado numas páginas e em falta noutras.",
   "directory.detail.baseline.scope":
-    "O compromisso é sobre a forma como um negócio trata as pessoas que serve, e sobre agir quando alguém no espaço fica aquém. Não dá a ninguém autorização para recusar uma pessoa por quem ela é.",
+    "O compromisso diz respeito à forma como um negócio trata as pessoas que serve e à obrigação de intervir quando alguém no espaço fica aquém. Não autoriza ninguém a recusar uma pessoa por ser quem é.",
   "directory.detail.nearby.title": "A curta distância a pé",
   "directory.detail.nearby.sub":
-    "Outros sítios que podes juntar à mesma noite, medidos a partir de {name}.",
+    "Outros sítios que podes juntar à mesma noite, com a distância contada a partir de {name}.",
   "directory.detail.nearby.metres": "{distance} m",
   "directory.detail.nearby.kilometres": "{distance} km",
   "directory.detail.visitWebsite": "Visitar o site",
@@ -11294,19 +11307,19 @@ export const marketing: Catalog = {
   "directory.detail.loader.ariaLabel": "A abrir este espaço",
   "directory.detail.loader.title": "A abrir este espaço",
   "directory.detail.loader.caption": "Vale a pena ver tudo de uma vez.",
-  "directory.detail.loader.steps.fetchingListing": "A encontrar o negócio",
+  "directory.detail.loader.steps.fetchingListing": "A encontrar o anúncio",
   "directory.detail.loader.steps.preparingDetails": "A organizar os detalhes",
   "directory.detail.loader.steps.loadingPhotos": "A trazer as fotografias",
   "directory.detail.notFound.title": "Não encontrámos este espaço",
   "directory.detail.notFound.body":
-    "Este negócio pode ter sido removido, ou o link pode estar desatualizado. Todos os outros lugares abertos a nós continuam no diretório.",
+    "Este anúncio pode ter sido removido, ou o link pode estar desatualizado. Todos os outros sítios que nos recebem de braços abertos continuam no diretório.",
   "directory.detail.notFound.cta": "Explorar o diretório",
-  "directory.detail.reportCta": "Denunciar este negócio",
+  "directory.detail.reportCta": "Denunciar este anúncio",
   "directory.detail.reportAriaLabel": "Denunciar {name}",
   "directory.detail.reportReview.cta": "Denunciar",
   "directory.detail.reportReview.title": "Denunciar esta avaliação",
   "directory.detail.reportReview.sub":
-    "Diz-nos o que está errado na avaliação de {name}. Um moderador analisa todas as denúncias, e não será dito quem a fez.",
+    "Diz-nos o que está errado na avaliação de {name}. A moderação analisa todas as denúncias, e quem escreveu a avaliação não vai saber quem a denunciou.",
   "directory.detail.reportReview.reasonGroupAria": "Motivo da denúncia",
   "directory.detail.reportReview.cancel": "Cancelar",
   "directory.detail.reportReview.sendCta": "Enviar denúncia",
@@ -11314,7 +11327,7 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.confirmTitle":
     "Agradecemos. <em>Estamos a tratar disso.</em>",
   "directory.detail.reportReview.confirmBody":
-    "Um moderador vai analisar esta avaliação.",
+    "A moderação vai analisar esta avaliação.",
   "directory.detail.reportReview.done": "Concluído",
   "directory.detail.reportReview.errorTitle":
     "Não foi possível enviar a denúncia",
@@ -11334,12 +11347,12 @@ export const marketing: Catalog = {
   "directory.detail.suggestEdit.field.other": "Outra coisa",
   "directory.detail.suggestEdit.messageLabel": "O que deve mudar?",
   "directory.detail.suggestEdit.messagePlaceholder":
-    "Conta o que está desatualizado ou errado, e o que devia dizer em vez disso.",
+    "Diz o que está desatualizado ou errado e o que devia lá estar.",
   "directory.detail.suggestEdit.submit": "Enviar sugestão",
   "directory.detail.suggestEdit.submitting": "A enviar…",
   "directory.detail.suggestEdit.cancel": "Cancelar",
   "directory.detail.suggestEdit.successToast":
-    "Obrigade. Vamos passar isto a quem gere este espaço.",
+    "Agradecemos. Vamos passar isto a quem gere este espaço.",
   "directory.detail.suggestEdit.errorToast":
     "Não foi possível enviar a tua sugestão. Tenta novamente.",
   // O valor de substituição, opcional. O balde "outra coisa" não corresponde a
@@ -11350,13 +11363,13 @@ export const marketing: Catalog = {
     "Deixa em branco se só sabes que algo está errado. A nota por si só já ajuda.",
   "directory.detail.suggestEdit.value.rejected": "{reason}",
   "directory.detail.suggestEdit.value.proseOnly":
-    "Para o resto, descreve a correção na nota acima. Este balde não aceita um valor de substituição.",
+    "Para tudo o resto, descreve a correção na nota acima. Este campo não leva valor de substituição.",
   "directory.detail.suggestEdit.value.attributesHelper":
     "Diz que detalhe está errado e como devia ser, na nota acima.",
   "directory.detail.suggestEdit.value.hours.label":
     "O que é que o horário devia dizer?",
   "directory.detail.suggestEdit.value.hours.placeholder":
-    "Ter a dom, 12:00 às 23:00. Fecha à segunda.",
+    "Terça a domingo, das 12:00 às 23:00. Fechado à segunda.",
   "directory.detail.suggestEdit.value.address.label": "Qual é a morada certa?",
   "directory.detail.suggestEdit.value.address.placeholder":
     "Rua da Prata 42, 1100-052 Lisboa",
@@ -11370,22 +11383,22 @@ export const marketing: Catalog = {
   "directory.detail.suggestEdit.value.description.placeholder":
     "Uma linha sobre o que é o espaço.",
   "directory.detail.contest.cta":
-    "Sugerir uma correção ou reivindicar este negócio",
+    "Sugerir uma correção ou reivindicar este anúncio",
   "directory.detail.contest.ariaLabel":
     "Sugerir uma correção ou reivindicar {name}",
   "directory.detail.contest.title":
-    "Sugerir uma correção ou reivindicar este negócio",
+    "Sugerir uma correção ou reivindicar este anúncio",
   "directory.detail.contest.sub":
     "Como queres ajudar a manter a página de {name} correta?",
   "directory.detail.contest.suggest.title": "Sugerir uma correção",
   "directory.detail.contest.suggest.desc":
     "Algo está desatualizado ou errado: envia uma correção a quem gere o espaço.",
-  "directory.detail.contest.dispute.title": "Contestar este negócio",
+  "directory.detail.contest.dispute.title": "Contestar este anúncio",
   "directory.detail.contest.dispute.desc":
-    "Este espaço foi listado sem o seu consentimento, ou não devia estar aqui.",
-  "directory.detail.contest.claim.title": "Reivindicar este negócio",
+    "Este espaço foi adicionado sem o seu consentimento, ou nem devia estar aqui.",
+  "directory.detail.contest.claim.title": "Reivindicar este anúncio",
   "directory.detail.contest.claim.desc":
-    "És tu que geres este espaço e queres gerir a sua página.",
+    "Estás à frente deste espaço e queres gerir o anúncio.",
   "directory.detail.dispute.ariaLabel": "Denunciar ou contestar {name}",
   "directory.detail.dispute.eyebrow": "Denunciar / contestar",
   "directory.detail.dispute.title": "Contestar <em>{name}</em>",
@@ -11393,14 +11406,14 @@ export const marketing: Catalog = {
     "Um espaço pode ser identificado como nosso sem o saber. Diz-nos o que está errado. Uma pessoa moderadora analisa cada contestação, e nada do que escreveres é partilhado publicamente.",
   "directory.detail.dispute.reasonLabel": "Qual é o problema?",
   "directory.detail.dispute.reasonPlaceholder":
-    "ex.: Somos nós que gerimos este espaço e nunca fomos consultados sobre esta listagem, ou esta informação está errada.",
+    "ex.: Gerimos este espaço e nunca nos perguntaram se queríamos aparecer aqui, ou esta informação está errada.",
   "directory.detail.dispute.emailLabel": "Email de contacto",
   "directory.detail.dispute.emailHelper":
-    "Opcional. Adiciona um se uma pessoa moderadora te dever contactar fora da QueerPulse.",
+    "Opcional. Deixa um se quiseres que a moderação te contacte fora da QueerPulse.",
   "directory.detail.dispute.emailPlaceholder": "tu@exemplo.com",
   "directory.detail.dispute.emailError": "Introduz um email válido.",
   "directory.detail.dispute.note":
-    "Contestar não remove a listagem por si só. Uma pessoa moderadora analisa primeiro.",
+    "Contestar não retira o anúncio só por si. Primeiro, a moderação analisa o caso.",
   "directory.detail.dispute.cancel": "Cancelar",
   "directory.detail.dispute.submit": "Enviar à moderação",
   "directory.detail.dispute.submitting": "A enviar…",
@@ -11409,31 +11422,31 @@ export const marketing: Catalog = {
   "directory.detail.dispute.errorTitle":
     "Não conseguimos registar a tua contestação",
   "directory.detail.dispute.successAriaLabel": "Contestação recebida",
-  "directory.detail.dispute.successTitle": "Obrigade. Estamos",
+  "directory.detail.dispute.successTitle": "Agradecemos. Estamos",
   "directory.detail.dispute.successEm": "a tratar disto.",
   "directory.detail.dispute.successBody":
-    "Uma moderadora vai analisar a tua denúncia sobre {name}. Se deixaste um email, só o usamos se precisarmos de dar seguimento.",
+    "A moderação vai analisar a tua denúncia sobre {name}. Se deixaste um email, só o usamos se precisarmos de dar seguimento.",
   "directory.detail.dispute.doneCta": "Concluído",
-  "directory.detail.claim.ariaLabel": "Reclamar {name}",
-  "directory.detail.claim.eyebrow": "Reclamar esta listagem",
-  "directory.detail.claim.title": "Geres o <em>{name}</em>?",
+  "directory.detail.claim.ariaLabel": "Reivindicar {name}",
+  "directory.detail.claim.eyebrow": "Reivindicar este anúncio",
+  "directory.detail.claim.title": "És tu que geres <em>{name}</em>?",
   "directory.detail.claim.sub":
-    "Conta-nos um pouco sobre ti e uma moderadora analisa o teu pedido. Se tudo bater certo, passas a gerir a listagem: as avaliações, os detalhes, tudo.",
+    "Conta-nos um pouco sobre ti e a moderação analisa o teu pedido. Se tudo bater certo, passas a gerir o anúncio: as avaliações, os detalhes, tudo.",
   "directory.detail.claim.noteLabel":
     "Algo que nos ajude a confirmar que és tu",
   "directory.detail.claim.notePlaceholder":
-    "ex.: Sou a pessoa responsável, aqui está como me podes contactar para confirmar.",
+    "ex.: Sou a pessoa responsável, deixo aqui o meu contacto para confirmarem.",
   "directory.detail.claim.note":
-    "Reclamar não transfere a listagem por si só. Uma pessoa moderadora analisa cada pedido primeiro.",
+    "Reivindicar não transfere o anúncio só por si. Primeiro, a moderação analisa cada pedido.",
   // A promessa da base afirmativa (ClaimAffirmingBaselinePledge), pedida em
   // todos os pedidos, porque reclamar uma listagem significa passares a ser
   // quem a gere.
   "directory.detail.claim.pledgeLead":
-    "Reclamar <b>{name}</b> significa passares a ser quem a gere, com uma promessa à mistura. Todas as listagens do diretório fizeram a mesma.",
+    "Reivindicar <b>{name}</b> faz de ti a pessoa que gere este espaço, com uma promessa associada. Todos os anúncios do diretório assumiram a mesma.",
   "directory.detail.claim.pledgeAgreeTitle":
-    "Concordo com isto, por esta listagem",
+    "Concordo com isto, para este anúncio",
   "directory.detail.claim.pledgeAgreeSub":
-    "O teu acordo fica registado com o teu nome e a data em que aceitas, se o teu pedido for aprovado por uma pessoa moderadora.",
+    "Se a moderação aprovar o teu pedido, a tua aceitação fica registada com o teu nome e a data.",
   "directory.detail.claim.cancel": "Cancelar",
   "directory.detail.claim.submit": "Enviar à moderação",
   "directory.detail.claim.submitting": "A enviar…",
@@ -11443,14 +11456,14 @@ export const marketing: Catalog = {
   "directory.detail.claim.cause.alreadyYours":
     "Este espaço já é teu, por isso não há nada a reivindicar.",
   "directory.detail.claim.cause.hasOwner":
-    "Este espaço já tem dono. Se o anúncio estiver errado ou te representar mal, faz uma contestação e um moderador vai analisar.",
+    "Este espaço já tem uma pessoa responsável. Se o anúncio estiver errado ou te representar mal, abre uma contestação e a moderação analisa o caso.",
   "directory.detail.claim.successAriaLabel": "Pedido recebido",
   "directory.detail.claim.successTitle": "Recebido. Estamos",
   "directory.detail.claim.successEm": "a tratar disto.",
   "directory.detail.claim.successBody":
     "Uma pessoa moderadora vai analisar o teu pedido sobre {name}. Podes ver em que ponto está sempre que quiseres.",
   "directory.detail.claim.doneCta": "Concluído",
-  "directory.detail.claim.policyTitle": "O que ajuda, e quanto tempo demora",
+  "directory.detail.claim.policyTitle": "O que ajuda e quanto tempo demora",
   "directory.detail.claim.policyTurnaround_one":
     "Uma pessoa moderadora decide no prazo de {count} dia depois de enviares.",
   "directory.detail.claim.policyTurnaround_other":
@@ -11461,7 +11474,7 @@ export const marketing: Catalog = {
   "directory.myClaims.backLabel": "Diretório local",
   "directory.myClaims.title": "Pedidos que enviaste",
   "directory.myClaims.sub":
-    "Todos os pedidos que fizeste para assumir uma listagem criada por outra pessoa, e em que ponto está cada um.",
+    "Todos os pedidos que fizeste para assumir um anúncio criado por outra pessoa, e em que ponto está cada um.",
   "directory.myClaims.turnaround_one":
     "Cada pedido é decidido no prazo de {count} dia a contar da data de envio.",
   "directory.myClaims.turnaround_other":
@@ -11472,9 +11485,9 @@ export const marketing: Catalog = {
   "directory.myClaims.announceEmpty": "Ainda não há pedidos.",
   "directory.myClaims.announceCount_one": "1 pedido.",
   "directory.myClaims.announceCount_other": "{count} pedidos.",
-  "directory.myClaims.empty.title": "Ainda não reclamaste nenhuma listagem",
+  "directory.myClaims.empty.title": "Ainda não reivindicaste nenhum anúncio",
   "directory.myClaims.empty.description":
-    "Se geres um espaço que já está no diretório local, abre a página dele e escolhe reclamar a listagem. Uma pessoa moderadora lê todos os pedidos e, se estiver tudo certo, a listagem passa a ser tua: as avaliações, os detalhes, tudo.",
+    "Se geres um espaço que já está no diretório local, abre a página dele e escolhe reivindicar o anúncio. Uma pessoa moderadora lê todos os pedidos e, se estiver tudo certo, o anúncio passa a ser teu: as avaliações, os detalhes, tudo.",
   "directory.myClaims.empty.action": "Ver o diretório local",
   "directory.myClaims.status.pending": "À espera de análise",
   "directory.myClaims.status.approved": "Aprovado",
@@ -11485,12 +11498,12 @@ export const marketing: Catalog = {
   "directory.myClaims.waiting_other": "À espera há {count} dias.",
   "directory.myClaims.decisionDue": "A decisão é esperada até {date}.",
   "directory.myClaims.decisionOverdue":
-    "Este pedido era esperado até {date}. Continua na fila e uma pessoa moderadora vai chegar lá.",
+    "Este pedido era esperado até {date}. Continua na fila e a moderação vai tratar dele.",
   "directory.myClaims.reviewedOn": "Analisado a {date}.",
   "directory.myClaims.outcome.approved":
-    "A listagem é tua. Já a podes editar, e fica com os teus espaços no teu perfil.",
+    "O anúncio é teu. Já o podes editar, e aparece junto dos teus espaços no teu perfil.",
   "directory.myClaims.outcome.declined":
-    "Este pedido não foi aprovado. Podes voltar a reclamar a listagem se entretanto algo tiver mudado.",
+    "Este pedido não foi aprovado. Podes voltar a reivindicar o anúncio se entretanto algo tiver mudado.",
   "directory.myClaims.noteLabel": "O que disseste à moderação",
   "directory.myClaims.viewListing": "Ver {name} no diretório",
   "directory.myClaims.editListing": "Editar {name}",
@@ -11502,7 +11515,7 @@ export const marketing: Catalog = {
   "directory.detail.trust.howLink": "Como funciona a verificação",
   "directory.detail.runBy": "Quem gere: <a>{name}</a>",
   "directory.detail.onQueerPulse": "Na QueerPulse",
-  "directory.detail.addedByMember": "Adicionado por um membro",
+  "directory.detail.addedByMember": "Adicionado por uma pessoa da comunidade",
   // Aparece quando o backend diz `ownerId === null`. DUAS situações levam a
   // isso: a equipa escrever a ficha de um negócio que ainda não se juntou,
   // e um membro apagar a conta, o que limpa a coluna via
@@ -11510,14 +11523,14 @@ export const marketing: Catalog = {
   // fala só do estado da reivindicação e cala quem escreveu a ficha,
   // porque na segunda situação foi um membro. Lê o comentário longo em
   // DirectoryAsideFooter.tsx antes de mexeres nesta frase.
-  "directory.detail.unclaimedNote": "Ainda ninguém reivindicou esta ficha.",
-  "directory.detail.savedByMembers_one": "Guardado por {count} membro",
-  "directory.detail.savedByMembers_other": "Guardado por {count} membros",
+  "directory.detail.unclaimedNote": "Ainda ninguém reivindicou este anúncio.",
+  "directory.detail.savedByMembers_one": "Guardado por {count} pessoa",
+  "directory.detail.savedByMembers_other": "Guardado por {count} pessoas",
   "directory.detail.membersHereLately": "Pessoas por aqui recentemente",
   "directory.detail.upcomingHere": "Próximos eventos aqui",
   "directory.detail.upcomingRunBy": "Em breve",
   "directory.detail.upcoming.addToCalendar": "Adicionar ao calendário:",
-  "directory.detail.upcoming.googleCalendar": "Google Calendário",
+  "directory.detail.upcoming.googleCalendar": "Google Calendar",
   "directory.detail.upcoming.downloadIcs": ".ics",
   "directory.detail.upcoming.runBy": "Dinamizado por {name}",
   "directory.detail.galleryAria": "Fotos de {name}",
@@ -11525,7 +11538,7 @@ export const marketing: Catalog = {
   "directory.detail.reposition.open": "Reposicionar fotos",
   "directory.detail.reposition.toolbarAria": "Posições das fotos",
   "directory.detail.reposition.hint":
-    "Arrasta cada foto para a mover dentro da moldura e usa o controlo para aproximar. Quem visita vê exatamente o que vês aqui.",
+    "Arrasta cada foto para a mover dentro da moldura e usa a barra de zoom para a aproximar. Quem visita vê exatamente o que vês aqui.",
   "directory.detail.reposition.viewAria": "Pré-visualizar em",
   "directory.detail.reposition.viewDesktop": "Computador",
   "directory.detail.reposition.viewPhone": "Telemóvel",
@@ -11536,8 +11549,8 @@ export const marketing: Catalog = {
   "directory.detail.reposition.frameAria": "Foto {index} de {count}: {alt}",
   "directory.detail.reposition.frameAriaNoAlt": "Foto {index} de {count}",
   "directory.detail.reposition.frameHint":
-    "Arrasta para mover a foto. As setas também a movem, e mais ou menos aproxima.",
-  "directory.detail.reposition.zoomAria": "Aproximar a foto {index}",
+    "Arrasta para mover a foto. As setas também a movem, e as teclas mais e menos fazem zoom.",
+  "directory.detail.reposition.zoomAria": "Zoom da foto {index}",
   "directory.detail.reposition.zoomValue": "{zoom}x",
   "directory.detail.reposition.discard.title":
     "Descartar as alterações às posições das fotos?",
@@ -11564,15 +11577,15 @@ export const marketing: Catalog = {
   "directory.detail.reposition.error.signedOut":
     "A tua sessão terminou. Inicia sessão outra vez e depois guarda as posições.",
   "directory.detail.reposition.error.rateLimited":
-    "Demasiadas gravações em pouco tempo. Espera um minuto e guarda outra vez.",
+    "Guardaste demasiadas vezes em pouco tempo. Espera um minuto e guarda outra vez.",
   "directory.detail.reposition.error.offline":
     "Estás sem ligação. As tuas alterações continuam aqui, guarda outra vez quando a ligação voltar.",
   "directory.detail.reposition.error.unreachable":
-    "Não foi possível chegar ao QueerPulse. As tuas alterações continuam aqui, tenta guardar outra vez.",
+    "Não foi possível contactar a QueerPulse. As tuas alterações continuam aqui, tenta guardar outra vez.",
   "directory.detail.reposition.error.server":
     "O nosso servidor teve um problema ao guardar as posições. As tuas alterações continuam aqui, tenta outra vez.",
   "directory.detail.reposition.error.refused":
-    "O servidor recusou esta gravação (erro {status}). As tuas alterações continuam aqui.",
+    "O servidor recusou guardar as alterações (erro {status}). As tuas alterações continuam aqui.",
   "directory.detail.lightboxClose": "Fechar",
   "directory.detail.prevPhoto": "Foto anterior",
   "directory.detail.nextPhoto": "Foto seguinte",
@@ -11607,10 +11620,10 @@ export const marketing: Catalog = {
   "directory.detail.ownerBand.freshness.stale":
     "Confirmaste estes dados pela última vez a {date}, há mais de seis meses. Uma verificação rápida mantém o horário fiável.",
   "directory.detail.ownerBand.freshness.unconfirmed":
-    "Ainda não confirmaste estes dados. Quem visita é avisado disso, por isso vale a pena a primeira verificação.",
+    "Ainda não confirmaste estes dados. A página avisa quem a visita, por isso vale a pena fazer já a primeira verificação.",
   "directory.detail.ownerBand.confirm": "Confirmar que os dados estão certos",
   "directory.detail.ownerBand.confirmToast":
-    "Obrigado. O teu anúncio passa a constar como confirmado hoje.",
+    "Agradecemos. O teu anúncio passa a aparecer como confirmado hoje.",
   "directory.detail.ownerBand.confirmError":
     "Não foi possível guardar. Tenta novamente.",
   "directory.detail.ownerBand.confirmErrorTitle":
@@ -11659,15 +11672,16 @@ export const marketing: Catalog = {
   "arriving.meta.description":
     "Um guia prático para pessoas LGBTQ+ recém-chegadas a Lisboa: bairros acolhedores, recursos de saúde, noções básicas de habitação, organizações-chave, e primeiros passos.",
   "arriving.hero.eyebrow": "Acabaste de chegar a Lisboa",
-  "arriving.hero.title": "Queer e acabaste de chegar? <em>Bem-vinde.</em>",
+  "arriving.hero.title":
+    "És queer e chegaste agora a Lisboa? <em>Boas-vindas.</em>",
   "arriving.hero.body":
-    "Esta cidade tem muito para nós: uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer trabalho sério, e pessoas que te vão mesmo ajudar a assentar. Aqui fica o que convém saber primeiro.",
+    "Esta cidade tem muito para nós: uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer trabalho sério, e pessoas que te vão mesmo ajudar a instalar-te. Aqui fica o que convém saber primeiro.",
   "arriving.review.verify":
     "Rendas, taxas e horários mudam mais depressa do que esta página. Trata tudo o que está aqui como ponto de partida e confirma o detalhe atual junto do próprio serviço.",
 
   // Aparece ao lado de um link cujo destino precisa de conta na QueerPulse,
   // para que quem não tem sessão iniciada saiba antes de clicar.
-  "arriving.memberOnly": "Só para membros",
+  "arriving.memberOnly": "Só para a comunidade",
 
   // ── Checklist de chegada. As marcações ficam guardadas apenas no browser
   //    de quem lê; não há conta por trás nem nada é enviado para lado nenhum.
@@ -11681,15 +11695,15 @@ export const marketing: Catalog = {
     "Guardado neste browser, neste aparelho. Nada é enviado para lado nenhum e mais ninguém consegue ver.",
   "arriving.checklist.steps.nif.title": "Tirar o NIF",
   "arriving.checklist.steps.nif.note":
-    "O número de identificação fiscal. Quase nada funciona sem ele: contrato de arrendamento, contrato de telemóvel, conta bancária. Faz disto o primeiro recado.",
+    "O número de identificação fiscal. Quase nada funciona sem ele: contrato de arrendamento, contrato de telemóvel, conta bancária. Trata disto primeiro.",
   "arriving.checklist.steps.nif.linkLabel": "Vistos e residência",
   "arriving.checklist.steps.sns.title": "Inscrever-te no SNS",
   "arriving.checklist.steps.sns.note":
     "Assim que tiveres NIF, inscreve-te no teu Centro de Saúde. É isso que te dá direito a médico de família no Serviço Nacional de Saúde.",
   "arriving.checklist.steps.sns.linkLabel": "sns.gov.pt",
-  "arriving.checklist.steps.doctor.title": "Pedir médico afirmativo",
+  "arriving.checklist.steps.doctor.title": "Pedir médico de família afirmativo",
   "arriving.checklist.steps.doctor.note":
-    "O SNS cobre cuidados de saúde trans, e o médico que te calha continua a fazer muita diferença. Trata disto enquanto nada é urgente.",
+    "O SNS cobre cuidados de saúde trans, e calhar com a pessoa certa no consultório continua a fazer muita diferença. Trata disto enquanto nada é urgente.",
   "arriving.checklist.steps.doctor.linkLabel": "O guia de saúde trans",
   "arriving.checklist.steps.room.title": "Começar a procurar quarto cedo",
   "arriving.checklist.steps.room.note":
@@ -11698,7 +11712,7 @@ export const marketing: Catalog = {
   "arriving.checklist.steps.rights.title":
     "Ler os teus direitos antes de assinar",
   "arriving.checklist.steps.rights.note":
-    "O que a senhoria pode pedir, quanto pode ser a caução, e o que tem de ficar por escrito. Dez minutos agora poupam-te um ano mau.",
+    "O que a pessoa senhoria pode pedir, quanto pode ser a caução, e o que tem de ficar por escrito. Dez minutos agora poupam-te um ano mau.",
   "arriving.checklist.steps.rights.linkLabel": "Direitos de quem arrenda",
   "arriving.checklist.steps.crisis.title": "Guardar um número para um dia mau",
   "arriving.checklist.steps.crisis.note":
@@ -11707,12 +11721,12 @@ export const marketing: Catalog = {
   "arriving.checklist.steps.gathering.title":
     "Ir a um evento nas primeiras duas semanas",
   "arriving.checklist.steps.gathering.note":
-    "Ler sobre uma cidade é uma coisa diferente de estar numa sala dela. Uma noite muda a sensação do mês inteiro.",
+    "Ler sobre uma cidade é muito diferente de estar lá, numa sala cheia de gente. Uma noite muda a forma como vives o mês inteiro.",
   "arriving.checklist.steps.gathering.linkLabel": "O que aí vem",
   "arriving.checklist.steps.community.title":
     "Entrar numa comunidade que se encontre presencialmente",
   "arriving.checklist.steps.community.note":
-    "Escolhe a que se encontra perto de ti. Aparecer duas vezes é o que transforma desconhecidos em pessoas que conheces.",
+    "Escolhe a que se encontra perto de ti. Aparecer duas vezes é o que transforma caras novas em pessoas que conheces.",
   "arriving.checklist.steps.community.linkLabel": "Ver comunidades",
 
   // ── Bairros. As notas costumavam mencionar pessoas que só existem no
@@ -11724,7 +11738,7 @@ export const marketing: Catalog = {
     "A vida queer de Lisboa espalha-se por vários núcleos, cada um com o seu carácter. Aqui fica um guia honesto de onde está a comunidade.",
   "arriving.hoods.principeReal.tag": "Social · Criativo",
   "arriving.hoods.principeReal.body":
-    "O coração da vida social queer em Lisboa. Um jardim, bares de vinhos, livrarias independentes, e muita gente criativa queer. O mais visível dos núcleos e o mais fácil de entrar.",
+    "O coração da vida social queer em Lisboa. Um jardim, bares de vinhos, livrarias independentes, e muita gente criativa queer. O mais visível dos núcleos e o mais fácil de explorar.",
   "arriving.hoods.principeReal.note":
     "Um bom primeiro passeio se quiseres sentir a cidade sem planear nada.",
   "arriving.hoods.mouraria.tag": "Ativismo · Comunidade",
@@ -11734,7 +11748,7 @@ export const marketing: Catalog = {
     "Onde grande parte da organização e da ajuda mútua acontece de facto.",
   "arriving.hoods.bairroAlto.tag": "Noite · Artes",
   "arriving.hoods.bairroAlto.body":
-    "Bares pequenos, salas de música independente, noites longas, e uma longa história queer. É onde a Lisboa queer vai dançar.",
+    "Bares pequenos, salas de música independente, noites que acabam tarde, e uma longa história queer. É onde a Lisboa queer vai dançar.",
   "arriving.hoods.bairroAlto.note":
     "Barulhento depois das 22h e muito sossegado de manhã.",
   "arriving.hoods.caisDoSodre.tag": "Criativo · Beira-rio",
@@ -11766,7 +11780,7 @@ export const marketing: Catalog = {
   "arriving.health.cards.sns.linkLabel": "sns.gov.pt",
   "arriving.health.cards.trans.title": "Cuidados afirmativos trans",
   "arriving.health.cards.trans.body":
-    "A Lei de Identidade de Género portuguesa é das mais progressistas da Europa, e o SNS presta cuidados de saúde trans, hormonas incluídas. Encontrar médico à vontade com isto é a parte que vale a pena preparar.",
+    "A Lei de Identidade de Género portuguesa é das mais progressistas da Europa, e o SNS presta cuidados de saúde trans, hormonas incluídas. Encontrar profissionais de saúde à vontade com isto é a parte para a qual vale a pena preparar-te.",
   "arriving.health.cards.trans.linkLabel": "O guia de saúde trans",
   "arriving.health.cards.mental.title": "Apoio em saúde mental",
   "arriving.health.cards.mental.body":
@@ -11780,7 +11794,7 @@ export const marketing: Catalog = {
   // ── Habitação. O cartão do mercado não tem link de propósito: descreve uma
   //    situação em vez de apontar para um destino.
   "arriving.housing.eyebrow": "Habitação",
-  "arriving.housing.title": "Encontrar onde viver, <em>com honestidade.</em>",
+  "arriving.housing.title": "Encontrar onde viver, <em>sem rodeios.</em>",
   "arriving.housing.intro":
     "O mercado de habitação em Lisboa é caro e competitivo. Aqui fica um retrato honesto do que esperar, e de onde pedir ajuda.",
   "arriving.housing.cards.market.title": "Como é o mercado, na realidade",
@@ -11789,11 +11803,11 @@ export const marketing: Catalog = {
   "arriving.housing.cards.board.title":
     "Quartos partilhados dentro da comunidade",
   "arriving.housing.cards.board.body":
-    "As pessoas membros publicam quartos, subarrendamentos e partilhas no quadro de habitação da QueerPulse. As melhores pistas chegam quase sempre por pessoas.",
+    "As pessoas da comunidade publicam quartos, subarrendamentos e partilhas no quadro de habitação da QueerPulse. As melhores pistas chegam quase sempre por pessoas.",
   "arriving.housing.cards.board.linkLabel": "O quadro de habitação",
   "arriving.housing.cards.rights.title": "Saber o que estás a assinar",
   "arriving.housing.cards.rights.body":
-    "A lei do arrendamento dá-te mais do que uma senhoria apressada te vai dizer: quanto pode ser a caução, que pré-aviso te é devido, e o que tem de ficar por escrito.",
+    "A lei do arrendamento dá-te mais do que uma pessoa senhoria com pressa te vai dizer: quanto pode ser a caução, que pré-aviso te é devido, e o que tem de ficar por escrito.",
   "arriving.housing.cards.rights.linkLabel": "Direitos de quem arrenda",
   "arriving.housing.cards.visas.title": "Residência e casa ao mesmo tempo",
   "arriving.housing.cards.visas.body":
@@ -11820,7 +11834,7 @@ export const marketing: Catalog = {
   // ── Primeiro passo. Encontros reais que aí vêm, ao vivo nos dois modos.
   //    Esta secção anunciava um cartão fixo datado de 14 de junho de 2026.
   "arriving.firstStep.eyebrow": "O teu primeiro passo",
-  "arriving.firstStep.title": "Vem a algo <em>presencialmente.</em>",
+  "arriving.firstStep.title": "Vai a alguma coisa <em>em pessoa.</em>",
   "arriving.firstStep.intro":
     "Tudo o que está acima ajuda. O que muda mesmo um primeiro mês é entrar numa sala. Aqui fica o que aí vem.",
   "arriving.firstStep.eventMeta": "{hood} · {time}",
@@ -11833,7 +11847,7 @@ export const marketing: Catalog = {
   "arriving.firstStep.emptyCta": "Ver a página de eventos",
   "arriving.firstStep.allCta": "Ver todos os eventos",
   "arriving.firstStep.locked":
-    "O calendário de eventos vive dentro da QueerPulse. Quem é membro vê o que há esta semana e diz que vai.",
+    "O calendário de eventos vive dentro da QueerPulse. Quem faz parte vê o que há esta semana e diz que vai.",
   "arriving.firstStep.lockedCta": "Pedir um convite",
 
   // ── Comunidades. Comunidades reais, da mesma fonte que a grelha de
@@ -11841,13 +11855,13 @@ export const marketing: Catalog = {
   "arriving.commQuick.eyebrow": "Por onde começar",
   "arriving.commQuick.title": "Comunidades para <em>quem chega agora.</em>",
   "arriving.commQuick.intro":
-    "Comunidades fáceis de entrar que se encontram presencialmente, aqui na cidade. Escolhe uma e aparece duas vezes.",
+    "Comunidades boas para quem está a começar, que se encontram presencialmente aqui na cidade. Escolhe uma e aparece duas vezes.",
   "arriving.commQuick.browseCta": "Ver todas as comunidades",
   "arriving.commQuick.loading": "A carregar comunidades",
   "arriving.commQuick.empty":
-    "Não há nada aberto a quem chega agora neste momento. A lista completa continua a valer uma vista de olhos.",
+    "Neste momento não há nada aberto a quem acabou de chegar. Mesmo assim, vale a pena ver a lista completa.",
   "arriving.commQuick.locked":
-    "As comunidades vivem dentro da QueerPulse, para que as pessoas membros falem umas com as outras sem plateia.",
+    "As comunidades vivem dentro da QueerPulse, para que as pessoas da comunidade falem umas com as outras sem plateia.",
   "arriving.commQuick.lockedCta": "Pedir um convite",
 
   "arriving.outro.title": "Vamos conhecer <em>a comunidade?</em>",
@@ -11869,14 +11883,14 @@ export const marketing: Catalog = {
   //    conteúdo/testemunho, mesmo precedente de `directoryPlaces.ts`.
   "visas.meta.title": "Vistos e residência em Portugal para pessoas LGBTQ+",
   "visas.meta.description":
-    "Informação da comunidade sobre vias de visto na UE e fora da UE, autorizações de residência, e imigração para casais do mesmo sexo em Portugal, com advogados de imigração avaliados. Isto não é aconselhamento jurídico.",
+    "Informação da comunidade sobre vias de visto na UE e fora da UE, autorizações de residência, e imigração para casais do mesmo sexo em Portugal, com escritórios de advocacia de imigração com avaliações. Isto não é aconselhamento jurídico.",
   "visas.hero.eyebrow": "Vistos & Residência · Portugal",
   "visas.hero.title":
     "Portugal, legalmente. <em>O teu caminho para a residência.</em>",
   "visas.hero.sub":
     "Informação prática sobre vistos, residência e cidadania em Portugal, e aquilo que os casais e famílias queer precisam de saber que a informação oficial nem sempre esclarece.",
   "visas.hero.note":
-    "Informação da comunidade. Isto não é aconselhamento jurídico. A lei da imigração muda, confirma sempre com uma pessoa especialista.",
+    "Informação da comunidade. Isto não é aconselhamento jurídico. A lei da imigração muda, por isso confirma sempre com uma pessoa especialista.",
   "visas.review.verify":
     "Confirma antes de entregares o pedido. Esta página indica as regras e o organismo que publica cada valor, e não escreve limiares de rendimento nem taxas: esses são revistos todos os anos, e um número desatualizado é a única coisa aqui que te pode custar um pedido.",
   "visas.routePicker.label": "De onde estás a <em>partir?</em>",
@@ -11916,9 +11930,9 @@ export const marketing: Catalog = {
     "Acesso total ao SNS (com NISS), o direito de trabalhar sem restrições, o direito de votar em eleições locais e europeias, e o direito de trazer familiares. Após 5 anos de residência legal contínua, podes pedir a residência permanente. A cidadania por naturalização pede 7 anos de residência legal a nacionais da UE desde a alteração da Lei da Nacionalidade em 2026: vê o separador Cidadania.",
   "visas.tabs.eu.card3.eyebrow": "Pessoa parceira de fora da UE",
   "visas.tabs.eu.card3.title":
-    "Reunificação familiar para casais do mesmo sexo",
+    "Reagrupamento familiar para casais do mesmo sexo",
   "visas.tabs.eu.card3.body":
-    "Quando já tiveres o teu Certificado de Registo, o teu cônjuge ou pessoa parceira de fora da UE pede na AIMA o cartão de residência de familiar de cidadão da União. Vai precisar do teu certificado, de prova da relação e do passaporte. Este processo segue as regras europeias de livre circulação, que não fixam um prazo mínimo de residência antes do pedido, e a lei dá à AIMA até 3 meses para emitir o cartão. Confirma os documentos e os tempos de espera atuais em aima.gov.pt.",
+    "Quando já tiveres o teu Certificado de Registo, a tua pessoa parceira ou cônjuge de fora da UE pede na AIMA o cartão de residência de familiar de cidadão da União. Vai precisar do teu certificado, de prova da relação e do passaporte. Este processo segue as regras europeias de livre circulação, que não fixam um prazo mínimo de residência antes do pedido, e a lei dá à AIMA até 3 meses para emitir o cartão. Confirma os documentos e os tempos de espera atuais em aima.gov.pt.",
   "visas.tabs.eu.card3.tag": "Direitos plenos de parceria",
   "visas.tabs.eu.card3.link": "Detalhes do visto para pessoa parceira",
 
@@ -11935,19 +11949,19 @@ export const marketing: Catalog = {
   "visas.tabs.d7.card2.eyebrow": "O que obténs",
   "visas.tabs.d7.card2.title": "Condições do visto",
   "visas.tabs.d7.card2.body":
-    "Visto inicial válido por 4 meses; é trocado por uma autorização de residência de 2 anos (Autorização de Residência) à chegada a Portugal. Renovável por 3 anos, seguida de residência permanente. Tens de passar pelo menos 6 meses por ano em Portugal para a manter. Pessoas parceiras e filhos a cargo podem ser incluídos.",
+    "Visto inicial válido por 4 meses; é trocado por uma autorização de residência de 2 anos (Autorização de Residência) à chegada a Portugal. Renovável por 3 anos, seguida de residência permanente. Tens de passar pelo menos 6 meses por ano em Portugal para a manter. Pessoas parceiras e descendentes a cargo podem ser incluídas.",
   "visas.tabs.d7.card3.eyebrow": "Impostos",
   "visas.tabs.d7.card3.title": "Regime fiscal do IFICI",
   "visas.tabs.d7.card3.body":
-    "Portugal substituiu o regime do NHR no final de 2023 pelo regime do IFICI (informalmente chamado NHR 2.0). Está agora direcionado a profissões elegíveis (tecnologia, investigação, artes). Quem tem apenas o D7 deixou de qualificar automaticamente. O teu rendimento será tributado como o de qualquer pessoa residente comum. Procura aconselhamento fiscal antes de te mudares.",
+    "Portugal substituiu o regime do NHR no final de 2023 pelo regime do IFICI (informalmente chamado NHR 2.0). Está agora direcionado a profissões elegíveis (tecnologia, investigação, artes). Quem tem apenas o D7 deixou de ter acesso automático. O teu rendimento será tributado como o de qualquer pessoa residente comum. Procura aconselhamento fiscal antes de te mudares.",
   "visas.tabs.d7.card3.link": "Contactos de aconselhamento fiscal",
   "visas.tabs.d7.step1.title": "Pede no consulado português do teu país",
   "visas.tabs.d7.step1.text":
-    "Submete comprovativo de rendimento, registo criminal limpo, seguro de saúde e comprovativo de alojamento em Portugal.",
-  "visas.tabs.d7.step1.note": "Processamento de 2–8 semanas",
+    "Entrega comprovativo de rendimento, registo criminal limpo, seguro de saúde e comprovativo de alojamento em Portugal.",
+  "visas.tabs.d7.step1.note": "Processamento de 2 a 8 semanas",
   "visas.tabs.d7.step2.title": "Chega a Portugal com o teu visto",
   "visas.tabs.d7.step2.text":
-    "Tens 4 meses para marcar a tua marcação na AIMA e trocar o visto por uma autorização de residência.",
+    "Tens 4 meses para fazer a marcação na AIMA e trocar o visto por uma autorização de residência.",
   "visas.tabs.d7.step3.title": "Marcação na AIMA",
   "visas.tabs.d7.step3.text":
     "A AIMA (que substituiu o SEF em 2023) trata das autorizações de residência. Marca com antecedência: as esperas podem ser longas. Leva todos os documentos originais.",
@@ -11959,21 +11973,21 @@ export const marketing: Catalog = {
   "visas.tabs.d8.label": "Nómada Digital (D8)",
   "visas.tabs.d8.headTitle": "Visto de <em>Nómada Digital (D8)</em>",
   "visas.tabs.d8.headText":
-    "O visto D8 de Portugal, introduzido em 2022, foi pensado para pessoas que trabalham remotamente para, ou prestam serviços a, empresas fora de Portugal. Tem um limiar de rendimento mais alto do que o D7, mas é cada vez mais popular.",
+    "O visto D8 de Portugal, introduzido em 2022, foi pensado para quem trabalha remotamente para empresas fora de Portugal ou lhes presta serviços. Tem um limiar de rendimento mais alto do que o D7, mas é cada vez mais popular.",
   "visas.tabs.d8.card1.eyebrow": "Requisitos",
   "visas.tabs.d8.card1.title": "O que precisas para te qualificares",
   "visas.tabs.d8.card1.body":
-    "Comprovativo de emprego remoto ou contratos com clientes não portugueses. O requisito de rendimento é normalmente quatro vezes o salário mínimo português, e esse salário é revisto todos os anos, por isso tira o valor atual da AIMA e não de uma página que escreva um montante. Seguro de saúde com cobertura em Portugal. Registo criminal limpo. NIF português (nalguns casos pode ser obtido antes do visto).",
-  "visas.tabs.d8.card1.tag": "Limiar de rendimento mais alto do que o D7",
+    "Comprovativo de emprego remoto ou contratos com clientes não portugueses. O requisito de rendimento é normalmente quatro vezes o salário mínimo português, e esse salário é revisto todos os anos, por isso confirma o valor atual na AIMA, mesmo que outra página indique um montante. Seguro de saúde com cobertura em Portugal. Registo criminal limpo. NIF português (nalguns casos pode ser obtido antes do visto).",
+  "visas.tabs.d8.card1.tag": "Limiar mais alto do que o D7",
   "visas.tabs.d8.card1.link": "O limiar atual em aima.gov.pt",
   "visas.tabs.d8.card2.eyebrow": "Processo",
   "visas.tabs.d8.card2.title": "Como pedir",
   "visas.tabs.d8.card2.body":
-    "Tal como o D7, os pedidos são feitos no consulado português antes da chegada. À chegada, trocas por uma autorização de residência de 2 anos. Familiares (incluindo pessoas parceiras do mesmo sexo) podem ser incluídos no pedido, ou juntar-se a ti mais tarde por reagrupamento familiar, que normalmente pede que tenhas a tua autorização há 2 anos: vê o separador “Trazer uma Pessoa Parceira”.",
+    "Tal como o D7, os pedidos são feitos no consulado português antes da chegada. À chegada, trocas por uma autorização de residência de 2 anos. Podes incluir familiares no pedido, incluindo pessoas parceiras do mesmo sexo, ou pedir mais tarde o reagrupamento familiar, que normalmente exige que tenhas a tua autorização há 2 anos: vê o separador “Trazer uma Pessoa Parceira”.",
   "visas.tabs.d8.card3.eyebrow": "IFICI / Impostos",
   "visas.tabs.d8.card3.title": "Tratamento fiscal",
   "visas.tabs.d8.card3.body":
-    "Quem tem D8 e trabalha em funções elegíveis de tecnologia ou investigação pode qualificar-se para o regime IFICI (taxa fixa de 20% de IRS durante até 10 anos). Não é automático: tens de te candidatar e a tua profissão tem de ser elegível. Confirma com uma pessoa especialista fiscal antes de assumir que vais beneficiar.",
+    "Quem tem D8 e trabalha em funções elegíveis de tecnologia ou investigação pode qualificar-se para o regime IFICI (taxa fixa de 20% de IRS durante até 10 anos). Não é automático: tens de te candidatar e a tua profissão tem de ser elegível. Confirma com uma pessoa especialista fiscal antes de assumires que vais beneficiar.",
   "visas.tabs.d8.card3.link": "Aconselhamento fiscal",
 
   "visas.tabs.work.label": "Vistos de Trabalho",
@@ -11990,9 +12004,9 @@ export const marketing: Catalog = {
     "Visto de 180 dias que te permite vir a Portugal à procura de trabalho. Exige comprovativo de fundos suficientes e qualificações. Assim que encontrares emprego, podes converter para um visto de trabalho D1 sem sair do país. Útil se quiseres chegar antes de garantir emprego.",
   "visas.tabs.work.card2.tag": "180 dias para encontrar trabalho",
   "visas.tabs.work.card3.eyebrow": "Trabalho independente",
-  "visas.tabs.work.card3.title": "Trabalhador independente (D2)",
+  "visas.tabs.work.card3.title": "Profissional independente (D2)",
   "visas.tabs.work.card3.body":
-    "Para freelancers e profissionais independentes que já identificaram clientes ou oportunidades em Portugal. Vais precisar de um plano de negócio e prova de rendimento previsto. Registares-te como trabalhador independente (recibos verdes) é a estrutura fiscal que a maioria das pessoas residentes por conta própria utiliza.",
+    "Para freelancers e profissionais independentes que já identificaram clientes ou oportunidades em Portugal. Vais precisar de um plano de negócio e prova de rendimento previsto. Abrir atividade nas Finanças em regime de recibos verdes é a estrutura fiscal que a maioria das pessoas residentes por conta própria usa.",
 
   "visas.tabs.partner.label": "Trazer uma Pessoa Parceira",
   "visas.tabs.partner.headTitle": "Trazer uma <em>pessoa parceira</em>",
@@ -12007,25 +12021,25 @@ export const marketing: Catalog = {
   "visas.tabs.partner.card2.eyebrow": "Sem casamento",
   "visas.tabs.partner.card2.title": "Pessoas parceiras sem estatuto formal",
   "visas.tabs.partner.card2.body":
-    "Sem casamento, a coabitação de longo prazo (união de facto, normalmente 2 ou mais anos) é reconhecida para efeitos de reunificação familiar. Vais precisar de documentar a relação: contas partilhadas, contas conjuntas, correspondência. Casar ou constituir união de facto primeiro é muitas vezes administrativamente mais simples.",
+    "Sem casamento, a coabitação de longo prazo (união de facto, normalmente 2 ou mais anos) é reconhecida para efeitos de reagrupamento familiar. Tens de documentar a relação: despesas partilhadas, contas conjuntas, correspondência. Casar ou formalizar a união primeiro costuma ser mais simples do ponto de vista administrativo.",
   "visas.tabs.partner.card3.eyebrow":
     "Pessoa cidadã da UE + pessoa parceira de fora da UE",
   "visas.tabs.partner.card3.title": "O acórdão Coman",
   "visas.tabs.partner.card3.body":
-    "O acórdão do Tribunal de Justiça da União Europeia de 2018 (Coman v. Roménia) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo de pessoas cidadãs da UE para efeitos de livre circulação, mesmo em países que não têm casamento entre pessoas do mesmo sexo. Isto significa que uma pessoa cidadã da UE pode trazer o seu cônjuge do mesmo sexo para Portugal, independentemente da posição do seu país de origem.",
+    "O acórdão do Tribunal de Justiça da União Europeia de 2018 (Coman v. Roménia) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo de pessoas cidadãs da UE para efeitos de livre circulação, mesmo em países que não têm casamento entre pessoas do mesmo sexo. Na prática, uma pessoa cidadã da UE pode trazer o seu cônjuge do mesmo sexo para Portugal, independentemente da posição do seu país de origem.",
   "visas.tabs.partner.card3.tag": "Proteção do tribunal da UE",
   "visas.tabs.partner.card3.link":
     "Fala com um advogado ou advogada de imigração",
-  "visas.tabs.partner.card4.eyebrow": "Reunificação familiar",
+  "visas.tabs.partner.card4.eyebrow": "Reagrupamento familiar",
   "visas.tabs.partner.card4.title": "O processo para pessoas parceiras",
   "visas.tabs.partner.card4.body":
-    "Quando já tiveres a tua autorização de residência, pedes na AIMA o reagrupamento familiar com a tua pessoa parceira. Desde a alteração à Lei de Estrangeiros em outubro de 2025, precisas normalmente de 2 anos de residência legal antes de fazeres o pedido. O prazo desce para 15 meses se viveram juntos pelo menos 18 meses antes da mudança, e não há espera se tiverem filhos menores em comum ou se tiveres uma autorização para atividade altamente qualificada, um Cartão Azul UE ou uma autorização de residência para investimento. A AIMA pede o teu título de residência, prova da relação, alojamento adequado e meios de subsistência sem apoios sociais, e tem até 9 meses para decidir, prorrogáveis uma vez em casos excecionais. Confirma as regras em vigor em aima.gov.pt antes de planeares à volta de uma data.",
+    "Quando já tiveres a tua autorização de residência, pedes na AIMA o reagrupamento familiar com a tua pessoa parceira. Desde a alteração à Lei de Estrangeiros em outubro de 2025, precisas normalmente de 2 anos de residência legal antes de fazeres o pedido. O prazo desce para 15 meses se tiverem vivido em conjunto pelo menos 18 meses antes da mudança, e não há espera se tiverem filhos menores em comum ou se tiveres uma autorização para atividade altamente qualificada, um Cartão Azul UE ou uma autorização de residência para investimento. A AIMA pede o teu título de residência, prova da relação, alojamento adequado e meios de subsistência sem apoios sociais, e tem até 9 meses para decidir, prorrogáveis uma vez em casos excecionais. Confirma as regras em vigor em aima.gov.pt antes de fazeres planos com base numa data.",
 
   "visas.tabs.citizenship.label": "Cidadania",
   "visas.tabs.citizenship.headTitle":
     "Cidadania & <em>residência permanente</em>",
   "visas.tabs.citizenship.headText":
-    "A residência permanente abre ao fim de 5 anos de residência legal. A naturalização como cidadã ou cidadão português demora mais: a Lei da Nacionalidade mudou em 2026 e pede agora 10 anos, ou 7 para nacionais da UE e de países de língua oficial portuguesa.",
+    "Ao fim de 5 anos de residência legal, podes pedir a residência permanente. Obter a cidadania portuguesa por naturalização demora mais: a Lei da Nacionalidade mudou em 2026 e pede agora 10 anos, ou 7 para nacionais da UE e de países de língua oficial portuguesa.",
   "visas.tabs.citizenship.card1.eyebrow": "Prazo",
   "visas.tabs.citizenship.card1.title": "7 a 10 anos até à cidadania",
   "visas.tabs.citizenship.card1.body":
@@ -12035,11 +12049,11 @@ export const marketing: Catalog = {
   "visas.tabs.citizenship.card1.body2":
     "Precisas também de um teste ou certificado de língua e cultura portuguesas, de conhecer os direitos e deveres de cidadania e de não teres condenação transitada em julgado em pena de prisão superior a 3 anos pelos crimes graves que a lei enumera.",
   "visas.tabs.citizenship.card1.body3":
-    "Os pedidos que já estavam pendentes quando as novas regras entraram em vigor, em maio de 2026, seguem a regra anterior dos 5 anos. Estas regras foram reescritas em 2025 e 2026, por isso lê o texto em vigor antes de planeares à volta de uma data.",
+    "Os pedidos que já estavam pendentes quando as novas regras entraram em vigor, em maio de 2026, seguem a regra anterior dos 5 anos. Estas regras foram reescritas em 2025 e 2026, por isso lê o texto em vigor antes de fazeres planos com base numa data.",
   "visas.tabs.citizenship.card2.eyebrow": "Residência permanente",
   "visas.tabs.citizenship.card2.title": "Alternativa à cidadania",
   "visas.tabs.citizenship.card2.body":
-    "Também podes pedir a residência permanente (Autorização de Residência Permanente) após 5 anos de residência legal. Dá-te o direito de ficar por tempo indeterminado, pede português básico e mantém a tua nacionalidade tal como está. Algumas pessoas escolhem esta via para ficarem só com o passaporte de origem.",
+    "Também podes pedir a residência permanente (Autorização de Residência Permanente) após 5 anos de residência legal. Dá-te o direito de ficar por tempo indeterminado, exige português básico e não mexe na tua nacionalidade. Algumas pessoas escolhem esta via para ficarem só com o passaporte de origem.",
   "visas.tabs.citizenship.card3.eyebrow": "Língua portuguesa",
   "visas.tabs.citizenship.card3.title": "Teste de língua e cultura",
   "visas.tabs.citizenship.card3.body":
@@ -12052,29 +12066,29 @@ export const marketing: Catalog = {
   "visas.ground.nif.label": "Primeiro",
   "visas.ground.nif.title": "NIF, número de contribuinte",
   "visas.ground.nif.body":
-    "Precisas de um Número de Identificação Fiscal para quase tudo: abrir uma conta bancária, assinar um contrato de arrendamento, comprar um plano de telemóvel. Consegue-o nas Finanças com o teu passaporte. Pessoas cidadãs da UE: leva o passaporte. Fora da UE: leva o passaporte + comprovativo de morada. Também podes usar um serviço de representante fiscal se ainda não estiveres em Portugal.",
+    "Precisas de um Número de Identificação Fiscal para quase tudo: abrir uma conta bancária, assinar um contrato de arrendamento, contratar um tarifário de telemóvel. Pede-o nas Finanças com o teu passaporte. Pessoas cidadãs da UE: leva o passaporte. Fora da UE: leva o passaporte + comprovativo de morada. Se ainda não estiveres em Portugal, também podes usar um serviço de representante fiscal.",
   "visas.ground.niss.label": "Segundo",
   "visas.ground.niss.title": "NISS, segurança social",
   "visas.ground.niss.body":
-    "O teu Número de Identificação de Segurança Social dá-te acesso aos cuidados de saúde do SNS e regista as tuas contribuições. Regista-te no Centro de Emprego e Formação Profissional ou na Segurança Social da tua área. Necessário antes de poderes aceder a consultas do SNS.",
+    "O teu Número de Identificação de Segurança Social dá-te acesso aos cuidados de saúde do SNS e regista as tuas contribuições. Regista-te no Centro de Emprego e Formação Profissional ou na Segurança Social da tua área. Precisas dele para teres acesso a consultas do SNS.",
   "visas.ground.aima.label": "Local-chave",
   "visas.ground.aima.title": "AIMA",
   "visas.ground.aima.body":
-    "A AIMA (Agência para a Integração, Migrações e Asilo) substituiu o SEF em outubro de 2023. Trata de todas as autorizações de residência, renovações e reunificação familiar. Marca consultas online em aima.gov.pt. As esperas são longas, marca assim que chegares.",
+    "A AIMA (Agência para a Integração, Migrações e Asilo) substituiu o SEF em outubro de 2023. Trata de todas as autorizações de residência, renovações e pedidos de reagrupamento familiar. Faz o agendamento online em aima.gov.pt. As esperas são longas, por isso marca assim que chegares.",
   "visas.ground.sns.label": "Saúde",
   "visas.ground.sns.title": "Acesso ao SNS",
   "visas.ground.sns.body":
-    "Regista-te num médico de família (Centro de Saúde) da tua área, usando o teu cartão AR ou o certificado de registo da UE, mais o NISS. Os tempos de espera são longos. Muitas pessoas da comunidade usam seguro de saúde privado a par do acesso ao SNS. Consulta a página de Bem-estar para prestadores de cuidados de saúde queer-friendly.",
+    "Inscreve-te no Centro de Saúde da tua área para teres médico de família, com o teu cartão AR ou o certificado de registo da UE, mais o NISS. Os tempos de espera são longos. Muitas pessoas da comunidade usam seguro de saúde privado a par do acesso ao SNS. Na página de Bem-estar encontras profissionais de saúde queer-friendly.",
 
   "visas.lawyers.title":
-    "Advocacia de imigração <em>avaliada pela comunidade</em>",
+    "<em>Advocacia de imigração</em> avaliada pela comunidade",
   "visas.lawyers.emptyBody":
-    "Estamos a construir um diretório de advogados de imigração LGBTQ+-friendly avaliado pela comunidade. Ainda não está pronto. Até estar, as melhores recomendações vêm de membros que já passaram pelo processo. Pergunta no tópico do fórum sobre vistos.",
+    "Estamos a construir um diretório de advocacia de imigração LGBTQ+-friendly, avaliado pela comunidade. Ainda não está pronto. Até lá, as melhores recomendações vêm de pessoas que já passaram pelo processo. Pergunta no tópico do fórum sobre vistos.",
   "visas.lawyers.forumCta": "Pergunta no fórum de vistos",
 
   "visas.outro.title": "Estás a construir uma vida <em>aqui.</em>",
   "visas.outro.sub": "A papelada é temporária. A comunidade é permanente.",
-  "visas.outro.settlingCta": "Guia de instalação",
+  "visas.outro.settlingCta": "Guia para te instalares",
   "visas.outro.askCta": "Pergunta à comunidade",
 
   // ── Mapa (guia da cidade queer de Lisboa) — chrome de página/filtros/
@@ -12100,11 +12114,11 @@ export const marketing: Catalog = {
   "map.sidebar.venueCount_one": "<b>{count}</b> espaço",
   "map.sidebar.venueCount_other": "<b>{count}</b> espaços",
   "map.sidebar.clear": "Limpar",
-  "map.sidebar.backToAll": "Todos os locais",
+  "map.sidebar.backToAll": "Todos os espaços",
   "map.sidebar.empty": "Nenhum espaço corresponde a estes filtros.",
   "map.jumpToList": "Ver a lista · {count}",
-  "map.fullscreen.enter": "Ecrã inteiro",
-  "map.fullscreen.exit": "Sair do ecrã inteiro",
+  "map.fullscreen.enter": "Ecrã completo",
+  "map.fullscreen.exit": "Sair do ecrã completo",
   "map.venueCard.beenCount_one": "<b>{count}</b> pessoa já esteve aqui",
   "map.venueCard.beenCount_other": "<b>{count}</b> pessoas já estiveram aqui",
   "map.venueCard.beenThere": "Já estiveste aqui",
@@ -12125,13 +12139,13 @@ export const marketing: Catalog = {
   "local.view.online": "Online",
   "local.view.toggleAria": "Escolher vista de lista, mapa ou online",
   "local.card.seeFullDetails": "Ver detalhes",
-  "local.filter.searchPlaceholder": "Procurar espaços e locais…",
+  "local.filter.searchPlaceholder": "Pesquisar espaços e locais…",
   "local.filter.categoryLabel": "Tipo de lugar",
   "local.filter.refine": "Refinar",
   "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",
   "local.filter.ownedByLabel": "Quem gere",
   "local.filter.ownedByNote":
-    "Nas palavras de quem é dono. Escolhe mais do que uma para ver os sítios que correspondem a qualquer uma.",
+    "Nas palavras de quem gere cada espaço. Escolhe mais do que uma para ver os sítios que correspondem a qualquer uma.",
   "local.filter.filters": "Filtros",
   "local.filter.hideFilters": "Ocultar filtros",
   "local.filter.quickFiltersLabel": "Filtros rápidos",
@@ -12145,7 +12159,7 @@ export const marketing: Catalog = {
     "Mostra os locais que responderam sim a tudo o que escolheres. Um local sobre o qual ninguém perguntou fica de fora dos resultados.",
   "local.filter.entryLabel": "Como entrar",
   "local.filter.entryNote":
-    "Escolhe um. Um espaço sobre o qual ninguém nos disse nada fica de fora.",
+    "Escolhe uma opção. Um espaço sobre o qual ninguém nos disse nada fica de fora.",
   "local.filter.payLabel": "Formas de pagamento",
   "local.filter.payNote":
     "Mostra espaços que aceitam todas as formas que escolheres.",
@@ -12158,7 +12172,7 @@ export const marketing: Catalog = {
   "local.filter.moreFilters.show": "Mostrar mais filtros",
   "local.filter.languages.showMore": "Mostrar mais idiomas",
   "local.filter.languages.showFewer": "Mostrar menos idiomas",
-  "local.filter.moreFilters.hide": "Esconder mais filtros",
+  "local.filter.moreFilters.hide": "Ocultar mais filtros",
   "local.filter.moreFilters.label": "Detalhes e comodidades",
   "local.filter.moreFilters.note":
     "Mostra espaços que disseram sim a tudo o que escolheres.",
@@ -12168,11 +12182,11 @@ export const marketing: Catalog = {
   "local.filter.sortNoteHood":
     "Os bairros estão ordenados pela proximidade, e os locais dentro de cada um também.",
   "local.filter.sortNoteName":
-    "Mantém-se alfabético. A tua localização continua a pôr o tempo a pé em cada cartão.",
+    "Ordem alfabética. A tua localização continua a mostrar o tempo a pé em cada cartão.",
   // ── Usar a minha localização. Opcional, reversível e nunca sai do dispositivo.
   "local.nearMe.on": "Usar a minha localização",
   "local.nearMe.off": "Desligar a minha localização",
-  "local.nearMe.asking": "A encontrar-te…",
+  "local.nearMe.asking": "A localizar-te…",
   "local.nearMe.privacy": "A tua localização fica neste dispositivo.",
   "local.nearMe.onNote":
     "Os tempos a pé estão ligados. A tua localização fica neste dispositivo.",
@@ -12239,7 +12253,7 @@ export const marketing: Catalog = {
   "local.nearMe.help.system.ios":
     "O teu dispositivo pode desligar a localização para o Safari inteiro. Abre <b>Definições</b>, depois <b>Privacidade e segurança</b>, depois <b>Serviços de localização</b>, e muda <b>Sites no Safari</b> para <b>Durante a utilização da app</b>.",
   "local.nearMe.help.system.android":
-    "O teu telemóvel pode desligar a localização por completo. Desliza a partir do topo do ecrã e confirma que a <b>Localização</b> está ligada.",
+    "O teu telemóvel pode desligar a localização por completo. Desliza para baixo a partir do topo do ecrã e confirma que a <b>Localização</b> está ligada.",
   "local.nearMe.help.system.other":
     "O teu dispositivo também pode desligar a localização para todas as apps. Vê as definições de privacidade ou de localização e carrega em <b>Tentar de novo</b>.",
   "local.nearMe.help.tryAgain": "Tentar de novo",
@@ -12272,9 +12286,9 @@ export const marketing: Catalog = {
     "A constituição da QueerPulse em linguagem simples: finalidade, adesão, votos de confiança, decisões e moderação como funcionam hoje, com as regras ainda em redação assinaladas como tal.",
   "constitution.artNumLabel": "Artigo",
   "constitution.hero.eyebrow": "Constituição · rascunho de trabalho",
-  "constitution.hero.title": "As regras, <em>até onde estão escritas.</em>",
+  "constitution.hero.title": "O <em>regulamento,</em> até onde está escrito.",
   "constitution.hero.dek1":
-    "A carta de trabalho do <b>coletivo de voluntários</b> que gere a QueerPulse. Não é um documento legal, e ainda não existe nenhuma empresa ou associação registada por trás da QueerPulse.",
+    "A carta de trabalho do <b>coletivo de pessoas voluntárias</b> que gere a QueerPulse. Não é um documento jurídico, e ainda não existe nenhuma empresa ou associação registada por trás da QueerPulse.",
   "constitution.hero.dek2":
     "É intencionalmente curta e descreve apenas como a QueerPulse funciona hoje. Quando uma regra ainda está a ser redigida, o artigo diz-o. Tudo o que exige mais detalhe está no Código de Conduta.",
 
@@ -12283,35 +12297,35 @@ export const marketing: Catalog = {
   "constitution.art1.clause1":
     "A QueerPulse existe para prestar <strong>apoio profissional, social, cultural e material</strong> a pessoas LGBTQ+ na cidade de Lisboa.",
   "constitution.art1.clause2":
-    "A QueerPulse funciona <strong>sem fins lucrativos,</strong> como um coletivo de voluntários. Ainda não é uma empresa nem uma associação registada. Se isso alguma vez mudar, este documento muda com ela.",
+    "A QueerPulse funciona <strong>sem fins lucrativos,</strong> como um coletivo de pessoas voluntárias. Ainda não é uma empresa nem uma associação registada. Se isso alguma vez mudar, este documento muda também.",
 
-  "constitution.art2.toc": "II · Pessoas-membro",
-  "constitution.art2.title": "Pessoas-membro",
+  "constitution.art2.toc": "II · Pessoas da comunidade",
+  "constitution.art2.title": "Pessoas da comunidade",
   "constitution.art2.clause1":
-    "É <strong>pessoa-membro</strong> quem entrou por convite ou através de um pedido analisado pela nossa equipa, e aceitou o Código de Conduta.",
+    "Faz parte da <strong>comunidade</strong> quem entrou por convite ou através de um pedido analisado pela nossa equipa e aceitou o Código de Conduta.",
   "constitution.art2.clause2":
-    "Ser pessoa-membro não tem custo nem escalões, por agora. Todas as pessoas-membro têm o mesmo estatuto.",
+    "Fazer parte da comunidade não tem custo nem escalões, por agora. Todas as pessoas da comunidade têm o mesmo estatuto.",
   "constitution.art2.clause3":
-    "Nenhum estatuto de uma pessoa-membro (incluindo idade, nacionalidade, língua, identidade, ocupação ou visibilidade) afeta os seus direitos de voto ou o tratamento em moderação.",
+    "Nenhuma característica de uma pessoa da comunidade (incluindo idade, nacionalidade, língua, identidade, ocupação ou visibilidade) afeta os seus direitos de voto ou o modo como a moderação a trata.",
 
   "constitution.art3.toc": "III · Votos de confiança",
   "constitution.art3.title": "Votos de confiança",
   "constitution.art3.clause1":
-    "As pessoas-membro existentes podem dar um <strong>voto de confiança</strong> a novas pessoas-membro e convidar pessoas para entrar.",
+    "Quem já faz parte da comunidade pode dar um <strong>voto de confiança</strong> a pessoas novas e convidar pessoas para entrar.",
   "constitution.art3.clause2":
-    "Cada pessoa-membro tem um limite mensal de convites e um limite diário de votos de confiança. A nossa equipa define os limites, e eles existem para que um voto de confiança continue a ter peso.",
+    "Cada pessoa da comunidade tem um limite mensal de convites e um limite diário de votos de confiança. A nossa equipa define os limites, e eles existem para que um voto de confiança continue a ter peso.",
 
   "constitution.art4.toc": "IV · Decisões",
   "constitution.art4.title": "Como se <em>decide</em>",
   "constitution.art4.clause1":
-    "A QueerPulse ainda não tem assembleia. Um órgão que decida em nome de todas as pessoas-membro está <strong>a ser redigido,</strong> e até existir este documento não descreve nenhum.",
+    "A QueerPulse ainda não tem assembleia. Um órgão que decida em nome de toda a comunidade está <strong>a ser redigido,</strong> e, até existir, este documento não descreve nenhum.",
   "constitution.art4.clause2":
-    "As pessoas-membro já podem abrir uma moção na página de Governação. Uma moção precisa de coassinaturas de outras pessoas-membro para chegar a votação, a nossa equipa analisa-a primeiro, e cada moção mostra a sua contagem e o seu resultado.",
+    "As pessoas da comunidade já podem abrir uma moção na página de Governação. Uma moção precisa de coassinaturas de outras pessoas da comunidade para chegar a votação, a nossa equipa analisa-a primeiro, e cada moção mostra a sua contagem e o seu resultado.",
 
   "constitution.art5.toc": "V · Equipa e conselho",
   "constitution.art5.title": "A equipa e o <em>conselho</em>",
   "constitution.art5.clause1":
-    "O funcionamento do dia a dia, moderação incluída, está a cargo da equipa de voluntários.",
+    "O funcionamento do dia a dia, moderação incluída, está a cargo da equipa voluntária.",
   "constitution.art5.clause2":
     "Um conselho consultivo está <strong>a ser nomeado.</strong> Os seus lugares aparecem na página de Governação assim que forem preenchidos. Grupos permanentes para áreas como apoios ou trabalho editorial ainda estão a ser redigidos.",
 
@@ -12320,25 +12334,25 @@ export const marketing: Catalog = {
   "constitution.art6.clause1":
     "As regras sobre como o dinheiro é recebido e gasto, incluindo quanto tem de ir para programas da comunidade, estão <strong>a ser redigidas.</strong> Este documento ainda não fixa nenhuma percentagem.",
   "constitution.art6.clause2":
-    "As finanças que a equipa publicar aparecem na secção de Finanças da página de Governação e no Relatório de Transparência. Os valores são introduzidos pela equipa de voluntários.",
+    "As finanças que a equipa publicar aparecem na secção de Finanças da página de Governação e no Relatório de Transparência. Os valores são introduzidos pela equipa voluntária.",
 
   "constitution.art7.toc": "VII · Expressão",
   "constitution.art7.title": "Expressão e <em>moderação</em>",
   "constitution.art7.clause1":
     "A comunidade é moderada de acordo com o Código de Conduta.",
   "constitution.art7.clause2":
-    "<strong>A QueerPulse não age sobre as críticas que lhe são feitas.</strong> O Código de Conduta inclui a crítica à plataforma, incluindo a crítica a quem a gere, entre as coisas que a moderação deixa em paz.",
+    "<strong>A QueerPulse não toma medidas contra as críticas que lhe são feitas.</strong> O Código de Conduta põe a crítica à plataforma, e também a quem a gere, entre as coisas em que a moderação não toca.",
   "constitution.art7.clause3":
-    "As decisões de moderação podem ser contestadas <strong>uma vez,</strong> junto de uma pessoa moderadora que não tenha participado na decisão original. A parte das decisões revertidas em recurso é contada a partir do registo de moderação e publicada no Relatório de Transparência.",
+    "As decisões de moderação podem ser contestadas <strong>uma vez,</strong> junto de uma pessoa moderadora que não tenha participado na decisão original. A proporção de decisões revertidas em recurso é contada a partir do registo de moderação e publicada no Relatório de Transparência.",
 
   "constitution.art8.toc": "VIII · Remoção",
   "constitution.art8.title": "Remoção",
   "constitution.art8.clause1":
-    "As pessoas-membro só podem ser removidas através da escada de aplicação descrita na secção §04 do Código de Conduta.",
+    "Uma pessoa da comunidade só pode ser removida através da escada de aplicação descrita no §04 do Código de Conduta.",
   "constitution.art8.clause2":
     "A remoção pode ser contestada <strong>uma vez,</strong> junto de uma pessoa moderadora que não tenha participado na decisão original. Os prazos estão no Código de Conduta.",
   "constitution.art8.clause3":
-    "Os dados de uma pessoa-membro removida são tratados como descreve a Política de Privacidade.",
+    "Os dados de uma pessoa removida da comunidade são tratados como descreve a Política de Privacidade.",
 
   "constitution.art9.toc": "IX · Ainda em redação",
   "constitution.art9.title": "Ainda <em>em redação</em>",
@@ -12373,18 +12387,18 @@ export const marketing: Catalog = {
   "resourceLibrary.stats.categories": "categorias",
   "resourceLibrary.stats.communityLabel": "Comunidade",
   "resourceLibrary.stats.maintained": "mantida",
-  "resourceLibrary.search.placeholder": "Pesquisar recursos…",
+  "resourceLibrary.search.placeholder": "Pesquisa recursos…",
   "resourceLibrary.results_one": "{count} resultado",
   "resourceLibrary.results_other": "{count} resultados",
   "resourceLibrary.empty":
     "Nenhum recurso corresponde. Tenta um filtro mais amplo.",
   "resourceLibrary.emptyUnreviewed":
-    "Ainda nenhum guia passou pela revisão editorial. Um guia aparece aqui assim que uma editora o ler de ponta a ponta e confirmar que está correto.",
+    "Ainda nenhum guia passou pela revisão editorial. Um guia aparece aqui assim que alguém da equipa editorial o ler de ponta a ponta e confirmar que está correto.",
   "resourceLibrary.card.visitSite": "Visitar site",
   "resourceLibrary.orgs.title":
     "Organizações que fazem isto <em>todos os dias.</em>",
   "resourceLibrary.orgs.lead":
-    "Uma pequena lista de organizações em Lisboa e por Portugal em quem confiamos, para apoio que a QueerPulse não presta diretamente.",
+    "Uma pequena lista de organizações de Lisboa e de âmbito nacional em que confiamos, para o apoio que a QueerPulse não presta diretamente.",
   "resourceLibrary.outro.title": "Sabes de algo que <em>falta?</em>",
   "resourceLibrary.outro.sub":
     "Todos os recursos aqui foram adicionados por uma pessoa da comunidade. Se algo te ajudou e não está listado, conta-nos.",
@@ -12423,7 +12437,7 @@ export const marketing: Catalog = {
   "platforms.filter.health": "Saúde & Bem-estar",
   "platforms.filter.portugal": "Portugal & Lisboa",
   "platforms.note.body":
-    "<b>Uma nota sobre esta lista:</b> Incluímos plataformas que consideramos genuinamente úteis para pessoas queer. Isto não é um aval às práticas de nenhuma empresa. Faz sempre as tuas próprias escolhas informadas sobre dados, segurança e privacidade, especialmente em aplicações de namoro e sociais.",
+    "<b>Uma nota sobre esta lista:</b> Incluímos plataformas que consideramos genuinamente úteis para pessoas queer. Não estamos a dar aval às práticas de nenhuma empresa. Faz sempre as tuas próprias escolhas informadas sobre dados, segurança e privacidade, especialmente em aplicações de namoro e redes sociais.",
   "platforms.outro.title": "Falta alguma coisa? <em>Diz-nos.</em>",
   "platforms.outro.sub":
     "Conheces uma plataforma, recurso ou comunidade que devia estar aqui? Sugere-a e nós adicionamo-la ao diretório.",
@@ -12444,21 +12458,21 @@ export const marketing: Catalog = {
   "partnerProfileEdit.meta.title": "O perfil da tua organização",
   "partnerProfileEdit.meta.description":
     "Mantém atualizada a página pública da tua organização na QueerPulse: contactos, descrição, etiquetas e financiamento.",
-  "partnerProfileEdit.hero.eyebrow": "Parceiros · O teu perfil",
+  "partnerProfileEdit.hero.eyebrow": "Parcerias · O teu perfil",
   "partnerProfileEdit.hero.title": "Mantém a tua página <em>verdadeira.</em>",
   "partnerProfileEdit.hero.sub":
     "Esta é a página que as pessoas encontram quando te procuram. Muda o que mudou, guarda, e fica no ar.",
-  "partnerProfileEdit.empty.title": "Não geres nenhum perfil de parceiro",
+  "partnerProfileEdit.empty.title": "Não geres nenhum perfil de parceria",
   "partnerProfileEdit.empty.body":
-    "Esta página é para organizações já aprovadas como parceiras. Se a tua foi aprovada e não a vês aqui, pede-nos para passar o perfil para a tua conta.",
+    "Esta página é para organizações já aprovadas como parceiras. Se a tua foi aprovada e não a vês aqui, pede-nos que passemos o perfil para a tua conta.",
   "partnerProfileEdit.empty.applyCta": "Candidatar a parceria",
-  "partnerProfileEdit.picker.label": "Qual organização?",
+  "partnerProfileEdit.picker.label": "Que organização?",
   "partnerProfileEdit.staffFields.title": "Definido pela equipa de parcerias",
   "partnerProfileEdit.staffFields.tier": "Nível de parceria",
-  "partnerProfileEdit.staffFields.since": "Parceiros desde",
-  "partnerProfileEdit.staffFields.eyebrow": "Etiqueta do cartão",
+  "partnerProfileEdit.staffFields.since": "Parceria desde",
+  "partnerProfileEdit.staffFields.eyebrow": "Antetítulo do cartão",
   "partnerProfileEdit.staffFields.note":
-    "Estes quatro dizem algo sobre a relação entre nós, por isso definimo-los em conjunto e não cada lado por si. Pede-nos e alteramos.",
+    "Estes quatro campos dizem algo sobre a nossa relação, por isso definimo-los em conjunto. Pede-nos e alteramos.",
   "partnerProfileEdit.fields.regionLabel.label":
     "Região, tal como deve aparecer",
   "partnerProfileEdit.fields.regionLabel.helper":
@@ -12466,34 +12480,33 @@ export const marketing: Catalog = {
   "partnerProfileEdit.fields.about.label": "Sobre a tua organização",
   "partnerProfileEdit.fields.about.helper":
     "Alguns parágrafos, separados por uma linha em branco. É o texto longo da tua página.",
-  "partnerProfileEdit.fields.funding.label": "Como és financiada",
+  "partnerProfileEdit.fields.funding.label": "Como se financiam",
   "partnerProfileEdit.fields.funding.helper":
     "As pessoas leem isto. Diz de onde vem o dinheiro, com clareza.",
   "partnerProfileEdit.fields.phone.label": "Telefone",
   "partnerProfileEdit.fields.phoneNote.label": "Quando ligar",
   "partnerProfileEdit.fields.phoneNote.helper":
-    'Por exemplo "Dias úteis, das 14:00 às 20:00". Deixa vazio se a linha está sempre aberta.',
+    'Por exemplo "Dias úteis, das 14:00 às 20:00". Deixa em branco se a linha estiver sempre aberta.',
   "partnerProfileEdit.actions.save": "Guardar alterações",
   "partnerProfileEdit.actions.saving": "A guardar\u2026",
   "partnerProfileEdit.actions.viewPublic": "Ver a tua página pública",
   "partnerProfileEdit.savedToast":
     "Guardado. A tua página pública está atualizada.",
   "partnerProfileEdit.errorToast": "Não foi possível guardar o teu perfil.",
-  "submitPartner.hero.eyebrow": "Parceiros · Candidatura",
+  "submitPartner.hero.eyebrow": "Parcerias · Candidatura",
   "submitPartner.hero.title": "Candidata-te a <em>parceria.</em>",
   "submitPartner.hero.sub":
     "As parcerias da QueerPulse são operacionais e de mãos na massa. Conta-nos quem és e o que fazes, com honestidade, e vamos ler cada palavra.",
   "submitPartner.success.title": "Candidatura",
   "submitPartner.success.em": "recebida.",
-  "submitPartner.success.closeLabel": "Voltar a parceiros",
-  "submitPartner.success.step1":
-    "Está pendente de revisão pela equipa de parcerias",
+  "submitPartner.success.closeLabel": "Voltar às parcerias",
+  "submitPartner.success.step1": "Aguarda revisão da equipa de parcerias",
   "submitPartner.success.step2":
     "Lemos todas as candidaturas, por mais toscas que sejam",
   "submitPartner.success.step3":
     "Entraremos em contacto: um sim, um ainda não, ou uma pergunta",
   "submitPartner.success.body":
-    "Obrigade por nos contactares. A tua candidatura está feita. Nada fica público até termos falado contigo sobre ela.",
+    "Agradecemos o teu contacto. A tua candidatura foi entregue. Nada fica público até termos falado contigo sobre ela.",
   "submitPartner.actions.sending": "A enviar…",
   "submitPartner.actions.submit": "Submeter candidatura",
   "submitPartner.actions.cancel": "Cancelar",
@@ -12503,22 +12516,22 @@ export const marketing: Catalog = {
   "submitPartner.fields.name.placeholder": "ex.: Casa T",
   "submitPartner.fields.orgType.label": "Tipo de organização",
   "submitPartner.fields.orgType.helper":
-    "Só o tipo de organização que são. O rótulo “Parceiro ·” é adicionado por nós.",
+    "Só o tipo de organização. Nós acrescentamos o rótulo “Parceiro ·”.",
   "submitPartner.fields.orgType.placeholder":
     "ex.: Clínica de saúde comunitária",
   "submitPartner.fields.city.label": "Cidade / base",
   "submitPartner.fields.city.placeholder": "ex.: Lisboa",
   "submitPartner.fields.region.label": "Região",
-  "submitPartner.fields.logo.label": "Marca do logótipo",
+  "submitPartner.fields.logo.label": "Iniciais do logótipo",
   "submitPartner.fields.logo.derivedHelper":
-    "Preenchido a partir do nome. Edita se preferires definir a insígnia.",
+    "Preenchido a partir do nome. Edita se preferires escolher tu as iniciais.",
   "submitPartner.fields.logo.placeholder": "ex.: CT",
   "submitPartner.fields.sectionPitch": "A apresentação",
   "submitPartner.fields.tagline.label": "Frase-síntese",
   "submitPartner.fields.tagline.helper":
     "A frase única que resume o que fazem.",
   "submitPartner.fields.tagline.placeholder":
-    "Um espaço de acolhimento em Lisboa onde ninguém espera por cuidados sozinho.",
+    "Um espaço de acolhimento em Lisboa onde ninguém espera a sós por cuidados.",
   "submitPartner.fields.desc.label": "Descrição breve",
   "submitPartner.fields.desc.helper":
     "Uma ou duas frases mostradas no cartão da listagem.",
@@ -12534,7 +12547,7 @@ export const marketing: Catalog = {
   "submitPartner.fields.email.label": "Email de contacto",
   "submitPartner.fields.email.placeholder": "ex.: ola@casat.pt",
   "submitPartner.fields.requiredError": "Este campo é obrigatório.",
-  "submitPartner.form.sinceDefault": "A candidatar · {year}",
+  "submitPartner.form.sinceDefault": "Candidatura · {year}",
 
   "submitPartner.region.pt": "Portugal",
   "submitPartner.region.eu": "Europa",
@@ -12898,17 +12911,17 @@ export const marketing: Catalog = {
   // lista estiver vazia.
   "securityPolicy.meta.title": "Segurança e divulgação de vulnerabilidades",
   "securityPolicy.meta.description":
-    "Como comunicar uma vulnerabilidade de segurança no QueerPulse, o que está dentro do âmbito e o que acontece depois de comunicares.",
+    "Como comunicar uma vulnerabilidade de segurança na QueerPulse, o que está dentro do âmbito e o que acontece depois de comunicares.",
   "securityPolicy.hero.eyebrow": "Divulgação de vulnerabilidades",
   "securityPolicy.hero.titleTop": "Encontraste algo?",
   "securityPolicy.hero.titleEm": "Diz-nos.",
   "securityPolicy.hero.sub":
-    "Levamos a segurança a sério. Se encontraste uma vulnerabilidade no QueerPulse, queremos saber. Esta página explica como comunicá-la, o que esperar e como tratamos as divulgações.",
+    "Levamos a segurança a sério. Se encontraste uma vulnerabilidade na QueerPulse, queremos saber. Esta página explica como comunicá-la, o que esperar e como tratamos as divulgações.",
 
   "securityPolicy.commitment.eyebrow": "O nosso compromisso",
   "securityPolicy.commitment.title": "Não <em>penalizamos</em> a boa fé.",
   "securityPolicy.commitment.body1":
-    "Os investigadores de segurança que comunicam vulnerabilidades de boa fé não sofrerão qualquer ação legal da nossa parte. Não contactaremos a tua entidade patronal, o teu fornecedor de internet nem as autoridades, a menos que uses o teu acesso para prejudicar membros. Acreditamos que a investigação de segurança torna toda a gente mais segura, e ficamos gratos quando alguém dedica tempo a comunicar o que encontra.",
+    "Quem investiga segurança e comunica vulnerabilidades de boa fé não vai enfrentar qualquer ação judicial da nossa parte. Não contactaremos a tua entidade patronal, o teu fornecedor de internet nem as autoridades, a menos que uses o teu acesso para prejudicar pessoas da comunidade. Acreditamos que a investigação de segurança torna toda a gente mais segura, e agradecemos sempre que alguém dedica tempo a comunicar o que encontra.",
   "securityPolicy.commitment.body2":
     "Pedimos-te que nos dês um prazo razoável para corrigir um problema antes de o divulgares publicamente. Em troca, procuramos responder à tua comunicação o mais depressa que pudermos, manter-te a par do progresso e creditar-te nos nossos agradecimentos de segurança, se assim o quiseres.",
 
@@ -12922,12 +12935,12 @@ export const marketing: Catalog = {
   "securityPolicy.scope.in.4": "XSS armazenado e refletido",
   "securityPolicy.scope.in.5": "CSRF em endpoints autenticados",
   "securityPolicy.scope.in.6": "Injeção de SQL",
-  "securityPolicy.scope.in.7": "Referências diretas a objetos inseguras",
+  "securityPolicy.scope.in.7": "Referências diretas inseguras a objetos",
   "securityPolicy.scope.in.8": "Exposição de dados sensíveis",
   "securityPolicy.scope.out.1": "Ataques de negação de serviço",
   "securityPolicy.scope.out.2": "Engenharia social da nossa equipa",
   "securityPolicy.scope.out.3": "Ataques físicos à infraestrutura",
-  "securityPolicy.scope.out.4": "Spam ou contorno dos limites de tráfego",
+  "securityPolicy.scope.out.4": "Spam ou contorno dos limites de pedidos",
   "securityPolicy.scope.out.5":
     "Infraestrutura e serviços geridos por terceiros (comunica ao fornecedor)",
   "securityPolicy.scope.out.6": "Clickjacking em páginas não sensíveis",
@@ -12958,11 +12971,11 @@ export const marketing: Catalog = {
 
   "securityPolicy.ack.eyebrow": "Agradecimentos",
   "securityPolicy.ack.title":
-    "<em>Investigadores</em> de segurança que ajudaram.",
+    "Pessoas que <em>investigam</em> segurança e nos ajudaram.",
   "securityPolicy.ack.body":
-    "Estamos gratos aos seguintes investigadores que divulgaram vulnerabilidades de forma responsável. (Listados com autorização.)",
+    "Agradecemos às seguintes pessoas, que divulgaram vulnerabilidades de forma responsável. (Listadas com autorização.)",
   "securityPolicy.ack.empty":
-    "Ainda não há ninguém creditado aqui. Reporta algo e, se quiseres o crédito, o teu nome fica registado.",
+    "Ainda não há créditos aqui. Comunica algo e, se quiseres o crédito, o teu nome passa a constar.",
 
   "securityPolicy.report.titleTop": "Comunicar uma",
   "securityPolicy.report.titleEm": "vulnerabilidade",
@@ -12980,7 +12993,7 @@ export const marketing: Catalog = {
   "securityPolicy.outro.titleTop": "A segurança é",
   "securityPolicy.outro.titleEm": "trabalho de comunidade.",
   "securityPolicy.outro.sub":
-    "Obrigade a todas as pessoas que ajudam a manter o QueerPulse seguro.",
+    "Agradecemos a todas as pessoas que ajudam a manter a QueerPulse segura.",
   "securityPolicy.outro.cta": "Contactar a equipa de segurança",
 
   // ── Declaração de acessibilidade (/policies/accessibility) ─────────────
@@ -12988,56 +13001,56 @@ export const marketing: Catalog = {
   // verificável no repositório; não acrescentes aqui nada que o código não
   // sustente.
   "accessibilityStatement.meta.title":
-    "Declaração de acessibilidade do QueerPulse",
+    "Declaração de acessibilidade da QueerPulse",
   "accessibilityStatement.meta.description":
-    "Quão acessível é hoje o QueerPulse, medido face ao WCAG 2.2 nível AA: o que verificamos, o que sabemos que fica aquém, como comunicar uma barreira e o que fazer se a nossa resposta não chegar.",
+    "Quão acessível é hoje a QueerPulse, medida face ao WCAG 2.2 nível AA: o que verificamos, o que sabemos que fica aquém, como comunicar uma barreira e o que fazer se a nossa resposta não chegar.",
   "accessibilityStatement.title": "Declaração de <em>acessibilidade</em>",
   "accessibilityStatement.meta.prepared": "Preparada a {date}",
   "accessibilityStatement.meta.reviewed": "Última revisão a {date}",
   "accessibilityStatement.meta.standard": "Medida face a {standard}",
   "accessibilityStatement.standard": "WCAG 2.2 nível AA",
   "accessibilityStatement.plain.text":
-    "Apontamos ao WCAG 2.2 nível AA e estamos lá em parte. As verificações automáticas correm em cada build e são mantidas a zero falhas. Ainda ninguém testou esta plataforma com um leitor de ecrã numa sessão que possamos mostrar, e parte da nossa cor de marca fica abaixo do contraste que exigimos a nós próprias. Ambas as coisas estão escritas em baixo, com uma forma de nos dizeres o que nos escapou.",
+    "Apontamos ao WCAG 2.2 nível AA e estamos lá em parte. As verificações automáticas correm em cada build e são mantidas a zero falhas. Ainda ninguém testou esta plataforma com um leitor de ecrã numa sessão que possamos mostrar, e parte da nossa cor de marca fica abaixo do contraste que nos exigimos. Explicamos as duas coisas em baixo, com uma forma de nos dizeres o que nos escapou.",
 
   "accessibilityStatement.commitment.title": "O nosso compromisso",
   "accessibilityStatement.commitment.p1":
-    "Publicamos isto porque há pessoas que contam com isto. Uma plataforma cujo sentido inteiro é poderes ser quem és nalgum lado tem de ser utilizável por todas essas pessoas, e escrever onde estamos mesmo é a única forma de sermos responsabilizadas por isso.",
+    "Publicamos isto porque há pessoas da comunidade que contam com esta informação. Uma plataforma que existe para poderes ser quem és em algum lado tem de ser utilizável por toda a gente, e escrever onde estamos de facto é a única forma de nos poderem pedir contas por isso.",
   "accessibilityStatement.commitment.p2":
     "Trabalhamos segundo as Diretrizes de Acessibilidade para o Conteúdo Web (WCAG) 2.2, nível AA. A norma europeia de acessibilidade EN 301 549 exige o nível AA do WCAG 2.1. O WCAG 2.2 contém tudo o que está no 2.1 e acrescenta mais, por isso apontamos à versão mais recente.",
   "accessibilityStatement.commitment.p3":
-    "Publicamos isto por escolha nossa. A nossa leitura da lei portuguesa, exposta na secção seguinte, é a de que nada nos obriga a isso hoje. Preferimos ser mensuráveis a estar isentas.",
+    "Publicamos isto por escolha nossa. A nossa leitura da lei portuguesa, exposta na secção seguinte, é a de que nada nos obriga a isso hoje. Preferimos que nos possam medir a beneficiar de uma isenção.",
   "accessibilityStatement.commitment.p4":
     "Quase tudo o que se segue é imposto pelo build. Onde não é, dizemo-lo.",
 
   "accessibilityStatement.scope.title": "O que esta declaração cobre",
   "accessibilityStatement.scope.p1":
-    "Esta declaração aplica-se à aplicação web do QueerPulse, incluindo a experiência no telemóvel e a aplicação instalável, que são a mesma aplicação.",
+    "Esta declaração aplica-se à aplicação web da QueerPulse, incluindo a experiência no telemóvel e a aplicação instalável, que são a mesma aplicação.",
   "accessibilityStatement.scope.p2":
-    "O Cinema, o Studio e a Cultura ficam de fora. Nenhum deles abriu, cada um resolve para uma página simples a dizer que ainda não abriu, e não há conteúdo por trás para tornar acessível. Esta declaração será alargada a cada um no dia em que abrir.",
+    "O Cinema, o Studio e a Cultura ficam de fora. Nenhum deles abriu, cada um mostra apenas uma página a dizer que ainda não abriu, e ainda não há conteúdo por trás para tornar acessível. Esta declaração será alargada a cada um no dia em que abrir.",
   "accessibilityStatement.scope.p3":
-    "O que os membros escrevem e carregam pertence-lhes. Damos os campos e as perguntas que permitem descrever uma imagem ou explicar como se entra num espaço. Não podemos prometer que toda a gente os preenche.",
+    "O que as pessoas da comunidade escrevem e carregam pertence-lhes. Damos os campos e as indicações que permitem descrever uma imagem ou explicar como se entra num espaço. Não podemos prometer que toda a gente os preencha.",
 
   "accessibilityStatement.legal.title": "Onde está a lei",
   "accessibilityStatement.legal.p1":
-    "Portugal transpôs o Ato Europeu da Acessibilidade, a Diretiva (UE) 2019/882, através do <lei>Decreto-Lei n.º 82/2022</lei>. Entrou em vigor a 7 de dezembro de 2022 e aplica-se aos serviços prestados a partir de 28 de junho de 2025. Duas coisas nesse diploma fazem com que, muito provavelmente, ele não alcance hoje o QueerPulse.",
+    "Portugal transpôs o Ato Europeu da Acessibilidade, a Diretiva (UE) 2019/882, através do <lei>Decreto-Lei n.º 82/2022</lei>. Entrou em vigor a 7 de dezembro de 2022 e aplica-se aos serviços prestados a partir de 28 de junho de 2025. Duas coisas nesse diploma fazem com que, muito provavelmente, não se aplique hoje à QueerPulse.",
   "accessibilityStatement.legal.services":
-    "<strong>A lista de serviços que abrange.</strong> O artigo 2.º, n.º 3 nomeia os serviços de comunicações eletrónicas; o acesso a serviços de comunicação social audiovisual; determinados elementos do transporte aéreo, de autocarro, ferroviário, marítimo e por vias navegáveis interiores de passageiros; os terminais interativos de transporte; os serviços bancários e financeiros destinados aos consumidores; os livros eletrónicos e os programas informáticos dedicados; os serviços de comércio eletrónico; e o atendimento das chamadas de emergência para o 112. Uma plataforma comunitária sem fins comerciais não está em nenhuma dessas listas. A única alínea em que poderia caber é a do comércio eletrónico, e o QueerPulse não tem nenhum processador de pagamentos nem recebe dinheiro de ninguém.",
+    "<strong>A lista de serviços que abrange.</strong> O artigo 2.º, n.º 3 nomeia os serviços de comunicações eletrónicas; o acesso a serviços de comunicação social audiovisual; determinados elementos do transporte aéreo, de autocarro, ferroviário, marítimo e por vias navegáveis interiores de passageiros; os terminais interativos de transporte; os serviços bancários e financeiros destinados aos consumidores; os livros eletrónicos e os programas informáticos dedicados; os serviços de comércio eletrónico; e o atendimento das chamadas de emergência para o 112. Uma plataforma comunitária sem fins comerciais não está em nenhuma dessas listas. A única alínea em que poderia caber é a do comércio eletrónico, e a QueerPulse não tem nenhum processador de pagamentos nem recebe dinheiro de ninguém.",
   "accessibilityStatement.legal.microenterprise":
     "<strong>A isenção das microempresas.</strong> O artigo 2.º, n.º 5, alínea b) diz que o decreto-lei não se aplica às microempresas que prestam os serviços previstos no n.º 3. Uma microempresa, na definição que o decreto-lei vai buscar à Diretiva, emprega menos de 10 pessoas e tem um volume de negócios anual ou um balanço total anual não superior a 2 milhões de euros.",
   "accessibilityStatement.legal.p2":
-    "A bilhética paga nos eventos é uma questão de produto ainda em aberto. Se o QueerPulse alguma vez vender fosse o que fosse, passa plausivelmente a ser um serviço de comércio eletrónico ao abrigo do artigo 2.º, n.º 3, alínea g). O artigo 13.º, n.º 2, alínea b) passaria então a pedir-nos que explicássemos publicamente, por escrito e oralmente, de que forma o serviço cumpre os requisitos de acessibilidade aplicáveis, a menos que a isenção das microempresas continuasse a cobrir-nos. Escrevemos isto como um sinal para irmos verificar, e não fazemos nenhuma previsão sobre qual seria a resposta.",
+    "A bilhética paga nos eventos é uma questão de produto ainda em aberto. Se a QueerPulse alguma vez vender alguma coisa, é plausível que passe a ser um serviço de comércio eletrónico ao abrigo do artigo 2.º, n.º 3, alínea g). O artigo 13.º, n.º 2, alínea b) passaria então a pedir-nos que explicássemos publicamente, por escrito e oralmente, de que forma o serviço cumpre os requisitos de acessibilidade aplicáveis, a menos que a isenção das microempresas continuasse a cobrir-nos. Escrevemos isto como um sinal para irmos verificar, e não fazemos nenhuma previsão sobre qual seria a resposta.",
   "accessibilityStatement.legal.p3":
-    "A declaração de acessibilidade em que a maior parte das pessoas pensa vem de outra lei. A Diretiva sobre a Acessibilidade da Web, a (UE) 2016/2102, transposta cá pelo Decreto-Lei n.º 83/2018, vincula os organismos do setor público. O QueerPulse não é um deles.",
+    "A declaração de acessibilidade em que a maior parte das pessoas pensa vem de outra lei. A Diretiva sobre a Acessibilidade da Web, a (UE) 2016/2102, transposta cá pelo Decreto-Lei n.º 83/2018, vincula os organismos do setor público. A QueerPulse não é um deles.",
   "accessibilityStatement.legal.disclaimerLabel":
     "Isto não é aconselhamento jurídico",
   "accessibilityStatement.legal.disclaimer":
-    "Esta secção é um resumo de como as pessoas que gerem o QueerPulse leem a lei na parte que nos toca. Nenhuma advogada a reviu, não é aconselhamento jurídico e não deves apoiar-te nela para a tua própria situação. Se achas que lemos a lei mal, diz-nos e vamos verificar.",
+    "Esta secção é um resumo de como as pessoas que gerem a QueerPulse leem a lei na parte que nos toca. Não passou por revisão jurídica nem é aconselhamento jurídico, e não deves apoiar-te nela para a tua própria situação. Se achas que lemos mal a lei, diz-nos e vamos verificar.",
 
   "accessibilityStatement.status.title": "Estado de conformidade",
   "accessibilityStatement.status.p1":
-    "O QueerPulse está <strong>parcialmente conforme</strong> com o WCAG 2.2 nível AA. Parcialmente conforme quer dizer que a maior parte da norma é cumprida e que algumas partes não são. As partes que sabemos ficarem aquém estão listadas mais abaixo, uma a uma.",
+    "A QueerPulse está <strong>parcialmente conforme</strong> com o WCAG 2.2 nível AA. Parcialmente conforme quer dizer que a maior parte da norma é cumprida e que algumas partes não são. As partes que sabemos que ficam aquém estão listadas mais abaixo, uma a uma.",
   "accessibilityStatement.status.p2":
-    "Não temos nenhuma certificação de acessibilidade e não reclamamos nenhuma. Nenhuma entidade externa avaliou esta plataforma.",
+    "Não temos nenhuma certificação de acessibilidade nem dizemos ter. Nenhuma entidade externa avaliou esta plataforma.",
 
   "accessibilityStatement.works.title": "O que funciona hoje",
   "accessibilityStatement.works.intro":
@@ -13047,13 +13060,13 @@ export const marketing: Catalog = {
   "accessibilityStatement.works.dialogs":
     "<strong>Caixas de diálogo.</strong> Abrir um diálogo leva o foco para dentro dele, o Tab fica lá dentro, o Escape fecha o que está por cima e fechar devolve o foco ao controlo que o abriu.",
   "accessibilityStatement.works.forms":
-    "<strong>Formulários.</strong> Cada etiqueta visível está ligada ao seu campo, o texto de erro é anunciado e ligado ao campo a que pertence, o texto de ajuda é anunciado com o campo, e os campos obrigatórios estão marcados para os leitores de ecrã e não só para os olhos.",
+    "<strong>Formulários.</strong> Cada etiqueta visível está ligada ao seu campo, o texto de erro é anunciado e ligado ao campo a que pertence, o texto de ajuda é anunciado com o campo, e os campos obrigatórios estão marcados tanto para a vista como para os leitores de ecrã.",
   "accessibilityStatement.works.landmarks":
-    "<strong>Estrutura e navegação.</strong> Cada página tem exatamente uma região principal. Um teste verifica isso diretamente na página inicial, e a passagem do axe aplica a mesma regra às outras dez páginas que cobre. As páginas fora dessas onze não são verificadas. Mudar de página anuncia a página nova e coloca lá o foco, coisa que uma aplicação de página única não faz sozinha.",
+    "<strong>Estrutura e navegação.</strong> Cada página tem exatamente uma região principal. Um teste verifica isso diretamente na página inicial, e a passagem do axe aplica a mesma regra às outras dez páginas que cobre. As páginas fora dessas onze não são verificadas. Mudar de página anuncia a página nova e leva o foco para o seu conteúdo, coisa que uma aplicação de página única não faz sozinha.",
   "accessibilityStatement.works.motion":
     "<strong>Movimento.</strong> Quando o teu dispositivo pede movimento reduzido, as animações e o deslizamento suave desligam-se em toda a interface. As Definições têm também um interruptor de Reduzir movimento para quem tenha o dispositivo a dizer outra coisa.",
   "accessibilityStatement.works.status":
-    "<strong>Mensagens de estado.</strong> As confirmações são anunciadas com calma e as falhas interrompem, para que um erro seja difícil de escapar.",
+    "<strong>Mensagens de estado.</strong> As confirmações são anunciadas com discrição e as falhas interrompem, por isso um erro dificilmente passa despercebido.",
   "accessibilityStatement.works.language":
     "<strong>Idioma.</strong> A página declara o seu idioma e atualiza-o quando trocas entre inglês e português, para que um leitor de ecrã a leia com a voz certa.",
 
@@ -13068,46 +13081,46 @@ export const marketing: Catalog = {
   "accessibilityStatement.shortfalls.textSize":
     "<strong>Tamanho do texto.</strong> O texto está definido em pixels em toda a aplicação, por isso mudar o tamanho de letra por omissão do teu navegador não o aumenta. O zoom do navegador e do sistema funciona normalmente e o layout reorganiza-se até à largura de um telemóvel. O controlo de tamanho de texto nas Definições é um dos que estão Em breve.",
   "accessibilityStatement.shortfalls.focusAfterError":
-    "<strong>Foco depois de um envio falhado.</strong> Existe um auxiliar que leva o foco ao primeiro campo com erro e está ligado a um formulário até agora. Em todos os outros o erro continua a ser anunciado e continua ligado ao seu campo, e o foco fica onde o deixaste.",
+    "<strong>Foco depois de um envio falhado.</strong> Existe um auxiliar que leva o foco ao primeiro campo com erro e, por agora, só está ligado a um formulário. Em todos os outros o erro continua a ser anunciado e continua ligado ao seu campo, e o foco fica onde o deixaste.",
   "accessibilityStatement.shortfalls.sample":
     "<strong>As verificações automáticas cobrem uma amostra de páginas.</strong> A suite de testes corre o axe-core sobre onze páginas representativas e a passagem de contraste corre num navegador real sobre seis. A aplicação tem cerca de 140 componentes de página, por isso a maioria nunca foi verificada por máquina uma a uma. A amostra foi escolhida para cobrir as peças partilhadas, que é onde vive a maior parte dos defeitos.",
   "accessibilityStatement.shortfalls.assistiveTech":
-    "<strong>Nenhum teste com tecnologia de apoio registado.</strong> Nunca foi feita e escrita uma sessão com leitor de ecrã, dispositivo de comutação ou controlo por voz nesta plataforma. As ferramentas automáticas encontram uma minoria dos problemas de acessibilidade, por isso esta é a maior lacuna no que sabemos, e fechá-la é o próximo ponto desta lista.",
+    "<strong>Nenhum teste com tecnologia de apoio registado.</strong> Ainda não registámos por escrito nenhuma sessão com leitor de ecrã, dispositivo de comutação ou controlo por voz nesta plataforma. As ferramentas automáticas encontram uma minoria dos problemas de acessibilidade, por isso esta é a maior lacuna no que sabemos, e fechá-la é o próximo ponto desta lista.",
   "accessibilityStatement.shortfalls.pdf":
     "<strong>Um PDF para descarregar.</strong> O kit de imprensa oferece uma referência de marca imprimível em PDF, e essa não foi verificada quanto a etiquetagem ou ordem de leitura. Os mesmos valores de cor seguem ao lado num ficheiro de texto simples, que qualquer tecnologia de apoio lê corretamente.",
   "accessibilityStatement.shortfalls.language":
-    "<strong>Duas línguas de interface.</strong> A interface está disponível em inglês e em português. O que um membro ou uma pessoa da redação escreve fica na língua em que foi escrito, e nós não o traduzimos.",
+    "<strong>Duas línguas de interface.</strong> A interface está disponível em inglês e em português. O que alguém da comunidade ou da equipa editorial escreve fica na língua em que foi escrito, e não o traduzimos.",
 
   "accessibilityStatement.prepared.title": "Como esta declaração foi preparada",
   "accessibilityStatement.prepared.p1":
-    "Esta é uma autoavaliação, preparada por quem constrói o QueerPulse a partir das ferramentas de acessibilidade que estão no código e das auditorias escritas guardadas ao lado. Nenhuma entidade externa participou e nenhum teste com pessoas utilizadoras a informou.",
+    "Esta é uma autoavaliação, preparada por quem constrói a QueerPulse a partir das ferramentas de acessibilidade que estão no código e das auditorias escritas guardadas ao lado. Nenhuma entidade externa participou e nenhum teste com pessoas utilizadoras a informou.",
   "accessibilityStatement.prepared.lint":
     "<strong>Regras de lint que bloqueiam o build.</strong> Todas as regras de acessibilidade do eslint-plugin-jsx-a11y correm sobre todo o código. Nove são erros duros, e cobrem alternativas em texto para imagens, atributos e papéis ARIA válidos, e etiquetas ligadas aos seus campos. As restantes são mantidas num orçamento de zero avisos por uma verificação que corre em primeiro lugar no build, por isso um único aviso novo em qualquer sítio faz o build falhar.",
   "accessibilityStatement.prepared.axe":
-    "<strong>axe-core na suite de testes.</strong> Onze páginas representativas são desenhadas através do router real e analisadas com o axe-core, sem nada em quarentena e sem nenhuma regra suprimida, tirando a única que um motor sem desenho não consegue calcular.",
+    "<strong>axe-core na suite de testes.</strong> Onze páginas representativas são renderizadas com o router real e analisadas com o axe-core, sem nada em quarentena e sem nenhuma regra suprimida, tirando a única que um renderizador headless não consegue calcular.",
   "accessibilityStatement.prepared.contrast":
-    "<strong>Medição de contraste de cor.</strong> Cada par de cores que a interface desenha na realidade foi calculado com a fórmula do WCAG, foi escrito, e foi corrigido ou recebeu uma variante que passa. Uma passagem de contraste em navegador sobre seis páginas protege contra regressões.",
+    "<strong>Medição de contraste de cor.</strong> Cada par de cores que a interface desenha de facto foi calculado com a fórmula do WCAG e documentado, e depois corrigido ou dotado de uma variante que passa. Uma passagem de contraste em navegador sobre seis páginas protege contra regressões.",
   "accessibilityStatement.prepared.p2":
     "As ferramentas automáticas apanham uma minoria dos problemas de acessibilidade, normalmente estimada entre um terço e metade. Tudo o que uma máquina não vê, e toda a questão de saber se esta plataforma é mesmo utilizável com um leitor de ecrã, continua por verificar. É por isso que a secção seguinte importa mais do que as duas anteriores.",
 
   "accessibilityStatement.feedback.title": "Diz-nos onde está a barreira",
   "accessibilityStatement.feedback.p1":
-    "Se alguma coisa aqui te bloqueia, diz-nos. Não precisas de conta e não precisas de saber porque está partido. Descreve o que estavas a tentar fazer e o que aconteceu em vez disso, e indica a página se conseguires.",
+    "Se alguma coisa aqui te bloqueia, diz-nos. Não precisas de conta nem de saber porque não funciona. Descreve o que estavas a tentar fazer e o que aconteceu de facto, e indica a página se conseguires.",
   "accessibilityStatement.feedback.p2":
     "Usa o formulário de contacto e escolhe <strong>Acessibilidade</strong> como tema. A mensagem fica guardada para quem gere a plataforma, que lê todas.",
   "accessibilityStatement.feedback.p3":
-    "Qualquer resposta ao teu relato é escrita por alguém da nossa equipa para o endereço que nos deres. Procuramos responder em {days} dias úteis. Se o teu relato for sobre algo que te está a deixar de fora da tua própria conta, diz-o e passa à frente.",
+    "Qualquer resposta ao teu relato é escrita por alguém da nossa equipa para o endereço que nos deres. Procuramos responder em {days} dias úteis. Se o teu relato for sobre algo que te está a deixar de fora da tua própria conta, diz-nos e damos-lhe prioridade.",
   "accessibilityStatement.feedback.cta": "Comunicar uma barreira de acesso",
 
   "accessibilityStatement.enforcement.title": "Se a nossa resposta não chegar",
   "accessibilityStatement.enforcement.p1":
     "Se não respondermos, ou se a resposta deixar a barreira de pé, é aqui que podes seguir, pela ordem com mais hipóteses de te ajudar.",
   "accessibilityStatement.enforcement.tellUs":
-    "<strong>Diz-nos primeiro.</strong> O formulário de contacto, no tópico Acessibilidade, guarda o teu relato para as pessoas que gerem a plataforma, e é o caminho mais rápido para a barreira ser vista. Tudo o que vem a seguir parte do princípio de que esse caminho já te falhou.",
+    "<strong>Diz-nos primeiro.</strong> O formulário de contacto, no tema Acessibilidade, guarda o teu relato para as pessoas que gerem a plataforma, e é o caminho mais rápido para a barreira ser vista. Tudo o que vem a seguir parte do princípio de que esse caminho já te falhou.",
   "accessibilityStatement.enforcement.idipd":
     "<strong>IDiPD.</strong> O Instituto para os Direitos das Pessoas com Deficiência, I. P. é a entidade portuguesa que acompanha a aplicação do Decreto-Lei 82/2022 e promove os direitos das pessoas com deficiência. O artigo 36.º faz dele também a entidade que encaminha para o regulador competente as queixas que lhe cheguem diretamente. Chamava-se Instituto Nacional para a Reabilitação, I. P. até o Decreto-Lei n.º 60/2026 lhe mudar o nome. Os contactos estão <idipd>no site do próprio instituto</idipd>, onde se mantêm atualizados.",
   "accessibilityStatement.enforcement.regulator":
-    "<strong>O regulador setorial, se alguma vez cairmos no artigo 28.º.</strong> O Decreto-Lei 82/2022 entrega a fiscalização a um regulador diferente por cada categoria de serviço, em vez de a entregar a uma única entidade de acessibilidade. Os serviços de comércio eletrónico cabem à ANACOM. Como está dito acima, não cremos que o QueerPulse seja hoje um serviço abrangido pelo decreto-lei, por isso é bem possível que este caminho não esteja aberto para ti neste momento. Preferimos dizer-te isso com clareza a mandar-te a um regulador que te vai ter de dispensar.",
+    "<strong>O regulador setorial, se alguma vez cairmos no artigo 28.º.</strong> O Decreto-Lei 82/2022 entrega a fiscalização de cada categoria de serviço ao respetivo regulador, sem uma entidade única de acessibilidade. Os serviços de comércio eletrónico cabem à ANACOM. Como está dito acima, não cremos que a QueerPulse seja hoje um serviço abrangido pelo decreto-lei, por isso é bem possível que este caminho não esteja aberto para ti neste momento. Dizemo-lo com clareza para não te mandarmos a um regulador que teria de te dispensar.",
   "accessibilityStatement.enforcement.p2":
     "Nada disto substitui os tribunais nem qualquer outro direito que tenhas. Se quiseres apresentar queixa e não souberes por onde começar, o IDiPD é a primeira porta certa.",
 
@@ -13118,7 +13131,7 @@ export const marketing: Catalog = {
   // FE Task 3 (business mailboxes, spec 2026-09-20): the delivery promise "It arrives as a direct message from your account" stops being true. An enquiry now lands in the listing's mailbox, read by whoever runs it. deliveryNote, sub and successBody are REPLACEMENT VALUES for these existing keys only; no key is added or removed.
   "directory.detail.enquiry.cta": "Enviar mensagem a este negócio",
   "directory.detail.enquiry.deliveryNote":
-    "Chega à caixa de mensagens deste negócio, e só quem gere esta ficha a pode ler.",
+    "Chega à caixa de mensagens deste negócio, e só quem gere o anúncio a pode ler.",
   "directory.detail.enquiry.replyNote":
     "Podem responder-te já a esta mensagem. Podes escrever mais assim que o fizerem.",
   "directory.detail.enquiry.existingThreadCta": "Abrir a conversa que já tens",
@@ -13128,27 +13141,27 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.loadErrorTitle":
     "Não conseguimos verificar se este negócio recebe mensagens",
   "directory.detail.enquiry.loadErrorBody":
-    "O resto da ficha está bem. Só esta verificação é que não respondeu.",
+    "O resto do anúncio está bem. Só esta verificação é que não teve resposta.",
   "directory.detail.enquiry.unavailable.unclaimed":
-    "Ainda ninguém reivindicou esta ficha, por isso não há uma caixa de mensagens por trás dela. Se és tu que geres o {name}, reivindica a ficha e passas a poder ser contactado por aqui.",
+    "Ainda ninguém reivindicou este anúncio, por isso não há uma caixa de mensagens por trás dele. Se és tu que geres {name}, reivindica o anúncio e as pessoas da comunidade passam a poder contactar-te por aqui.",
   "directory.detail.enquiry.unavailable.noAccount":
-    "Esta ficha não está ligada a uma conta que possa receber mensagens, por isso os contactos acima são a forma de lá chegar.",
+    "Este anúncio não está associado a uma conta que receba mensagens, por isso usa os contactos acima.",
   "directory.detail.enquiry.unavailable.ownListing":
-    "Esta ficha é tua, por isso não há aqui ninguém a quem escrever.",
+    "Este anúncio é teu, por isso não há aqui ninguém a quem escrever.",
   "directory.detail.enquiry.unavailable.blocked":
     "Não é possível contactar este negócio a partir da tua conta.",
   "directory.detail.enquiry.ariaLabel": "Escrever a {name}",
   "directory.detail.enquiry.sub":
-    "Chega à caixa de mensagens desta ficha, e a resposta vem do negócio.",
+    "Chega à caixa de mensagens deste anúncio, e a resposta vem do negócio.",
   "directory.detail.enquiry.cancel": "Cancelar",
   "directory.detail.enquiry.error.rateLimited":
     "Chegaste ao limite de mensagens a negócios por agora. Dá-lhes tempo para responder e tenta mais tarde.",
   "directory.detail.enquiry.error.notAllowed":
     "Não é possível contactar este negócio a partir da tua conta.",
   "directory.detail.enquiry.error.unavailable":
-    "Esta ficha já não recebe mensagens pelo QueerPulse. Tenta os contactos da página.",
+    "Este anúncio já não recebe mensagens pela QueerPulse. Usa os contactos da página.",
   "directory.detail.enquiry.error.gone":
-    "Esta ficha já não está disponível, por isso a tua mensagem não foi enviada.",
+    "Este anúncio já não está disponível, por isso a tua mensagem não foi enviada.",
   "directory.detail.enquiry.error.generic":
     "A tua mensagem não foi enviada. Tenta outra vez daqui a pouco.",
   "directory.detail.enquiry.successAriaLabel":
@@ -13156,7 +13169,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.successTitle": "Mensagem",
   "directory.detail.enquiry.successEm": "enviada",
   "directory.detail.enquiry.successBody":
-    "Está na caixa de mensagens de {name}, onde quem o gere pode responder em nome de {name}.",
+    "Está na caixa de mensagens de {name}, onde quem gere o espaço pode responder em nome de {name}.",
   "directory.detail.enquiry.successReplyStep":
     "{name} pode responder-te já a isto. Vais poder escrever mais assim que o fizer.",
   "directory.detail.enquiry.openThreadCta": "Abrir a conversa",
@@ -13164,7 +13177,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.limit.thisBusiness":
     "Já escreveste a {name} hoje. Dá tempo para responderem antes de escreveres outra vez.",
   "directory.detail.enquiry.limit.directory":
-    "Escreveste a muitos negócios hoje, por isso isto está em pausa por agora.",
+    "Escreveste a muitos negócios hoje, por isso as mensagens ficam em pausa por agora.",
   "directory.detail.enquiry.limit.clearsIn": "Podes escrever de novo {when}.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
@@ -13709,9 +13722,9 @@ export const marketing: Catalog = {
   "listBusiness.editor.nav.awaitingCount_other":
     "{count} à espera da tua resposta",
   "listBusiness.team.intro":
-    "Mostra na tua página as personas e os membros que trabalham aqui. Cada um aparece quando disser que sim",
+    "Mostra na tua página as personas e as pessoas da comunidade que trabalham aqui. Cada uma aparece quando disser que sim",
   "listBusiness.team.notLiveNotice":
-    "A tua listagem tem de estar publicada e visível no diretório antes de poderes convidar ou aprovar alguém",
+    "O teu anúncio tem de estar publicado e visível no diretório antes de poderes convidar ou aprovar alguém",
   "listBusiness.team.search.label": "Procura uma persona pelo nome ou @handle",
   "listBusiness.team.search.placeholder": "Nome ou @handle",
   "listBusiness.team.search.hint": "Escreve pelo menos 2 caracteres",
@@ -13736,14 +13749,14 @@ export const marketing: Catalog = {
   "listBusiness.team.member.hint":
     "Convida uma das tuas conexões. Aparece na tua página quando aceitar",
   "listBusiness.team.member.searchLabel":
-    "Procura um membro entre as tuas conexões",
+    "Pesquisa uma pessoa entre as tuas conexões",
   "listBusiness.team.member.loadingConnections": "A carregar as tuas conexões",
   "listBusiness.team.member.noConnections":
     "Ainda não tens conexões para convidar",
   "listBusiness.team.member.connectionsLoadError":
     "Não conseguimos carregar as tuas conexões. Tenta outra vez",
   "listBusiness.team.member.allListed":
-    "Todos os que aparecem aqui já foram convidados ou estão na tua equipa",
+    "Toda a gente que aparece aqui já foi convidada ou está na tua equipa",
   "listBusiness.team.member.inviteCta": "Convidar membro para a equipa",
   "listBusiness.team.member.inviteAria":
     "Convidar membro para a equipa: {name}",
@@ -13760,10 +13773,11 @@ export const marketing: Catalog = {
   "listBusiness.team.accepted.heading": "Na tua página",
   "listBusiness.team.accepted.count": "{count} de {max}",
   "listBusiness.team.accepted.empty":
-    "Ainda ninguém aparece na tua página. Convida uma persona ou um membro, ou aprova um pedido",
+    "Ainda ninguém aparece na tua página. Convida uma persona ou uma pessoa, ou aprova um pedido",
   "listBusiness.team.moveUpAria": "Subir {name}",
   "listBusiness.team.moveDownAria": "Descer {name}",
-  "listBusiness.team.movedStatus": "{name} está agora em {position} de {count}",
+  "listBusiness.team.movedStatus":
+    "{name} está agora na posição {position} de {count}",
   "listBusiness.team.editRoleCta": "Editar função",
   "listBusiness.team.editRoleAria": "Editar função: {name}",
   "listBusiness.team.saveRoleCta": "Guardar função",
@@ -13774,19 +13788,19 @@ export const marketing: Catalog = {
   "listBusiness.team.removeConfirm.titleHidden":
     "Remover esta persona da tua equipa?",
   "listBusiness.team.removeConfirm.titleHiddenMember":
-    "Remover este membro da tua equipa?",
+    "Remover esta pessoa da tua equipa?",
   "listBusiness.team.removeConfirm.body":
     "Esta persona deixa de aparecer na tua página de imediato. Podes voltar a convidá-la mais tarde",
   "listBusiness.team.removeConfirm.bodyMember":
-    "Este membro deixa de aparecer na tua página de imediato. Podes voltar a convidar este membro mais tarde",
+    "Esta pessoa deixa de aparecer na tua página de imediato. Podes voltar a convidá-la mais tarde",
   "listBusiness.team.hiddenPersona.name":
     "Uma persona que não está visível de momento",
   "listBusiness.team.hiddenPersona.hint":
     "Volta a aparecer na tua página quando ficar visível",
   "listBusiness.team.hiddenMember.name":
-    "Um membro que não está visível neste momento",
+    "Uma pessoa que não está visível neste momento",
   "listBusiness.team.hiddenMember.hint":
-    "Voltam a aparecer na tua página quando estiverem visíveis",
+    "Volta a aparecer na tua página quando estiver visível",
   "listBusiness.team.toast.invited": "Convite enviado",
   "listBusiness.team.toast.added": "Adicionada à tua equipa",
   "listBusiness.team.toast.declined": "Pedido recusado",
@@ -13798,7 +13812,7 @@ export const marketing: Catalog = {
     "Não encontrámos esse negócio. Pode estar escondido de momento",
   "listingTeam.errors.linkGone": "Isto já foi respondido ou retirado",
   "listingTeam.errors.personaIneligible":
-    "Esta persona pode entrar numa equipa quando estiver publicada, tiver um handle e estiver visível para membros ou para toda a gente",
+    "Esta persona pode entrar numa equipa quando estiver publicada, tiver um handle e estiver visível para pessoas da comunidade ou para toda a gente",
   "listingTeam.errors.listingNotLive":
     "O negócio tem de estar publicado e visível no diretório primeiro",
   "listingTeam.errors.alreadyPendingInvite":
@@ -13813,21 +13827,21 @@ export const marketing: Catalog = {
   "listingTeam.errors.teamFull":
     "Esta equipa está completa. Um negócio pode mostrar até {max} pessoas",
   "listingTeam.errors.memberNotFound":
-    "Esse membro não é uma das tuas conexões ou não está disponível neste momento",
+    "Essa pessoa não é uma das tuas conexões ou não está disponível neste momento",
   "listingTeam.errors.memberIneligible":
-    "Este membro não pode entrar numa equipa neste momento. O perfil tem de estar aberto e visível",
+    "Esta pessoa não pode entrar numa equipa neste momento. O perfil dela tem de estar aberto e visível",
   "listingTeam.errors.memberFull":
-    "Este membro já está em {max} equipas, o máximo a que pode pertencer",
+    "Esta pessoa já está em {max} equipas, o máximo a que pode pertencer",
   "listingTeam.errors.memberFullYou":
     "Já estás em {max} equipas, o máximo a que podes pertencer",
   "listingTeam.errors.memberAlreadyPendingInvite":
-    "Já existe um convite para este membro à espera de resposta",
+    "Já existe um convite para esta pessoa à espera de resposta",
   "listingTeam.errors.memberAlreadyAccepted":
-    "Este membro já faz parte da equipa",
+    "Esta pessoa já faz parte da equipa",
   "listingTeam.errors.memberCooldown":
-    "Este membro recusou há pouco tempo. Podes convidar de novo a partir de {date}",
+    "Esta pessoa recusou há pouco tempo. Podes voltar a convidá-la a partir de {date}",
   "listingTeam.errors.memberCooldownLater":
-    "Este membro recusou há pouco tempo. Podes convidar de novo mais tarde",
+    "Esta pessoa recusou há pouco tempo. Podes voltar a convidá-la mais tarde",
   "listingTeam.errors.pendingFullListing":
     "Tens {max} convites e pedidos à espera. Responde ou cancela alguns antes de enviares mais",
   "listingTeam.errors.pendingFullPersona":
@@ -13836,7 +13850,7 @@ export const marketing: Catalog = {
     "Esta persona já está em {max} equipas, o máximo possível",
   "listingTeam.errors.personaRequestsFull":
     "Esta persona tem {max} pedidos à espera. Cancela um para enviar outro",
-  "listingTeam.errors.notAccepted": "Esta ligação já terminou",
+  "listingTeam.errors.notAccepted": "Este vínculo à equipa já terminou",
   "listingTeam.errors.orderMismatch":
     "A equipa acabou de mudar. Tenta outra vez",
   "listingTeam.errors.tooFast":

@@ -12,9 +12,10 @@ import type {
   VjLoopMode,
   VjMediaKind,
   VjRenderer,
+  VjSetlistItemKind,
   VjSpeed,
 } from "./vj.lists";
-import type { VjSceneLook } from "./vj.state";
+import type { VjSceneLook, VjStepDuration } from "./vj.state";
 
 export interface VjCreatorDTO {
   userId: string;
@@ -77,6 +78,8 @@ export interface VjClipDTO {
   packIds: string[];
   /** packIds.length; the delete dialog's count. */
   packCount: number;
+  /** How many set list items play this clip; the delete dialog's count. */
+  setlistItemCount: number;
   createdBy: VjCreatorDTO | null;
   createdAt: string;
   updatedAt: string;
@@ -129,6 +132,7 @@ export interface VjPackDeletedDTO {
 export interface VjClipDeletedDTO {
   deletedClipId: string;
   removedFromPackCount: number;
+  removedFromSetlistCount: number;
 }
 
 /** Body of POST /admin/vj/clips. The server derives mimeType, mediaKind and byteSize. */
@@ -218,13 +222,21 @@ export interface VjSceneDeletedDTO {
 
 export interface VjSetlistItemDTO {
   id: string;
-  sceneId: string;
   position: number;
+  kind: VjSetlistItemKind;
+  /** Set on a scene step; null on a clip step. */
+  sceneId: string | null;
+  /** Set on a clip step; null on a scene step. */
+  clipId: string | null;
+  /** Null plays the sequence's stepDuration. */
+  duration: VjStepDuration | null;
 }
 export interface VjSetlistDTO {
   id: string;
   name: string;
   position: number;
+  isLooping: boolean;
+  stepDuration: VjStepDuration;
   /** position ASC, id ASC. */
   items: VjSetlistItemDTO[];
   createdBy: VjCreatorDTO | null;
@@ -260,9 +272,37 @@ export interface UpdateVjSceneBody {
   packId?: string | null;
   look?: VjSceneLook;
 }
+/** One step in a whole-list write. `id` keeps an existing item of this set list. */
+export type VjSetlistItemInput =
+  | {
+      id?: string;
+      kind: "scene";
+      sceneId: string;
+      duration?: VjStepDuration | null;
+    }
+  | {
+      id?: string;
+      kind: "clip";
+      clipId: string;
+      duration?: VjStepDuration | null;
+    };
+/** `PUT setlists/:id/items`. */
+export interface SetVjSetlistItemsBody {
+  items: VjSetlistItemInput[];
+}
+/** `POST setlists`: sceneIds (remote "Make a sequence from these scenes") or items, one of the two. */
 export interface CreateVjSetlistBody {
   name: string;
   sceneIds?: string[];
+  items?: VjSetlistItemInput[];
+  isLooping?: boolean;
+  stepDuration?: VjStepDuration;
+}
+/** `PATCH setlists/:id`: at least one field. */
+export interface UpdateVjSetlistBody {
+  name?: string;
+  isLooping?: boolean;
+  stepDuration?: VjStepDuration;
 }
 
 // Live connections (admin/vj/live)

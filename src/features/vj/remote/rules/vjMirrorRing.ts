@@ -1,10 +1,15 @@
 /**
  * The ring around the mini mirror: how far the stage is to its next change.
- * A queued frame (contract 7.4 `applyAt`) wins; else, with shuffle on, the
- * ring fills over the shuffle interval since the live source went live.
+ * A playing sequence fills over its step's clock first, so the timer's own
+ * early frame (queued 300 ms before each step ends) leaves the ring whole.
+ * Then a queued frame (contract 7.4 `applyAt`); then a paused sequence
+ * shows the share its step had run (sequences contract 8.2); else, with
+ * shuffle on, the ring fills over the shuffle interval since the live
+ * source went live.
  */
 import {
   vjShuffleIntervalMs,
+  type VjSetlistPlayback,
   type VjShuffle,
   type VjTempo,
 } from "../../../../shared/contracts/vj";
@@ -12,6 +17,8 @@ import {
 export type VjMirrorRing =
   | { kind: "none" }
   | { kind: "applyAt"; progress: number; msLeft: number }
+  /** isPaused: the clock is stopped, so progress and msLeft hold still. */
+  | { kind: "setlist"; progress: number; msLeft: number; isPaused: boolean }
   | { kind: "shuffle"; progress: number; msLeft: number };
 
 export interface VjMirrorRingInput {
@@ -25,6 +32,8 @@ export interface VjMirrorRingInput {
   tempo: VjTempo;
   /** Server ms the current live source went live; null when nothing is live. */
   liveSince: number | null;
+  /** The active sequence's clock (the default playback when none is active). */
+  setlistPlayback: VjSetlistPlayback;
 }
 
 function clampProgress(progress: number): number {
@@ -38,8 +47,52 @@ function progressOver(spanStart: number, spanEnd: number, now: number): number {
   return clampProgress((now - spanStart) / spanMs);
 }
 
+/** The sequence's ring while its clock runs; null in any other status. */
+function playingSetlistRingOf(
+  playback: VjSetlistPlayback,
+  serverNowMs: number,
+): VjMirrorRing | null {
+  const { stepStartedAt, stepEndsAt } = playback;
+  if (
+    playback.status !== "playing" ||
+    stepStartedAt === null ||
+    stepEndsAt === null
+  ) {
+    return null;
+  }
+  return {
+    kind: "setlist",
+    progress: progressOver(stepStartedAt, stepEndsAt, serverNowMs),
+    msLeft: Math.max(0, stepEndsAt - serverNowMs),
+    isPaused: false,
+  };
+}
+
+/** The sequence's ring while its clock holds; null in any other status. */
+function pausedSetlistRingOf(playback: VjSetlistPlayback): VjMirrorRing | null {
+  const { stepDurationMs, pausedRemainingMs } = playback;
+  if (
+    playback.status === "paused" &&
+    stepDurationMs !== null &&
+    pausedRemainingMs !== null
+  ) {
+    return {
+      kind: "setlist",
+      progress:
+        stepDurationMs <= 0
+          ? 1
+          : clampProgress(1 - pausedRemainingMs / stepDurationMs),
+      msLeft: Math.max(0, pausedRemainingMs),
+      isPaused: true,
+    };
+  }
+  return null;
+}
+
 export function vjMirrorRingOf(input: VjMirrorRingInput): VjMirrorRing {
   const { serverNowMs, nextApplyAt, frameReceivedAt } = input;
+  const playingRing = playingSetlistRingOf(input.setlistPlayback, serverNowMs);
+  if (playingRing !== null) return playingRing;
   if (nextApplyAt !== null) {
     const spanStart = frameReceivedAt ?? serverNowMs;
     return {
@@ -48,6 +101,8 @@ export function vjMirrorRingOf(input: VjMirrorRingInput): VjMirrorRing {
       msLeft: Math.max(0, nextApplyAt - serverNowMs),
     };
   }
+  const pausedRing = pausedSetlistRingOf(input.setlistPlayback);
+  if (pausedRing !== null) return pausedRing;
   if (input.shuffle.isOn && input.liveSince !== null) {
     const intervalMs = vjShuffleIntervalMs(input.shuffle, input.tempo);
     const nextAdvanceAt = input.liveSince + intervalMs;
@@ -58,4 +113,17 @@ export function vjMirrorRingOf(input: VjMirrorRingInput): VjMirrorRing {
     };
   }
   return { kind: "none" };
+}
+
+/** Whether the shell must tick the synced clock for the ring to move. */
+export function isVjMirrorRingCounting(input: {
+  nextApplyAt: number | null;
+  shuffle: VjShuffle;
+  setlistPlayback: VjSetlistPlayback;
+}): boolean {
+  return (
+    input.nextApplyAt !== null ||
+    input.setlistPlayback.status === "playing" ||
+    input.shuffle.isOn
+  );
 }

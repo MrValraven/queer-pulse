@@ -4,6 +4,7 @@ import { TestProviders } from "../../../../test/TestProviders";
 import { awaitCatalog } from "../../../../test/awaitCatalog";
 import {
   createVjStageState,
+  DEFAULT_VJ_STEP_DURATION,
   vjSceneLookOf,
   type VjClipDTO,
   type VjSceneDTO,
@@ -55,6 +56,7 @@ function makeClip(id: string, title: string): VjClipDTO {
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: null,
+    setlistItemCount: 0,
   };
 }
 
@@ -63,10 +65,15 @@ function makeSetlist(itemCount: number): VjSetlistDTO {
     id: "setlist-1",
     name: "Friday",
     position: 0,
+    isLooping: false,
+    stepDuration: DEFAULT_VJ_STEP_DURATION,
     items: Array.from({ length: itemCount }, (_, itemIndex) => ({
       id: `item-${itemIndex}`,
-      sceneId: itemIndex % 2 === 0 ? "scene-a" : "scene-b",
       position: itemIndex,
+      kind: "scene" as const,
+      sceneId: itemIndex % 2 === 0 ? "scene-a" : "scene-b",
+      clipId: null,
+      duration: null,
     })),
     createdBy: null,
     createdAt: "2026-11-06T20:00:00.000Z",
@@ -99,6 +106,10 @@ function scenesPropsWith(
     onSaveScene: vi.fn(),
     onSetlistNext: vi.fn(),
     onSetlistPrevious: vi.fn(),
+    setlistStatus: "manual",
+    isSetlistLooping: false,
+    isSetlistPlayPending: false,
+    onSetlistTogglePlaying: vi.fn(),
     ...overrides,
   };
 }
@@ -177,7 +188,12 @@ describe("VjStrips", () => {
       }),
       historyPropsWith({ isBlocked: true, blockedReasonId: "status-line" }),
     );
-    for (const name of ["Recall scene Peak", "Previous scene", "Next scene"]) {
+    for (const name of [
+      "Recall scene Peak",
+      "Previous step",
+      "Play sequence",
+      "Next step",
+    ]) {
       expect(scenesStrip().getByRole("button", { name })).toHaveAttribute(
         "aria-describedby",
         "status-line",
@@ -213,25 +229,6 @@ describe("VjStrips", () => {
     expect(
       scenesStrip().getByRole("button", { name: "Save scene" }),
     ).toBeInTheDocument();
-  });
-
-  it("set list group shows 3 of 12 and steps both ways", async () => {
-    const scenesProps = scenesPropsWith({
-      activeSetlist: makeSetlist(12),
-      setlistIndex: 2,
-    });
-    await renderStrips(scenesProps, historyPropsWith());
-    expect(scenesStrip().getByText("3 of 12")).toBeInTheDocument();
-    fireEvent.click(scenesStrip().getByRole("button", { name: "Next scene" }));
-    fireEvent.click(
-      scenesStrip().getByRole("button", { name: "Previous scene" }),
-    );
-    expect(scenesProps.onSetlistNext).toHaveBeenCalledTimes(1);
-    expect(scenesProps.onSetlistPrevious).toHaveBeenCalledTimes(1);
-    // Item index 2 names scene-a, so its chip reads as live.
-    expect(
-      scenesStrip().getByRole("button", { name: "Recall scene Warm up" }),
-    ).toHaveAttribute("aria-current", "true");
   });
 
   it("Previous sends the second recent clip", async () => {
@@ -330,5 +327,167 @@ describe("VjStrips", () => {
     // The neighbours keep their nodes and slide along; only the new chip mounts.
     expect(recentChips[1]).toBe(glitterBefore);
     expect(recentChips[0]).toHaveAttribute("aria-current", "true");
+  });
+});
+
+describe("VjStrips sequence group", () => {
+  it("sequence group shows 3 of 12 and steps both ways", async () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(12),
+      setlistIndex: 2,
+    });
+    await renderStrips(scenesProps, historyPropsWith());
+    expect(scenesStrip().getByText("3 of 12")).toBeInTheDocument();
+    fireEvent.click(scenesStrip().getByRole("button", { name: "Next step" }));
+    fireEvent.click(
+      scenesStrip().getByRole("button", { name: "Previous step" }),
+    );
+    expect(scenesProps.onSetlistNext).toHaveBeenCalledTimes(1);
+    expect(scenesProps.onSetlistPrevious).toHaveBeenCalledTimes(1);
+    // Item index 2 names scene-a, so its chip reads as live.
+    expect(
+      scenesStrip().getByRole("button", { name: "Recall scene Warm up" }),
+    ).toHaveAttribute("aria-current", "true");
+  });
+
+  it("the play chip plays, pauses and resumes as the status asks", async () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(4),
+      setlistIndex: 1,
+    });
+    const { rerender } = await renderStrips(scenesProps, historyPropsWith());
+    const playChip = scenesStrip().getByRole("button", {
+      name: "Play sequence",
+    });
+    fireEvent.click(playChip);
+    expect(scenesProps.onSetlistTogglePlaying).toHaveBeenCalledWith(playChip);
+    const rerenderWithStatus = (
+      setlistStatus: VjScenesStripProps["setlistStatus"],
+    ) =>
+      rerender(
+        <TestProviders>
+          <VjStrips
+            isCompact={false}
+            scenesProps={{ ...scenesProps, setlistStatus }}
+            historyProps={historyPropsWith()}
+          />
+        </TestProviders>,
+      );
+    rerenderWithStatus("playing");
+    expect(
+      scenesStrip().getByRole("button", { name: "Pause sequence" }),
+    ).toHaveAttribute("data-live", "true");
+    rerenderWithStatus("takenOver");
+    expect(
+      scenesStrip().getByRole("button", { name: "Resume sequence" }),
+    ).toBeInTheDocument();
+    rerenderWithStatus("finished");
+    expect(
+      scenesStrip().getByRole("button", { name: "Play again" }),
+    ).toBeInTheDocument();
+  });
+
+  it("the play chip holds while its command waits and keeps the popover anchor", async () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(4),
+      setlistIndex: 0,
+      isSetlistPlayPending: true,
+    });
+    await renderStrips(scenesProps, historyPropsWith());
+    expect(
+      document.querySelector('[data-vj-setlist-group="setlist-1"]'),
+    ).not.toBeNull();
+    const playChip = scenesStrip().getByRole("button", {
+      name: "Play sequence",
+    });
+    expect(playChip).toHaveAttribute("aria-disabled", "true");
+    expect(playChip).toHaveAttribute("aria-busy", "true");
+    fireEvent.click(playChip);
+    expect(scenesProps.onSetlistTogglePlaying).not.toHaveBeenCalled();
+  });
+
+  it("pins the group in Save scene's place, outside the scrolling chips", async () => {
+    await renderStrips(
+      scenesPropsWith({
+        activeSetlist: makeSetlist(4),
+        setlistIndex: 0,
+        onOpenScenesSheet: vi.fn(),
+      }),
+      historyPropsWith(),
+    );
+    const group = document.querySelector<HTMLElement>(
+      '[data-vj-setlist-group="setlist-1"]',
+    );
+    expect(group).not.toBeNull();
+    // The scroller marks its fade edges; the pinned group sits outside it.
+    expect(group?.closest("[data-vj-fade-start]")).toBeNull();
+    expect(
+      scenesStrip().queryByRole("button", { name: "Save scene" }),
+    ).toBeNull();
+    expect(
+      scenesStrip().getByRole("button", { name: "Open scenes and sequences" }),
+    ).toBeInTheDocument();
+  });
+
+  it("brings Save scene back once no sequence is active", async () => {
+    await renderStrips(scenesPropsWith(), historyPropsWith());
+    expect(
+      scenesStrip().getByRole("button", { name: "Save scene" }),
+    ).toBeInTheDocument();
+    expect(document.querySelector("[data-vj-setlist-group]")).toBeNull();
+  });
+
+  it("with Loop on, Next from the last step goes round", async () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(3),
+      setlistIndex: 2,
+      isSetlistLooping: true,
+    });
+    await renderStrips(scenesProps, historyPropsWith());
+    const nextChip = scenesStrip().getByRole("button", { name: "Next step" });
+    expect(nextChip).not.toHaveAttribute("aria-disabled");
+    fireEvent.click(nextChip);
+    expect(scenesProps.onSetlistNext).toHaveBeenCalledTimes(1);
+  });
+
+  it("without Loop, Next holds at the last step", async () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(3),
+      setlistIndex: 2,
+    });
+    await renderStrips(scenesProps, historyPropsWith());
+    const nextChip = scenesStrip().getByRole("button", { name: "Next step" });
+    expect(nextChip).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(nextChip);
+    expect(scenesProps.onSetlistNext).not.toHaveBeenCalled();
+  });
+
+  it("with Loop on, Previous goes round from nothing recalled yet", async () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(3),
+      setlistIndex: null,
+      isSetlistLooping: true,
+    });
+    await renderStrips(scenesProps, historyPropsWith());
+    const previousChip = scenesStrip().getByRole("button", {
+      name: "Previous step",
+    });
+    expect(previousChip).not.toHaveAttribute("aria-disabled");
+    fireEvent.click(previousChip);
+    expect(scenesProps.onSetlistPrevious).toHaveBeenCalledTimes(1);
+  });
+
+  it("without Loop, Previous holds while nothing is recalled yet", async () => {
+    const scenesProps = scenesPropsWith({
+      activeSetlist: makeSetlist(3),
+      setlistIndex: null,
+    });
+    await renderStrips(scenesProps, historyPropsWith());
+    const previousChip = scenesStrip().getByRole("button", {
+      name: "Previous step",
+    });
+    expect(previousChip).toHaveAttribute("aria-disabled", "true");
+    fireEvent.click(previousChip);
+    expect(scenesProps.onSetlistPrevious).not.toHaveBeenCalled();
   });
 });

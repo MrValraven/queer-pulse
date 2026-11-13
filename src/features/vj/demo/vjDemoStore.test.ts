@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ApiError } from "../../../shared/api/client";
-import type { VjLibraryChange } from "../../../shared/contracts/vj";
+import type {
+  VjLibraryChange,
+  VjSetlistItemInput,
+} from "../../../shared/contracts/vj";
 import { VJ_DEMO_LIBRARY_STORAGE_KEY } from "../vj.constants";
 import {
   createVjDemoChannelHub,
@@ -12,14 +15,18 @@ import {
   demoAddVjPackClip,
   demoCreateVjClip,
   demoCreateVjPack,
+  demoCreateVjSetlist,
   demoDeleteVjClip,
   demoDeleteVjPack,
   demoGetVjClips,
   demoGetVjPackClips,
   demoGetVjPackMedia,
   demoGetVjPacks,
+  demoGetVjSetlists,
   demoRemoveVjPackClip,
   demoReorderVjPacks,
+  demoSetVjSetlistItems,
+  demoUpdateVjSetlist,
   resetVjDemoLibrary,
   vjDemoLibraryLookup,
   type VjDemoClipUpload,
@@ -31,9 +38,20 @@ const PEAK_HOUR_ID = "00000000-0000-4000-8000-0000000000a2";
 const CLOSING_ID = "00000000-0000-4000-8000-0000000000a3";
 const NEON_GRID_ID = "00000000-0000-4000-8000-0000000000c1";
 const DISCO_DOTS_ID = "00000000-0000-4000-8000-0000000000c3";
+const PINK_TUNNEL_ID = "00000000-0000-4000-8000-0000000000c4";
 const STATIC_BLOOM_ID = "00000000-0000-4000-8000-0000000000c8";
 const WARM_UP_SCENE_ID = "00000000-0000-4000-8000-0000000000d1";
 const PEAK_SCENE_ID = "00000000-0000-4000-8000-0000000000d2";
+const FRIDAY_SET_ID = "00000000-0000-4000-8000-0000000000b1";
+/** The seed steps of "Friday set": warm up, pink tunnel, peak, disco dots. */
+const FRIDAY_STEP_IDS = [
+  "00000000-0000-4000-8000-000000000100",
+  "00000000-0000-4000-8000-000000000101",
+  "00000000-0000-4000-8000-000000000102",
+  "00000000-0000-4000-8000-000000000103",
+] as const;
+const UNKNOWN_ID = "00000000-0000-4000-8000-00000000ffff";
+const OTHER_UNKNOWN_ID = "00000000-0000-4000-8000-00000000fffe";
 const SUPPER_CLUB_EVENT_ID = "00000000-0000-4000-8000-00000000ee01";
 const FIXED_NOW = Date.parse("2026-11-05T20:00:00.000Z");
 
@@ -241,6 +259,7 @@ describe("vjDemoStore deletes, uploads and sync", () => {
     expect(demoDeleteVjClip(NEON_GRID_ID)).toEqual({
       deletedClipId: NEON_GRID_ID,
       removedFromPackCount: 2,
+      removedFromSetlistCount: 0,
     });
     expect(
       demoGetVjPackClips(WARM_UP_ID).items.map((clip) => clip.id),
@@ -431,5 +450,726 @@ describe("vjDemoStore v2 fields", () => {
       .items.filter((clip) => clip.isFavorite)
       .map((clip) => clip.id);
     expect(favorites).toEqual([NEON_GRID_ID]);
+  });
+});
+
+function codeOf(action: () => unknown): unknown {
+  return bodyOf(refusalOf(action)).code;
+}
+
+function fridaySet() {
+  const setlist = demoGetVjSetlists().items.find(
+    (candidate) => candidate.id === FRIDAY_SET_ID,
+  );
+  if (setlist === undefined) throw new Error("expected the seed set list");
+  return setlist;
+}
+
+function setlistItemCountOf(clipId: string): number | undefined {
+  return demoGetVjClips().items.find((clip) => clip.id === clipId)
+    ?.setlistItemCount;
+}
+
+/** The stored steps of "Friday set" as a PUT body would send them. */
+function fridayInputs(): VjSetlistItemInput[] {
+  return fridaySet().items.map((item): VjSetlistItemInput =>
+    item.kind === "scene"
+      ? {
+          id: item.id,
+          kind: "scene",
+          sceneId: item.sceneId ?? "",
+          duration: item.duration,
+        }
+      : {
+          id: item.id,
+          kind: "clip",
+          clipId: item.clipId ?? "",
+          duration: item.duration,
+        },
+  );
+}
+
+async function changesDuring(action: () => void): Promise<VjLibraryChange[]> {
+  const received: VjDemoMessage[] = [];
+  const listener = hub.open();
+  listener.subscribe((message) => received.push(message));
+  action();
+  await flushMicrotasks();
+  return received.map((message) => message.payload as VjLibraryChange);
+}
+
+describe("vjDemoStore sequences seed and DTOs", () => {
+  it("seeds Friday set as a looping sequence of scene and clip steps", () => {
+    const setlist = fridaySet();
+    expect(setlist).toMatchObject({
+      isLooping: true,
+      stepDuration: { kind: "seconds", value: 8 },
+    });
+    expect(setlist.items).toEqual([
+      {
+        id: FRIDAY_STEP_IDS[0],
+        position: 0,
+        kind: "scene",
+        sceneId: WARM_UP_SCENE_ID,
+        clipId: null,
+        duration: null,
+      },
+      {
+        id: FRIDAY_STEP_IDS[1],
+        position: 1,
+        kind: "clip",
+        sceneId: null,
+        clipId: PINK_TUNNEL_ID,
+        duration: null,
+      },
+      {
+        id: FRIDAY_STEP_IDS[2],
+        position: 2,
+        kind: "scene",
+        sceneId: PEAK_SCENE_ID,
+        clipId: null,
+        duration: { kind: "beats", value: 16 },
+      },
+      {
+        id: FRIDAY_STEP_IDS[3],
+        position: 3,
+        kind: "clip",
+        sceneId: null,
+        clipId: DISCO_DOTS_ID,
+        duration: null,
+      },
+    ]);
+  });
+
+  it("counts the set list steps that play each clip", () => {
+    expect(setlistItemCountOf(PINK_TUNNEL_ID)).toBe(1);
+    expect(setlistItemCountOf(DISCO_DOTS_ID)).toBe(1);
+    expect(setlistItemCountOf(NEON_GRID_ID)).toBe(0);
+  });
+});
+
+describe("vjDemoStore sequence steps PUT", () => {
+  it("keeps the ids a PUT names, gives id-less steps fresh ids and leaves out the rest", async () => {
+    const changes = await changesDuring(() => {
+      demoSetVjSetlistItems(FRIDAY_SET_ID, {
+        items: [
+          {
+            id: FRIDAY_STEP_IDS[2],
+            kind: "scene",
+            sceneId: PEAK_SCENE_ID,
+            duration: { kind: "beats", value: 32 },
+          },
+          {
+            id: FRIDAY_STEP_IDS[0].toUpperCase(),
+            kind: "scene",
+            sceneId: WARM_UP_SCENE_ID,
+          },
+          { kind: "clip", clipId: NEON_GRID_ID.toUpperCase(), duration: null },
+        ],
+      });
+    });
+
+    const items = fridaySet().items;
+    expect(items.map((item) => item.position)).toEqual([0, 1, 2]);
+    expect(items[0]).toMatchObject({
+      id: FRIDAY_STEP_IDS[2],
+      duration: { kind: "beats", value: 32 },
+    });
+    expect(items[1]).toMatchObject({
+      id: FRIDAY_STEP_IDS[0],
+      duration: null,
+    });
+    expect(items[2]).toMatchObject({ kind: "clip", clipId: NEON_GRID_ID });
+    expect(FRIDAY_STEP_IDS as readonly string[]).not.toContain(items[2]?.id);
+    expect(setlistItemCountOf(PINK_TUNNEL_ID)).toBe(0);
+    expect(setlistItemCountOf(NEON_GRID_ID)).toBe(1);
+    expect(changes).toEqual([
+      expect.objectContaining({
+        kind: "setlist_items_changed",
+        setlistId: FRIDAY_SET_ID,
+        setlistIds: [FRIDAY_SET_ID],
+      }),
+    ]);
+  });
+
+  it("a PUT equal to the stored steps saves and posts nothing", async () => {
+    const before = fridaySet();
+    const changes = await changesDuring(() => {
+      demoSetVjSetlistItems(FRIDAY_SET_ID, { items: fridayInputs() });
+    });
+
+    expect(changes).toEqual([]);
+    expect(fridaySet()).toEqual(before);
+  });
+
+  it("an id-less copy of a stored step is a change", async () => {
+    const inputs = fridayInputs().map(({ id, ...input }) => {
+      void id;
+      return input;
+    });
+    const changes = await changesDuring(() => {
+      demoSetVjSetlistItems(FRIDAY_SET_ID, { items: inputs });
+    });
+
+    expect(changes.map((change) => change.kind)).toEqual([
+      "setlist_items_changed",
+    ]);
+  });
+});
+
+describe("vjDemoStore sequence steps PUT refusals", () => {
+  const scene = { kind: "scene", sceneId: WARM_UP_SCENE_ID } as const;
+  const tooMany = Array.from({ length: 101 }, () => ({ ...scene }));
+
+  it.each([
+    ["a malformed route id first", "set", { items: 1 }, "VJ_SETLIST_NOT_FOUND"],
+    [
+      "the old sceneIds body, even beside items",
+      FRIDAY_SET_ID,
+      { sceneIds: [WARM_UP_SCENE_ID], items: [scene] },
+      "VJ_SETLIST_ITEMS_INVALID",
+    ],
+    [
+      "items that are no array",
+      FRIDAY_SET_ID,
+      { items: "steps" },
+      "VJ_SETLIST_ITEMS_INVALID",
+    ],
+    ["items that are missing", FRIDAY_SET_ID, {}, "VJ_SETLIST_ITEMS_INVALID"],
+    [
+      "an id sent as null",
+      FRIDAY_SET_ID,
+      { items: [{ ...scene, id: null }] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "a malformed id",
+      FRIDAY_SET_ID,
+      { items: [{ ...scene, id: "step-1" }] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "an id used twice",
+      FRIDAY_SET_ID,
+      {
+        items: [
+          { ...scene, id: FRIDAY_STEP_IDS[0] },
+          { ...scene, id: FRIDAY_STEP_IDS[0].toUpperCase() },
+        ],
+      },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "a key outside the five",
+      FRIDAY_SET_ID,
+      { items: [{ ...scene, position: 0 }] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "a kind outside the list",
+      FRIDAY_SET_ID,
+      { items: [{ kind: "generator", sceneId: WARM_UP_SCENE_ID }] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "a scene step carrying a clip",
+      FRIDAY_SET_ID,
+      { items: [{ ...scene, clipId: NEON_GRID_ID }] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "a clip step whose clipId is no uuid",
+      FRIDAY_SET_ID,
+      { items: [{ kind: "clip", clipId: "neon" }] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "an entry that is no object",
+      FRIDAY_SET_ID,
+      { items: [WARM_UP_SCENE_ID] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "a length out of range",
+      FRIDAY_SET_ID,
+      { items: [{ ...scene, duration: { kind: "seconds", value: 1 } }] },
+      "VJ_SETLIST_STEP_DURATION_INVALID",
+    ],
+    [
+      "a bad length before a later bad entry, in list order",
+      FRIDAY_SET_ID,
+      {
+        items: [
+          { ...scene, duration: { kind: "beats", value: 3 } },
+          { kind: "bogus" },
+        ],
+      },
+      "VJ_SETLIST_STEP_DURATION_INVALID",
+    ],
+    [
+      "a bad entry before a later bad length, in list order",
+      FRIDAY_SET_ID,
+      {
+        items: [
+          { kind: "bogus" },
+          { ...scene, duration: { kind: "beats", value: 3 } },
+        ],
+      },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "the body rules before the set list read",
+      UNKNOWN_ID,
+      { items: [{ kind: "bogus" }] },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "an unknown set list after the body rules",
+      UNKNOWN_ID,
+      { items: [{ ...scene, id: UNKNOWN_ID }] },
+      "VJ_SETLIST_NOT_FOUND",
+    ],
+    [
+      "an id naming no step of this set list before a missing scene",
+      FRIDAY_SET_ID,
+      { items: [{ id: UNKNOWN_ID, kind: "scene", sceneId: UNKNOWN_ID }] },
+      "VJ_SETLIST_ITEM_NOT_FOUND",
+    ],
+  ] as const)("refuses %s", (_label, setlistId, body, code) => {
+    const before = fridaySet();
+    expect(codeOf(() => demoSetVjSetlistItems(setlistId, body))).toBe(code);
+    expect(fridaySet()).toEqual(before);
+  });
+
+  it("answers VJ_SETLIST_FULL with the set list id over 100 steps", () => {
+    const body = bodyOf(
+      refusalOf(() => demoSetVjSetlistItems(FRIDAY_SET_ID, { items: tooMany })),
+    );
+    expect(body).toMatchObject({
+      code: "VJ_SETLIST_FULL",
+      setlistId: FRIDAY_SET_ID,
+    });
+  });
+
+  it("names the first missing scene before any missing clip, then the missing clip", () => {
+    expect(
+      bodyOf(
+        refusalOf(() =>
+          demoSetVjSetlistItems(FRIDAY_SET_ID, {
+            items: [
+              { kind: "clip", clipId: UNKNOWN_ID },
+              { kind: "scene", sceneId: OTHER_UNKNOWN_ID },
+            ],
+          }),
+        ),
+      ),
+    ).toMatchObject({ code: "VJ_SCENE_NOT_FOUND", sceneId: OTHER_UNKNOWN_ID });
+    expect(
+      bodyOf(
+        refusalOf(() =>
+          demoSetVjSetlistItems(FRIDAY_SET_ID, {
+            items: [
+              { kind: "clip", clipId: NEON_GRID_ID },
+              { kind: "clip", clipId: UNKNOWN_ID },
+            ],
+          }),
+        ),
+      ),
+    ).toMatchObject({ code: "VJ_CLIP_NOT_FOUND", clipId: UNKNOWN_ID });
+  });
+});
+
+describe("vjDemoStore sequence create and PATCH", () => {
+  it("creates from steps with Loop and a length, or from sceneIds on the defaults", async () => {
+    const changes = await changesDuring(() => {
+      demoCreateVjSetlist({
+        name: "Late set",
+        items: [
+          { kind: "clip", clipId: NEON_GRID_ID, duration: null },
+          { kind: "scene", sceneId: PEAK_SCENE_ID },
+        ],
+        isLooping: true,
+        stepDuration: { kind: "beats", value: 8 },
+      });
+    });
+    const late = demoGetVjSetlists().items.find(
+      (setlist) => setlist.name === "Late set",
+    );
+    expect(late).toMatchObject({
+      isLooping: true,
+      stepDuration: { kind: "beats", value: 8 },
+    });
+    expect(late?.items.map((item) => [item.kind, item.position])).toEqual([
+      ["clip", 0],
+      ["scene", 1],
+    ]);
+    expect(changes.map((change) => change.kind)).toEqual(["setlist_created"]);
+
+    const fromScenes = demoCreateVjSetlist({
+      name: "From scenes",
+      sceneIds: [WARM_UP_SCENE_ID, WARM_UP_SCENE_ID],
+    });
+    expect(fromScenes).toMatchObject({
+      isLooping: false,
+      stepDuration: { kind: "seconds", value: 8 },
+    });
+    expect(fromScenes.items).toEqual([
+      expect.objectContaining({
+        kind: "scene",
+        sceneId: WARM_UP_SCENE_ID,
+        clipId: null,
+        duration: null,
+      }),
+      expect.objectContaining({ kind: "scene", sceneId: WARM_UP_SCENE_ID }),
+    ]);
+  });
+
+  it.each([
+    [
+      "a missing name before the list rules",
+      { name: "", sceneIds: [], items: [] },
+      "VJ_SETLIST_NAME_REQUIRED",
+    ],
+    [
+      "sceneIds and items both sent",
+      { name: "Late", sceneIds: [], items: [] },
+      "VJ_SETLIST_ITEMS_INVALID",
+    ],
+    [
+      "a bad step before a bad Loop",
+      { name: "Late", items: [{ kind: "bogus" }], isLooping: "yes" },
+      "VJ_SETLIST_STEP_INVALID",
+    ],
+    [
+      "a bad Loop before a bad length",
+      { name: "Late", isLooping: "yes", stepDuration: { kind: "beats" } },
+      "VJ_SETLIST_LOOP_INVALID",
+    ],
+    [
+      "a bad default length",
+      { name: "Late", stepDuration: { kind: "seconds", value: 601 } },
+      "VJ_SETLIST_STEP_DURATION_INVALID",
+    ],
+    [
+      "a step id, which no new set list holds",
+      {
+        name: "Late",
+        items: [
+          { id: FRIDAY_STEP_IDS[0], kind: "scene", sceneId: WARM_UP_SCENE_ID },
+        ],
+      },
+      "VJ_SETLIST_ITEM_NOT_FOUND",
+    ],
+    [
+      "a taken name before a missing scene",
+      { name: "friday SET", sceneIds: [UNKNOWN_ID] },
+      "VJ_SETLIST_NAME_TAKEN",
+    ],
+    [
+      "a missing clip step",
+      { name: "Late", items: [{ kind: "clip", clipId: UNKNOWN_ID }] },
+      "VJ_CLIP_NOT_FOUND",
+    ],
+  ] as const)("a create refuses %s", (_label, body, code) => {
+    expect(codeOf(() => demoCreateVjSetlist(body))).toBe(code);
+    expect(demoGetVjSetlists().items).toHaveLength(1);
+  });
+
+  it.each([
+    ["a malformed route id first", "set", {}, "VJ_SETLIST_NOT_FOUND"],
+    ["a body naming no field", FRIDAY_SET_ID, {}, "VJ_SETLIST_PATCH_EMPTY"],
+    [
+      "a blank name before a bad Loop",
+      FRIDAY_SET_ID,
+      { name: " ", isLooping: 1 },
+      "VJ_SETLIST_NAME_REQUIRED",
+    ],
+    [
+      "a bad Loop before a bad length",
+      FRIDAY_SET_ID,
+      { isLooping: "on", stepDuration: null },
+      "VJ_SETLIST_LOOP_INVALID",
+    ],
+    [
+      "a bad length",
+      FRIDAY_SET_ID,
+      { stepDuration: { kind: "beats", value: 12 } },
+      "VJ_SETLIST_STEP_DURATION_INVALID",
+    ],
+    [
+      "an unknown set list after the field rules",
+      UNKNOWN_ID,
+      { isLooping: false },
+      "VJ_SETLIST_NOT_FOUND",
+    ],
+  ] as const)("a PATCH refuses %s", (_label, setlistId, body, code) => {
+    expect(codeOf(() => demoUpdateVjSetlist(setlistId, body))).toBe(code);
+  });
+
+  it("a PATCH equal to the stored fields saves and posts nothing", async () => {
+    const before = fridaySet();
+    const changes = await changesDuring(() => {
+      demoUpdateVjSetlist(FRIDAY_SET_ID, {
+        name: "Friday set",
+        isLooping: true,
+        stepDuration: { kind: "seconds", value: 8 },
+      });
+    });
+    expect(changes).toEqual([]);
+    expect(fridaySet()).toEqual(before);
+  });
+
+  it("a PATCH saves Loop and the default length and posts setlist_updated", async () => {
+    const changes = await changesDuring(() => {
+      demoUpdateVjSetlist(FRIDAY_SET_ID, {
+        isLooping: false,
+        stepDuration: { kind: "beats", value: 64 },
+      });
+    });
+    expect(fridaySet()).toMatchObject({
+      name: "Friday set",
+      isLooping: false,
+      stepDuration: { kind: "beats", value: 64 },
+    });
+    expect(changes).toEqual([
+      expect.objectContaining({
+        kind: "setlist_updated",
+        setlistId: FRIDAY_SET_ID,
+        setlistIds: [FRIDAY_SET_ID],
+      }),
+    ]);
+  });
+
+  it("checks the name clash only when the name changes", () => {
+    const late = demoCreateVjSetlist({ name: "Late set" });
+    expect(
+      bodyOf(
+        refusalOf(() =>
+          demoUpdateVjSetlist(FRIDAY_SET_ID, { name: "late SET" }),
+        ),
+      ),
+    ).toMatchObject({ code: "VJ_SETLIST_NAME_TAKEN", setlistId: late.id });
+    expect(
+      demoUpdateVjSetlist(FRIDAY_SET_ID, {
+        name: "Friday set",
+        isLooping: false,
+      }).isLooping,
+    ).toBe(false);
+  });
+});
+
+describe("vjDemoStore clip delete and the sequence reads", () => {
+  it("deleting a clip drops its steps, closes positions and names the set list", async () => {
+    let answer: unknown;
+    const changes = await changesDuring(() => {
+      answer = demoDeleteVjClip(PINK_TUNNEL_ID);
+    });
+
+    expect(answer).toEqual({
+      deletedClipId: PINK_TUNNEL_ID,
+      removedFromPackCount: 1,
+      removedFromSetlistCount: 1,
+    });
+    expect(fridaySet().items.map((item) => [item.id, item.position])).toEqual([
+      [FRIDAY_STEP_IDS[0], 0],
+      [FRIDAY_STEP_IDS[2], 1],
+      [FRIDAY_STEP_IDS[3], 2],
+    ]);
+    expect(changes).toEqual([
+      expect.objectContaining({
+        kind: "clip_deleted",
+        clipId: PINK_TUNNEL_ID,
+        packIds: [PEAK_HOUR_ID],
+        setlistIds: [FRIDAY_SET_ID],
+      }),
+    ]);
+  });
+
+  it("the step read answers item ids, Loop, the default length and the step", () => {
+    const counted = vjDemoLibraryLookup.readSetlist(FRIDAY_SET_ID, {
+      kind: "count",
+    });
+    expect(counted).toEqual({
+      setlistId: FRIDAY_SET_ID,
+      isLooping: true,
+      stepDuration: { kind: "seconds", value: 8 },
+      itemIds: [...FRIDAY_STEP_IDS],
+      step: null,
+    });
+
+    expect(
+      vjDemoLibraryLookup.readSetlist(FRIDAY_SET_ID.toUpperCase(), {
+        kind: "index",
+        index: 1,
+        wrapsToFirst: false,
+      })?.step,
+    ).toEqual({
+      kind: "clip",
+      itemId: FRIDAY_STEP_IDS[1],
+      index: 1,
+      clipId: PINK_TUNNEL_ID,
+      duration: { kind: "seconds", value: 8 },
+    });
+
+    const peak = vjDemoLibraryLookup.readSetlist(FRIDAY_SET_ID, {
+      kind: "index",
+      index: 2,
+      wrapsToFirst: false,
+    })?.step;
+    expect(peak).toMatchObject({
+      kind: "scene",
+      itemId: FRIDAY_STEP_IDS[2],
+      index: 2,
+      sceneId: PEAK_SCENE_ID,
+      duration: { kind: "beats", value: 16 },
+    });
+    expect(peak?.kind === "scene" ? peak.look.transition.mode : null).toBe(
+      "cut",
+    );
+  });
+
+  it("wraps past the end only when asked, and reads the last step", () => {
+    const read = (
+      position: Parameters<typeof vjDemoLibraryLookup.readSetlist>[1],
+    ) => vjDemoLibraryLookup.readSetlist(FRIDAY_SET_ID, position)?.step;
+
+    expect(read({ kind: "index", index: 4, wrapsToFirst: true })).toMatchObject(
+      { itemId: FRIDAY_STEP_IDS[0], index: 0 },
+    );
+    expect(read({ kind: "index", index: 4, wrapsToFirst: false })).toBeNull();
+    expect(read({ kind: "index", index: -1, wrapsToFirst: true })).toBeNull();
+    expect(read({ kind: "index", index: 1.5, wrapsToFirst: true })).toBeNull();
+    expect(
+      read({ kind: "index", index: Number.NaN, wrapsToFirst: true }),
+    ).toBeNull();
+    expect(
+      read({
+        kind: "index",
+        index: Number.POSITIVE_INFINITY,
+        wrapsToFirst: true,
+      }),
+    ).toBeNull();
+    expect(
+      read({ kind: "index", index: 250, wrapsToFirst: true }),
+    ).toMatchObject({ itemId: FRIDAY_STEP_IDS[0], index: 0 });
+    expect(read({ kind: "last" })).toMatchObject({
+      itemId: FRIDAY_STEP_IDS[3],
+      index: 3,
+      kind: "clip",
+    });
+  });
+
+  it("an empty, unknown or malformed set list reads as such", () => {
+    const empty = demoCreateVjSetlist({ name: "Empty" });
+    expect(
+      vjDemoLibraryLookup.readSetlist(empty.id, {
+        kind: "index",
+        index: 0,
+        wrapsToFirst: true,
+      }),
+    ).toMatchObject({ itemIds: [], step: null });
+    expect(
+      vjDemoLibraryLookup.readSetlist(empty.id, { kind: "last" })?.step,
+    ).toBeNull();
+    expect(
+      vjDemoLibraryLookup.readSetlist(UNKNOWN_ID, { kind: "count" }),
+    ).toBeNull();
+    expect(
+      vjDemoLibraryLookup.readSetlist("set", { kind: "count" }),
+    ).toBeNull();
+  });
+
+  it("the follow read answers item ids and Loop", () => {
+    expect(vjDemoLibraryLookup.readSetlistFollow(FRIDAY_SET_ID)).toEqual({
+      itemIds: [...FRIDAY_STEP_IDS],
+      isLooping: true,
+    });
+    expect(vjDemoLibraryLookup.readSetlistFollow(UNKNOWN_ID)).toBeNull();
+    expect(vjDemoLibraryLookup.readSetlistFollow("set")).toBeNull();
+  });
+});
+
+describe("vjDemoStore sequence review cases", () => {
+  const LATER_NOW = FIXED_NOW + 60_000;
+
+  function moveClockTo(now: number): void {
+    configureVjDemoStore({ storage, channel: storeChannel, now: () => now });
+  }
+
+  it("a clip delete counts every step across set lists and names them in id order", async () => {
+    const twice = demoCreateVjSetlist({
+      name: "Disco twice",
+      items: [
+        { kind: "clip", clipId: DISCO_DOTS_ID },
+        { kind: "scene", sceneId: PEAK_SCENE_ID },
+        { kind: "clip", clipId: DISCO_DOTS_ID, duration: null },
+      ],
+    });
+    let answer: unknown;
+    const changes = await changesDuring(() => {
+      answer = demoDeleteVjClip(DISCO_DOTS_ID);
+    });
+
+    expect(answer).toEqual({
+      deletedClipId: DISCO_DOTS_ID,
+      removedFromPackCount: 1,
+      removedFromSetlistCount: 3,
+    });
+    expect(changes[0]?.setlistIds).toEqual([FRIDAY_SET_ID, twice.id].sort());
+    const remaining = demoGetVjSetlists().items.find(
+      (setlist) => setlist.id === twice.id,
+    );
+    expect(remaining?.items.map((item) => [item.kind, item.position])).toEqual([
+      ["scene", 0],
+    ]);
+    expect(fridaySet().items.map((item) => item.id)).toEqual(
+      FRIDAY_STEP_IDS.slice(0, 3),
+    );
+  });
+
+  it("refuses a step id that belongs to another set list", () => {
+    const other = demoCreateVjSetlist({
+      name: "Other set",
+      sceneIds: [WARM_UP_SCENE_ID],
+    });
+    const otherStepId = other.items[0]?.id ?? "";
+    expect(
+      codeOf(() =>
+        demoSetVjSetlistItems(FRIDAY_SET_ID, {
+          items: [
+            { id: otherStepId, kind: "scene", sceneId: WARM_UP_SCENE_ID },
+          ],
+        }),
+      ),
+    ).toBe("VJ_SETLIST_ITEM_NOT_FOUND");
+  });
+
+  it("a PATCH and a PUT that change something bump updatedAt; a no-op keeps it", () => {
+    const seededAt = fridaySet().updatedAt;
+    moveClockTo(LATER_NOW);
+    demoUpdateVjSetlist(FRIDAY_SET_ID, { isLooping: true });
+    expect(fridaySet().updatedAt).toBe(seededAt);
+
+    demoUpdateVjSetlist(FRIDAY_SET_ID, { isLooping: false });
+    expect(fridaySet().updatedAt).toBe(new Date(LATER_NOW).toISOString());
+
+    moveClockTo(LATER_NOW + 60_000);
+    demoSetVjSetlistItems(FRIDAY_SET_ID, { items: fridayInputs() });
+    expect(fridaySet().updatedAt).toBe(new Date(LATER_NOW).toISOString());
+
+    demoSetVjSetlistItems(FRIDAY_SET_ID, {
+      items: fridayInputs().slice(1),
+    });
+    expect(fridaySet().updatedAt).toBe(
+      new Date(LATER_NOW + 60_000).toISOString(),
+    );
+  });
+
+  it("a case-only rename is a change", async () => {
+    const changes = await changesDuring(() => {
+      demoUpdateVjSetlist(FRIDAY_SET_ID, { name: "Friday Set" });
+    });
+    expect(fridaySet().name).toBe("Friday Set");
+    expect(changes.map((change) => change.kind)).toEqual(["setlist_updated"]);
   });
 });

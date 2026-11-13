@@ -16,6 +16,7 @@ import {
   VJ_OVERLAY_SIZES,
   VJ_OVERLAY_STYLES,
   VJ_QUANTIZE_MODES,
+  VJ_SETLIST_PLAYBACK_STATUSES,
   VJ_SHUFFLE_BEAT_COUNTS,
   VJ_SHUFFLE_INTERVAL_KINDS,
   VJ_SHUFFLE_SOURCES,
@@ -27,6 +28,7 @@ import {
   type VjEffectId,
   type VjEventCardDTO,
   type VjPackDTO,
+  type VjSetlistPlayback,
   type VjStageState,
 } from "../../../shared/contracts/vj";
 
@@ -239,6 +241,88 @@ function isScreenOverrides(value: unknown): boolean {
   return isVjPlainObject(value) && Object.values(value).every(isScreenOverride);
 }
 
+/** The clock fields per status (sequences contract 3.2 table): playing holds
+ *  both ends a duration apart and no remainder; paused holds a duration and a
+ *  remainder inside it and no ends; every other status holds no ends and no
+ *  remainder. */
+function isSetlistClockFor(playback: Record<string, unknown>): boolean {
+  const { status, stepStartedAt, stepEndsAt, stepDurationMs } = playback;
+  const { pausedRemainingMs } = playback;
+  if (status === "playing") {
+    return (
+      isVjFiniteNumber(stepStartedAt) &&
+      isVjFiniteNumber(stepEndsAt) &&
+      isVjFiniteNumber(stepDurationMs) &&
+      stepEndsAt - stepStartedAt === stepDurationMs &&
+      pausedRemainingMs === null
+    );
+  }
+  if (stepStartedAt !== null || stepEndsAt !== null) return false;
+  if (status === "paused") {
+    return (
+      isVjFiniteNumber(stepDurationMs) &&
+      isVjFiniteNumber(pausedRemainingMs) &&
+      pausedRemainingMs >= 0 &&
+      pausedRemainingMs <= stepDurationMs
+    );
+  }
+  return isNullableFiniteNumber(stepDurationMs) && pausedRemainingMs === null;
+}
+
+/** A sequence's clock: every field typed, a known status and the 3.2 invariants. */
+export function isVjSetlistPlayback(
+  value: unknown,
+): value is VjSetlistPlayback {
+  return (
+    isVjPlainObject(value) &&
+    isOneOf(VJ_SETLIST_PLAYBACK_STATUSES, value.status) &&
+    isNullableString(value.itemId) &&
+    typeof value.isFlashConfirmed === "boolean" &&
+    isNullableFiniteNumber(value.stepStartedAt) &&
+    isNullableFiniteNumber(value.stepEndsAt) &&
+    isNullableFiniteNumber(value.stepDurationMs) &&
+    isNullableFiniteNumber(value.pausedRemainingMs) &&
+    typeof value.isLooping === "boolean" &&
+    isSetlistClockFor(value)
+  );
+}
+
+/** The default playback (createVjSetlistPlayback(false)), field by field. */
+function isDefaultSetlistPlayback(playback: VjSetlistPlayback): boolean {
+  return (
+    playback.status === "manual" &&
+    playback.itemId === null &&
+    !playback.isFlashConfirmed &&
+    playback.stepStartedAt === null &&
+    playback.stepEndsAt === null &&
+    playback.stepDurationMs === null &&
+    playback.pausedRemainingMs === null &&
+    !playback.isLooping
+  );
+}
+
+/** A playback that fits the state's active set list: a valid clock, and the
+ *  default playback when no set list is active (sequences contract 3.2). */
+export function isVjSetlistPlaybackFor(
+  activeSetlistId: unknown,
+  playback: unknown,
+): playback is VjSetlistPlayback {
+  return (
+    isVjSetlistPlayback(playback) &&
+    (activeSetlistId !== null || isDefaultSetlistPlayback(playback))
+  );
+}
+
+/** The active set list, its index and its clock. */
+function isSetlistFields(state: Record<string, unknown>): boolean {
+  const { activeSetlistId, setlistIndex, setlistPlayback } = state;
+  return (
+    isNullableString(activeSetlistId) &&
+    (setlistIndex === null || isNonNegativeInteger(setlistIndex)) &&
+    isVjSetlistPlaybackFor(activeSetlistId, setlistPlayback)
+  );
+}
+
 /** Identity, counters and the live source: at most one of a clip and a generator. */
 function isStageSource(state: Record<string, unknown>): boolean {
   return (
@@ -266,8 +350,7 @@ export function isVjStageStateV2(value: unknown): value is VjStageState {
     isShuffle(value.shuffle) &&
     isStringList(value.recentClipIds) &&
     isScreenOverrides(value.screenOverrides) &&
-    isNullableString(value.activeSetlistId) &&
-    (value.setlistIndex === null || isNonNegativeInteger(value.setlistIndex)) &&
+    isSetlistFields(value) &&
     isVjFiniteNumber(value.updatedAt)
   );
 }

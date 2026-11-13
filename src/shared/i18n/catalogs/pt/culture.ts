@@ -21,18 +21,18 @@ export const culture: Catalog = {
     "Os clubes, encomendas, mostras e rádio que compõem a vida cultural queer da cidade: com curadoria da comunidade, sempre em mudança.",
   "outro.title": "Cria algo <em>connosco.</em>",
   "outro.sub":
-    "Cultura é o que construímos entre os eventos, em silêncio, com constância, juntes.",
+    "A cultura é o que construímos entre eventos, sem alarde, com constância, em conjunto.",
   "outro.submitWorkCta": "Submeter o teu trabalho",
   "outro.exploreCommunitiesCta": "Explorar comunidades",
 
   "club.picksHeading": "As <em>escolhas</em> deste mês.",
   "club.picksSub":
-    "Com curadoria da comunidade. Vota na seleção do próximo mês em todos os últimos domingos.",
+    "Com curadoria da comunidade. Vota na escolha do próximo mês no último domingo de cada mês.",
   "club.suggestPickCta": "+ Sugerir uma escolha",
   "club.kind.book": "Livro",
   "club.kind.film": "Filme",
   "club.kind.music": "Música",
-  "club.picks.eventKind.meets": "Reúne a {date}",
+  "club.picks.eventKind.meets": "Reunião a {date}",
   "club.picks.eventKind.screening": "Exibição a {date}",
   "club.picks.eventKind.listeningParty": "Sessão de escuta a {date}",
   "club.picks.discussing_one": "{count} pessoa a comentar",
@@ -42,11 +42,11 @@ export const culture: Catalog = {
   "club.replies_other": "{count} respostas",
   "club.emptyLive.title": "Escolhas e discussões em breve",
   "club.emptyLive.description":
-    "Quando o clube arrancar, as escolhas do mês e as conversas à volta delas vão viver aqui.",
+    "Quando o clube arrancar, as escolhas do mês e as conversas à volta delas aparecem aqui.",
 
   "commissions.heading": "Encomendas <em>criativas.</em>",
   "commissions.sub":
-    "Estou a criar algo. Ajuda-me a torná-lo melhor. Mais estruturado do que o quadro aberto.",
+    "Estou a criar algo. Vem ajudar-me a melhorá-lo. Mais estruturado do que o quadro aberto.",
   "commissions.postProjectCta": "+ Publicar um projeto",
   "commissions.cat.photo": "Fotografia",
   "commissions.cat.music": "Música",
@@ -57,7 +57,7 @@ export const culture: Catalog = {
   "commissions.interestSent": "Interesse enviado",
   "commissions.emptyLive.title": "Encomendas abertas em breve",
   "commissions.emptyLive.description":
-    "Quando as pessoas começarem a publicar projetos e a procurar colaborações, os apelos vão aparecer aqui.",
+    "Quando as pessoas começarem a publicar projetos e a procurar quem colabore, os pedidos aparecem aqui.",
 
   "showcase.heading": "Trabalho da <em>comunidade.</em>",
   "showcase.sub":
@@ -69,21 +69,21 @@ export const culture: Catalog = {
 
   "radio.heading": "Rádio da <em>comunidade.</em>",
   "radio.sub":
-    "Presença cultural ambiente, com curadoria de DJs rotativos. Sem algoritmo. Sem anúncios.",
+    "Presença cultural ambiente, com curadoria rotativa de DJs. Sem algoritmo. Sem anúncios.",
   "radio.submitPlaylistCta": "Submeter uma playlist",
   "radio.emptyLive.title": "Programação de rádio em breve",
   "radio.emptyLive.description":
-    "A rádio da comunidade ainda não está no ar. Quando alguém da curadoria pegar no primeiro turno, vais ouvi-lo aqui.",
+    "A rádio da comunidade ainda não está no ar. Quando uma pessoa curadora ficar com o primeiro horário, vais ouvir tudo aqui.",
   "radio.curatorLabel": "Curadoria desta semana",
   "radio.curatedBy": "com curadoria de {name}",
-  "radio.becomeCurator": "Torna-te curador",
+  "radio.becomeCurator": "Junta-te à curadoria",
   "radio.nowPlaying": "A tocar agora",
   "radio.upNext": "A seguir",
   "radio.previousTrack": "Faixa anterior",
   "radio.nextTrack": "Faixa seguinte",
   "radio.play": "Reproduzir",
   "radio.playbackNote":
-    "A reprodução ainda não está ativa. Isto mostra o que está no ar neste momento.",
+    "A reprodução ainda não está ativa. Aqui vês o que está no ar neste momento.",
 
   "modal.dialogAriaLabel": "Janela",
   "modal.done": "Concluído",
@@ -91,23 +91,23 @@ export const culture: Catalog = {
   "common.sending": "A enviar…",
 
   "suggestPick.title": "Sugerir uma <em>escolha</em>",
-  "suggestPick.sub": "Nomeia algo para a comunidade votar este mês.",
+  "suggestPick.sub": "Propõe algo para a comunidade votar este mês.",
   "suggestPick.formatLabel": "Formato",
   "suggestPick.titleLabel": "Título",
   "suggestPick.titlePlaceholder": "p.ex. Detransition, Baby",
-  "suggestPick.authorLabel": "Autor / artista / realizador",
+  "suggestPick.authorLabel": "Autoria / artista / realização",
   "suggestPick.authorPlaceholder": "Quem criou isto?",
   "suggestPick.whyLabel": "Porquê esta escolha?",
   "suggestPick.whyPlaceholder":
     "Uma frase sobre porque é que o clube devia escolher isto…",
-  "suggestPick.nominateCta": "Nomear escolha",
+  "suggestPick.nominateCta": "Propor escolha",
   "suggestPick.success.title": "Escolha",
-  "suggestPick.success.em": "nomeada.",
+  "suggestPick.success.em": "proposta.",
   "suggestPick.success.body":
-    "Recebemos a tua nomeação. A comunidade decide o que lemos, vemos e ouvimos a seguir.",
-  "suggestPick.success.step1": "Entra na votação de último domingo.",
+    "Recebemos a tua proposta. A comunidade decide o que lemos, vemos e ouvimos a seguir.",
+  "suggestPick.success.step1": "Entra na votação do último domingo do mês.",
   "suggestPick.success.step2":
-    "O resultado é publicado aqui nesta página depois da votação.",
+    "O resultado é publicado nesta página depois da votação.",
 
   "postProject.title": "Publicar um <em>projeto</em>",
   "postProject.sub":
@@ -116,20 +116,20 @@ export const culture: Catalog = {
   "postProject.titlePlaceholder": "O que estás a criar?",
   "postProject.descLabel": "Descrição",
   "postProject.descPlaceholder":
-    "O que é, em que ponto estás, e como é a colaboração…",
+    "O que é, em que ponto estás e como imaginas a colaboração…",
   "postProject.lookingForLabel": "À procura de",
   "postProject.postCta": "Publicar projeto",
   "postProject.success.title": "Projeto",
   "postProject.success.em": "publicado.",
   "postProject.success.body":
-    "Recebemos o teu projeto. O quadro ainda é pequeno, por isso as publicações ainda não são associadas automaticamente a colaboradores.",
+    "Recebemos o teu projeto. O quadro ainda é pequeno, por isso as publicações não são associadas automaticamente por enquanto.",
   "postProject.success.step1": "Está guardado e visível para a nossa equipa.",
   "postProject.success.step2":
-    "Se alguém quiser avançar como colaborador, uma curadora responde-te por mensagem na QueerPulse.",
+    "Se alguém quiser colaborar contigo, a curadoria responde-te por mensagem na QueerPulse.",
 
-  "submitWork.title": "Submete o teu <em>trabalho</em>",
+  "submitWork.title": "Submeter o teu <em>trabalho</em>",
   "submitWork.sub":
-    "Até três peças. Revisto mensalmente por pessoas curadoras da comunidade.",
+    "Até três peças, revistas todos os meses por pessoas curadoras da comunidade.",
   "submitWork.titleLabel": "Título do trabalho",
   "submitWork.titlePlaceholder": "p.ex. Corpo Estranho, 2024",
   "submitWork.mediumLabel": "Suporte",
@@ -143,10 +143,10 @@ export const culture: Catalog = {
   "submitWork.success.title": "Trabalho",
   "submitWork.success.em": "submetido.",
   "submitWork.success.body":
-    "Recebemos o teu trabalho. A mostra roda oito peças de cada vez, escolhidas pela comunidade.",
+    "Recebemos o teu trabalho. A mostra apresenta oito peças de cada vez, em rotação, escolhidas pela comunidade.",
   "submitWork.success.step1": "Está guardado na fila da mostra.",
   "submitWork.success.step2":
-    "Se for selecionado, uma curadora responde-te por mensagem na QueerPulse.",
+    "Se for selecionado, a curadoria responde-te por mensagem na QueerPulse.",
 
   "submitPlaylist.eyebrow": "Rádio da Comunidade",
   "submitPlaylist.title": "Submeter uma <em>playlist</em>",
@@ -159,37 +159,37 @@ export const culture: Catalog = {
     "URL do Spotify, SoundCloud ou de uma tracklist",
   "submitPlaylist.vibeLabel": "Ambiente",
   "submitPlaylist.noteLabel": "Nota da curadoria",
-  "submitPlaylist.notePlaceholder": "Para quando é isto? Sobre o que é?…",
+  "submitPlaylist.notePlaceholder": "Para que ocasião é? De que trata?…",
   "submitPlaylist.submitCta": "Submeter playlist",
   "submitPlaylist.success.title": "Playlist",
   "submitPlaylist.success.em": "recebida.",
   "submitPlaylist.success.body":
-    "Recebemos a tua playlist. Rodamos as pessoas convidadas para o som se manter humano.",
+    "Recebemos a tua playlist. Vamos rodando quem toca para o som continuar humano.",
   "submitPlaylist.success.step1":
-    "Está guardada aqui para uma pessoa da curadoria considerar.",
+    "Fica guardada aqui para a curadoria analisar.",
   "submitPlaylist.success.step2":
-    "Se conseguirmos reservar-te um lugar, uma curadora responde-te por mensagem na QueerPulse.",
+    "Se conseguirmos reservar-te um lugar, a curadoria responde-te por mensagem na QueerPulse.",
 
   "commissionInterest.errorToast":
     "Não foi possível enviar o teu interesse. Tenta novamente.",
   "commissionInterest.eyebrow": "Manifestar interesse",
   "commissionInterest.title": "Contacta <em>{name}</em>",
   "commissionInterest.sub":
-    "Conta-lhes um pouco sobre ti e porque é que este projeto te fala. Só verão isto se enviares.",
+    "Fala um pouco de ti e de porque é que este projeto te toca. A pessoa só vê a mensagem se a enviares.",
   "commissionInterest.messageLabel": "A tua mensagem (opcional)",
   "commissionInterest.messagePlaceholder":
-    "O que trarias, o que já fizeste antes, ou apenas um olá…",
+    "O que trarias, o que já fizeste ou só um olá…",
   "commissionInterest.sendCta": "Enviar interesse",
   "commissionInterest.success.title": "Interesse",
   "commissionInterest.success.em": "enviado.",
   "commissionInterest.success.body":
-    "Vamos ligar-te a {name} se quiser avançar com isto.",
+    "Se {name} quiser avançar, pomos-vos em contacto.",
   "commissionInterest.success.step1":
     "{name} pode ver a tua nota e o teu perfil.",
   "commissionInterest.success.step2":
     "Se quiser avançar, a apresentação acontece por mensagem na QueerPulse.",
   "commissionInterest.success.step3":
-    "Sem pressão de qualquer forma. As colaborações aqui são sempre um sim de ambos os lados.",
+    "Sem pressão, seja qual for a resposta. Aqui, uma colaboração só acontece com um sim dos dois lados.",
 
   "options.lookingFor.writer": "Escrita",
   "options.lookingFor.editor": "Edição",
@@ -212,7 +212,7 @@ export const culture: Catalog = {
   "options.vibe.tender": "Terno",
   "options.vibe.joyful": "Alegre",
   "options.vibe.political": "Político",
-  "options.vibe.ambient": "Ambiente",
+  "options.vibe.ambient": "Ambient",
   "options.vibe.dancefloor": "Pista de dança",
   "options.vibe.healing": "Cura",
   "options.vibe.nostalgic": "Nostálgico",
@@ -224,7 +224,7 @@ export const culture: Catalog = {
   "comingSoon.metaTitle": "Cultura: em breve na QueerPulse",
   "comingSoon.title": "A Cultura ainda está a ser montada",
   "comingSoon.description":
-    "As escolhas de noite, o quadro de encomendas, a montra de arte e a rádio comunitária ainda estão a ser construídos e não há nada publicado. Entretanto, a revista já está a sair e é nas comunidades que a cena se organiza.",
+    "As escolhas do clube, o quadro de encomendas, a mostra de arte e a rádio da comunidade ainda estão a ser construídos e ainda não há nada publicado por lá. Entretanto, a revista já está a sair e é nas comunidades que a cena se organiza.",
   "comingSoon.magazineCta": "Ler a revista",
   "comingSoon.communitiesCta": "Explorar comunidades",
 
@@ -268,12 +268,12 @@ export const culture: Catalog = {
     "O Quadro de Encomendas ainda está a ser construído, por isso nada do que enviaste é publicado.",
   "commissionInterestPage.success.step3":
     "Daqui não sai nenhuma resposta. A QueerPulse não envia e-mails nem cria notificações sobre isto, por isso não fica nada à tua espera numa caixa de entrada.",
-  "commissionInterestPage.success.backCta": "Voltar a Cultura",
+  "commissionInterestPage.success.backCta": "Voltar à Cultura",
   "commissionInterestPage.success.anotherCta": "Registar outro interesse",
   "comingSoon.commissions.title":
     "O Quadro de Encomendas está a ser construído",
   "comingSoon.commissions.body":
-    "Ainda não há nada publicado nele. Podes na mesma dizer à equipa de cultura o que gostarias de encomendar, e isso vai direto para a fila que eles leem.",
+    "Ainda não há nada publicado. Mesmo assim, podes dizer à equipa de cultura o que gostarias de encomendar, e o pedido segue direto para a fila que a equipa lê.",
   "comingSoon.commissions.cta": "Registar interesse",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.

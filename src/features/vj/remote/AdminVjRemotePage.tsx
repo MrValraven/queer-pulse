@@ -94,7 +94,9 @@ function useVjRemoteView(): VjRemoteView {
  * favorite's REST refusal included), held until the stage moves on, else the
  * command runner's last refusal. The runner's {max} or {min} go with its own
  * key; a dispatcher key takes them only when the runner refused with the
- * same key (the same send, seen by both).
+ * same key (the same send, seen by both). `refusalStamp` is a new object
+ * for each dispatcher refusal (null when none holds), so a control can tell
+ * a refusal newer than its press from one already standing.
  */
 function useVjStatusErrorKey(
   runnerError: { key: string | null; values: VjErrorValues | null },
@@ -102,6 +104,7 @@ function useVjStatusErrorKey(
 ): {
   errorKey: string | null;
   errorValues: VjErrorValues | null;
+  refusalStamp: object | null;
   onRefused: (errorKey: string | null) => void;
 } {
   const [refusal, setRefusal] = useState<{
@@ -122,23 +125,30 @@ function useVjStatusErrorKey(
     return {
       errorKey: runnerError.key,
       errorValues: runnerError.values,
+      refusalStamp: null,
       onRefused,
     };
   }
   return {
     errorKey: refusal.key,
     errorValues: refusal.key === runnerError.key ? runnerError.values : null,
+    refusalStamp: refusal,
     onRefused,
   };
 }
 
 /**
  * The pad's own element, else the dock, for a press that came without one
- * (keyboard, MIDI). A set list step without one sits on the set list group.
+ * (keyboard, MIDI). A sequence step or a sequence that plays itself, asking
+ * without one, sits on the strip's sequence group.
  */
 function vjConsentAnchorOf(request: VjFlashConsentRequest): HTMLElement | null {
   if (request.anchor !== null) return request.anchor;
-  if (request.sceneName !== undefined) {
+  const isSetlistRequest =
+    request.sceneName !== undefined ||
+    request.sceneNameKey !== undefined ||
+    request.setlistName !== null;
+  if (isSetlistRequest) {
     const setlistGroup = document.querySelector<HTMLElement>(
       "[data-vj-setlist-group]",
     );
@@ -176,21 +186,26 @@ function VjRemoteFlashConsent({
   const padId = shownRequest?.padId ?? null;
   const transitionMode = shownRequest?.transitionMode ?? null;
   const sceneName = shownRequest?.sceneName;
+  const sceneNameKey = shownRequest?.sceneNameKey;
   // A scene reads "Turn on <scene name> now": the scene's name is its label.
+  // A step whose look this remote cannot read is named by its catalog key.
   const effectLabel =
     sceneName !== undefined
       ? sceneName
-      : padId === "strobe"
-        ? t("vj:effects.strobe")
-        : padId !== null
-          ? t(`vj:effect.name.${padId}`)
-          : transitionMode !== null
-            ? t(`vj:transition.mode.${transitionMode}`)
-            : t("vj:transition.title");
+      : sceneNameKey !== undefined
+        ? t(sceneNameKey)
+        : padId === "strobe"
+          ? t("vj:effects.strobe")
+          : padId !== null
+            ? t(`vj:effect.name.${padId}`)
+            : transitionMode !== null
+              ? t(`vj:transition.mode.${transitionMode}`)
+              : t("vj:transition.title");
   return (
     <VjFlashConsentPopover
       anchorRef={anchorRef}
       effectLabel={effectLabel}
+      setlistName={shownRequest?.setlistName ?? null}
       isOpen={flashConsent !== null}
       onConsent={confirmFlash}
       onClose={dismissFlash}
@@ -208,7 +223,8 @@ function VjRemotePage({
   const isOnline = useOnlineStatus();
   const offlineReason = vjRemoteOfflineReasonOf(stage, isOnline);
   const isBlocked = offlineReason !== null;
-  const { run, lastErrorKey, lastErrorValues } = useVjCommandRunner(stage);
+  const { run, isPending, lastErrorKey, lastErrorValues } =
+    useVjCommandRunner(stage);
   // The phone stays awake while the remote is open.
   useScreenWakeLock(true);
   const clock = useVjRemoteClock(stage);
@@ -262,6 +278,7 @@ function VjRemotePage({
     latestState,
     stateRevision,
     run,
+    isCommandPending: isPending,
     clock,
     frames,
     layout,
@@ -281,6 +298,7 @@ function VjRemotePage({
     offlineReason,
     errorKey: status.errorKey,
     errorValues: status.errorValues,
+    refusalStamp: status.refusalStamp,
     onRefused: status.onRefused,
   };
 

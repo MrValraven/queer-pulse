@@ -229,6 +229,7 @@ function restoreOf(state: VjStageState): VjStageRestore {
     shuffle: state.shuffle,
     activeSetlistId: state.activeSetlistId,
     setlistIndex: state.setlistIndex,
+    setlistPlayback: state.setlistPlayback,
   };
 }
 
@@ -557,7 +558,7 @@ describe("VJ demo flow: scenes and set lists", () => {
     const tempo = stageOf(remote).latestState?.tempo;
     const sentAt = Date.now();
     const applyAt = await applyAtOfAccepted(remote, (commands) =>
-      commands.setlistNext(),
+      commands.setlistNext({ isFlashConfirmed: true }),
     );
     expect(applyAt).toBe(tempo === undefined ? null : nextBarAt(tempo, sentAt));
     if (applyAt === null) return;

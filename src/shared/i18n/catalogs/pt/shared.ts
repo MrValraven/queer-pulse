@@ -526,17 +526,17 @@ export const shared: Catalog = {
 
   // MegaNav — Community
   "megaNav.community.title": "Comunidade",
-  "megaNav.community.subtitle": "Pessoas, eventos & espaços",
+  "megaNav.community.subtitle": "Pessoas, eventos e lugares",
   "megaNav.community.feature.eyebrow": "Comunidade",
   "megaNav.community.feature.title": "Encontra a tua gente.",
   "megaNav.community.feature.body":
-    "Um diretório de pessoas, fóruns e eventos: o tecido de ligação do dia a dia da rede.",
+    "Um diretório de pessoas, fóruns e eventos: o que liga a comunidade no dia a dia.",
   "megaNav.community.feature.cta": "Explorar pessoas",
   "megaNav.community.featurePublic.eyebrow": "Comunidade",
   "megaNav.community.featurePublic.title":
     "Como verificamos os espaços locais.",
   "megaNav.community.featurePublic.body":
-    "Cada espaço é revisto antes de receber o selo de verificado. Vê como funciona, e quais foram removidos.",
+    "Cada espaço é revisto antes de receber o emblema de verificação. Vê como funciona e quais foram retirados da lista.",
   "megaNav.community.featurePublic.cta": "Ver como funciona a verificação",
   "megaNav.community.col.people.head": "Pessoas",
   "megaNav.community.col.people.membersDirectory": "Diretório de pessoas",
@@ -548,13 +548,13 @@ export const shared: Catalog = {
   "megaNav.community.col.people.dating": "Dating",
   "megaNav.community.col.gather.events": "Eventos",
   "megaNav.community.col.organise.activismVolunteering":
-    "Ativismo e Voluntariado",
+    "Ativismo e voluntariado",
   "megaNav.community.col.organise.changeMakers": "Agentes de mudança",
   "megaNav.community.col.discover.head": "Descobrir",
   "megaNav.community.col.discover.businessDirectory":
     "Diretório de negócios locais",
   "megaNav.community.col.discover.housing": "Habitação",
-  "megaNav.community.col.discover.partners": "Parceiros",
+  "megaNav.community.col.discover.partners": "Parcerias",
   "megaNav.community.col.gatheringsPlaces.head": "Eventos e lugares",
 
   // mobileNav.data.ts: sheet-only labels and subtitles.
@@ -593,8 +593,8 @@ export const shared: Catalog = {
   "megaNav.resources.col.safety.safetyGuide": "Guia de segurança",
   "megaNav.resources.col.learn.head": "Aprender e pertencer",
   "megaNav.resources.col.learn.resourceLibrary": "Biblioteca de recursos",
-  "megaNav.resources.col.learn.guideIndex": "Todos os guias A–Z",
-  "megaNav.resources.col.learn.transNbHub": "Centro trans e não-binárie",
+  "megaNav.resources.col.learn.guideIndex": "Todos os guias de A a Z",
+  "megaNav.resources.col.learn.transNbHub": "Centro trans e não binário",
   "megaNav.resources.col.learn.comingOut": "Assumir-se",
   "megaNav.resources.col.learn.familyParenting": "Família e parentalidade",
   "megaNav.resources.col.learn.forCaregivers": "Para quem cuida",
@@ -612,7 +612,7 @@ export const shared: Catalog = {
   "megaNav.culture.col.magazine.allIssues": "Todas as edições",
   "megaNav.culture.col.magazine.sections": "Explorar por secção",
   "megaNav.culture.col.magazine.writeForUs": "Escreve para nós",
-  "megaNav.culture.col.screenSound.cinema": "Cinema · filme queer",
+  "megaNav.culture.col.screenSound.cinema": "Cinema · filmes queer",
   "megaNav.culture.col.makers.head": "Criação e cena",
   "megaNav.culture.col.makers.studio": "Studio · música queer",
   "megaNav.culture.col.makers.platforms": "Plataformas",
@@ -621,7 +621,7 @@ export const shared: Catalog = {
 
   // MegaNav — Work
   "megaNav.work.title": "Trabalho",
-  "megaNav.work.subtitle": "Carreira & economia",
+  "megaNav.work.subtitle": "Carreira e economia",
   "megaNav.work.feature.eyebrow": "O teu espaço de trabalho",
   "megaNav.work.feature.title": "O teu Trabalho, num só lugar.",
   "megaNav.work.feature.body":
@@ -631,8 +631,7 @@ export const shared: Catalog = {
   "megaNav.work.col.career.yourWork": "O teu Trabalho",
   "megaNav.work.col.career.jobBoard": "Bolsa de emprego",
   "megaNav.work.col.career.mentorship": "Mentoria",
-  "megaNav.work.col.career.employerReviews":
-    "Avaliações de entidades empregadoras",
+  "megaNav.work.col.career.employerReviews": "Avaliações de empresas",
   "megaNav.work.col.economy.head": "Economia",
   "megaNav.work.col.economy.skillsExchange": "Troca de competências",
   "megaNav.work.col.economy.solidarityPricing": "Preços solidários",
@@ -642,11 +641,11 @@ export const shared: Catalog = {
 
   // MegaNav — About
   "megaNav.about.title": "Sobre",
-  "megaNav.about.subtitle": "A plataforma & legal",
+  "megaNav.about.subtitle": "A plataforma e a parte legal",
   "megaNav.about.feature.eyebrow": "Sobre",
   "megaNav.about.feature.title": "O que é a QueerPulse.",
   "megaNav.about.feature.body":
-    "A nossa missão, como nos governamos, e a letra pequena legal.",
+    "A nossa missão, como nos governamos e as letras pequenas.",
   "megaNav.about.feature.cta": "Sobre a QueerPulse",
   "megaNav.about.col.mission.head": "Missão e governação",
   "megaNav.about.col.mission.aboutQueerPulse": "Sobre a QueerPulse",

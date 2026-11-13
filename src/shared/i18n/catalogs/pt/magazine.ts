@@ -15,8 +15,8 @@ import type { Catalog } from "../../types";
  */
 export const magazine: Catalog = {
   // ── Composição partilhada de formato (magazineFormat.ts) ─────────────────
-  "format.minRead": "leitura de {count} min",
-  "format.minReadApprox": "~ leitura de {count} min",
+  "format.minRead": "{count} min de leitura",
+  "format.minReadApprox": "~ {count} min de leitura",
   "format.words_one": "{count} palavra",
   "format.words_other": "{count} palavras",
   "format.readsThisWeek": "{reads} leituras esta semana",
@@ -103,9 +103,9 @@ export const magazine: Catalog = {
   // Um 401 dos endpoints da revista significa "não tens sessão iniciada", e
   // nunca "não há nada publicado". Aparece a quem chega de fora por um link
   // partilhado, com um CTA de entrada que traz a pessoa de volta a esta página.
-  "signInWall.title": "A revista é para membros",
+  "signInWall.title": "A revista é para quem faz parte da comunidade",
   "signInWall.description":
-    "Os ensaios, reportagens, entrevistas e críticas da comunidade ficam do lado de dentro, para quem escreve saber quem está a ler. Inicia sessão para continuar a leitura.",
+    "Os ensaios, reportagens, entrevistas e críticas da comunidade estão reservados a quem faz parte dela, para quem escreve saber quem está a ler. Inicia sessão para continuares onde ficaste.",
   "signInWall.signInCta": "Iniciar sessão para ler",
   "signInWall.requestInviteCta": "Pedir um convite",
 
@@ -184,7 +184,7 @@ export const magazine: Catalog = {
   "deck.goToSlide": "Ir para o slide {n}",
   "deck.tapToReveal": "Toca para revelar",
   "deck.beforeAfterHint": "Arrasta para comparar",
-  "deck.end": "Chegou ao fim",
+  "deck.end": "Chegaste ao fim",
   "deck.backToMagazine": "Voltar à revista",
   "deck.badge": "Interativo",
   "deck.start": "Começar a história",
@@ -208,7 +208,7 @@ export const magazine: Catalog = {
   "deck.editor.addSlide": "Adicionar slide",
   "deck.editor.addSlideLayout": "Modelo",
   "deck.editor.addSlideHint":
-    "Cada slide é o verdadeiro componente do leitor. Esta pré-visualização não pode divergir.",
+    "Cada slide usa o mesmo componente que quem lê vai ver. Esta pré-visualização é sempre fiel.",
   "deck.editor.moveUp": "Mover para cima",
   "deck.editor.moveDown": "Mover para baixo",
   "deck.editor.removeSlide": "Remover slide",
@@ -237,7 +237,7 @@ export const magazine: Catalog = {
   "deck.editor.field.before": "Antes",
   "deck.editor.field.after": "Depois",
   "deck.editor.field.prompt": "Instrução",
-  "deck.editor.field.hidden": "Escondido até tocar",
+  "deck.editor.field.hidden": "Escondido até ao toque",
   "deck.editor.tint.coral": "Coral",
   "deck.editor.tint.jade": "Jade",
   "deck.editor.tint.plum": "Ameixa",
@@ -251,7 +251,8 @@ export const magazine: Catalog = {
   "deck.editor.preview.title": "Pré-visualização",
   "deck.editor.preview.emptySlide":
     "Começa a preencher este slide para o veres aqui.",
-  "deck.editor.budget.headingOver": "Demasiado longo. Vai cortar num telemóvel",
+  "deck.editor.budget.headingOver":
+    "Demasiado longo. Fica cortado num telemóvel",
   "deck.editor.budget.headingOk": "Cabe no telemóvel mais estreito",
   "deck.editor.budget.bodyOver": "Um slide não é um parágrafo",
   "deck.editor.budget.bodyOk": "Curto o suficiente para ler de relance",
@@ -259,7 +260,7 @@ export const magazine: Catalog = {
   "deck.editor.saved": "Rascunho guardado",
   "deck.editor.publishedToast": "Deck publicado",
   "deck.editor.publishUnlinked":
-    "Este deck ainda não tem uma peça na redação, e os decks são publicados a partir da peça. Começa os decks na redação com Montar um deck.",
+    "Este deck ainda não tem uma peça na redação, e um deck só se publica a partir da sua peça. Cria decks na redação com Montar um deck.",
   "deck.editor.scheduledToast": "Deck agendado",
   "deck.editor.unpublishedToast": "Deck despublicado",
   "deck.editor.deletedToast": "Deck eliminado",
@@ -287,14 +288,14 @@ export const magazine: Catalog = {
   "deck.editor.publish.issueLinked":
     "Publica-se automaticamente quando a edição {number} sair.",
   "deck.editor.publish.issueUnlinked":
-    "Este deck ainda não está numa edição. Adiciona-o a uma no registo da peça, ou publica-o agora ou numa data.",
+    "Este deck ainda não está numa edição. Junta-o a uma edição na ficha da peça. Também o podes publicar já ou agendar para uma data.",
   "deck.editor.publish.scheduledFor":
     "Agendado para {date} às {time}. Ninguém o vê até lá.",
   "deck.editor.publish.checklist.cover": "Slide de capa definido",
   "deck.editor.publish.checklist.source":
     "Fonte em todos os slides de estatística (opcional)",
   "deck.editor.publish.checklist.sourcePending":
-    "Fonte em todos os slides de estatística (opcional, ainda nenhum)",
+    "Fonte em todos os slides de estatística (opcional, ainda sem nenhuma)",
 
   // ── useLinkedDeckPublish (o que recusa o ato de publicar de um deck ligado a uma peça) ──
   "deck.editor.piecePublish.careGateToast":
@@ -306,17 +307,17 @@ export const magazine: Catalog = {
   "deck.editor.danger.body":
     "Eliminar um deck remove-o de todos os sítios onde está ligado. Não é possível desfazer.",
   "deck.editor.danger.blockedPublished":
-    "Este deck está publicado. Despublica-o primeiro e depois poderá ser eliminado.",
+    "Este deck está publicado. Despublica-o primeiro e depois já o podes eliminar.",
   "deck.editor.danger.blockedLinked":
-    "Este deck pertence a uma peça da redação. Elimina a peça, que remove o deck com ela.",
+    "Este deck pertence a uma peça da redação. Elimina a peça e o deck vai com ela.",
   "deck.editor.danger.cta": "Eliminar este deck",
   "deck.editor.deleteModal.title": "Eliminar este deck?",
   // Substitui o texto antigo, que prometia um 404 a quem lê. A ENG-112 impede
   // eliminar um deck publicado, por isso ninguém chega a esse estado.
   "deck.editor.deleteModal.detail_one":
-    "Eliminar remove {title} e o seu {count} slide. Não há como voltar atrás, e não fica nenhuma cópia.",
+    "Vais eliminar {title} e o {count} slide que tem. Não é possível desfazer e não fica nenhuma cópia.",
   "deck.editor.deleteModal.detail_other":
-    "Eliminar remove {title} e os seus {count} slides. Não há como voltar atrás, e não fica nenhuma cópia.",
+    "Vais eliminar {title} e os {count} slides que tem. Não é possível desfazer e não fica nenhuma cópia.",
   "deck.editor.deleteModal.draftOnly":
     "Só um deck em rascunho pode ser eliminado, por isso ninguém fora da redação perde nada.",
   "deck.editor.convertModal.title": "Transformar isto em texto corrido?",
@@ -326,7 +327,7 @@ export const magazine: Catalog = {
   "deck.editor.convertModal.errorToast":
     "Não foi possível converter este deck. Tenta novamente.",
   "deck.editor.convertModal.body":
-    "Os slides de texto e imagem passam diretamente para blocos de artigo, e cada estatística vira um bloco de estatísticas. Os slides interativos (antes/depois, revelar) não têm equivalente em artigo e serão descartados. Isto não pode ser desfeito.",
+    "Os slides de texto e imagem passam diretamente para blocos de artigo, e cada estatística dá origem a um bloco de estatísticas. Os slides interativos (antes/depois, revelar) não têm equivalente em artigo e são descartados. Não é possível desfazer.",
   "deck.editor.convertModal.cta": "Converter em artigo",
   "deck.editor.convertModal.blockedPublishedToast":
     "Despublica este deck antes de o converteres num artigo.",
@@ -343,7 +344,7 @@ export const magazine: Catalog = {
   "issue.stats.contributorsCount_other": "{count} pessoas colaboradoras",
   "issue.stats.longReadCount_one": "{count} reportagem longa",
   "issue.stats.longReadCount_other": "{count} reportagens longas",
-  "issue.stats.publishedPrefix": "Publicado a",
+  "issue.stats.publishedPrefix": "Publicada a",
   "issue.coverAlt": "Capa da edição {number}",
   "issue.letterEyebrow": "Carta da direção editorial",
   "issue.readCta": "Ler a edição {number}",
@@ -361,16 +362,16 @@ export const magazine: Catalog = {
   "contents.pageLabel": "página",
   "contents.contributorsHeading": "Quem colaborou <em>nesta edição</em>",
   "contents.contributorsSubtitle_one":
-    "{count} pessoa da comunidade fez a Edição {issue}: quem escreve, quem ilustra e quem editou tudo até dar liga.",
+    "{count} pessoa da comunidade fez a Edição {issue}: quem escreve, quem ilustra e a equipa editorial que manteve tudo de pé.",
   "contents.contributorsSubtitle_other":
-    "{count} pessoas da comunidade fizeram a Edição {issue}: quem escreve, quem ilustra e quem editou tudo até dar liga.",
+    "{count} pessoas da comunidade fizeram a Edição {issue}: quem escreve, quem ilustra e a equipa editorial que manteve tudo de pé.",
   "contents.print.eyebrow": "Edição impressa",
   "contents.print.heading": "Segura-a <em>nas tuas mãos.</em>",
   "contents.print.body":
     "A Edição {issue} está disponível numa <b>tiragem limitada</b>: {pages} páginas, capa em risografia, impressa em Marvila. As pessoas da comunidade recebem-na ao preço de custo; as receitas financiam as pessoas colaboradoras da próxima edição.",
   "contents.print.orderCta": "Encomendar a edição impressa: {price}",
   "contents.print.readOnlineCta": "Ler online, grátis",
-  "contents.print.imageAlt": "Simulação da edição impressa · Edição {issue}",
+  "contents.print.imageAlt": "Maqueta da edição impressa · Edição {issue}",
 
   // ── IssueContentsPanel (live) ────────────────────────────────────────────
   // A ordem curada pela redação e os resumos de cada peça, na própria página
@@ -384,7 +385,7 @@ export const magazine: Catalog = {
   "issues.eyebrow": "Revista · todas as edições",
   "issues.heroTitle": "Nove edições, <em>trimestrais</em>, desde 2024.",
   "issues.heroDek":
-    "Uma revista que não tem pressa. Grátis para ler online. Cada edição gira à volta de uma única pergunta: saúde, trabalho, a cidade, o que devemos umas às outras.",
+    "Uma revista que não tem pressa. Grátis para ler online. Cada edição gira à volta de uma única pergunta: saúde, trabalho, a cidade, o que nos devemos mutuamente.",
   "issues.stats.issuesPublished_one": "{count} edição publicada",
   "issues.stats.issuesPublished_other": "{count} edições publicadas",
   "issues.stats.articlesArchived_one": "{count} artigo arquivado",
@@ -423,7 +424,7 @@ export const magazine: Catalog = {
   "author.portraitPlaceholder": "Retrato",
   // CON-11 — a assinatura como pessoa real: a ligação à conta de membro por
   // trás dela e o editor para quem a pode preencher.
-  "author.viewMemberProfile": "Ver o perfil de membro de {name}",
+  "author.viewMemberProfile": "Ver o perfil de {name} na comunidade",
   "author.editBylineCta": "Editar esta assinatura",
   "author.editMyBylineCta": "Editar o meu perfil de autoria",
   "author.editor.eyebrow": "Revista · assinatura",
@@ -450,8 +451,8 @@ export const magazine: Catalog = {
   "author.work.featuredImageAlt":
     "Imagem principal da história em destaque de {name}",
   "author.work.featuredImagePlaceholder": "História em destaque",
-  "author.work.selectedWorkHeading": "Trabalho selecionado",
-  "author.work.allArticlesCta_one": "Todos os {count} artigo",
+  "author.work.selectedWorkHeading": "Trabalhos selecionados",
+  "author.work.allArticlesCta_one": "Ver {count} artigo",
   "author.work.allArticlesCta_other": "Todos os {count} artigos",
   "author.work.seeAllPicksCta": "Ver todas as escolhas",
   "author.work.findElsewhereHeading": "Encontra {name} <em>noutros sítios</em>",
@@ -462,11 +463,11 @@ export const magazine: Catalog = {
   "authorsDirectory.eyebrow": "Revista · autoria",
   "authorsDirectory.title": "Toda a gente que escreve para a revista.",
   "authorsDirectory.sub":
-    "Repórteres, ensaístas e entrevistadores, todos num só lugar. Escolhe um nome para leres o trabalho.",
-  "authorsDirectory.errorTitle": "Não conseguimos carregar a autoria.",
+    "Quem faz reportagem, ensaio e entrevista, num só sítio. Escolhe um nome para leres o trabalho dessa pessoa.",
+  "authorsDirectory.errorTitle": "Não conseguimos carregar a lista de autoria.",
   "authorsDirectory.errorBody":
     "Algo nos interrompeu a caminho daqui. Tenta novamente.",
-  "authorsDirectory.emptyTitle": "Ainda não há autoria para mostrar.",
+  "authorsDirectory.emptyTitle": "Ainda não há pessoas autoras para mostrar.",
   "authorsDirectory.emptyBody":
     "O diretório ainda está a ser preparado. As assinaturas chegam em breve.",
   // CON-11 — o diretório mostra pessoas, não apenas nomes.
@@ -480,14 +481,14 @@ export const magazine: Catalog = {
   "profileWriting.visitorTitle": "A <em>escrita</em> de {firstName}",
   "profileWriting.sub_one": "{count} peça publicada na revista.",
   "profileWriting.sub_other": "{count} peças publicadas na revista.",
-  "profileWriting.allCta_one": "Ver a {count} peça",
+  "profileWriting.allCta_one": "Ver {count} peça",
   "profileWriting.allCta_other": "Ver todas as {count} peças",
 
   // ── MagazineSectionsPage (CNT-20) ────────────────────────────────────────
   "sections.eyebrow": "Revista · secções",
   "sections.title": "Explora por secção.",
   "sections.sub":
-    "Cada parte da revista, da capa às features até à última palavra. Escolhe uma secção para veres o que já saiu.",
+    "Cada parte da revista, das reportagens de capa até à última palavra. Escolhe uma secção para veres o que lá saiu.",
   "sections.errorTitle": "Não conseguimos carregar as secções.",
   "sections.errorBody":
     "Algo nos interrompeu a caminho daqui. Tenta novamente.",
@@ -545,7 +546,7 @@ export const magazine: Catalog = {
   // ── EditorDashboardHeader ──────────────────────────────────────────────
   "editor.header.title": "Edição {number} · <em>{theme}</em>",
   "editor.header.meta":
-    "Fecha a <b>{closes}</b> · publica a <b>{publishes}</b> · <b>{editors}</b> em edição",
+    "Fecha a <b>{closes}</b> · publica a <b>{publishes}</b> · <b>{editors}</b> a editar",
 
   // ── EditorStats ────────────────────────────────────────────────────────
 
@@ -606,7 +607,7 @@ export const magazine: Catalog = {
   "desk.write.sectionsLoading":
     "Ainda estamos a carregar a lista de secções. Tenta outra vez daqui a pouco.",
   "desk.write.sectionsUnavailable":
-    "Não foi possível carregar a lista de secções, por isso esta peça não tem onde sair. Recarrega a secretária e tenta outra vez.",
+    "Não foi possível carregar a lista de secções, por isso esta peça não tem onde sair. Recarrega a redação e tenta outra vez.",
   "desk.header.produce": "Produção da edição",
   "desk.header.slotsFilledAria": "Vagas da edição preenchidas",
   "desk.header.layoutAria": "Esquema da redação",
@@ -684,10 +685,10 @@ export const magazine: Catalog = {
     "Não foi possível apagar a vista. Tenta outra vez.",
 
   // ── PiecesPipeline ───────────────────────────────────────────────────────
-  "desk.pipeline.emptyTitle": "A secretária está livre",
+  "desk.pipeline.emptyTitle": "A redação está em dia",
   "desk.pipeline.emptyDescription": "Nada corresponde a este filtro agora.",
   "desk.pipeline.columnPiece": "Peça",
-  "desk.pipeline.columnStage": "Estado",
+  "desk.pipeline.columnStage": "Fase",
   "desk.pipeline.columnWaitingOn": "À espera de",
   "desk.pipeline.columnWaitingOnShort": "À espera",
   "desk.pipeline.columnDue": "Prazo",
@@ -727,10 +728,10 @@ export const magazine: Catalog = {
   // antes de confirmar.
   "desk.deletePiece.title": "Apagar “{title}”?",
   "desk.deletePiece.description":
-    "O rascunho, as versões guardadas e os comentários de quem lê vão com ela. Se a peça veio de uma proposta, essa proposta volta para a caixa de entrada. Isto não pode ser desfeito.",
+    "A peça leva consigo o rascunho, as versões guardadas e os comentários de quem lê. Se veio de uma proposta, essa proposta volta para a caixa de entrada. Não é possível desfazer.",
   "desk.deletePiece.confirm": "Apagar peça",
   "desk.deletePiece.publishedError":
-    "Esta peça tem trabalho publicado. Despublica-o primeiro e só depois apagas a peça.",
+    "Esta peça tem trabalho publicado. Despublica-o primeiro e depois apaga a peça.",
   "desk.deletePiece.failed":
     "Não foi possível apagar esta peça. Tenta outra vez.",
   // O diálogo de confirmação de despublicar (UnpublishPieceModal). Quem edita
@@ -749,9 +750,9 @@ export const magazine: Catalog = {
   "desk.board.moveStageAria": "Mudar de estado",
   "desk.board.overCap": "Acima de {cap}",
   "desk.board.unpublish": "Despublicar",
-  "desk.board.unpublishToMove": "Para a mover, despublica-a no registo da peça",
+  "desk.board.unpublishToMove": "Para a mover, despublica-a na ficha da peça",
   "desk.board.unscheduleToMove":
-    "Está agendada. Para a mover, cancela o agendamento no registo da peça",
+    "Está agendada. Para a mover, cancela o agendamento na ficha da peça",
   "desk.board.goesLive": "Publica-se a {date}",
   "desk.board.liveOnSite": "Já está no site",
   "desk.board.scrollPrevious": "Estados anteriores",
@@ -833,7 +834,7 @@ export const magazine: Catalog = {
   "desk.palette.goToDesk": "Ir para a redação",
   "desk.palette.ariaLabel": "Paleta de comandos",
   "desk.palette.searchPlaceholder":
-    "Ir diretamente a uma peça, ou começar uma nova…",
+    "Vai diretamente a uma peça ou começa uma nova…",
   "desk.palette.searchAria": "Pesquisar na redação",
   "desk.palette.commandsAria": "Comandos",
   "desk.palette.noResults": "Nada corresponde a “{query}”.",
@@ -851,23 +852,23 @@ export const magazine: Catalog = {
   "deskShell.openNow": "Abertos agora",
   "deskShell.writePiece": "Escrever",
   "deskShell.kbdHintSuffix": "para saltar · ? para atalhos",
-  "deskShell.backToPlatform": "Voltar ao QueerPulse",
+  "deskShell.backToPlatform": "Voltar à QueerPulse",
 
   // ── DeskModals (chrome partilhado por Commission/Pass/Chase/Handoff/Shortcuts) ──
   "desk.modals.cancel": "Cancelar",
   "desk.modals.noteLabel": "A tua nota",
   "desk.modals.shortcuts.title": "Teclado",
-  "desk.modals.shortcuts.gotIt": "Percebido",
+  "desk.modals.shortcuts.gotIt": "Entendido",
   // O atalho em si ("j / k", "⌘K") é mostrado tal e qual e fica fora do
   // catálogo: o nome de uma tecla é igual em todas as línguas. Só o que ele
   // faz é texto.
   "desk.modals.shortcuts.moveBetween": "Mover entre peças",
   "desk.modals.shortcuts.openFocused": "Abrir a peça em foco",
   "desk.modals.shortcuts.chaseWriter": "Dar um toque a quem escreve",
-  "desk.modals.shortcuts.writeYourself": "Escrever tu uma peça",
+  "desk.modals.shortcuts.writeYourself": "Ser tu a escrever uma peça",
   "desk.modals.shortcuts.triageTopPitch": "Triar a proposta do topo",
   "desk.modals.shortcuts.jumpAnywhere":
-    "Saltar para qualquer lado, ou começar uma peça",
+    "Saltar para qualquer sítio ou começar uma peça",
   "desk.modals.shortcuts.thisList": "Esta lista",
   "desk.modals.shortcuts.toggleSelect": "Selecionar a peça em foco",
   "desk.modals.shortcuts.openTriage": "Abrir a caixa de propostas",
@@ -884,9 +885,9 @@ export const magazine: Catalog = {
   "desk.modals.commission.titleFromScratch": "Escrever o briefing",
   "desk.modals.commission.sendBrief": "Enviar o briefing",
   "desk.modals.commission.bodyFromPitch":
-    "Estás a encomendar a proposta de {byline}. Define o essencial abaixo, e o briefing segue diretamente para essa pessoa.",
+    "Estás a encomendar a proposta de {byline}. Define o essencial abaixo e o briefing segue diretamente para essa pessoa.",
   "desk.modals.commission.bodyFromScratch":
-    "Define o essencial abaixo, e levamos um briefing a quem escreve.",
+    "Define o essencial abaixo e nós fazemos chegar o briefing a quem escreve.",
   "desk.modals.commission.angleLabel": "O ângulo",
   "desk.modals.commission.sectionLabel": "Secção",
   "desk.modals.commission.wordsLabel": "Palavras",
@@ -911,7 +912,7 @@ export const magazine: Catalog = {
   "desk.modals.pass.title": "Recusar “{title}”",
   "desk.modals.pass.send": "Enviar",
   "desk.modals.pass.body":
-    "Uma recusa cai melhor com um motivo genuíno. Escolhe um ponto de partida abaixo, ou escreve o teu próprio. De qualquer forma, quem escreveu ouve isso de ti.",
+    "Uma recusa recebe-se melhor com um motivo a sério. Escolhe um ponto de partida abaixo ou escreve a tua mensagem. Em qualquer caso, quem escreveu fica a saber por ti.",
   "desk.modals.pass.startingPoints": "Pontos de partida",
   // Cada `label` dá nome a um chip; cada `body` é semeado na nota editável que
   // quem escreveu acaba por ler, por isso tem de funcionar como prosa real de
@@ -919,13 +920,13 @@ export const magazine: Catalog = {
   // `desk.pitchRow.betterAsDeck`, por isso só o corpo está aqui.
   "desk.modals.pass.templates.notForUs.label": "Não é para nós",
   "desk.modals.pass.templates.notForUs.body":
-    "Agradeço-te teres confiado isto a nós. Não encaixa na QueerPulse. Não somos a casa que esta peça merece, e prefiro dizer-to já do que deixá-la à espera. Manda-nos a próxima, por favor.",
+    "Agradeço-te a confiança. Esta peça não encaixa na QueerPulse. Não somos a casa que ela merece e prefiro dizer-to já a deixá-la à espera. Manda-nos a próxima, por favor.",
   "desk.modals.pass.templates.notNow.label": "Agora não",
   "desk.modals.pass.templates.notNow.body":
     "Gosto muito disto, mas a edição 14 está cheia e o calendário joga contra. Posso voltar a falar contigo para a edição 16, quando o tema estiver mais perto? Sem compromisso de nenhum dos lados.",
   "desk.modals.pass.templates.anotherSection.label": "Experimenta outra secção",
   "desk.modals.pass.templates.anotherSection.body":
-    "Isto não resulta como reportagem de fundo, mas assentaria lindamente na secção Serviço: mais curto, mais prático, com a mesma investigação. Queres que a encomende assim?",
+    "Como reportagem de fundo isto não resulta. Na secção Serviço ficava lindamente: mais curto, mais prático, com a mesma investigação. Queres que a encomende assim?",
   "desk.modals.pass.templates.betterAsDeck.body":
     "A investigação é forte, mas o formato não é o certo: isto pede um deck. Se te apetecer, encomendava-o em oito ou nove slides.",
 
@@ -949,20 +950,21 @@ export const magazine: Catalog = {
   "desk.chase.draft.dueLateRaw": "devia ter chegado a {text}",
   "desk.chase.draft.dueSoon":
     "Estou só a ver como vai «{title}». A entrega {dueClause}. Como está a correr?",
-  "desk.chase.draft.late": "A «{title}» {dueClause}. Podes dizer-me como está?",
+  "desk.chase.draft.late":
+    "«{title}» {dueClause}. Podes dizer-me em que ponto está?",
   "desk.chase.draft.noDate":
     "Estou só a ver como vai «{title}». Como está a correr?",
 
   // ── HandoffModal ─────────────────────────────────────────────────────────
-  "desk.modals.handoff.title": "Passar",
-  "desk.modals.handoff.cta": "Passar",
+  "desk.modals.handoff.title": "Passar a peça",
+  "desk.modals.handoff.cta": "Passar a peça",
   "desk.modals.handoff.body":
-    "Escolhe quem edita e quem escreve “{title}”. Quem a recebe continua exatamente onde está.",
+    "Escolhe quem edita e quem escreve “{title}”. Quem a receber retoma o trabalho no ponto em que está.",
   "desk.modals.handoff.toLabel": "Para",
   "desk.modals.handoff.writerLabel": "Quem escreve",
   "desk.modals.handoff.writerNone": "Sem ninguém",
   "desk.modals.handoff.writersUnavailable":
-    "A lista de quem escreve ainda não carregou, por isso quem escreve fica igual.",
+    "A lista de quem escreve ainda não carregou, por isso a autoria fica como está.",
 
   // ── Editorial pipeline stage names (desk/stageLabels.ts) ─────────────────
   // Substitui a nota "left unswept here" no cabeçalho desta secção: os ids de
@@ -979,7 +981,7 @@ export const magazine: Catalog = {
   "desk.stage.commissioned": "Encomendada",
   "desk.stage.drafting": "Em rascunho",
   "desk.stage.inReview": "Em análise",
-  "desk.stage.edit": "Edição",
+  "desk.stage.edit": "Em edição",
   "desk.stage.sensitivityRead": "Leitura de sensibilidade",
   "desk.stage.layout": "Paginação",
   "desk.stage.ready": "Pronta",
@@ -1122,8 +1124,8 @@ export const magazine: Catalog = {
   "desk.pulse.closeDateSavedToast": "Fecha a {date}.",
 
   // ── DeskWorkbar (pesquisa, vista, filtro, ordenação) ──────────────────────
-  "desk.workbar.searchPlaceholder": "Pesquisar peças, autoria, secções",
-  "desk.workbar.searchPlaceholderMedium": "Pesquisar peças",
+  "desk.workbar.searchPlaceholder": "Pesquisa peças, autoria, secções",
+  "desk.workbar.searchPlaceholderMedium": "Pesquisa peças",
   "desk.workbar.searchPlaceholderShort": "Pesquisar",
   "desk.workbar.layout.calendar": "Calendário",
   "desk.workbar.layoutTrigger": "Esquema: {layout}",
@@ -1175,13 +1177,13 @@ export const magazine: Catalog = {
   "desk.rail.activity.seeAll": "Ver tudo ({count})",
   "desk.rail.activity.showLess": "Mostrar menos",
   // Previsão do fecho (rail/IssueForecast.tsx)
-  "desk.rail.forecast.onTrack": "No caminho para fechar a {date}",
+  "desk.rail.forecast.onTrack": "No bom caminho para fechar a {date}",
   "desk.rail.forecast.atRisk_one": "{count} peça pode falhar o fecho",
   "desk.rail.forecast.atRisk_other": "{count} peças podem falhar o fecho",
   "desk.rail.forecast.reasonLate": "Atrasada",
   "desk.rail.forecast.reasonDueAfterClose": "Após o fecho",
   "desk.rail.forecast.reasonNotEnoughTime": "Pouco tempo",
-  "desk.rail.forecast.more": "+{count} mais",
+  "desk.rail.forecast.more": "Mais {count}",
   "desk.rail.forecast.showAtRisk_one":
     "{count} peça pode falhar o fecho, mostrá-la na tabela",
   "desk.rail.forecast.showAtRisk_other":
@@ -1226,7 +1228,7 @@ export const magazine: Catalog = {
   "desk.peek.previousAria": "Peça anterior",
   "desk.peek.nextAria": "Peça seguinte",
   "desk.peek.closeAria": "Fechar pré-visualização",
-  "desk.peek.scheduledFor": "Agendada para publicar a {date}",
+  "desk.peek.scheduledFor": "Publicação agendada para {date}",
   "desk.publish.alreadyScheduled":
     "Esta peça já está agendada. Abre o rascunho para mudar a data.",
   "desk.peek.recordErrorTitle": "Não foi possível carregar a ficha desta peça",
@@ -1241,8 +1243,8 @@ export const magazine: Catalog = {
     "{count} peça com data de publicação ficou onde estava. Cancela o agendamento ou despublica-a para a mover.",
   "desk.bulk.skippedWithDate_other":
     "{count} peças com data de publicação ficaram onde estavam. Cancela o agendamento ou despublica-as para as mover.",
-  "desk.bulk.chase_one": "Insistir {count}",
-  "desk.bulk.chase_other": "Insistir {count}",
+  "desk.bulk.chase_one": "Insistir com {count}",
+  "desk.bulk.chase_other": "Insistir com {count}",
   "desk.bulk.stageChangedToast_one": "{count} peça movida para {stage}.",
   "desk.bulk.stageChangedToast_other": "{count} peças movidas para {stage}.",
   "desk.bulk.stageChangeFailedToast_one":
@@ -1273,7 +1275,7 @@ export const magazine: Catalog = {
   "desk.calendar.publishes": "Publica",
   "desk.calendar.afterClose": "Depois do fecho",
   "desk.calendar.late": "Atrasada",
-  "desk.calendar.more": "+{count} mais",
+  "desk.calendar.more": "Mais {count}",
   "desk.calendar.fewer": "Mostrar menos",
   "desk.calendar.emptyWeeks": "Nada tem prazo nestas semanas",
   "desk.calendar.legendLabel": "Cores dos pontos",
@@ -1360,9 +1362,9 @@ export const magazine: Catalog = {
   "piece.stageStepper.heading": "Em que ponto está",
 
   // ── PublishGateCard ──────────────────────────────────────────────────────
-  "piece.gate.heading": "Portão de publicação",
+  "piece.gate.heading": "Controlo de publicação",
   "piece.gate.notAdvisory":
-    "O portão não é uma sugestão. Nada aqui pode ser ultrapassado por uma só pessoa.",
+    "Este controlo é obrigatório. Nada aqui pode ser contornado por uma só pessoa.",
   "piece.gate.publish": "Publicar",
   "piece.gateReason.careNotStarted": "Registo de cuidado por iniciar",
   "piece.gateReason.sensitivityNotStarted":
@@ -1392,19 +1394,20 @@ export const magazine: Catalog = {
   // mesma (outra pessoa abriu um item de cuidado entre o render e o clique).
   "piece.publish.openCareTab": "Abrir o separador Cuidado",
   "piece.publish.unpublish": "Despublicar",
-  "piece.publish.viewLive": "Ver publicado",
-  "piece.publish.viewLiveAria": "Ver “{title}” como quem lê o vê",
-  "piece.publish.liveSince": "Publicado desde {date}",
-  "piece.publish.scheduledFor": "Agendado para {date}",
+  "piece.publish.viewLive": "Ver no site",
+  "piece.publish.viewLiveAria": "Ver “{title}” tal como aparece a quem lê",
+  "piece.publish.liveSince": "No site desde {date}",
+  "piece.publish.scheduledFor": "Agendada para {date}",
   "piece.publish.blockedByGate_one":
     "A publicação está bloqueada: {count} item de cuidado ainda está por resolver.",
   "piece.publish.blockedByGate_other":
     "A publicação está bloqueada: {count} itens de cuidado ainda estão por resolver.",
   "piece.publish.blockedToast_one":
-    "Resolve o {count} item de cuidado por resolver antes de publicar.",
+    "Resolve {count} item de cuidado em aberto antes de publicar.",
   "piece.publish.blockedToast_other":
-    "Resolve os {count} itens de cuidado por resolver antes de publicar.",
-  "piece.publish.publishedToast": "Publicado. Já está disponível para quem lê.",
+    "Resolve os {count} itens de cuidado em aberto antes de publicar.",
+  "piece.publish.publishedToast":
+    "Peça publicada. Já está disponível para quem lê.",
   "piece.publish.unpublishedToast":
     "Despublicada. Já não está acessível a quem lê.",
   "piece.publish.failedToast":
@@ -1418,13 +1421,13 @@ export const magazine: Catalog = {
   "piece.publish.refusedNotReadyToast":
     "Esta peça ainda não está pronta para publicar.",
   "piece.publish.refusedNoDetail":
-    "A redação não indicou o motivo. Recarrega o registo e tenta novamente.",
+    "A redação não indicou o motivo. Recarrega a ficha e tenta novamente.",
   "piece.publish.confirmPublishTitle": "Publicar “{title}”?",
-  "piece.publish.confirmPublishSub": "Fica disponível a quem lê de imediato.",
+  "piece.publish.confirmPublishSub": "Fica logo disponível para quem lê.",
   "piece.publish.confirmSettleSub":
     "Já está no site. Publicar marca-a como publicada e avisa quem escreveu.",
   "piece.publish.confirmPublishBody":
-    "Quem escreveu é avisado de que saiu. Podes despublicá-la a qualquer momento, e nada é apagado quando o fizeres.",
+    "Avisamos quem a escreveu de que foi publicada. Podes despublicá-la a qualquer momento e nada é apagado quando o fizeres.",
   "piece.publish.confirmPublishCta": "Publicar",
   "piece.publish.confirmUnpublishTitle": "Despublicar “{title}”?",
   "piece.publish.confirmUnpublishSub": "Quem lê perde o acesso de imediato.",
@@ -1458,13 +1461,13 @@ export const magazine: Catalog = {
   "piece.brief.due": "Prazo",
   "piece.brief.noDateSet": "Sem data definida",
   "piece.brief.length": "Extensão",
-  "piece.brief.noTargetSet": "Sem alvo definido",
+  "piece.brief.noTargetSet": "Sem extensão definida",
   "piece.brief.filedAt": "Entregue",
   "piece.brief.notFiledYet": "Ainda não entregue",
   "piece.brief.fee": "Valor",
   "piece.brief.killFee": "Valor de cancelamento",
   "piece.brief.overWordsWarning":
-    "Entregou {count} palavras acima do briefing. Corta antes da paginação, ou move uma secção para o deck.",
+    "O texto tem {count} palavras acima do briefing. Corta antes da paginação ou passa uma secção para o deck.",
   "piece.brief.whatWeAskedFor": "O que pedimos",
   "piece.brief.avoidLabel": "Evitar.",
   "piece.brief.artLabel": "Imagem.",
@@ -1504,7 +1507,7 @@ export const magazine: Catalog = {
   "piece.care.readProgress":
     "{done} de {total} · uma leitura não é um carimbo automático. {reader} pode devolvê-la a qualquer momento.",
   "piece.care.nudgeReader": "Insistir com a pessoa leitora",
-  "piece.care.nudgedToast": "Insististe com {reader}.",
+  "piece.care.nudgedToast": "Lembrete enviado a {reader}.",
   "piece.care.askSecondReader": "Pedir uma segunda leitura",
   "piece.care.secondReaderToast": "Pedida uma segunda leitura.",
   "piece.care.noReadRequestedYet":
@@ -1535,13 +1538,13 @@ export const magazine: Catalog = {
 
   // ── HistoryTab ───────────────────────────────────────────────────────────
   "piece.history.heading": "Tudo o que aconteceu",
-  "piece.history.unknownActor": "Desconhecido",
+  "piece.history.unknownActor": "Sem identificação",
   "piece.history.footer":
-    "As mudanças de estado, publicações e restauros são guardados durante toda a vida da revista.",
+    "Guardamos as mudanças de estado, as publicações e os restauros enquanto a revista existir.",
 
   // ── AfterTab ─────────────────────────────────────────────────────────────
   "piece.after.lettersHeading": "Cartas",
-  "piece.after.noLettersYet": "Ainda sem cartas de leitores.",
+  "piece.after.noLettersYet": "Ainda sem cartas de quem lê.",
   "piece.after.sendToAuthor": "Enviar à autoria",
   "piece.after.sendToAuthorToast":
     "O envio de mensagens à autoria ainda não está disponível.",
@@ -1554,7 +1557,7 @@ export const magazine: Catalog = {
     "Uma correção é publicada como uma nota datada no rodapé da peça. Nunca corrigimos em silêncio.",
   "piece.after.correctionAriaLabel": "Texto da correção",
   "piece.after.correctionPlaceholder":
-    "O que estava errado, e o que está certo.",
+    "O que estava errado e o que está certo.",
   "piece.after.publishCorrection": "Publicar correção",
   "piece.after.notifyPeopleNamed": "Avisar as pessoas identificadas",
 
@@ -1566,64 +1569,64 @@ export const magazine: Catalog = {
   "submitStory.intro.eyebrow": "Propõe um texto",
   "submitStory.intro.title": "Tens algo que <em>vale a pena contar?</em>",
   "submitStory.intro.lead":
-    "A revista da QueerPulse é escrita pela comunidade. Não precisas de uma assinatura habitual nem de um agente: só de uma história que importa e de uma forma honesta de a contar.",
-  "submitStory.intro.lookingFor.specific.title": "O específico em vez do geral",
+    "A revista da QueerPulse é escrita pela comunidade. Não precisas de currículo nem de representação: só de uma história que importa e de uma forma honesta de a contar.",
+  "submitStory.intro.lookingFor.specific.title": "O específico primeiro",
   "submitStory.intro.lookingFor.specific.body":
     "Um clube de jantares, uma rua, uma tarde. Confiamos que a história pequena carrega a grande.",
   "submitStory.intro.lookingFor.beyond.title": "Lisboa e para além dela",
   "submitStory.intro.lookingFor.beyond.body":
-    "Enraizados aqui, mas publicamos também vozes da diáspora e de quem nos visita. O lugar importa; as fronteiras, menos.",
+    "Temos raízes aqui e publicamos também vozes da diáspora e de quem nos visita. O lugar importa; as fronteiras, menos.",
   "submitStory.intro.lookingFor.pay.title": "Trabalho pago",
   "submitStory.intro.lookingFor.pay.body":
-    "As peças publicadas são pagas a um valor que combinas à partida com a tua editora ou o teu editor.",
+    "As peças publicadas são pagas a um valor que combinas à partida com a pessoa que te edita.",
   "submitStory.intro.stepsHeading": "O que acontece a seguir",
   "submitStory.intro.step.reply":
-    "Uma resposta de uma pessoa da edição: sim, não, ou vamos falar.",
+    "Uma resposta da redação: sim, não ou vamos falar.",
   "submitStory.intro.step.assigned":
-    "Se for sim, é atribuída uma pessoa editora e combinam juntas o valor e o prazo.",
+    "Se for sim, ficas com uma pessoa editora e combinam em conjunto o valor e o prazo.",
   "submitStory.intro.step.copyright":
-    "Mantêm os direitos de autor. Nós apenas licenciamos o texto.",
+    "Os direitos de autor continuam teus. Nós só licenciamos o texto.",
 
   // ── SubmitStorySidebar ─────────────────────────────────────────────────
   "submitStory.sidebar.guidelinesHeading": "Linhas editoriais",
-  "submitStory.sidebar.guideline.length.term": "800–2500 palavras",
+  "submitStory.sidebar.guideline.length.term": "800 a 2500 palavras",
   "submitStory.sidebar.guideline.length.detail":
     "para a maioria das secções. Reportagens longas até 4000.",
   "submitStory.sidebar.guideline.experience.term":
     "Escreve a partir da experiência.",
   "submitStory.sidebar.guideline.experience.detail":
-    "Em primeira pessoa ou com reportagem próxima.",
+    "Na primeira pessoa ou com reportagem de perto.",
   "submitStory.sidebar.guideline.noPromo.term": "Sem conteúdo promocional.",
   "submitStory.sidebar.guideline.noPromo.detail":
     "A revista não publica publicidade nem peças patrocinadas.",
   "submitStory.sidebar.guideline.language.term": "Português ou inglês",
-  "submitStory.sidebar.guideline.language.detail": "Publicamos nos dois.",
+  "submitStory.sidebar.guideline.language.detail": "Publicamos nas duas.",
   "submitStory.sidebar.guideline.deadlines.term": "Os prazos são firmes.",
   "submitStory.sidebar.guideline.deadlines.detail":
-    "Submissões atrasadas passam para a edição seguinte.",
+    "Os textos entregues fora do prazo passam para a edição seguinte.",
   "submitStory.sidebar.afterSubmitHeading": "Depois de submeteres",
   "submitStory.sidebar.afterSubmit.response":
     "As pessoas editoras leem todas as submissões e respondem com aceitação, um pedido de alterações, ou uma recusa com notas.",
   "submitStory.sidebar.afterSubmit.approve":
     "As peças aceites passam por uma ronda de edição. <strong>Aprovas a versão final</strong> antes de ser publicada.",
   "submitStory.sidebar.afterSubmit.licence":
-    "Mantés os direitos de autor. <strong>A QueerPulse tem uma licença não exclusiva</strong> para publicar na revista e no arquivo.",
+    "Manténs os direitos de autor. <strong>A QueerPulse tem uma licença não exclusiva</strong> para publicar na revista e no arquivo.",
   "submitStory.sidebar.questionsHeading": "Perguntas?",
   "submitStory.sidebar.questionsBody":
     "Escreve à redação por email ou consulta edições anteriores para teres uma ideia do que publicamos.",
-  "submitStory.sidebar.emailCta": "Email à redação",
+  "submitStory.sidebar.emailCta": "Escrever à redação",
 
   // ── SubmitStorySuccess ─────────────────────────────────────────────────
   "submitStory.success.title": "Estamos a <em>ler.</em>",
   "submitStory.success.sub":
-    "Obrigade por confiares em nós com “{title}”. Aconteça o que acontecer, os direitos de autor são teus.",
+    "Agradecemos que nos tenhas confiado “{title}”. Aconteça o que acontecer, os direitos de autor são teus.",
   "submitStory.success.defaultTitle": "o teu texto",
   "submitStory.success.timeline.readsEvery":
     "Uma pessoa editora lê pessoalmente todas as propostas.",
   "submitStory.success.timeline.hearBy":
-    "Tens resposta nossa até <strong>{date}</strong>: sim, não, ou vamos falar.",
+    "Tens resposta nossa até <strong>{date}</strong>: sim, não ou vamos falar.",
   "submitStory.success.timeline.ifYes":
-    "Se for sim, combinamos juntas o valor e o prazo.",
+    "Se for sim, combinamos em conjunto o valor e o prazo.",
   "submitStory.success.backCta": "Voltar à revista",
   "submitStory.success.pastIssuesCta": "Ler edições anteriores",
 
@@ -1688,7 +1691,7 @@ export const magazine: Catalog = {
   "submitStory.editor.error.sectionInvalid":
     "A secção do teu texto não foi aceite. Escolhe-a outra vez na lista e submete de novo.",
   "submitStory.editor.error.summaryRequired":
-    "O teu texto precisa de um resumo ou de algum corpo antes de seguir para a edição. Acrescenta um e submete de novo.",
+    "O teu texto precisa de um resumo ou de algum conteúdo no corpo antes de seguir para a redação. Acrescenta um deles e submete de novo.",
   "submitStory.editor.error.headlineTooLong":
     "O teu título tem mais de 200 carateres. Encurta-o e submete outra vez.",
   "submitStory.editor.error.deckTooLong":
@@ -1755,10 +1758,9 @@ export const magazine: Catalog = {
     "{count} submissão com a redação neste momento",
   "pitchTracker.header.leadActive_other":
     "{count} submissões com a redação neste momento",
-  "pitchTracker.header.leadPublished_one":
-    "<b>{count} publicada</b> desde sempre",
+  "pitchTracker.header.leadPublished_one": "<b>{count} publicada</b> no total",
   "pitchTracker.header.leadPublished_other":
-    "<b>{count} publicadas</b> desde sempre",
+    "<b>{count} publicadas</b> no total",
 
   // ── PitchTabs ──────────────────────────────────────────────────────────
   "pitchTracker.tabs.ariaLabel": "Estado da submissão",
@@ -1771,7 +1773,7 @@ export const magazine: Catalog = {
   // ── WriterSubmissionsTab ───────────────────────────────────────────────
   "pitchTracker.page.emptyTitle": "Nada nesta vista.",
   "pitchTracker.page.emptyBody":
-    "Não há submissões aqui neste momento. Experimenta outro estado, ou submete uma história no botão acima.",
+    "Não há submissões aqui neste momento. Experimenta outro estado ou submete uma história com o botão acima.",
   "pitchTracker.page.showAllCta": "Mostrar todas",
   "pitchTracker.page.withdrawnToast": "Submissão retirada",
   "pitchTracker.page.undoCta": "Desfazer",
@@ -1789,7 +1791,7 @@ export const magazine: Catalog = {
   "pitchTracker.card.withdrawCta": "Retirar",
   "pitchTracker.withdraw.confirmTitle": "Retirar esta submissão?",
   "pitchTracker.withdraw.confirmBody":
-    "A redação deixa de a ver e a submissão sai da tua lista. Não é possível anular, mas podes sempre voltar a submeter a história.",
+    "A redação deixa de a ver e a submissão sai da tua lista. Esta ação não pode ser anulada. Podes sempre voltar a submeter a história.",
   "pitchTracker.withdraw.confirmCta": "Retirar submissão",
   "pitchTracker.withdraw.doneToast": "Submissão retirada.",
   "pitchTracker.withdraw.decidedToast":
@@ -1807,7 +1809,7 @@ export const magazine: Catalog = {
   "pitchTracker.stage.pitched": "Proposta enviada",
   "pitchTracker.stage.accepted": "Aceite",
   "pitchTracker.stage.firstDraft": "Primeiro rascunho",
-  "pitchTracker.stage.firstEdit": "Primeira edição",
+  "pitchTracker.stage.firstEdit": "Primeira revisão",
   "pitchTracker.stage.layOut": "Paginação",
   "pitchTracker.stage.published": "Publicado",
   "pitchTracker.stage.inReview": "Em revisão",
@@ -1815,7 +1817,7 @@ export const magazine: Catalog = {
   "pitchTracker.stage.draft": "Rascunho",
   "pitchTracker.stage.edit": "Edição",
   "pitchTracker.stage.out": "No ar",
-  "pitchTracker.stage.reviewed": "Revista",
+  "pitchTracker.stage.reviewed": "Avaliada",
   "pitchTracker.stage.closed": "Encerrada",
 
   // ── Live submissionToPitch adapter's generic per-status labels ──────────
@@ -1841,14 +1843,14 @@ export const magazine: Catalog = {
   "printOrder.closeAria": "Fechar",
   "printOrder.success.title": "Está a <em>caminho de ti.</em>",
   "printOrder.success.body_one":
-    "{count} exemplar de <b>{issue}</b> reservado desta tiragem. Enviamos um email para <b>{email}</b> quando sair de Marvila, normalmente dentro de uma semana. Obrigade por financiares as pessoas colaboradoras da próxima edição.",
+    "{count} exemplar de <b>{issue}</b> reservado desta tiragem. Enviamos um email para <b>{email}</b> quando sair de Marvila, normalmente dentro de uma semana. Agradecemos por ajudares a pagar a quem colabora na próxima edição.",
   "printOrder.success.body_other":
-    "{count} exemplares de <b>{issue}</b> reservados desta tiragem. Enviamos um email para <b>{email}</b> quando saírem de Marvila, normalmente dentro de uma semana. Obrigade por financiares as pessoas colaboradoras da próxima edição.",
+    "{count} exemplares de <b>{issue}</b> reservados desta tiragem. Enviamos um email para <b>{email}</b> quando saírem de Marvila, normalmente dentro de uma semana. Agradecemos por ajudares a pagar a quem colabora na próxima edição.",
   "printOrder.success.doneCta": "Concluído",
   "printOrder.eyebrow": "Edição impressa · {issue}",
   "printOrder.title": "Encomendar a <em>tiragem impressa.</em>",
   "printOrder.lead":
-    "{pages} páginas, capa em risografia, impressa em Marvila. <b>{price} € ao custo</b>. As receitas financiam as pessoas colaboradoras da próxima edição.",
+    "{pages} páginas, capa em risografia, impressão em Marvila. <b>{price} € a preço de custo</b>. As receitas financiam as pessoas colaboradoras da próxima edição.",
   "printOrder.copiesLabel": "Exemplares",
   "printOrder.fewerCopiesAria": "Menos exemplares",
   "printOrder.moreCopiesAria": "Mais exemplares",
@@ -1857,7 +1859,7 @@ export const magazine: Catalog = {
     "Só o usamos para te avisar quando o teu exemplar for enviado.",
   "printOrder.emailPlaceholder": "tu@exemplo.com",
   "printOrder.cancelCta": "Cancelar",
-  "printOrder.placingCta": "A colocar a tua encomenda…",
+  "printOrder.placingCta": "A fazer a tua encomenda…",
   "printOrder.placeCta": "Fazer encomenda: {total} €",
 
   // ══════════════════ Páginas de reportagem (Story showcase) ═════════════════
@@ -1870,11 +1872,11 @@ export const magazine: Catalog = {
   "story.outro.studio.title":
     "Queres fazer parte do que <em>vai ser escrito a seguir?</em>",
   "story.outro.studio.sub":
-    "As histórias são sobre as pessoas na sala. Junta-te a nós.",
+    "As histórias são sobre quem cá está. Junta-te a nós.",
   "story.outro.tomas.title":
     "Queres juntar-te à mesa do Tomás? <em>Junta-te à rede primeiro.</em>",
   "story.outro.tomas.sub":
-    "O jantar, a rede, os eventos: tudo começa com um convite de alguém que te conhece.",
+    "O clube de jantares, a rede, os eventos: tudo começa com um convite de alguém que te conhece.",
   "story.outro.safety.title": "Leste e parece-te <em>certo?</em>",
   "story.outro.safety.sub":
     "Não somos para todas as pessoas. Mas se isto faz sentido para ti, talvez sejas para nós.",
@@ -1907,7 +1909,7 @@ export const magazine: Catalog = {
   "write.header.unpublishedToast": "Artigo despublicado",
   "write.header.publishError": "Não foi possível publicar, tenta novamente",
   "write.header.publishNotReadyError":
-    "Adiciona um standfirst e texto alternativo em todas as imagens antes de publicar.",
+    "Adiciona um resumo e texto alternativo a todas as imagens antes de publicar.",
   "write.header.savedSaving": "A guardar…",
   "write.header.savedError": "Não foi possível guardar, vamos tentar de novo",
   "write.header.savedOk": "Todas as alterações guardadas",
@@ -1924,7 +1926,7 @@ export const magazine: Catalog = {
   // tem de ser claro: recarregar custa as edições deste separador.
   "write.conflict.heading": "Este rascunho avançou",
   "write.conflict.body":
-    "Outra pessoa gravou este artigo depois de o teres aberto, por isso parámos de gravar em vez de escrever por cima do trabalho dela. Ao recarregar, ficas com a versão atual e perdes as edições deste separador, por isso copia primeiro o que quiseres guardar.",
+    "Outra pessoa guardou este artigo depois de o abrires. Para não escrevermos por cima do trabalho dela, parámos de guardar. Ao recarregar, ficas com a versão atual e perdes as edições deste separador, por isso copia primeiro o que quiseres manter.",
   "write.conflict.reloadCta": "Recarregar o rascunho atual",
 
   // ── Alternador Rascunho/Composição/Leitura (editorMode.ts) ───────────────
@@ -1938,7 +1940,7 @@ export const magazine: Catalog = {
   // ── ArticleDocument ───────────────────────────────────────────────────────
   "write.document.headlinePlaceholder": "Título",
   "write.document.standfirstPlaceholder":
-    "Resumo: uma ou duas frases sob o título",
+    "Resumo: uma ou duas frases por baixo do título",
   "write.document.addBlockHint": "ou escreve / num parágrafo vazio",
 
   // ── Tipos de bloco (blockKinds.ts não é um componente — traduzidos em
@@ -1963,12 +1965,13 @@ export const magazine: Catalog = {
   "write.block.moveUpAria": "Mover bloco para cima",
   "write.block.moveDownAria": "Mover bloco para baixo",
   "write.block.removeAria": "Remover bloco",
-  "write.block.paragraphPlaceholder": "Escreve, ou prime / para um bloco",
+  "write.block.paragraphPlaceholder":
+    "Escreve ou prime / para inserir um bloco",
   "write.block.headingPlaceholder": "Subtítulo de secção",
   "write.block.pullQuotePlaceholder": "Citação em destaque",
 
   // ── ArticleBlockKindFields ────────────────────────────────────────────────
-  "write.block.quotePlaceholder": "Discurso citado",
+  "write.block.quotePlaceholder": "Palavras citadas",
   "write.block.attributionPlaceholder": "Atribuição",
   "write.block.attributionAria": "Atribuição da citação",
   "write.block.questionPlaceholder": "Pergunta",
@@ -1985,7 +1988,7 @@ export const magazine: Catalog = {
   // ── ImageBlockControls ────────────────────────────────────────────────────
   "write.image.sourceLabel": "A imagem",
   "write.image.sourceHelper":
-    "Carrega a arte para este sítio. Recorte livre: o enquadramento e o ponto focal abaixo decidem como aparece.",
+    "Carrega a imagem para este espaço. Recorte livre: o enquadramento e o ponto focal abaixo definem como aparece.",
   "write.image.sourcePlaceholder": "Ainda sem imagem",
   "write.image.altLabel": "Texto alternativo",
   "write.image.altError": "Obrigatório para leitores de ecrã e legendas.",
@@ -2012,9 +2015,9 @@ export const magazine: Catalog = {
   "write.publish.now": "Agora",
   "write.publish.schedule": "Agendar",
   "write.publish.withIssue": "Com a edição",
-  "write.publish.scheduleLabel": "Publicar às",
+  "write.publish.scheduleLabel": "Publicar em",
   "write.publish.scheduleNote":
-    "Publica-se automaticamente na data e hora escolhidas.",
+    "Publica-se automaticamente na data e hora que escolheres.",
   "write.publish.scheduleInvalid": "Escolhe uma data e hora no futuro.",
   "write.publish.issueNote": "Publica-se automaticamente quando a edição sai.",
   "write.publish.checklistHeading": "Antes de publicar · {done}/{total}",
@@ -2024,7 +2027,7 @@ export const magazine: Catalog = {
   "write.publish.checklist.standfirst": "Resumo escrito",
   "write.publish.checklist.alts": "Texto alternativo em todas as imagens",
   "write.publish.checklist.altsPending":
-    "Texto alternativo em todas as imagens (ainda nenhuma)",
+    "Texto alternativo em todas as imagens (ainda sem imagens)",
   "write.publish.checklist.sensitivity":
     "Leitura de sensibilidade: tratada na ficha da peça",
   "write.publish.checklist.source": "Fonte na linha de estatísticas (opcional)",
@@ -2034,7 +2037,7 @@ export const magazine: Catalog = {
   "write.publish.gate.careHeading":
     "O controlo de cuidado desta peça ainda está aberto.",
   "write.publish.gate.notReadyHeading":
-    "O rascunho gravado ainda não está pronto para publicar.",
+    "O rascunho guardado ainda não está pronto para publicar.",
   "write.publish.gate.careToast":
     "A publicação está bloqueada enquanto o controlo de cuidado estiver aberto.",
 
@@ -2042,7 +2045,7 @@ export const magazine: Catalog = {
   "write.meta.title": "Metadados da peça",
   "write.meta.sectionLabel": "Secção",
   "write.meta.bylineLabel": "Assinatura",
-  "write.meta.bylineHelper": "Definida no separador Resumo da ficha da peça.",
+  "write.meta.bylineHelper": "Definida no separador Briefing da ficha da peça.",
   "write.meta.roleLabel": "Função",
   "write.meta.roleHelper":
     "Um qualificador da assinatura, por exemplo “Editora convidada”.",
@@ -2050,13 +2053,13 @@ export const magazine: Catalog = {
   "write.meta.tagsHelper": "Separadas por vírgulas.",
   "write.meta.slugLabel": "Slug",
   "write.meta.slugHelper": "Gerado pelo servidor.",
-  "write.meta.metaDescriptionLabel": "Meta descrição",
+  "write.meta.metaDescriptionLabel": "Metadescrição",
   "write.meta.metaDescriptionHelper":
     "Aparece nos resultados de pesquisa e nas pré-visualizações de partilha. Opcional.",
-  "write.meta.heroImageLabel": "Arte de abertura",
+  "write.meta.heroImageLabel": "Imagem de abertura",
   "write.meta.heroImageHelper":
-    "A imagem que abre a peça e acompanha todos os cartões que apontam para ela. Pelo menos 1200 por 600.",
-  "write.meta.heroImagePlaceholder": "Ainda sem arte de abertura",
+    "A imagem que abre a peça e aparece em todos os cartões que levam até ela. Pelo menos 1200 por 600.",
+  "write.meta.heroImagePlaceholder": "Ainda sem imagem de abertura",
   "write.meta.socialImageLabel": "Imagem para partilha",
   "write.meta.socialImageHelper":
     "URL da imagem usada quando este artigo é partilhado. Opcional.",
@@ -2151,13 +2154,13 @@ export const magazine: Catalog = {
   "issue.ship.notYet": "Ainda não",
   "issue.ship.shipIt": "Lançar",
   "issue.ship.warnNote":
-    "As peças que ainda estão atrás do portão de publicação ficam em espera e publicam-se mais tarde. A edição não espera por elas.",
+    "As peças que ainda não passaram a verificação de publicação ficam retidas e saem mais tarde. A edição não espera por elas.",
   // ENG-110 / PRD-126: lançar agenda em vez de publicar quando a edição tem uma
   // data futura, e o desfecho é relatado depois em vez de ser assumido. Nada
   // aqui pode descrever uma entrega: a CON-05 retirou o digest por email e a
   // QueerPulse não envia nenhum.
   "issue.ship.schedulesForNote":
-    "Lançar a edição não publica nada hoje. Cada peça elegível fica agendada para ficar disponível às 09:00 de {date}.",
+    "Lançar a edição não publica nada hoje. Cada peça elegível fica agendada para sair às 09:00 de {date}.",
   "issue.ship.publishesNowNote":
     "Cada peça elegível fica disponível a quem lê assim que lançares a edição.",
   "issue.ship.lastShipHeading": "Último lançamento a {date}",
@@ -2177,17 +2180,17 @@ export const magazine: Catalog = {
   "issue.ship.quietLead": "Sai em silêncio.",
   "issue.ship.shippedQuietlyLead": "Já saiu em silêncio.",
   "issue.ship.shippedQuietlyBody":
-    "Um novo lançamento só anuncia esta edição se puser uma peça disponível pela primeira vez.",
+    "Um novo lançamento só anuncia esta edição se publicar uma peça pela primeira vez.",
 
   // ── Issue production toasts ──────────────────────────────────────────────
   // O `issuePanelSaved` renomeia de propósito o antigo "Digest guardado": a
   // CON-05 retirou o digest por email e esse separador é agora o painel da
   // edição. Um toast a nomear uma superfície que já não existe é uma mentira.
-  "issue.toast.runOrderSaved": "Alinhamento guardado",
+  "issue.toast.runOrderSaved": "Ordem de publicação guardada",
   "issue.toast.issuePanelSaved": "Painel da edição guardado",
   "issue.toast.coverSaved": "Capa guardada",
   "issue.toast.shipped": "Edição lançada",
-  "issue.toast.contentsBlurbSaved": "Descrição do índice guardada",
+  "issue.toast.contentsBlurbSaved": "Resumo do índice guardado",
 
   // ── IssueTabsNav ─────────────────────────────────────────────────────────
   "issue.tabs.ariaLabel": "Secções da produção da edição",
@@ -2200,7 +2203,7 @@ export const magazine: Catalog = {
   "issue.publishDate.heading": "Data de publicação",
   "issue.publishDate.set": "Esta edição está marcada para {date}.",
   "issue.publishDate.unset":
-    "Ainda sem data. Define-a quando souberes, ou deixa que o envio marque a de hoje.",
+    "Ainda sem data. Define-a quando souberes, ou deixa que o lançamento marque a de hoje.",
   "issue.publishDate.save": "Guardar data",
   "issue.publishDate.clear": "Limpar data",
   "issue.publishDate.saving": "A guardar\u2026",
@@ -2253,15 +2256,16 @@ export const magazine: Catalog = {
   "issue.addPieces.addCtaEmpty": "Juntar à edição {number}",
   "issue.addPieces.addCta_one": "Juntar 1 à edição {number}",
   "issue.addPieces.addCta_other": "Juntar {count} à edição {number}",
-  "issue.addPieces.searchPlaceholder": "Procurar peças sem edição…",
-  "issue.addPieces.searchLabel": "Procurar peças sem edição",
-  "issue.addPieces.noMatches": "Nada corresponde a essa procura.",
+  "issue.addPieces.searchPlaceholder": "Pesquisa peças sem edição…",
+  "issue.addPieces.searchLabel": "Pesquisar peças sem edição",
+  "issue.addPieces.noMatches": "Nada corresponde a essa pesquisa.",
   "issue.addPieces.emptyTitle": "Está tudo arrumado",
   "issue.addPieces.emptyDescription":
     "Não há peças à espera de edição. Encomenda uma na redação para começar.",
-  "issue.addPieces.addedToast_one": "{count} peça juntou-se à edição {number}.",
+  "issue.addPieces.addedToast_one":
+    "{count} peça adicionada à edição {number}.",
   "issue.addPieces.addedToast_other":
-    "{count} peças juntaram-se à edição {number}.",
+    "{count} peças adicionadas à edição {number}.",
   "issue.addPieces.failedToast": "Não deu para guardar. Tenta outra vez.",
 
   "issue.runOrder.inLayout": "Em paginação",
@@ -2305,7 +2309,7 @@ export const magazine: Catalog = {
   "issue.digest.edit": "Editar",
   "issue.digest.previewPanel": "Ver a página de quem lê",
   "issue.digest.announceOffToast":
-    "Publicar esta edição deixa de avisar a comunidade.",
+    "Lançar esta edição deixa de avisar a comunidade.",
   "issue.digest.alreadyAnnounced": "Anunciado à comunidade a {date}",
   "issue.digest.announceWithIssue": "Anunciar com a edição",
   "issue.digest.announceOnToast":
@@ -2379,7 +2383,7 @@ export const magazine: Catalog = {
   "writer.page.error.notActive":
     "Só contas ativas podem abrir o espaço de escrita, e a tua conta não está ativa neste momento.",
   "writer.page.error.notWriter":
-    "A tua conta não tem o papel de pessoa escritora, por isso o espaço de trabalho não tem nada para mostrar. Se a tua candidatura para escrever foi aprovada, pede à nossa equipa que confirme se o papel foi atribuído.",
+    "A tua conta não tem o papel de pessoa autora, por isso o espaço de trabalho não tem nada para mostrar. Se a tua candidatura para escrever foi aprovada, pede à nossa equipa que confirme se o papel foi atribuído.",
   "writer.page.error.notOpen": "O espaço de escrita ainda não está aberto.",
   "writer.page.error.timedOut":
     "Os nossos servidores demoraram demasiado a enviar as tuas atribuições, propostas e pagamentos. Atualiza a página para tentar de novo.",
@@ -2407,7 +2411,7 @@ export const magazine: Catalog = {
   "writer.work.paymentLabel": "Pagamento",
   "writer.work.fileDraft": "Entregar um rascunho",
   "writer.work.readBrief": "Ler o briefing",
-  "writer.work.messageEditor": "Mensagem à pessoa editora",
+  "writer.work.messageEditor": "Escrever a quem te edita",
   "writer.work.activeBadge": "Ativa",
   "writer.work.setActive": "Usar para assinatura e termos",
   // Substitui o enum `magazine_payment.status` em bruto que quem escreve lia no
@@ -2426,7 +2430,7 @@ export const magazine: Catalog = {
   "writer.brief.rateLabel": "Valor",
   "writer.brief.killFeeLabel": "Valor de cancelamento",
   "writer.brief.commissionedByLabel": "Encomendado por",
-  "writer.brief.commissionedOnLabel": "Encomendado a",
+  "writer.brief.commissionedOnLabel": "Data da encomenda",
   "writer.brief.noBrief": "Ainda não foi escrito um briefing para esta peça.",
   "writer.brief.close": "Fechar",
 
@@ -2449,15 +2453,15 @@ export const magazine: Catalog = {
     "Assim que uma peça for entregue e aprovada, o pagamento aparece aqui.",
   "writer.payments.unscheduled": "Sem edição agendada",
   "writer.payments.terms":
-    "Prazo de pagamento de 21 dias. Se estivermos atrasados, isso fica registado aqui antes de teres de perguntar.",
+    "Prazo de pagamento de 21 dias. Se nos atrasarmos, fica registado aqui antes de teres de perguntar.",
 
   // ── AgreedTermsCard ──────────────────────────────────────────────────────
   "writer.terms.heading": "O que acordaste",
   "writer.terms.body":
-    "Toda a encomenda tem os mesmos termos: valor, valor de cancelamento, prazo, e o que acontece se a peça mudar de forma.",
+    "Cada encomenda tem os mesmos termos: valor, valor de cancelamento, prazo e o que acontece se a peça mudar de forma.",
   "writer.terms.killFeeLabel": "Valor de cancelamento",
   "writer.terms.rightsLabel": "Direitos",
-  "writer.terms.editsLabel": "Edições",
+  "writer.terms.editsLabel": "Alterações",
   "writer.terms.emptyState":
     "Ainda sem nenhuma encomenda ativa. Os termos aparecem assim que houver uma.",
 
@@ -2466,7 +2470,7 @@ export const magazine: Catalog = {
   "writer.byline.body":
     "Escolhes a assinatura em cada peça, e podes alterá-la até ao momento em que é publicada.",
   "writer.byline.fieldLabel": "Assinatura para “{title}”",
-  "writer.byline.anonymous": "Anónime",
+  "writer.byline.anonymous": "Autoria anónima",
   "writer.byline.emptyState":
     "Ainda não tens nenhuma atribuição ativa para definir uma assinatura.",
   "writer.byline.updatedToast": "Assinatura atualizada.",
@@ -2479,7 +2483,7 @@ export const magazine: Catalog = {
     "Cola o texto, arrasta um documento, ou escreve aqui. Chega à redação em blocos limpos, prontos a editar.",
   "writer.fileDraft.fieldLabel": "Rascunho",
   "writer.fileDraft.fieldHelper":
-    "Enviar um documento chega em breve. Colar o texto já funciona.",
+    "Em breve vais poder carregar um documento. Colar o texto já funciona.",
   "writer.fileDraft.placeholder": "Cola aqui o teu rascunho…",
   "writer.fileDraft.wordCountWithTarget":
     "A contagem de palavras é comparada com o teu briefing ({target} palavras). Passar do valor não é problema.",
@@ -2511,7 +2515,7 @@ export const magazine: Catalog = {
   "writer.messages.title": "Mensagens · {title}",
 
   // ── EditorMessageCard (cartão "Da tua pessoa editora", Fase 7 Vaga F) ──
-  "writer.editorMessage.heading": "Da tua pessoa editora",
+  "writer.editorMessage.heading": "De quem te edita",
   "writer.editorMessage.fromLabel": "{name}",
   "writer.editorMessage.loading": "A carregar…",
   "writer.editorMessage.noMessagesYet": "Ainda sem mensagens. Diz olá.",
@@ -2521,7 +2525,7 @@ export const magazine: Catalog = {
   "pieceThread.you": "Tu",
   "pieceThread.emptyTitle": "Ainda sem mensagens",
   "pieceThread.emptyDescription":
-    "Diz olá. Insistências e perguntas vivem aqui agora, em vez do email.",
+    "Diz olá. Os lembretes e as perguntas que antes iam por email ficam agora aqui.",
   "pieceThread.errorState":
     "Não foi possível carregar esta conversa. Tenta de novo daqui a pouco.",
   "pieceThread.composerAria": "Mensagem",
@@ -2536,12 +2540,13 @@ export const magazine: Catalog = {
   // ══════════════════ Candidatar a escrever ═══════════════════════════════
   "applyToWrite.intro.title": "Mostra-nos <em>o que sabes fazer.</em>",
   "applyToWrite.intro.lead":
-    "Toda a história que chega a um editor começa aqui. Diz-nos porque queres escrever para a QueerPulse e partilha uma amostra da tua escrita: colada aqui, ou um link para algo que já publicaste.",
+    "Cada história que chega a quem edita começa aqui. Diz-nos porque queres escrever para a QueerPulse e partilha uma amostra da tua escrita: colada aqui ou um link para algo que já publicaste.",
   "applyToWrite.form.pitchNoteLabel": "Porque queres escrever para nós?",
   "applyToWrite.form.pitchNotePlaceholder": "Uma ou duas frases chegam.",
   "applyToWrite.form.sampleTextLabel": "Cola uma amostra de escrita",
   "applyToWrite.form.sampleTextPlaceholder": "Cola aqui um texto teu.",
-  "applyToWrite.form.sampleLinkLabel": "…ou liga a algo que já publicaste",
+  "applyToWrite.form.sampleLinkLabel":
+    "…ou um link para algo que já publicaste",
   "applyToWrite.form.sampleLinkPlaceholder": "https://",
   "applyToWrite.form.sampleRequiredError":
     "Inclui uma amostra de escrita: cola texto ou adiciona um link.",
@@ -2560,7 +2565,7 @@ export const magazine: Catalog = {
   "applyToWrite.form.error.pitchTooLong":
     "A tua nota sobre porque queres escrever connosco tem mais de 2000 carateres. Encurta-a e envia outra vez.",
   "applyToWrite.form.error.alreadyWriter":
-    "Já és uma pessoa escritora da QueerPulse, por isso não há candidatura para enviar. Atualiza a página para ver as tuas ferramentas de escrita.",
+    "Já escreves para a QueerPulse, por isso não há candidatura para enviar. Atualiza a página para ver as tuas ferramentas de escrita.",
   "applyToWrite.form.error.alreadyPending":
     "Já tens uma candidatura em análise. Atualiza a página para ver em que ponto está.",
   "applyToWrite.form.error.notActive":
@@ -2583,13 +2588,13 @@ export const magazine: Catalog = {
     "Os nossos servidores recusaram a candidatura com o erro {status}. Tenta outra vez daqui a pouco.",
   "applyToWrite.pending.title": "A tua candidatura está <em>em análise.</em>",
   "applyToWrite.pending.body":
-    "Um editor vai ler a tua amostra e responder-te. Isto demora normalmente umas duas semanas.",
+    "Alguém da redação vai ler a tua amostra e responder-te. Normalmente demora umas duas semanas.",
   "applyToWrite.declined.title": "Desta vez não",
   "applyToWrite.declined.body":
-    "Obrigade por te candidatares. Desta vez não resultou.",
-  "applyToWrite.declined.reviewNoteLabel": "Da parte dos editores:",
+    "Agradecemos a tua candidatura. Desta vez não resultou.",
+  "applyToWrite.declined.reviewNoteLabel": "Da parte da redação:",
   "applyToWrite.declined.reapplyCta": "Candidatar de novo",
-  "applyToWrite.approved.title": "Já és uma pessoa escritora da QueerPulse",
+  "applyToWrite.approved.title": "Já escreves para a QueerPulse",
   "applyToWrite.approved.body":
     "A tua candidatura foi aprovada. Vai à página de submissão para enviares a tua primeira proposta.",
   "applyToWrite.approved.cta": "Começar a escrever",
@@ -2602,24 +2607,23 @@ export const magazine: Catalog = {
   "comments.delete": "Eliminar",
   "comments.editedMark": "(editado)",
   "comments.tombstone": "Este comentário foi eliminado.",
-  "comments.composer.placeholder": "Adicionar um comentário…",
-  "comments.composer.replyPlaceholder": "Escrever uma resposta…",
-  "comments.composer.editPlaceholder": "Editar o teu comentário…",
+  "comments.composer.placeholder": "Adiciona um comentário…",
+  "comments.composer.replyPlaceholder": "Escreve uma resposta…",
+  "comments.composer.editPlaceholder": "Edita o teu comentário…",
   "comments.composer.post": "Publicar comentário",
   "comments.composer.postReply": "Publicar resposta",
   "comments.composer.saveEdit": "Guardar",
   "comments.composer.cancel": "Cancelar",
   "comments.report.cta": "Denunciar",
   "comments.report.title": "Denunciar este comentário",
-  "comments.report.sub":
-    "Diz-nos o que está errado com o comentário de {name}.",
+  "comments.report.sub": "Diz-nos qual é o problema do comentário de {name}.",
   "comments.report.reasonGroupAria": "Motivo da denúncia",
   "comments.report.cancel": "Cancelar",
   "comments.report.sendCta": "Enviar denúncia",
   "comments.report.sending": "A enviar…",
   "comments.report.confirmTitle": "Denúncia <em>enviada</em>",
   "comments.report.confirmBody":
-    "Obrigade. Um moderador vai rever o comentário de {name}.",
+    "Agradecemos. A moderação vai rever o comentário de {name}.",
   "comments.report.done": "Concluído",
   "comments.report.error.title": "A tua denúncia não foi enviada",
   // Uma linha por recusa que a denúncia de um comentário pode receber; ver
@@ -2683,9 +2687,9 @@ export const magazine: Catalog = {
   // ── Editor de artigos: anulação da remoção de bloco ──────────────────────
   "write.block.removedToast": "Bloco removido.",
   "write.block.undoRemove": "Anular",
-  "write.scheduledSave.heading": "Esta alteração não foi gravada",
+  "write.scheduledSave.heading": "Esta alteração não foi guardada",
   "write.scheduledSave.body":
-    "Esta peça tem publicação agendada, por isso tem de continuar pronta para sair. Repõe o que falta, ou carrega em Despublicar lá em cima para a tirar da agenda e gravar esta alteração.",
+    "Esta peça tem publicação agendada, por isso tem de continuar pronta para sair. Repõe o que falta, ou carrega em Despublicar lá em cima para a tirar da agenda e guardar esta alteração.",
 
   // ── Comentários: confirmação de eliminação (FE-CNT-11) ───────────────────
   "comments.deleteConfirm.title": "Eliminar este comentário?",
@@ -2697,10 +2701,10 @@ export const magazine: Catalog = {
   "lifecycle.pageTitle": "Arquivo · Revista QueerPulse",
   "lifecycle.heading": "O arquivo",
   "lifecycle.blurb":
-    "Onde está hoje cada texto publicado e quais prometemos rever. Retirar um texto mantém-no legível e dá ao leitor uma nota datada, para que nada do que alguém partilhou se torne um link morto.",
+    "Onde está hoje cada texto publicado e quais prometemos rever. Retirar um texto mantém-no legível e mostra a quem lê uma nota datada, para que nada do que alguém partilhou se torne um link morto.",
   "lifecycle.horizon": "{days} dias",
-  "lifecycle.horizonAria": "Até onde a fila de revisão olha",
-  "lifecycle.saved": "Guardado. Os leitores já veem isto no texto.",
+  "lifecycle.horizonAria": "Quantos dias à frente a fila de revisão abrange",
+  "lifecycle.saved": "Guardado. Quem lê já vê isto no texto.",
   "lifecycle.saveFailed": "Não foi possível guardar. Tenta outra vez.",
 
   "lifecycle.state.live": "No ar",
@@ -2710,11 +2714,11 @@ export const magazine: Catalog = {
   "lifecycle.hint.live":
     "Atual. Mantemos o texto como está e não aparece nenhum aviso.",
   "lifecycle.hint.underReview":
-    "Estamos a confrontá-lo com a lei ou o serviço tal como estão agora. O leitor é avisado de que partes podem estar desatualizadas.",
+    "Estamos a verificá-lo de novo à luz da lei ou do serviço tal como estão agora. Quem lê fica a saber que algumas partes podem estar desatualizadas.",
   "lifecycle.hint.archived":
     "Do seu tempo. Fica como registo, deixa de ser atualizado e lê-se como história.",
   "lifecycle.hint.superseded":
-    "Um texto mais recente substitui-o. O aviso leva o leitor diretamente para lá.",
+    "Um texto mais recente substitui-o. O aviso leva quem lê diretamente para lá.",
 
   "lifecycle.counts.overdue": "Em atraso",
 
@@ -2724,7 +2728,7 @@ export const magazine: Catalog = {
   "lifecycle.queue.empty": "Nada a rever neste período.",
   "lifecycle.flagged.heading": "Com aviso",
   "lifecycle.flagged.blurb":
-    "Tudo aquilo em que o leitor vê neste momento uma nota. Um texto pode estar aqui e na fila acima ao mesmo tempo.",
+    "Tudo o que mostra neste momento uma nota a quem lê. Um texto pode estar aqui e na fila acima ao mesmo tempo.",
   "lifecycle.flagged.empty": "Todos os textos publicados estão no ar.",
 
   "lifecycle.row.published": "publicado a {date}",
@@ -2737,19 +2741,19 @@ export const magazine: Catalog = {
 
   "lifecycle.modal.eyebrow": "Ciclo de vida",
   "lifecycle.modal.sub":
-    "É isto que o leitor vê no topo do texto. De qualquer forma, o texto continua publicado e continua no arquivo.",
+    "É isto que aparece a quem lê no topo do texto. De qualquer forma, o texto continua publicado e continua no arquivo.",
   "lifecycle.modal.stateLabel": "Onde está este texto",
   "lifecycle.modal.replacementLabel": "O texto que o substitui",
   "lifecycle.modal.replacementHelper":
     "O slug dele, a parte a seguir a ?id= no endereço.",
   "lifecycle.modal.replacementRequired":
-    "Um texto substituído precisa de um sítio para onde enviar o leitor.",
-  "lifecycle.modal.noteLabel": "O que dizer ao leitor",
+    "Um texto substituído precisa de um destino para onde encaminhar quem lê.",
+  "lifecycle.modal.noteLabel": "O que dizer a quem lê",
   "lifecycle.modal.noteHelper":
     "Uma frase tua. Se ficar em branco, o texto recebe a formulação geral deste estado.",
   "lifecycle.modal.reviewLabel": "Rever de novo a",
   "lifecycle.modal.reviewHelper":
-    "O dia em que isto volta à redação. O leitor também vê a promessa.",
+    "O dia em que isto volta à redação. Quem lê também vê a promessa.",
   "lifecycle.modal.cancel": "Cancelar",
   "lifecycle.modal.save": "Guardar estado",
 
@@ -2776,10 +2780,10 @@ export const magazine: Catalog = {
     "Este texto já existe em todos os idiomas em que publicamos.",
   "lifecycle.languages.translatorNone": "Ainda sem ninguém",
   "lifecycle.languages.translatorsUnavailable":
-    "A lista de membros ainda não carregou. Podes abrir já a tradução e escolher quem traduz mais tarde, na redação.",
+    "A lista de pessoas da comunidade ainda não carregou. Podes abrir já a tradução e escolher quem traduz mais tarde, na redação.",
   "lifecycle.languages.bylineLabel": "Crédito",
   "lifecycle.languages.bylineHelper":
-    "O nome tal como deve aparecer nos créditos. Deixa em branco para usar o nome de membro.",
+    "O nome tal como deve aparecer nos créditos. Deixa em branco para usar o nome do perfil.",
 
   // ── Reader: the decks index (PRD-105) ───────────────────────────────────
   "decks.metaTitle": "Decks interativos",
@@ -2829,10 +2833,9 @@ export const magazine: Catalog = {
   "comments.loadMore": "Carregar mais",
   "comments.loadingMore": "A carregar…",
   "comments.unknownAuthor": "[eliminado]",
-  "comments.report.subUnknown":
-    "Diz-nos o que está errado com este comentário.",
+  "comments.report.subUnknown": "Diz-nos qual é o problema deste comentário.",
   "comments.report.confirmBodyUnknown":
-    "Obrigade. Um moderador vai rever este comentário.",
+    "Agradecemos. A moderação vai rever este comentário.",
   "comments.loadError.title": "Não conseguimos carregar os comentários.",
   "comments.loadError.body":
     "A conversa continua aqui. Tenta outra vez daqui a um instante.",

@@ -39,8 +39,8 @@ function demoLibrary(): VjDemoLibraryLookup {
     clipIdsInPack: () => new Set<string>(),
     readPackClipForAdvance: () => null,
     readSceneLook: () => null,
-    readSetlistItem: () => null,
-    setlistItemCount: () => null,
+    readSetlist: () => null,
+    readSetlistFollow: () => null,
   };
 }
 

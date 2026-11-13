@@ -413,6 +413,83 @@
   font-variant-numeric: tabular-nums;
 }
 
+.ringHolder {
+  display: flex;
+}
+
+/* A sequence that stands still: its mark sits where the ring counts, the
+   same 28px, and the Next line's words say why. */
+.sequenceMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: var(--vj-mirror-ring-size);
+  block-size: var(--vj-mirror-ring-size);
+  border: 2px solid var(--qs-ring-track);
+  border-radius: 50%;
+  color: var(--qs-text);
+}
+
+.sequenceMark svg {
+  flex: none;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
+}
+
+.sequenceMark[data-kind="waitingFlash"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* The Next line as one button: its words in the line's 20px, its hit area
+   reaching var(--tap-min) above and below without growing the band. */
+.sequenceSlot {
+  display: flex;
+  min-inline-size: 0;
+}
+
+.sequenceStatus {
+  position: relative;
+  display: flex;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--qs-text);
+  font: inherit;
+  font-weight: 600;
+  text-align: start;
+  text-decoration: underline;
+  text-decoration-color: var(--qs-text-mute);
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* The words clip on their own span, so the button's hit area stays whole. */
+.sequenceText {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sequenceStatus::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block: calc((100% - var(--tap-min)) / 2);
+}
+
+.sequenceStatus:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
 .skipCell {
   grid-area: skip;
   display: flex;

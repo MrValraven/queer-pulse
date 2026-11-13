@@ -24,20 +24,21 @@ import type { Catalog } from "../../types";
  */
 export const safety: Catalog = {
   // ── Shared across ReportPage.tsx / HateCrimePage.tsx (HubBackLink label) ─
-  "nav.safetyGuideLabel": "Guia de Segurança",
+  "nav.safetyGuideLabel": "Guia de segurança",
 
   // ── Quick exit (saída rápida fixa em páginas de segurança sensíveis) ─────
   "quickExit.label": "Saída rápida",
   "quickExit.aria": "Saída rápida: sair desta página agora para um site neutro",
 
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
-  "report.meta.title": "Denunciar uma preocupação à equipa de segurança",
+  "report.meta.title":
+    "Denunciar uma preocupação à equipa de segurança da QueerPulse",
   "report.meta.description":
-    "Faz uma denúncia sobre assédio, abuso ou uma situação insegura no QueerPulse. Podes denunciar de forma anónima e podes denunciar sem conta.",
-  "report.eyebrow": "Segurança e Denúncias",
+    "Faz uma denúncia sobre assédio, abuso ou uma situação insegura na QueerPulse. Podes denunciar de forma anónima e sem conta.",
+  "report.eyebrow": "Segurança e denúncias",
   "report.hero.title": "A segurança é <em>estrutural.</em>",
   "report.hero.lead":
-    "A nossa forma de tratar denúncias, o que acontece quando fazes uma, e os princípios que orientam cada decisão que tomamos.",
+    "A nossa forma de tratar denúncias, o que acontece quando fazes uma e os princípios que orientam cada decisão que tomamos.",
 
   // ── Ligações entre o formulário (ReportPage) e o guia
   //    (ReportingGuidePage) ─────────────────────────────────────────────────
@@ -61,7 +62,7 @@ export const safety: Catalog = {
   "myReports.error": "Não conseguimos carregar as tuas denúncias.",
   "myReports.retry": "Tentar de novo",
   "myReports.footNote":
-    "As tuas 50 denúncias mais recentes. Mostramos-te a tua denúncia e o estado dela, nunca o que foi decidido sobre outra pessoa.",
+    "As tuas 50 denúncias mais recentes. Mostramos-te apenas a tua denúncia e o estado dela. O que foi decidido sobre outras pessoas fica fora desta lista.",
   "myReports.subject.member": "Sobre um membro",
   "myReports.subject.post": "Sobre uma publicação",
   "myReports.subject.reply": "Sobre uma resposta",
@@ -70,20 +71,20 @@ export const safety: Catalog = {
   "myReports.subject.community": "Sobre uma comunidade",
   "myReports.subject.housing": "Sobre um anúncio de habitação",
   "myReports.subject.flatmate": "Sobre um perfil de colega de casa",
-  "myReports.subject.landlord": "Sobre um senhorio",
+  "myReports.subject.landlord": "Sobre uma pessoa senhoria",
   "myReports.subject.listing": "Sobre um anúncio de negócio",
   "myReports.subject.event": "Sobre um evento",
   "myReports.subject.business": "Sobre um negócio",
-  "myReports.subject.company": "Sobre um empregador",
+  "myReports.subject.company": "Sobre uma entidade empregadora",
   "myReports.subject.job": "Sobre uma oferta de emprego",
   "myReports.subject.subprofile": "Sobre uma persona",
   "myReports.subject.review": "Sobre uma avaliação",
   "myReports.subject.magazine_comment": "Sobre um comentário na revista",
-  "myReports.subject.event_photo": "Sobre uma fotografia de um evento",
+  "myReports.subject.event_photo": "Sobre uma foto de um evento",
   "myReports.subject.landlord_recommendation":
-    "Sobre uma recomendação de senhorio",
+    "Sobre uma recomendação de pessoa senhoria",
   "myReports.subject.volunteering": "Sobre uma oportunidade de voluntariado",
-  "myReports.subject.conversation": "Sobre um grupo de conversa",
+  "myReports.subject.conversation": "Sobre uma conversa de grupo",
   "myReports.subject.identity": "Sobre uma conversa com um negócio",
   "myReports.subject.group_listing": "Sobre um quarto num grupo de habitação",
   "myReports.subject.studio_release": "Sobre um lançamento do Studio",
@@ -91,28 +92,28 @@ export const safety: Catalog = {
   "myReports.subject.studio_track": "Sobre uma faixa do Studio",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
-    "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e onde encontrar o nosso relatório público de transparência.",
+    "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão e onde encontrar o nosso relatório público de transparência.",
   "report.guide.makeReportCta": "Fazer uma denúncia",
 
   "report.how.title": "Como <em>funciona a denúncia</em>",
   "report.how.lead":
-    "Fazes uma denúncia. As denúncias urgentes são vistas primeiro e as restantes são analisadas por ordem de gravidade. Isto é o que acontece depois de a submeteres.",
+    "Fazes uma denúncia. As denúncias urgentes são vistas primeiro e as restantes são analisadas por ordem de gravidade. Eis o que acontece depois de a submeteres.",
   "report.flow.step1.title": "Fazes uma denúncia",
   "report.flow.step1.desc":
     "Através do botão em qualquer perfil, mensagem ou publicação do fórum, ou diretamente por esta página. Podes denunciar de forma anónima, se precisares.",
   "report.flow.step2.title": "Confirmação imediata",
   "report.flow.step2.desc":
-    "Uma confirmação chega às tuas notificações do QueerPulse assim que a denúncia é registada. Uma denúncia feita sem conta salta este passo: não há aqui uma caixa de entrada para alcançar.",
+    "Uma confirmação chega às tuas notificações da QueerPulse assim que a denúncia é registada. Uma denúncia feita sem conta salta este passo: aqui não há nenhuma caixa de entrada para onde a enviar.",
   "report.flow.step3.title": "Revisão por ordem de gravidade",
   "report.flow.step3.desc":
     "A nossa equipa analisa as provas, o contexto e o histórico, começando pelas denúncias mais urgentes. Procuramos analisar as mais urgentes em 1 hora, as graves em 24 horas e as restantes em 3 a 7 dias.",
   "report.flow.step4.title": "Decisão e ação",
   "report.flow.step4.desc":
-    "Resultados possíveis: aviso, suspensão temporária, remoção permanente. O resultado e a justificação por trás dele chegam às tuas notificações do QueerPulse.",
+    "Resultados possíveis: aviso, suspensão temporária, remoção permanente. O resultado e a respetiva justificação chegam às tuas notificações da QueerPulse.",
 
   "report.form.title": "Fazer uma <em>denúncia.</em>",
   "report.form.lead":
-    "Usa este formulário para preocupações de segurança, assédio, abuso, ou qualquer situação que te tenha feito sentir insegure. Todas as denúncias são tratadas com total seriedade. Não existe um limiar mínimo para o que justifica uma denúncia.",
+    "Usa este formulário para preocupações de segurança, assédio, abuso ou qualquer situação em que te tenhas sentido em risco. Todas as denúncias são tratadas com total seriedade. Não existe um limiar mínimo para o que justifica uma denúncia.",
   "report.form.categoryLabel": "O que estás a denunciar?",
   "report.form.categoryPlaceholder": "Seleciona uma categoria",
   "report.category.outing":
@@ -123,7 +124,7 @@ export const safety: Catalog = {
   // Ver o comentário na versão EN: é a formulação do backend, traduzida.
   "report.category.hateSpeech": "Discurso de ódio ou um insulto",
   "report.category.unwantedContact": "Contacto ou mensagens indesejados",
-  "report.category.impersonation": "Falsa identidade ou personificação",
+  "report.category.impersonation": "Deturpação ou usurpação de identidade",
   "report.category.discrimination": "Discriminação",
   "report.category.venueSafety": "Comportamento inseguro num evento",
   "report.category.other": "Outra coisa",
@@ -136,11 +137,11 @@ export const safety: Catalog = {
   "report.detail.involvedLine": "Quem ou o que esteve envolvido: {involved}",
   "report.form.detailLabel": "O que aconteceu?",
   "report.form.detailPlaceholder":
-    "Conta-nos o que aconteceu, com o detalhe com que te sintas confortável a partilhar. Não há respostas erradas.",
+    "Conta-nos o que aconteceu, com todo o detalhe que te sintas à vontade para partilhar. Não há respostas erradas.",
   "report.form.emailLabel":
     "Um endereço onde alguém te possa contactar (opcional)",
   "report.form.emailHelper":
-    "O QueerPulse nunca te envia emails sobre denúncias. Isto só dá a alguém da equipa de segurança uma forma de te contactar se precisar de te perguntar alguma coisa. Se deixares em branco, a denúncia fica anónima.",
+    "A QueerPulse nunca te envia emails sobre denúncias. Isto só dá a alguém da equipa de segurança uma forma de te contactar se precisar de te perguntar alguma coisa. Se deixares em branco, a denúncia fica anónima.",
   "report.form.emailPlaceholder": "teu@email.com",
   // Ver o comentário na versão EN: é uma escolha EXPLÍCITA, porque este
   // formulário costumava deduzi-la a partir do campo de email em branco.
@@ -152,7 +153,7 @@ export const safety: Catalog = {
   "report.form.identity.anonymousHelper":
     "Quem modera vê a denúncia sem o teu nome e sem esse registo de denúncias anteriores. A QueerPulse continua a guardar internamente a ligação entre ti e esta denúncia, para que possa ser rastreada se for preciso.",
   "report.form.identity.signedOutNote":
-    "Não tens sessão iniciada, por isso quem modera vê esta denúncia sem nome e sem qualquer histórico de denúncias para a pesar. Os membros leem o que aconteceu a uma denúncia nas notificações do QueerPulse; sem conta, não há aqui um sítio onde uma resposta possa chegar. Inicia sessão primeiro se quiseres que fique registada como tua.",
+    "Não tens sessão iniciada, por isso quem modera vê esta denúncia sem nome e sem qualquer histórico de denúncias com que a comparar. Quem tem conta lê o resultado de uma denúncia nas notificações da QueerPulse; sem conta, não há aqui um sítio onde uma resposta possa chegar. Inicia sessão primeiro se quiseres que fique registada como tua.",
   "report.form.submitting": "A submeter…",
   "report.form.submitCta": "Submeter denúncia",
   "report.form.fineprint":
@@ -185,11 +186,11 @@ export const safety: Catalog = {
 
   "report.toast.chooseCategory": "Escolhe primeiro o que estás a denunciar.",
   "report.toast.received":
-    "Denúncia recebida. O que resultar dela chega às tuas notificações do QueerPulse.",
+    "Denúncia recebida. O que resultar dela chega às tuas notificações da QueerPulse.",
   "report.authRefused":
     "O servidor não aceitou esta denúncia tal como foi enviada. Inicia sessão e envia outra vez. Se já tens sessão iniciada, uma restrição de moderação na tua conta pode ser o que está a bloquear.",
   "report.toast.receivedSignedOut":
-    "Denúncia recebida. Um moderador lê todas. Sem conta não há aqui um sítio onde uma resposta possa chegar, por isso não vais receber nada de volta.",
+    "Denúncia recebida. A moderação lê todas. Sem conta não há aqui um sítio onde uma resposta possa chegar, por isso não vais receber nada de volta.",
   "report.toast.submitError":
     "Não foi possível enviar a tua denúncia. Não chegou até nós. Verifica a ligação e tenta novamente.",
   // Ver o comentário na versão EN: só cobre o limite de rajada de 60 segundos.
@@ -202,7 +203,7 @@ export const safety: Catalog = {
     "Esta mensagem não está numa conversa da qual fazes parte, por isso não pode ser denunciada.",
   // Ver o comentário na versão EN: a cópia de prova da mensagem já expirou.
   "report.evidenceExpired":
-    "Já não podes denunciar esta mensagem. Foi apagada há algum tempo e o QueerPulse já não guarda uma cópia para a equipa de moderação ver.",
+    "Já não podes denunciar esta mensagem. Foi apagada há algum tempo e a QueerPulse já não guarda uma cópia para a equipa de moderação ver.",
 
   // ── CommunityReportControl / CommunityReportModal ───────────────────────
   // Ver o comentário na versão EN: denunciar uma comunidade INTEIRA, a partir
@@ -211,9 +212,9 @@ export const safety: Catalog = {
   "report.community.triggerAria": "Denunciar a comunidade {name}",
   "report.community.title": "Denunciar {name}",
   "report.community.lead":
-    "Isto denuncia a comunidade em si. Usa quando o problema é o espaço: aquilo em torno do qual se organiza, aquilo que deixa passar, ou o que quem a organiza faz.",
+    "Esta denúncia é sobre a comunidade em si. Usa-a quando o problema é o espaço: aquilo em torno do qual se organiza, o que deixa passar ou o que faz quem a organiza.",
   "report.community.reasonLabel": "O que está errado aqui?",
-  "report.community.detailLabel": "O que deve quem modera saber? (opcional)",
+  "report.community.detailLabel": "O que deve a moderação saber? (opcional)",
   "report.community.detailPlaceholder":
     "Links, datas, publicações de quem, o que tiveres. Quem modera lê isto antes de abrir a comunidade.",
   "report.community.cancelCta": "Cancelar",
@@ -236,12 +237,12 @@ export const safety: Catalog = {
     "Não conseguimos enviar essa denúncia. Ainda não foi submetida. Verifica a tua ligação e tenta outra vez.",
   "reportPerson.form.lead":
     "Quem modera lê o que escreveres aqui. Detalhes ajudam: o que aconteceu, quando, e em que parte da plataforma. Escolhe o motivo mais próximo do que aconteceu, porque é ele que define com que rapidez isto é revisto.",
-  "reportPerson.form.reasonLabel": "Sobre o que é isto?",
+  "reportPerson.form.reasonLabel": "De que se trata?",
   "reportPerson.form.reasonPlaceholder": "Escolhe um motivo",
   "reportPerson.form.reasonMissing": "Escolhe do que se trata para enviar",
-  "reportPerson.form.detailLabel": "O que deve quem modera saber?",
+  "reportPerson.form.detailLabel": "O que deve a moderação saber?",
   "reportPerson.form.detailPlaceholder":
-    "O que aconteceu, quando, e qualquer coisa que ajude quem modera a encontrar isto. Sê tão específique quanto te sintas confortável.",
+    "O que aconteceu, quando e tudo o que ajude a moderação a encontrar o caso. Partilha os detalhes com que te sintas à vontade.",
   "reportPerson.form.charsRemaining_one": "Falta {count} carácter para enviar",
   "reportPerson.form.charsRemaining_other":
     "Faltam {count} carateres para enviar",
@@ -264,12 +265,12 @@ export const safety: Catalog = {
   "reportGroup.error":
     "Não conseguimos enviar essa denúncia. Ainda não foi submetida. Verifica a tua ligação e tenta outra vez.",
   "reportGroup.form.lead":
-    "Isto denuncia o grupo em si, não uma pessoa dentro dele. Quem modera lê o que escreveres aqui: detalhes ajudam, como à volta do que o grupo está organizado, o que deixa acontecer, ou o que se passa nele. Escolhe o motivo mais próximo do que aconteceu, porque é ele que define com que rapidez isto é revisto.",
+    "Esta denúncia é sobre o grupo como um todo. Quem modera lê o que escreveres aqui e os detalhes ajudam: aquilo em torno do qual o grupo se organiza, o que deixa passar ou o que se passa nele. Escolhe o motivo mais próximo do que aconteceu, porque é ele que define com que rapidez isto é revisto.",
   "reportGroup.form.reasonLabel": "O que está errado aqui?",
   "reportGroup.form.reasonMissing": "Escolhe do que se trata para enviar",
-  "reportGroup.form.detailLabel": "O que deve quem modera saber?",
+  "reportGroup.form.detailLabel": "O que deve a moderação saber?",
   "reportGroup.form.detailPlaceholder":
-    "O que se passa neste grupo, desde quando, e qualquer coisa que ajude quem modera a encontrar isto. Sê tão específique quanto te sintas confortável.",
+    "O que se passa neste grupo, desde quando e tudo o que ajude a moderação a encontrar o caso. Partilha os detalhes com que te sintas à vontade.",
   "reportGroup.form.charsRemaining_one": "Falta {count} carácter para enviar",
   "reportGroup.form.charsRemaining_other":
     "Faltam {count} carateres para enviar",
@@ -285,43 +286,45 @@ export const safety: Catalog = {
   "reason.doxxing": "Partilhar dados pessoais ou de localização (doxxing)",
   "reason.harassment": "Assédio dirigido ou ameaças",
   "reason.hateSpeech": "Discurso de ódio ou insulto discriminatório",
-  "reason.unwantedContact": "Contacto indesejado depois de pedido para parar",
-  "reason.impersonation": "Falsa identidade ou personificação",
+  "reason.unwantedContact":
+    "Contacto indesejado mesmo depois de um pedido para parar",
+  "reason.impersonation": "Deturpação ou usurpação de identidade",
   "reason.copyright": "Usa música ou arte de outra pessoa sem autorização",
   "reason.hatefulLyrics": "Letras de ódio",
   "reason.untaggedExplicit": "Explícita e sem marcação",
   "reason.discrimination": "Discriminação ou uso do género errado",
   "reason.spam": "Spam ou autopromoção",
-  "reason.offTopic": "Fora do tópico ou perturbador",
+  "reason.offTopic": "Fora do tema ou perturbador",
   "reason.venueSafety": "Um incidente de assédio ou segurança no espaço",
   "reason.venueStaff": "A equipa não interveio quando foi necessário",
   "reason.venueAccessibility": "Um problema de acessibilidade",
   "reason.housingUnsafe":
-    "Alojamento inseguro, discriminatório, ou com informação enganosa",
+    "Alojamento inseguro, discriminatório ou com informação enganosa",
   "reason.housingScam": "Burla ou anúncio falso",
   "reason.fundingScam": "Burla, angariação falsa ou apoio falso",
   "reason.paymentNeverConfirmed": "Recebeu o meu pagamento e não o confirmou",
   "reason.notAffirming":
-    "Não é afirmativo LGBTQ+: quebrou o compromisso da comunidade",
-  "reason.offPlatform": "Pediram para pagar ou sair da plataforma",
+    "Sem postura afirmativa LGBTQ+: quebrou o compromisso da comunidade",
+  "reason.offPlatform": "Pediu para pagar ou continuar fora da plataforma",
   "reason.listingDispute": "Contestação ou reivindicação de um anúncio",
-  "reason.listingOwnerNotify": "Contacto com quem gere: anúncio sugerido",
+  "reason.listingOwnerNotify":
+    "Contacto com a pessoa proprietária: anúncio sugerido",
   "reason.other": "Outra coisa, explicada em detalhe",
 
   // ── Safe-space BADGE flag copy. Ver a nota em en/safety.ts ─────────────
   "flag.success.title": "Sinalização <em>recebida.</em>",
   "flag.success.body":
-    "Obrigade. Uma pessoa moderadora vai ler a tua denúncia. <b>Três sinalizações independentes desencadeiam uma revisão imediata e a suspensão temporária do emblema</b>. A tua denúncia conta para isso. Podemos contactar-te para mais detalhe, mas nunca o espaço.",
+    "Agradecemos. Uma pessoa moderadora vai ler a tua denúncia. <b>Três sinalizações independentes desencadeiam uma revisão imediata e a suspensão temporária do emblema</b>. A tua denúncia conta para isso. Podemos contactar-te para pedir mais detalhes. O espaço nunca é contactado.",
   "flag.success.doneCta": "Concluído",
   "flag.error":
     "Não foi possível enviar essa sinalização. Não chegou até nós. Verifica a ligação e tenta novamente.",
   "flag.form.title": "O que aconteceu em <em>{spaceName}?</em>",
   "flag.form.lead":
-    "As sinalizações são como sabemos quando um espaço falha. Conta-nos o que viste: detalhes ajudam o painel de revisão. O teu nome nunca é partilhado com o espaço.",
+    "É pelas sinalizações que sabemos quando um espaço falha. Conta-nos o que viste: os detalhes ajudam o painel de revisão. O teu nome nunca é partilhado com o espaço.",
   "flag.form.concernLabel": "Qual é a preocupação?",
   "flag.form.detailLabel": "Conta-nos o que aconteceu",
   "flag.form.detailPlaceholder":
-    "Quando aconteceu, o que viste ou viveste, e quem esteve envolvide? Sê tão específique quanto te sintas confortável.",
+    "Quando aconteceu, o que viste ou viveste e que pessoas estiveram envolvidas? Partilha os detalhes com que te sintas à vontade.",
   "flag.form.charsRemaining_one": "Falta {count} carácter para submeter",
   "flag.form.charsRemaining_other": "Faltam {count} carateres para submeter",
   "flag.form.charsCount_one": "{count} carácter",
@@ -333,11 +336,11 @@ export const safety: Catalog = {
   // ── BlockMutePage.tsx / BlockMuteScreens.tsx / blockMute.data.ts ──────
   "blockMute.meta.title": "Silenciar ou bloquear alguém na QueerPulse",
   "blockMute.meta.description":
-    "Como silenciar ou bloquear outra pessoa na QueerPulse: o que cada opção esconde, se a pessoa é notificada, e como desfazer mais tarde.",
+    "Como silenciar ou bloquear outra pessoa na QueerPulse: o que cada opção esconde, se a pessoa é notificada e como desfazer mais tarde.",
   "common.no": "Não",
   "blockMute.choose.title": "Controlos de <em>privacidade</em>",
   "blockMute.choose.sub":
-    "Estas ações são privadas. {name} não será notificade.",
+    "Estas ações são privadas. {name} não vai receber nenhuma notificação.",
   "blockMute.choose.muteTitle": "Silenciar {name}",
   "blockMute.choose.muteDesc":
     "Não vais ver as publicações nem a atividade desta pessoa. Não vai saber que foi silenciada. Podes dessilenciar a qualquer momento.",
@@ -370,16 +373,16 @@ export const safety: Catalog = {
   "blockMute.muted.summaryLabel": "O que está silenciado",
   "blockMute.muted.everythingTheyPost": "Tudo o que esta pessoa publica",
   "blockMute.muted.durationLabel": "Duração",
-  "blockMute.muted.notifiedLabel": "{name} foi notificade?",
+  "blockMute.muted.notifiedLabel": "{name} recebeu notificação?",
   "blockMute.muted.manageLink": "Gerir pessoas silenciadas",
   "blockMute.muted.undoCta": "Desfazer: dessilenciar {name}",
 
   "blockMute.blocked.title": "<em>Bloqueaste</em> {name}",
   "blockMute.blocked.sub":
-    "{name} já não pode ver o teu perfil, enviar-te mensagem, ou encontrar-te na pesquisa.",
+    "{name} já não pode ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa.",
   "blockMute.blocked.visibleLabel": "Perfil visível para esta pessoa",
   "blockMute.blocked.messageLabel": "Pode enviar-te mensagem",
-  "blockMute.blocked.notifiedLabel": "{name} foi notificade?",
+  "blockMute.blocked.notifiedLabel": "{name} recebeu notificação?",
   "blockMute.blocked.manageLink": "Gerir pessoas bloqueadas",
   "blockMute.blocked.undoCta": "Desfazer: desbloquear {name}",
   "blockMute.blocked.reportNote":
@@ -410,14 +413,14 @@ export const safety: Catalog = {
     "Não conseguimos retirar o teu voto de confiança a {name}. Tenta novamente.",
   "blockModal.title": "Bloquear {name}?",
   "blockModal.body":
-    "Bloquear corta qualquer conexão entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhum de vocês consegue estabelecer conexão com o outro. Podes desbloquear mais tarde.",
+    "Bloquear corta qualquer conexão entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhuma das contas pode criar uma conexão com a outra. Podes desbloquear mais tarde.",
   "blockModal.reportCheckbox": "Denunciar também {name} à equipa de moderação",
   "blockModal.reasonCodeLabel": "O que aconteceu?",
   "blockModal.reasonCodeHelper":
     "É isto que a equipa de moderação vê primeiro, e é o que define a rapidez com que a denúncia é vista.",
   "blockModal.reasonCodePlaceholder": "Escolhe o que aconteceu",
   "blockModal.reasonCodeMissing":
-    "Escolhe o que aconteceu, ou desmarca a denúncia para bloquear já.",
+    "Escolhe o que aconteceu ou desmarca a opção de denúncia para bloquear já.",
   "blockModal.reasonLabel": "Motivo (opcional)",
   "blockModal.reasonPlaceholder":
     "Acrescenta qualquer contexto para a equipa de moderação…",
@@ -436,22 +439,22 @@ export const safety: Catalog = {
 
   "appeal.pending.title": "Estamos a <em>analisar</em> o teu recurso",
   "appeal.pending.sub":
-    "Um moderador que não esteve envolvido na decisão original lê o teu caso. A data abaixo é o prazo a que nos obrigamos.",
+    "Uma pessoa moderadora que não esteve envolvida na decisão original lê o teu caso. A data abaixo é o prazo a que nos obrigamos.",
   "appeal.ref.label": "Referência do recurso",
   "appeal.pending.submittedLabel": "Submetido",
   "appeal.pending.expectedLabel": "Resposta esperada",
   "appeal.pending.info":
-    "<strong>Enquanto o teu recurso está em análise:</strong> a decisão original mantém-se em vigor, mas nenhuma ação adicional será tomada. O resultado aparece aqui mesmo. Volta a esta página, ou inicia sessão e abre os teus recursos para veres em que ponto está.",
+    "<strong>Enquanto o teu recurso está em análise:</strong> a decisão original mantém-se em vigor e não será tomada nenhuma ação adicional. O resultado aparece aqui mesmo. Volta a esta página ou inicia sessão e abre os teus recursos para veres em que ponto está.",
   "appeal.pending.govLink": "Como funciona a moderação",
 
   "appeal.overturned.title": "O teu recurso foi <em>bem-sucedido</em>",
   "appeal.overturned.sub":
-    "Depois de analisar o teu caso, revertemos a decisão original. Lamentamos o incómodo.",
+    "Depois de analisarmos o teu caso, revertemos a decisão original. Lamentamos o incómodo.",
   "appeal.decisionLabel": "Decisão",
   "appeal.overturned.decisionValue": "Revertida",
   "appeal.decidedOnLabel": "Decidido em",
   "appeal.overturned.info":
-    "<strong>O que foi restaurado:</strong> o aviso na tua conta foi removido, e o teu conteúdo está visível de novo. O estado da tua conta não foi afetado.",
+    "<strong>O que foi restaurado:</strong> o aviso na tua conta foi removido e o teu conteúdo está visível de novo. O estado da tua conta não foi afetado.",
   "appeal.overturned.profileCta": "Voltar ao teu perfil",
   "appeal.overturned.guidelinesCta": "Ver as diretrizes da comunidade",
 
@@ -463,7 +466,7 @@ export const safety: Catalog = {
   "appeal.upheld.info":
     "<strong>Daqui para a frente:</strong> o aviso na conta mantém-se no teu registo durante 90 dias e não vai afetar a tua capacidade de participar na maioria das atividades da comunidade. Violações repetidas podem resultar em nova análise.",
   "appeal.upheld.contactNote":
-    "Se acreditares que isto é um erro, podes contactar diretamente a nossa equipa de Confiança.",
+    "Se achas que houve um erro, podes contactar diretamente a nossa equipa de Confiança.",
   "appeal.upheld.contactCta": "Enviar mensagem à equipa de Confiança",
 
   // Apenas em modo live: o recurso real obtido de `GET /appeals/me`.
@@ -474,44 +477,44 @@ export const safety: Catalog = {
   "appeal.live.empty.desc":
     "Ainda não submeteste nenhum recurso contra uma decisão de moderação. Se foi tomada alguma decisão contra a tua conta, podes contestá-la aqui.",
   "appeal.live.empty.cta": "Submeter um recurso",
-  "appeal.live.decisionNoteLabel": "Nota do moderador",
+  "appeal.live.decisionNoteLabel": "Nota da moderação",
 
   // ── AppealSubmitPage.tsx ───────────────────────────────────────────────
   "appealSubmit.kicker": "Contestar uma decisão",
-  "appealSubmit.heading": "Diz-nos o que <em>correu mal</em>",
+  "appealSubmit.heading": "Diz-nos em que <em>errámos</em>",
   "appealSubmit.lead":
-    "Um moderador diferente do que tomou a decisão vai ler isto. Sê específico: o que aconteceu, e porque é que a decisão não te parece justa.",
+    "Uma pessoa moderadora diferente da que tomou a decisão vai ler isto. Dá detalhes: o que aconteceu e porque é que a decisão não te parece justa.",
   "appealSubmit.form.reasonLabel": "O teu recurso",
   "appealSubmit.form.reasonHelper":
     "Quanto mais contexto deres, mais há para reconsiderar. Pelo menos uma frase ou duas.",
   "appealSubmit.form.reasonPlaceholder":
-    "Explica-nos o que aconteceu do teu lado…",
+    "Explica-nos o que aconteceu do teu ponto de vista…",
   "appealSubmit.form.charCount": "{count} / {max}",
   "appealSubmit.form.submitCta": "Enviar recurso",
   "appealSubmit.form.submitting": "A enviar…",
   "appealSubmit.form.ladderCta": "Ler a escala da comunidade",
   "appealSubmit.notice":
-    "<b>Enquanto o teu recurso é analisado,</b> a decisão original mantém-se. Um moderador diferente decide-o no prazo de {days} dias, e o resultado aparece nesta página com a data limite. Volta cá, ou reabre o teu recurso a qualquer momento para veres em que ponto está.",
+    "<b>Enquanto o teu recurso é analisado,</b> a decisão original mantém-se. Uma pessoa moderadora diferente decide no prazo de {days} dias e o resultado aparece nesta página, com a data limite. Volta cá ou reabre o teu recurso a qualquer momento para veres em que ponto está.",
   "appealSubmit.windowClosed.contactCta": "Escrever à equipa de moderação",
   "appealSubmit.windowClosed.bodyNoDate":
-    "Os recursos estão abertos durante {days} dias depois de uma decisão, e a janela para este fechou. Se algo mudou entretanto, ou se não conseguiste chegar a este formulário a tempo, escreve à equipa de moderação e pede que voltem a olhar.",
+    "Podes recorrer durante {days} dias depois de uma decisão e o prazo para esta já terminou. Se algo mudou entretanto ou se não conseguiste chegar a este formulário a tempo, escreve à equipa de moderação e pede que voltem a analisar o caso.",
   "appealSubmit.windowClosed.body":
-    "Os recursos estão abertos durante {days} dias depois de uma decisão. Este fechou a {date}. Se algo mudou entretanto, ou se não conseguiste chegar a este formulário a tempo, escreve à equipa de moderação e pede que voltem a olhar.",
+    "Podes recorrer durante {days} dias depois de uma decisão. O prazo para esta terminou a {date}. Se algo mudou entretanto ou se não conseguiste chegar a este formulário a tempo, escreve à equipa de moderação e pede que voltem a analisar o caso.",
   "appealSubmit.windowClosed.title":
-    "A janela de recurso para esta decisão fechou",
+    "O prazo de recurso desta decisão terminou",
   "appealSubmit.alreadyDecided.title": "Esta decisão já foi contestada",
   "appealSubmit.alreadyDecided.body":
-    "Cada decisão só pode ser contestada uma vez. Uma pessoa moderadora que não fez parte da decisão original já reviu este caso, e essa decisão é final. Se algo mudou entretanto, escreve à equipa de moderação.",
+    "Cada decisão só pode ser contestada uma vez. Uma pessoa moderadora que não fez parte da decisão original já reviu este caso e essa decisão é definitiva. Se algo mudou entretanto, escreve à equipa de moderação.",
   "appealSubmit.alreadyDecided.outcomeCta": "Ver o resultado",
-  "appealSubmit.alreadyDecided.contactCta": "Escreve à equipa de moderação",
+  "appealSubmit.alreadyDecided.contactCta": "Escrever à equipa de moderação",
   "appealSubmit.filingWindow":
-    "Os recursos estão abertos durante {days} dias depois de uma decisão. O prazo começa quando a decisão foi tomada, e não quando a leste. Quando não há registo de quando isso foi, não se aplica nenhum prazo a ti.",
+    "Podes recorrer durante {days} dias depois de uma decisão. O prazo conta a partir do dia em que a decisão foi tomada, seja qual for o dia em que soubeste dela. Se não houver registo dessa data, não tens qualquer prazo.",
   "appealSubmit.foot":
-    "Todos os recursos, e como foram decididos, ficam registados no nosso <a>registo de transparência</a>.",
+    "Todos os recursos e a forma como foram decididos ficam no nosso <a>registo de transparência</a>.",
   "appealSubmit.errorFrame": "Não foi possível registar o teu recurso",
   "appealSubmit.success.title": "O teu recurso <em>entrou</em>",
   "appealSubmit.success.sub":
-    "Um moderador que não esteve envolvido na decisão original vai analisá-lo. O resultado aparece aqui. Acompanha o teu recurso nesta página para o veres assim que for decidido.",
+    "Uma pessoa moderadora que não esteve envolvida na decisão original vai analisá-lo. O resultado aparece aqui. Acompanha o teu recurso nesta página para o veres assim que for decidido.",
   "appealSubmit.success.filedLabel": "Registado",
   "appealSubmit.success.trackCta": "Acompanhar este recurso",
   "appealSubmit.success.howCta": "Como funciona a moderação",
@@ -522,7 +525,7 @@ export const safety: Catalog = {
   "hateCrime.meta.title":
     "Denunciar um crime de ódio em Portugal: guia passo a passo",
   "hateCrime.meta.description":
-    "O que conta como crime de ódio em Portugal, como documentá-lo em segurança, a quem denunciar, e onde encontrar apoio jurídico e comunitário depois.",
+    "O que conta como crime de ódio em Portugal, como documentá-lo em segurança, a quem denunciar e onde encontrar apoio jurídico e comunitário depois.",
   "hateCrime.eyebrow": "Guia de denúncia · Portugal",
   "hateCrime.title.line1": "Como denunciar",
   "hateCrime.title.line2": "<em>um crime de ódio.</em>",
@@ -532,7 +535,7 @@ export const safety: Catalog = {
     "<strong>A tua segurança vem primeiro.</strong> Se estás em perigo imediato, liga já para o <strong>112</strong>. Este guia é para depois de estares em segurança.",
   "hateCrime.outro.title": "Tens <em>direitos.</em>",
   "hateCrime.outro.sub":
-    "A comunidade QueerPulse inclui advogades, profissionais do direito, e pessoas que já passaram por este processo. Não precisas de o percorrer sozinhe.",
+    "A comunidade da QueerPulse inclui quem exerce advocacia, profissionais do direito e pessoas que já passaram por este processo. Não precisas de o percorrer sem companhia.",
   "hateCrime.outro.legalCta": "Recursos jurídicos",
 
   // ── HateCrimeTabs.tsx — tab bar + sidebar ──────────────────────────────
@@ -542,7 +545,7 @@ export const safety: Catalog = {
   "hateCrime.tab.support": "Obter apoio",
   "hateCrime.tab.law": "Lei portuguesa",
 
-  "hateCrime.sidebar.emergencyTitle": "Emergência e imediato",
+  "hateCrime.sidebar.emergencyTitle": "Emergência e apoio imediato",
   "hateCrime.sidebar.emergencyServices": "Serviços de emergência",
   "hateCrime.sidebar.apav.org": "APAV Apoio à Vítima",
   "hateCrime.sidebar.apav.role": "Confidencial, 24h",
@@ -558,14 +561,14 @@ export const safety: Catalog = {
   "hateCrime.sidebar.ilgaEurope.org": "ILGA Europe",
   "hateCrime.sidebar.ilgaEurope.role": "Apoio jurídico ao nível da UE",
   "hateCrime.sidebar.onTitle": "Na QueerPulse",
-  "hateCrime.sidebar.legalResourcesCta": "Recursos Jurídicos",
-  "hateCrime.sidebar.mentalHealthCta": "Saúde Mental",
-  "hateCrime.sidebar.solidarityCta": "Preços Solidários",
+  "hateCrime.sidebar.legalResourcesCta": "Recursos jurídicos",
+  "hateCrime.sidebar.mentalHealthCta": "Saúde mental",
+  "hateCrime.sidebar.solidarityCta": "Preços solidários",
   "hateCrime.sidebar.reportCta": "Denunciar à QueerPulse",
 
   // ── hateCrime.data.tsx — tag chips ─────────────────────────────────────
   "hateCrime.tag.immediate": "Imediato",
-  "hateCrime.tag.ifHurt": "Se sofreste dano físico",
+  "hateCrime.tag.ifHurt": "Se houver lesões físicas",
   "hateCrime.tag.recommended": "Recomendado",
   "hateCrime.tag.ifApplicable": "Se aplicável",
   "hateCrime.tag.important": "Importante",
@@ -578,19 +581,19 @@ export const safety: Catalog = {
     "Os momentos a seguir a um incidente são desorientadores. Estes passos ajudam-te a proteger-te e a preservar as tuas opções, sem te comprometeres com nada ainda.",
   "hateCrime.immediate.step1.title": "Coloca-te em segurança",
   "hateCrime.immediate.step1.desc":
-    "Sai do local se conseguires. Procura um espaço público, uma loja, um café, ou um lugar que conheças. Não te sintas obrigade a confrontar a pessoa agressora ou a esperar por alguém.",
+    "Sai do local se conseguires. Procura um espaço público, uma loja, um café ou um lugar que conheças. Não te sintas na obrigação de confrontar a pessoa agressora ou de esperar por alguém.",
   "hateCrime.immediate.step2.title": "Contacta alguém em quem confies",
   "hateCrime.immediate.step2.desc":
-    "Liga ou envia mensagem a um amigue, a um parceire, ou a alguém da comunidade. Não devias estar sozinhe agora. Se não houver ninguém disponível, a linha de apoio à vítima da APAV (116 006) tem atendimento 24 horas.",
+    "Liga ou envia mensagem a uma pessoa amiga, ao teu par ou a alguém da comunidade. Agora é melhor não ficares sem companhia. Se não houver ninguém disponível, a linha de apoio à vítima da APAV (116 006) tem atendimento 24 horas.",
   "hateCrime.immediate.step3.title": "Procura assistência médica se precisares",
   "hateCrime.immediate.step3.desc":
-    "Se foste agredide fisicamente, vai à urgência do hospital mais próximo. Pede que documentem as tuas lesões. Esta documentação é prova, mesmo que não denuncies à polícia.",
+    "Se sofreste uma agressão física, vai à urgência do hospital mais próximo. Pede que documentem as tuas lesões. Este registo serve de prova, mesmo que não denuncies à polícia.",
   "hateCrime.immediate.step4.title": "Escreve o que aconteceu, agora",
   "hateCrime.immediate.step4.desc":
     "Enquanto está fresco na memória: hora, local, o que foi dito ou feito, descrição da pessoa ou pessoas agressoras, e eventuais testemunhas. Faz isto antes de dormires. A memória degrada-se rapidamente depois de um trauma. Usa as notas do telemóvel, se for mais fácil.",
   "hateCrime.immediate.step5.title": "Preserva qualquer prova",
   "hateCrime.immediate.step5.desc":
-    "Capturas de ecrã de mensagens. Fotografias de danos ou lesões. Não laves a roupa usada durante o incidente. Faz uma cópia de segurança do telemóvel se estiverem envolvidas mensagens.",
+    "Capturas de ecrã de mensagens. Fotografias de danos ou lesões. Não laves a roupa usada durante o incidente. Faz uma cópia de segurança do telemóvel se houver mensagens envolvidas.",
 
   // ── hateCrime.data.tsx — "Document it" tab ─────────────────────────────
   "hateCrime.document.preamble":
@@ -598,13 +601,13 @@ export const safety: Catalog = {
   "hateCrime.document.collectHeading": "O que <em>recolher</em>",
   "hateCrime.document.step1.title": "Relato escrito",
   "hateCrime.document.step1.desc":
-    "Data, hora, local exato. O que foi dito ou feito, com o máximo de detalhe que conseguires lembrar. A aparência da pessoa agressora e quaisquer características distintivas. Se houve testemunhas e quem eram.",
+    "Data, hora, local exato. O que foi dito ou feito, com todo o pormenor de que te lembrares. A aparência da pessoa agressora e quaisquer características distintivas. Se houve testemunhas e quem eram.",
   "hateCrime.document.step2.title": "Fotografias",
   "hateCrime.document.step2.desc":
     "Lesões (fotografias datadas, de vários ângulos). Danos materiais. O próprio local. Quaisquer grafitis ou materiais deixados para trás. Ativa a geolocalização na câmara do telemóvel antes de as tirares.",
   "hateCrime.document.step3.title": "Prova digital",
   "hateCrime.document.step3.desc":
-    "Capturas de ecrã de mensagens, publicações em redes sociais, ou emails, com o URL, o nome de utilizador e a data/hora visíveis. Captura o perfil além da mensagem. Guarda localmente e num serviço de armazenamento na nuvem.",
+    "Capturas de ecrã de mensagens, publicações em redes sociais ou emails, com o URL, o nome de utilizador e a data/hora visíveis. Faz também captura do perfil, além da mensagem. Guarda localmente e num serviço de armazenamento na nuvem.",
   "hateCrime.document.step4.title": "Videovigilância (CCTV)",
   "hateCrime.document.step4.desc":
     "Se o incidente aconteceu numa zona comercial, pode haver imagens de videovigilância. Age depressa. A maioria dos sistemas sobrepõe as gravações ao fim de 72 horas. Podes pedir as imagens diretamente ou pedir à polícia que o faça quando denunciares.",
@@ -626,20 +629,20 @@ export const safety: Catalog = {
     "Pede a classificação de crime de ódio",
   "hateCrime.report.police.step2.desc":
     "Declara explicitamente que o crime foi motivado pela tua orientação sexual ou identidade de género. Pede que fique registado como crime de ódio ao abrigo do Artigo 132.º do Código Penal. A polícia pode não o fazer automaticamente.",
-  "hateCrime.report.police.step3.title": "Leva acompanhamento",
+  "hateCrime.report.police.step3.title": "Leva alguém contigo",
   "hateCrime.report.police.step3.desc":
-    "Tens o direito de levar contigo uma pessoa de apoio. A ILGA Portugal oferece acompanhamento jurídico gratuito para denúncias de crimes de ódio. Contacta-os antes de ires. Mesmo 30 minutos de preparação ajudam.",
+    "Tens o direito de levar contigo uma pessoa de apoio. A ILGA Portugal oferece acompanhamento jurídico gratuito para denúncias de crimes de ódio. Contacta-a antes de ires. Mesmo 30 minutos de preparação ajudam.",
   "hateCrime.report.ilgaHeading": "Opção 2: <em>ILGA Portugal</em>",
   "hateCrime.report.ilga.step1.title": "Denuncia diretamente à ILGA",
   "hateCrime.report.ilga.step1.desc":
     "A ILGA mantém o seu próprio sistema de monitorização de crimes de ódio (independente da polícia). Denunciar aqui é confidencial e não desencadeia contacto automático com a polícia. A tua denúncia contribui para a defesa de direitos e para os dados recolhidos.",
   "hateCrime.report.ilga.step2.title": "Apoio jurídico e acompanhamento",
   "hateCrime.report.ilga.step2.desc":
-    "Se quiseres denunciar à polícia, a ILGA pode disponibilizar uma pessoa voluntária ou da equipa para te acompanhar. Também oferecem orientação jurídica sobre o que esperar do processo e como fazer valer os teus direitos.",
+    "Se quiseres denunciar à polícia, a ILGA pode disponibilizar uma pessoa voluntária ou da equipa para te acompanhar. Também oferece orientação jurídica sobre o que esperar do processo e como fazer valer os teus direitos.",
   "hateCrime.report.euHeading": "Opção 3: <em>Mecanismos da UE</em>",
   "hateCrime.report.eu.step1.title": "Provedor de Justiça (Ombudsman)",
   "hateCrime.report.eu.step1.desc":
-    "Se acreditares que as autoridades não agiram sobre a tua denúncia, podes apresentar queixa ao Provedor de Justiça, em provedor-jus.pt. Gratuito, independente, e disponível para residentes.",
+    "Se considerares que as autoridades não deram seguimento à tua denúncia, podes apresentar queixa ao Provedor de Justiça, em provedor-jus.pt. É gratuito, independente e acessível a residentes.",
   "hateCrime.report.eu.step2.title": "Tribunal Europeu dos Direitos Humanos",
   "hateCrime.report.eu.step2.desc":
     "Para casos graves em que todos os recursos internos foram esgotados, é possível recorrer ao TEDH, em Estrasburgo. É um processo longo. A ILGA Europe fornece orientação e, nalguns casos, apoio jurídico.",
@@ -653,16 +656,16 @@ export const safety: Catalog = {
     "Apoio gratuito e confidencial para vítimas de crime. Apoio emocional, ajuda prática para navegar no sistema, e informação jurídica. 116 006, disponível a nível nacional. Apoio online em apav.pt.",
   "hateCrime.support.step2.title": "ILGA Portugal: Apoio da comunidade",
   "hateCrime.support.step2.desc":
-    "Para além da ajuda jurídica, a ILGA liga-te a apoio entre pares e aconselhamento. Compreendem as dimensões específicas do crime de ódio LGBTQ+. 213 887 615 · ilga-portugal.pt.",
+    "Para além da ajuda jurídica, a ILGA liga-te a apoio entre pares e aconselhamento. Conhece bem as dimensões específicas do crime de ódio LGBTQ+. 213 887 615 · ilga-portugal.pt.",
   "hateCrime.support.step3.title": "Diretório de Saúde Mental da QueerPulse",
   "hateCrime.support.step3.desc":
-    "Terapeutas com tarifas em escala progressiva e experiência em trauma e violência baseada em identidade. Não precisas de esperar para te sentires melhor. O apoio precoce faz uma diferença real.",
+    "Terapeutas com experiência em trauma e violência baseada na identidade, com preços ajustados aos rendimentos. Não precisas de esperar para te sentires melhor. Procurar apoio cedo faz mesmo diferença.",
   "hateCrime.support.directoryCta": "Ver o diretório",
   "hateCrime.support.longerTermHeading": "A <em>longo prazo</em>",
   "hateCrime.support.step4.title": "Grupos de apoio entre pares",
   "hateCrime.support.step4.desc":
     "A ILGA Portugal organiza grupos mensais de pares para pessoas que sofreram crimes de ódio. Partilhar com outras pessoas que passaram por experiências semelhantes é muitas vezes a coisa mais útil. Pergunta à ILGA pelo calendário atual.",
-  "hateCrime.support.step5.title": "Não precisas de processar isto sozinhe",
+  "hateCrime.support.step5.title": "Não tens de lidar com isto sem companhia",
   "hateCrime.support.step5.desc":
     "O fórum da QueerPulse tem um espaço privado e moderado para pessoas que sofreram discriminação ou violência. Podes partilhar tanto ou tão pouco quanto quiseres.",
   "hateCrime.support.forumCta": "Ir para o fórum",
@@ -677,31 +680,30 @@ export const safety: Catalog = {
     "Além disso, a Lei contra a discriminação (Lei n.º 93/2017) proíbe a discriminação com base na orientação sexual e identidade de género no acesso a bens, serviços, habitação e emprego.",
   "hateCrime.law.def2.h4": "O que conta como crime de ódio?",
   "hateCrime.law.def2.para1":
-    "Agressão física, ameaças, assédio, intimidação, danos materiais, incitamento ao ódio, e abuso online podem todos ser crimes de ódio quando motivados pela orientação sexual ou identidade de género da vítima. A motivação tem de ser estabelecida, por isso a documentação e a forma como apresentas a tua denúncia importam.",
+    "Agressão física, ameaças, assédio, intimidação, danos materiais, incitamento ao ódio e abuso online podem todos ser crimes de ódio quando motivados pela orientação sexual ou identidade de género da vítima. A motivação tem de ser demonstrada, por isso a documentação e a forma como apresentas a tua denúncia importam.",
   "hateCrime.law.def3.h4": "Crimes de ódio online",
   "hateCrime.law.def3.para1":
     "Ameaças e assédio online são crimes em Portugal. Denuncia à plataforma E à polícia. Preserva capturas de ecrã imediatamente. As plataformas eliminam conteúdo denunciado e as pessoas agressoras podem eliminar as suas contas. Também podes denunciar à Autoridade Nacional de Comunicações (ANACOM) em caso de inação persistente da plataforma.",
-  "hateCrime.law.def4.h4": "Se a polícia não levar a sério",
+  "hateCrime.law.def4.h4": "Se a polícia não levar o caso a sério",
   "hateCrime.law.def4.para1":
-    "Tens o direito de pedir outro agente. Podes escalar dentro da PSP para uma chefia. Podes contactar a Inspeção-Geral da Administração Interna (IGAI) para apresentar queixa sobre a conduta policial. O acompanhamento da ILGA Portugal ajuda a prevenir esta situação. A tua denúncia não pode ser recusada. Tens direito a um comprovativo (número de NUIPC) quando apresentas uma queixa formal.",
+    "Tens o direito de pedir que te atenda outro elemento da polícia. Podes levar o caso a uma chefia dentro da PSP. Podes contactar a Inspeção-Geral da Administração Interna (IGAI) para apresentar queixa sobre a conduta policial. O acompanhamento da ILGA Portugal ajuda a prevenir esta situação. A tua denúncia não pode ser recusada. Tens direito a um comprovativo (número NUIPC) quando apresentas uma queixa formal.",
 
   // ── safeSpacesPage.data.ts — CRITERIA / HOW ──────────────────
-  "spaces.criteria.genderNeutral.lead": "Casas de banho neutras em género",
+  "spaces.criteria.genderNeutral.lead": "Casas de banho sem género",
   "spaces.criteria.genderNeutral.rest": " disponíveis ou claramente acessíveis",
   "spaces.criteria.staffIntervene.lead": "A equipa intervém",
   "spaces.criteria.staffIntervene.rest":
     " se uma pessoa estiver a ser assediada ou discriminada",
   "spaces.criteria.noIncidents.lead": "Sem incidentes discriminatórios",
   "spaces.criteria.noIncidents.rest": " denunciados nos últimos 12 meses",
-  "spaces.criteria.transWelcome.lead": "Pessoas trans e não-bináries",
+  "spaces.criteria.transWelcome.lead": "Pessoas trans e não binárias",
   "spaces.criteria.transWelcome.rest":
     " sentem-se genuinamente bem-vindas e em casa",
   "spaces.criteria.accessible.lead": "Acessível",
   "spaces.criteria.accessible.rest":
     ", ou as limitações de acesso claramente comunicadas",
   "spaces.criteria.reviews.lead": "Mínimo de 3 visitas independentes",
-  "spaces.criteria.reviews.rest":
-    " de pessoas sem qualquer interesse no espaço",
+  "spaces.criteria.reviews.rest": " de pessoas sem vínculo ao espaço",
   "spaces.criteria.annualReview.lead": "Reavaliação anual",
   "spaces.criteria.annualReview.rest": ": o estatuto não dura para sempre",
 
@@ -710,7 +712,7 @@ export const safety: Catalog = {
     "Submete um espaço com uma breve nota sobre porque achas que deve ser verificado. Confirmamos a receção na aplicação no prazo de 48 horas, e podes acompanhar em que ponto está.",
   "spaces.how.step2.title": "Três visitas independentes",
   "spaces.how.step2.desc":
-    "Três pessoas sem qualquer interesse no espaço vão lá e escrevem o que encontraram. Quem nomeou o espaço não conta para as três, e o mesmo vale para quem é proprietárie ou ajuda a geri-lo.",
+    "Três pessoas sem vínculo ao espaço vão lá e escrevem o que encontraram. Quem nomeou o espaço não conta para as três, tal como a pessoa proprietária e quem ajuda a geri-lo.",
   "spaces.how.step3.title": "A equipa de revisão decide",
   // O passo 3 é onde a barreira das três visitas é de facto aplicada, por isso
   // é o único passo que tem de nomear a exceção.
@@ -729,7 +731,7 @@ export const safety: Catalog = {
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Espaços seguros LGBTQ+ verificados em Lisboa",
   "spaces.meta.description":
-    "Um diretório de espaços em Lisboa avaliado pela comunidade e verificado como genuinamente seguro para pessoas LGBTQ+, com avaliações, um emblema de verificação, e uma forma de sinalizar ou nomear um espaço.",
+    "Diretório de espaços em Lisboa verificados pela comunidade como mesmo seguros para pessoas LGBTQ+, com avaliações de quem lá esteve, um emblema de verificação e uma forma de sinalizar ou nomear um espaço.",
   "spaces.hero.category": "Verificado pela comunidade",
   "spaces.hero.title": "Espaços que são realmente <em>seguros.</em>",
   // "Todos os espaços nesta lista foram visitados e avaliados" era uma
@@ -744,9 +746,9 @@ export const safety: Catalog = {
   // continua a nunca dizer "todos": a exceção é rara, mas existe, e uma
   // afirmação absoluta voltaria a ser falsa na primeira vez que fosse usada.
   "spaces.hero.lead":
-    "Um emblema aqui é conquistado. Três pessoas sem qualquer interesse no espaço vão lá, e cada uma escreve o que encontrou, antes de uma equipa de revisão decidir segundo critérios fixos. Quando a equipa atribui um emblema com menos visitas, regista a razão e o emblema mostra a contagem real. Essa regra vale para os emblemas atribuídos a partir de hoje. Todos os emblemas têm data, voltam a revisão passado um ano, e podem ser retirados.",
+    "Um emblema aqui é conquistado. Três pessoas sem vínculo ao espaço vão lá, e cada uma escreve o que encontrou, antes de uma equipa de revisão decidir segundo critérios fixos. Quando a equipa atribui um emblema com menos visitas, regista a razão e o emblema mostra a contagem real. Essa regra vale para os emblemas atribuídos a partir de hoje. Todos os emblemas têm data, voltam à revisão passado um ano e podem ser retirados.",
   "spaces.hero.stat.verified": "espaços verificados em Lisboa",
-  "spaces.hero.stat.reviews": "avaliações submetidas por pessoas",
+  "spaces.hero.stat.reviews": "avaliações da comunidade",
   // Rotula `stats.removed`, que o backend calcula como os espaços que estão
   // agora no estado removido. Não há filtro de data nenhum nessa consulta,
   // por isso "este ano" era simplesmente falso.
@@ -762,7 +764,7 @@ export const safety: Catalog = {
     "Última verificação de emblemas a {date} · Mantido pela comunidade",
   "spaces.dir.nominateCta": "+ Nomear um espaço",
   "spaces.dir.browseLead":
-    "Todos os espaços verificados estão agora no diretório local, filtrados apenas para os que conquistaram o emblema.",
+    "Todos os espaços verificados estão agora no diretório local, com um filtro que mostra só os que conquistaram o emblema.",
   "spaces.dir.browseCta": "Ver espaços verificados",
   "spaces.outro.title": "A segurança é <em>coletiva.</em>",
   "spaces.outro.sub":
@@ -790,23 +792,23 @@ export const safety: Catalog = {
   "spaces.removed.step1":
     "<span>3 sinalizações</span> suspendem o emblema de imediato, até revisão.",
   "spaces.removed.step2":
-    "<span>Revisão do painel</span> lê cada denúncia à luz dos critérios.",
+    "<span>O painel de revisão</span> lê cada denúncia à luz dos critérios.",
   "spaces.removed.step3":
-    "<span>Removido</span> se os critérios falham ou os proprietáries não colaboram.",
+    "<span>Removido</span> se não cumprir os critérios ou se as pessoas proprietárias não colaborarem.",
   "spaces.removed.step4":
-    "<span>Motivo público</span>: toda a remoção é registada abertamente, à vista de todos.",
+    "<span>Motivo público</span>: cada remoção fica registada abertamente, à vista de toda a gente.",
   "spaces.removed.card.badge": "Removido",
   "spaces.removed.card.whyLink": "Porque foi removido",
   "spaces.nominate.title": "Nomear um <em>espaço.</em>",
   "spaces.nominate.lead":
-    "Encontraste um lugar que realmente parece seguro. Conta-nos sobre ele. Nós tratamos do resto.",
+    "Encontraste um lugar onde te sentes mesmo em segurança. Fala-nos dele. Nós tratamos do resto.",
   "spaces.nominate.flagNote":
     "Reparaste que um espaço verificado deixou de estar à altura? Denuncia-o a partir da ficha no diretório local, ou contacta-nos diretamente. De qualquer forma, será avaliado.",
   "spaces.nominate.namePlaceholder": "Nome do espaço",
   "spaces.nominate.addressPlaceholder": "Morada ou bairro",
   "spaces.nominate.typeSelect.placeholder": "Tipo de espaço",
   "spaces.nominate.typeSelect.bar": "Bar",
-  "spaces.nominate.typeSelect.club": "Clube",
+  "spaces.nominate.typeSelect.club": "Discoteca",
   "spaces.nominate.typeSelect.cafe": "Café",
   "spaces.nominate.typeSelect.healthcare": "Saúde",
   "spaces.nominate.typeSelect.services": "Serviços",
@@ -823,17 +825,17 @@ export const safety: Catalog = {
   "spaces.error.gone":
     "Não encontrámos este espaço. Pode ter sido removido do diretório.",
   "spaces.nominate.thanks.title":
-    "Obrigade. Já estamos a <em>tratar disso.</em>",
+    "Agradecemos. Já estamos a <em>tratar disso.</em>",
   "spaces.nominate.thanks.textNamed":
-    "A tua nomeação para <strong>{name}</strong> foi recebida. A comunidade é a razão por que esta lista tem algum significado. Contribuir para ela é genuinamente um presente.",
+    "A tua nomeação para <strong>{name}</strong> foi recebida. Esta lista só tem significado graças à comunidade, e cada contributo é um verdadeiro presente.",
   "spaces.nominate.thanks.textPlain":
-    "A tua nomeação foi recebida. A comunidade é a razão por que esta lista tem algum significado. Contribuir para ela é genuinamente um presente.",
+    "A tua nomeação foi recebida. Esta lista só tem significado graças à comunidade, e cada contributo é um verdadeiro presente.",
   // O prazo de 48 horas TEM suporte real: uma constante de política, um
   // endpoint de confirmação e uma varredura diária que avisa a moderação
   // quando o prazo passa. O que era vago era o canal, e a QueerPulse não envia
   // email nenhum. O final passa a nomear o único canal que existe.
   "spaces.nominate.thanks.subInfo":
-    "Aqui está o que acontece a seguir: confirmamos a receção de todas as nomeações no prazo de <strong>48 horas</strong>. Depois, três pessoas verificadas visitam de forma independente e avaliam-no segundo os critérios, antes de um painel de voluntáries decidir. É nas tuas notificações aqui na aplicação que vais saber de cada passo.",
+    "O que acontece a seguir: confirmamos a receção de todas as nomeações no prazo de <strong>48 horas</strong>. Depois, três pessoas verificadas visitam o espaço de forma independente e avaliam-no segundo os critérios, antes de um painel de voluntariado decidir. Vais saber de cada passo pelas notificações aqui na aplicação.",
   "spaces.nominate.anotherCta": "Nomear outro espaço",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
@@ -854,11 +856,11 @@ export const safety: Catalog = {
     "Com voto de confiança de <em>{count} pessoas</em>",
   "spaces.detail.vouchedSub":
     "Avaliações de segurança independentes de pessoas verificadas.",
-  "spaces.detail.addVouchCta": "Adicionar a tua",
+  "spaces.detail.addVouchCta": "Dar voto de confiança",
   "spaces.detail.whereTitle": "Onde",
   "spaces.detail.backAllCta": "Voltar a todos os espaços",
   "spaces.detail.glanceTitle": "Num relance",
-  "spaces.detail.shareTitle": "Se um amigue precisar de um lugar",
+  "spaces.detail.shareTitle": "Se alguém próximo precisar de um lugar",
   "spaces.detail.shareBody":
     "Envia-lhe exatamente esta página. Tudo aqui é aquilo com que pode contar: as promessas, os votos de confiança, as saídas.",
   "spaces.detail.copyLinkCta": "Copiar link para partilhar",
@@ -867,16 +869,16 @@ export const safety: Catalog = {
   "spaces.detail.removedEyebrow":
     "Removido dos espaços seguros · {type} · {hood}",
   "spaces.detail.removedMeta.removed": "Removido",
-  "spaces.detail.removedMeta.listedSince": "Listado desde",
-  "spaces.detail.removedMeta.flags": "Sinalizações de pessoas",
+  "spaces.detail.removedMeta.listedSince": "Na lista desde",
+  "spaces.detail.removedMeta.flags": "Sinalizações da comunidade",
   "spaces.detail.whyRemovedTitle": "Porque foi <em>removido</em>",
   "spaces.detail.howHappenedTitle": "Como <em>aconteceu</em>",
   "spaces.detail.howHappenedSub":
-    "Toda a remoção segue os mesmos passos, à vista de todos.",
+    "Cada remoção segue os mesmos passos, à vista de toda a gente.",
   "spaces.detail.whatNowTitle": "O que isto significa agora",
   "spaces.detail.hadExperienceTitle": "Tiveste uma experiência aqui?",
   "spaces.detail.hadExperienceBody":
-    "O registo mantém-se aberto. Se algo te aconteceu aqui, contar-nos continua a ajudar. Informa qualquer futura reavaliação.",
+    "O registo mantém-se aberto. Se algo te aconteceu aqui, contar-nos continua a ajudar. Conta para qualquer reavaliação futura.",
   "spaces.detail.fileReportCta": "Fazer uma denúncia",
   "spaces.detail.lookingForTitle": "À procura de um lugar seguro?",
   // `{count}` é o `stats.verified` em direto, que substituiu um
@@ -892,35 +894,36 @@ export const safety: Catalog = {
   "spaces.detail.seeVerifiedCta": "Ver espaços verificados",
 
   // ── VouchModal.tsx ─────────────────────────────────────────────────────
-  "vouchModal.ariaLabel": "Dar voto de confiança a este espaço",
+  "vouchModal.ariaLabel": "Dar um voto de confiança a este espaço",
   "vouchModal.closeAriaLabel": "Fechar",
   "vouchModal.success.title": "O teu voto de confiança foi <em>registado.</em>",
   "vouchModal.success.body":
-    "Obrigade por dares um voto de confiança a <strong>{spaceName}</strong>. Os votos de confiança das pessoas são como as outras sabem que um espaço é seguro antes de lá entrarem. O teu vai aparecer assim que uma pessoa moderadora o confirmar.",
+    "Agradecemos o teu apoio a <strong>{spaceName}</strong>. É pelos votos de confiança da comunidade que as outras pessoas sabem que um espaço é seguro antes de lá entrarem. O teu aparece assim que a moderação o confirmar.",
   "vouchModal.success.doneCta": "Concluído",
   "vouchModal.form.eyebrow": "Adiciona o teu voto de confiança",
   "vouchModal.form.title": "Dá um voto de confiança a <em>{spaceName}</em>",
   "vouchModal.form.lead":
-    "Um voto de confiança é uma nota curta e honesta sobre porque este espaço te parece seguro. Detalhes ajudam outras pessoas a confiar nele.",
+    "Um voto de confiança é uma nota curta e honesta sobre a razão de este espaço te parecer seguro. Os pormenores ajudam as outras pessoas a confiar nele.",
   "vouchModal.form.relationshipLabel": "Como conheces este espaço?",
-  "vouchModal.relationship.regular": "Venho aqui regularmente",
-  "vouchModal.relationship.onceOrTwice": "Já vim uma ou duas vezes",
-  "vouchModal.relationship.workOrVolunteer": "Trabalho ou sou voluntárie aqui",
-  "vouchModal.relationship.withFriend": "Vim com um amigue que precisava",
+  "vouchModal.relationship.regular": "Vou lá com frequência",
+  "vouchModal.relationship.onceOrTwice": "Já lá fui uma ou duas vezes",
+  "vouchModal.relationship.workOrVolunteer": "Trabalho ou faço voluntariado lá",
+  "vouchModal.relationship.withFriend":
+    "Fui lá com uma pessoa amiga que precisava",
   "vouchModal.form.noteLabel": "A tua nota",
   "vouchModal.form.notePlaceholder":
-    "O que faz este espaço parecer-te seguro? Equipa, ambiente, acessibilidade, um momento que marcou…",
+    "O que faz com que este espaço te pareça seguro? Equipa, ambiente, acessibilidade, um momento que marcou…",
   "vouchModal.form.charsRemaining_one": "Falta {count} carácter para submeter",
   "vouchModal.form.charsRemaining_other":
-    "Faltam {count} carateres para submeter",
+    "Faltam {count} caracteres para submeter",
   "vouchModal.form.charsCount_one": "{count} carácter",
-  "vouchModal.form.charsCount_other": "{count} carateres",
+  "vouchModal.form.charsCount_other": "{count} caracteres",
   "vouchModal.form.cancelCta": "Cancelar",
   "vouchModal.form.submitting": "A submeter…",
   "vouchModal.form.submitCta": "Adicionar o meu voto de confiança",
   "vouchModal.form.error": "Não foi possível submeter. Tenta novamente.",
   "vouchModal.error.notVouchable":
-    "Não podes dar um voto de confiança a este espaço. Pode ser teu, ou pode já não ser um espaço seguro verificado nem estar em análise.",
+    "Não podes dar um voto de confiança a este espaço. Pode ser teu, ou pode já não ser um espaço seguro verificado nem estar em revisão.",
   "vouchModal.error.alreadyVouched":
     "Já deste um voto de confiança a este espaço. Atualiza para o veres.",
 
@@ -935,13 +938,13 @@ export const safety: Catalog = {
   "badge.state.verified.titleTier":
     "Espaço seguro verificado · Nível de confiança {tier}",
   "badge.state.verified.lead":
-    "Pessoas sem qualquer interesse neste espaço foram lá e ele cumpriu o padrão. O emblema pode ser suspenso se as coisas mudarem.",
-  "badge.state.due.title": "Verificado, e com a reavaliação anual em atraso",
+    "Pessoas da comunidade sem qualquer interesse neste espaço visitaram-no e confirmaram que cumpre o padrão. O emblema pode ser suspenso se as coisas mudarem.",
+  "badge.state.due.title": "Verificado, com reavaliação anual pendente",
   "badge.state.due.lead":
     "O emblema mantém-se. Passou um ano desde que foi atribuído, por isso este espaço está na fila para novas visitas.",
-  "badge.state.suspended.title": "Emblema suspenso enquanto isto é revisto",
+  "badge.state.suspended.title": "Emblema suspenso durante a revisão",
   "badge.state.suspended.lead":
-    "O emblema está suspenso, por isso trata este espaço como não verificado para já. Dizemos aqui quando a revisão fechar.",
+    "O emblema está suspenso, por isso trata este espaço como não verificado para já. Avisamos aqui quando a revisão terminar.",
   "badge.state.removed.title": "Emblema retirado",
   "badge.state.removed.lead":
     "Este espaço já não cumpre o padrão. O registo do motivo permanece público.",
@@ -955,16 +958,16 @@ export const safety: Catalog = {
   "flag.prompt": "Notaste algo diferente por aqui?",
   "flag.openCta": "Fala connosco",
   "flag.alreadyNote":
-    "Já assinalaste algo sobre este espaço. A equipa de revisão tem isso.",
+    "Já assinalaste algo sobre este espaço. A equipa de revisão já está a par.",
   "flag.withdrawCta": "Retirar",
   "flag.withdrawnToast": "Retirado",
   "flag.errorToast": "Não foi possível enviar. Tenta novamente.",
   "flag.error.notFlaggable":
-    "Não podes assinalar este espaço. Pode ser teu, ou pode já não ter o selo de espaço seguro.",
+    "Não podes assinalar este espaço. Pode ser teu, ou pode já não ter o emblema de espaço seguro.",
   "flag.error.rateLimited":
-    "Enviaste vários alertas nos últimos minutos. Espera um pouco antes de assinalares outra vez.",
+    "Enviaste várias sinalizações nos últimos minutos. Espera um pouco antes de assinalares outra vez.",
   "flag.error.nothingToWithdraw":
-    "Não tens nenhum alerta aberto para retirar. Pode já ter sido resolvido. Atualiza para veres em que ponto está.",
+    "Não tens nenhuma sinalização aberta para retirar. Pode já ter sido resolvida. Atualiza para veres em que ponto está.",
   "flag.modal.title": "Assinalar algo sobre {name}",
   "flag.modal.sub": "A equipa de revisão lê todas estas mensagens.",
   "flag.modal.privacy":
@@ -972,7 +975,7 @@ export const safety: Catalog = {
   "flag.modal.reasonLabel": "Do que se trata?",
   "flag.modal.detailLabel": "Algo que queiras acrescentar",
   "flag.modal.detailHelper":
-    "Opcional, e só moderadores leem. Deixa de fora tudo o que preferires não ver registado.",
+    "Opcional, e só a moderação lê. Deixa de fora o que preferires que não fique por escrito.",
   "flag.modal.detailPlaceholder": "O que aconteceu, e quando",
   "flag.modal.cancelCta": "Cancelar",
   "flag.modal.sendCta": "Enviar à equipa de revisão",
@@ -980,25 +983,25 @@ export const safety: Catalog = {
   "flag.reason.not_safe.label": "Não pareceu seguro",
   "flag.reason.not_safe.desc": "Aconteceu alguma coisa, ou o ambiente mudou.",
   "flag.reason.discrimination.label": "Discriminação",
-  "flag.reason.discrimination.desc": "Alguém foi mal tratade por ser quem é.",
+  "flag.reason.discrimination.desc": "Trataram mal alguém por ser quem é.",
   "flag.reason.staff_conduct.label": "Conduta da equipa",
   "flag.reason.staff_conduct.desc":
     "A forma como as pessoas que lá trabalham se comportaram.",
   "flag.reason.accessibility.label": "O acesso piorou",
   "flag.reason.accessibility.desc": "Entrar é mais difícil do que a ficha diz.",
-  "flag.reason.closed_or_changed.label": "Fechou ou mudou de proprietáries",
+  "flag.reason.closed_or_changed.label": "Fechou ou mudou de propriedade",
   "flag.reason.closed_or_changed.desc":
     "O espaço mudou de mãos, mudou de sítio, ou fechou.",
   "flag.reason.other.label": "Outra coisa",
   "flag.reason.other.desc": "Conta-nos pelas tuas palavras.",
-  "flag.done.title": "Obrigade",
+  "flag.done.title": "Agradecemos",
   "flag.done.panelTitle": "A equipa de revisão",
-  "flag.done.panelEm": "tem isto.",
+  "flag.done.panelEm": "está a tratar disto.",
   "flag.done.alreadyTitle": "Já tinhas assinalado",
   "flag.done.alreadyEm": "esta situação.",
   "flag.done.body":
-    "Nada disto é público. Ao espaço é dito que há uma revisão aberta, e nunca quem a abriu.",
-  "flag.done.step.read": "Une moderadore lê e decide o que acontece a seguir.",
+    "Nada disto é público. O espaço só fica a saber que há uma revisão aberta. Quem a abriu nunca é revelado.",
+  "flag.done.step.read": "A moderação lê e decide o que acontece a seguir.",
   "flag.done.step.anonymous": "{name} nunca fica a saber quem assinalou isto.",
   "flag.done.step.threshold":
     "{count} sinalizações distintas suspendem o emblema de imediato enquanto a revisão decorre.",
@@ -1007,44 +1010,44 @@ export const safety: Catalog = {
   // ── AdminSafeSpaceNominationsPage.tsx — a fila de revisão ──────────────
   "governance.nominations.title": "Fila de <em>nomeações.</em>",
   "governance.nominations.sub":
-    "Mais antigas primeiro, porque a promessa publicada é uma nomeação confirmada no prazo de 48 horas. Tudo o que passou a janela fica marcado.",
+    "Mais antigas primeiro, porque a promessa publicada é confirmar cada nomeação no prazo de 48 horas. O que ultrapassou o prazo fica assinalado.",
   "governance.scope.open": "Abertas",
   "governance.scope.decided": "Decididas",
   "governance.scope.all": "Todas",
   "governance.sort.oldest": "Mais antigas primeiro",
   "governance.sort.newest": "Mais recentes primeiro",
-  "governance.filter.breachedOnly": "Só as que passaram a janela",
-  "governance.filter.searchPlaceholder": "Procurar pelo nome do espaço",
+  "governance.filter.breachedOnly": "Só as fora do prazo",
+  "governance.filter.searchPlaceholder": "Pesquisa pelo nome do espaço",
   "governance.summary.inQueue_one": "{count} nomeação nesta vista.",
   "governance.summary.inQueue_other": "{count} nomeações nesta vista.",
   "governance.summary.breaching_one":
-    "{count} passou a janela de confirmação de {hours} horas.",
+    "{count} ultrapassou o prazo de confirmação de {hours} horas.",
   "governance.summary.breaching_other":
-    "{count} passaram a janela de confirmação de {hours} horas.",
+    "{count} ultrapassaram o prazo de confirmação de {hours} horas.",
   "governance.summary.flags_one":
     "{count} sinalização nesta vista. {threshold} sinalizações abertas sobre o mesmo espaço suspendem o emblema automaticamente.",
   "governance.summary.flags_other":
     "{count} sinalizações nesta vista. {threshold} sinalizações abertas sobre o mesmo espaço suspendem o emblema automaticamente.",
   "governance.summary.reReview_one":
-    "{count} emblema passou a verificação anual.",
+    "{count} emblema tem a verificação anual em atraso.",
   "governance.summary.reReview_other":
-    "{count} emblemas passaram a verificação anual.",
+    "{count} emblemas têm a verificação anual em atraso.",
   "governance.empty": "Nada nesta vista de momento.",
   "governance.loadError.nominations.title": "A fila de nomeações não carregou",
   "governance.loadError.nominations.body":
-    "A falha é do nosso lado, por isso a fila abaixo está vazia porque nada chegou. Pode haver espaços à espera. Tenta de novo.",
+    "Houve uma falha do nosso lado: a fila abaixo está vazia porque não chegaram dados. Pode haver espaços à espera. Tenta de novo.",
   "governance.loadError.flags.title": "A fila de sinalizações não carregou",
   "governance.loadError.flags.body":
-    "A falha é do nosso lado, por isso a fila abaixo está vazia porque nada chegou. Pode haver sinalizações em aberto. Tenta de novo.",
+    "Houve uma falha do nosso lado: a fila abaixo está vazia porque não chegaram dados. Pode haver sinalizações em aberto. Tenta de novo.",
   "governance.loadError.reReview.title": "A lista de reavaliação não carregou",
   "governance.loadError.reReview.body":
-    "A falha é do nosso lado. Pode haver emblemas com a verificação anual em atraso. Tenta de novo.",
+    "Houve uma falha do nosso lado. Pode haver emblemas com a verificação anual em atraso. Tenta de novo.",
   "governance.status.pending": "À espera",
   "governance.status.acknowledged": "Confirmada",
   "governance.status.in_review": "Em revisão",
   "governance.status.approved": "Emblema atribuído",
   "governance.status.rejected": "Recusada",
-  "governance.chip.breached": "Passou {hours}h",
+  "governance.chip.breached": "Excedeu {hours}h",
   "governance.chip.acknowledgedLate": "Confirmada tarde",
   "governance.chip.visits": "{count}/{required} visitas",
   "governance.chip.unassigned": "Ainda sem ficha",
@@ -1052,31 +1055,30 @@ export const safety: Catalog = {
   "governance.detail.nominatorWords": "Nas palavras de quem nomeou",
   "governance.detail.clock": "O prazo de 48 horas",
   "governance.detail.received": "Recebida",
-  "governance.detail.dueBy": "Confirmação devida",
+  "governance.detail.dueBy": "Prazo de confirmação",
   "governance.detail.acknowledged": "Confirmada",
   "governance.detail.notYet": "Ainda não",
   "governance.detail.placeType": "Tipo de espaço",
   "governance.detail.address": "Morada",
-  "governance.detail.assignmentNote":
-    "O que foi pedido para as visitas verificarem",
+  "governance.detail.assignmentNote": "O que as visitas tinham de verificar",
   "governance.detail.decision": "Decisão e justificação",
   "governance.detail.trail": "Registo de auditoria",
-  "governance.detail.trailEmpty": "Ainda não há nada registado nesta.",
+  "governance.detail.trailEmpty": "Ainda não há nada registado nesta nomeação.",
   "governance.detail.decide": "Fazer avançar esta nomeação",
   "governance.detail.openListingCta": "Abrir a ficha",
   "governance.visits.title": "Três visitas independentes",
   "governance.visits.unassigned":
-    "Ainda não há nenhuma ficha ligada a esta nomeação, por isso não há contra o que contar visitas. Atribui uma ficha abaixo para a abrir a visitas.",
+    "Ainda não há nenhuma ficha ligada a esta nomeação, por isso ainda não há visitas para contar. Atribui uma ficha abaixo para a abrir a visitas.",
   "governance.visits.met":
     "{count} de {required} visitas independentes. O mínimo está cumprido.",
   "governance.visits.short":
     "{count} de {required} visitas independentes. O mínimo ainda não está cumprido.",
   "governance.visits.notIndependent_one":
-    "Há mais {count} voto de confiança de alguém com interesse no espaço (quem é proprietárie, quem ajuda a geri-lo, ou quem o nomeou). Não conta.",
+    "Há mais {count} voto de confiança registado de alguém com interesse no espaço (a pessoa proprietária, quem ajuda a geri-lo ou quem o nomeou). Não conta.",
   "governance.visits.notIndependent_other":
-    "Há mais {count} votos de confiança de pessoas com interesse no espaço (quem é proprietárie, quem ajuda a geri-lo, ou quem o nomeou). Não contam.",
+    "Há mais {count} votos de confiança registados de pessoas com interesse no espaço (a pessoa proprietária, quem ajuda a geri-lo ou quem o nomeou). Não contam.",
   "governance.visits.whoNote":
-    "Os relatos das visitas estão na página do próprio espaço. A decisão é tua, e a contagem fica aqui para que o registo mostre contra o que decidiste.",
+    "Os relatos das visitas estão na página do próprio espaço. A decisão é tua, e a contagem fica aqui para que o registo mostre a contagem perante a qual decidiste.",
   "governance.audit.nomination_acknowledged": "Confirmada",
   "governance.audit.nomination_assigned": "Ligada a uma ficha",
   "governance.audit.nomination_awarded": "Emblema atribuído",
@@ -1089,12 +1091,12 @@ export const safety: Catalog = {
   "governance.audit.badge_restored": "Emblema reposto",
   "governance.action.acknowledgeLabel": "Confirmar esta nomeação",
   "governance.action.acknowledgeHelper":
-    "Para o prazo de 48 horas e diz a quem nomeou que alguém está a tratar disto. A nota fica interna.",
+    "Interrompe a contagem das 48 horas e diz a quem nomeou que alguém da equipa de revisão está a tratar dela. Qualquer nota fica interna.",
   "governance.action.notePlaceholder": "Nota interna (opcional)",
   "governance.action.acknowledgeCta": "Confirmar",
   "governance.action.assignLabel": "Ficha em revisão",
   "governance.action.assignHelper":
-    "A ref ou o slug da ficha. Atribuir abre a nomeação a visitas de membres, e confirma-a se ainda ninguém o tiver feito.",
+    "A ref ou o slug da ficha. Atribuir abre a nomeação a visitas da comunidade e confirma-a, se ainda ninguém o tiver feito.",
   "governance.action.assignPlaceholder": "ref-da-ficha ou slug",
   "governance.action.assignCta": "Atribuir para visitas",
   "governance.action.reasonLabel": "Justificação da decisão",
@@ -1107,7 +1109,7 @@ export const safety: Catalog = {
   // Só aparece quando a contagem está abaixo da barreira. `{min}` é o
   // `@MinLength(20)` do backend em `belowVisitBarReason`.
   "governance.action.belowBarLabel":
-    "Motivo para atribuir abaixo da barreira de visitas",
+    "Motivo para atribuir abaixo do mínimo de visitas",
   "governance.action.belowBarHelper":
     "Este espaço tem {count} de {required} visitas independentes, por isso o emblema é recusado sem uma exceção escrita. No mínimo {min} caracteres. Fica no registo de auditoria, e o emblema público vai indicar a contagem real.",
   "governance.action.reopenLabel": "Motivo da reabertura",
@@ -1132,13 +1134,13 @@ export const safety: Catalog = {
   "governance.tab.reReview": "Emblemas a rever",
   "governance.flags.title": "Sinalizações e <em>suspensões.</em>",
   "governance.flags.sub":
-    "O que membres assinalaram sobre espaços com emblema, e que emblemas estão suspensos ou passaram a verificação anual.",
+    "O que a comunidade assinalou sobre espaços com emblema, e que emblemas estão suspensos ou têm a verificação anual em atraso.",
   "governance.flagState.open": "Abertas",
   "governance.flagState.resolved": "Resolvidas",
   "governance.flagState.all": "Todas",
   "governance.flags.empty": "Nenhuma sinalização nesta vista.",
   "governance.flags.privacyNote":
-    "Só moderadores. Nunca digas a um espaço quem o sinalizou, e não deixes que uma contagem ou um horário o tornem adivinhável.",
+    "Só para a moderação. Nunca digas a um espaço quem o sinalizou, e não deixes que uma contagem ou um horário permitam adivinhá-lo.",
   "governance.flags.unknownSpace": "Espaço desconhecido",
   "governance.flags.reviewCta": "Rever",
   "governance.flags.dismissCta": "Arquivar",
@@ -1169,16 +1171,16 @@ export const safety: Catalog = {
   "governance.badge.reasonLabel": "Motivo",
   "moderationStance.head": "Como lemos estes casos",
   "moderationStance.rule.politicalSpeech":
-    "A QueerPulse está ao lado do povo palestiniano. Criticar Israel, o seu governo, o seu exército ou as suas políticas é discurso político e fica publicado. Fazer campanha para retirar uma classe de pessoas membras, como as pessoas trans, é uma violação do Código de Conduta, com o vocabulário que for.",
+    "A QueerPulse está ao lado do povo palestiniano. Criticar Israel, o seu governo, o seu exército ou as suas políticas é discurso político e fica publicado. Fazer campanha para excluir um grupo de pessoas da comunidade, como as pessoas trans, é uma violação do Código de Conduta, seja qual for a formulação.",
   "moderationStance.rule.noBothSides":
-    "Se uma pessoa membra merece direitos n\u00e3o \u00e9 um debate que acolhemos. N\u00e3o arquives uma den\u00fancia com o argumento de que o outro lado merece ser ouvido.",
+    "Se alguém da comunidade merece direitos não é um debate que acolhemos. Não arquives uma denúncia com o argumento de que o outro lado merece ser ouvido.",
   "moderationStance.rule.neverProveGender":
-    "Nunca pe\u00e7as a uma pessoa membra que prove o seu g\u00e9nero, e encerra qualquer den\u00fancia que equivalha a esse pedido. A norma \u00e9 a autodetermina\u00e7\u00e3o.",
+    "Nunca peças a alguém da comunidade que prove o seu género, e encerra qualquer denúncia que equivalha a esse pedido. A norma é a autodeterminação.",
   "moderationStance.applicantHead": "Estás a avaliar uma pessoa",
   "moderationStance.applicantRule.neverProveIdentity":
     "Nunca pe\u00e7as a quem se candidata que prove o seu g\u00e9nero, a sua condi\u00e7\u00e3o queer ou a sua identidade, e nunca recuses algu\u00e9m por duvidares disso. A norma \u00e9 a autodetermina\u00e7\u00e3o, aqui como em todo o lado.",
   "moderationStance.applicantRule.politicsNotAScreen":
-    "A pol\u00edtica n\u00e3o \u00e9 um crit\u00e9rio de triagem. Apoiar a liberta\u00e7\u00e3o da Palestina n\u00e3o \u00e9 um sinal de alarme. Organizar-se contra uma classe de pessoas membras \u00e9, e essa \u00e9 a \u00fanica leitura pol\u00edtica que fazemos.",
+    "A política não é um critério de triagem. Apoiar a libertação da Palestina não é um sinal de alarme. Organizar-se contra um grupo de pessoas da comunidade é, e essa é a única leitura política que fazemos.",
   "moderationStance.applicantRule.judgeTheApplication":
     "Avalia o que a pessoa escreveu. Um nome, uma fotografia, uma forma de escrever ou um sotaque nas respostas n\u00e3o s\u00e3o prova de nada, e agir com base nisso \u00e9 a falha mais prov\u00e1vel nesta fila.",
   "moderationStance.link.guidelines": "Diretrizes: as linhas vermelhas",
@@ -1192,7 +1194,7 @@ export const safety: Catalog = {
   "moderationStance.digest.guidelines.p1":
     "As diretrizes descrevem a cultura. As linhas vermelhas são a parte delas que se aplica: assédio ou ataques pessoais dirigidos, divulgar dados identificativos de alguém, expor a identidade de alguém sem consentimento, ameaças ou intimidação, partilhar conversas ou fotografias privadas sem consentimento, e discriminação com base em qualquer característica protegida.",
   "moderationStance.digest.guidelines.p2":
-    "A cláusula do discurso político fica ao lado delas. Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado, incluindo a defesa da libertação da Palestina. Passa a ser uma violação quando se dirige a uma pessoa: culpar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade, ou fazer campanha para retirar uma classe de pessoas membras, com o vocabulário que for.",
+    "A cláusula do discurso político fica ao lado delas. Criticar Israel, o seu governo, o seu exército ou a sua ideologia é discurso político e fica publicado, incluindo a defesa da libertação da Palestina. Passa a ser uma violação quando se dirige a uma pessoa: culpar alguém da comunidade pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade, ou fazer campanha para excluir um grupo de pessoas da comunidade, seja qual for a formulação.",
   "moderationStance.digest.guidelines.point.oneTest.title":
     "Um único teste decide.",
   "moderationStance.digest.guidelines.point.oneTest.body":
@@ -1213,17 +1215,17 @@ export const safety: Catalog = {
   "moderationStance.digest.stand.lead":
     "Em resumo, as posições publicadas com que se mede uma decisão tomada aqui.",
   "moderationStance.digest.stand.p1":
-    "As mulheres trans são mulheres, os homens trans são homens, as pessoas não binárias são não binárias e as pessoas intersexo existem. Nada disto é dito com reservas nem está aberto a debate nesta plataforma. A norma é a autodeterminação, por isso nunca se pede a uma pessoa membra ou candidata que prove o seu género.",
+    "As mulheres trans são mulheres, os homens trans são homens, as pessoas não binárias são não binárias e as pessoas intersexo existem. Nada disto é dito com reservas nem está aberto a debate nesta plataforma. A norma é a autodeterminação, por isso nunca se pede a quem faz parte da comunidade nem a quem se candidata que prove o seu género.",
   "moderationStance.digest.stand.p2":
-    "Israel está a cometer um genocídio contra os palestinianos em Gaza, e a QueerPulse está com o povo palestiniano. A defesa da libertação da Palestina é bem-vinda aqui e é moderada como discurso político. O trabalho sexual é trabalho, a migração é uma questão queer, e I = I: a serofobia cai sob a mesma linha vermelha que qualquer outra discriminação.",
+    "Israel está a cometer um genocídio contra o povo palestiniano em Gaza, e a QueerPulse está com o povo palestiniano. A defesa da libertação da Palestina é bem-vinda aqui e é moderada como discurso político. O trabalho sexual é trabalho, a migração é uma questão queer, e I = I: a serofobia cai sob a mesma linha vermelha que qualquer outra discriminação.",
   "moderationStance.digest.stand.point.notADebate.title":
     "Pertencer a esta comunidade não é um tema de debate.",
   "moderationStance.digest.stand.point.notADebate.body":
-    "Não há discussão dos dois lados sobre se uma pessoa membra merece direitos, e nenhuma denúncia é arquivada em nome do equilíbrio.",
+    "Não há discussão dos dois lados sobre se alguém da comunidade merece direitos, e nenhuma denúncia é arquivada em nome do equilíbrio.",
   "moderationStance.digest.stand.point.speechVsExclusion.title":
-    "Criticar um Estado é discurso; fazer campanha contra uma classe de pessoas membras é uma violação do Código de Conduta.",
+    "Criticar um Estado é discurso; fazer campanha contra um grupo de pessoas da comunidade é uma violação do Código de Conduta.",
   "moderationStance.digest.stand.point.speechVsExclusion.body":
-    "Chamar-lhe crítica de género deixa-o exatamente aquilo que era.",
+    "Chamar-lhe crítica de género não muda o que é.",
   "moderationStance.digest.stand.point.whenWeSpeak.title":
     "Falamos onde a nossa comunidade está implicada.",
   "moderationStance.digest.stand.point.whenWeSpeak.body":
@@ -1232,23 +1234,23 @@ export const safety: Catalog = {
 
   // ── Muted-members list (PRD-07) / BlockedUsersPane.tsx ───────────────────
   "blockedMembers.row.unblockLabel": "Desbloquear {name}",
-  "mutedMembers.section.muted": "Silenciados",
+  "mutedMembers.section.muted": "Pessoas silenciadas",
   "mutedMembers.note":
-    "Silenciar é unilateral e discreto. Ninguém aqui foi avisado, ninguém aqui foi removido de nada, e podes trazer qualquer pessoa de volta com um toque.",
-  "mutedMembers.row.mutedOn": "Silenciado {date}",
-  "mutedMembers.row.deletedMember": "Membro eliminado",
+    "Silenciar é unilateral e discreto. Nenhuma destas pessoas recebeu aviso nem foi removida de nada, e podes trazer qualquer uma de volta com um toque.",
+  "mutedMembers.row.mutedOn": "Silenciaste a {date}",
+  "mutedMembers.row.deletedMember": "Conta eliminada",
   "mutedMembers.row.unmuteCta": "Deixar de silenciar",
   "mutedMembers.row.unmuteLabel": "Deixar de silenciar {name}",
   "mutedMembers.empty.none.title": "Ainda não silenciaste ninguém",
   "mutedMembers.empty.none.desc":
-    "Quando silenciares um membro, as publicações e os comentários dele ficam em silêncio para ti e ele nunca é avisado. Todas as pessoas que silenciares aparecem aqui para poderes desfazer.",
+    "Quando silencias alguém, deixas de ver as publicações e os comentários dessa pessoa, e ela nunca é avisada. Todas as pessoas que silenciares aparecem aqui para poderes desfazer.",
   "mutedMembers.empty.error.title":
-    "Não conseguimos carregar os teus membros silenciados",
+    "Não conseguimos carregar as pessoas que silenciaste",
   "mutedMembers.empty.error.desc":
-    "Em vez de te mostrarmos uma lista em que não podemos confiar, não mostrámos nada. Tenta novamente dentro de momentos.",
-  "mutedMembers.toast.unmuted": "{name} deixou de estar silenciado.",
+    "Não conseguimos garantir que a lista estava certa, por isso preferimos não mostrar nada. Tenta novamente dentro de momentos.",
+  "mutedMembers.toast.unmuted": "{name} já não está em silêncio.",
   "mutedMembers.toast.unmutedError":
-    "Não conseguimos deixar de silenciar esse membro. Tenta novamente.",
+    "Não conseguimos deixar de silenciar esta pessoa. Tenta novamente.",
 
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   "blockMute.blocked.manageFollowUpToast":

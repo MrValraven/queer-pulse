@@ -47,11 +47,11 @@ describe("vjErrors", () => {
   );
 
   it("gives every code its own line", () => {
-    expect(new Set(Object.values(VJ_REASON_KEY)).size).toBe(55);
+    expect(new Set(Object.values(VJ_REASON_KEY)).size).toBe(60);
     expect(new Set(Object.values(VJ_SOCKET_REASON_KEY)).size).toBe(
       VJ_SOCKET_ERROR_CODES.length,
     );
-    expect(VJ_SOCKET_ERROR_CODES).toHaveLength(75);
+    expect(VJ_SOCKET_ERROR_CODES).toHaveLength(76);
   });
 
   it("spells keys the contract way", () => {
@@ -311,6 +311,73 @@ describe("vjErrors v2 codes", () => {
     expect(isVjSilentSocketCode("vj_clip_excluded")).toBe(true);
     expect(isVjSilentSocketCode("vj_clip_not_favorite")).toBe(true);
     expect(isVjSilentSocketCode("vj_stale_setlist")).toBe(true);
+    expect(isVjSilentSocketCode("vj_setlist_end")).toBe(false);
+  });
+});
+
+describe("vjErrors sequence codes", () => {
+  it("maps every new sequence refusal code to its own catalog key", () => {
+    expect(VJ_REASON_KEY.VJ_SETLIST_STEP_INVALID).toBe(
+      "vj:error.setlistStepInvalid",
+    );
+    expect(VJ_REASON_KEY.VJ_SETLIST_STEP_DURATION_INVALID).toBe(
+      "vj:error.setlistStepDurationInvalid",
+    );
+    expect(VJ_REASON_KEY.VJ_SETLIST_ITEM_NOT_FOUND).toBe(
+      "vj:error.setlistItemNotFound",
+    );
+    expect(VJ_REASON_KEY.VJ_SETLIST_LOOP_INVALID).toBe(
+      "vj:error.setlistLoopInvalid",
+    );
+    expect(VJ_REASON_KEY.VJ_SETLIST_PATCH_EMPTY).toBe(
+      "vj:error.setlistPatchEmpty",
+    );
+  });
+
+  it("names the cause of a refused sequence request from the server body", () => {
+    expect(vjErrorKeyOf(refusal("VJ_SETLIST_STEP_INVALID"))).toBe(
+      "vj:error.setlistStepInvalid",
+    );
+    expect(vjErrorKeyOf(refusal("VJ_SETLIST_ITEM_NOT_FOUND"))).toBe(
+      "vj:error.setlistItemNotFound",
+    );
+    expect(vjErrorKeyOf(refusal("VJ_SETLIST_LOOP_INVALID"))).toBe(
+      "vj:error.setlistLoopInvalid",
+    );
+    expect(vjErrorKeyOf(refusal("VJ_SETLIST_PATCH_EMPTY"))).toBe(
+      "vj:error.setlistPatchEmpty",
+    );
+  });
+
+  it("a refused step length names the seconds bounds 2 and 600", () => {
+    const refused = refusal("VJ_SETLIST_STEP_DURATION_INVALID");
+    expect(vjErrorKeyOf(refused)).toBe("vj:error.setlistStepDurationInvalid");
+    expect(vjErrorValuesOf(refused)).toEqual({ min: 2, max: 600 });
+  });
+
+  it("an unconfirmed flash on the next step names the flash warning", () => {
+    const ack = {
+      ok: false,
+      code: "vj_setlist_flash_unconfirmed",
+      message: "x",
+    };
+    expect(vjReasonOf(ack)).toBe("vj_setlist_flash_unconfirmed");
+    expect(vjErrorKeyOf(ack)).toBe("vj:error.socket.setlistFlashUnconfirmed");
+    expect(VJ_SOCKET_REASON_KEY.vj_setlist_flash_unconfirmed).toBe(
+      "vj:error.socket.setlistFlashUnconfirmed",
+    );
+    expect(isVjSilentSocketCode("vj_setlist_flash_unconfirmed")).toBe(false);
+  });
+
+  it("a wrong on or off switch keeps the existing effect flag line", () => {
+    expect(
+      vjErrorKeyOf({ ok: false, code: "vj_effect_flag_invalid", message: "x" }),
+    ).toBe("vj:error.socket.effectFlagInvalid");
+  });
+
+  it("the sequence socket refusals that name the end of a run are not silent", () => {
+    expect(isVjSilentSocketCode("vj_setlist_empty")).toBe(false);
+    expect(isVjSilentSocketCode("vj_setlist_start")).toBe(false);
     expect(isVjSilentSocketCode("vj_setlist_end")).toBe(false);
   });
 });

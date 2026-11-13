@@ -182,9 +182,17 @@ function shuffleKeyOf(state: VjStageState | null): string {
   return `${isOn}|${intervalKind}|${intervalValue}`;
 }
 
-/** Whether the shuffle clock runs on this screen at all. */
+/** Whether the shuffle clock runs on this screen at all. A playing sequence
+ *  owns the stage (sequences contract 6.2), so a record that holds both runs
+ *  no offline shuffle. A state from a backend older than sequences carries
+ *  no setlistPlayback and reads as not playing. */
 function isShuffleActive(state: VjStageState | null): boolean {
-  return state !== null && state.shuffle.isOn && state.activePackId !== null;
+  if (state === null || !state.shuffle.isOn || state.activePackId === null) {
+    return false;
+  }
+  const setlistPlayback = state.setlistPlayback as
+    VjStageState["setlistPlayback"] | undefined;
+  return setlistPlayback?.status !== "playing";
 }
 
 /**

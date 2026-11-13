@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { upgradeVjStageFieldsV1 } from "../../../shared/contracts/vj";
+import {
+  createVjSetlistPlayback,
+  upgradeVjStageFieldsV1,
+  upgradeVjStageFieldsV2,
+} from "../../../shared/contracts/vj";
 import {
   VJ_SCREEN_SNAPSHOT_STORAGE_KEY,
   VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY,
@@ -76,12 +80,19 @@ describe("vjScreenRecordV1", () => {
     localStorage.clear();
   });
 
-  it("upgrades a v1 record through upgradeVjStageFieldsV1 with savedAt as now", () => {
+  it("upgrades a v1 record through both upgrade passes with savedAt as now", () => {
     const upgraded = upgradeVjScreenRecordV1(buildRecordV1());
 
     expect(upgraded?.version).toBe(2);
     expect(upgraded?.savedAt).toBe(SAVED_AT);
-    expect(upgraded?.state).toEqual(upgradeVjStageFieldsV1(stateV1, SAVED_AT));
+    expect(upgraded?.state).toEqual(
+      upgradeVjStageFieldsV2(upgradeVjStageFieldsV1(stateV1, SAVED_AT)),
+    );
+    expect(upgraded?.state.activeSetlistId).toBeNull();
+    expect(upgraded?.state.setlistIndex).toBeNull();
+    expect(upgraded?.state.setlistPlayback).toEqual(
+      createVjSetlistPlayback(false),
+    );
     expect(upgraded?.state.tempo).toEqual({
       bpm: 128,
       downbeatAt: SAVED_AT,

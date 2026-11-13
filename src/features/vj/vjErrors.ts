@@ -84,7 +84,8 @@ export const VJ_CONNECTION_REFUSAL_KEY: Record<VjConnectionRefusal, string> = {
   stopped: "vj:connection.refused.stopped",
 };
 
-/** The number each reason names in its line as {max}. */
+/** The number each reason names in its line as {max}. A set list step length
+ *  names its seconds bounds as {min} and {max}. */
 export const VJ_ERROR_MAX: Partial<
   Record<VjRefusalCode | VjSocketErrorCode, number>
 > = {
@@ -99,6 +100,7 @@ export const VJ_ERROR_MAX: Partial<
   VJ_SETLIST_NAME_TOO_LONG: VJ_LIMITS.setlistNameMax,
   VJ_SETLIST_LIMIT_REACHED: VJ_LIMITS.setlistsMax,
   VJ_SETLIST_FULL: VJ_LIMITS.setlistItemsMax,
+  VJ_SETLIST_STEP_DURATION_INVALID: VJ_LIMITS.setlistStepSecondsMax,
   vj_effects_too_many: VJ_LIMITS.effectsOnMax,
   vj_overrides_too_many: VJ_LIMITS.screenOverridesMax,
   vj_countdown_label_too_long: VJ_LIMITS.countdownLabelMax,
@@ -109,6 +111,7 @@ export const VJ_ERROR_MIN: Partial<
   Record<VjRefusalCode | VjSocketErrorCode, number>
 > = {
   VJ_CLIP_LOOP_INVALID: VJ_LIMITS.loopMinLengthMs,
+  VJ_SETLIST_STEP_DURATION_INVALID: VJ_LIMITS.setlistStepSecondsMin,
 };
 
 /** Contract 8.7 and C 7.11: the state in these acks is applied and nothing shows. */

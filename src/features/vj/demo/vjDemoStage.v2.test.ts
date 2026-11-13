@@ -50,12 +50,16 @@ const library: VjDemoLibraryLookup = {
       ? { isFavorite: clipId === CLIP_GRID }
       : null,
   readSceneLook: () => null,
-  readSetlistItem: () => null,
-  setlistItemCount: () => null,
+  readSetlist: () => null,
+  readSetlistFollow: () => null,
 };
 
 function run(stage: VjDemoStage, event: VjDemoStageEvent, now = 1_000) {
-  return reduceVjDemoStage(stage, event, { now, library });
+  return reduceVjDemoStage(stage, event, {
+    now,
+    library,
+    writeSetlistLooping: () => null,
+  });
 }
 
 function freshStage(): VjDemoStage {

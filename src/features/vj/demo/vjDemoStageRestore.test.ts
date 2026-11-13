@@ -2,12 +2,18 @@ import { describe, expect, it } from "vitest";
 import {
   VJ_LIMITS,
   canonicalVjStageState,
+  createVjSetlistPlayback,
   createVjStageState,
   type VjEffectId,
+  type VjSetlistRead,
+  type VjSetlistReadPosition,
   type VjStageState,
 } from "../../../shared/contracts/vj";
 import type { VjDemoLibraryLookup } from "./vjDemoCommandKit";
-import { restoreVjDemoStage } from "./vjDemoStageRestore";
+import {
+  restoreVjDemoStage,
+  restoreVjDemoStageWithSetlist,
+} from "./vjDemoStageRestore";
 
 const STAGE_EPOCH = "11111111-1111-4111-8111-111111111111";
 const OLD_STAGE_EPOCH = "99999999-9999-4999-8999-999999999999";
@@ -20,12 +26,51 @@ const MIX_CLIP_ID = "33333333-3333-4333-8333-333333333333";
 const EXCLUDED_CLIP_ID = "66666666-6666-4666-8666-666666666666";
 const OUTSIDE_CLIP_ID = "88888888-8888-4888-8888-888888888888";
 const SETLIST_ID = "77777777-7777-4777-8777-777777777777";
+const FOUR_ITEM_IDS = [
+  "c0000000-0000-4000-8000-0000000000a1",
+  "c0000000-0000-4000-8000-0000000000a2",
+  "c0000000-0000-4000-8000-0000000000a3",
+  "c0000000-0000-4000-8000-0000000000a4",
+];
 
 interface DemoLibraryParts {
   packs?: Map<string, { eventId: string | null }>;
   clipIds?: string[];
   packClipIds?: string[];
-  setlistItemCount?: number | null;
+  /** The item ids of SETLIST_ID (clip steps); absent means no such set list. */
+  setlistItemIds?: string[];
+  isSetlistLooping?: boolean;
+}
+
+/** SETLIST_ID read as the demo store answers it, every step a clip step. */
+function readPartsSetlist(
+  parts: DemoLibraryParts,
+  setlistId: string,
+  position: VjSetlistReadPosition,
+): VjSetlistRead | null {
+  const itemIds = parts.setlistItemIds;
+  if (setlistId !== SETLIST_ID || itemIds === undefined) return null;
+  const index =
+    position.kind === "index" && position.index < itemIds.length
+      ? position.index
+      : null;
+  const itemId = index === null ? undefined : itemIds[index];
+  return {
+    setlistId,
+    isLooping: parts.isSetlistLooping ?? false,
+    stepDuration: { kind: "seconds", value: 8 },
+    itemIds,
+    step:
+      itemId === undefined || index === null
+        ? null
+        : {
+            kind: "clip",
+            itemId,
+            index,
+            clipId: CLIP_ID,
+            duration: { kind: "seconds", value: 8 },
+          },
+  };
 }
 
 /** A library that knows only the given packs, clips and set list. */
@@ -47,9 +92,14 @@ function demoLibrary(parts: DemoLibraryParts = {}): VjDemoLibraryLookup {
         : new Set<string>(),
     readPackClipForAdvance: () => null,
     readSceneLook: () => null,
-    readSetlistItem: () => null,
-    setlistItemCount: (setlistId) =>
-      setlistId === SETLIST_ID ? (parts.setlistItemCount ?? null) : null,
+    readSetlist: (setlistId, position) =>
+      readPartsSetlist(parts, setlistId, position),
+    readSetlistFollow: (setlistId) => {
+      const read = readPartsSetlist(parts, setlistId, { kind: "count" });
+      return read === null
+        ? null
+        : { itemIds: read.itemIds, isLooping: read.isLooping };
+    },
   };
 }
 
@@ -61,7 +111,7 @@ function allFoundLibrary(
     packs: new Map([[PACK_ID, { eventId }]]),
     clipIds: [CLIP_ID, MIX_CLIP_ID],
     packClipIds: [EXCLUDED_CLIP_ID],
-    setlistItemCount: 4,
+    setlistItemIds: FOUR_ITEM_IDS,
   });
 }
 
@@ -536,5 +586,159 @@ describe("restoreVjDemoStage adoption", () => {
   it("answers the fresh stage for a payload that is not an object", () => {
     const fresh = freshStage();
     expect(restoreVjDemoStage(fresh, "state", demoLibrary(), NOW)).toBe(fresh);
+  });
+});
+
+describe("restoreVjDemoStage set list playback (sequences contract 3.8, 9)", () => {
+  const RUNNING = {
+    status: "playing",
+    itemId: "stale",
+    isFlashConfirmed: true,
+    stepStartedAt: NOW - 2_000,
+    stepEndsAt: NOW + 6_000,
+    stepDurationMs: 8_000,
+    pausedRemainingMs: null,
+    isLooping: false,
+  };
+
+  function restoredWith(
+    setlistPlayback: unknown,
+    overrides: Record<string, unknown> = {},
+    library: VjDemoLibraryLookup = allFoundLibrary(),
+  ) {
+    return restoreVjDemoStageWithSetlist(
+      freshStage(),
+      v2Restore({ setlistPlayback, ...overrides }),
+      library,
+      NOW,
+    );
+  }
+
+  it("a playing run resumes from its step end with the item read at the sent index, the flash flag reset", () => {
+    const restored = restoredWith(
+      RUNNING,
+      {},
+      demoLibrary({
+        setlistItemIds: FOUR_ITEM_IDS,
+        isSetlistLooping: true,
+      }),
+    );
+    expect(restored.state.setlistIndex).toBe(2);
+    expect(restored.state.setlistPlayback).toEqual({
+      status: "playing",
+      itemId: FOUR_ITEM_IDS[2],
+      isFlashConfirmed: false,
+      stepStartedAt: NOW - 2_000,
+      stepEndsAt: NOW + 6_000,
+      stepDurationMs: 8_000,
+      pausedRemainingMs: null,
+      isLooping: true,
+    });
+    expect(restored.setlistRead?.itemIds).toEqual(FOUR_ITEM_IDS);
+  });
+
+  it("a step end already past is kept, so the timer fires at once and advances one step", () => {
+    const restored = restoredWith({
+      ...RUNNING,
+      stepStartedAt: NOW - 20_000,
+      stepEndsAt: NOW - 12_000,
+    });
+    expect(restored.state.setlistPlayback).toMatchObject({
+      status: "playing",
+      stepEndsAt: NOW - 12_000,
+    });
+  });
+
+  it("a playing record that fails its clock check restores as manual with no clock", () => {
+    for (const broken of [
+      { ...RUNNING, stepEndsAt: NOW + 7_000 },
+      { ...RUNNING, stepDurationMs: 0, stepStartedAt: NOW + 6_000 },
+      {
+        ...RUNNING,
+        stepStartedAt: NOW + 700_000,
+        stepEndsAt: NOW + 708_000,
+      },
+    ]) {
+      expect(restoredWith(broken).state.setlistPlayback).toEqual({
+        ...createVjSetlistPlayback(false),
+        itemId: FOUR_ITEM_IDS[2],
+      });
+    }
+  });
+
+  it("a paused run keeps its full length and time left", () => {
+    const restored = restoredWith({
+      ...RUNNING,
+      status: "paused",
+      stepStartedAt: null,
+      stepEndsAt: null,
+      pausedRemainingMs: 3_000,
+    });
+    expect(restored.state.setlistPlayback).toMatchObject({
+      status: "paused",
+      stepDurationMs: 8_000,
+      pausedRemainingMs: 3_000,
+      stepEndsAt: null,
+    });
+  });
+
+  it("takenOver, finished and needsFlashConsent restore with no clock and the length kept", () => {
+    for (const status of ["takenOver", "finished", "needsFlashConsent"]) {
+      expect(
+        restoredWith({ ...RUNNING, status }).state.setlistPlayback,
+      ).toMatchObject({
+        status,
+        stepStartedAt: null,
+        stepEndsAt: null,
+        stepDurationMs: 8_000,
+        pausedRemainingMs: null,
+        isFlashConfirmed: false,
+      });
+    }
+  });
+
+  it("an unknown status reads as manual, and a record saved before sequences gets the default", () => {
+    expect(
+      restoredWith({ ...RUNNING, status: "spinning" }).state.setlistPlayback
+        .status,
+    ).toBe("manual");
+    const beforeSequences = v2Restore();
+    const restored = restoreVjDemoStage(
+      freshStage(),
+      beforeSequences,
+      allFoundLibrary(),
+      NOW,
+    );
+    expect(restored.setlistPlayback).toEqual({
+      ...createVjSetlistPlayback(false),
+      itemId: FOUR_ITEM_IDS[2],
+    });
+  });
+
+  it("an index past the list keeps the set list armed with no item", () => {
+    const restored = restoredWith(RUNNING, { setlistIndex: 9 });
+    expect(restored.state.activeSetlistId).toBe(SETLIST_ID);
+    expect(restored.state.setlistIndex).toBeNull();
+    expect(restored.state.setlistPlayback.itemId).toBeNull();
+  });
+
+  it("a set list the library lacks restores no selection and the default playback", () => {
+    const restored = restoredWith(RUNNING, {}, demoLibrary());
+    expect(restored.state.activeSetlistId).toBeNull();
+    expect(restored.state.setlistIndex).toBeNull();
+    expect(restored.state.setlistPlayback).toEqual(
+      createVjSetlistPlayback(false),
+    );
+    expect(restored.setlistRead).toBeNull();
+  });
+
+  it("a payload without a set list restores the default playback whatever it sent", () => {
+    const restored = restoredWith(RUNNING, {
+      activeSetlistId: null,
+      setlistIndex: null,
+    });
+    expect(restored.state.setlistPlayback).toEqual(
+      createVjSetlistPlayback(false),
+    );
   });
 });

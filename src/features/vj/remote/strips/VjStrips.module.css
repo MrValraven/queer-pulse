@@ -294,12 +294,14 @@
   padding-inline: 0;
 }
 
-/* ── Set list group: position between Previous scene and Next scene ── */
+/* ── Sequence group: pinned in Save scene's place while a sequence is
+   active; the play chip and the position sit between Previous step and
+   Next step. ── */
 .setlistGroup {
+  position: relative;
   display: inline-flex;
   flex: none;
   align-items: center;
-  overflow: hidden;
 }
 
 .setlistPosition {
@@ -310,6 +312,19 @@
   color: var(--qs-text-mute);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+/* Under 25rem of row the position text leaves the eye and stays for screen
+   readers, so Previous, Play and Next keep their room. */
+@container (max-inline-size: 25rem) {
+  .setlistPosition {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 .divider {

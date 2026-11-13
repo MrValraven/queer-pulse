@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { CreateVjClipBody } from "../../../shared/contracts/vj";
+import type {
+  CreateVjClipBody,
+  CreateVjSetlistBody,
+  SetVjSetlistItemsBody,
+} from "../../../shared/contracts/vj";
 
 const client = vi.hoisted(() => ({
   apiGet: vi.fn<(path: string) => Promise<unknown>>(),
@@ -19,6 +23,7 @@ vi.mock("../../../shared/api/client", () => ({
 
 import {
   createVjClip,
+  createVjSetlist,
   getVjClipsMedia,
   getVjPackEvent,
   getVjPackMedia,
@@ -30,6 +35,7 @@ import {
   setVjPackEvent,
   setVjSetlistItems,
   updateVjClip,
+  updateVjSetlist,
 } from "./vj.api";
 
 describe("vj.api", () => {
@@ -141,11 +147,56 @@ describe("vj.api", () => {
     );
   });
 
-  it("replaces a set list's items with PUT", async () => {
-    await setVjSetlistItems("s/1", { sceneIds: ["x", "x"] });
+  it("writes a set list's steps with PUT, ids kept and lengths as given", async () => {
+    const body: SetVjSetlistItemsBody = {
+      items: [
+        { id: "item-1", kind: "scene", sceneId: "scene-1", duration: null },
+        {
+          kind: "clip",
+          clipId: "clip-1",
+          duration: { kind: "beats", value: 16 },
+        },
+        { kind: "scene", sceneId: "scene-1" },
+      ],
+    };
+    await setVjSetlistItems("s/1", body);
     expect(client.apiPut).toHaveBeenCalledWith(
       "/admin/vj/setlists/s%2F1/items",
-      { sceneIds: ["x", "x"] },
+      body,
     );
+    const sent = client.apiPut.mock.calls[0]?.[1] as Record<string, unknown>;
+    expect(Object.keys(sent)).toEqual(["items"]);
+  });
+
+  it("patches a set list with only the fields the caller sets", async () => {
+    await updateVjSetlist("s/1", { isLooping: true });
+    expect(client.apiPatch).toHaveBeenLastCalledWith(
+      "/admin/vj/setlists/s%2F1",
+      { isLooping: true },
+    );
+    await updateVjSetlist("s1", {
+      name: "Late set",
+      stepDuration: { kind: "seconds", value: 12 },
+    });
+    expect(client.apiPatch).toHaveBeenLastCalledWith("/admin/vj/setlists/s1", {
+      name: "Late set",
+      stepDuration: { kind: "seconds", value: 12 },
+    });
+  });
+
+  it("creates a set list from steps with Loop and a default length", async () => {
+    const body: CreateVjSetlistBody = {
+      name: "Friday set",
+      items: [{ kind: "clip", clipId: "clip-1", duration: null }],
+      isLooping: true,
+      stepDuration: { kind: "beats", value: 8 },
+    };
+    await createVjSetlist(body);
+    expect(client.apiPost).toHaveBeenCalledWith("/admin/vj/setlists", body);
+    await createVjSetlist({ name: "From scenes", sceneIds: ["scene-1"] });
+    expect(client.apiPost).toHaveBeenLastCalledWith("/admin/vj/setlists", {
+      name: "From scenes",
+      sceneIds: ["scene-1"],
+    });
   });
 });

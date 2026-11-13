@@ -7,17 +7,17 @@ import type { Catalog } from "../../types";
 export const forBusinesses: Catalog = {
   "meta.title": "QueerPulse para pequenos negócios",
   "meta.description":
-    "Lista o teu negócio onde clientes queer procuram, gere-o com a tua equipa e fala com clientes num só sítio.",
+    "Põe o teu negócio onde as pessoas queer procuram, gere-o com a tua equipa e fala com a clientela num só sítio.",
 
   // Hero
   "hero.eyebrow": "Para pequenos negócios",
   "hero.title":
     "Que te encontrem as pessoas <em>para quem abriste a porta</em>",
   "hero.lede":
-    "Põe o teu café, loja, salão ou serviço onde as pessoas queer procuram sítios para ir. O anúncio é teu, geres com a tua equipa e respondes a clientes a partir de uma só caixa de mensagens do negócio.",
+    "Põe o teu café, loja, salão ou serviço onde as pessoas queer procuram sítios para ir. O anúncio é teu, geres-o com a tua equipa e respondes a clientes a partir de uma só caixa de mensagens do negócio.",
   "hero.frame.card": "Exemplo de cartão do diretório de {name}, um café",
   "hero.frame.review":
-    "Exemplo de avaliação com a resposta de quem gere o negócio logo abaixo",
+    "Exemplo de avaliação com a resposta da pessoa proprietária logo abaixo",
   "hero.frame.thread":
     "Exemplo de conversa na caixa de mensagens do negócio, com o primeiro nome de quem respondeu",
   "cta.listBusiness": "Regista o teu negócio",
@@ -36,27 +36,27 @@ export const forBusinesses: Catalog = {
     "Uma pergunta numa caixa, uma reserva noutra e uma resposta que ninguém da equipa viu.",
   "scatter.reviews.title": "Avaliações em vários sites",
   "scatter.reviews.body":
-    "Palavras simpáticas e outras difíceis, espalhadas por sites a que respondes um a um.",
+    "Palavras simpáticas e outras difíceis, espalhadas por sites onde respondes uma a uma.",
 
   // How it works here
   "walkthrough.title": "Um anúncio, gerido <em>como geres o teu espaço</em>",
   "walkthrough.lede":
-    "Quatro coisas que fazes aqui, cada uma com a peça do QueerPulse que a faz.",
+    "Quatro coisas que fazes aqui, cada uma com a parte da QueerPulse que trata dela.",
   "walkthrough.list.title": "Regista o teu negócio, ou reivindica-o",
   "walkthrough.list.body":
     "Começa por onde te encontram: um lugar que se visita, só online ou itinerante. A nossa equipa lê cada anúncio antes de ficar publicado. Se alguém já adicionou o teu negócio, reivindica-o na página dele e a nossa equipa analisa o pedido.",
   "walkthrough.list.frame":
-    "Exemplo da primeira pergunta do formulário, onde é que as pessoas o encontram",
+    "Exemplo da primeira pergunta do formulário do anúncio: onde é que as pessoas o encontram",
   "walkthrough.tags.title": "Mostra o que é só teu",
   "walkthrough.tags.body":
-    "Escolhe os destaques que as pessoas procuram, diz por palavras tuas quem é dono e gere o negócio (mulheres, pessoas trans, não binárias, BIPOC ou migrantes) e responde às perguntas de acessibilidade com franqueza, para que as pessoas possam planear a visita.",
+    "Escolhe os destaques que as pessoas procuram, diz por palavras tuas de quem é e quem gere o negócio (mulheres, pessoas trans, não binárias, BIPOC ou migrantes) e responde às perguntas de acessibilidade com clareza, para que as pessoas possam planear a visita.",
   "walkthrough.tags.frame":
     "Exemplo das etiquetas de um anúncio: categoria, quem o gere, destaques e acessibilidade",
   "walkthrough.team.title": "Gere-o em equipa",
   "walkthrough.team.body":
     "Convida pessoas de confiança para te ajudarem a manter o anúncio em dia. Podem editar tudo sobre o negócio, e os teus dados pessoais e quem pode editar ficam contigo. A tua página também pode mostrar quem lá trabalha.",
   "walkthrough.team.frame":
-    "Exemplo da lista de cogestores: uma pessoa que já edita e um convite à espera",
+    "Exemplo da lista de quem ajuda a gerir: uma pessoa que já edita e um convite à espera",
   "walkthrough.team.rosterTitle": "Quem pode editar este anúncio",
   "walkthrough.inbox.title": "Responde a clientes numa só caixa",
   "walkthrough.inbox.body":
@@ -79,7 +79,7 @@ export const forBusinesses: Catalog = {
   "allInOne.before.reviews": "Avaliações respondidas site a site",
   "allInOne.after.listing":
     "Um anúncio que é teu, com os teus destaques, quem o gere e as tuas respostas de acessibilidade",
-  "allInOne.after.team": "Cogestores que o editam contigo",
+  "allInOne.after.team": "Quem ajuda a gerir e o edita contigo",
   "allInOne.after.inbox":
     "Uma caixa de mensagens do negócio a que a equipa responde em conjunto",
   "allInOne.after.replies": "A tua resposta, logo abaixo de qualquer avaliação",
@@ -95,7 +95,7 @@ export const forBusinesses: Catalog = {
   "safety.claims.title":
     "Reivindicações e contestações vão para a nossa equipa",
   "safety.claims.body":
-    "Geres um negócio que outra pessoa listou? Reivindica-o, a nossa equipa analisa o pedido e podes acompanhar o estado dele. Qualquer pessoa da comunidade pode contestar um anúncio, e a nossa equipa analisa isso também.",
+    "Geres um negócio que outra pessoa adicionou? Reivindica-o, a nossa equipa analisa o pedido e podes acompanhar o estado dele. Qualquer pessoa da comunidade pode contestar um anúncio, e a nossa equipa analisa isso também.",
   "safety.replies.title": "O teu lado de cada avaliação",
   "safety.replies.body":
     "Responde uma vez a qualquer avaliação do teu negócio. Quem lê a avaliação vê as tuas palavras logo abaixo.",
@@ -103,25 +103,25 @@ export const forBusinesses: Catalog = {
   // Questions
   "faq.whoSees.question": "Quem pode ver o meu anúncio?",
   "faq.whoSees.answer":
-    "Depois de a nossa equipa o ler e de ficar publicado, qualquer pessoa da comunidade que explore o diretório o encontra. Escolhes como apareces nele: com o teu nome e papel, só com o papel ou <b>anónime</b>, visível só para a nossa equipa.",
+    "Depois de a nossa equipa o ler e de ficar publicado, qualquer pessoa da comunidade que explore o diretório o encontra. Escolhes como apareces nele: com o teu nome e papel, só com o papel ou <b>em anonimato</b>, visível só para a nossa equipa.",
   "faq.team.question": "Mais do que uma pessoa pode gerir o anúncio?",
   "faq.team.answer":
-    "Sim. Convida pessoas com quem tens ligação para cogestoras. Depois de aceitarem, podem editar o anúncio e responder à caixa de mensagens do negócio contigo. Só tu podes convidar pessoas ou retirar um lugar.",
+    "Sim. Convida pessoas das tuas conexões para te ajudarem a gerir. Depois de aceitarem, podem editar o anúncio e responder à caixa de mensagens do negócio contigo. Só tu podes convidar pessoas ou retirar um lugar.",
   "faq.noPremises.question": "Posso registar um negócio sem espaço físico?",
   "faq.noPremises.answer":
-    "Sim. Escolhe <b>Só online</b> para uma loja ou serviço a que as pessoas chegam por um site ou pelas redes sociais, ou <b>Itinerante</b> para visitas guiadas, cabeleireiros ao domicílio e tudo o que vai ter com os clientes. Dizes onde trabalhas, toda a Lisboa ou algumas freguesias, e as localidades onde também vais.",
-  "faq.alreadyListed.question": "Alguém já listou o meu negócio. E agora?",
+    "Sim. Escolhe <b>Só online</b> para uma loja ou serviço a que as pessoas chegam por um site ou pelas redes sociais, ou <b>Itinerante</b> para visitas guiadas, serviços de cabeleireiro ao domicílio e tudo o que vai ter com a clientela. Dizes onde trabalhas, toda a Lisboa ou algumas freguesias, e as localidades onde também vais.",
+  "faq.alreadyListed.question": "Alguém já adicionou o meu negócio. E agora?",
   "faq.alreadyListed.answer":
     "Reivindica-o na página dele. Ao reivindicar, aceitas o compromisso de acolhimento, e a nossa equipa analisa o pedido antes de o anúncio passar a ser teu. Podes acompanhar o estado nos pedidos que fizeste.",
 
   // Closing
-  "closing.title": "Abre as portas <em>no QueerPulse</em>",
+  "closing.title": "Abre as portas <em>na QueerPulse</em>",
   "closing.body":
     "O teu anúncio, a tua equipa e a tua caixa de mensagens, juntos num só sítio.",
 
   // Sample content (the fictional Café Andorinha)
   "sample.place.desc":
-    "Café, bolo e uma mesa comprida junto à janela. Traz um livro ou alguém amigo.",
+    "Café, bolo e uma mesa comprida junto à janela. Traz um livro ou uma pessoa amiga.",
   "sample.place.street": "Rua das Andorinhas 14",
   "sample.place.photoAlt": "Um café luminoso com mesas junto à janela",
   "sample.online.desc":
@@ -134,12 +134,12 @@ export const forBusinesses: Catalog = {
   "sample.review.text":
     "vim beber um café e fiquei a tarde toda na mesa comprida junto à janela e da segunda vez já sabiam o meu nome",
   "sample.review.reply":
-    "obrigada Marisa!! a mesa da janela é tua sempre que quiseres, até breve",
+    "agradecemos imenso Marisa!! a mesa da janela é tua sempre que quiseres, até breve",
   "sample.thread.ask":
     "olá! há acesso sem degraus? a minha amiga usa cadeira de rodas e queríamos ir no sábado",
   "sample.thread.answer":
     "olá! sim a porta é ao nível da rua e há espaço na mesa comprida, guardamos para vocês",
-  "sample.thread.thanks": "que bom obrigada, até sábado",
+  "sample.thread.thanks": "que bom agradeço imenso, até sábado",
   "sample.team.ask":
     "olá podíamos fazer um pequeno lançamento de livro no café num sábado à noite?",
   "sample.team.colleague":

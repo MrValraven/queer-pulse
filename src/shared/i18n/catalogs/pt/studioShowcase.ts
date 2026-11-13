@@ -52,9 +52,9 @@ export const studioShowcase: Catalog = {
   "council.member.akinDiallo.bio":
     "A única pessoa no conselho que ainda anda em digressão como artista. Programa a partir da estrada. Abstém-se de qualquer votação sobre os seus próprios lançamentos.",
   "council.member.akinDiallo.note":
-    "«Programei esta noite a partir de um camarim em Marseille. O conselho devia ter sempre alguém com <em>o mesmo cansaço de quem anda na estrada a tocar</em>»",
+    "«Programei esta noite a partir de um camarim em Marselha. O conselho devia ter sempre alguém com <em>o mesmo cansaço de quem anda na estrada a tocar</em>»",
   "council.member.helenaPinto.bio":
-    "Vem dos coros comunitários e trouxe-os todos consigo. Programa o coral e o congregacional. Entrou no conselho por eleição na última assembleia.",
+    "Vem dos coros comunitários e trouxe-os todos consigo. Programa o coral e o congregacional. Foi eleita na última assembleia.",
   "council.member.helenaPinto.note":
     "«Primeiro mês no conselho. Continuo a querer pedir desculpa por escolher tanta música coral. Depois lembro-me: <em>mais ninguém o vai fazer</em>, e os coros também precisam de ser ouvidos»",
 
@@ -153,7 +153,7 @@ export const studioShowcase: Catalog = {
   "triage.sub.badge.trackCount_other": "{count} faixas",
   "triage.sub.badge.leadSheetAttached": "Partitura com cifras anexada",
   "triage.sub.badge.lyricsInLanguage": "Letra em {language}",
-  "triage.sub.badge.claimedByYou": "Reclamada · por ti",
+  "triage.sub.badge.claimedByYou": "Assumida · por ti",
   "triage.sub.badge.satbScores": "Partituras SATB",
   "triage.sub.badge.mixLength": "Mix · {minutes} min",
   "triage.sub.badge.cueSheetAttached": "Alinhamento anexado",
@@ -184,7 +184,7 @@ export const studioShowcase: Catalog = {
     "dois minutos e quarenta e seis segundos. um piano e uma pequena fogueira. conheces-me como quem traduziu o disco da Mariana e queria experimentar o outro lado, só desta vez",
 
   // ── Triage: detail panel (StudioTriageDetail) ──
-  "triage.detail.claim.headline": "Reclamada por {name}",
+  "triage.detail.claim.headline": "Assumida por {name}",
   "triage.detail.claim.note": "És tu quem responde a esta.",
   "triage.detail.claim.secondReader": "Segunda audição de {name} agendada.",
   "triage.detail.flagged.bridge": "a ponte aos 2:14 é que é",
@@ -300,7 +300,7 @@ export const studioShowcase: Catalog = {
   "notifications.items.newSingle.title":
     "<strong>{name}</strong> lançou um single novo, <em>{track}</em>",
   "notifications.items.newSingle.meta":
-    "De alguém que sustentas com {amount}/mês · grátis para quem sustenta",
+    "De artista que apoias com {amount}/mês · grátis para apoiantes",
   "notifications.items.collectionAdd.title":
     "<strong>{name}</strong> pôs numa coleção uma faixa a que deste gorjeta: <em>{collection}</em>",
   "notifications.items.collectionAdd.meta_one":
@@ -342,7 +342,7 @@ export const studioShowcase: Catalog = {
 
   // ── Press: contact (StudioPressPage) ──
   "press.contact.body":
-    "A Mariana trata da própria imprensa. Sem intermediários. <em>{email}</em> · costuma responder no prazo de um dia.",
+    "É a própria Mariana que trata da imprensa. Sem intermediários. <em>{email}</em> · costuma responder no prazo de um dia.",
 
   // ── Receipt: card and note (StudioReceiptPage) ──
   "receipt.coverAlt": "Capa de {title}",
@@ -358,7 +358,7 @@ export const studioShowcase: Catalog = {
     "{name}, a fechar o set de quarta-feira às {time}",
   "offAir.hero.nextShow.title": "{show} com <em>{host}</em>",
   "offAir.hero.nextShow.description":
-    "Ambient e composição trans · 90 minutos · legendas ao vivo",
+    "Ambient e pessoas compositoras trans · 90 minutos · legendas ao vivo",
 
   // ── Off air: card meta line (StudioOffAirShelves, StudioOffAirHero) ──
   "offAir.meta.kind.album": "Álbum",
@@ -387,7 +387,7 @@ export const studioShowcase: Catalog = {
   // ── Sheet store: more from the transcriber (StudioSheetAlso) ──
   "sheetStore.also.format.piano": "piano",
   "sheetStore.also.format.satb": "SATB",
-  "sheetStore.also.format.leadSheet": "partitura principal",
+  "sheetStore.also.format.leadSheet": "melodia e cifra",
   "sheetStore.also.format.guitarTab": "tablatura de guitarra",
 
   // ── Set: hero (StudioSetPage) ──
@@ -395,16 +395,16 @@ export const studioShowcase: Catalog = {
   "set.hero.length_one": "{count} faixa · {minutes} min",
   "set.hero.length_other": "{count} faixas · {minutes} min",
   "set.hero.blurb":
-    "A hora entre o pôr do sol e a segunda garrafa. O quarto set Vespertina de {name}, gravado de uma só vez diante de quarenta pessoas, com cada artista do alinhamento creditado pelo nome.",
+    "A hora entre o pôr do sol e a segunda garrafa. O quarto set Vespertina de {name}, gravado de uma só vez diante de quarenta pessoas, com o nome de cada artista do alinhamento nos créditos.",
 
   // ── Set: saved item (StudioSetPage) ──
   "set.saved.title": "Set do Studio",
   "set.saved.meta": "Set",
   "set.saved.description":
-    "Um set ao vivo, noite dentro, gravado de uma só vez e sem cortes.",
+    "Um set ao vivo no estúdio, noite dentro, gravado de uma só vez e sem cortes.",
 
   // ── Set submission: uploaded file (StudioSetMatcher) ──
-  "setSubmission.file.loudness": "sonoridade {value}",
+  "setSubmission.file.loudness": "loudness {value}",
 
   // ── Set submission: unidentified tracks (StudioSetMatcher) ──
   "setSubmission.tracks.unknownBootleg": "edit pirata desconhecido",

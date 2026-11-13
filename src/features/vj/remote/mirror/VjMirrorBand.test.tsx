@@ -338,3 +338,80 @@ describe("VjMirrorBand", () => {
     });
   });
 });
+
+describe("VjMirrorBand sequence status", () => {
+  it("says a taken over sequence stopped and opens it on tap", async () => {
+    const onOpenSequence = vi.fn();
+    await renderBand({
+      nextUp: {
+        kind: "setlist",
+        item: {
+          id: "item-2",
+          position: 1,
+          kind: "scene",
+          sceneId: "scene-2",
+          clipId: null,
+          duration: null,
+        },
+        position: 2,
+        total: 4,
+      },
+      nextUpTitle: "Pink tunnel",
+      sequenceStatus: { kind: "takenOver" },
+      onOpenSequence,
+    });
+    expect(screen.queryByText("Step 2 of 4: Pink tunnel")).toBeNull();
+    const statusButton = screen.getByRole("button", {
+      name: "Paused, tap to open",
+    });
+    fireEvent.click(statusButton);
+    expect(onOpenSequence).toHaveBeenCalledTimes(1);
+    expect(
+      document.querySelector('[data-kind="takenOver"][aria-hidden="true"]'),
+    ).not.toBeNull();
+  });
+
+  it("names the flashing step it waits for", async () => {
+    await renderBand({
+      sequenceStatus: { kind: "waitingFlash", stepName: "Strobe drop" },
+      onOpenSequence: vi.fn(),
+    });
+    expect(
+      screen.getByRole("button", { name: "Waiting: Strobe drop flashes" }),
+    ).toBeInTheDocument();
+  });
+
+  it("a paused sequence keeps its ring with the time left", async () => {
+    await renderBand({
+      ring: { kind: "setlist", progress: 0.5, msLeft: 4000, isPaused: true },
+      sequenceStatus: { kind: "paused" },
+      onOpenSequence: vi.fn(),
+    });
+    expect(
+      screen.getByRole("button", { name: "Sequence paused" }),
+    ).toBeInTheDocument();
+    expect(
+      document.querySelector('[data-vj-mirror-ring="setlist"]'),
+    ).not.toBeNull();
+  });
+
+  it("a waiting quantized change still names what lands", async () => {
+    await renderBand({
+      frames: framesShowing(
+        stateWith({}),
+        stateWith({
+          liveClipId: NEON.id,
+          tempo: { ...BASE_STATE.tempo, quantize: "bar" },
+        }),
+      ),
+      pendingClip: NEON,
+      pendingQuantize: "bar",
+      sequenceStatus: { kind: "finished" },
+      onOpenSequence: vi.fn(),
+    });
+    expect(screen.getByText("Neon rain")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Sequence finished" }),
+    ).toBeNull();
+  });
+});

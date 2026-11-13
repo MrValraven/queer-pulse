@@ -32,6 +32,8 @@ import type {
   VjSetTempoPayload,
   VjSetTransitionPayload,
   VjSetlistSelectPayload,
+  VjSetlistSetLoopingPayload,
+  VjSetlistSetPlayingPayload,
   VjSetlistStepPayload,
   VjStageFrame,
   VjSwapMixPayload,
@@ -56,6 +58,8 @@ export type {
   VjRecallScenePayload,
   VjSetlistSelectPayload,
   VjSetlistStepPayload,
+  VjSetlistSetPlayingPayload,
+  VjSetlistSetLoopingPayload,
   VjSetCountdownPayload,
   VjSetLogoPayload,
   VjSetEventCardPayload,
@@ -124,6 +128,14 @@ export interface VjClientFrameMap {
     payload: VjSetlistStepPayload;
     success: VjCommandSuccess;
   };
+  "stage:setlistSetPlaying": {
+    payload: VjSetlistSetPlayingPayload;
+    success: VjCommandSuccess;
+  };
+  "stage:setlistSetLooping": {
+    payload: VjSetlistSetLoopingPayload;
+    success: VjCommandSuccess;
+  };
   "stage:setCountdown": {
     payload: VjSetCountdownPayload;
     success: VjCommandSuccess;
@@ -149,7 +161,7 @@ export interface VjClientFrameMap {
 
 /** Every acked frame; screen:status goes through sendScreenStatus. */
 export type VjClientFrameName = keyof VjClientFrameMap;
-/** The 20 stamped remote commands (C 9.3). */
+/** The 22 stamped remote commands (C 9.3). */
 export type VjCommandFrameName = VjRemoteCommandName;
 export type VjClientPayload<Name extends VjClientFrameName> =
   VjClientFrameMap[Name]["payload"];

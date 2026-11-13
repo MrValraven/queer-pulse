@@ -4,8 +4,11 @@
 // restore readers it composes (restoredVjEffects, restoredVjTempo,
 // restoredVjTransition, restoredVjOverlay, restoredVjCountdown,
 // restoredVjLogo, restoredVjEventCard, restoredVjMix, restoredVjShuffle).
-// The payload goes through upgradeVjStageFieldsV1 first, so a v1-shaped
-// snapshot seeds a v2 stage. Each field is read on its own with the command
+// The payload goes through upgradeVjStageFieldsV1 and then
+// upgradeVjStageFieldsV2, so a v1-shaped or pre-sequences snapshot seeds a
+// current stage. The set list is read at the sent index (sequences contract
+// 9), and its playback comes from restoredVjSetlistPlayback checked against
+// that read. Each field is read on its own with the command
 // field rules: a bad one takes its default, and an id the library does not
 // find is dropped. The library answers synchronously, so the backend's
 // separate lookup step folds into the reads below.
@@ -27,8 +30,11 @@ import {
   VJ_TRANSITION_IDS,
   canonicalVjStageState,
   createVjStageState,
+  restoredVjSetlistPlayback,
   roundVjAmount,
   upgradeVjStageFieldsV1,
+  upgradeVjStageFieldsV2,
+  vjSetlistIndexPosition,
   type VjCountdown,
   type VjEffects,
   type VjEventCard,
@@ -36,6 +42,9 @@ import {
   type VjLogo,
   type VjMix,
   type VjOverlay,
+  type VjSetlistPlayback,
+  type VjSetlistRead,
+  type VjSetlistReadPosition,
   type VjShuffle,
   type VjStageState,
   type VjTempo,
@@ -185,25 +194,67 @@ function restoredSourceOf(
   return restoredGeneratorOf(restore);
 }
 
+/** Where the restore reads its set list: the sent index when it is an index
+ *  a set list can hold, else the item count only. */
+function restoreSetlistPositionOf(
+  restore: Record<string, unknown>,
+): VjSetlistReadPosition {
+  const sentIndex = restore.setlistIndex;
+  if (
+    isNumberInRange(sentIndex, {
+      min: 0,
+      max: VJ_LIMITS.setlistItemsMax - 1,
+      isInteger: true,
+    })
+  ) {
+    return vjSetlistIndexPosition(sentIndex, false);
+  }
+  return { kind: "count" };
+}
+
+/** The restored set list and its playback. */
+interface VjRestoredSetlist {
+  activeSetlistId: string | null;
+  setlistIndex: number | null;
+  setlistPlayback: VjSetlistPlayback;
+}
+
 /** The restored set list: kept when the library has it; an index that is no
- *  integer, or at or past the item count, becomes null. */
+ *  integer, or at or past the item count, becomes null; the playback is
+ *  restoredVjSetlistPlayback against the read (the default with none, so a
+ *  cleared selection never keeps a playback). */
 function restoredSetlistOf(
   restore: Record<string, unknown>,
-  setlistId: string | null,
-  library: VjDemoLibraryLookup,
-): { activeSetlistId: string | null; setlistIndex: number | null } {
-  if (setlistId === null) return { activeSetlistId: null, setlistIndex: null };
-  const itemCount = library.setlistItemCount(setlistId);
-  if (itemCount === null) return { activeSetlistId: null, setlistIndex: null };
+  read: VjSetlistRead | null,
+  now: number,
+): VjRestoredSetlist {
+  if (read === null) {
+    return {
+      activeSetlistId: null,
+      setlistIndex: null,
+      setlistPlayback: restoredVjSetlistPlayback(restore.setlistPlayback, {
+        read: null,
+        setlistIndex: null,
+        now,
+      }),
+    };
+  }
   const sentIndex = restore.setlistIndex;
-  const isIndexKept = isNumberInRange(sentIndex, {
+  const setlistIndex = isNumberInRange(sentIndex, {
     min: 0,
-    max: itemCount - 1,
+    max: read.itemIds.length - 1,
     isInteger: true,
-  });
+  })
+    ? sentIndex
+    : null;
   return {
-    activeSetlistId: setlistId,
-    setlistIndex: isIndexKept ? sentIndex : null,
+    activeSetlistId: read.setlistId.toLowerCase(),
+    setlistIndex,
+    setlistPlayback: restoredVjSetlistPlayback(restore.setlistPlayback, {
+      read,
+      setlistIndex,
+      now,
+    }),
   };
 }
 
@@ -397,20 +448,33 @@ function restoredShuffleOf(
   };
 }
 
+/** A restored stage with the set list read it was checked against (the
+ *  stage keeps its item ids as setlistItemIds, sequences contract 5.4). */
+export interface VjDemoRestoredStage {
+  state: VjStageState;
+  /** Null when the payload names no set list or the library lacks it. */
+  setlistRead: VjSetlistRead | null;
+}
+
 /** Contract 7.13 adoption: revision 1, clipSequence 1, the fresh stageEpoch,
  *  overrides {}, history [liveClipId] or [], liveSince now when a source is
- *  live, updatedAt now, canonical. A payload that is not an object restores
- *  nothing and answers `fresh` as it is. */
-export function restoreVjDemoStage(
+ *  live, updatedAt now, canonical, and the set list read at the sent index.
+ *  A payload that is not an object restores nothing and answers `fresh` as
+ *  it is. */
+export function restoreVjDemoStageWithSetlist(
   fresh: VjStageState,
   restore: unknown,
   library: VjDemoLibraryLookup,
   now: number,
-): VjStageState {
-  if (!isVjRecord(restore)) return fresh;
-  const upgraded = upgradeVjStageFieldsV1(restore, now);
+): VjDemoRestoredStage {
+  if (!isVjRecord(restore)) return { state: fresh, setlistRead: null };
+  const upgraded = upgradeVjStageFieldsV2(upgradeVjStageFieldsV1(restore, now));
   const defaults = createVjStageState(fresh.stageEpoch, now);
   const ids = restoreIdsOf(upgraded);
+  const setlistRead =
+    ids.setlistId === null
+      ? null
+      : library.readSetlist(ids.setlistId, restoreSetlistPositionOf(upgraded));
   const existingClipIds = library.existingClipIds(
     [ids.liveClipId, ids.mixClipId].filter(
       (clipId): clipId is string => clipId !== null,
@@ -424,7 +488,7 @@ export function restoreVjDemoStage(
   const source = restoredSourceOf(upgraded, ids.liveClipId, existingClipIds);
   const isSourceLive =
     source.liveClipId !== null || source.liveGeneratorId !== null;
-  return canonicalVjStageState({
+  const state = canonicalVjStageState({
     ...defaults,
     revision: 1,
     clipSequence: 1,
@@ -451,7 +515,18 @@ export function restoreVjDemoStage(
     ),
     recentClipIds: source.liveClipId === null ? [] : [source.liveClipId],
     screenOverrides: {},
-    ...restoredSetlistOf(upgraded, ids.setlistId, library),
+    ...restoredSetlistOf(upgraded, setlistRead, now),
     updatedAt: now,
   });
+  return { state, setlistRead };
+}
+
+/** Contract 7.13 adoption as restoreVjDemoStageWithSetlist, the state alone. */
+export function restoreVjDemoStage(
+  fresh: VjStageState,
+  restore: unknown,
+  library: VjDemoLibraryLookup,
+  now: number,
+): VjStageState {
+  return restoreVjDemoStageWithSetlist(fresh, restore, library, now).state;
 }

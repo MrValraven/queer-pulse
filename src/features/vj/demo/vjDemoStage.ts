@@ -1,15 +1,24 @@
 // The demo VJ stage: contract 7 (and v1 6.4 to 6.10) as a pure reducer, so
 // two demo tabs get the same frames, acks and codes the live gateway sends.
 // The client frames live in vjDemoStageFrames.ts; this file keeps the stage
-// shape, the timers, library changes and the offline prune.
+// shape, the timers (the sequence step timer included), library changes and
+// the offline prune.
 
 import {
+  VJ_LIMITS,
   createVjStageState,
+  vjSetlistTimerReadPosition,
+  vjSetlistTimerTransition,
   type VjLibraryChange,
+  type VjSetlistFollowRead,
   type VjStageCause,
   type VjStageState,
 } from "../../../shared/contracts/vj";
-import { applyVjDemoLibraryChange } from "./vjDemoLibraryEffects";
+import {
+  readVjDemoSetlistFollows,
+  vjDemoLibraryChangeState,
+} from "./vjDemoLibraryEffects";
+import { showVjDemoSetlistStep } from "./vjDemoSceneCommands";
 import {
   leadOf,
   pruneOfflineVjDemoScreens,
@@ -44,6 +53,7 @@ export type VjDemoStageEvent =
   | { kind: "strobeTimeout" }
   | { kind: "overlayTimeout" }
   | { kind: "countdownEnd" }
+  | { kind: "setlistTimer" }
   | { kind: "library"; change: VjLibraryChange }
   | { kind: "pruneOffline" };
 
@@ -60,6 +70,7 @@ export function createVjDemoStage(
     highestScreenNumber: 0,
     pendingApplyAt: null,
     lastMicAdoptionAt: null,
+    setlistItemIds: null,
   };
 }
 
@@ -117,20 +128,107 @@ function reduceTimer(
   return { stage: landing.stage, ack: null, outgoing: landing.outgoing };
 }
 
-/** Contract 7.10: relay to every attached tab, then land what the change
- *  leaves the stage in, cause `library`. */
+/** Sequences contract 5.7, the step timer's fire: read the next step of the
+ *  state that fired, then land its transition with cause `setlist` at the
+ *  step end it fired for. */
+function landSetlistTimer(
+  stage: VjDemoStage,
+  context: VjDemoStageContext,
+): VjDemoStageResult {
+  const fired = stage.state;
+  const position = vjSetlistTimerReadPosition(fired);
+  if (position === null || fired.activeSetlistId === null) {
+    return silent(stage);
+  }
+  const read = context.library.readSetlist(fired.activeSetlistId, position);
+  const transition = vjSetlistTimerTransition(fired, read);
+  if (transition === null) return silent(stage);
+  const shown = showVjDemoSetlistStep(transition.nextState, transition.show);
+  const landing = landVjDemoChange(
+    stage,
+    {
+      next: shown.next,
+      stamps: shown.stamps,
+      isLookSwitch: shown.isLookSwitch,
+      isImmediate: false,
+      setlistClock: transition.clock,
+      scheduledAt: fired.setlistPlayback.stepEndsAt,
+    },
+    "setlist",
+    null,
+    context.now,
+    [read],
+  );
+  return { stage: landing.stage, ack: null, outgoing: landing.outgoing };
+}
+
+/** The step timer's fire, never throwing out of the timer callback. The
+ *  backend re-reads at once when a newer state moved the index, the status,
+ *  the step end, Loop or the held item ids while its read was out; the demo
+ *  reads the library synchronously inside this one reduction, so the read
+ *  always answers the state it was made for and that check has nothing to
+ *  catch. A read or landing that throws lands nothing and asks the timer
+ *  to try again after setlistTimerRetryMs (nothing logged, the show holds
+ *  its step); the retry serves the same target, so a newer target replaces
+ *  it. */
+function reduceSetlistTimer(
+  stage: VjDemoStage,
+  context: VjDemoStageContext,
+): VjDemoStageResult {
+  try {
+    return landSetlistTimer(stage, context);
+  } catch {
+    return {
+      ...silent(stage),
+      setlistTimerRetryAt: context.now + VJ_LIMITS.setlistTimerRetryMs,
+    };
+  }
+}
+
+/** Sequences contract 5.4 after a library follow: the follow read of the
+ *  active set list gives its item ids; a set list the change left inactive
+ *  gives null; no read for it keeps the memory. */
+function withFollowedSetlistItemIds(
+  stage: VjDemoStage,
+  setlistReads: ReadonlyMap<string, VjSetlistFollowRead | null>,
+): VjDemoStage {
+  const activeSetlistId = stage.state.activeSetlistId;
+  if (activeSetlistId === null) return { ...stage, setlistItemIds: null };
+  const read = setlistReads.get(activeSetlistId.toLowerCase());
+  if (read === undefined || read === null) return stage;
+  return { ...stage, setlistItemIds: [...read.itemIds] };
+}
+
+/** Contract 7.10 and sequences 5.9: relay to every attached tab, then land
+ *  what the change leaves the stage in, cause `library`. The active set
+ *  list follows its items with the item ids the stage held before the
+ *  change, then keeps the follow read's item ids (an unchanged state
+ *  included, so an append after the current step is remembered too). */
 function reduceLibrary(
   stage: VjDemoStage,
   change: VjLibraryChange,
   context: VjDemoStageContext,
 ): VjDemoStageResult {
   const relay = frameTo("library:changed", change);
-  const proposed = applyVjDemoLibraryChange(
+  const setlistReads = readVjDemoSetlistFollows(
     stage.state,
     change,
     context.library,
   );
-  if (proposed === stage.state) return { stage, ack: null, outgoing: [relay] };
+  const proposed = vjDemoLibraryChangeState(
+    stage.state,
+    change,
+    setlistReads,
+    stage.setlistItemIds,
+    context.now,
+  );
+  if (proposed === null) {
+    return {
+      stage: withFollowedSetlistItemIds(stage, setlistReads),
+      ack: null,
+      outgoing: [relay],
+    };
+  }
   const landing = landVjDemoChange(
     stage,
     serverVjDemoChange(proposed),
@@ -139,7 +237,7 @@ function reduceLibrary(
     context.now,
   );
   return {
-    stage: landing.stage,
+    stage: withFollowedSetlistItemIds(landing.stage, setlistReads),
     ack: null,
     outgoing: [relay, ...landing.outgoing],
   };
@@ -175,6 +273,8 @@ function reduceEvent(
     case "overlayTimeout":
     case "countdownEnd":
       return reduceTimer(stage, event.kind, context.now);
+    case "setlistTimer":
+      return reduceSetlistTimer(stage, context);
     case "library":
       return reduceLibrary(stage, event.change, context);
     case "pruneOffline":

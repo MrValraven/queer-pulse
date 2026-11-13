@@ -1,9 +1,35 @@
-import { useEffect, useRef, type JSX, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  type JSX,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiChevronLeft, FiChevronRight, FiList, FiPlus } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiList,
+  FiPause,
+  FiPlay,
+  FiPlus,
+  FiRotateCcw,
+} from "react-icons/fi";
+import type { IconType } from "react-icons";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
-import type { VjSceneDTO, VjSetlistDTO } from "../../../../shared/contracts/vj";
+import type {
+  VjSceneDTO,
+  VjSetlistDTO,
+  VjSetlistPlaybackStatus,
+} from "../../../../shared/contracts/vj";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import {
+  VJ_SETLIST_STRIP_PLAY_CONTROL_KEYS,
+  vjSetlistNextIndex,
+  vjSetlistPlayControlOf,
+  vjSetlistPreviousIndex,
+  type VjSetlistPlayControl,
+} from "../rules/vjSetlistPlayback";
 import { useVjHelpDescribedBy } from "../top/useVjHelpDescribedBy";
 import { vjHiddenEdgesOf } from "../top/vjPackTabsScroll";
 import styles from "./VjStrips.module.css";
@@ -35,6 +61,14 @@ export interface VjScenesStripProps {
   onSaveScene: () => void;
   onSetlistNext: () => void;
   onSetlistPrevious: () => void;
+  /** The active sequence's playback status: which play control the group shows. */
+  setlistStatus: VjSetlistPlaybackStatus;
+  /** The active sequence's Loop: Next from the last step and Previous from the first go round. */
+  isSetlistLooping: boolean;
+  /** A Play, Pause or step select waits for its ack. */
+  isSetlistPlayPending: boolean;
+  /** Play, Pause, Resume or Play again; the tapped chip anchors the flash warning. */
+  onSetlistTogglePlaying: (anchor: HTMLElement) => void;
   /** The scene recalled last when the caller tracks it; by default the active set list's current scene. */
   liveSceneId?: string | null;
   /** Opens the Scenes sheet (R20), which owns rename, delete and set lists. No chip without it. */
@@ -142,17 +176,79 @@ function VjSceneChip({
   );
 }
 
-interface VjSetlistGroupProps {
+/** The play chip's icon for each play control. */
+const VJ_SETLIST_PLAY_ICONS: Readonly<Record<VjSetlistPlayControl, IconType>> =
+  {
+    play: FiPlay,
+    pause: FiPause,
+    resume: FiPlay,
+    playAgain: FiRotateCcw,
+  };
+
+type VjSetlistGroupProps = Pick<
+  VjScenesStripProps,
+  | "setlistIndex"
+  | "onSetlistNext"
+  | "onSetlistPrevious"
+  | "setlistStatus"
+  | "isSetlistLooping"
+  | "isSetlistPlayPending"
+  | "onSetlistTogglePlaying"
+> & {
   setlist: VjSetlistDTO;
-  setlistIndex: number | null;
   isBlocked: boolean;
   /** Set while blocked: the status line's id. */
   describedBy: string | undefined;
-  onSetlistNext: () => void;
-  onSetlistPrevious: () => void;
+};
+
+/**
+ * The sequence's play chip: Play, Pause, Resume or Play again as the status
+ * asks. While the sequence plays, the chip carries the coral wash and the
+ * pause icon, so the mark never rests on colour alone.
+ */
+function VjSetlistPlayChip({
+  setlistStatus,
+  isSetlistPlayPending,
+  isHeld,
+  describedBy,
+  onSetlistTogglePlaying,
+}: Pick<
+  VjSetlistGroupProps,
+  | "setlistStatus"
+  | "isSetlistPlayPending"
+  | "describedBy"
+  | "onSetlistTogglePlaying"
+> & { isHeld: boolean }): JSX.Element {
+  const { t } = useTranslation();
+  const playControl = vjSetlistPlayControlOf(setlistStatus);
+  const PlayIcon = VJ_SETLIST_PLAY_ICONS[playControl];
+  return (
+    <button
+      type="button"
+      className={`${styles.chip} ${styles.iconChip}`}
+      data-vj-setlist-play={playControl}
+      data-live={setlistStatus === "playing" ? "true" : undefined}
+      aria-label={t(VJ_SETLIST_STRIP_PLAY_CONTROL_KEYS[playControl])}
+      aria-disabled={isHeld || undefined}
+      aria-busy={isSetlistPlayPending || undefined}
+      aria-describedby={describedBy}
+      onClick={(event) => {
+        if (isHeld) return;
+        onSetlistTogglePlaying(event.currentTarget);
+      }}
+    >
+      <span className={styles.chipFace}>
+        <PlayIcon aria-hidden="true" focusable="false" fill="none" />
+      </span>
+    </button>
+  );
 }
 
-/** Previous scene, "3 of 12", Next scene. Nothing recalled yet reads as 0, so Next starts the list. */
+/**
+ * Previous step, the play chip, "3 of 12", Next step. Nothing recalled yet
+ * reads as 0, so Next starts the list; with Loop on, Previous from step 1
+ * or from nothing recalled yet, and Next from the last step, go round.
+ */
 function VjSetlistGroup({
   setlist,
   setlistIndex,
@@ -160,6 +256,10 @@ function VjSetlistGroup({
   describedBy,
   onSetlistNext,
   onSetlistPrevious,
+  setlistStatus,
+  isSetlistLooping,
+  isSetlistPlayPending,
+  onSetlistTogglePlaying,
 }: VjSetlistGroupProps): JSX.Element {
   const { t } = useTranslation();
   const { transition } = useChipTransition();
@@ -167,8 +267,12 @@ function VjSetlistGroup({
   const stepDescribedBy = helpDescribedBy("setlistStep", describedBy);
   const total = setlist.items.length;
   const position = setlistIndex === null ? 0 : setlistIndex + 1;
-  const isPreviousBlocked = isBlocked || position <= 1;
-  const isNextBlocked = isBlocked || position >= total;
+  const isPreviousBlocked =
+    isBlocked ||
+    vjSetlistPreviousIndex(setlistIndex, total, isSetlistLooping) === null;
+  const isNextBlocked =
+    isBlocked ||
+    vjSetlistNextIndex(setlistIndex, total, isSetlistLooping) === null;
   return (
     <m.div
       layout="position"
@@ -192,6 +296,13 @@ function VjSetlistGroup({
           <FiChevronLeft aria-hidden="true" focusable="false" fill="none" />
         </span>
       </button>
+      <VjSetlistPlayChip
+        setlistStatus={setlistStatus}
+        isSetlistPlayPending={isSetlistPlayPending}
+        isHeld={isBlocked || isSetlistPlayPending || total === 0}
+        describedBy={helpDescribedBy("setlistPlay", describedBy)}
+        onSetlistTogglePlaying={onSetlistTogglePlaying}
+      />
       <span className={styles.setlistPosition}>
         {t("vj:strip.setlistPosition", { position, total })}
       </span>
@@ -218,41 +329,57 @@ interface VjSceneToolsProps {
   isSaving: boolean;
   onSaveScene: () => void;
   onOpenScenesSheet?: () => void;
+  /**
+   * The active sequence's group. While one is active it takes Save scene's
+   * place, so Previous, Play and Next stay in reach at any width (Save scene
+   * stays in the Scenes sheet).
+   */
+  setlistGroup: ReactNode;
 }
 
 /**
- * The row's tail: Save scene, then the door to the Scenes sheet. It stays
- * pinned beside the scrolling chips; on a narrow row Save scene shrinks to its
- * icon (the aria-label keeps its name).
+ * The row's tail, pinned beside the scrolling chips: Save scene, or the
+ * active sequence's group in its place, then the door to the Scenes sheet.
+ * On a narrow row Save scene shrinks to its icon (the aria-label keeps its
+ * name).
  */
 function VjSceneTools({
   isSaving,
   onSaveScene,
   onOpenScenesSheet,
+  setlistGroup,
 }: VjSceneToolsProps): JSX.Element {
   const { t } = useTranslation();
+  const { transition } = useChipTransition();
   const helpDescribedBy = useVjHelpDescribedBy();
   return (
     <div className={styles.sceneTools}>
-      <m.button
-        type="button"
-        layout="position"
-        className={`${styles.chip} ${styles.saveChip}`}
-        data-vj-save-scene=""
-        aria-label={t("vj:strip.saveScene")}
-        aria-disabled={isSaving || undefined}
-        aria-busy={isSaving || undefined}
-        aria-describedby={helpDescribedBy("saveScene")}
-        onClick={() => {
-          if (isSaving) return;
-          onSaveScene();
-        }}
-      >
-        <span className={styles.chipFace}>
-          <FiPlus aria-hidden="true" focusable="false" fill="none" />
-          <span className={styles.chipName}>{t("vj:strip.saveScene")}</span>
-        </span>
-      </m.button>
+      <AnimatePresence initial={false}>
+        {setlistGroup ?? (
+          <m.button
+            key="save-scene"
+            type="button"
+            layout="position"
+            {...VJ_STRIP_CHIP_PRESENCE}
+            transition={transition}
+            className={`${styles.chip} ${styles.saveChip}`}
+            data-vj-save-scene=""
+            aria-label={t("vj:strip.saveScene")}
+            aria-disabled={isSaving || undefined}
+            aria-busy={isSaving || undefined}
+            aria-describedby={helpDescribedBy("saveScene")}
+            onClick={() => {
+              if (isSaving) return;
+              onSaveScene();
+            }}
+          >
+            <span className={styles.chipFace}>
+              <FiPlus aria-hidden="true" focusable="false" fill="none" />
+              <span className={styles.chipName}>{t("vj:strip.saveScene")}</span>
+            </span>
+          </m.button>
+        )}
+      </AnimatePresence>
       {onOpenScenesSheet !== undefined ? (
         <m.button
           type="button"
@@ -272,11 +399,13 @@ function VjSceneTools({
 }
 
 /**
- * The scenes strip: the active set list's position with its two steps, one
- * chip per scene (a tap recalls it; the live one carries the coral wash, a
- * recall on its way a coral ring); only these scroll sideways. Save scene and
- * the Scenes button stay pinned after them. Rename, delete and set lists live
- * in the Scenes sheet; this row only recalls and saves.
+ * The scenes strip: one chip per scene (a tap recalls it; the live one
+ * carries the coral wash, a recall on its way a coral ring); only these
+ * scroll sideways. Pinned after them: Save scene, or while a sequence is
+ * active its group (Previous step, the play chip, "3 of 12" where the row
+ * has room, Next step) in Save scene's place, then the Scenes button.
+ * Rename, delete and editing sequences live in the Scenes sheet; this row
+ * recalls, saves, plays and steps.
  */
 export function VjScenesStrip({
   scenes,
@@ -290,6 +419,10 @@ export function VjScenesStrip({
   onSaveScene,
   onSetlistNext,
   onSetlistPrevious,
+  setlistStatus,
+  isSetlistLooping,
+  isSetlistPlayPending,
+  onSetlistTogglePlaying,
   liveSceneId,
   onOpenScenesSheet,
 }: VjScenesStripProps): JSX.Element {
@@ -317,17 +450,6 @@ export function VjScenesStrip({
         className={`${styles.scroller} ${styles.sceneScroller}`}
       >
         <AnimatePresence initial={false}>
-          {activeSetlist !== null ? (
-            <VjSetlistGroup
-              key={`setlist-${activeSetlist.id}`}
-              setlist={activeSetlist}
-              setlistIndex={setlistIndex}
-              isBlocked={isBlocked}
-              describedBy={blockedDescription}
-              onSetlistNext={onSetlistNext}
-              onSetlistPrevious={onSetlistPrevious}
-            />
-          ) : null}
           {scenes.map((scene) => (
             <VjSceneChip
               key={scene.id}
@@ -359,6 +481,23 @@ export function VjScenesStrip({
         isSaving={isSaving}
         onSaveScene={onSaveScene}
         onOpenScenesSheet={onOpenScenesSheet}
+        setlistGroup={
+          activeSetlist === null ? null : (
+            <VjSetlistGroup
+              key={`setlist-${activeSetlist.id}`}
+              setlist={activeSetlist}
+              setlistIndex={setlistIndex}
+              isBlocked={isBlocked}
+              describedBy={blockedDescription}
+              onSetlistNext={onSetlistNext}
+              onSetlistPrevious={onSetlistPrevious}
+              setlistStatus={setlistStatus}
+              isSetlistLooping={isSetlistLooping}
+              isSetlistPlayPending={isSetlistPlayPending}
+              onSetlistTogglePlaying={onSetlistTogglePlaying}
+            />
+          )
+        }
       />
     </div>
   );

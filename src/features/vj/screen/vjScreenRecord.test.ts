@@ -1,9 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  createVjSetlistPlayback,
   createVjStageState,
+  stampVjSetlistClock,
+  vjSetlistTakeoverState,
+  vjSetlistTimerTransition,
   type VjClipDTO,
   type VjEventCardDTO,
   type VjPackDTO,
+  type VjSetlistPlayback,
+  type VjSetlistRead,
   type VjStageRestore,
 } from "../../../shared/contracts/vj";
 import {
@@ -20,6 +26,7 @@ import {
   writeVjScreenRecord,
   type VjScreenRecord,
 } from "./vjScreenRecord";
+import { isVjSetlistPlayback } from "./vjScreenRecordGuards";
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -65,6 +72,7 @@ const clip: VjClipDTO = {
   loopOutMs: 3500,
   loopMode: "pingPong",
   previewUrl: "https://files.example/preview-1.webm",
+  setlistItemCount: 0,
 };
 
 const eventCard: VjEventCardDTO = {
@@ -153,6 +161,51 @@ function buildRecordV1(): Record<string, unknown> {
     },
     pack: packV1,
     clips: [clipV1],
+  };
+}
+
+const SETLIST_ID = "setlist-1";
+
+/** A sequence playing its second step, eight seconds long. */
+const playingPlayback: VjSetlistPlayback = {
+  status: "playing",
+  itemId: "item-2",
+  isFlashConfirmed: true,
+  stepStartedAt: 4_000,
+  stepEndsAt: 12_000,
+  stepDurationMs: 8_000,
+  pausedRemainingMs: null,
+  isLooping: true,
+};
+
+/** buildRecord with an active set list at index 1 and the given playback. */
+function buildSequenceRecord(
+  setlistPlayback: VjSetlistPlayback,
+): VjScreenRecord {
+  const record = buildRecord();
+  return {
+    ...record,
+    state: {
+      ...record.state,
+      activeSetlistId: SETLIST_ID,
+      setlistIndex: 1,
+      setlistPlayback,
+    },
+  };
+}
+
+/** A v2 record as a build from before sequences saved it: no setlistPlayback. */
+function buildRecordBeforeSequences(): Record<string, unknown> {
+  const record = buildRecord();
+  const { setlistPlayback: _setlistPlayback, ...stateBeforeSequences } =
+    record.state;
+  return {
+    ...record,
+    state: {
+      ...stateBeforeSequences,
+      activeSetlistId: SETLIST_ID,
+      setlistIndex: 2,
+    },
   };
 }
 
@@ -326,6 +379,7 @@ describe("vjScreenRecord", () => {
       "shuffle",
       "activeSetlistId",
       "setlistIndex",
+      "setlistPlayback",
     ];
     expect(Object.keys(restoreState).sort()).toEqual(
       [...expectedFields].sort(),
@@ -337,6 +391,195 @@ describe("vjScreenRecord", () => {
     expect(restoreState).not.toHaveProperty("recentClipIds");
     expect(restoreState).not.toHaveProperty("screenOverrides");
     expect(restoreState).not.toHaveProperty("clipSequence");
+  });
+});
+
+describe("vjScreenRecord sequence clock", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it("round-trips a playing and a paused sequence clock", () => {
+    const playingRecord = buildSequenceRecord(playingPlayback);
+    writeVjScreenRecord(playingRecord);
+    expect(readVjScreenRecord()).toEqual(playingRecord);
+
+    const pausedRecord = buildSequenceRecord({
+      ...playingPlayback,
+      status: "paused",
+      stepStartedAt: null,
+      stepEndsAt: null,
+      pausedRemainingMs: 3_000,
+    });
+    writeVjScreenRecord(pausedRecord);
+    expect(readVjScreenRecord()?.state.setlistPlayback).toEqual(
+      pausedRecord.state.setlistPlayback,
+    );
+  });
+
+  it("reads a record saved before sequences with the default playback", () => {
+    storeRaw(VJ_SCREEN_SNAPSHOT_STORAGE_KEY, buildRecordBeforeSequences());
+
+    const restored = readVjScreenRecord();
+    expect(restored).not.toBeNull();
+    expect(restored?.state.setlistPlayback).toEqual(
+      createVjSetlistPlayback(false),
+    );
+    expect(restored?.state.activeSetlistId).toBe(SETLIST_ID);
+    expect(restored?.state.setlistIndex).toBe(2);
+    expect(localStorage.getItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY)).not.toBeNull();
+  });
+
+  it("reads a broken sequence clock as the manual default and keeps the look", () => {
+    const brokenPlaybacks: unknown[] = [
+      null,
+      { ...playingPlayback, status: "running" },
+      { ...playingPlayback, isFlashConfirmed: "yes" },
+      { ...playingPlayback, itemId: 2 },
+      { ...playingPlayback, isLooping: undefined },
+      // Playing: the ends must sit stepDurationMs apart and hold no remainder.
+      { ...playingPlayback, stepEndsAt: 13_000 },
+      { ...playingPlayback, stepStartedAt: null },
+      { ...playingPlayback, pausedRemainingMs: 1_000 },
+      // Paused: no ends, a remainder inside the duration.
+      { ...playingPlayback, status: "paused", pausedRemainingMs: 1_000 },
+      {
+        ...playingPlayback,
+        status: "paused",
+        stepStartedAt: null,
+        stepEndsAt: null,
+        pausedRemainingMs: 9_000,
+      },
+      {
+        ...playingPlayback,
+        status: "paused",
+        stepStartedAt: null,
+        stepEndsAt: null,
+        pausedRemainingMs: null,
+      },
+      // Any other status: no ends and no remainder.
+      {
+        ...createVjSetlistPlayback(true),
+        status: "finished",
+        pausedRemainingMs: 2_000,
+      },
+      { ...createVjSetlistPlayback(true), stepEndsAt: 12_000 },
+    ];
+    for (const brokenPlayback of brokenPlaybacks) {
+      expect(isVjSetlistPlayback(brokenPlayback)).toBe(false);
+      const record = buildSequenceRecord(brokenPlayback as VjSetlistPlayback);
+      storeRaw(VJ_SCREEN_SNAPSHOT_STORAGE_KEY, record);
+      const storedIsLooping =
+        (brokenPlayback as { isLooping?: unknown } | null)?.isLooping === true;
+
+      expect(readVjScreenRecord()).toEqual({
+        ...record,
+        state: {
+          ...record.state,
+          setlistPlayback: createVjSetlistPlayback(storedIsLooping),
+        },
+      });
+      expect(
+        localStorage.getItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY),
+      ).not.toBeNull();
+    }
+  });
+
+  it("reads a running clock with no set list as the default playback", () => {
+    const record = buildRecord();
+    storeRaw(VJ_SCREEN_SNAPSHOT_STORAGE_KEY, {
+      ...record,
+      state: { ...record.state, setlistPlayback: playingPlayback },
+    });
+
+    const restored = readVjScreenRecord();
+    expect(restored?.state.activeSetlistId).toBeNull();
+    expect(restored?.state.setlistPlayback).toEqual(
+      createVjSetlistPlayback(false),
+    );
+    expect(restored?.state.liveClipId).toBe("clip-1");
+  });
+
+  it("still removes a record whose set list fields are broken", () => {
+    const record = buildSequenceRecord(playingPlayback);
+    storeRaw(VJ_SCREEN_SNAPSHOT_STORAGE_KEY, {
+      ...record,
+      state: { ...record.state, setlistIndex: -1 },
+    });
+    expect(readVjScreenRecord()).toBeNull();
+    expect(localStorage.getItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY)).toBeNull();
+  });
+
+  it("keeps a taken over sequence", () => {
+    const record = buildSequenceRecord({
+      ...createVjSetlistPlayback(true),
+      status: "takenOver",
+      itemId: "item-2",
+    });
+    writeVjScreenRecord(record);
+    expect(readVjScreenRecord()).toEqual(record);
+  });
+
+  it("accepts every clock the contract writers produce", () => {
+    const playingState = buildSequenceRecord(playingPlayback).state;
+    const readAt = (step: VjSetlistRead["step"]): VjSetlistRead => ({
+      setlistId: SETLIST_ID,
+      isLooping: false,
+      stepDuration: { kind: "seconds", value: 8 },
+      itemIds: ["item-1", "item-2", "item-3"],
+      step,
+    });
+
+    // The timer lands the next step and the landing stamps its clock.
+    const advance = vjSetlistTimerTransition(
+      playingState,
+      readAt({
+        kind: "clip",
+        itemId: "item-3",
+        index: 2,
+        clipId: "clip-3",
+        duration: { kind: "seconds", value: 6 },
+      }),
+    );
+    expect(advance).not.toBeNull();
+    const advancedPlayback = stampVjSetlistClock(
+      advance?.nextState.setlistPlayback ?? playingPlayback,
+      advance?.clock ?? { kind: "keep" },
+      20_000,
+    );
+    expect(advancedPlayback.status).toBe("playing");
+    expect(isVjSetlistPlayback(advancedPlayback)).toBe(true);
+
+    // Past the last step with Loop off the timer lands finished.
+    const finish = vjSetlistTimerTransition(playingState, readAt(null));
+    expect(finish?.nextState.setlistPlayback.status).toBe("finished");
+    const finishedPlayback = stampVjSetlistClock(
+      finish?.nextState.setlistPlayback ?? playingPlayback,
+      finish?.clock ?? { kind: "keep" },
+      20_000,
+    );
+    expect(isVjSetlistPlayback(finishedPlayback)).toBe(true);
+
+    // A takeover clears every clock field.
+    const takenOverState = vjSetlistTakeoverState(playingState, {
+      ...playingState,
+      liveClipId: "clip-9",
+    });
+    expect(takenOverState.setlistPlayback.status).toBe("takenOver");
+    expect(isVjSetlistPlayback(takenOverState.setlistPlayback)).toBe(true);
+
+    for (const setlistPlayback of [advancedPlayback, finishedPlayback]) {
+      const record = buildSequenceRecord(setlistPlayback);
+      writeVjScreenRecord(record);
+      expect(readVjScreenRecord()).toEqual(record);
+    }
+  });
+
+  it("carries a sequence clock into the restore state", () => {
+    const record = buildSequenceRecord(playingPlayback);
+    expect(vjStageRestoreOf(record.state).setlistPlayback).toEqual(
+      playingPlayback,
+    );
   });
 });
 

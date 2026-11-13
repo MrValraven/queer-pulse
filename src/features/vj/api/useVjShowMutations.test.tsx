@@ -14,11 +14,11 @@ import {
   demoCreateVjSetlist,
   demoDeleteVjScene,
   demoDeleteVjSetlist,
-  demoRenameVjSetlist,
   demoReorderVjScenes,
   demoReorderVjSetlists,
   demoSetVjSetlistItems,
   demoUpdateVjScene,
+  demoUpdateVjSetlist,
 } from "../demo/vjDemoStore";
 import { vjRefusal } from "../demo/vjDemoRefusals";
 import { vjErrorKeyOf } from "../vjErrors";
@@ -39,7 +39,7 @@ vi.mock("../demo/vjDemoStore", async (importOriginal) => {
     demoReorderVjScenes: vi.fn(),
     demoDeleteVjScene: vi.fn(),
     demoCreateVjSetlist: vi.fn(),
-    demoRenameVjSetlist: vi.fn(),
+    demoUpdateVjSetlist: vi.fn(),
     demoReorderVjSetlists: vi.fn(),
     demoSetVjSetlistItems: vi.fn(),
     demoDeleteVjSetlist: vi.fn(),
@@ -73,10 +73,15 @@ function buildSetlist(
     id: setlistId,
     name: `Set list ${setlistId}`,
     position,
+    isLooping: false,
+    stepDuration: { kind: "seconds", value: 8 },
     items: sceneIds.map((sceneId, itemIndex) => ({
       id: `${setlistId}-item-${itemIndex}`,
-      sceneId,
       position: itemIndex,
+      kind: "scene",
+      sceneId,
+      clipId: null,
+      duration: null,
     })),
     createdBy: null,
     createdAt: CREATED_AT,
@@ -145,7 +150,7 @@ beforeEach(() => {
   vi.mocked(demoReorderVjScenes).mockReset();
   vi.mocked(demoDeleteVjScene).mockReset();
   vi.mocked(demoCreateVjSetlist).mockReset();
-  vi.mocked(demoRenameVjSetlist).mockReset();
+  vi.mocked(demoUpdateVjSetlist).mockReset();
   vi.mocked(demoReorderVjSetlists).mockReset();
   vi.mocked(demoSetVjSetlistItems).mockReset();
   vi.mocked(demoDeleteVjSetlist).mockReset();
@@ -291,7 +296,7 @@ describe("set list writes (demo)", () => {
     ).toEqual(["setlist-1", "setlist-2", "setlist-3"]);
   });
 
-  it("saving a set list's scenes replaces it in the cache and refreshes scene counts", async () => {
+  it("saving a set list's steps replaces it in the cache and refreshes scene counts", async () => {
     const savedSetlist = buildSetlist("setlist-2", 1, ["scene-2", "scene-2"]);
     vi.mocked(demoSetVjSetlistItems).mockReturnValue(savedSetlist);
     const queryClient = seededQueryClient();
@@ -300,12 +305,20 @@ describe("set list writes (demo)", () => {
     await act(async () => {
       await result.current.setlists.setSetlistItems.mutateAsync({
         setlistId: "setlist-2",
-        sceneIds: ["scene-2", "scene-2"],
+        items: [
+          { kind: "scene", sceneId: "scene-2" },
+          { kind: "scene", sceneId: "scene-2" },
+        ],
       });
     });
     expect(vi.mocked(demoSetVjSetlistItems).mock.calls[0]).toEqual([
       "setlist-2",
-      { sceneIds: ["scene-2", "scene-2"] },
+      {
+        items: [
+          { kind: "scene", sceneId: "scene-2" },
+          { kind: "scene", sceneId: "scene-2" },
+        ],
+      },
     ]);
     const cachedSetlists = queryClient.getQueryData<VjSetlistDTO[]>(
       vjKeys.setlists(true),
@@ -338,7 +351,7 @@ describe("set list writes (demo)", () => {
     const hold = new Promise<void>((resolve) => {
       release = resolve;
     });
-    vi.mocked(demoRenameVjSetlist).mockImplementation(
+    vi.mocked(demoUpdateVjSetlist).mockImplementation(
       () => hold.then(() => SETLIST_ONE) as unknown as VjSetlistDTO,
     );
     vi.mocked(demoUpdateVjScene).mockImplementation(
@@ -348,7 +361,7 @@ describe("set list writes (demo)", () => {
     const { result } = renderShowWrites(queryClient);
     expect(result.current.isWriting).toBe(false);
     act(() => {
-      result.current.setlists.renameSetlist.mutate({
+      result.current.setlists.updateSetlist.mutate({
         setlistId: "setlist-1",
         name: "Friday",
       });

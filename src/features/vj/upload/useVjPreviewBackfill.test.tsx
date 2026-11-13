@@ -85,6 +85,7 @@ function buildClip(
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: null,
+    setlistItemCount: 0,
     ...overrides,
   };
 }

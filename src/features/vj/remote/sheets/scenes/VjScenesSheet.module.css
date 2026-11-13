@@ -1,4 +1,4 @@
-/* Scenes and set lists, inside the remote's dark sheet frame (the --qs-*
+/* Scenes and sequences, inside the remote's dark sheet frame (the --qs-*
    stage tokens). Rows are glass cards with their name on top and their
    actions under it, so long names wrap and every button keeps a 44px hit
    area. Groups sit further apart than the rows inside them. */
@@ -47,7 +47,7 @@
   container: vj-scene-row / inline-size;
 }
 
-/* The set list that plays carries the coral edge, and its position line
+/* The sequence on stage carries the coral edge, and its position line
    says the same in words. */
 .row[data-is-active="true"] {
   border-color: var(--accent);
@@ -84,10 +84,15 @@
 }
 
 .rowActions > *,
-.stepButtons > *,
 .wideButton {
   inline-size: 100%;
   touch-action: manipulation;
+}
+
+/* Icons inside a row's buttons keep their size when a long label (PT)
+   squeezes the pill. */
+.row svg {
+  flex-shrink: 0;
 }
 
 .renameForm {
@@ -129,9 +134,297 @@
   color: var(--qs-text);
 }
 
+/* Two buttons side by side while both labels fit whole (each at least
+   9rem), else one per line, so a long PT label never runs out of its pill. */
 .stepButtons {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.stepButtons > * {
+  flex: 1 1 9rem;
+  max-inline-size: 100%;
+  touch-action: manipulation;
+}
+
+/* An add button with its own reason folding open under it. */
+.adderCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.adderCell > button {
+  inline-size: 100%;
+}
+
+.adderReason {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+}
+
+/* Where the sequence stands, with the time its playing step has left. */
+.positionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.positionTime {
+  margin: 0;
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--qs-text-mute);
+}
+
+/* Edit steps: its chevron turns with the panel it opens. */
+.editChevron {
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+[aria-expanded="true"] .editChevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editChevron {
+    transition-duration: 0s;
+  }
+}
+
+/* The row's refusal: the sheet's alert look, quiet for screen readers
+   (the dock's status line announces it). */
+.rowRefusal {
+  composes: alert from "../../VjSheets.module.css";
+}
+
+.rowRefusalIcon {
+  composes: warningIcon from "../../VjSheets.module.css";
+}
+
+/* ── The status line under the position: why the sequence stopped ──
+   A quiet line with its mark; the play button right under it is its
+   action. The region stays mounted, so a new reason is heard. */
+.statusRegion {
+  min-width: 0;
+}
+
+.statusLine {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--qs-text);
+}
+
+.statusIcon {
+  flex: none;
+  margin-block-start: 0.2em;
+  color: var(--qs-text-mute);
+}
+
+/* The flash warning panel: the sheet's warning surface, then its choices
+   stacked full width in thumb reach. */
+.flashPanel {
+  composes: warning from "../../VjSheets.module.css";
+  margin-block-start: 0;
+}
+
+.flashText {
+  composes: warningText from "../../VjSheets.module.css";
+}
+
+.flashIcon {
+  composes: warningIcon from "../../VjSheets.module.css";
+}
+
+.flashActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.flashActions > * {
+  inline-size: 100%;
+  touch-action: manipulation;
+}
+
+/* ── Loop: the sheet's switch row, with its hint under the label ── */
+.loopSwitch {
+  composes: switchRow from "../../VjSheets.module.css";
+  min-height: var(--tap-min);
+  padding-block: var(--gap-xs);
+}
+
+.loopSwitch[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.loopSwitch[aria-busy="true"] {
+  cursor: progress;
+}
+
+.loopSwitch:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.loopText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.loopHint {
+  font-size: var(--text-13);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+}
+
+.loopTrack {
+  composes: switchTrack from "../../VjSheets.module.css";
+  transition-timing-function: var(--ease);
+}
+
+.loopKnob {
+  composes: switchKnob from "../../VjSheets.module.css";
+}
+
+.loopSwitch[aria-checked="true"] .loopTrack::before {
+  opacity: 1;
+}
+
+.loopSwitch[aria-checked="true"] .loopKnob {
+  transform: translateX(18px);
+}
+
+/* ── Edit steps: the panel folds open under the row's controls ── */
+.stepsPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding-block-start: var(--gap-sm);
+  border-block-start: 1px solid var(--qs-line);
+}
+
+.stepsTitle {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--qs-text);
+  overflow-wrap: anywhere;
+}
+
+/* One step: number, name and kind, then its three tools; its length button
+   sits under the name. Rows part with a hairline, so the panel reads as
+   one list inside the sequence card. */
+.stepRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-xs);
+  border-block-end: 1px solid var(--qs-line);
+}
+
+.stepMain {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.stepNumber {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: 50%;
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--qs-text);
+}
+
+/* The step on screen: a filled coral number, and aria-current says it in words. */
+.stepRow[data-is-current="true"] .stepNumber {
+  border-color: var(--accent-fill-strong);
+  background: var(--accent-fill-strong);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.stepText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.stepName {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.stepKind {
+  font-size: var(--text-12);
+  color: var(--qs-text-mute);
+}
+
+.stepTools {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.stepLength {
+  align-self: flex-start;
+  touch-action: manipulation;
+}
+
+.stepLength[data-custom="true"] {
+  border-color: var(--accent);
+}
+
+.stepLengthPanel {
+  padding-block: var(--gap-xs);
+}
+
+/* The sequence's own settings, after its steps and apart from them. */
+.stepsSettings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+}
+
+.stepsSettingsTitle {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--qs-text);
+  overflow-wrap: anywhere;
+}
+
+.stepsAdders {
+  display: flex;
+  flex-direction: column;
   gap: var(--gap-xs);
 }
 

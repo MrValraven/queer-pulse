@@ -3,11 +3,11 @@
  * 6.10, 8.5). A pack change starts a new preload and aborts the old one while
  * the loaded clips keep playing; once the new pack has settled, the cache keeps
  * the active pack, the previous pack and every clip `vjRetainedClips` names
- * (contract 9.1: the live, mix and override clips and the active set list's
- * scene sources). Coming back online, and the socket attaching again while no
- * run is going, retry what never arrived; a library change naming the active
- * pack refetches its clips, and a deleted clip leaves the cache. Nothing here
- * logs.
+ * (contract 9.1: the live, mix and override clips and every clip the active
+ * set list names, the next step's first). Coming back online, and the socket
+ * attaching again while no run is going, retry what never arrived; a library
+ * change naming the active pack refetches its clips, and a deleted clip
+ * leaves the cache. Nothing here logs.
  *
  * The extra clips (retained clips outside both packs) run through the same
  * preloader with GET /admin/vj/clips/media (`createVjExtraClipFetcher`). Their
@@ -44,7 +44,7 @@ import {
   createVjExtraClipFetcher,
   VJ_EXTRA_CLIPS_PACK_ID,
 } from "./vjExtraClipMedia";
-import { vjRetainedClips } from "./vjRetainedClips";
+import { vjClipSetSignatureOf, vjRetainedClips } from "./vjRetainedClips";
 import type { VjScreenRecord } from "./vjScreenRecord";
 
 export interface VjScreenPreloadResult {
@@ -81,8 +81,8 @@ export interface VjScreenPreloadInput {
   };
   /** This screen's id, so its override clip stays cached; default none. */
   screenId?: string;
-  /** Source clips of the active set list's scenes, in set list order; default none. */
-  setlistSceneClipIds?: readonly string[];
+  /** Every clip the active set list names, the next step's first; default none. */
+  setlistClipIds?: readonly string[];
 }
 
 /** Progress reaches the page in whole tenths, so a playing screen re-renders a few times per clip. */
@@ -357,7 +357,19 @@ function useClipEntryFallbacks(
   );
 }
 
-/** Refetches on a change naming the active pack; a deleted clip leaves the cache and the lists. */
+/**
+ * Whether a change touches scenes or set lists. These carry packId null, so
+ * the active pack check would miss them; the screen still refetches its
+ * scenes and set lists, so new and edited sequence steps get pre-cached.
+ */
+function isVjSequenceLibraryChange(change: VjLibraryChange): boolean {
+  return change.kind.startsWith("scene") || change.kind.startsWith("setlist");
+}
+
+/**
+ * Refetches on a change naming the active pack, and on every scene and set
+ * list change; a deleted clip leaves the cache and the lists.
+ */
 function useLibraryChanges(
   subscribeLibrary: VjStageController["subscribeLibrary"],
   runner: VjPreloadRunner,
@@ -370,6 +382,10 @@ function useLibraryChanges(
         if (change.kind === "clip_deleted" && change.clipId !== null) {
           onClipDeleted(change.clipId);
           void runner.cache.remove(change.clipId).catch(() => undefined);
+        }
+        if (isVjSequenceLibraryChange(change)) {
+          invalidateLibrary(change);
+          return;
         }
         const activePackId = runner.latestRef.current.packId;
         if (activePackId === null) return;
@@ -507,13 +523,17 @@ function usePreloadRunner(options: VjPreloadRunnerOptions): {
   return { runner, statusById };
 }
 
-/** Runs the extra clips whenever their list changes; the cached ones turn ready at once. */
+/** Runs the extra clips whenever a clip joins or leaves the set; the cached
+ *  ones turn ready at once. A reorder (every sequence step turns the list to
+ *  the next step first) keeps the run going, so a slow link still finishes
+ *  the upcoming steps. A run downloads in the order of the list it started
+ *  from, the next step first. */
 function useExtraClipsRun(
   runner: VjPreloadRunner,
   extraClips: readonly VjClipDTO[],
 ): void {
   const hasExtraClips = extraClips.length > 0;
-  const extraSignature = clipSignatureOf(extraClips);
+  const extraSignature = vjClipSetSignatureOf(extraClips);
   useEffect(() => {
     if (!hasExtraClips) return;
     startPreloadRun(
@@ -530,14 +550,14 @@ interface VjRetainedClipsHookInput {
   previousClips: readonly VjClipDTO[];
   state: VjStageState | null;
   screenId: string;
-  setlistSceneClipIds: readonly string[];
+  setlistClipIds: readonly string[];
   record: VjScreenRecord | null;
   deletedClipIds: ReadonlySet<string>;
 }
 
 /** The retention set (contract 9.1), the extra clips' known entries and the fallback entries behind them. */
 function useRetainedClips(input: VjRetainedClipsHookInput) {
-  const { clips, previousClips, state, screenId, setlistSceneClipIds } = input;
+  const { clips, previousClips, state, screenId, setlistClipIds } = input;
   const { record, deletedClipIds } = input;
   const retained = useMemo(
     () =>
@@ -546,9 +566,9 @@ function useRetainedClips(input: VjRetainedClipsHookInput) {
         previousPackClipIds: previousClips.map((clip) => clip.id),
         state,
         screenId,
-        setlistSceneClipIds,
+        setlistClipIds,
       }),
-    [clips, previousClips, state, screenId, setlistSceneClipIds],
+    [clips, previousClips, state, screenId, setlistClipIds],
   );
   const recordClips = record?.clips ?? NO_CLIPS;
   const recordEntries = useMemo(() => {
@@ -612,7 +632,7 @@ export function useVjScreenPreload(
     previousClips,
     state: input.stage.state ?? record?.state ?? null,
     screenId: input.screenId ?? "",
-    setlistSceneClipIds: input.setlistSceneClipIds ?? NO_CLIP_ID_LIST,
+    setlistClipIds: input.setlistClipIds ?? NO_CLIP_ID_LIST,
     record,
     deletedClipIds,
   });

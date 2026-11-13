@@ -3437,6 +3437,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-13.headline":
+    "Build VJ sequences of clips and scenes that play and loop on their own.",
   "changelog.releases.2026-11-09.headline":
     "Stop every live VJ screen at once, or move them all to a simple renderer from the remote.",
   "changelog.releases.2026-11-08.headline":
@@ -3803,6 +3805,9 @@ export const marketing: Catalog = {
     "Richer partner cards in the directory",
   "changelog.entries.partner-cards-redesign.body":
     "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.vj-sequences.title": "VJ sequences that play themselves",
+  "changelog.entries.vj-sequences.body":
+    "Line up clips and scenes with their own lengths, then press Play and let them run and loop.",
   "changelog.entries.vj-simple-renderer.title":
     "Simple renderer for VJ screens",
   "changelog.entries.vj-simple-renderer.body":

@@ -14,11 +14,11 @@ import {
   demoDeleteVjSetlist,
   demoGetVjScenes,
   demoGetVjSetlists,
-  demoRenameVjSetlist,
   demoReorderVjScenes,
   demoReorderVjSetlists,
   demoSetVjSetlistItems,
   demoUpdateVjScene,
+  demoUpdateVjSetlist,
 } from "./vjDemoStore";
 
 const WARM_UP_PACK_ID = "00000000-0000-4000-8000-0000000000a1";
@@ -28,6 +28,13 @@ const WARM_HAZE_ID = "00000000-0000-4000-8000-0000000000c2";
 const WARM_UP_SCENE_ID = "00000000-0000-4000-8000-0000000000d1";
 const PEAK_SCENE_ID = "00000000-0000-4000-8000-0000000000d2";
 const FRIDAY_SET_ID = "00000000-0000-4000-8000-0000000000b1";
+const PINK_TUNNEL_ID = "00000000-0000-4000-8000-0000000000c4";
+const DISCO_DOTS_ID = "00000000-0000-4000-8000-0000000000c3";
+
+/** A scene step entry of a whole-list write. */
+function sceneStep(sceneId: string) {
+  return { kind: "scene" as const, sceneId };
+}
 const UNKNOWN_ID = "00000000-0000-4000-8000-0000000000ff";
 const FIXED_NOW = Date.parse("2026-11-06T20:00:00.000Z");
 const LATER_NOW = FIXED_NOW + 60_000;
@@ -313,12 +320,20 @@ describe("demo scene reorder and delete", () => {
       removedFromSetlistCount: 3,
     });
     expect(demoGetVjScenes().items.map((scene) => scene.position)).toEqual([0]);
-    const setlists = demoGetVjSetlists().items;
-    for (const setlist of setlists) {
-      expect(
-        setlist.items.map((item) => [item.sceneId, item.position]),
-      ).toEqual([[PEAK_SCENE_ID, 0]]);
-    }
+    const stepsOf = (setlistId: string) =>
+      demoGetVjSetlists()
+        .items.find((setlist) => setlist.id === setlistId)
+        ?.items.map((item) => [
+          item.kind,
+          item.sceneId ?? item.clipId,
+          item.position,
+        ]);
+    expect(stepsOf(FRIDAY_SET_ID)).toEqual([
+      ["clip", PINK_TUNNEL_ID, 0],
+      ["scene", PEAK_SCENE_ID, 1],
+      ["clip", DISCO_DOTS_ID, 2],
+    ]);
+    expect(stepsOf(second.id)).toEqual([["scene", PEAK_SCENE_ID, 0]]);
     const expectedSetlistIds = [FRIDAY_SET_ID, second.id].sort();
     expect(postedChanges()).toEqual([
       expect.objectContaining({
@@ -349,7 +364,7 @@ describe("demo scene reorder and delete", () => {
   });
 });
 
-describe("demo set list create and rename", () => {
+describe("demo set list create and update", () => {
   it("answers each code of the create row in order", () => {
     expect(codeOf(() => demoCreateVjSetlist({ name: "" }))).toBe(
       "VJ_SETLIST_NAME_REQUIRED",
@@ -407,39 +422,40 @@ describe("demo set list create and rename", () => {
     expect(late.items).toEqual([]);
     expect(late.position).toBe(1);
     expect(
-      bodyOf(() => demoRenameVjSetlist(late.id, { name: "friday Set" })),
+      bodyOf(() => demoUpdateVjSetlist(late.id, { name: "friday Set" })),
     ).toMatchObject({
       code: "VJ_SETLIST_NAME_TAKEN",
       setlistId: FRIDAY_SET_ID,
     });
   });
 
-  it("answers each code of the rename row in order", () => {
-    expect(codeOf(() => demoRenameVjSetlist("set", { name: "" }))).toBe(
+  it("answers each code of the update row in order", () => {
+    expect(codeOf(() => demoUpdateVjSetlist("set", { name: "" }))).toBe(
       "VJ_SETLIST_NOT_FOUND",
     );
-    expect(codeOf(() => demoRenameVjSetlist(UNKNOWN_ID, { name: "" }))).toBe(
+    expect(codeOf(() => demoUpdateVjSetlist(UNKNOWN_ID, { name: "" }))).toBe(
       "VJ_SETLIST_NAME_REQUIRED",
     );
     expect(
-      codeOf(() => demoRenameVjSetlist(UNKNOWN_ID, { name: "x".repeat(61) })),
+      codeOf(() => demoUpdateVjSetlist(UNKNOWN_ID, { name: "x".repeat(61) })),
     ).toBe("VJ_SETLIST_NAME_TOO_LONG");
     expect(
-      codeOf(() => demoRenameVjSetlist(UNKNOWN_ID, { name: "Late" })),
+      codeOf(() => demoUpdateVjSetlist(UNKNOWN_ID, { name: "Late" })),
     ).toBe("VJ_SETLIST_NOT_FOUND");
   });
 
   it("the stored name posts nothing and a case-only change renames", () => {
-    demoRenameVjSetlist(FRIDAY_SET_ID, { name: " Friday set " });
+    demoUpdateVjSetlist(FRIDAY_SET_ID, { name: " Friday set " });
     expect(posted).toEqual([]);
     currentNow = LATER_NOW;
-    const renamed = demoRenameVjSetlist(FRIDAY_SET_ID, { name: "Friday Set" });
+    const renamed = demoUpdateVjSetlist(FRIDAY_SET_ID, { name: "Friday Set" });
     expect(renamed.name).toBe("Friday Set");
     expect(renamed.updatedAt).toBe(new Date(LATER_NOW).toISOString());
     expect(postedChanges()).toEqual([
       expect.objectContaining({
-        kind: "setlist_renamed",
+        kind: "setlist_updated",
         setlistId: FRIDAY_SET_ID,
+        setlistIds: [FRIDAY_SET_ID],
       }),
     ]);
   });
@@ -448,7 +464,11 @@ describe("demo set list create and rename", () => {
 describe("demo set list items, reorder and delete", () => {
   it("a set list holds a scene twice", () => {
     const setlist = demoSetVjSetlistItems(FRIDAY_SET_ID, {
-      sceneIds: [PEAK_SCENE_ID, PEAK_SCENE_ID.toUpperCase(), WARM_UP_SCENE_ID],
+      items: [
+        sceneStep(PEAK_SCENE_ID),
+        sceneStep(PEAK_SCENE_ID.toUpperCase()),
+        sceneStep(WARM_UP_SCENE_ID),
+      ],
     });
     expect(setlist.items.map((item) => [item.sceneId, item.position])).toEqual([
       [PEAK_SCENE_ID, 0],
@@ -463,44 +483,63 @@ describe("demo set list items, reorder and delete", () => {
   });
 
   it("101 items answer VJ_SETLIST_FULL", () => {
-    const tooMany = Array.from({ length: 101 }, () => PEAK_SCENE_ID);
+    const tooMany = Array.from({ length: 101 }, () => sceneStep(PEAK_SCENE_ID));
     expect(
-      bodyOf(() => demoSetVjSetlistItems(FRIDAY_SET_ID, { sceneIds: tooMany })),
+      bodyOf(() => demoSetVjSetlistItems(FRIDAY_SET_ID, { items: tooMany })),
     ).toMatchObject({ code: "VJ_SETLIST_FULL", setlistId: FRIDAY_SET_ID });
     const hundred = tooMany.slice(0, 100);
     expect(
-      demoSetVjSetlistItems(FRIDAY_SET_ID, { sceneIds: hundred }).items,
+      demoSetVjSetlistItems(FRIDAY_SET_ID, { items: hundred }).items,
     ).toHaveLength(100);
   });
 
   it("answers each code of the items row in order", () => {
-    expect(codeOf(() => demoSetVjSetlistItems("set", { sceneIds: 1 }))).toBe(
+    expect(codeOf(() => demoSetVjSetlistItems("set", { items: 1 }))).toBe(
       "VJ_SETLIST_NOT_FOUND",
     );
     expect(
-      codeOf(() => demoSetVjSetlistItems(UNKNOWN_ID, { sceneIds: 1 })),
+      codeOf(() =>
+        demoSetVjSetlistItems(FRIDAY_SET_ID, { sceneIds: [PEAK_SCENE_ID] }),
+      ),
     ).toBe("VJ_SETLIST_ITEMS_INVALID");
+    expect(codeOf(() => demoSetVjSetlistItems(UNKNOWN_ID, { items: 1 }))).toBe(
+      "VJ_SETLIST_ITEMS_INVALID",
+    );
     expect(
       codeOf(() =>
-        demoSetVjSetlistItems(UNKNOWN_ID, { sceneIds: [UNKNOWN_ID] }),
+        demoSetVjSetlistItems(UNKNOWN_ID, { items: [sceneStep(UNKNOWN_ID)] }),
       ),
     ).toBe("VJ_SETLIST_NOT_FOUND");
     expect(
       bodyOf(() =>
         demoSetVjSetlistItems(FRIDAY_SET_ID, {
-          sceneIds: [PEAK_SCENE_ID, UNKNOWN_ID],
+          items: [sceneStep(PEAK_SCENE_ID), sceneStep(UNKNOWN_ID)],
         }),
       ),
     ).toMatchObject({ code: "VJ_SCENE_NOT_FOUND", sceneId: UNKNOWN_ID });
     expect(posted).toEqual([]);
   });
 
-  it("PUT items naming the stored scenes in the same order saves and posts nothing", () => {
+  it("PUT items naming the stored steps with their ids in the same order saves and posts nothing", () => {
     // Mirrors the backend: VjSetlistService.setSetlistItems is a no-op here.
     const before = demoGetVjSetlists().items[0];
     currentNow = LATER_NOW;
     const after = demoSetVjSetlistItems(FRIDAY_SET_ID, {
-      sceneIds: [WARM_UP_SCENE_ID, PEAK_SCENE_ID],
+      items: (before?.items ?? []).map((item) =>
+        item.kind === "scene"
+          ? {
+              id: item.id,
+              kind: item.kind,
+              sceneId: item.sceneId,
+              duration: item.duration,
+            }
+          : {
+              id: item.id,
+              kind: item.kind,
+              clipId: item.clipId,
+              duration: item.duration,
+            },
+      ),
     });
     expect(after.items.map((item) => item.id)).toEqual(
       before?.items.map((item) => item.id),
@@ -567,8 +606,10 @@ describe("demo scene and set list library changes", () => {
       name: "Late set",
       sceneIds: [scene.id],
     });
-    demoRenameVjSetlist(setlist.id, { name: "Later set" });
-    demoSetVjSetlistItems(setlist.id, { sceneIds: [scene.id, scene.id] });
+    demoUpdateVjSetlist(setlist.id, { name: "Later set" });
+    demoSetVjSetlistItems(setlist.id, {
+      items: [sceneStep(scene.id), sceneStep(scene.id)],
+    });
     demoReorderVjSetlists({ setlistIds: [setlist.id, FRIDAY_SET_ID] });
     demoDeleteVjScene(scene.id);
     demoDeleteVjSetlist(setlist.id);
@@ -587,7 +628,7 @@ describe("demo scene and set list library changes", () => {
       ["scene_updated", scene.id, null, []],
       ["scenes_reordered", null, null, []],
       ["setlist_created", null, setlist.id, []],
-      ["setlist_renamed", null, setlist.id, []],
+      ["setlist_updated", null, setlist.id, [setlist.id]],
       ["setlist_items_changed", null, setlist.id, [setlist.id]],
       ["setlists_reordered", null, null, []],
       ["scene_deleted", scene.id, null, [setlist.id]],

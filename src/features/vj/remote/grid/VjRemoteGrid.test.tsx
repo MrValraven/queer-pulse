@@ -45,6 +45,7 @@ function clipOf(id: string, title: string, overrides: Partial<VjClipDTO> = {}) {
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: `/files/${id}-preview.mp4`,
+    setlistItemCount: 0,
     ...overrides,
   };
   return clip;

@@ -15,15 +15,16 @@ import {
   useState,
   type RefObject,
 } from "react";
-import type {
-  VjClipDTO,
-  VjEffectId,
-  VjGeneratorId,
-  VjQuantize,
-  VjSceneDTO,
-  VjSetlistDTO,
-  VjTransitionId,
-  VjTransitionLength,
+import {
+  vjSceneLookFlashes,
+  type VjClipDTO,
+  type VjEffectId,
+  type VjGeneratorId,
+  type VjQuantize,
+  type VjSceneDTO,
+  type VjSetlistDTO,
+  type VjTransitionId,
+  type VjTransitionLength,
 } from "../../../../shared/contracts/vj";
 import { useVjClipFavorite } from "../../api/useVjClipFavorite";
 import type {
@@ -52,6 +53,14 @@ import type { VjRun } from "../useVjCommandRunner";
 import {
   dispatchVjRemoteAction,
   handleAllEffectsOff,
+  handleSetlistPlay,
+  handleSetlistPlayFlashing,
+  handleSetlistSetLooping,
+  handleSetlistSkipFlashing,
+  handleSetlistStep,
+  handleSetlistStepThrough,
+  handleSetlistStop,
+  handleSetlistTogglePlaying,
   handleTouchPadSend,
   sendVjMixAmount,
   sendVjPad,
@@ -59,7 +68,7 @@ import {
   VJ_BLACKOUT_KEY,
   vjGeneratorKeyOf,
   vjPadKeyOf,
-  vjSceneLookFlashes,
+  vjSetlistLoopKeyOf,
   vjTileKeyOf,
   type VjHeldPad,
   type VjRemoteActionContext,
@@ -78,7 +87,35 @@ export interface VjFlashConsentRequest {
   transitionMode: VjTransitionId | null;
   /** Set when a scene recall or a set list step asked: the scene's name, for the confirm's label. */
   sceneName?: string;
+  /**
+   * Set when a step whose look this remote cannot read asked (its scene or
+   * its set list is not loaded): a catalog key that names it on the confirm,
+   * such as vj:setlistItems.sceneGone or vj:strip.setlistNext.
+   */
+  sceneNameKey?: string;
+  /**
+   * Set when a sequence that plays itself asked (Play, Resume, Play again):
+   * the sequence's name, for vj:flash.sequenceConfirm; null otherwise.
+   */
+  setlistName: string | null;
   anchor: HTMLElement | null;
+}
+
+/**
+ * The sequence controls for touch: each takes the pressed button as the
+ * flash warning's anchor. Keyboard and MIDI reach the same handlers through
+ * `dispatch` with no anchor.
+ */
+export interface VjSetlistRemoteActions {
+  play: (setlistId: string, anchor: HTMLElement | null) => void;
+  stepThrough: (setlistId: string, anchor: HTMLElement | null) => void;
+  /** Pause while playing, else Play, Resume or Play again. */
+  togglePlaying: (anchor: HTMLElement | null) => void;
+  step: (direction: "next" | "previous", anchor: HTMLElement | null) => void;
+  setLooping: (isLooping: boolean) => void;
+  stop: () => void;
+  playFlashing: () => void;
+  skipFlashing: () => void;
 }
 
 export interface VjRemoteActions {
@@ -118,6 +155,11 @@ export interface VjRemoteActions {
   dismissFlash: () => void;
   blackoutIsOn: (serverIsOn: boolean) => boolean;
   isBlackoutPending: boolean;
+  setlist: VjSetlistRemoteActions;
+  /** A sequence's Loop switch as shown: the pressed value until its ack lands. */
+  setlistLoopIsOn: (setlistId: string, serverIsOn: boolean) => boolean;
+  /** Whether that sequence's Loop switch waits for its ack. */
+  isSetlistLoopPending: (setlistId: string) => boolean;
   /** vj:dock.resetDone for 2.5 s after a reset look lands; null otherwise. */
   infoKey: string | null;
 }
@@ -134,7 +176,7 @@ export interface UseVjRemoteActionsOptions {
   isBlocked: boolean;
   onRefused: (errorKey: string | null) => void;
   onOpenSheet: (sheet: "shortcuts") => void;
-  /** The library's scenes and set lists, so a set list step can check its look for flashes. */
+  /** The library's scenes and set lists, so a sequence's steps can be checked for flashes. */
   scenes?: readonly VjSceneDTO[];
   setlists?: readonly VjSetlistDTO[];
 }
@@ -211,7 +253,13 @@ function useVjFlashConsentGate(
   const [consent, setConsent] = useState<VjPendingConsent | null>(null);
   const requestPadConsent = useCallback(
     (padId: VjPadId, anchor: HTMLElement | null) =>
-      setConsent({ padId, transitionMode: null, anchor, onConsented: null }),
+      setConsent({
+        padId,
+        transitionMode: null,
+        setlistName: null,
+        anchor,
+        onConsented: null,
+      }),
     [],
   );
   const requestFlashConsent = useCallback(
@@ -224,7 +272,13 @@ function useVjFlashConsentGate(
         onConsented();
         return;
       }
-      setConsent({ padId: null, transitionMode, anchor, onConsented });
+      setConsent({
+        padId: null,
+        transitionMode,
+        setlistName: null,
+        anchor,
+        onConsented,
+      });
     },
     [optionsRef],
   );
@@ -243,6 +297,69 @@ function useVjFlashConsentGate(
         padId: null,
         transitionMode: null,
         sceneName: scene.name,
+        setlistName: null,
+        anchor,
+        onConsented,
+      });
+    },
+    [optionsRef],
+  );
+  // The handlers decide a sequence needs the warning; this only asks it.
+  const requestSetlistConsent = useCallback(
+    (
+      setlist: Pick<VjSetlistDTO, "name">,
+      anchor: HTMLElement | null,
+      onConsented: () => void,
+    ) => {
+      if (optionsRef.current.flashConsent.hasConsented) {
+        onConsented();
+        return;
+      }
+      setConsent({
+        padId: null,
+        transitionMode: null,
+        setlistName: setlist.name,
+        anchor,
+        onConsented,
+      });
+    },
+    [optionsRef],
+  );
+  // A step whose look this remote cannot read: the handler counts it as flashing.
+  const requestStepConsent = useCallback(
+    (
+      stepNameKey: string,
+      anchor: HTMLElement | null,
+      onConsented: () => void,
+    ) => {
+      if (optionsRef.current.flashConsent.hasConsented) {
+        onConsented();
+        return;
+      }
+      setConsent({
+        padId: null,
+        transitionMode: null,
+        sceneNameKey: stepNameKey,
+        setlistName: null,
+        anchor,
+        onConsented,
+      });
+    },
+    [optionsRef],
+  );
+  // A step the server refused as an unconfirmed flash: it asks whatever the
+  // look here says, naming the step.
+  const requestNamedStepConsent = useCallback(
+    (stepName: string, anchor: HTMLElement | null, onConsented: () => void) => {
+      if (optionsRef.current.flashConsent.hasConsented) {
+        onConsented();
+        return;
+      }
+      setConsent({
+        padId: null,
+        transitionMode: null,
+        sceneName: stepName,
+        setlistName: null,
         anchor,
         onConsented,
       });
@@ -272,6 +389,8 @@ function useVjFlashConsentGate(
             padId: consent.padId,
             transitionMode: consent.transitionMode,
             sceneName: consent.sceneName,
+            sceneNameKey: consent.sceneNameKey,
+            setlistName: consent.setlistName,
             anchor: consent.anchor,
           },
     [consent],
@@ -282,9 +401,89 @@ function useVjFlashConsentGate(
     requestPadConsent,
     requestFlashConsent,
     requestSceneFlashConsent,
+    requestSetlistConsent,
+    requestStepConsent,
+    requestNamedStepConsent,
     confirmFlash,
     dismissFlash,
   };
+}
+
+/** The sequence controls, each reading the newest render through the context. */
+function useVjSetlistRemoteActions(
+  contextRef: RefObject<VjRemoteActionContext | null>,
+): VjSetlistRemoteActions {
+  const play = useCallback(
+    (setlistId: string, anchor: HTMLElement | null) => {
+      const context = contextRef.current;
+      if (context !== null) handleSetlistPlay(context, setlistId, anchor);
+    },
+    [contextRef],
+  );
+  const stepThrough = useCallback(
+    (setlistId: string, anchor: HTMLElement | null) => {
+      const context = contextRef.current;
+      if (context !== null) {
+        handleSetlistStepThrough(context, setlistId, anchor);
+      }
+    },
+    [contextRef],
+  );
+  const togglePlaying = useCallback(
+    (anchor: HTMLElement | null) => {
+      const context = contextRef.current;
+      if (context !== null) handleSetlistTogglePlaying(context, anchor);
+    },
+    [contextRef],
+  );
+  const step = useCallback(
+    (direction: "next" | "previous", anchor: HTMLElement | null) => {
+      const context = contextRef.current;
+      if (context !== null) handleSetlistStep(context, direction, anchor);
+    },
+    [contextRef],
+  );
+  const setLooping = useCallback(
+    (isLooping: boolean) => {
+      const context = contextRef.current;
+      if (context !== null) handleSetlistSetLooping(context, isLooping);
+    },
+    [contextRef],
+  );
+  const stop = useCallback(() => {
+    const context = contextRef.current;
+    if (context !== null) handleSetlistStop(context);
+  }, [contextRef]);
+  const playFlashing = useCallback(() => {
+    const context = contextRef.current;
+    if (context !== null) handleSetlistPlayFlashing(context);
+  }, [contextRef]);
+  const skipFlashing = useCallback(() => {
+    const context = contextRef.current;
+    if (context !== null) handleSetlistSkipFlashing(context);
+  }, [contextRef]);
+  return useMemo(
+    () => ({
+      play,
+      stepThrough,
+      togglePlaying,
+      step,
+      setLooping,
+      stop,
+      playFlashing,
+      skipFlashing,
+    }),
+    [
+      play,
+      stepThrough,
+      togglePlaying,
+      step,
+      setLooping,
+      stop,
+      playFlashing,
+      skipFlashing,
+    ],
+  );
 }
 
 export function useVjRemoteActions(
@@ -338,6 +537,13 @@ export function useVjRemoteActions(
   const senders = useVjContinuousSenders({ sendMix, sendLength });
   const consentGate = useVjFlashConsentGate(optionsRef, contextRef);
   const { requestPadConsent, requestSceneFlashConsent } = consentGate;
+  const { requestSetlistConsent, requestStepConsent, requestNamedStepConsent } =
+    consentGate;
+  const currentState = useCallback(
+    () => optionsRef.current.stage.latestState,
+    [],
+  );
+  const setlistActions = useVjSetlistRemoteActions(contextRef);
 
   const onResetDone = useCallback(
     () => showInfo(VJ_RESET_DONE_KEY),
@@ -353,6 +559,7 @@ export function useVjRemoteActions(
     contextRef.current = {
       run,
       state,
+      currentState,
       serverNow: clock.serverNow,
       visibleClips,
       dockPads,
@@ -375,6 +582,9 @@ export function useVjRemoteActions(
       transitionLength: senders.transitionLength,
       requestPadConsent,
       requestSceneConsent: requestSceneFlashConsent,
+      requestSetlistConsent,
+      requestStepConsent,
+      requestNamedStepConsent,
       reportOutcome,
       onResetDone,
       onOpenSheet,
@@ -427,6 +637,15 @@ export function useVjRemoteActions(
     (serverIsOn: boolean) => padValueOf(VJ_BLACKOUT_KEY, serverIsOn),
     [padValueOf],
   );
+  const setlistLoopIsOn = useCallback(
+    (setlistId: string, serverIsOn: boolean) =>
+      padValueOf(vjSetlistLoopKeyOf(setlistId), serverIsOn),
+    [padValueOf],
+  );
+  const isSetlistLoopPending = useCallback(
+    (setlistId: string) => isPadKeyPending(vjSetlistLoopKeyOf(setlistId)),
+    [isPadKeyPending],
+  );
   const armedClipId = cue.armedClipId;
   const tileStateOf = useCallback(
     (clipId: string) => ({
@@ -456,6 +675,9 @@ export function useVjRemoteActions(
     dismissFlash: consentGate.dismissFlash,
     blackoutIsOn,
     isBlackoutPending: isPadKeyPending(VJ_BLACKOUT_KEY),
+    setlist: setlistActions,
+    setlistLoopIsOn,
+    isSetlistLoopPending,
     infoKey,
   };
 }

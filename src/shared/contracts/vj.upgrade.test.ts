@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createVjStageState } from "./vj.state";
-import { upgradeVjStageFieldsV1 } from "./vj.upgrade";
+import { createVjSetlistPlayback } from "./vj.sequence";
+import { upgradeVjStageFieldsV1, upgradeVjStageFieldsV2 } from "./vj.upgrade";
 
 const NOW = 50_000;
 const CLIP_ID = "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d";
@@ -225,5 +226,52 @@ describe("upgradeVjStageFieldsV1", () => {
     const snapshot = JSON.stringify(record);
     upgradeVjStageFieldsV1(record, NOW);
     expect(JSON.stringify(record)).toBe(snapshot);
+  });
+});
+
+describe("upgradeVjStageFieldsV2", () => {
+  it("fills the default playback on a record without one", () => {
+    const record = { stageEpoch: "epoch", revision: 1 };
+    expect(upgradeVjStageFieldsV2(record)).toEqual({
+      stageEpoch: "epoch",
+      revision: 1,
+      setlistPlayback: createVjSetlistPlayback(false),
+    });
+  });
+
+  it("returns a record that holds a playback unchanged, as the same object", () => {
+    const record = createVjStageState("epoch", 100) as unknown as Record<
+      string,
+      unknown
+    >;
+    expect(upgradeVjStageFieldsV2(record)).toBe(record);
+  });
+
+  it("keeps a playback that was saved as it is, even when it is not the default", () => {
+    const playback = { ...createVjSetlistPlayback(true), status: "finished" };
+    const record = { setlistPlayback: playback };
+    expect(upgradeVjStageFieldsV2(record).setlistPlayback).toBe(playback);
+  });
+
+  it("leaves the input record as it was", () => {
+    const record = { revision: 3 };
+    upgradeVjStageFieldsV2(record);
+    expect(record).toEqual({ revision: 3 });
+  });
+
+  it("fills a v1 record after the v1 pass, and a v2 record without a playback through the second pass alone", () => {
+    const v1Upgraded = upgradeVjStageFieldsV2(
+      upgradeVjStageFieldsV1(buildV1StageRecord(), NOW),
+    );
+    expect(v1Upgraded.setlistPlayback).toEqual(createVjSetlistPlayback(false));
+    expect(v1Upgraded.tempo).toBeDefined();
+
+    const { setlistPlayback: _setlistPlayback, ...savedBeforeSequences } =
+      createVjStageState("epoch", 100);
+    const v2Record = savedBeforeSequences as unknown as Record<string, unknown>;
+    expect(upgradeVjStageFieldsV1(v2Record, NOW)).toBe(v2Record);
+    expect(upgradeVjStageFieldsV2(v2Record).setlistPlayback).toEqual(
+      createVjSetlistPlayback(false),
+    );
   });
 });

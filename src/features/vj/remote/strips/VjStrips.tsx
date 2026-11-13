@@ -5,6 +5,7 @@ import {
   FiChevronRight,
   FiCornerUpLeft,
   FiList,
+  FiPlay,
   FiPlus,
 } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
@@ -81,6 +82,11 @@ function useVjStripsLegendItems({
       ),
       text: t("vj:help.setlistStep"),
     });
+    items.push({
+      id: "setlistPlay",
+      marker: <VjHelpMarker icon={<FiPlay {...VJ_LEGEND_ICON_PROPS} />} />,
+      text: t("vj:help.setlistPlay"),
+    });
   }
   const firstScene = scenesProps.scenes[0];
   if (firstScene !== undefined) {
@@ -90,16 +96,19 @@ function useVjStripsLegendItems({
       text: t("vj:help.sceneChip"),
     });
   }
-  items.push({
-    id: "saveScene",
-    marker: (
-      <VjHelpMarker
-        icon={<FiPlus {...VJ_LEGEND_ICON_PROPS} />}
-        label={t("vj:strip.saveScene")}
-      />
-    ),
-    text: t("vj:help.saveScene"),
-  });
+  // While a sequence is active its group takes Save scene's place.
+  if (scenesProps.activeSetlist === null) {
+    items.push({
+      id: "saveScene",
+      marker: (
+        <VjHelpMarker
+          icon={<FiPlus {...VJ_LEGEND_ICON_PROPS} />}
+          label={t("vj:strip.saveScene")}
+        />
+      ),
+      text: t("vj:help.saveScene"),
+    });
+  }
   if (scenesProps.onOpenScenesSheet !== undefined) {
     items.push({
       id: "sceneList",

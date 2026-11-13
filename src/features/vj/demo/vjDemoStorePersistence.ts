@@ -11,6 +11,8 @@ import type {
   VjCreatorDTO,
   VjLibraryChange,
   VjSceneLook,
+  VjSetlistItemKind,
+  VjStepDuration,
 } from "../../../shared/contracts/vj";
 import { currentUser } from "../../members/data/demoCurrentUser";
 import {
@@ -24,6 +26,7 @@ import {
   type VjDemoChannel,
 } from "./vjDemoChannel";
 import {
+  fillVjDemoSequenceFields,
   isVjDemoLibraryV2,
   seedVjDemoScenesAndSetlists,
   upgradeVjDemoLibraryV1,
@@ -31,10 +34,11 @@ import {
 import { VJ_DEMO_MEDIA } from "./vjDemoMedia.data";
 import { isVjUuid, vjRefusal } from "./vjDemoRules";
 
-/** A clip as stored; `previewUrl` lives in the page-life preview map (C 9.5). */
+/** A clip as stored; `previewUrl` lives in the page-life preview map (C 9.5),
+ *  and the pack and set list counts are read from the library. */
 export type StoredVjDemoClip = Omit<
   VjClipDTO,
-  "packIds" | "packCount" | "previewUrl"
+  "packIds" | "packCount" | "setlistItemCount" | "previewUrl"
 >;
 
 export interface StoredVjDemoPack {
@@ -59,14 +63,22 @@ export interface StoredVjDemoScene {
   updatedAt: string;
 }
 
+/** One step (sequences contract 10.1): a scene step names its scene and no
+ *  clip, a clip step its clip and no scene. */
 export interface StoredVjDemoSetlistItem {
   id: string;
-  sceneId: string;
+  kind: VjSetlistItemKind;
+  sceneId: string | null;
+  clipId: string | null;
+  /** Null plays the sequence default. */
+  duration: VjStepDuration | null;
 }
 
 export interface StoredVjDemoSetlist {
   id: string;
   name: string;
+  isLooping: boolean;
+  stepDuration: VjStepDuration;
   /** Item order; the index is the position. */
   items: StoredVjDemoSetlistItem[];
   createdBy: VjCreatorDTO | null;
@@ -184,11 +196,14 @@ export function buildVjDemoSeedLibrary(): StoredVjDemoLibrary {
   };
 }
 
+/** The stored text as a v2 library. A library saved before sequences gains
+ *  their fields first (sequences contract 10.2); the filled copy is written
+ *  back on its next commit. */
 function parseLibrary(text: string | null): StoredVjDemoLibrary | null {
   if (text === null) return null;
   try {
-    const parsed: unknown = JSON.parse(text);
-    return isVjDemoLibraryV2(parsed) ? parsed : null;
+    const filled = fillVjDemoSequenceFields(JSON.parse(text) as unknown);
+    return isVjDemoLibraryV2(filled) ? filled : null;
   } catch {
     return null;
   }

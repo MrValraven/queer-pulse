@@ -1,14 +1,19 @@
 /**
- * The source clips of the active set list's scenes, in set list order
- * (contract 9.1 cache retention), so a scene recall starts from a cached
- * clip. Both library lists load only while a set list is active.
+ * Every clip the active set list names (sequences contract 6.1): clip steps,
+ * scene sources and scene mix clips, each once, starting at the step after
+ * `setlistIndex` and wrapping round, so the next step's clip is fetched
+ * first and a timer advance lands on a cached clip. An armed set list
+ * (index null) starts at its first step. Both library lists load only while
+ * a set list is active; clip steps count before the scenes arrive.
  */
 import { useMemo, useState } from "react";
+import type { VjSceneDTO } from "../../../shared/contracts/vj";
 import { useVjScenes } from "../api/useVjScenes";
 import { useVjSetlists } from "../api/useVjSetlists";
-import { vjSceneClipIds } from "./vjRetainedClips";
+import { vjSetlistClipIds } from "./vjRetainedClips";
 
 const NO_CLIP_IDS: readonly string[] = [];
+const NO_SCENES: readonly VjSceneDTO[] = [];
 
 function isSameClipIdList(
   first: readonly string[],
@@ -22,6 +27,7 @@ function isSameClipIdList(
 
 export function useVjScreenSetlistClips(
   activeSetlistId: string | null,
+  setlistIndex: number | null,
 ): readonly string[] {
   const isEnabled = activeSetlistId !== null;
   const setlists = useVjSetlists({ isEnabled }).data;
@@ -29,14 +35,11 @@ export function useVjScreenSetlistClips(
 
   const nextClipIds = useMemo(() => {
     if (activeSetlistId === null || setlists === undefined) return NO_CLIP_IDS;
-    if (scenes === undefined) return NO_CLIP_IDS;
     const setlist = setlists.find((each) => each.id === activeSetlistId);
     if (setlist === undefined) return NO_CLIP_IDS;
-    const sceneIds = [...setlist.items]
-      .sort((first, second) => first.position - second.position)
-      .map((item) => item.sceneId);
-    return vjSceneClipIds(scenes, sceneIds);
-  }, [activeSetlistId, setlists, scenes]);
+    const startIndex = setlistIndex === null ? 0 : setlistIndex + 1;
+    return vjSetlistClipIds(setlist.items, scenes ?? NO_SCENES, startIndex);
+  }, [activeSetlistId, setlistIndex, setlists, scenes]);
 
   // The same ids keep the same list, so the retention set stays memoised.
   const [stableClipIds, setStableClipIds] = useState(nextClipIds);

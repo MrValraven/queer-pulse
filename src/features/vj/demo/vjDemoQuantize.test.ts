@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   VJ_LIMITS,
   canonicalVjStageState,
+  createVjSetlistPlayback,
   createVjStageState,
   vjBeatPositionAt,
   type VjQuantize,
+  type VjSetlistPlayback,
   type VjStageState,
 } from "../../../shared/contracts/vj";
 import {
@@ -158,9 +160,10 @@ describe("settleVjDemoChange", () => {
     }
   });
 
-  it("only command and shuffle causes compute a grid time", () => {
+  it("only command, shuffle and setlist causes compute a grid time", () => {
     expect(isVjDemoTimerOrLibraryCause("command")).toBe(false);
     expect(isVjDemoTimerOrLibraryCause("shuffle")).toBe(false);
+    expect(isVjDemoTimerOrLibraryCause("setlist")).toBe(false);
     for (const cause of [
       "strobe_timeout",
       "overlay_timeout",
@@ -302,5 +305,126 @@ describe("vjDemoAttachApplyAt", () => {
     expect(vjDemoAttachApplyAt(NOW, NOW)).toBeNull();
     expect(vjDemoAttachApplyAt(9_000, NOW)).toBeNull();
     expect(vjDemoAttachApplyAt(null, NOW)).toBeNull();
+  });
+});
+
+describe("settleVjDemoChange set list clock (sequences contract 3.5, 5.7)", () => {
+  const SETLIST_ID = "55555555-5555-4555-8555-5555555555b1";
+
+  function withPlayback(
+    state: VjStageState,
+    playback: Partial<VjSetlistPlayback>,
+  ): VjStageState {
+    return {
+      ...state,
+      activeSetlistId: SETLIST_ID,
+      setlistIndex: 0,
+      setlistPlayback: { ...createVjSetlistPlayback(false), ...playback },
+    };
+  }
+
+  it("a start stamps the clock from applyAt: a look switch on the beat grid", () => {
+    const previous = stageWithQuantize("beat");
+    const next = withPlayback(withVjLiveClip(previous, CLIP_GRID), {
+      status: "playing",
+      stepDurationMs: 8_000,
+    });
+    const result = settle(previous, next, {
+      stamps: clipStamps(),
+      isLookSwitch: true,
+      setlistClock: { kind: "start", durationMs: 8_000, remainingMs: 8_000 },
+    });
+    expect(result.applyAt).toBe(10_500);
+    expect(result.state.setlistPlayback).toMatchObject({
+      stepStartedAt: 10_500,
+      stepEndsAt: 18_500,
+      stepDurationMs: 8_000,
+      pausedRemainingMs: null,
+    });
+  });
+
+  it("a start with less time left than the full length keeps both numbers apart (Resume)", () => {
+    const previous = stageWithQuantize("off");
+    const next = withPlayback(previous, {
+      status: "playing",
+      stepDurationMs: 8_000,
+    });
+    const result = settle(previous, next, {
+      setlistClock: { kind: "start", durationMs: 8_000, remainingMs: 3_000 },
+    });
+    expect(result.applyAt).toBeNull();
+    expect(result.state.setlistPlayback).toMatchObject({
+      stepStartedAt: NOW + 3_000 - 8_000,
+      stepEndsAt: NOW + 3_000,
+      stepDurationMs: 8_000,
+    });
+  });
+
+  it("clear empties both times and keep leaves them as given", () => {
+    const previous = stageWithQuantize("off");
+    const running = withPlayback(previous, {
+      status: "playing",
+      stepStartedAt: 2_000,
+      stepEndsAt: 10_000,
+      stepDurationMs: 8_000,
+    });
+    const cleared = settle(previous, running, {
+      setlistClock: { kind: "clear" },
+    });
+    expect(cleared.state.setlistPlayback).toMatchObject({
+      stepStartedAt: null,
+      stepEndsAt: null,
+      stepDurationMs: 8_000,
+    });
+    const kept = settle(previous, running, { setlistClock: { kind: "keep" } });
+    expect(kept.state.setlistPlayback).toEqual(running.setlistPlayback);
+    const absent = settle(previous, running);
+    expect(absent.state.setlistPlayback).toEqual(running.setlistPlayback);
+  });
+
+  it("a timer advance with quantize off lands at its step end, or at once once it passed", () => {
+    const previous = stageWithQuantize("off");
+    const next = withVjLiveClip(previous, CLIP_GRID);
+    expect(
+      settle(previous, next, { cause: "setlist", scheduledAt: NOW + 300 })
+        .applyAt,
+    ).toBe(NOW + 300);
+    expect(
+      settle(previous, next, { cause: "setlist", scheduledAt: NOW - 50 })
+        .applyAt,
+    ).toBeNull();
+  });
+
+  it("a timer advance with quantize on lands on the first boundary at or after its step end, look switch or not", () => {
+    const previous = stageWithQuantize("beat");
+    const next = withVjLiveClip(previous, CLIP_GRID);
+    expect(
+      settle(previous, next, {
+        cause: "setlist",
+        scheduledAt: NOW + 300,
+        isLookSwitch: false,
+      }).applyAt,
+    ).toBe(10_500);
+    // A step end one ms past a boundary (rounded beats) still lands on it.
+    expect(
+      settle(previous, next, { cause: "setlist", scheduledAt: 11_001 }).applyAt,
+    ).toBe(11_000);
+    // The minimum lead from now wins over a step end already passed.
+    expect(
+      settle(previous, next, { cause: "setlist", scheduledAt: NOW - 400 })
+        .applyAt,
+    ).toBe(10_500);
+  });
+
+  it("a timer advance never lands before a pending change", () => {
+    const previous = stageWithQuantize("off");
+    const next = withVjLiveClip(previous, CLIP_GRID);
+    expect(
+      settle(previous, next, {
+        cause: "setlist",
+        scheduledAt: NOW + 300,
+        pendingApplyAt: NOW + 2_000,
+      }).applyAt,
+    ).toBe(NOW + 2_000);
   });
 });

@@ -30,10 +30,10 @@ describe("vjFrames typing", () => {
     expect(mappedNames).toHaveLength(VJ_CLIENT_FRAME_NAMES.length - 1);
   });
 
-  it("VjCommandFrameName is exactly the 20 remote commands", () => {
+  it("VjCommandFrameName is exactly the 22 remote commands", () => {
     expectTypeOf<VjCommandFrameName>().toEqualTypeOf<VjRemoteCommandName>();
-    expect(VJ_REMOTE_COMMAND_NAMES).toHaveLength(20);
-    expect(new Set(VJ_REMOTE_COMMAND_NAMES).size).toBe(20);
+    expect(VJ_REMOTE_COMMAND_NAMES).toHaveLength(22);
+    expect(new Set(VJ_REMOTE_COMMAND_NAMES).size).toBe(22);
   });
 
   it("VjCommandPatch drops clientId and commandSequence", () => {
@@ -42,6 +42,13 @@ describe("vjFrames typing", () => {
     }>();
     expectTypeOf<VjCommandPatch<"stage:recallScene">>().toEqualTypeOf<{
       sceneId: string;
+    }>();
+    expectTypeOf<VjCommandPatch<"stage:setlistSetPlaying">>().toEqualTypeOf<{
+      isPlaying: boolean;
+      isFlashConfirmed?: boolean;
+    }>();
+    expectTypeOf<VjCommandPatch<"stage:setlistSetLooping">>().toEqualTypeOf<{
+      isLooping: boolean;
     }>();
     expectTypeOf<VjCommandPatch<"stage:swapMix">>().not.toHaveProperty(
       "clientId",

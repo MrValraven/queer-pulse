@@ -18,12 +18,12 @@ export const members: Catalog = {
   "card.you": "Tu",
   "card.vouchCount_one": "{count} voto de confiança",
   "card.vouchCount_other": "{count} votos de confiança",
-  "card.mutualsCount_one": "{count} contacto em comum",
-  "card.mutualsCount_other": "{count} contactos em comum",
+  "card.mutualsCount_one": "{count} conexão em comum",
+  "card.mutualsCount_other": "{count} conexões em comum",
 
   // ── Faixa "ativo recentemente" (ActivityBandPill) ─────────────────────────
-  "activityBand.thisMonth": "Ativo este mês",
-  "activityBand.last3Months": "Ativo nos últimos 3 meses",
+  "activityBand.thisMonth": "Com atividade este mês",
+  "activityBand.last3Months": "Com atividade nos últimos 3 meses",
   "activityBand.dormant": "Sem atividade recente",
 
   // ── Mensagens de erro do carregamento de imagens (api/uploadProcessing.ts, api/useUploadImage.ts) ──
@@ -57,13 +57,13 @@ export const members: Catalog = {
 
   // ── AvatarEditor ───────────────────────────────────────────────────────────
   "avatar.error.generic":
-    "Não conseguimos adicionar essa fotografia. Tenta novamente.",
+    "Não conseguimos adicionar essa foto. Tenta novamente.",
   "avatar.uploading": "A carregar… {percent}%",
-  "avatar.change": "Mudar fotografia",
-  "avatar.add": "Adicionar fotografia",
-  "avatar.remove": "Remover fotografia",
-  "avatar.useGoogle": "Usar fotografia da Google",
-  "avatar.googleAdded": "Adicionámos a tua fotografia da Google.",
+  "avatar.change": "Mudar foto",
+  "avatar.add": "Adicionar foto",
+  "avatar.remove": "Remover foto",
+  "avatar.useGoogle": "Usar foto da Google",
+  "avatar.googleAdded": "Adicionámos a tua foto da Google.",
 
   // ── AvatarEditor · modal de escolha de fotografia (PhotoPickerModal) ───────
   "avatar.picker.title": "Escolher uma foto",
@@ -79,7 +79,7 @@ export const members: Catalog = {
   "avatar.picker.delete": "Eliminar foto",
   "avatar.picker.deleteConfirmTitle": "Eliminar esta foto?",
   "avatar.picker.deleteConfirmBody":
-    "Isto remove o carregamento definitivamente. Não é possível anular.",
+    "A foto carregada é eliminada de vez. Não é possível anular.",
   "avatar.picker.deleteConfirmBodyInUse":
     "Esta foto está a ser usada como a tua {usedAs}. Ao eliminá-la, também é removida daí. Não é possível anular.",
   "avatar.picker.deleteConfirmCta": "Eliminar foto",
@@ -112,7 +112,7 @@ export const members: Catalog = {
     "Segundo link (opcional, ex.: https://bandcamp.com/…)",
   "workItem.secondLinkLabel": "Segundo link do trabalho",
   "workItem.linkedNote":
-    "Está ligado a uma página da QueerPulse. Não editável aqui.",
+    "Leva a uma página da QueerPulse. Não podes editá-lo aqui.",
   "workItem.addSecondLink": "Adicionar um segundo link",
   "workItem.removeSecondLink": "Remover o segundo link",
   "workItem.remove": "Remover",
@@ -126,7 +126,7 @@ export const members: Catalog = {
   "profile.goBack": "Voltar atrás",
   "profile.notFound.title": "Este perfil não está aqui",
   "profile.notFound.description":
-    "Pode ter sido definido como privado, a pessoa pode ter saído, ou este link pode estar desatualizado. Não foi nada que tenhas feito.",
+    "O perfil pode ter passado a privado, a pessoa pode ter saído ou este link pode estar desatualizado. Do teu lado está tudo bem.",
   "profile.notFound.backAction": "Voltar a Pessoas",
   "profile.loadError.title": "Não conseguimos carregar o teu perfil",
   "profile.loadError.description":
@@ -180,7 +180,7 @@ export const members: Catalog = {
   "profile.hero.declineRequestCta": "Recusar com delicadeza",
   "profile.hero.vouchedFor": "Deste um voto de confiança a {first}",
   "profile.hero.withdrawVouchCta": "Retirar voto de confiança",
-  "profile.hero.vouchForCta": "Dar voto de confiança a {first}",
+  "profile.hero.vouchForCta": "Dar um voto de confiança a {first}",
   // Nota de perfil limitado (PRD-203). Uma fronteira respeitada, nunca uma
   // repreensao a quem visita. O ramo privado NAO promete mais conteudo: um
   // perfil privado continua privado mesmo para quem tem ligacao.
@@ -188,18 +188,18 @@ export const members: Catalog = {
   // que quem seguiu uma ligacao antiga perceba que o endereco mudou.
   // "Encaminhado" descreve a ligacao, nao quem le.
   "profile.moved.body":
-    "Seguiste uma ligação para @{oldSlug}. Esse nome de utilizador mudou, e agora leva aqui: @{slug}.",
+    "Seguiste uma ligação para @{oldSlug}. Esse nome de utilizador mudou. Agora está aqui: @{slug}.",
   "profile.moved.announcement": "Encaminhado de @{oldSlug} para @{slug}.",
   "profile.moved.ariaLabel":
     "Encaminhado a partir de um nome de utilizador antigo",
-  "profile.moved.dismiss": "Dispensar esta nota",
+  "profile.moved.dismiss": "Fechar esta nota",
   "profile.limited.ariaLabel": "Sobre este perfil",
-  "profile.limited.network.title": "{name} partilha mais com quem tem conexão",
+  "profile.limited.network.title": "{name} partilha mais com as suas conexões",
   "profile.limited.network.body":
-    "O resto deste perfil abre-se assim que ficarem conectados.",
+    "O resto deste perfil fica visível quando tiverem uma conexão.",
   "profile.limited.private.title": "{name} mantém o perfil privado",
   "profile.limited.private.body":
-    "Isto é o que toda a gente vê. Ligarem-se não abre o resto, mas permite que troquem mensagens.",
+    "Toda a gente vê só esta parte. Uma conexão permite trocarem mensagens, e o resto do perfil continua fechado.",
   "profile.limited.generic.title": "Este perfil tem mais",
   "profile.limited.generic.body":
     "{name} partilha o resto com um círculo mais pequeno.",
@@ -217,12 +217,12 @@ export const members: Catalog = {
   "profile.hero.writtenBy.pt": "{name} escreveu isto em português",
 
   // ── Cartão de contactos em comum (ProfileMutualsCard) ───────────────────────
-  "profile.mutuals.title": "Contactos em comum",
-  "profile.mutuals.one": "Ambos conhecem <strong>{nameA}</strong>.",
+  "profile.mutuals.title": "Conexões em comum",
+  "profile.mutuals.one": "Têm <strong>{nameA}</strong> em comum.",
   "profile.mutuals.two":
-    "Ambos conhecem <strong>{nameA}</strong> e <strong>{nameB}</strong>.",
+    "Têm <strong>{nameA}</strong> e <strong>{nameB}</strong> em comum.",
   "profile.mutuals.many":
-    "Ambos conhecem <strong>{nameA}</strong>, <strong>{nameB}</strong> e mais {othersCount}.",
+    "Têm <strong>{nameA}</strong>, <strong>{nameB}</strong> e mais {othersCount} em comum.",
 
   // ── Modal "Dizer olá" (ProfileHelloModal) ───────────────────────────────────
   "profile.hello.title": "Dizer olá a {first}",
@@ -230,9 +230,9 @@ export const members: Catalog = {
     "Escolhe o que te trouxe até aqui, ou começa já a escrever.",
   "profile.hello.reasonsLabel": "O que te trouxe até aqui",
   "profile.hello.draftTemplate":
-    'Olá {first}, vi isto no teu perfil, "{reason}", e quis dizer olá. ',
+    'Olá {first}, vi que estás disponível para "{reason}" e quis dizer olá. ',
   "profile.hello.draftLabel": "A tua mensagem",
-  "profile.hello.draftPlaceholder": "Diz o que tens em mente.",
+  "profile.hello.draftPlaceholder": "Escreve o que te apetecer.",
   "profile.hello.cancel": "Cancelar",
   "profile.hello.send": "Enviar",
   "profile.hello.sentToast": "Enviado. {first} costuma responder em breve.",
@@ -255,7 +255,7 @@ export const members: Catalog = {
     "{count} convites de equipa à espera da tua resposta",
   "profile.nav.skills": "Competências e ofertas",
   "profile.nav.groups": "Grupos e círculos",
-  "profile.nav.shapings": "O que me formou",
+  "profile.nav.shapings": "O que me marcou",
   "profile.nav.activity": "Atividade recente",
   "profile.nav.related": "Pessoas por perto",
   "profile.nav.events": "Eventos",
@@ -270,8 +270,8 @@ export const members: Catalog = {
   "profileEvents.noUpcoming": "{firstName} não tem nada marcado.",
   "profileEvents.selfNoUpcoming": "Não tens nada marcado.",
   "profileEvents.selfEmpty":
-    "Quando organizares ou coorganizares um evento, ele aparece aqui.",
-  "profileEvents.hostCta": "Organiza um evento",
+    "Quando organizares ou coorganizares um evento, aparece aqui.",
+  "profileEvents.hostCta": "Organizar um evento",
   "profileEvents.loadError.title":
     "Não conseguimos carregar <em>estes eventos</em>",
   "profileEvents.loadError.body": "Verifica a ligação e tenta de novo.",
@@ -279,7 +279,7 @@ export const members: Catalog = {
     "O nosso servidor teve um problema ao carregar estes eventos. Tenta de novo daqui a pouco.",
 
   // ── Sinais de confiança + explicação (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
-  "profile.trust.verified": "Verificado",
+  "profile.trust.verified": "Identidade verificada",
   "profile.trust.staff": "Equipa",
   "profile.trust.vouchCount_one": "{count} voto de confiança",
   "profile.trust.vouchCount_other": "{count} votos de confiança",
@@ -289,25 +289,25 @@ export const members: Catalog = {
   "profile.trust.verifiedDescription":
     "A identidade desta pessoa foi confirmada pela QueerPulse.",
   "profile.trust.staffDescription":
-    "Esta pessoa faz parte da equipa QueerPulse.",
+    "Esta pessoa faz parte da equipa da QueerPulse.",
   "profile.trust.vouchesTerm": "Votos de confiança",
   "profile.trust.vouchesDescription":
-    "Outros membros que deram, pessoalmente, um voto de confiança à entrada desta pessoa na comunidade.",
+    "Pessoas da comunidade que deram pessoalmente um voto de confiança para que esta pessoa entrasse.",
 
   // ── Menu de definições do perfil (ProfileSettingsMenu) ──────────────────────
   "profile.rail.settingsMenuAria": "Definições do perfil",
   "profile.rail.whoSeesWhat": "Quem vê o quê",
   "profile.rail.bringMeBack": "Voltar a ficar visível",
-  "profile.rail.hideMe24h": "Ficar oculto 24h",
+  "profile.rail.hideMe24h": "Ocultar perfil 24h",
   "profile.rail.yourData": "Os teus dados",
   "profile.rail.showQr": "Mostrar código QR",
   "profile.rail.hideToast.hidden":
     "O teu perfil fica oculto durante as próximas 24 horas.",
   "profile.rail.hideToast.visible": "O teu perfil volta a ficar visível.",
   "profile.rail.hideToast.failedHide":
-    "Não conseguimos guardar. O teu perfil continua visível para os outros membros. Tenta outra vez daqui a pouco.",
+    "Não conseguimos guardar. O teu perfil continua visível para as outras pessoas. Tenta outra vez daqui a pouco.",
   "profile.rail.hideToast.failedUnhide":
-    "Não conseguimos guardar. O teu perfil continua escondido dos outros membros. Tenta outra vez daqui a pouco.",
+    "Não conseguimos guardar. O teu perfil continua escondido das outras pessoas. Tenta outra vez daqui a pouco.",
 
   // ── Modal do código QR do perfil (ProfileQrModal) ────────────────────────────
   "profile.qr.title": "O código QR do teu perfil",
@@ -340,9 +340,9 @@ export const members: Catalog = {
   "profile.communities.subtitleSelf":
     "Comunidades que estás a destacar no teu perfil.",
   "profile.communities.subtitlePublic": "Comunidades de que {first} faz parte.",
-  "profile.communities.role.owner": "Fundador",
+  "profile.communities.role.owner": "Responsável",
   "profile.communities.role.coOwner": "Cotitular",
-  "profile.communities.role.mod": "Moderador",
+  "profile.communities.role.mod": "Moderação",
   "profile.communities.role.member": "Membro",
   "profile.communities.empty.title": "Destaca as tuas comunidades",
   "profile.communities.empty.description":
@@ -352,7 +352,7 @@ export const members: Catalog = {
   // ── Secções de conteúdo do perfil (ProfileContentSections, WorkEditor) ────
   "content.now.title": "Agora",
   "content.now.subtitle": "O que ocupa {first} agora",
-  "content.now.subtitleOpenTo": "Ao que {first} está disponível",
+  "content.now.subtitleOpenTo": "Aquilo para que {first} está disponível",
   "content.now.openLabel": "Disponível para",
   "content.now.eyebrow": "Agora mesmo",
   "content.now.emptyPrompt": "Em que andas agora?",
@@ -378,7 +378,7 @@ export const members: Catalog = {
   "content.now.chip.staleMonths": "Sem olás há {months} meses, queres trocar?",
   "content.now.chip.staleNever": "Ainda sem olás, queres trocar?",
   "content.now.explainer":
-    "São estas as portas que as pessoas podem tocar para chegar até ti, com o motivo já preenchido.",
+    "São estas as portas a que as pessoas podem bater para chegar até ti, com o motivo já preenchido.",
   "content.now.respondsWithin.day": "Costuma responder num dia",
   "content.now.respondsWithin.fewDays": "Costuma responder em poucos dias",
   "content.now.respondsWithin.week":
@@ -389,7 +389,7 @@ export const members: Catalog = {
     "Uma frase ou duas sobre o que te anda a ocupar a cabeça",
   "content.now.edit.notHereForLabel": "Não estou aqui para",
   "content.now.edit.notHereForPlaceholder":
-    "Alguma coisa que preferias que não te perguntassem",
+    "Coisas que preferes que não te perguntem",
   "content.now.edit.openToLabel": "Disponível para",
   "content.now.edit.save": "Guardar",
   "content.now.edit.cancel": "Cancelar",
@@ -440,14 +440,14 @@ export const members: Catalog = {
     "<strong>{name}</strong> oferece isto no quadro de trocas",
   "content.board.matchLooking": "<strong>{name}</strong> procura isto",
   "content.board.footerRule":
-    "As procuras duram 30 dias, as ofertas 90. Expiram discretamente.",
+    "Os pedidos duram 30 dias e as ofertas 90. Expiram discretamente.",
   "content.board.postToBoard": "Publicar no quadro",
   // Sem etiquetas de estatísticas aqui: a faixa reutiliza `content.now.stats.*`.
   // Ver a nota em inglês.
   "content.board.respondSuccess": "Enviado. {name} vai ver no quadro.",
-  "content.board.respondAlready": "Já ofereceste ajuda nesta.",
-  "content.board.renewSuccess_one": "Renovada. Corre mais {count} dia.",
-  "content.board.renewSuccess_other": "Renovada. Corre mais {count} dias.",
+  "content.board.respondAlready": "Já ofereceste ajuda com isto.",
+  "content.board.renewSuccess_one": "Renovada. Fica ativa mais {count} dia.",
+  "content.board.renewSuccess_other": "Renovada. Fica ativa mais {count} dias.",
 
   // ── Linha do quadro de trocas (BoardRow) ───────────────────────────────
   "profile.board.foundIt": "Encontrado, fechado",
@@ -459,13 +459,12 @@ export const members: Catalog = {
   "profile.board.foundNotePlaceholder": "Adiciona uma nota (opcional)",
   "content.skills.title": "Competências e ofertas",
   "content.skills.subtitle":
-    "Aquilo em que {first} pode ajudar, e trocar no quadro de trocas",
+    "Em que {first} pode ajudar e o que pode trocar no quadro",
   "content.skills.barterCta": "Ver o quadro de trocas completo",
   "content.groups.title": "Grupos e círculos",
   "content.groups.subtitle": "Onde {first} aparece na comunidade",
-  "content.shapings.title": "O que me formou",
-  "content.shapings.subtitle":
-    "Não são interesses. São textos, filmes e momentos marcantes.",
+  "content.shapings.title": "O que me marcou",
+  "content.shapings.subtitle": "Textos, filmes e momentos que me formaram.",
   "content.activity.title": "Atividade recente",
   "content.activity.subtitle": "Momentos públicos por toda a plataforma",
   // Títulos de período na linha do tempo. "Esta semana" são os últimos 7 dias.
@@ -483,7 +482,7 @@ export const members: Catalog = {
   "content.activity.showMore": "Mostrar mais {count}",
   "content.activity.showLess": "Mostrar menos",
   "content.related.title": "Pessoas por perto",
-  "content.related.subtitle": "A partilhar ofício ou bairro.",
+  "content.related.subtitle": "Com o mesmo ofício ou o mesmo bairro.",
   // A etiqueta única de cada cartão: porque é que essa pessoa está perto de
   // QUEM é dono deste perfil, nunca de quem está a ler. Em português as formas
   // com "também" evitam a concordância de género de "ambos/ambas", que numa
@@ -491,18 +490,18 @@ export const members: Catalog = {
   "content.related.closeness.vouchedForOwner":
     "Deu um voto de confiança a {first}",
   "content.related.closeness.ownerVouchedFor":
-    "{first} deu-lhes um voto de confiança",
+    "{first} deu-lhe um voto de confiança",
   "content.related.closeness.community": "Também em {name}",
-  "content.related.closeness.openTo": "Também com interesse em {label}",
+  "content.related.closeness.openTo": "Também disponível para {label}",
   "content.related.closeness.craft": "Também trabalha em {label}",
-  "content.related.closeness.hood": "Também por {name}",
+  "content.related.closeness.hood": "Também vive em {name}",
 
   // ── Etiquetas de "o que me formou" + visibilidade (profileSections.data) ──
   "shaping.film": "Um filme",
   "shaping.book": "Um livro ou texto",
   "shaping.song": "Uma música ou álbum",
   "shaping.moment": "Um momento",
-  "visibility.open": "Aberto a novos contactos",
+  "visibility.open": "Disponível para conexões",
   "visibility.network": "Só para a rede",
   "visibility.private": "Privado",
   "visibility.hint.open": "Qualquer pessoa na QueerPulse pode dizer olá.",
@@ -519,7 +518,7 @@ export const members: Catalog = {
   "profileEdit.field.pronouns": "Pronomes",
   "profileEdit.field.neighbourhood": "Bairro",
   "profileEdit.field.neighbourhoodPlaceholder": "Escolhe a tua zona",
-  "profileEdit.field.neighbourhoodSearchPlaceholder": "Procurar zonas",
+  "profileEdit.field.neighbourhoodSearchPlaceholder": "Pesquisa zonas",
   // ── Seletor de bairro. Os nomes dos lugares são nomes próprios e nunca são
   //    traduzidos (i18n sweep §6); só os títulos dos grupos e a saída de
   //    emergência abaixo é que são chrome.
@@ -531,8 +530,7 @@ export const members: Catalog = {
   "profileEdit.field.neighbourhoodBackToList": "Escolher da lista",
   "profileEdit.field.bio": "Biografia",
   "profileEdit.field.bioHelp":
-    "A versão mais longa, na tua página de perfil. Se deixares a biografia curta em branco, o teu cartão no diretório usa o início desta. " +
-    "Escreve @ para mencionar um membro, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e fica uma ligação.",
+    "A versão mais longa, na tua página de perfil. Se deixares a biografia curta em branco, o teu cartão no diretório usa o início desta. Escreve @ para mencionar uma pessoa, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e transforma-se numa ligação.",
   "profileEdit.field.tags": "Etiquetas",
   // ── Seletor de área e função (WorkFieldPicker) ──────────────────────────────
   // Aparece em três sítios — o editor de perfil, o passo "o que fazes" do
@@ -556,14 +554,14 @@ export const members: Catalog = {
   "workPicker.group.lifeStage": "A estudar, a cuidar ou entre empregos",
   "workPicker.removePick": "Remover {label}",
   "workPicker.unlistedNote":
-    "Só tu e as tuas conexões veem isto. O trabalho sexual ainda carrega estigma, e uma lista que qualquer pessoa pudesse pesquisar poderia expor-te, por isso fica fora da pesquisa de membros, dos filtros, das sugestões e dos cartões do diretório.",
-  "profileEdit.field.addSkillPlaceholder": "Procurar competências…",
+    "Só tu e as tuas conexões veem isto. O trabalho sexual ainda carrega estigma, e uma lista que qualquer pessoa pudesse pesquisar poderia expor-te, por isso fica fora da pesquisa de pessoas, dos filtros, das sugestões e dos cartões do diretório.",
+  "profileEdit.field.addSkillPlaceholder": "Pesquisa competências…",
   "profileEdit.field.links": "Links",
   "profileEdit.field.photo": "Foto",
   "profileEdit.field.lookingFor": "À procura de",
   "profileEdit.customPronounPlaceholder": "personalizado…",
   "profileEdit.customPronounsLabel": "Pronomes personalizados",
-  "profileEdit.searchTagPlaceholder": "Procurar competências…",
+  "profileEdit.searchTagPlaceholder": "Pesquisa competências…",
   "profileEdit.popularTagsLabel": "Populares",
 
   // ── Modal de todas as etiquetas (ProfileTagBrowserModal) ──────────────────
@@ -572,8 +570,8 @@ export const members: Catalog = {
   "profileEdit.tagBrowser.selectedCount_one": "{count} etiqueta no teu perfil",
   "profileEdit.tagBrowser.selectedCount_other":
     "{count} etiquetas no teu perfil",
-  "profileEdit.tagBrowser.searchLabel": "Procurar etiquetas",
-  "profileEdit.tagBrowser.searchPlaceholder": "Procurar etiquetas…",
+  "profileEdit.tagBrowser.searchLabel": "Pesquisar etiquetas",
+  "profileEdit.tagBrowser.searchPlaceholder": "Pesquisa etiquetas…",
   "profileEdit.tagBrowser.noMatches":
     "Nenhuma etiqueta corresponde a “{query}”.",
   "profileEdit.tagBrowser.done": "Concluído",
@@ -595,19 +593,18 @@ export const members: Catalog = {
   // ── Pronúncia, biografia em português, nota de limites (ProfileEditDetailFields) ──
   "profileEdit.pronunciation.label": "Pronúncia do nome",
   "profileEdit.pronunciation.help":
-    "Escreve-a foneticamente para que a digam bem. Aparece junto ao teu nome com um botão para ouvir.",
+    "Escreve como soa, para que as pessoas acertem na pronúncia. Aparece junto ao teu nome com um botão para ouvir.",
   "profileEdit.pronunciation.placeholder": "ex.: kuh-tuh-RI-nuh",
   "profileEdit.pronunciation.hear": "Ouvir",
   "profileEdit.bioPt.label": "Biografia em português",
   "profileEdit.bioPt.help":
-    "Uma versão opcional da tua biografia em português. Se adicionares uma, quem visita pode alternar entre idiomas. " +
-    "Escreve @ para mencionar um membro, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e fica uma ligação.",
+    "Uma versão opcional da tua biografia em português. Se adicionares uma, quem visita pode alternar entre idiomas. Escreve @ para mencionar uma pessoa, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e isso passa a ser uma ligação.",
   "profileEdit.bioPt.placeholder":
     "Escreve-a em português se quiseres que as pessoas possam alternar.",
   "profileEdit.notHereFor.label": "Não estou aqui para",
   "profileEdit.notHereFor.help":
     "Um limite que gostarias que as pessoas conhecessem antes de te contactarem.",
-  "profileEdit.notHereFor.placeholder": "ex.: Networking do meu trabalho",
+  "profileEdit.notHereFor.placeholder": "ex.: Networking para o meu emprego",
 
   // ── Campo de biografia curta (ProfileShortBioField) ────────────────────────
   "profileEdit.shortBio.label": "Biografia curta",
@@ -629,7 +626,7 @@ export const members: Catalog = {
     "A acabar um fanzine, a aprender a soldar, à procura de sala de ensaio…",
   "profileEdit.openTo.label": "Disponível para",
   "profileEdit.openTo.help":
-    "O que te faria bem agora. As pessoas podem tocar nestes para te contactar sobre isso mesmo.",
+    "O que te interessa receber agora. As pessoas podem tocar num destes para te contactar precisamente sobre isso.",
   "profileEdit.openTo.presetsLabel": "Coisas para que estás disponível",
   "profileEdit.openTo.addPlaceholder": "Ou diz à tua maneira…",
   "profileEdit.openTo.addLabel": "Adicionar algo para que estás disponível",
@@ -674,12 +671,12 @@ export const members: Catalog = {
   "profileEdit.board.removeLabel": "Remover {title}",
   "profileEdit.board.tagsLabel": "Etiquetas de correspondência",
   "profileEdit.board.tagsHelp":
-    "Escolhe algumas palavras. Quando a publicação de alguém combina com a tua, ambos veem.",
-  "profileEdit.board.tagsPlaceholder": "Procurar etiquetas…",
+    "Escolhe algumas palavras. Quando a publicação de alguém combina com a tua, as duas pessoas veem a correspondência.",
+  "profileEdit.board.tagsPlaceholder": "Pesquisa etiquetas…",
 
   // ── Editor de competências (SkillsEditor) ───────────────────────────────────
   "profileEdit.skills.subtitle":
-    "Aquilo em que podes ajudar, e trocar no quadro de trocas",
+    "Aquilo em que podes ajudar e que podes trocar no quadro de trocas",
   "profileEdit.skills.add": "Adicionar",
   "profileEdit.skills.namePlaceholder": "Uma competência ou serviço…",
   "profileEdit.skills.nameLabel": "Competência ou serviço",
@@ -702,12 +699,12 @@ export const members: Catalog = {
     "Até um filme, um livro, uma música e um momento que te formaram",
   "profileEdit.shapings.titlePlaceholder": "Título",
   "profileEdit.shapings.titleLabel": "Título: {label}",
-  "profileEdit.shapings.notePlaceholder": "Porque ficou contigo",
+  "profileEdit.shapings.notePlaceholder": "Porque te ficou na memória",
   "profileEdit.shapings.noteLabel": "Nota: {label}",
 
   // ── Linha de votos de confiança no cabeçalho (HeroVouchRow) ────────────────
-  "hero.vouch.namesPlusYou": "{names} e de ti",
-  "hero.vouch.anonymous": "Anónimo",
+  "hero.vouch.namesPlusYou": "{names}, e também de ti",
+  "hero.vouch.anonymous": "Pessoa anónima",
   "hero.vouch.by": "Com voto de confiança de <b>{names}</b>.",
   "hero.vouch.byYouOnly":
     "Para já, só <b>tu</b> deste um voto de confiança a {first}.",
@@ -740,7 +737,7 @@ export const members: Catalog = {
   "hero.vouch.namesHiddenSelf":
     "Só tu vês quem te deu voto de confiança. Quem visita vê só o número.",
   "hero.vouch.emptySelf":
-    "Ainda sem votos de confiança. Vão aparecer aqui à medida que quem te conhece juntar o nome. É o único número que importa.",
+    "Ainda sem votos de confiança. Vão aparecer aqui quando pessoas que te conhecem juntarem o seu nome. É o único número que importa.",
   "hero.vouch.emptyOther":
     "Ainda ninguém deu um voto de confiança a {first}. Se conheces esta pessoa, o teu pode ser o primeiro.",
   // A pista de confiança relativa a quem está a ver. Só aparece a partir de
@@ -773,38 +770,38 @@ export const members: Catalog = {
   "publicBySlug.linksHeading": "Noutros sítios",
   "publicBySlug.workHeading": "Trabalho",
   "publicBySlug.activityHeading": "Atividade recente",
-  "publicBySlug.activityEmpty": "Ainda nada público por aqui.",
-  "publicBySlug.joinTitle": "Entra pela mão de um membro",
+  "publicBySlug.activityEmpty": "Ainda não há nada público por aqui.",
+  "publicBySlug.joinTitle": "Entra pela mão de alguém da comunidade",
   "publicBySlug.joinBody":
     "Um sítio onde a Lisboa queer se junta: sem anúncios, sem algoritmo. Precisas de alguém que te traga, ou podes pedir-nos diretamente.",
   "publicBySlug.notFound.metaTitle": "Não encontrado · QueerPulse",
   "publicBySlug.notFound.title": "Não há nada neste link",
   "publicBySlug.notFound.description":
     "Não há nada para mostrar aqui. Vale a pena confirmares o endereço que seguiste.",
-  "publicBySlug.notFound.backCta": "Ir para o QueerPulse",
+  "publicBySlug.notFound.backCta": "Ir para a QueerPulse",
 
   "publicProfile.hereForTitle": "Para que <em>estou aqui</em>",
   "publicProfile.visiblePublicly": "Visível publicamente",
   "publicProfile.writing.heading": "Escrita <em>pública</em>",
-  "publicProfile.writing.meta_one": "{count} peça · Revista QueerPulse",
-  "publicProfile.writing.meta_other": "{count} peças · Revista QueerPulse",
-  "publicProfile.hosting.heading": "Organização <em>pública</em>",
+  "publicProfile.writing.meta_one": "{count} texto · Revista QueerPulse",
+  "publicProfile.writing.meta_other": "{count} textos · Revista QueerPulse",
+  "publicProfile.hosting.heading": "Eventos <em>públicos</em>",
   "publicProfile.hosting.meta": "Eventos abertos a qualquer pessoa",
   "publicProfile.locked.postsHeading": "Publicações e <em>mensagens</em>",
   "publicProfile.membersOnly": "Só para pessoas da comunidade",
   "publicProfile.locked.postsTitle":
     "Publicações, respostas e mensagens diretas são <em>só para a comunidade.</em>",
   "publicProfile.locked.postsBody":
-    "A QueerPulse mantém o dia a dia da comunidade atrás de um início de sessão, para proteger as pessoas. Junta-te e o feed de {first} desbloqueia-se de imediato, incluindo a possibilidade de enviares mensagem a {first}.",
+    "A QueerPulse só mostra o dia a dia da comunidade a quem tem sessão iniciada, para proteger as pessoas. Junta-te e o feed de {first} abre-se de imediato, e também passas a poder enviar mensagem a {first}.",
   "publicProfile.requestInviteArrow": "Pedir um convite",
   "publicProfile.locked.connectionsHeading": "Conexões",
   "publicProfile.locked.connectionsTitle":
     "Quem {first} conhece, <em>em privado.</em>",
   "publicProfile.locked.connectionsBody":
-    "Para proteger as redes das pessoas da comunidade, não mostramos listas de conexões publicamente. Entra para veres os teus contactos em comum com {first}.",
+    "Para proteger as redes das pessoas da comunidade, as listas de conexões ficam privadas. Entra para veres as conexões que tens em comum com {first}.",
   "publicProfile.bottomCta.title": "Queres <em>ver tudo?</em>",
   "publicProfile.bottomCta.body":
-    "A QueerPulse cresce por votos de confiança. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
+    "A QueerPulse cresce através de votos de confiança. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede-nos um convite diretamente.",
 
   // ── Secções de perfil público (PublicProfileSections) ──────────────────────
   "publicProfile.preview.ownerLabel":
@@ -821,16 +818,16 @@ export const members: Catalog = {
   "publicProfile.head.memberSince": "Nesta comunidade desde <b>{since}</b>",
   "publicProfile.head.vouchedFor":
     "<b>Com voto de confiança</b> de {count} pessoas",
-  "publicProfile.head.requestInviteCta": "Pedir um convite para ligar",
+  "publicProfile.head.requestInviteCta": "Pedir um convite para criar conexão",
   "publicProfile.head.ctaNote":
-    "O perfil completo de {firstName}, publicações e acesso a mensagens diretas abrem assim que te tornares parte da comunidade.",
+    "O perfil completo de {firstName}, as publicações e as mensagens diretas ficam disponíveis assim que fizeres parte da comunidade.",
 
   // ── Controlo do perfil público (PublicProfileModal) ──────────────────────
   "publicProfile.control.locked.eyebrow": "Perfil público · bloqueado",
   "publicProfile.control.locked.title":
-    "Um perfil público é algo em que <em>cresces aos poucos.</em>",
+    "Um perfil público é algo que <em>se ganha com o tempo.</em>",
   "publicProfile.control.locked.lede":
-    "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse: quem escreve, organiza eventos ou lidera projetos. É aqui que estás:",
+    "Os perfis públicos são para quem ajuda a dar a cara pela QueerPulse: quem escreve, organiza eventos ou dinamiza a comunidade. Este é o teu ponto de situação:",
   "publicProfile.control.unlocked.eyebrow": "Perfil público · desbloqueado",
   "publicProfile.control.unlocked.title":
     "Já podes partilhar um <em>perfil público.</em>",
@@ -849,16 +846,16 @@ export const members: Catalog = {
     "Guardado: vamos ativar isto quando os perfis públicos abrirem",
   "publicProfile.control.toast.failed":
     "Não conseguimos guardar. A tua preferência ficou como estava. Tenta outra vez daqui a pouco.",
-  "publicProfile.control.checking.title": "A ver <em>onde estás</em>",
+  "publicProfile.control.checking.title": "A ver <em>em que ponto estás</em>",
   "publicProfile.control.checking.body":
     "Um momento. Estamos a somar as tuas contribuições, votos de confiança e tempo por aqui.",
   "publicProfile.control.error.title": "Não conseguimos verificar agora",
   "publicProfile.control.error.body":
     "Algo impediu o carregamento do teu progresso. A culpa não é tua. Tenta outra vez daqui a pouco.",
-  "publicProfile.control.error.retry": "Tentar de novo",
+  "publicProfile.control.error.retry": "Tentar novamente",
 
   // ── Public-profile hero badge (PublicProfileBadge) ──────────────────────────
-  "publicProfile.badge.label": "Ficar público",
+  "publicProfile.badge.label": "Tornar o perfil público",
 
   // ── Critérios de elegibilidade pública (publicFigure.ts) ───────────────────
   "publicProfile.eligibility.verified.hint":
@@ -870,14 +867,14 @@ export const members: Catalog = {
   "publicProfile.eligibility.tenure.remaining_other": "faltam {count} dias",
   "publicProfile.eligibility.family.contribution.label": "Contribuição pública",
   "publicProfile.eligibility.family.contribution.hint":
-    "Publicar textos, organizar eventos abertos e personas",
+    "Publicar textos, organizar eventos abertos e criar personas",
   "publicProfile.eligibility.family.trust.label": "Confiança da comunidade",
   "publicProfile.eligibility.family.trust.hint":
-    "Votos de confiança, recomendações e conexões de outros membros",
+    "Votos de confiança, recomendações e conexões de outras pessoas da comunidade",
   "publicProfile.eligibility.family.participation.label":
     "Participação constante",
   "publicProfile.eligibility.family.participation.hint":
-    "Ir a eventos, publicar e manter-te ativo recentemente",
+    "Ir a eventos, publicar e manter atividade recente",
   "publicProfile.eligibility.progress.pct":
     "{pct}% do caminho para um perfil público",
   "publicProfile.eligibility.gates.heading": "Primeiro, o essencial",
@@ -889,12 +886,12 @@ export const members: Catalog = {
   "publicProfile.eligibility.action.host":
     "Publica algo ou organiza um evento aberto",
   "publicProfile.eligibility.action.vouch":
-    "Pede a quem te conhece que te dê um voto de confiança",
-  "publicProfile.eligibility.action.attend": "Aparece a um evento ou dois",
+    "Pede um voto de confiança a alguém da comunidade que te conheça",
+  "publicProfile.eligibility.action.attend": "Aparece num evento ou dois",
   "publicProfile.eligibility.action.points": "+{points}",
   "publicProfile.eligibility.family.amount": "{points} / {cap}",
   "publicProfile.eligibility.standing.blocked":
-    "Isto não pode abrir agora. Não há nada a fazer aqui. Vai resolver-se.",
+    "Por agora, isto não pode abrir. Não precisas de fazer nada: vai resolver-se por si.",
 
   // ── Etiquetas de estatísticas do perfil público (currentUserPublic.data) ──
   "publicProfile.stat.poemsPublished": "Poemas publicados",
@@ -908,7 +905,7 @@ export const members: Catalog = {
   "publicProfile.previewOff.title":
     "O teu perfil público ainda não está ligado",
   "publicProfile.previewOff.description":
-    "Se o ligares, quem está fora da QueerPulse vê o teu nome, pronomes, frase de apresentação, biografia, os links e trabalhos que escolheste mostrar e a tua atividade pública recente. Mais nada sai da área de pessoas.",
+    "Se o ligares, qualquer pessoa na internet vê o teu nome, pronomes, frase de apresentação, biografia, os links e trabalhos que escolheste mostrar e a tua atividade pública recente. Mais nada sai da parte reservada à comunidade.",
   "publicProfile.previewOff.cta": "Abrir definições de perfil",
 
   // ── Pesquisa global (SearchPage) ────────────────────────────────────────────
@@ -929,7 +926,7 @@ export const members: Catalog = {
   "search.type.all": "Tudo",
   // ── Aviso de início de sessão (SearchResults) — para quem não tem sessão iniciada em modo real ──
   "search.signInRequired.badge": "Entrar",
-  "search.signInRequired.title": "A pesquisa é para <em>membros</em>",
+  "search.signInRequired.title": "A pesquisa é para <em>a comunidade</em>",
   "search.signInRequired.body":
     "Inicia sessão para pesquisar pessoas, comunidades, eventos, o fórum e negócios locais.",
   "search.recentSearches": "Pesquisas recentes",
@@ -940,19 +937,19 @@ export const members: Catalog = {
   // ── Paginação de uma categoria além da primeira página (SearchLoadMore, SOC-08) ──
   "search.loadMore.action": "Carregar mais resultados",
   "search.loadMore.loading": "A carregar…",
-  "search.loadMore.retry": "Tentar de novo",
+  "search.loadMore.retry": "Tentar novamente",
   "search.loadMore.failed": "Essa página não carregou.",
-  "search.loadMore.end": "Isto é tudo para esta pesquisa.",
+  "search.loadMore.end": "Não há mais resultados para esta pesquisa.",
   "search.resultCount_one": `<b>{count}</b> resultado para "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> resultados para "<b>{query}</b>"`,
   "search.empty.title": "Nada encontrado",
   "search.empty.body":
-    "Tenta outra palavra: nome de uma pessoa, bairro, competência, ou tipo de evento.",
+    "Tenta outra palavra: nome de uma pessoa, bairro, competência ou tipo de evento.",
   // Linhas de páginas da pesquisa, linha dos tópicos e ações do estado vazio (search.data.ts, SearchResults.tsx).
-  "search.page.members.name": "Membros",
+  "search.page.members.name": "Pessoas",
   "search.page.members.sub": "Encontra pessoas da comunidade",
   "search.page.communities.name": "Comunidades",
-  "search.page.communities.sub": "Grupos onde entrar e pertencer",
+  "search.page.communities.sub": "Grupos de que podes fazer parte",
   "search.page.events.name": "Eventos",
   "search.page.events.sub": "O que vem aí perto de ti",
   "search.page.forum.name": "Fórum",
@@ -973,9 +970,9 @@ export const members: Catalog = {
   "search.page.saved.name": "Guardados",
   "search.page.saved.sub": "Tudo o que guardaste",
   "search.page.myEvents.name": "Os meus eventos",
-  "search.page.myEvents.sub": "Os eventos onde vais",
+  "search.page.myEvents.sub": "Os eventos a que vais",
   "search.page.connections.name": "Conexões",
-  "search.page.connections.sub": "As pessoas com quem tens ligação",
+  "search.page.connections.sub": "As pessoas com quem tens conexão",
   "search.page.subprofiles.name": "Explorar subperfis",
   "search.page.subprofiles.sub": "O diretório de personas",
   "search.page.mySubprofiles.name": "Os meus subperfis",
@@ -1006,7 +1003,7 @@ export const members: Catalog = {
   "search.empty.searchEverything": "Pesquisar em tudo",
   "search.loadError.title": "Não conseguimos <em>fazer essa pesquisa</em>",
   "search.loadError.body":
-    "O pedido não voltou. A falha é do nosso lado, as tuas palavras estavam bem. Tenta outra vez daqui a um momento.",
+    "O pedido ficou sem resposta. O problema é do nosso lado e a tua pesquisa estava bem. Tenta outra vez daqui a pouco.",
   "search.hero.label": "Pesquisar",
   "search.hero.title":
     "Encontra quem ou o que quiseres <em>na comunidade.</em>",
@@ -1025,32 +1022,32 @@ export const members: Catalog = {
   "directory.filters.ambassadors.chipLabel": "Pessoas embaixadoras",
   "directory.filters.ambassadors.focusCaption": "Área de foco",
   "directory.lead":
-    "Filtra pelo que oferecem, onde vivem, ao que estão <b>disponíveis</b>. Os dados funcionam nos dois sentidos. As pessoas aparecem aqui porque optaram por ser encontráveis por estas razões.",
+    "Filtra pelo que oferecem, por onde vivem e por aquilo para que estão <b>disponíveis</b>. Os dados funcionam nos dois sentidos. As pessoas aparecem aqui porque escolheram ser encontradas por estes motivos.",
   "directory.showingPrefix": "A mostrar",
   "directory.showingOf": "de",
   "directory.memberCountLabel_one": "pessoa",
   "directory.memberCountLabel_other": "pessoas",
   "directory.sortLabel": "Ordenar",
   "directory.sort.recentlyJoined": "Juntaram-se recentemente",
-  "directory.sort.recentlyActive": "Ativos recentemente",
-  "directory.sort.closestMutuals": "Mais contactos em comum",
+  "directory.sort.recentlyActive": "Com atividade recente",
+  "directory.sort.closestMutuals": "Mais conexões em comum",
   "directory.sort.aToZ": "De A a Z",
   "directory.sort.mostVouched": "Com mais votos de confiança",
   "directory.removeChipLabel": "Remover {label}",
   // Nome acessivel do campo (PRD-205). Infinitivo "Procurar", a par de
   // subprofiles:directory.searchAria, para que os dois diretorios combinem.
-  "directory.searchLabel": "Procurar pessoas pelo nome, profissão ou área",
+  "directory.searchLabel": "Pesquisar pessoas por nome, profissão ou área",
   "directory.searchPlaceholder": "Nome, profissão ou área",
   "directory.emptyFiltered.title": "Ainda não há nada que corresponda",
   "directory.emptyFiltered.description":
-    "Ninguém corresponde a esse nome e a esses filtros agora. Experimenta menos letras, ou alivia um filtro, e vai aparecer mais gente.",
+    "Ninguém corresponde a esse nome e a esses filtros neste momento. Experimenta escrever menos letras ou tirar um filtro, e vão aparecer mais pessoas.",
   "directory.clearFiltersCta": "Limpar filtros",
   "directory.emptyAll.title": "Ainda não há pessoas aqui",
   "directory.emptyAll.description":
-    "Este diretório ainda está a encher-se. À medida que as pessoas se juntam à QueerPulse e optam por ser encontráveis, vão aparecer aqui. Volta a verificar em breve.",
+    "Este diretório ainda está a crescer. À medida que as pessoas se juntam à QueerPulse e escolhem ser encontradas, vão aparecer aqui. Volta cá em breve.",
   "directory.error.title": "Não conseguimos carregar o diretório",
   "directory.error.description":
-    "Algo correu mal ao procurar pessoas. Isto não é um diretório vazio. Tenta novamente daqui a pouco.",
+    "Algo correu mal ao carregar as pessoas. O diretório não está vazio. Tenta novamente daqui a pouco.",
   "directory.error.retry": "Tentar novamente",
   "directory.loadingMore": "A carregar…",
   "directory.loadMoreCta": "Carregar mais pessoas",
@@ -1061,7 +1058,7 @@ export const members: Catalog = {
   "directory.showResultsCta_other": "Ver {count} pessoas",
 
   // ── Barra lateral de filtros (MemberFilterCards) ────────────────────────────
-  "directory.filter.openToTitle": "Ao que estão disponíveis",
+  "directory.filter.openToTitle": "Para que estão disponíveis",
   "directory.filter.hoodTitle": "Onde vivem",
   "directory.filter.identityTitle": "Identidade · autodeclarada",
   "directory.filter.languagesTitle": "Idiomas",
@@ -1076,14 +1073,14 @@ export const members: Catalog = {
 
   // ── Filtro de profissão (FilterProfessions) ─────────────────────────────────
   "directory.filter.whatTheyDoTitle": "O que fazem",
-  "directory.filter.searchPlaceholder": "Pesquisar uma área ou profissão…",
+  "directory.filter.searchPlaceholder": "Pesquisa uma área ou profissão…",
   "directory.filter.searchAriaLabel": "Pesquisar áreas e profissões",
   "directory.filter.noFieldMatch": 'Nenhuma área corresponde a "{query}".',
   "directory.filter.professionTitle": "Profissão",
   "directory.filter.noProfessionMatch":
     'Nenhuma profissão corresponde a "{query}".',
   "directory.filter.matchingSearch":
-    "A corresponder à tua pesquisa em todas as áreas.",
+    "Resultados da tua pesquisa em todas as áreas.",
   "directory.filter.showingWithinField_one":
     "A mostrar profissões dentro da área selecionada.",
   "directory.filter.showingWithinField_other":
@@ -1124,8 +1121,8 @@ export const members: Catalog = {
   "directory.discipline.music": "Música",
   "directory.discipline.curation": "Museus, bibliotecas e património",
   "directory.discipline.craft": "Arte e artesanato",
-  "directory.discipline.beauty": "Beleza",
-  "directory.discipline.wellness": "Bem-estar",
+  "directory.discipline.beauty": "Cabelo e beleza",
+  "directory.discipline.wellness": "Fitness e bem-estar",
   "directory.discipline.sport": "Desporto",
   "directory.discipline.animals": "Cuidado de animais",
   "directory.discipline.trades": "Construção e ofícios",
@@ -1199,40 +1196,40 @@ export const members: Catalog = {
   "directory.profession.accountant": "Contabilidade",
   "directory.profession.bookkeeper": "Escrituração contabilística",
   "directory.profession.financialAnalyst": "Análise financeira",
-  "directory.profession.fundraiser": "Angariação de fundos",
+  "directory.profession.fundraiser": "Angariação de fundos e candidaturas",
   "directory.profession.accountExecutive": "Gestão de contas",
   "directory.profession.businessDevelopment": "Desenvolvimento de negócio",
-  "directory.profession.customerSuccessManager": "Gestão de sucesso do cliente",
+  "directory.profession.customerSuccessManager": "Customer success",
   "directory.profession.portraitPhotographer": "Fotografia de retrato",
   "directory.profession.photojournalist": "Fotojornalismo",
   "directory.profession.retoucher": "Retoque fotográfico",
   "directory.profession.documentaryFilmmaker": "Realização de documentários",
   "directory.profession.filmmaker": "Realização",
   "directory.profession.cinematographer": "Direção de fotografia",
-  "directory.profession.filmEditor": "Montagem",
+  "directory.profession.filmEditor": "Montagem de filmes",
   "directory.profession.choreographer": "Coreografia",
   "directory.profession.dancer": "Dança",
   "directory.profession.theatreMaker": "Criação teatral",
   "directory.profession.performanceArtist": "Arte da performance",
   "directory.profession.musicProducer": "Produção musical",
   "directory.profession.dj": "DJ",
-  "directory.profession.sessionMusician": "Música de sessão",
+  "directory.profession.sessionMusician": "Música de estúdio",
   "directory.profession.soundDesigner": "Design de som",
   "directory.profession.musicIndustryAR": "A&R",
   "directory.profession.architect": "Arquitetura",
   "directory.profession.urbanDesigner": "Design urbano",
   "directory.profession.interiorArchitect": "Arquitetura de interiores",
   "directory.profession.communityOrganiser": "Organização comunitária",
-  "directory.profession.housingOrganiser": "Organização habitacional",
-  "directory.profession.housingAdvocate": "Defesa da habitação",
+  "directory.profession.housingOrganiser": "Organização pela habitação",
+  "directory.profession.housingAdvocate": "Direito à habitação",
   "directory.profession.supportCoordinator": "Coordenação de apoio",
   "directory.profession.accessibilityAdvocate": "Defesa da acessibilidade",
   "directory.profession.activist": "Ativismo",
   "directory.profession.curator": "Curadoria",
-  "directory.profession.archivist": "Arquivo",
+  "directory.profession.archivist": "Arquivística",
   "directory.profession.galleryDirector": "Direção de galeria",
-  "directory.profession.chef": "Cozinha",
-  "directory.profession.barista": "Barismo",
+  "directory.profession.chef": "Chefia de cozinha",
+  "directory.profession.barista": "Barista",
   "directory.profession.baker": "Panificação",
   "directory.profession.supperClubHost": "Organização de jantares",
   "directory.profession.bartender": "Serviço de bar",
@@ -1241,7 +1238,7 @@ export const members: Catalog = {
   "directory.profession.woodworker": "Marcenaria",
   "directory.profession.textileArtist": "Arte têxtil",
   "directory.profession.barber": "Barbearia",
-  "directory.profession.hairdresser": "Cabeleireiro",
+  "directory.profession.hairdresser": "Corte e coloração de cabelo",
   "directory.profession.makeupArtist": "Maquilhagem",
   "directory.profession.nailTechnician": "Manicure e unhas",
   "directory.profession.beautician": "Estética",
@@ -1271,18 +1268,18 @@ export const members: Catalog = {
   "directory.profession.biologist": "Biologia",
   "directory.profession.ecologist": "Ecologia",
   "directory.profession.labResearcher": "Investigação laboratorial",
-  "directory.profession.gameMaster": "Mestre de jogo",
+  "directory.profession.gameMaster": "Narração de RPG (DM/GM)",
   "directory.profession.ttrpgWriter": "Escrita de RPG",
   "directory.profession.gameDesigner": "Design de jogos",
   "directory.profession.boardGameReviewer": "Crítica de jogos de tabuleiro",
   "directory.profession.gameNightHost": "Organização de noites de jogos",
   "directory.profession.larpOrganiser": "Organização de LARP",
   "directory.profession.miniaturePainter": "Pintura de miniaturas",
-  "directory.profession.cosplayer": "Cosplayer",
-  "directory.profession.streamer": "Streamer",
+  "directory.profession.cosplayer": "Cosplay",
+  "directory.profession.streamer": "Streaming",
   "directory.profession.tournamentOrganiser": "Organização de torneios",
-  "directory.profession.podcaster": "Podcaster",
-  "directory.profession.voiceActor": "Dobragem",
+  "directory.profession.podcaster": "Podcasts",
+  "directory.profession.voiceActor": "Dobragem e locução",
   "directory.profession.productDesigner": "Design de produto digital",
   "directory.profession.webDesigner": "Web design",
   "directory.profession.motionDesigner": "Motion design",
@@ -1316,7 +1313,7 @@ export const members: Catalog = {
   "directory.profession.healthcareAssistant": "Auxiliar de ação médica",
   "directory.profession.radiographer": "Radiologia",
   "directory.profession.clinicalLabTechnician": "Análises clínicas",
-  "directory.profession.pharmacyTechnician": "Técnico de farmácia",
+  "directory.profession.pharmacyTechnician": "Apoio técnico de farmácia",
   "directory.profession.dentalHygienist": "Higiene oral",
   "directory.profession.optometrist": "Optometria e ótica",
   "directory.profession.audiologist": "Audiologia",
@@ -1350,7 +1347,7 @@ export const members: Catalog = {
   "directory.profession.securityEngineer": "Cibersegurança",
   "directory.profession.dataAnalyst": "Análise de dados",
   "directory.profession.machineLearningEngineer": "Machine learning",
-  "directory.profession.itSupport": "Suporte informático",
+  "directory.profession.itSupport": "Apoio informático",
   "directory.profession.technicalWriter": "Escrita técnica",
   "directory.profession.engineeringManager": "Direção de tecnologia",
   "directory.profession.dataEngineer": "Engenharia de dados",
@@ -1362,7 +1359,7 @@ export const members: Catalog = {
   "directory.profession.hardwareTechnician": "Reparação de computadores",
   "directory.profession.logisticsCoordinator": "Coordenação logística",
   "directory.profession.adminAssistant": "Assistência administrativa",
-  "directory.profession.dataEntryClerk": "Registo de dados",
+  "directory.profession.dataEntryClerk": "Introdução de dados",
   "directory.profession.procurementSpecialist": "Compras e aprovisionamento",
   "directory.profession.qualityManager": "Gestão da qualidade",
   "directory.profession.healthSafetyOfficer": "Segurança e saúde no trabalho",
@@ -1378,20 +1375,21 @@ export const members: Catalog = {
   "directory.profession.creditAnalyst": "Análise de crédito",
   "directory.profession.insuranceAgent": "Mediação de seguros",
   "directory.profession.claimsHandler": "Sinistros e subscrição de seguros",
-  "directory.profession.actuary": "Atuariado",
-  "directory.profession.financialController": "Controlo de gestão",
+  "directory.profession.actuary": "Ciências atuariais",
+  "directory.profession.financialController": "Controlo financeiro",
   "directory.profession.salesRepresentative": "Representação comercial",
   "directory.profession.estateAgent": "Mediação imobiliária",
   "directory.profession.salesManager": "Direção comercial",
   "directory.profession.keyAccountManager": "Gestão de grandes contas",
-  "directory.profession.medicalRep": "Delegado de informação médica",
+  "directory.profession.medicalRep": "Informação médica",
   "directory.profession.callCentreAgent": "Operação de call center",
   "directory.profession.contactCentreTeamLead": "Coordenação de call center",
   "directory.profession.technicalSupportAgent": "Apoio técnico ao cliente",
   "directory.profession.propertyManager": "Gestão de imóveis",
   "directory.profession.propertyValuer": "Avaliação imobiliária",
   "directory.profession.condominiumManager": "Administração de condomínios",
-  "directory.profession.eventPhotographer": "Fotografia de eventos",
+  "directory.profession.eventPhotographer":
+    "Fotografia de eventos e casamentos",
   "directory.profession.fashionPhotographer": "Fotografia de moda",
   "directory.profession.screenwriter": "Argumento",
   "directory.profession.filmProducer": "Produção audiovisual",
@@ -1413,7 +1411,7 @@ export const members: Catalog = {
   "directory.profession.songwriter": "Composição de canções",
   "directory.profession.composer": "Composição musical",
   "directory.profession.musicTeacher": "Ensino de música",
-  "directory.profession.soundEngineer": "Técnica de som",
+  "directory.profession.soundEngineer": "Engenharia de som",
   "directory.profession.landscapeArchitect": "Arquitetura paisagista",
   "directory.profession.landSurveyor": "Topografia",
   "directory.profession.draughtsperson": "Desenho técnico e BIM",
@@ -1423,8 +1421,8 @@ export const members: Catalog = {
     "Coordenação de centro comunitário",
   "directory.profession.socioculturalAnimator": "Animação sociocultural",
   "directory.profession.interculturalMediator": "Mediação intercultural",
-  "directory.profession.socialCareTechnician": "Técnico de ação social",
-  "directory.profession.librarian": "Biblioteca",
+  "directory.profession.socialCareTechnician": "Ação social",
+  "directory.profession.librarian": "Biblioteconomia",
   "directory.profession.historian": "História",
   "directory.profession.conservator": "Conservação e restauro",
   "directory.profession.artCritic": "Crítica de arte",
@@ -1432,11 +1430,11 @@ export const members: Catalog = {
   "directory.profession.museumEducator": "Mediação cultural",
   "directory.profession.archaeologist": "Arqueologia",
   "directory.profession.culturalProgrammer": "Programação cultural",
-  "directory.profession.cook": "Cozinha de linha",
+  "directory.profession.cook": "Cozinha",
   "directory.profession.sommelier": "Escanção",
   "directory.profession.brewer": "Produção de cerveja e destilados",
   "directory.profession.caterer": "Catering",
-  "directory.profession.restaurantManager": "Gestão de restauração",
+  "directory.profession.restaurantManager": "Gestão de restaurantes",
   "directory.profession.kitchenAssistant": "Ajudante de cozinha e copa",
   "directory.profession.pastryChef": "Pastelaria",
   "directory.profession.butcher": "Talho",
@@ -1458,12 +1456,12 @@ export const members: Catalog = {
   "directory.profession.metalworker": "Serralharia",
   "directory.profession.hvacTechnician": "Climatização e refrigeração",
   "directory.profession.maintenanceTechnician": "Manutenção e eletromecânica",
-  "directory.profession.siteManager": "Encarregado de obra",
+  "directory.profession.siteManager": "Direção de obra",
   "directory.profession.telecomsInstaller": "Instalação de telecomunicações",
   "directory.profession.solarInstaller": "Instalação de energias renováveis",
   "directory.profession.productionOperator": "Operação de produção",
   "directory.profession.cncOperator": "Operação de máquinas CNC",
-  "directory.profession.assembler": "Montagem",
+  "directory.profession.assembler": "Montagem industrial",
   "directory.profession.productionSupervisor": "Chefia de produção",
   "directory.profession.productionManager": "Direção de produção",
   "directory.profession.qualityInspector": "Controlo de qualidade",
@@ -1474,7 +1472,7 @@ export const members: Catalog = {
   "directory.profession.funeralDirector":
     "Serviços fúnebres e acompanhamento no fim de vida",
   "directory.profession.careHomeAssistant": "Ajudante de lar",
-  "directory.profession.nanny": "Ama e babysitting",
+  "directory.profession.nanny": "Babysitting e acompanhamento infantil",
   "directory.profession.lifeCoach": "Coaching",
   "directory.profession.pilatesInstructor": "Pilates",
   "directory.profession.meditationTeacher": "Meditação",
@@ -1496,7 +1494,8 @@ export const members: Catalog = {
   "directory.profession.stockController": "Gestão de stocks",
   "directory.profession.supplyChainManager":
     "Gestão da cadeia de abastecimento",
-  "directory.profession.freightForwarder": "Transitários e despachantes",
+  "directory.profession.freightForwarder":
+    "Trânsito de mercadorias e despacho aduaneiro",
   "directory.profession.seafarer": "Marinha mercante",
   "directory.profession.drivingInstructor": "Instrução de condução",
   "directory.profession.chemist": "Química",
@@ -1508,11 +1507,11 @@ export const members: Catalog = {
   "directory.profession.marineScientist": "Ciências do mar",
   "directory.profession.socialScientist": "Sociologia e antropologia",
   "directory.profession.economist": "Economia",
-  "directory.profession.labTechnician": "Técnica de laboratório",
+  "directory.profession.labTechnician": "Técnicas laboratoriais",
   "directory.profession.clinicalResearchAssociate": "Investigação clínica",
   "directory.profession.actualPlayPerformer": "Actual play",
   "directory.profession.fantasyCartographer": "Cartografia de fantasia",
-  "directory.profession.diceMaker": "Fabrico de dados",
+  "directory.profession.diceMaker": "Fabrico de dados de jogo",
   "directory.profession.propMaker": "Adereços e armaduras",
   "directory.profession.puzzleDesigner": "Design de puzzles e escape rooms",
   "directory.profession.speedrunner": "Speedrunning",
@@ -1539,12 +1538,12 @@ export const members: Catalog = {
   "directory.profession.telecomsEngineer": "Engenharia de telecomunicações",
   "directory.profession.energyEngineer": "Engenharia de energia",
   "directory.profession.qualityEngineer": "Engenharia da qualidade",
-  "directory.profession.engineeringTechnician": "Técnico de engenharia",
-  "directory.profession.founder": "Fundação de empresa",
-  "directory.profession.smallBusinessOwner": "Negócio local",
+  "directory.profession.engineeringTechnician": "Apoio técnico de engenharia",
+  "directory.profession.founder": "Empreendedorismo",
+  "directory.profession.smallBusinessOwner": "Negócio próprio",
   "directory.profession.freelancer": "Trabalho independente",
   "directory.profession.consultant": "Consultoria",
-  "directory.profession.coopMember": "Cooperativa",
+  "directory.profession.coopMember": "Trabalho em cooperativa",
   "directory.profession.promoter": "Promoção de eventos",
   "directory.profession.eventProducer": "Produção de eventos",
   "directory.profession.eventPlanner": "Planeamento de eventos e casamentos",
@@ -1552,7 +1551,7 @@ export const members: Catalog = {
   "directory.profession.doorHost": "Receção de porta",
   "directory.profession.stageTechnician": "Luz e palco",
   "directory.profession.celebrant": "Celebração de casamentos e cerimónias",
-  "directory.profession.eventStaff": "Staff e hospedeiras de eventos",
+  "directory.profession.eventStaff": "Staff e acolhimento de eventos",
   "directory.profession.socialWorker": "Serviço social",
   "directory.profession.youthWorker": "Animação juvenil",
   "directory.profession.policyAdvisor": "Assessoria de políticas públicas",
@@ -1572,7 +1571,7 @@ export const members: Catalog = {
   "directory.profession.hotelManager": "Gestão hoteleira",
   "directory.profession.frontDeskAgent": "Receção de hotel",
   "directory.profession.housekeeper": "Limpeza e arrumação de quartos",
-  "directory.profession.tourGuide": "Guia turístico",
+  "directory.profession.tourGuide": "Visitas guiadas",
   "directory.profession.travelAgent": "Agência de viagens",
   "directory.profession.guesthouseHost": "Alojamento local",
   "directory.profession.concierge": "Concierge",
@@ -1583,7 +1582,7 @@ export const members: Catalog = {
   "directory.profession.permacultureDesigner": "Permacultura",
   "directory.profession.beekeeper": "Apicultura",
   "directory.profession.fisher": "Pesca e aquacultura",
-  "directory.profession.forestryWorker": "Silvicultura e sapadores florestais",
+  "directory.profession.forestryWorker": "Silvicultura e defesa da floresta",
   "directory.profession.agronomist": "Agronomia",
   "directory.profession.farmWorker": "Trabalho agrícola",
   "directory.profession.domesticWorker": "Trabalho doméstico",
@@ -1593,7 +1592,7 @@ export const members: Catalog = {
   "directory.profession.wasteWorker": "Recolha de resíduos e reciclagem",
   "directory.profession.militaryPersonnel": "Forças Armadas",
   "directory.profession.prisonOfficer": "Guarda prisional",
-  "directory.profession.lifeguard": "Nadador-salvador",
+  "directory.profession.lifeguard": "Salvamento aquático",
   "directory.profession.emergencyDispatcher":
     "Proteção civil e despacho de emergência",
   "directory.profession.vet": "Medicina veterinária",
@@ -1628,10 +1627,10 @@ export const members: Catalog = {
   //    pessoa o diria, não como categoria de mercado.
   "openTo.collaborating": "Colaborações",
   "openTo.mentoring": "Mentoria",
-  "openTo.casualMeetups": "Café e jantares longos",
+  "openTo.casualMeetups": "Café e jantares demorados",
   "openTo.commissions": "Encomendas",
   "openTo.clientWork": "Novos clientes",
-  "openTo.referrals": "Referências",
+  "openTo.referrals": "Encaminhamentos",
   "openTo.swaps": "Trocas de competências",
   "openTo.studioVisits": "Visitas ao estúdio",
   "openTo.interviewees": "Dar entrevistas",
@@ -1657,12 +1656,12 @@ export const members: Catalog = {
   // ── Pré-visualização do cartão (DirectoryCardPreview) ──────────────────────
   "directory.preview.caption": "Como o teu cartão aparece no diretório",
   "directory.preview.borrowedNote":
-    "Ainda não há nada aqui, por isso o teu cartão usa o início da tua biografia. Escreve uma biografia curta e ele passa a usar essa.",
+    "Ainda não há nada aqui, por isso o teu cartão usa o início da tua biografia. Escreve uma biografia curta e o cartão passa a usá-la.",
 
   // ── Paleta de comandos (CommandPalette) ─────────────────────────────────────
   "commandPalette.ariaLabel": "Pesquisar na QueerPulse",
   "commandPalette.escKey": "esc",
-  "commandPalette.placeholder": "Pesquisar pessoas, eventos, comunidades…",
+  "commandPalette.placeholder": "Pesquisa pessoas, eventos, comunidades…",
   "commandPalette.signInBody":
     "Inicia sessão para pesquisar em toda a QueerPulse.",
   "commandPalette.noMatches": "Sem resultados. Tenta outra palavra.",
@@ -1673,32 +1672,31 @@ export const members: Catalog = {
 
   // ── Opções de relação para dar um voto de confiança (vouchMember.data.ts) ──
   "vouch.relationship.collaborated": "Já colaborámos",
-  "vouch.relationship.friends": "Somos amigues",
+  "vouch.relationship.friends": "Temos uma amizade",
   "vouch.relationship.group": "Mesmo coletivo ou grupo",
   "vouch.relationship.metThroughQueerPulse": "Conhecemo-nos na QueerPulse",
-  "vouch.relationship.neighbours": "Somos vizinhes",
+  "vouch.relationship.neighbours": "Vivemos perto",
 
   // ── Etiquetas de "textura" da relação, só de leitura (HeroVouchRow) —
   // frases nominais curtas na terceira pessoa, não a cópia na primeira
   // pessoa acima; descrevem a relação de quem deu o voto com este perfil. ──
   "vouch.relationshipChip.collaborated": "Colaboração",
-  "vouch.relationshipChip.friends": "Amigues",
+  "vouch.relationshipChip.friends": "Amizade",
   "vouch.relationshipChip.group": "Mesmo coletivo",
-  "vouch.relationshipChip.met_through": "Conhecidos na QueerPulse",
-  "vouch.relationshipChip.neighbours": "Vizinhes",
+  "vouch.relationshipChip.met_through": "Através da QueerPulse",
+  "vouch.relationshipChip.neighbours": "Vizinhança",
 
   // ── Modal de dar um voto de confiança (VouchMemberModal, VouchMemberModalParts) ──
-  "vouch.modal.ariaLabel": "Dar voto de confiança a {first}",
+  "vouch.modal.ariaLabel": "Dar um voto de confiança a {first}",
   "vouch.modal.close": "Fechar",
-  "vouch.modal.success.title":
-    "Aí está <em>{first}</em>, com voto de confiança.",
+  "vouch.modal.success.title": "<em>{first}</em> tem o teu voto de confiança.",
   "vouch.modal.success.body":
     "A tua cara acabou de entrar no círculo de votos de confiança de <b>{first}</b>. É assim que a confiança circula aqui. Pessoa a pessoa, nome a nome.",
   "vouch.modal.success.doneCta": "Concluído",
   "vouch.modal.form.eyebrow": "Adicionar o teu voto de confiança",
   "vouch.modal.form.title": "Dá um voto de confiança a <em>{first}</em>",
   "vouch.modal.form.sub":
-    "Um voto de confiança é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui. A QueerPulse cresce por votos de confiança, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
+    "Dar um voto de confiança é dizeres publicamente que conheces {first} e que confias nesta pessoa nos espaços da comunidade. Tem peso aqui. A QueerPulse cresce com votos de confiança, e o teu nome fica no perfil desta pessoa ao lado de quem já a apoiou.",
   "vouch.modal.form.relationshipLabel": "Como conheces {first}?",
   "vouch.modal.form.relationshipHint": "seleciona todas as que se aplicam",
   // A linha de chips de competências foi removida (nada guardava as escolhas),
@@ -1712,15 +1710,15 @@ export const members: Catalog = {
   "vouch.modal.form.cancel": "Cancelar",
   "vouch.modal.form.sending": "A enviar o teu voto de confiança…",
   "vouch.modal.form.anonymousLabel":
-    "Dar voto de confiança anonimamente. O teu nome fica oculto de outros membros",
+    "Dar um voto de confiança anónimo. As outras pessoas não veem o teu nome",
   "vouch.modal.error":
     "Não conseguimos guardar o teu voto de confiança. Tenta novamente.",
   "vouch.modal.error.alreadyVouched":
-    "Já deste um voto de confiança a este membro.",
+    "Já deste um voto de confiança a esta pessoa.",
   "vouch.modal.error.unavailable":
-    "Este membro não está disponível para receber um voto de confiança neste momento.",
+    "Esta pessoa não pode receber votos de confiança neste momento.",
   "vouch.modal.error.blocked":
-    "Não podes dar um voto de confiança a este membro neste momento.",
+    "Não podes dar um voto de confiança a esta pessoa neste momento.",
   "vouch.modal.error.dailyCap":
     "Atingiste o limite de votos de confiança de hoje. Tenta novamente amanhã.",
 
@@ -1733,7 +1731,7 @@ export const members: Catalog = {
   "drafts.sort.edited": "Editado recentemente",
   "drafts.sort.deadline": "Prazo mais próximo",
   "drafts.sort.progress": "Menos completo",
-  "drafts.sort.title": "Alfabética",
+  "drafts.sort.title": "Ordem alfabética",
   "drafts.status.draft": "Rascunho",
   "drafts.status.ready": "Pronto",
   "drafts.status.stale": "Parado",
@@ -1768,7 +1766,7 @@ export const members: Catalog = {
   "drafts.header.startCta": "Começar algo",
 
   // ── Controlos de pesquisa + ordenação (DraftsControls) ──────────────────────
-  "drafts.controls.searchPlaceholder": "Pesquisar nos teus rascunhos…",
+  "drafts.controls.searchPlaceholder": "Pesquisa nos teus rascunhos…",
   "drafts.controls.searchAriaLabel": "Pesquisar rascunhos",
   "drafts.controls.clearSearchLabel": "Limpar pesquisa",
   "drafts.controls.sortLabel": "Ordenar",
@@ -1787,14 +1785,14 @@ export const members: Catalog = {
     'Nada nos teus rascunhos corresponde a "{query}". Tenta outra palavra, ou limpa a pesquisa.',
   "drafts.empty.allCaughtUpTitle": "Tudo em dia.",
   "drafts.empty.allCaughtUpText":
-    "Não há rascunhos por aí. Nada a meio caminho à tua espera. Quando começares algo e te afastares, fica guardado aqui.",
+    "Já não há rascunhos. Nada escrito a meio à tua espera. Se começares algo e saíres, fica guardado aqui.",
   "drafts.empty.startCta": "Começar algo novo",
   "drafts.toast.deleted_one": "Rascunho eliminado",
   "drafts.toast.deleted_other": "{count} rascunhos eliminados",
   "drafts.toast.undo": "Desfazer",
   "drafts.toast.kept": "Rascunho mantido: mais 30 dias",
   "drafts.dangerNote":
-    "<b>Sobre a regra dos 90 dias:</b> rascunhos que não tocas há 87+ dias recebem um lembrete por email, e são eliminados automaticamente ao dia 90. Podes prolongar qualquer rascunho 30 dias de cada vez. <em>Isto mantém a tua lista de rascunhos honesta e protege o teu trabalho.</em>",
+    "<b>Sobre a regra dos 90 dias:</b> os rascunhos em que não mexes há 87 dias ou mais recebem um lembrete por email e são eliminados automaticamente no dia 90. Podes prolongar qualquer rascunho 30 dias de cada vez. <em>Assim a tua lista de rascunhos mostra o que está mesmo em curso, e o teu trabalho fica protegido.</em>",
 
   // ── Linha de rascunho (DraftRow) ────────────────────────────────────────────
   "drafts.row.selectAriaLabel": "Selecionar rascunho",
@@ -1804,7 +1802,7 @@ export const members: Catalog = {
   "drafts.meta.daysLeft_one": "{count} dia",
   "drafts.meta.daysLeft_other": "{count} dias",
   "drafts.meta.closesOn": "Fecha a {date} · {daysPhrase}",
-  "drafts.meta.deletesIn": "Elimina-se em {daysPhrase} · regra dos 90 dias",
+  "drafts.meta.deletesIn": "Eliminado daqui a {daysPhrase} · regra dos 90 dias",
 
   // ── Barra de seleção em massa (DraftsBulkBar) ───────────────────────────────
   "drafts.bulkBar.ariaLabel": "Ações em massa",
@@ -1861,7 +1859,7 @@ export const members: Catalog = {
     "{count} convites à espera da tua resposta",
   "places.teamInvites.accepted.heading": "Equipas em que estás",
   "places.teamInvites.roleLine": "Função: {role}",
-  "places.teamInvites.listingHidden": "Escondida do diretório neste momento",
+  "places.teamInvites.listingHidden": "Escondido do diretório neste momento",
   "places.teamInvites.acceptCta": "Aceitar convite",
   "places.teamInvites.acceptAria": "Aceitar convite: {listing}",
   "places.teamInvites.declineCta": "Recusar convite",
@@ -1870,7 +1868,7 @@ export const members: Catalog = {
   "places.teamInvites.leaveAria": "Sair da equipa: {listing}",
   "places.teamInvites.leaveConfirm.title": "Sair da equipa de {listing}?",
   "places.teamInvites.leaveConfirm.body":
-    "A empresa não é avisada. Podes ser convidado de novo mais tarde.",
+    "A empresa não é avisada. Podem voltar a convidar-te mais tarde.",
   "places.teamInvites.toast.accepted": "Convite aceite",
   "places.teamInvites.toast.declined": "Convite recusado",
   "places.teamInvites.toast.left": "Saíste da equipa",
@@ -1889,24 +1887,25 @@ export const members: Catalog = {
   "places.ownerOffers.declineCta": "Recusar",
   "places.ownerOffers.acceptCloseCta": "Deixa estar",
   "places.ownerOffers.pledgeLead":
-    "Se disseres que sim, <b>{listing}</b> passa a ser teu para gerires, com uma promessa à mistura. Todos os espaços do diretório fizeram a mesma.",
-  "places.ownerOffers.agreeTitle": "Concordo com isto, por este espaço",
+    "Se disseres que sim, passas a gerir <b>{listing}</b>, com uma promessa associada. Todos os espaços do diretório fizeram esta mesma promessa.",
+  "places.ownerOffers.agreeTitle": "Concordo com isto, em nome deste espaço",
   "places.ownerOffers.agreeSub":
     "O teu acordo fica registado com o teu nome e a data em que aceitas.",
   "places.ownerOffers.pledgeBackCta": "Ainda não",
   "places.ownerOffers.pledgeAcceptCta": "Concordar e aceitar",
-  "places.ownerOffers.acceptedToast": "{listing} é teu a partir de agora.",
+  "places.ownerOffers.acceptedToast":
+    "A partir de agora, és tu quem gere {listing}.",
   "places.ownerOffers.declinedToast": "Oferta recusada.",
   "places.ownerOffers.error":
     "Não conseguimos enviar a tua resposta. Tenta outra vez.",
   "places.empty.title": "Ainda sem espaços",
   "places.empty.description":
-    "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",
+    "Geres um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",
   "places.empty.action": "Registar o meu espaço",
   "places.empty.titleWithSuggestions": "Ainda não geres nenhum espaço",
   "places.loadError.title": "Não conseguimos carregar <em>estes espaços</em>",
   "places.loadError.body":
-    "A lista não voltou. A falha é do nosso lado. Tenta outra vez daqui a um momento.",
+    "A lista não carregou. O problema é do nosso lado. Tenta outra vez daqui a pouco.",
 
   "places.quickEdit.title": "Edição rápida",
   "places.quickEdit.sub": "Atualiza os dados principais de {name}.",
@@ -1926,12 +1925,12 @@ export const members: Catalog = {
   "places.quickEdit.error.invalid":
     "O site ou o número de telefone não foram aceites. Verifica-os e guarda outra vez.",
   "places.quickEdit.error.notFound":
-    "Este local já não está na tua conta, por isso não conseguimos guardar. Atualiza os teus locais para ver o que há agora.",
+    "Este espaço já não está associado à tua conta, por isso não conseguimos guardar. Atualiza os teus espaços para ver o que há agora.",
   "places.quickEdit.moreLink":
     "Precisas de alterar categorias, morada ou fotos? <a>Abrir o editor completo.</a>",
   "places.suggestions.title": "Espaços que <em>sugeriste</em>",
   "places.suggestions.subtitle":
-    "Espaços que sugeriste para o diretório. A QueerPulse cuida de cada um até o negócio o reclamar, e a equipa revê-o antes de ficar ativo.",
+    "Espaços que sugeriste para o diretório. A QueerPulse cuida de cada um até o negócio o reivindicar, e a equipa revê-o antes de ficar ativo.",
   "places.suggestions.state.in_review": "Em análise",
   "places.suggestions.state.needs_info": "Pergunta para ti",
   "places.suggestions.state.published": "Publicado",
@@ -1944,11 +1943,11 @@ export const members: Catalog = {
   "places.suggestions.note.needs_info":
     "A equipa perguntou-te algo sobre este espaço. A pergunta está nas tuas notificações, e podes responder enviando uma correção.",
   "places.suggestions.note.published":
-    "Está ativo no diretório. A QueerPulse cuida dele até o negócio o reclamar.",
+    "Está ativo no diretório. A QueerPulse cuida dele até o negócio o reivindicar.",
   "places.suggestions.note.claimed":
-    "O negócio reclamou-o e agora é quem cuida do anúncio.",
+    "O negócio reivindicou-o e agora é quem cuida do anúncio.",
   "places.suggestions.note.claimedByYou":
-    "Reclamaste-o, por isso agora és tu quem gere o anúncio.",
+    "Reivindicaste-o, por isso agora és tu quem gere o anúncio.",
   "places.suggestions.note.closed":
     "O negócio avisou-nos que fechou de vez. A página continua disponível para quem quiser saber o que aconteceu.",
   "places.suggestions.correctionCta": "Enviar uma correção",
@@ -1966,7 +1965,7 @@ export const members: Catalog = {
   "badges.loading": "A carregar os teus emblemas…",
   "badges.errorTitle": "Não conseguimos carregar os teus emblemas",
   "badges.errorDescription":
-    "Algo correu mal ao aceder ao teu reconhecimento. Tenta novamente daqui a pouco.",
+    "Algo correu mal ao carregar os teus emblemas. Tenta novamente daqui a pouco.",
   "badges.emptyTitle": "Ainda sem emblemas",
   "badges.emptyDescription":
     "Aparece, organiza e participa. Os teus primeiros emblemas surgem aqui à medida que avanças.",
@@ -1988,20 +1987,21 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.vouchesDesc":
     "Dares um voto de confiança a outra pessoa.",
   "badges.xpBreakdown.sources.connections": "Conexões feitas",
-  "badges.xpBreakdown.sources.connectionsDesc": "Conectares-te a outro membro.",
+  "badges.xpBreakdown.sources.connectionsDesc":
+    "Criares uma conexão com outra pessoa.",
   "badges.xpBreakdown.sources.events": "Eventos em que participaste",
   "badges.xpBreakdown.sources.eventsDesc":
     "Participares num evento organizado por outra pessoa.",
   "badges.xpBreakdown.sources.posts": "Publicações na comunidade",
   "badges.xpBreakdown.sources.postsDesc":
     "Publicares onde há outras pessoas, ou responderes a alguém.",
-  "badges.xpBreakdown.sources.endorsements": "Endossos recebidos",
+  "badges.xpBreakdown.sources.endorsements": "Recomendações recebidas",
   "badges.xpBreakdown.sources.endorsementsDesc":
-    "Seres endossade por outro membro.",
+    "Receberes uma recomendação de outra pessoa.",
   "badges.xpBreakdown.sources.tenure": "Dias na QueerPulse",
   "badges.xpBreakdown.sources.tenureDesc":
     "Fazeres parte da QueerPulse, dia a dia.",
-  "badges.xpBreakdown.sources.verified": "Verificado",
+  "badges.xpBreakdown.sources.verified": "Conta verificada",
   "badges.xpBreakdown.sources.verifiedDesc": "Verificares a tua conta.",
   "badges.xpBreakdown.sources.gettingStarted": "Passos dos primeiros dias",
   "badges.xpBreakdown.sources.gettingStartedDesc":
@@ -2012,7 +2012,7 @@ export const members: Catalog = {
     "Uma sessão de voluntariado confirmada por quem publicou a oportunidade.",
   "badges.xpBreakdown.sources.hosting": "Eventos que organizaste",
   "badges.xpBreakdown.sources.hostingDesc":
-    "Organizares um evento que aconteceu e teve gente.",
+    "Organizares um evento que aconteceu e juntou pessoas.",
   "badges.xpBreakdown.sources.magazine": "Peças publicadas na revista",
   "badges.xpBreakdown.sources.magazineDesc":
     "Uma peça tua publicada na revista.",
@@ -2026,7 +2026,7 @@ export const members: Catalog = {
 
   // ── Emblemas v2: hero + mostrador de nível ───────────────────────────────
   "badges.hero.levelWord": "Nível",
-  "badges.hero.statEarnedLabel": "No espólio",
+  "badges.hero.statEarnedLabel": "Na vitrina",
   "badges.hero.statRareLabel": "Mais raro",
   "badges.hero.statNearLabel": "Emblema mais próximo",
   "badges.hero.statNearAllEarned": "Todos eles",
@@ -2034,7 +2034,7 @@ export const members: Catalog = {
   // Era "Imprimir o teu espólio", mas o diálogo que abre não tem impressão,
   // exportação nem partilha: só um botão Fechar. Voltar ao nome antigo no dia
   // em que existir mesmo um ficheiro para levar.
-  "badges.hero.viewCase": "Ver o teu espólio",
+  "badges.hero.viewCase": "Ver a tua vitrina",
   "badges.hero.xpProgress": "{xp} / {xpMax} XP",
   "badges.hero.xpToNextName": "{xp} XP para <b>{nextName}</b>",
   "badges.hero.maxLevel": "Chegaste ao topo da escada.",
@@ -2047,15 +2047,15 @@ export const members: Catalog = {
   "badges.momentum.heading": "Mais perto de <em>ganhar</em>",
   "badges.momentum.previewEarn": "Pré-visualizar o momento de ganhar",
   "badges.momentum.progress": "{units} de {target}",
-  "badges.momentum.cannotBeChased": "Vem de outro membro",
+  "badges.momentum.cannotBeChased": "Vem de outra pessoa",
   "badges.momentum.xpReward": "+{xp} XP",
   "badges.momentum.allEarnedDesc":
-    "Tudo nas tuas categorias não silenciadas já foi ganho.",
+    "Já ganhaste tudo nas categorias que não silenciaste.",
   "badges.momentum.unmuteCategory": "Reativar uma categoria",
   "badges.momentum.fastestXp": "XP mais rápido",
 
   // ── Emblemas v2: o espólio (grelha + controlos) ──────────────────────────
-  "badges.case.eyebrow": "O espólio",
+  "badges.case.eyebrow": "A vitrina",
   "badges.case.heading": "Os teus <em>emblemas</em>",
   "badges.case.sub": "{earned} ganhos · {remaining} ainda por aí",
   "badges.case.showLocked": "Mostrar bloqueados",
@@ -2074,11 +2074,11 @@ export const members: Catalog = {
   "badges.case.mutedNotePlural":
     "{categories} estão silenciadas. Nada delas te será sugerido.",
   "badges.case.hiddenFlag": "Escondido",
-  "badges.case.rarestFlag": "O mais raro do teu espólio",
+  "badges.case.rarestFlag": "O mais raro da tua vitrina",
   "badges.case.rarityCommon": "Comum",
   "badges.case.rarityRare": "Raro",
   "badges.case.rarityLegendary": "Lendário",
-  "badges.case.emptyTitle": "Ainda nada no espólio.",
+  "badges.case.emptyTitle": "<em>Ainda</em> nada na vitrina.",
   "badges.case.emptyDesc":
     "É exatamente assim que deve ser na primeira semana. Alguns destes estão ao alcance sem saíres de casa. Os restantes chegam com o tempo.",
 
@@ -2088,30 +2088,30 @@ export const members: Catalog = {
   "badges.drawer.worth": "Vale",
   "badges.drawer.checkedBy": "Verificado por",
   "badges.drawer.checkedBySystem": "Sistema",
-  "badges.drawer.checkedByHost": "Anfitrião",
+  "badges.drawer.checkedByHost": "Organização",
   "badges.drawer.checkedByPerson": "Uma pessoa",
-  "badges.drawer.checkedByMember": "Um membro",
+  "badges.drawer.checkedByMember": "Alguém da comunidade",
   "badges.drawer.howCheckedHeading": "Como é verificado",
   "badges.drawer.verifyAutoTitle": "Contado automaticamente",
   "badges.drawer.verifyAutoBody":
-    "Contado automaticamente a partir da tua própria atividade. Nada é registado que já não seja teu.",
+    "Contado automaticamente a partir da tua própria atividade. Só se regista o que já é teu.",
   "badges.drawer.verifyHostTitle": "Confirmado à porta",
   "badges.drawer.verifyHostBody":
-    "Confirmado pelo anfitrião que te regista à entrada.",
+    "Confirmado à porta por quem organiza o evento.",
   "badges.drawer.verifyReviewTitle": "Lido por uma pessoa",
   "badges.drawer.verifyReviewBody":
-    "Alguém da equipa da comunidade lê antes de contar. Essa demora é propositada.",
+    "Alguém da equipa da comunidade lê primeiro, e só depois conta. Essa demora é propositada.",
   "badges.drawer.verifyPeerTitle": "Dado nas palavras de outra pessoa",
   "badges.drawer.verifyPeerBody":
-    "Dado por outro membro, nas próprias palavras. Não pode ser pedido, comprado nem forçado.",
+    "Dado por outra pessoa da comunidade, nas palavras dela. Não pode ser pedido, comprado nem forçado.",
   "badges.drawer.noteHeading": "A tua nota sobre este",
   "badges.drawer.notePlaceholder":
-    "Uma linha para ti. O que foi isto, realmente?",
+    "Uma linha só para ti. De que se tratou, afinal?",
   "badges.drawer.noteHelp": "Só tu vês isto.",
   "badges.drawer.visibleOnProfile": "Visível no teu perfil",
   "badges.drawer.privateToYou": "Privado, só para ti",
   "badges.drawer.visibilityNote":
-    "Se o esconderes, os outros membros deixam de o ver no teu perfil. Fica sempre aqui para ti.",
+    "Se o esconderes, as outras pessoas deixam de o ver no teu perfil. Fica sempre aqui para ti.",
   "badges.drawer.visibilityErrorToast":
     "Não conseguimos mudar a visibilidade desse emblema. Tenta novamente daqui a pouco.",
   "badges.drawer.visibilityError.notEarned":
@@ -2128,25 +2128,25 @@ export const members: Catalog = {
   "badges.seasonal.eyebrow": "Sazonal",
   "badges.seasonal.heading": "Só <em>este ano</em>",
   "badges.seasonal.sub":
-    "Emblemas que não voltam a poder ser ganhos depois de fechada a janela. Expiram, mas a memória fica.",
+    "Emblemas que deixam de se poder ganhar quando o período fecha. Expiram, mas a memória fica.",
 
   // ── Emblemas v2: escada ────────────────────────────────────────────────────
   "badges.ladderV2.eyebrow": "A escada",
   "badges.ladderV2.heading": "O que cada nível <em>desbloqueia</em>",
   "badges.ladderV2.sub":
-    "Quase tudo o que o QueerPulse oferece está aberto desde o Nível 1. Estes degraus mostram o que cada nível acrescenta a isso, e nada que não esteja construído.",
-  "badges.ladderV2.passed": "Ultrapassado",
+    "Quase tudo o que a QueerPulse oferece está aberto desde o Nível 1. Estes degraus mostram o que cada nível acrescenta, e só incluem o que já existe.",
+  "badges.ladderV2.passed": "Alcançado",
   "badges.ladderV2.ahead": "Por vir",
   "badges.ladderV2.beyondTitle": "Depois de {name}",
-  "badges.ladderV2.beyondBody": "A escada acaba. A comunidade, não.",
+  "badges.ladderV2.beyondBody": "A escada acaba aqui. A comunidade continua.",
 
   // ── Emblemas v2: extrato de XP ────────────────────────────────────────────
   "badges.ledger.eyebrow": "Extrato",
   "badges.ledger.heading": "De onde vieram os <em>pontos</em>",
   "badges.ledger.subWithCount":
-    "{count} eventos. O teu nível deriva desta lista, nunca é guardado à parte.",
+    "{count} registos. O teu nível é calculado a partir desta lista e não fica guardado à parte.",
   "badges.ledger.subEmpty":
-    "O teu nível deriva desta lista, nunca é guardado à parte.",
+    "O teu nível é calculado a partir desta lista e não fica guardado à parte.",
   "badges.ledger.sparkXp": "{xp} XP",
   "badges.ledger.sparkAriaLabel": "XP ao longo do tempo, a terminar em {xp} XP",
   "badges.ledger.colDate": "Data",
@@ -2165,18 +2165,18 @@ export const members: Catalog = {
   "badges.ledger.reason.moderationRemoval":
     "Nova contagem depois de uma remoção pela moderação",
   "badges.ledger.reason.moderationRemovalWhy":
-    "Existe uma remoção de conteúdo decidida pela moderação ativa na tua conta, por isso o conteúdo removido deixou de contar. Volta a contar na contagem seguinte depois de a decisão ser levantada.",
+    "A moderação removeu conteúdo teu e essa decisão continua ativa na tua conta, por isso o conteúdo removido deixou de contar. Volta a contar na contagem seguinte depois de a decisão ser levantada.",
   "badges.ledger.reason.rebase": "Pontos reequilibrados",
   "badges.ledger.reason.rebaseWhy":
     "Os pontos passaram a vir só de atividade em que outra pessoa participou. Esta linha é a correção única que acertou o teu total.",
   "badges.ledger.reason.adjustment": "Correção ao teu total",
   "badges.ledger.reason.adjustmentWhy":
-    "Esta linha foi escrita pela plataforma. Fala com a equipa da comunidade se quiseres saber o detalhe.",
+    "Esta linha foi registada pela plataforma. Fala com a equipa da comunidade se quiseres saber os detalhes.",
   "perks.sidebar.explainBody":
-    "As vantagens são a forma de quem aparece receber um pouco mais de volta. Cada nível representa algo real: tempo aqui, eventos a que foste, pessoas que ligaste. O que desbloqueias é uma fatia maior do que a plataforma já faz.",
+    "As vantagens são a forma de quem continua a aparecer receber um pouco mais de volta. Cada nível representa algo real: tempo por cá, eventos a que foste, conexões que fizeste. O que desbloqueias é uma fatia maior do que a plataforma já consegue fazer.",
   "perks.sidebar.suggestLabel":
-    "O que tornaria mais valioso seres membro a longo prazo?",
-  "badges.case.categoryToggleLabel": "Mostrar distintivos de {category}",
+    "O que tornaria mais valioso fazeres parte da comunidade a longo prazo?",
+  "badges.case.categoryToggleLabel": "Mostrar emblemas de {category}",
   "badges.category.attendance": "Presença",
   "badges.category.community": "Comunidade",
   "badges.category.culture": "Cultura",
@@ -2184,7 +2184,7 @@ export const members: Catalog = {
   "badges.category.hosting": "Organização",
   "badges.category.milestones": "Marcos",
   "badges.category.platform": "Plataforma",
-  "badges.catalog.localScout.name": "Explorador do Bairro",
+  "badges.catalog.localScout.name": "Radar do Bairro",
   "badges.catalog.localScout.locked": "Guarda 3 sítios no diretório Local",
   "badges.catalog.localScout.earned": "Guardaste 3 sítios no diretório Local",
   "badges.catalog.wellRead.name": "Boa Leitura",
@@ -2200,33 +2200,36 @@ export const members: Catalog = {
   "badges.catalog.regularAttendee.locked": "Vai a 5 eventos num ano",
   "badges.catalog.regularAttendee.earned": "5 eventos num ano",
   "badges.catalog.decade.name": "Aniversário",
-  "badges.catalog.decade.locked": "Sê membro durante 1 ano",
-  "badges.catalog.decade.earned": "Membro há 1 ano",
+  "badges.catalog.decade.locked": "Faz 1 ano na comunidade",
+  "badges.catalog.decade.earned": "Na comunidade há 1 ano",
   "badges.catalog.connector.name": "Elo de Conexão",
   "badges.catalog.connector.locked": "Faz 10 conexões",
   "badges.catalog.connector.earned": "10 conexões feitas",
   "badges.catalog.vouch.name": "Voto de confiança",
-  "badges.catalog.vouch.locked": "Dá um voto de confiança a um novo membro",
-  "badges.catalog.vouch.earned": "Deste um voto de confiança a um novo membro",
+  "badges.catalog.vouch.locked":
+    "Dá um voto de confiança a uma pessoa nova na comunidade",
+  "badges.catalog.vouch.earned":
+    "Deste um voto de confiança a uma pessoa nova na comunidade",
   "badges.catalog.threadStarter.name": "Início de Conversa",
   "badges.catalog.threadStarter.locked": "Começa uma conversa na comunidade",
   "badges.catalog.threadStarter.earned": "Começaste uma conversa na comunidade",
   "badges.catalog.networker.name": "Rede Alargada",
-  "badges.catalog.networker.locked": "Conecta-te a 50 membros",
-  "badges.catalog.networker.earned": "Conectaste-te a 50 membros",
+  "badges.catalog.networker.locked": "Cria conexões com 50 pessoas",
+  "badges.catalog.networker.earned": "Criaste conexões com 50 pessoas",
   "badges.catalog.contributor.name": "Quem Contribui",
-  "badges.catalog.contributor.locked": "Envia uma história de membro",
-  "badges.catalog.contributor.earned": "Enviaste uma história de membro",
+  "badges.catalog.contributor.locked": "Envia a tua história",
+  "badges.catalog.contributor.earned": "Enviaste a tua história",
   "badges.catalog.twoHomes.name": "Duas Casas",
   "badges.catalog.twoHomes.locked": "Entra numa segunda comunidade",
   "badges.catalog.twoHomes.earned": "Entraste numa segunda comunidade",
-  "badges.catalog.foundingMember.name": "Membro Fundador",
+  "badges.catalog.foundingMember.name": "Da Primeira Hora",
   "badges.catalog.foundingMember.locked":
-    "Entra entre os primeiros 500 membros",
-  "badges.catalog.foundingMember.earned": "Entraste entre os primeiros 500",
+    "Entra entre as primeiras 500 pessoas",
+  "badges.catalog.foundingMember.earned":
+    "Entraste entre as primeiras 500 pessoas",
   "badges.catalog.sustainer.name": "Com Raízes",
-  "badges.catalog.sustainer.locked": "Sê membro durante 6 meses",
-  "badges.catalog.sustainer.earned": "Membro há 6 meses",
+  "badges.catalog.sustainer.locked": "Faz 6 meses na comunidade",
+  "badges.catalog.sustainer.earned": "Na comunidade há 6 meses",
   "badges.catalog.workReady.name": "Perfil de Trabalho Pronto",
   "badges.catalog.workReady.locked":
     "Preenche o teu Perfil de Trabalho (competências e áreas de foco)",
@@ -2248,9 +2251,9 @@ export const members: Catalog = {
   "badges.catalog.firstTable2026.earned": "Foste ao primeiro evento do ano",
   "badges.catalog.winterWarmth2026.name": "Calor de Inverno",
   "badges.catalog.winterWarmth2026.locked":
-    "Leva alguém novo a um evento de dezembro",
+    "Leva uma pessoa nova a um evento de dezembro",
   "badges.catalog.winterWarmth2026.earned":
-    "Levaste alguém novo a um evento de dezembro",
+    "Levaste uma pessoa nova a um evento de dezembro",
 
   "badges.catalog.pride2026.window": "Aberto até {date}",
   "badges.catalog.firstTable2026.window": "Só em janeiro",
@@ -2275,8 +2278,8 @@ export const members: Catalog = {
   // isso quem le portugues lia a escada toda em ingles. Passa a levar ids
   // estaveis, com o ingles como reserva. As chaves de PERK_CATALOG sao
   // PERSISTIDAS e nunca podem ser renomeadas.
-  "perks.group.available": "Disponível para resgatar",
-  "perks.group.coming": "Chega no Nível {level} · {name}",
+  "perks.group.available": "Disponíveis para resgatar",
+  "perks.group.coming": "A partir do Nível {level} · {name}",
   "perks.group.claimed": "Já resgatadas",
   "perks.ladder.statusDone": "Concluído",
   "perks.ladder.statusCurrent": "Atual",
@@ -2292,22 +2295,22 @@ export const members: Catalog = {
   "perks.category.membership": "Adesão",
   "perks.catalog.vouchAccess.title": "Poder dar votos de confiança",
   "perks.catalog.vouchAccess.desc":
-    "Poderes dar votos de confiança a outros membros, um sinal de confiança que os ajuda a destacar-se. Todos os membros ativos têm isto desde o primeiro dia.",
+    "A possibilidade de dares votos de confiança a outras pessoas da comunidade, um sinal que as ajuda a destacar-se. Toda a gente com conta ativa tem isto desde o primeiro dia.",
   "perks.catalog.vouchAccess.autoLabel":
-    "Disponível para todos os membros ativos",
+    "Disponível para toda a gente com conta ativa",
   "perks.catalog.inviteQuotaLevel4.title": "Mais convites por mês",
   "perks.catalog.inviteQuotaLevel4.desc":
     "Resgata e o teu limite mensal de convites passa de {base} para {total}. Os convites renovam-se no primeiro dia de cada mês.",
   "perks.catalog.inviteQuotaLevel5.title": "O limite mais alto de convites",
   "perks.catalog.inviteQuotaLevel5.desc":
-    "Resgata e o teu limite mensal de convites passa de {base} para {total}. A comunidade cresce por causa de pessoas como tu.",
+    "Resgata e o teu limite mensal de convites passa de {base} para {total}. A comunidade cresce graças a pessoas como tu.",
   "perks.catalog.inviteQuotaAtLimit.desc":
     "O teu limite mensal de convites é de {total}.",
   "perks.catalog.invitePaused.desc":
     "Os teus convites estão em pausa. Podes resgatar isto na mesma, e o limite maior começa quando a nossa equipa voltar a ativar os teus convites.",
   "perks.base.browseDirectory": "Ver o diretório de membros",
   "perks.base.joinGatherings": "Ir a eventos e confirmar presença",
-  "perks.base.directMessages": "Falar diretamente com outros membros",
+  "perks.base.directMessages": "Enviar mensagens diretas a outras pessoas",
   "perks.base.saveArticles": "Guardar artigos e recursos",
   "perks.base.joinCommunities": "Entrar em comunidades",
   "perks.base.hostGathering": "Organizar um evento",
@@ -2315,7 +2318,7 @@ export const members: Catalog = {
   "badges.ledger.integrityHeading": "Porque podes confiar nisto",
   "badges.ledger.integrity1Title": "Contado a partir do que já fizeste.",
   "badges.ledger.integrity1Body":
-    "As presenças vêm da tua própria confirmação num evento que já começou. Não há nada extra para entregar.",
+    "As presenças vêm da tua própria confirmação num evento que já começou. Não precisas de registar mais nada.",
   "badges.ledger.integrity2Title": "Cada ponto tem uma linha.",
   "badges.ledger.integrity2Body":
     "Cada aumento entra nesta lista com data e descrição, para o total poder ser conferido com ela.",
@@ -2329,23 +2332,22 @@ export const members: Catalog = {
     "Qualquer emblema que ganhes pode ser escondido do teu perfil, um a um. Um emblema escondido fica nesta página para ti.",
   "badges.ledger.integrity5Title": "Sem tabela de classificação.",
   "badges.ledger.integrity5Body":
-    "Os membros nunca são comparados entre si. A raridade descreve o próprio emblema.",
+    "Nunca comparamos as pessoas entre si. A raridade descreve o próprio emblema.",
   "badges.ledger.footnoteCount":
     "{badges} emblemas · {levels} níveis · um extrato que podes auditar.",
   "badges.ledger.footnoteContact":
-    "Algo parece errado? Fala com a equipa da comunidade.",
+    "Alguma coisa não bate certo? Fala com a equipa da comunidade.",
 
   // ── Emblemas v2: momento de ganhar + cartão do espólio ────────────────────
   "badges.earn.kickerBadge": "Emblema ganho",
   "badges.earn.kickerGiven": "Recebeste isto",
-  "badges.earn.body":
-    "São +{xp} XP, e são teus quer decidas mostrá-los ou não.",
-  "badges.earn.putInCase": "Guardar no espólio",
+  "badges.earn.body": "São +{xp} XP, e o emblema é teu, quer o mostres ou não.",
+  "badges.earn.putInCase": "Guardar na vitrina",
   "badges.earn.footnote":
     "Nível {level} · {name} · privado até dizeres o contrário",
-  "badges.caseCard.title": "O teu espólio",
+  "badges.caseCard.title": "A tua vitrina",
   "badges.caseCard.subtitle": "QueerPulse · Lisboa",
-  "badges.caseCard.emptyDesc": "Um espólio vazio. Volta daqui a um mês.",
+  "badges.caseCard.emptyDesc": "Uma vitrina vazia. Volta daqui a um mês.",
   "badges.caseCard.footStats": "{count} emblemas · {xp} XP",
   "badges.caseCard.close": "Fechar",
 
@@ -2359,17 +2361,17 @@ export const members: Catalog = {
   "perks.page.loading": "A carregar as tuas vantagens…",
   "perks.page.errorTitle": "Não conseguimos carregar as tuas vantagens",
   "perks.page.errorDescription":
-    "Algo correu mal ao aceder ao teu reconhecimento. Tenta novamente daqui a pouco.",
+    "Não conseguimos aceder aos teus emblemas e ao teu nível. Tenta novamente daqui a pouco.",
   "perks.page.emptyTitle": "Ainda sem vantagens",
   "perks.page.emptyDescription":
-    "Sobe de nível e os teus benefícios de membro aparecem aqui para resgatar.",
+    "Sobe de nível e as tuas vantagens aparecem aqui para resgatar.",
   "perks.sidebar.yourLevelTitle": "O teu nível",
   "perks.sidebar.xpSummary":
     "{xp} / {xpMax} XP · {xpToNext} para o Nível {nextLevel}",
   "perks.sidebar.nextUnlockNote":
-    "O teu próximo degrau é o <strong>Nível {nextLevel} · {nextName}</strong>. O que ele abre está listado na escada.",
+    "O teu próximo degrau é o <strong>Nível {nextLevel} · {nextName}</strong>. O que desbloqueia está na escada.",
   "perks.sidebar.seeAllBadgesCta": "Ver todos os emblemas e níveis",
-  "perks.sidebar.explainedTitle": "Vantagens explicadas",
+  "perks.sidebar.explainedTitle": "Como funcionam as vantagens",
   "perks.sidebar.suggestTitle": "Sugerir uma vantagem",
   "perks.sidebar.suggestPlaceholder": "Partilha uma ideia…",
   "perks.sidebar.sendSuggestionCta": "Enviar sugestão",
@@ -2382,15 +2384,15 @@ export const members: Catalog = {
   "perks.claim.errorToast":
     "Não conseguimos resgatar essa vantagem. Tenta novamente daqui a pouco.",
   "perks.claim.error.levelNotReached":
-    "Ainda não chegaste ao nível em que esta vantagem se desbloqueia. Continua e ela abre-se para ti.",
+    "Ainda não chegaste ao nível em que esta vantagem se desbloqueia. Continua e ela fica disponível para ti.",
 
   // ── A tua rede (ProfileNetworkStats + NetworkListModal) — só do dono ─────────
   "network.title": "A tua rede",
   "network.group.connected": "Conexões",
   "network.group.vouchedGiven": "Votos de confiança que deste",
   "network.group.vouchedReceived": "Votos de confiança que recebeste",
-  "network.row.connected": "ligade {time}",
-  "network.row.connectedNoTime": "ligade",
+  "network.row.connected": "conexão feita {time}",
+  "network.row.connectedNoTime": "conexão feita",
   "network.row.vouchedGiven": "deste um voto de confiança {time}",
   "network.row.vouchedGivenNoTime": "deste um voto de confiança",
   "network.row.vouchedReceived": "deu-te um voto de confiança {time}",
@@ -2398,8 +2400,8 @@ export const members: Catalog = {
   "network.viewAllAria": "Ver todas as {count} em {group}",
   "network.modalSub_one": "{count} pessoa",
   "network.modalSub_other": "{count} pessoas",
-  "network.searchPlaceholder": "Procurar por nome",
-  "network.searchAria": "Procurar nesta lista por nome",
+  "network.searchPlaceholder": "Pesquisa por nome",
+  "network.searchAria": "Pesquisar nesta lista por nome",
   "network.noMatches": "Ninguém aqui corresponde a “{query}”.",
 
   // ── Painel "Quem vê o quê" (WhoSeesWhatSheet + Presets/FieldToggles/Identities/HiddenFrom/Reports/NameChange) ──
@@ -2408,7 +2410,7 @@ export const members: Catalog = {
   "profile.whoSeesWhat.presets.heading": "Predefinições rápidas",
   "profile.whoSeesWhat.presets.sub":
     "Um toque define a tua foto, bairro, votos de confiança e o que procuras, tudo junto.",
-  "profile.whoSeesWhat.presets.findable.label": "Encontrável",
+  "profile.whoSeesWhat.presets.findable.label": "À vista",
   "profile.whoSeesWhat.presets.findable.desc":
     "Foto, bairro, votos de confiança e o que procuras ficam todos visíveis.",
   "profile.whoSeesWhat.presets.careful.label": "Reservado",
@@ -2420,10 +2422,10 @@ export const members: Catalog = {
 
   "profile.whoSeesWhat.activity.heading": "Há quanto tempo estiveste por cá",
   "profile.whoSeesWhat.activity.sub":
-    "Os outros membros conseguem ver mais ou menos há quanto tempo estiveste por cá. Guardamos o mês e nada mais preciso: sem datas, sem horas, sem um ponto a dizer que estás online agora.",
-  "profile.whoSeesWhat.activity.hideLabel": "Esconder isto dos outros membros",
+    "As outras pessoas conseguem ver mais ou menos há quanto tempo estiveste por cá. Guardamos só o mês e nada mais preciso: sem datas, sem horas, sem um ponto a dizer que estás online agora.",
+  "profile.whoSeesWhat.activity.hideLabel": "Esconder isto das outras pessoas",
   "profile.whoSeesWhat.activity.hideDesc":
-    "Desliga a linha para toda a gente e tira-te da ordenação Ativos recentemente. Continuas a vê-la aqui.",
+    "Desliga a linha para toda a gente e tira-te da ordenação Com atividade recente. Continuas a vê-la aqui.",
   "profile.whoSeesWhat.activity.current":
     "Neste momento apareces como: {band}.",
   "profile.whoSeesWhat.activity.none":
@@ -2431,12 +2433,12 @@ export const members: Catalog = {
   "profile.whoSeesWhat.activity.error":
     "Não foi possível guardar. Tenta outra vez.",
   "profile.whoSeesWhat.activity.demo":
-    "Isto é a demonstração. Inicia sessão para mudares a definição a sério.",
-  "profile.whoSeesWhat.fields.heading": "Controlos instantâneos",
-  "profile.whoSeesWhat.fields.sub": "Cada um destes produz efeito de imediato.",
+    "Estás na demonstração. Inicia sessão para mudares a definição a sério.",
+  "profile.whoSeesWhat.fields.heading": "Controlos de visibilidade",
+  "profile.whoSeesWhat.fields.sub": "Cada um tem efeito imediato.",
   "profile.whoSeesWhat.fields.photo.label": "Foto",
   "profile.whoSeesWhat.fields.photo.desc":
-    "Mostra a tua foto no perfil, no cartão do diretório e nos teus cartões de sócio.",
+    "Mostra a tua foto no perfil, no cartão do diretório e nos teus cartões de membro.",
   "profile.whoSeesWhat.fields.hood.label": "Bairro",
   "profile.whoSeesWhat.fields.hood.desc":
     "Mostra em que bairro de Lisboa estás.",
@@ -2449,7 +2451,7 @@ export const members: Catalog = {
   "profile.whoSeesWhat.fields.ambassador.label":
     "Etiqueta de pessoa embaixadora",
   "profile.whoSeesWhat.fields.ambassador.desc":
-    "Mostra a tua etiqueta junto ao teu nome, no filtro de pessoas embaixadoras e a quem convidas. Os teus benefícios mantêm-se na mesma.",
+    "Mostra a tua etiqueta junto ao teu nome, no filtro de pessoas embaixadoras e a quem convidas. As tuas vantagens mantêm-se na mesma.",
 
   "profile.whoSeesWhat.identities.heading": "Identidades",
   "profile.whoSeesWhat.identities.sub":
@@ -2460,16 +2462,16 @@ export const members: Catalog = {
 
   "profile.whoSeesWhat.hiddenFrom.heading": "Escondido de",
   "profile.whoSeesWhat.hiddenFrom.sub":
-    "O teu perfil fica invisível para quem estiver nesta lista, mesmo que estejam conectados a ti.",
+    "O teu perfil fica invisível para quem estiver nesta lista, mesmo que haja uma conexão entre vocês.",
   "profile.whoSeesWhat.hiddenFrom.demoNote":
-    "Esta é uma conta de demonstração, por isso esconder o teu perfil de alguém não está simulado aqui.",
+    "Estás numa conta de demonstração, por isso aqui não dá para simular esconder o teu perfil de alguém.",
   "profile.whoSeesWhat.hiddenFrom.empty":
     "Ainda não escondeste o teu perfil de ninguém.",
   "profile.whoSeesWhat.hiddenFrom.addButton": "Esconder de alguém",
   "profile.whoSeesWhat.hiddenFrom.remove": "Remover",
   "profile.whoSeesWhat.hiddenFrom.removeAria": "Remover {name}",
   "profile.whoSeesWhat.hiddenFrom.pickerTitle": "Esconder o teu perfil de",
-  "profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder": "Procurar por nome",
+  "profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder": "Pesquisa por nome",
   "profile.whoSeesWhat.hiddenFrom.pickerNoResults":
     "Ninguém com esse nome. Experimenta escrever de outra forma.",
   "profile.whoSeesWhat.hiddenFrom.pickerLoadMore": "Mostrar mais pessoas",
@@ -2525,14 +2527,14 @@ export const members: Catalog = {
   "profile.accountData.export.toast.startError":
     "Não conseguimos iniciar a tua exportação. Tenta novamente.",
 
-  "profile.accountData.stepAway.title": "Afastar-te",
+  "profile.accountData.stepAway.title": "Fazer uma pausa ou sair",
   "profile.accountData.stepAway.hide.title": "Ocultar-me",
   "profile.accountData.stepAway.hide.body":
-    "O teu perfil torna-se invisível e deixas de receber notificações. É totalmente reversível: volta a iniciar sessão quando quiseres reativá-la. Enquanto oculte, as outras pessoas veem-te listade como membro desativade.",
+    "O teu perfil torna-se invisível e deixas de receber notificações. Podes reverter tudo: volta a iniciar sessão quando quiseres para reativar a conta. Enquanto o perfil estiver oculto, as outras pessoas veem a tua conta como desativada.",
   "profile.accountData.stepAway.hide.cta": "Ocultar-me",
   "profile.accountData.stepAway.hide.confirm.title": "Ocultar o teu perfil?",
   "profile.accountData.stepAway.hide.confirm.body":
-    "Vais ser desligade e o teu perfil fica oculto de imediato. Volta a iniciar sessão quando quiseres. Nada é eliminado.",
+    "Vamos terminar a tua sessão e ocultar o teu perfil de imediato. Volta a iniciar sessão quando quiseres. Nada é eliminado.",
   "profile.accountData.stepAway.hide.confirm.cta": "Sim, oculta-me",
   "profile.accountData.stepAway.erase.title": "Apagar-me",
   "profile.accountData.stepAway.erase.body":
@@ -2545,7 +2547,7 @@ export const members: Catalog = {
   "profile.accountData.stepAway.erase.confirm.title":
     "Pedir a eliminação da conta?",
   "profile.accountData.stepAway.erase.confirm.body":
-    "Isto inicia um período de carência de 30 dias. O teu perfil em {profile} desaparece já, vais ser desligade, e tudo é permanentemente eliminado ao fim dos 30 dias, a não ser que canceles primeiro.",
+    "Isto inicia um período de carência de 30 dias. O teu perfil em {profile} desaparece já, a tua sessão termina agora, e tudo é eliminado de forma permanente ao fim dos 30 dias, a não ser que canceles antes.",
   "profile.accountData.stepAway.erase.confirm.cta": "Pedir eliminação",
   "profile.accountData.stepAway.erase.confirm.reasonLabel":
     "Diz-nos porquê, se quiseres (opcional)",
@@ -2556,13 +2558,13 @@ export const members: Catalog = {
   "profile.accountData.stepAway.dependency.checkFailed":
     "Não conseguimos verificar se alguma das tuas comunidades ou anúncios ainda depende de ti. Podes pedir a eliminação na mesma, e tratamos de tudo o que é teu quando a tua conta for eliminada.",
   "profile.accountData.stepAway.dependency.informationalIntro":
-    "Enquanto a tua conta não estiver ativa, não podes passar nem fechar isto por ti, e podes pedir a eliminação na mesma. Quando a tua conta for eliminada, cada comunidade de que és responsável passa para quem é cotitular há mais tempo, ou para quem é mod há mais tempo se não houver cotitular. Um espaço sem nenhum dos dois passa para quem é responsável pela comunidade-mãe, e uma comunidade que ninguém possa assumir fica sinalizada para a nossa equipa rever. Os teus anúncios continuam publicados sem responsável, e quem gere o espaço pode reivindicá-los.",
+    "Enquanto a tua conta não estiver ativa, não podes passar estas coisas a outra pessoa nem fechá-las por ti, e podes pedir a eliminação na mesma. Quando a tua conta for eliminada, cada comunidade de que és responsável passa para quem é cotitular há mais tempo ou, se não houver, para quem modera há mais tempo. Um espaço sem nenhuma destas pessoas passa para quem é responsável pela comunidade-mãe, e uma comunidade que ninguém possa assumir fica sinalizada para a nossa equipa rever. Os teus anúncios continuam publicados sem pessoa proprietária, e quem gere o espaço pode reivindicá-los.",
   "profile.accountData.stepAway.pending.banner":
     "<strong>A tua conta está agendada para eliminação.</strong> Está tudo oculto agora e será permanentemente apagado a <strong>{date}</strong>. Mudaste de ideias? Ainda podes cancelar.",
   "profile.accountData.stepAway.pending.cancelling": "A cancelar…",
   "profile.accountData.stepAway.pending.cancelCta": "Cancelar eliminação",
   "profile.accountData.stepAway.pending.cancelledToast":
-    "Eliminação cancelada. Bem-vinde de volta.",
+    "Eliminação cancelada. Que bom ter-te de volta.",
   "profile.accountData.stepAway.pending.cancelErrorToast":
     "Não conseguimos cancelar isso. Tenta novamente.",
   "profile.accountData.stepAway.toast.actionError":
@@ -2575,7 +2577,7 @@ export const members: Catalog = {
   "profile.accountData.dsar.title": "Pedir outra coisa",
   "profile.accountData.dsar.intro":
     "Acede, corrige ou opõe-te ao uso dos teus dados: tudo o que fica para além do que Descarregar e Apagar já cobrem.",
-  "profile.accountData.dsar.articleGroupLabel": "Qual direito?",
+  "profile.accountData.dsar.articleGroupLabel": "Que direito?",
   "profile.accountData.dsar.detailsLabel": "De que precisas?",
   "profile.accountData.dsar.detailsPlaceholder":
     "Descreve o que gostarias que fizéssemos",
@@ -2583,14 +2585,14 @@ export const members: Catalog = {
   "profile.accountData.dsar.submitCta": "Enviar pedido",
   "profile.accountData.dsar.pastTitle": "Pedidos anteriores",
   "profile.accountData.dsar.pastHint":
-    "Respondemos a cada pedido com uma notificação no QueerPulse, e o estado aqui é atualizado quando o fizermos.",
+    "Respondemos a cada pedido com uma notificação na QueerPulse, e o estado aqui atualiza-se quando o fizermos.",
   "profile.accountData.dsar.pastLoading": "A carregar os teus pedidos…",
   "profile.accountData.dsar.pastError":
     "Não conseguimos carregar os teus pedidos anteriores.",
   "profile.accountData.dsar.pastEmpty": "Ainda não fizeste nenhum pedido.",
   "profile.accountData.dsar.pastRowDueBy": "Resposta até {date}",
   "profile.accountData.dsar.toast.submitted":
-    "Pedido recebido, referência {ref}. Respondemos com uma notificação no QueerPulse até {date}.",
+    "Pedido recebido, referência {ref}. Respondemos com uma notificação na QueerPulse até {date}.",
   "profile.accountData.dsar.toast.submitError":
     "Não conseguimos enviar esse pedido. Tenta novamente.",
 
@@ -2600,7 +2602,7 @@ export const members: Catalog = {
   "savedLists.header.eyebrow": "Os teus guardados",
   "savedLists.header.title": "Listas que vale a pena <em>passar adiante</em>",
   "savedLists.header.lead":
-    "Tudo o que guardas fica numa lista. Cria outras pelas razões por que guardaste as coisas: um primeiro encontro, um sítio aberto até tarde, as clínicas que indicarias a uma amiga.",
+    "Tudo o que guardas fica numa lista. Cria outras para cada motivo: um primeiro encontro, um sítio aberto até tarde, as clínicas que recomendarias a uma pessoa amiga.",
   "savedLists.header.newCta": "Nova lista",
 
   "savedLists.empty.title": "Ainda não guardaste nada",
@@ -2608,8 +2610,7 @@ export const members: Catalog = {
     "Guarda um artigo, um sítio ou um evento e aparece aqui. Podes agrupar os teus guardados em listas quando quiseres.",
 
   "savedLists.newCard.title": "Nova lista",
-  "savedLists.newCard.subtitle":
-    "Agrupa guardados pela razão por que os guardaste",
+  "savedLists.newCard.subtitle": "Agrupa o que guardas por motivo",
 
   "savedLists.card.meta_one": "1 coisa · atualizada {time}",
   "savedLists.card.meta_other": "{count} coisas · atualizada {time}",
@@ -2661,7 +2662,7 @@ export const members: Catalog = {
   "savedLists.share.private.body":
     "Só tu a vês. Se quiseres passá-la a alguém, podes criar um link.",
   "savedLists.share.private.warning":
-    "Qualquer pessoa com o link e uma conta na QueerPulse consegue abrir esta lista. Envia-o só a quem confias.",
+    "Qualquer pessoa com o link e uma conta na QueerPulse consegue abrir esta lista. Envia-o só a pessoas em quem confias.",
   "savedLists.share.private.cta": "Criar link de partilha",
   "savedLists.share.points.accountRequired":
     "Precisam de uma conta na QueerPulse e de ter sessão iniciada para a abrir.",
@@ -2671,9 +2672,9 @@ export const members: Catalog = {
     "Podes desligar o link a qualquer momento. Todas as cópias dele deixam de funcionar de imediato.",
 
   "savedLists.share.live.heading":
-    "Os membros com este link conseguem abrir a lista",
+    "Quem tiver este link consegue abrir a lista",
   "savedLists.share.live.body":
-    "O link só funciona para membros com sessão iniciada. Mostra o nome da lista e o que está nela, e nada sobre ti.",
+    "O link só funciona para quem tem conta e sessão iniciada. Mostra o nome da lista e o que está nela, e nada sobre ti.",
   "savedLists.share.live.fieldLabel": "Link de partilha desta lista",
   "savedLists.share.live.copy": "Copiar",
   "savedLists.share.live.copied": "Copiado",
@@ -2690,10 +2691,10 @@ export const members: Catalog = {
   "savedLists.shared.note":
     "Alguém fez esta lista na QueerPulse e enviou-te o link. Pode desligá-lo quando quiser, e esta página deixa de funcionar quando o fizer.",
   "savedLists.shared.allUnavailable":
-    "Nenhuma destas coisas pode ser aberta agora. Quem te enviou a lista pode ter uma mais recente.",
+    "Já não é possível abrir nenhuma destas coisas. Quem te enviou a lista pode ter uma mais recente.",
   "savedLists.shared.gone.title": "Esta lista não está disponível",
   "savedLists.shared.gone.body":
-    "O link pode ter sido desligado, ou pode nunca ter sido real. Pede um link novo a quem to enviou.",
+    "O link pode ter sido desligado, ou nunca ter sido válido. Pede um link novo a quem to enviou.",
 
   "savedLists.toast.created": "Lista criada",
   "savedLists.toast.createError": "Não foi possível criar a lista",
@@ -2717,7 +2718,7 @@ export const members: Catalog = {
   "savedLists.error.listGone":
     "Essa lista já não existe. Atualiza as tuas listas guardadas para ver o que há agora.",
   "savedLists.error.defaultNotDeletable":
-    "A tua lista principal guarda tudo o que guardaste, por isso não pode ser apagada.",
+    "A tua lista principal reúne tudo o que guardaste, por isso não pode ser apagada.",
   "savedLists.error.unfileDefault":
     "Para tirar algo da tua lista principal, deixa de o guardar.",
   "drafts.error.idExists":

@@ -3704,7 +3704,7 @@ export const admin: Catalog = {
   "governance.audit.emptyTitle": "Nenhuma entrada corresponde",
   "governance.audit.emptyText":
     "Nenhuma ação de moderação corresponde a estes filtros. Tenta alargá-los.",
-  "governance.audit.pagerMeta": "A mostrar {start}–{end} de {total} entradas",
+  "governance.audit.pagerMeta": "A mostrar {start} a {end} de {total} entradas",
   "governance.audit.prevPage": "Página anterior",
   "governance.audit.nextPage": "Página seguinte",
   "governance.audit.entryModal.eyebrow": "Entrada de auditoria",
@@ -9048,7 +9048,7 @@ export const admin: Catalog = {
   "marketingVideos.merchCard.download.backPng": "Descarregar PNG das costas",
   "marketingVideos.merchCard.download.backPdf": "Descarregar PDF das costas",
   "marketingVideos.merchCard.download.backSvg": "Descarregar SVG das costas",
-  "marketingVideos.flyers.studio-open-call.title": "Chamada aberta do Studio",
+  "marketingVideos.flyers.studio-open-call.title": "Convocatória do Studio",
   "marketingVideos.flyers.studio-open-call.summary":
     "Uma story de Instagram a convidar artistas e DJs queer de Lisboa a juntar a sua música ao QueerPulse Studio, em inglês e português.",
   "marketingVideos.flyers.first-event.title": "Primeiro evento",

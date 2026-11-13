@@ -12,6 +12,7 @@ import {
   VJ_PRIDE_FLAGS,
   type VjTransitionId,
 } from "./vj.lists";
+import type { VjSceneLook } from "./vj.state";
 
 /** The effect groups of the catalog (C 3.2). */
 export const VJ_EFFECT_GROUPS = [
@@ -587,3 +588,16 @@ export const VJ_TRANSITION_CATALOG: Readonly<
   glitch: { isFlashCapable: true, isDomCapable: false },
   lumaFade: { isFlashCapable: false, isDomCapable: false },
 };
+
+/** Whether recalling the look can flash: its transition is flash-capable,
+ *  or an effect it turns on is (the catalog flags the pads read). */
+export function vjSceneLookFlashes(look: VjSceneLook): boolean {
+  if (VJ_TRANSITION_CATALOG[look.transition.mode].isFlashCapable) {
+    return true;
+  }
+  return VJ_EFFECT_IDS.some(
+    (effectId) =>
+      look.effects.settings[effectId]?.isOn === true &&
+      VJ_EFFECT_CATALOG[effectId].isFlashCapable,
+  );
+}

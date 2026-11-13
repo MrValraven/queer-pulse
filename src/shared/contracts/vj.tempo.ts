@@ -5,7 +5,12 @@
  */
 
 import { VJ_BEATS_PER_BAR, VJ_LIMITS } from "./vj.lists";
-import type { VjShuffle, VjTempo, VjTransition } from "./vj.state";
+import type {
+  VjShuffle,
+  VjStepDuration,
+  VjTempo,
+  VjTransition,
+} from "./vj.state";
 
 /** Rounds an amount to the 0.01 step. */
 export function roundVjAmount(amount: number): number {
@@ -123,6 +128,18 @@ export function vjShuffleIntervalMs(
 ): number {
   if (shuffle.intervalKind === "seconds") return shuffle.intervalValue * 1000;
   return Math.round((shuffle.intervalValue * 60000) / tempo.bpm);
+}
+
+/** A step length in ms with the tempo at the moment the step starts:
+ *  seconds give value * 1000, beats give Math.round(value * 60000 / tempo.bpm). */
+export function vjStepDurationMs(
+  duration: VjStepDuration,
+  tempo: VjTempo,
+): number {
+  if (duration.kind === "seconds") {
+    return duration.value * 1000;
+  }
+  return Math.round((duration.value * 60000) / tempo.bpm);
 }
 
 /** One flash per beat, capped at 3 per second at any tempo. Callers pass tempo.bpm. */

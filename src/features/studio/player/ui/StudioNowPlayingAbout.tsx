@@ -119,12 +119,14 @@ function AboutCard({
         )}
         <div className={css.actions}>
           <StudioArtistFollowControl artist={artist} />
-          <Link to={person.href} className={kit.pillLink}>
-            {t(
-              isEpisode
-                ? "studio:sidePanel.openShowPage"
-                : "studio:sidePanel.openArtistPage",
-            )}
+          <Link to={person.href} className={`${kit.pillLink} ${css.openLink}`}>
+            <span className={css.openLinkLabel}>
+              {t(
+                isEpisode
+                  ? "studio:sidePanel.openShowPage"
+                  : "studio:sidePanel.openArtistPage",
+              )}
+            </span>
           </Link>
         </div>
       </div>

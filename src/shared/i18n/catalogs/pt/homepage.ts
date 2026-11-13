@@ -683,10 +683,11 @@ export const homepage: Catalog = {
   "housing.listings.a.landlord.flag.rest":
     "aumentou a renda a meio do contrato em 2023, revertendo depois de uma reclamação por escrito.",
 
-  "housing.listings.b.peekLabel": "Subarrendamento na Graça · 390 € · jan–mar",
+  "housing.listings.b.peekLabel":
+    "Subarrendamento na Graça · 390 € · jan a mar",
   "housing.listings.b.photoPlaceholder": "O estúdio. Subarrendamento na Graça.",
   "housing.listings.b.chips.0": "390 € + despesas",
-  "housing.listings.b.chips.1": "Graça · jan–mar",
+  "housing.listings.b.chips.1": "Graça · jan a mar",
   "housing.listings.b.title": "Um estúdio inteiro na Graça, de janeiro a março",
   "housing.listings.b.meta":
     "Subarrendo enquanto estou fora. Acesso ao terraço, boa luz à tarde, um cão que terias de alimentar.",

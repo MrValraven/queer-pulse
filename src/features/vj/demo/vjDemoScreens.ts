@@ -18,6 +18,7 @@ import { VJ_SCREEN_OFFLINE_RETENTION_MS } from "../vj.constants";
 import type { VjDemoLibraryLookup } from "./vjDemoCommandKit";
 import { vjDemoAttachApplyAt } from "./vjDemoQuantize";
 import { isVjUuid } from "./vjDemoRules";
+import type { VjDemoSetlistLoopingWrite } from "./vjDemoSceneCommands";
 import {
   frameTo,
   isVjRecord,
@@ -27,7 +28,7 @@ import {
   vjDemoAckSuccess,
   type VjDemoOutgoing,
 } from "./vjDemoStageInput";
-import { restoreVjDemoStage } from "./vjDemoStageRestore";
+import { restoreVjDemoStageWithSetlist } from "./vjDemoStageRestore";
 
 export interface VjDemoScreenEntry {
   screenId: string;
@@ -63,6 +64,10 @@ export interface VjDemoStage {
   pendingApplyAt: number | null;
   /** When the lead's mic last moved the tempo (contract 7.9). */
   lastMicAdoptionAt: number | null;
+  /** The active set list's item ids in play order as the stage last read
+   *  them (sequences contract 5.4, memory only, never sent); null with no
+   *  active set list or before any read. */
+  setlistItemIds: string[] | null;
 }
 
 export type { VjDemoOutgoing } from "./vjDemoStageInput";
@@ -70,12 +75,18 @@ export type { VjDemoOutgoing } from "./vjDemoStageInput";
 export interface VjDemoStageContext {
   now: number;
   library: VjDemoLibraryLookup;
+  /** Saves Loop on a set list before `stage:setlistSetLooping` lands
+   *  (sequences contract 5.6); the demo server passes the store's write. */
+  writeSetlistLooping: VjDemoSetlistLoopingWrite;
 }
 
 export interface VjDemoStageResult {
   stage: VjDemoStage;
   ack: unknown;
   outgoing: VjDemoOutgoing[];
+  /** The server time the step timer tries again at after a failed read
+   *  (sequences contract 5.7); absent for every other result. */
+  setlistTimerRetryAt?: number;
 }
 
 /** A demo connection never expires inside one evening. */
@@ -243,18 +254,30 @@ function attachRemote(
   };
 }
 
-/** Contract 7.13 adoption at revision 0: the restored state, canonical, and
- *  no pending applyAt. Null when the stage keeps its state. */
+/** Contract 7.13 adoption at revision 0: the restored state, canonical, no
+ *  pending applyAt, and the set list's item ids from the restore read
+ *  (sequences contract 5.4). Null when the stage keeps its state. */
 function restoredStageOf(
   stage: VjDemoStage,
   restoreState: unknown,
   context: VjDemoStageContext,
-): Pick<VjDemoStage, "state" | "pendingApplyAt"> | null {
+): Pick<VjDemoStage, "state" | "pendingApplyAt" | "setlistItemIds"> | null {
   if (stage.state.revision !== 0 || !isVjRecord(restoreState)) return null;
-  const state = canonicalVjStageState(
-    restoreVjDemoStage(stage.state, restoreState, context.library, context.now),
+  const restored = restoreVjDemoStageWithSetlist(
+    stage.state,
+    restoreState,
+    context.library,
+    context.now,
   );
-  return { state, pendingApplyAt: null };
+  const state = canonicalVjStageState(restored.state);
+  return {
+    state,
+    pendingApplyAt: null,
+    setlistItemIds:
+      state.activeSetlistId === null || restored.setlistRead === null
+        ? null
+        : [...restored.setlistRead.itemIds],
+  };
 }
 
 /** The screen list with `screenId` pointed at the tab: a returning screen

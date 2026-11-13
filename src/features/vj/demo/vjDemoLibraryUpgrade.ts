@@ -3,11 +3,16 @@
  * library gains the clip defaults (C 2.1 column defaults) and the pack event
  * link, then the v2 seeds apply where their targets still exist (plan call 7):
  * the seed favorite, the seed pack's event link, the two scenes and the set
- * list. Pure: storage and the store clock stay in `vjDemoStorePersistence.ts`.
+ * list. A v2 library saved before sequences gains their fields through
+ * `fillVjDemoSequenceFields` (sequences contract 10.2). Pure: storage and the
+ * store clock stay in `vjDemoStorePersistence.ts`.
  */
 import {
+  DEFAULT_VJ_STEP_DURATION,
   VJ_LOOP_MODES,
+  VJ_SETLIST_ITEM_KINDS,
   VJ_SPEEDS,
+  isVjStepDuration,
   type VjSceneLook,
 } from "../../../shared/contracts/vj";
 import {
@@ -15,6 +20,7 @@ import {
   VJ_DEMO_SCENE_SEEDS,
   VJ_DEMO_SEED,
   VJ_DEMO_SETLIST_SEEDS,
+  type VjDemoSetlistItemSeed,
 } from "./vjDemo.data";
 import type {
   StoredVjDemoClip,
@@ -22,6 +28,7 @@ import type {
   StoredVjDemoPack,
   StoredVjDemoScene,
   StoredVjDemoSetlist,
+  StoredVjDemoSetlistItem,
 } from "./vjDemoStorePersistence";
 
 /** Seed set list item ids: this prefix, the set list's index, the item's index. */
@@ -116,11 +123,18 @@ function isStoredScene(value: unknown): value is StoredVjDemoScene {
   );
 }
 
+/** A step: a listed kind, exactly the matching target a string and the
+ *  other null, and a duration that is null or in range. */
 function isStoredSetlistItem(value: unknown): boolean {
+  if (!isRecord(value) || typeof value.id !== "string") return false;
+  if (!isOneOf(VJ_SETLIST_ITEM_KINDS, value.kind)) return false;
+  const hasMatchingTarget =
+    value.kind === "scene"
+      ? typeof value.sceneId === "string" && value.clipId === null
+      : typeof value.clipId === "string" && value.sceneId === null;
   return (
-    isRecord(value) &&
-    typeof value.id === "string" &&
-    typeof value.sceneId === "string"
+    hasMatchingTarget &&
+    (value.duration === null || isVjStepDuration(value.duration))
   );
 }
 
@@ -129,9 +143,72 @@ function isStoredSetlist(value: unknown): value is StoredVjDemoSetlist {
     isRecord(value) &&
     hasStoredIdentity(value) &&
     typeof value.name === "string" &&
+    typeof value.isLooping === "boolean" &&
+    isVjStepDuration(value.stepDuration) &&
     Array.isArray(value.items) &&
     (value.items as unknown[]).every(isStoredSetlistItem)
   );
+}
+
+/** A stored item with the sequence fields: an item saved before sequences
+ *  (a string `sceneId` and no `kind`) becomes a scene step on the default
+ *  length; a missing other target becomes null; a duration missing or out
+ *  of range becomes null. Anything else passes through for the step check. */
+function fillSetlistItem(item: unknown): unknown {
+  if (!isRecord(item)) return item;
+  if (typeof item.sceneId === "string" && !("kind" in item)) {
+    return {
+      id: item.id,
+      kind: "scene",
+      sceneId: item.sceneId,
+      clipId: null,
+      duration: null,
+    };
+  }
+  const filled: Record<string, unknown> = { ...item };
+  if (item.kind === "scene" && item.clipId === undefined) filled.clipId = null;
+  if (item.kind === "clip" && item.sceneId === undefined) filled.sceneId = null;
+  if (item.duration !== null && !isVjStepDuration(item.duration)) {
+    filled.duration = null;
+  }
+  return filled;
+}
+
+/** The filled steps of a stored list; a step that still fails the step
+ *  check is dropped, so one bad step never reseeds the whole library. */
+function fillSetlistItems(items: unknown[]): unknown[] {
+  return items.map(fillSetlistItem).filter(isStoredSetlistItem);
+}
+
+/** A stored set list with Loop (off when missing or not a boolean), a
+ *  default length (DEFAULT_VJ_STEP_DURATION when missing or out of range)
+ *  and filled items. */
+function fillSetlist(setlist: unknown): unknown {
+  if (!isRecord(setlist)) return setlist;
+  return {
+    ...setlist,
+    isLooping:
+      typeof setlist.isLooping === "boolean" ? setlist.isLooping : false,
+    stepDuration: isVjStepDuration(setlist.stepDuration)
+      ? setlist.stepDuration
+      : { ...DEFAULT_VJ_STEP_DURATION },
+    items: Array.isArray(setlist.items)
+      ? fillSetlistItems(setlist.items as unknown[])
+      : setlist.items,
+  };
+}
+
+/** The sequence fields filled on every set list of a parsed library
+ *  (sequences contract 10.2), run before `isVjDemoLibraryV2`. Steps are
+ *  repaired where they can be and dropped where they cannot; a value with no
+ *  set list array, or a set list whose own shape is broken, is left for the
+ *  guard, which reseeds. */
+export function fillVjDemoSequenceFields(value: unknown): unknown {
+  if (!isRecord(value) || !Array.isArray(value.setlists)) return value;
+  return {
+    ...value,
+    setlists: (value.setlists as unknown[]).map(fillSetlist),
+  };
 }
 
 function isListOf<Entry>(
@@ -197,16 +274,52 @@ export function seedVjDemoScenesAndSetlists(
     (seed, setlistIndex): StoredVjDemoSetlist => ({
       id: seed.id,
       name: seed.name,
-      items: seed.sceneIds.map((sceneId, itemIndex) => ({
-        id: `${SEED_SETLIST_ITEM_ID_PREFIX}${setlistIndex}${itemIndex}`,
-        sceneId,
-      })),
+      isLooping: seed.isLooping,
+      stepDuration: { ...seed.stepDuration },
+      items: seed.items.flatMap((itemSeed, itemIndex) =>
+        seedSetlistItemsOf(
+          itemSeed,
+          `${SEED_SETLIST_ITEM_ID_PREFIX}${setlistIndex}${itemIndex}`,
+          clipIds,
+        ),
+      ),
       createdBy: VJ_DEMO_CREATORS[seed.creator],
       createdAt,
       updatedAt: createdAt,
     }),
   );
   return { scenes, setlists };
+}
+
+/** One seed step as stored, keeping its seed id; a clip step whose clip the
+ *  library lacks is dropped (sequences contract 10.5). */
+function seedSetlistItemsOf(
+  itemSeed: VjDemoSetlistItemSeed,
+  itemId: string,
+  clipIds: ReadonlySet<string>,
+): StoredVjDemoSetlistItem[] {
+  const duration = itemSeed.duration === null ? null : { ...itemSeed.duration };
+  if (itemSeed.kind === "scene") {
+    return [
+      {
+        id: itemId,
+        kind: "scene",
+        sceneId: itemSeed.sceneId,
+        clipId: null,
+        duration,
+      },
+    ];
+  }
+  if (!clipIds.has(itemSeed.clipId)) return [];
+  return [
+    {
+      id: itemId,
+      kind: "clip",
+      sceneId: null,
+      clipId: itemSeed.clipId,
+      duration,
+    },
+  ];
 }
 
 /** A v1 clip with the C 2.1 column defaults; the seed favorite applies when
@@ -246,11 +359,11 @@ export function upgradeVjDemoLibraryV1(
   if (!isListOf(packs, isStoredPackV2) || !isListOf(clips, isStoredClipV2)) {
     return null;
   }
-  const upgraded: StoredVjDemoLibrary = {
+  const upgraded = fillVjDemoSequenceFields({
     version: 2,
     packs,
     clips,
     ...seedVjDemoScenesAndSetlists({ packs, clips }, now),
-  };
+  });
   return isVjDemoLibraryV2(upgraded) ? upgraded : null;
 }

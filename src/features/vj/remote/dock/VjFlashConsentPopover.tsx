@@ -4,7 +4,9 @@
  * a second tap; R26 holds the request (`actions.flashConsent`) and R27
  * renders this popover for it. Keep it off comes first, so the focus the
  * popover lands on is the safe choice. It paints over the remote's sheets,
- * since a switch in the Effects sheet can ask for it.
+ * since a switch in the Effects sheet can ask for it. A sequence that plays
+ * by itself asks once for all its flashing steps, so its confirm names the
+ * sequence (vj:flash.sequenceConfirm).
  */
 import { useId, type RefObject } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
@@ -17,6 +19,8 @@ export interface VjFlashConsentPopoverProps {
   anchorRef: RefObject<HTMLElement | null>;
   /** The effect's display name, for the confirm button. */
   effectLabel: string;
+  /** Set when a sequence asked (`VjFlashConsentRequest.setlistName`): the confirm names it instead. */
+  setlistName?: string | null;
   isOpen: boolean;
   onConsent: () => void;
   onClose: () => void;
@@ -25,6 +29,7 @@ export interface VjFlashConsentPopoverProps {
 export function VjFlashConsentPopover({
   anchorRef,
   effectLabel,
+  setlistName = null,
   isOpen,
   onConsent,
   onClose,
@@ -56,7 +61,9 @@ export function VjFlashConsentPopover({
       </p>
       <div className={styles.consentActions}>
         <Button type="button" variant="stage-ghost" size="md" onClick={onClose}>
-          {t("vj:flash.cancel")}
+          {setlistName === null
+            ? t("vj:flash.cancel")
+            : t("vj:flash.sequenceCancel", { name: setlistName })}
         </Button>
         <Button
           type="button"
@@ -65,7 +72,9 @@ export function VjFlashConsentPopover({
           aria-describedby={warningId}
           onClick={onConsent}
         >
-          {t("vj:flash.confirm", { effect: effectLabel })}
+          {setlistName === null
+            ? t("vj:flash.confirm", { effect: effectLabel })
+            : t("vj:flash.sequenceConfirm", { name: setlistName })}
         </Button>
       </div>
     </VjDockPopover>

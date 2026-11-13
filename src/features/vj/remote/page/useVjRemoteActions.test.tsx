@@ -9,12 +9,16 @@ import {
   type Mock,
 } from "vitest";
 import {
+  createVjSetlistPlayback,
   createVjStageState,
+  DEFAULT_VJ_STEP_DURATION,
   vjSceneLookOf,
   type VjClipDTO,
   type VjEffectId,
   type VjSceneDTO,
   type VjSetlistDTO,
+  type VjSetlistItemDTO,
+  type VjSetlistPlayback,
   type VjStageState,
 } from "../../../../shared/contracts/vj";
 import type {
@@ -82,15 +86,68 @@ const SCENES = [
   sceneOf(SCENE_CALM, "Slow open", false),
   sceneOf(SCENE_FLASH, "Big drop", true),
 ];
-const SETLISTS = [
-  {
-    id: SETLIST_ID,
-    items: [
-      { id: "item-1", sceneId: SCENE_CALM, position: 0 },
-      { id: "item-2", sceneId: SCENE_FLASH, position: 1 },
-    ],
-  } as VjSetlistDTO,
-];
+function sceneStepOf(
+  id: string,
+  sceneId: string,
+  position: number,
+): VjSetlistItemDTO {
+  return {
+    id,
+    position,
+    kind: "scene",
+    sceneId,
+    clipId: null,
+    duration: null,
+  };
+}
+
+function clipStepOf(
+  id: string,
+  clipId: string,
+  position: number,
+): VjSetlistItemDTO {
+  return {
+    id,
+    position,
+    kind: "clip",
+    sceneId: null,
+    clipId,
+    duration: null,
+  };
+}
+
+function setlistOf(
+  id: string,
+  name: string,
+  items: VjSetlistItemDTO[],
+): VjSetlistDTO {
+  return {
+    id,
+    name,
+    position: 0,
+    isLooping: false,
+    stepDuration: DEFAULT_VJ_STEP_DURATION,
+    items,
+    createdBy: null,
+    createdAt: "2026-11-13T00:00:00.000Z",
+    updatedAt: "2026-11-13T00:00:00.000Z",
+  };
+}
+
+/** calm scene, flashing scene, clip */
+const FLASHING_SETLIST = setlistOf(SETLIST_ID, "Friday set", [
+  sceneStepOf("item-1", SCENE_CALM, 0),
+  sceneStepOf("item-2", SCENE_FLASH, 1),
+  clipStepOf("item-3", CLIP_HAZE, 2),
+]);
+const CALM_SETLIST_ID = "00000000-0000-4000-8000-0000000000b2";
+const CALM_SETLIST = setlistOf(CALM_SETLIST_ID, "Warm up", [
+  clipStepOf("item-4", CLIP_GRID, 0),
+  sceneStepOf("item-5", SCENE_CALM, 1),
+]);
+const EMPTY_SETLIST_ID = "00000000-0000-4000-8000-0000000000b3";
+const EMPTY_SETLIST = setlistOf(EMPTY_SETLIST_ID, "Empty set", []);
+const SETLISTS = [FLASHING_SETLIST, CALM_SETLIST, EMPTY_SETLIST];
 
 function stateWith(changes: Partial<VjStageState> = {}): VjStageState {
   return {
@@ -302,6 +359,7 @@ describe("useVjRemoteActions: pads", () => {
     expect(result.current.flashConsent).toEqual({
       padId: "invert",
       transitionMode: null,
+      setlistName: null,
       anchor: null,
     });
     expect(consent).not.toHaveBeenCalled();
@@ -324,6 +382,7 @@ describe("useVjRemoteActions: pads", () => {
     expect(result.current.flashConsent).toEqual({
       padId: "strobe",
       transitionMode: null,
+      setlistName: null,
       anchor,
     });
   });
@@ -341,6 +400,7 @@ describe("useVjRemoteActions: pads", () => {
     expect(result.current.flashConsent).toEqual({
       padId: null,
       transitionMode: "dipWhite",
+      setlistName: null,
       anchor,
     });
     expect(onConsented).not.toHaveBeenCalled();
@@ -565,6 +625,7 @@ describe("useVjRemoteActions: scenes and the flash warning", () => {
       padId: null,
       transitionMode: null,
       sceneName: "Big drop",
+      setlistName: null,
       anchor,
     });
 
@@ -620,7 +681,9 @@ describe("useVjRemoteActions: scenes and the flash warning", () => {
     expect(result.current.flashConsent?.sceneName).toBe("Big drop");
 
     act(() => result.current.confirmFlash());
-    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext");
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext", {
+      isFlashConfirmed: true,
+    });
   });
 
   it("set list previous to a calm look steps at once", () => {
@@ -631,6 +694,906 @@ describe("useVjRemoteActions: scenes and the flash warning", () => {
     );
     act(() => result.current.dispatch({ kind: "setlistPrevious" }, "press"));
     expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistPrevious");
+    expect(result.current.flashConsent).toBeNull();
+  });
+});
+
+const noSequenceConsent = () => ({ hasConsented: false, consent: vi.fn() });
+const FLASH_REFUSAL: VjCommandOutcome = {
+  ok: false,
+  code: "vj_setlist_flash_unconfirmed",
+  errorKey: "vj:error.socket.setlistFlashUnconfirmed",
+};
+const STALE_KEY = "vj:error.socket.staleSetlist";
+const SCENE_UNLOADED = "00000000-0000-4000-8000-0000000000a9";
+/** flashing scene, then calm scene */
+const FLASH_FIRST_ID = "00000000-0000-4000-8000-0000000000b4";
+const FLASH_FIRST_SETLIST = setlistOf(FLASH_FIRST_ID, "Strobe opener", [
+  sceneStepOf("item-6", SCENE_FLASH, 0),
+  sceneStepOf("item-7", SCENE_CALM, 1),
+]);
+/** calm scene, then flashing scene */
+const FLASH_LAST_ID = "00000000-0000-4000-8000-0000000000b5";
+const FLASH_LAST_SETLIST = setlistOf(FLASH_LAST_ID, "Late drop", [
+  sceneStepOf("item-8", SCENE_CALM, 0),
+  sceneStepOf("item-9", SCENE_FLASH, 1),
+]);
+/** calm, flash, flash, calm clip */
+const FLASH_RUN_ID = "00000000-0000-4000-8000-0000000000b6";
+const FLASH_RUN_SETLIST = setlistOf(FLASH_RUN_ID, "Peak hour", [
+  sceneStepOf("item-10", SCENE_CALM, 0),
+  sceneStepOf("item-11", SCENE_FLASH, 1),
+  sceneStepOf("item-12", SCENE_FLASH, 2),
+  clipStepOf("item-13", CLIP_GRID, 3),
+]);
+/** clip, then a scene this remote has not loaded */
+const UNLOADED_STEP_ID = "00000000-0000-4000-8000-0000000000b7";
+const UNLOADED_STEP_SETLIST = setlistOf(UNLOADED_STEP_ID, "Guest set", [
+  clipStepOf("item-14", CLIP_GRID, 0),
+  sceneStepOf("item-15", SCENE_UNLOADED, 1),
+]);
+/** a scene this remote has not loaded first */
+const UNLOADED_FIRST_ID = "00000000-0000-4000-8000-0000000000b8";
+const UNLOADED_FIRST_SETLIST = setlistOf(UNLOADED_FIRST_ID, "Borrowed set", [
+  sceneStepOf("item-16", SCENE_UNLOADED, 0),
+]);
+const ALL_SETLISTS = [
+  ...SETLISTS,
+  FLASH_FIRST_SETLIST,
+  FLASH_LAST_SETLIST,
+  FLASH_RUN_SETLIST,
+  UNLOADED_STEP_SETLIST,
+  UNLOADED_FIRST_SETLIST,
+];
+
+function activeState(
+  setlistId: string,
+  setlistIndex: number | null,
+  playback: Partial<VjSetlistPlayback> = {},
+): VjStageState {
+  return stateWith({
+    activeSetlistId: setlistId,
+    setlistIndex,
+    setlistPlayback: { ...createVjSetlistPlayback(false), ...playback },
+  });
+}
+
+function renderSequence(
+  overrides: Partial<UseVjRemoteActionsOptions> = {},
+  state: VjStageState = stateWith(),
+) {
+  return renderActions(
+    { scenes: SCENES, setlists: ALL_SETLISTS, ...overrides },
+    state,
+  );
+}
+
+type SequenceView = ReturnType<typeof renderSequence>;
+
+/** A newer state lands while the warning is open. */
+function receiveState(view: SequenceView, nextState: VjStageState) {
+  view.rerender({
+    ...view.initialProps,
+    stage: {
+      latestState: nextState,
+      state: nextState,
+    } as VjStageController,
+  });
+}
+
+describe("useVjRemoteActions: sequence Next and Previous keep the per-tap consent", () => {
+  it("next to a clip step steps at once", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 1),
+    );
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext");
+    expect(result.current.flashConsent).toBeNull();
+  });
+
+  it("next wraps with Loop to a step 1 that flashes and asks first", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(FLASH_FIRST_ID, 1, { isLooping: true }),
+    );
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.sceneName).toBe("Big drop");
+    expect(result.current.flashConsent?.setlistName).toBeNull();
+  });
+
+  it("next at the last step without Loop sends for the server to name the end", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(FLASH_FIRST_ID, 1),
+    );
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext");
+  });
+
+  it("previous from step 1 wraps with Loop to a last step that flashes", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(FLASH_LAST_ID, 0, { isLooping: true }),
+    );
+    act(() => result.current.dispatch({ kind: "setlistPrevious" }, "press"));
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.sceneName).toBe("Big drop");
+  });
+
+  it("next to a scene the library has not loaded asks, named as a deleted scene", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(UNLOADED_STEP_ID, 0),
+    );
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent).toEqual({
+      padId: null,
+      transitionMode: null,
+      sceneNameKey: "vj:setlistItems.sceneGone",
+      setlistName: null,
+      anchor: null,
+    });
+    act(() => result.current.confirmFlash());
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext", {
+      isFlashConfirmed: true,
+    });
+  });
+
+  it("a step in a set list this remote has not loaded asks, named by its direction", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent(), setlists: [] },
+      activeState(SETLIST_ID, 0),
+    );
+    act(() => result.current.dispatch({ kind: "setlistPrevious" }, "press"));
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.sceneNameKey).toBe(
+      "vj:strip.setlistPrevious",
+    );
+  });
+
+  it("an unloaded step with the show's consent steps at once, confirmed", () => {
+    const { result, runMock } = renderSequence(
+      {},
+      activeState(UNLOADED_STEP_ID, 0),
+    );
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext", {
+      isFlashConfirmed: true,
+    });
+  });
+
+  it("with the show's consent a calm step is sent confirmed too", () => {
+    const { result, runMock } = renderSequence({}, activeState(SETLIST_ID, 1));
+    act(() => result.current.dispatch({ kind: "setlistPrevious" }, "press"));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistPrevious", {
+      isFlashConfirmed: true,
+    });
+  });
+
+  it("a confirm after the step on screen moved names why and sends nothing", () => {
+    const view = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 0),
+    );
+    act(() => view.result.current.dispatch({ kind: "setlistNext" }, "press"));
+    expect(view.result.current.flashConsent?.sceneName).toBe("Big drop");
+    receiveState(view, activeState(SETLIST_ID, 1));
+
+    act(() => view.result.current.confirmFlash());
+    expect(view.runMock).not.toHaveBeenCalled();
+    expect(view.onRefused).toHaveBeenCalledExactlyOnceWith(STALE_KEY);
+  });
+
+  it("the touch step places the warning on the pressed button", () => {
+    const { result } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 0),
+    );
+    const anchor = document.createElement("button");
+    act(() => result.current.setlist.step("next", anchor));
+    expect(result.current.flashConsent?.anchor).toBe(anchor);
+  });
+});
+
+/** Big drop as this remote last loaded it: its look reads calm, though the server's copy flashes. */
+const STALE_CALM_SCENES = [
+  SCENES[0] as VjSceneDTO,
+  sceneOf(SCENE_FLASH, "Big drop", false),
+];
+
+describe("useVjRemoteActions: a Next or Previous refused as an unconfirmed flash", () => {
+  it("reopens the warning naming the scene and sends again confirmed", async () => {
+    const { result, runMock, onRefused } = renderSequence(
+      { flashConsent: noSequenceConsent(), scenes: STALE_CALM_SCENES },
+      activeState(SETLIST_ID, 0),
+    );
+    runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    const anchor = document.createElement("button");
+    act(() => result.current.setlist.step("next", anchor));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext");
+    await flush();
+    expect(onRefused).not.toHaveBeenCalled();
+    expect(result.current.flashConsent).toEqual({
+      padId: null,
+      transitionMode: null,
+      sceneName: "Big drop",
+      setlistName: null,
+      anchor,
+    });
+
+    act(() => result.current.confirmFlash());
+    expect(runMock).toHaveBeenCalledTimes(2);
+    expect(runMock).toHaveBeenLastCalledWith("setlistNext", {
+      isFlashConfirmed: true,
+    });
+    await flush();
+    expect(onRefused).not.toHaveBeenCalled();
+  });
+
+  it("a confirmed resend that is refused again names the reason", async () => {
+    const { result, runMock, onRefused } = renderSequence(
+      { flashConsent: noSequenceConsent(), scenes: STALE_CALM_SCENES },
+      activeState(SETLIST_ID, 0),
+    );
+    runMock
+      .mockResolvedValueOnce(FLASH_REFUSAL)
+      .mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    await flush();
+    act(() => result.current.confirmFlash());
+    await flush();
+    expect(runMock).toHaveBeenCalledTimes(2);
+    expect(onRefused).toHaveBeenCalledExactlyOnceWith(
+      "vj:error.socket.setlistFlashUnconfirmed",
+    );
+    expect(result.current.flashConsent).toBeNull();
+  });
+
+  it("a step this remote read as a clip names its direction on the warning", async () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 1),
+    );
+    runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext");
+    await flush();
+    expect(result.current.flashConsent?.sceneNameKey).toBe(
+      "vj:strip.setlistNext",
+    );
+    act(() => result.current.confirmFlash());
+    expect(runMock).toHaveBeenLastCalledWith("setlistNext", {
+      isFlashConfirmed: true,
+    });
+  });
+
+  it("a confirm after the step on screen moved names why and sends nothing", async () => {
+    const view = renderSequence(
+      { flashConsent: noSequenceConsent(), scenes: STALE_CALM_SCENES },
+      activeState(SETLIST_ID, 0),
+    );
+    view.runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() => view.result.current.dispatch({ kind: "setlistNext" }, "press"));
+    await flush();
+    expect(view.result.current.flashConsent?.sceneName).toBe("Big drop");
+    receiveState(view, activeState(SETLIST_ID, 2));
+
+    act(() => view.result.current.confirmFlash());
+    expect(view.runMock).toHaveBeenCalledTimes(1);
+    expect(view.onRefused).toHaveBeenCalledExactlyOnceWith(STALE_KEY);
+  });
+
+  it("a send confirmed by the per-tap warning names a refusal without asking again", async () => {
+    const { result, runMock, onRefused } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 0),
+    );
+    runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() => result.current.dispatch({ kind: "setlistNext" }, "press"));
+    act(() => result.current.confirmFlash());
+    await flush();
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistNext", {
+      isFlashConfirmed: true,
+    });
+    expect(result.current.flashConsent).toBeNull();
+    expect(onRefused).toHaveBeenCalledExactlyOnceWith(
+      "vj:error.socket.setlistFlashUnconfirmed",
+    );
+  });
+});
+
+describe("useVjRemoteActions: Play sequence on a row", () => {
+  it("a sequence with a flashing step asks once, then plays step 1 confirmed", () => {
+    const giveConsent = vi.fn();
+    const { result, runMock } = renderSequence({
+      flashConsent: { hasConsented: false, consent: giveConsent },
+    });
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: SETLIST_ID },
+        "press",
+      ),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent).toEqual({
+      padId: null,
+      transitionMode: null,
+      setlistName: "Friday set",
+      anchor: null,
+    });
+
+    act(() => result.current.confirmFlash());
+    expect(giveConsent).toHaveBeenCalledTimes(1);
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      SETLIST_ID,
+      0,
+      { isPlaying: true, isFlashConfirmed: true },
+    );
+  });
+
+  it("a sequence with a scene this remote has not loaded asks first", () => {
+    const { result, runMock } = renderSequence({
+      flashConsent: noSequenceConsent(),
+    });
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: UNLOADED_STEP_ID },
+        "press",
+      ),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.setlistName).toBe("Guest set");
+  });
+
+  it("with the show's consent it plays confirmed without asking", () => {
+    const { result, runMock } = renderSequence();
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: SETLIST_ID },
+        "press",
+      ),
+    );
+    expect(result.current.flashConsent).toBeNull();
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      SETLIST_ID,
+      0,
+      { isPlaying: true, isFlashConfirmed: true },
+    );
+  });
+
+  it("a calm sequence plays unconfirmed without asking", () => {
+    const { result, runMock } = renderSequence({
+      flashConsent: noSequenceConsent(),
+    });
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: CALM_SETLIST_ID },
+        "press",
+      ),
+    );
+    expect(result.current.flashConsent).toBeNull();
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      CALM_SETLIST_ID,
+      0,
+      { isPlaying: true, isFlashConfirmed: false },
+    );
+  });
+
+  it("an empty sequence sends nothing", () => {
+    const { result, runMock } = renderSequence();
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: EMPTY_SETLIST_ID },
+        "press",
+      ),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+  });
+
+  it("the touch path places the warning on the pressed row button", () => {
+    const { result } = renderSequence({ flashConsent: noSequenceConsent() });
+    const anchor = document.createElement("button");
+    act(() => result.current.setlist.play(SETLIST_ID, anchor));
+    expect(result.current.flashConsent?.anchor).toBe(anchor);
+    expect(result.current.flashConsent?.setlistName).toBe("Friday set");
+  });
+
+  it("a flash refusal reopens the warning for that sequence and sends again confirmed", async () => {
+    const { result, runMock, onRefused } = renderSequence({
+      flashConsent: noSequenceConsent(),
+    });
+    runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: CALM_SETLIST_ID },
+        "press",
+      ),
+    );
+    await flush();
+    expect(onRefused).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.setlistName).toBe("Warm up");
+
+    act(() => result.current.confirmFlash());
+    expect(runMock).toHaveBeenCalledTimes(2);
+    expect(runMock).toHaveBeenLastCalledWith(
+      "setlistSelect",
+      CALM_SETLIST_ID,
+      0,
+      { isPlaying: true, isFlashConfirmed: true },
+    );
+  });
+
+  it("a confirmed send that is refused again names the reason", async () => {
+    const { result, runMock, onRefused } = renderSequence({
+      flashConsent: noSequenceConsent(),
+    });
+    runMock
+      .mockResolvedValueOnce(FLASH_REFUSAL)
+      .mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: CALM_SETLIST_ID },
+        "press",
+      ),
+    );
+    await flush();
+    act(() => result.current.confirmFlash());
+    await flush();
+    expect(runMock).toHaveBeenCalledTimes(2);
+    expect(onRefused).toHaveBeenCalledExactlyOnceWith(
+      "vj:error.socket.setlistFlashUnconfirmed",
+    );
+    expect(result.current.flashConsent).toBeNull();
+  });
+
+  it("a flash refusal for a sequence this remote has not loaded names the reason", async () => {
+    const { result, runMock, onRefused } = renderSequence({
+      flashConsent: noSequenceConsent(),
+      setlists: [],
+    });
+    runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: SETLIST_ID },
+        "press",
+      ),
+    );
+    await flush();
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      SETLIST_ID,
+      0,
+      { isPlaying: true, isFlashConfirmed: false },
+    );
+    expect(result.current.flashConsent).toBeNull();
+    expect(onRefused).toHaveBeenCalledExactlyOnceWith(
+      "vj:error.socket.setlistFlashUnconfirmed",
+    );
+  });
+});
+
+describe("useVjRemoteActions: Step through on a row", () => {
+  it("a step 1 that flashes asks the per-tap warning, then selects by hand", () => {
+    const { result, runMock } = renderSequence({
+      flashConsent: noSequenceConsent(),
+    });
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistStepThrough", setlistId: FLASH_FIRST_ID },
+        "press",
+      ),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.sceneName).toBe("Big drop");
+
+    act(() => result.current.confirmFlash());
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      FLASH_FIRST_ID,
+      0,
+    );
+  });
+
+  it("a step 1 scene the library has not loaded asks, named as a deleted scene", () => {
+    const { result, runMock } = renderSequence({
+      flashConsent: noSequenceConsent(),
+    });
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistStepThrough", setlistId: UNLOADED_FIRST_ID },
+        "press",
+      ),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.sceneNameKey).toBe(
+      "vj:setlistItems.sceneGone",
+    );
+    act(() => result.current.confirmFlash());
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      UNLOADED_FIRST_ID,
+      0,
+    );
+  });
+
+  it("a set list this remote has not loaded asks first", () => {
+    const { result, runMock } = renderSequence({
+      flashConsent: noSequenceConsent(),
+      setlists: [],
+    });
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistStepThrough", setlistId: SETLIST_ID },
+        "press",
+      ),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+    expect(result.current.flashConsent?.sceneNameKey).toBe(
+      "vj:strip.setlistNext",
+    );
+  });
+
+  it("a step 1 that is a clip selects at once", () => {
+    const { result, runMock } = renderSequence({
+      flashConsent: noSequenceConsent(),
+    });
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistStepThrough", setlistId: CALM_SETLIST_ID },
+        "press",
+      ),
+    );
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      CALM_SETLIST_ID,
+      0,
+    );
+  });
+
+  it("an empty sequence sends nothing", () => {
+    const { result, runMock } = renderSequence();
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistStepThrough", setlistId: EMPTY_SETLIST_ID },
+        "press",
+      ),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("useVjRemoteActions: the sequence play button", () => {
+  it("pauses while playing", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 1, {
+        status: "playing",
+        stepStartedAt: 1_000,
+        stepEndsAt: 9_000,
+        stepDurationMs: 8_000,
+      }),
+    );
+    act(() =>
+      result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+    );
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistSetPlaying", false);
+    expect(result.current.flashConsent).toBeNull();
+  });
+
+  it.each([
+    "paused",
+    "takenOver",
+    "needsFlashConsent",
+    "finished",
+    "manual",
+  ] as const)(
+    "from %s a flashing sequence asks up front, then sends confirmed",
+    (status) => {
+      const { result, runMock } = renderSequence(
+        { flashConsent: noSequenceConsent() },
+        activeState(SETLIST_ID, 0, {
+          status,
+          stepDurationMs: 8_000,
+          pausedRemainingMs: status === "paused" ? 3_000 : null,
+        }),
+      );
+      act(() =>
+        result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+      );
+      expect(runMock).not.toHaveBeenCalled();
+      expect(result.current.flashConsent?.setlistName).toBe("Friday set");
+
+      act(() => result.current.confirmFlash());
+      expect(runMock).toHaveBeenCalledExactlyOnceWith(
+        "setlistSetPlaying",
+        true,
+        true,
+      );
+    },
+  );
+
+  it("Play again on a calm finished sequence sends unconfirmed", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(CALM_SETLIST_ID, 1, { status: "finished" }),
+    );
+    act(() =>
+      result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+    );
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSetPlaying",
+      true,
+      false,
+    );
+  });
+
+  it("Play from manual with the show's consent sends confirmed at once", () => {
+    const { result, runMock } = renderSequence(
+      {},
+      activeState(SETLIST_ID, 1, { status: "manual" }),
+    );
+    act(() => result.current.setlist.togglePlaying(null));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSetPlaying",
+      true,
+      true,
+    );
+  });
+
+  it("a confirm after another sequence became active names why and sends nothing", () => {
+    const view = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 0, { status: "takenOver" }),
+    );
+    act(() =>
+      view.result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+    );
+    expect(view.result.current.flashConsent?.setlistName).toBe("Friday set");
+    receiveState(
+      view,
+      activeState(CALM_SETLIST_ID, 0, { status: "takenOver" }),
+    );
+
+    act(() => view.result.current.confirmFlash());
+    expect(view.runMock).not.toHaveBeenCalled();
+    expect(view.onRefused).toHaveBeenCalledExactlyOnceWith(STALE_KEY);
+  });
+
+  it("a confirm after the status changed names why and sends nothing", () => {
+    const view = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 0, { status: "takenOver" }),
+    );
+    act(() =>
+      view.result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+    );
+    receiveState(view, activeState(SETLIST_ID, 1, { status: "finished" }));
+
+    act(() => view.result.current.confirmFlash());
+    expect(view.runMock).not.toHaveBeenCalled();
+    expect(view.onRefused).toHaveBeenCalledExactlyOnceWith(STALE_KEY);
+  });
+
+  it("a refusal reopens the warning and a confirm after the sequence moved sends nothing", async () => {
+    const view = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(CALM_SETLIST_ID, 0, { status: "takenOver" }),
+    );
+    view.runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() =>
+      view.result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+    );
+    await flush();
+    expect(view.result.current.flashConsent?.setlistName).toBe("Warm up");
+    receiveState(view, stateWith());
+
+    act(() => view.result.current.confirmFlash());
+    expect(view.runMock).toHaveBeenCalledTimes(1);
+    expect(view.onRefused).toHaveBeenCalledExactlyOnceWith(STALE_KEY);
+  });
+
+  it("a refusal on Resume reopens the warning and sends again confirmed", async () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(CALM_SETLIST_ID, 0, { status: "takenOver" }),
+    );
+    runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() =>
+      result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+    );
+    await flush();
+    expect(result.current.flashConsent?.setlistName).toBe("Warm up");
+    act(() => result.current.confirmFlash());
+    expect(runMock).toHaveBeenLastCalledWith("setlistSetPlaying", true, true);
+  });
+
+  it("does nothing with no active sequence", () => {
+    const { result, runMock } = renderSequence();
+    act(() =>
+      result.current.dispatch({ kind: "setlistTogglePlaying" }, "press"),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("useVjRemoteActions: the sequence flash panel", () => {
+  it("Play the flashing step sends a confirmed play without asking", () => {
+    const giveConsent = vi.fn();
+    const { result, runMock } = renderSequence(
+      { flashConsent: { hasConsented: false, consent: giveConsent } },
+      activeState(SETLIST_ID, 0, { status: "needsFlashConsent" }),
+    );
+    act(() =>
+      result.current.dispatch({ kind: "setlistPlayFlashing" }, "press"),
+    );
+    expect(result.current.flashConsent).toBeNull();
+    expect(giveConsent).not.toHaveBeenCalled();
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSetPlaying",
+      true,
+      true,
+    );
+  });
+
+  it("Play the flashing step outside needsFlashConsent sends nothing", () => {
+    const { result, runMock } = renderSequence(
+      {},
+      activeState(SETLIST_ID, 0, { status: "paused" }),
+    );
+    act(() =>
+      result.current.dispatch({ kind: "setlistPlayFlashing" }, "press"),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+  });
+
+  it("Skip plays on from the first step after it that does not flash", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 0, { status: "needsFlashConsent" }),
+    );
+    act(() =>
+      result.current.dispatch({ kind: "setlistSkipFlashing" }, "press"),
+    );
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      SETLIST_ID,
+      2,
+      { isPlaying: true, isFlashConfirmed: false },
+    );
+  });
+
+  it("Skip passes further flashing steps to a calm one two on", () => {
+    const { result, runMock } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(FLASH_RUN_ID, 0, { status: "needsFlashConsent" }),
+    );
+    act(() =>
+      result.current.dispatch({ kind: "setlistSkipFlashing" }, "press"),
+    );
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      FLASH_RUN_ID,
+      3,
+      { isPlaying: true, isFlashConfirmed: false },
+    );
+  });
+
+  it("Skip with no step to land on sends nothing", () => {
+    const { result, runMock } = renderSequence(
+      {},
+      activeState(FLASH_LAST_ID, 0, { status: "needsFlashConsent" }),
+    );
+    act(() =>
+      result.current.dispatch({ kind: "setlistSkipFlashing" }, "press"),
+    );
+    expect(runMock).not.toHaveBeenCalled();
+  });
+
+  it("a Skip refused as unconfirmed names the refusal and confirms nothing", async () => {
+    const { result, runMock, onRefused } = renderSequence(
+      { flashConsent: noSequenceConsent() },
+      activeState(SETLIST_ID, 0, { status: "needsFlashConsent" }),
+    );
+    runMock.mockResolvedValueOnce(FLASH_REFUSAL);
+    act(() =>
+      result.current.dispatch({ kind: "setlistSkipFlashing" }, "press"),
+    );
+    await flush();
+    expect(result.current.flashConsent).toBeNull();
+    expect(runMock).toHaveBeenCalledTimes(1);
+    expect(onRefused).toHaveBeenCalledExactlyOnceWith(
+      "vj:error.socket.setlistFlashUnconfirmed",
+    );
+  });
+});
+
+describe("useVjRemoteActions: sequence Loop and Stop", () => {
+  it("the Loop switch shows its new value at once for that sequence only", () => {
+    const { result, runMock } = renderSequence({}, activeState(SETLIST_ID, 0));
+    act(() =>
+      result.current.dispatch(
+        { kind: "setlistSetLooping", isLooping: true },
+        "press",
+      ),
+    );
+    expect(runMock).toHaveBeenCalledExactlyOnceWith("setlistSetLooping", true);
+    expect(result.current.setlistLoopIsOn(SETLIST_ID, false)).toBe(true);
+    expect(result.current.isSetlistLoopPending(SETLIST_ID)).toBe(true);
+    expect(result.current.setlistLoopIsOn(CALM_SETLIST_ID, false)).toBe(false);
+    expect(result.current.isSetlistLoopPending(CALM_SETLIST_ID)).toBe(false);
+  });
+
+  it.each([
+    ["vj_setlist_not_found", "vj:error.socket.setlistNotFound"],
+    ["vj_server_error", "vj:error.socket.serverError"],
+    ["offline", "vj:error.offline"],
+  ] as const)(
+    "a Loop refused with %s rolls back and names its reason",
+    async (code, errorKey) => {
+      const { result, runMock, onRefused } = renderSequence(
+        {},
+        activeState(SETLIST_ID, 0),
+      );
+      runMock.mockResolvedValueOnce({ ok: false, code, errorKey });
+      act(() => result.current.setlist.setLooping(true));
+      await flush();
+      expect(result.current.setlistLoopIsOn(SETLIST_ID, false)).toBe(false);
+      expect(result.current.isSetlistLoopPending(SETLIST_ID)).toBe(false);
+      expect(onRefused).toHaveBeenCalledExactlyOnceWith(errorKey);
+    },
+  );
+
+  it("Loop with no active sequence sends nothing", () => {
+    const { result, runMock } = renderSequence();
+    act(() => result.current.setlist.setLooping(true));
+    expect(runMock).not.toHaveBeenCalled();
+  });
+
+  it("Stop clears the selection", () => {
+    const { result, runMock } = renderSequence(
+      {},
+      activeState(SETLIST_ID, 1, { status: "finished" }),
+    );
+    act(() => result.current.dispatch({ kind: "setlistStop" }, "press"));
+    expect(runMock).toHaveBeenCalledExactlyOnceWith(
+      "setlistSelect",
+      null,
+      null,
+    );
+  });
+});
+
+describe("useVjRemoteActions: blocked sequence controls", () => {
+  it("blocked sequence controls send nothing", () => {
+    const { result, runMock } = renderSequence(
+      { isBlocked: true },
+      activeState(SETLIST_ID, 0, { status: "needsFlashConsent" }),
+    );
+    act(() => {
+      result.current.dispatch(
+        { kind: "setlistPlay", setlistId: SETLIST_ID },
+        "press",
+      );
+      result.current.dispatch(
+        { kind: "setlistStepThrough", setlistId: SETLIST_ID },
+        "press",
+      );
+      result.current.dispatch({ kind: "setlistTogglePlaying" }, "press");
+      result.current.dispatch(
+        { kind: "setlistSetLooping", isLooping: true },
+        "press",
+      );
+      result.current.dispatch({ kind: "setlistStop" }, "press");
+      result.current.dispatch({ kind: "setlistPlayFlashing" }, "press");
+      result.current.dispatch({ kind: "setlistSkipFlashing" }, "press");
+    });
+    expect(runMock).not.toHaveBeenCalled();
     expect(result.current.flashConsent).toBeNull();
   });
 });

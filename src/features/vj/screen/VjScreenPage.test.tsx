@@ -253,6 +253,7 @@ function clip(clipId: string, packId = "pack-1"): VjClipDTO {
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: null,
+    setlistItemCount: 0,
   };
 }
 
@@ -1042,7 +1043,7 @@ describe("VjScreenPage sources", () => {
     const preloadInput = mocks.preloadInputs.at(-1);
     expect(preloadInput?.screenId).toBe(SCREEN_ID);
     expect(preloadInput?.stage.state).toBe(mixState);
-    expect(preloadInput?.setlistSceneClipIds).toEqual([]);
+    expect(preloadInput?.setlistClipIds).toEqual([]);
   });
 });
 

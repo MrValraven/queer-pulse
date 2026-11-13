@@ -1,8 +1,8 @@
 /**
  * The demo VJ library's DTO projection (C 6.1): packs with their event
- * summary, clips with their page-life preview, scenes with their set list
- * count, set lists with item positions, and the event option and card of a
- * demo event fixture. Positions are array indexes. Kept apart from
+ * summary, clips with their page-life preview and set list step count,
+ * scenes with their set list count, set lists with Loop, the default length
+ * and their steps, and the event option and card of a demo event fixture. Positions are array indexes. Kept apart from
  * `vjDemoStorePersistence.ts`, which never imports it, so there is no cycle.
  */
 import type {
@@ -16,6 +16,7 @@ import type {
   VjSceneDTO,
   VjSceneListDTO,
   VjSetlistDTO,
+  VjSetlistItemDTO,
   VjSetlistListDTO,
 } from "../../../shared/contracts/vj";
 import { gatheringPath } from "../../gatherings/gatheringPaths";
@@ -31,6 +32,7 @@ import {
   type StoredVjDemoPack,
   type StoredVjDemoScene,
   type StoredVjDemoSetlist,
+  type StoredVjDemoSetlistItem,
 } from "./vjDemoStorePersistence";
 
 /** Clip id to an in-memory blob URL; lives for the page's life and is never
@@ -147,6 +149,17 @@ export function toVjDemoPackDto(
   };
 }
 
+/** How many set list steps, across every set list, match `isMatch`. */
+function countSetlistItems(
+  library: StoredVjDemoLibrary,
+  isMatch: (item: StoredVjDemoSetlistItem) => boolean,
+): number {
+  return library.setlists.reduce(
+    (count, setlist) => count + setlist.items.filter(isMatch).length,
+    0,
+  );
+}
+
 export function toVjDemoClipDto(
   library: StoredVjDemoLibrary,
   clip: StoredVjDemoClip,
@@ -156,6 +169,10 @@ export function toVjDemoClipDto(
     ...clip,
     packIds,
     packCount: packIds.length,
+    setlistItemCount: countSetlistItems(
+      library,
+      (item) => item.clipId === clip.id,
+    ),
     previewUrl: vjDemoPreviewUrlOf(clip.id),
   };
 }
@@ -186,10 +203,9 @@ export function toVjDemoSceneDto(
   library: StoredVjDemoLibrary,
   scene: StoredVjDemoScene,
 ): VjSceneDTO {
-  const setlistItemCount = library.setlists.reduce(
-    (count, setlist) =>
-      count + setlist.items.filter((item) => item.sceneId === scene.id).length,
-    0,
+  const setlistItemCount = countSetlistItems(
+    library,
+    (item) => item.sceneId === scene.id,
   );
   return {
     id: scene.id,
@@ -212,6 +228,21 @@ export function toVjDemoSceneListDto(
   };
 }
 
+/** One step at its array index; a null duration plays the sequence default. */
+export function toVjDemoSetlistItemDto(
+  item: StoredVjDemoSetlistItem,
+  position: number,
+): VjSetlistItemDTO {
+  return {
+    id: item.id,
+    position,
+    kind: item.kind,
+    sceneId: item.sceneId,
+    clipId: item.clipId,
+    duration: item.duration === null ? null : { ...item.duration },
+  };
+}
+
 /** Takes the library for the set list's own position. */
 export function toVjDemoSetlistDto(
   library: StoredVjDemoLibrary,
@@ -221,11 +252,9 @@ export function toVjDemoSetlistDto(
     id: setlist.id,
     name: setlist.name,
     position: library.setlists.indexOf(setlist),
-    items: setlist.items.map((item, index) => ({
-      id: item.id,
-      sceneId: item.sceneId,
-      position: index,
-    })),
+    isLooping: setlist.isLooping,
+    stepDuration: { ...setlist.stepDuration },
+    items: setlist.items.map(toVjDemoSetlistItemDto),
     createdBy: setlist.createdBy,
     createdAt: setlist.createdAt,
     updatedAt: setlist.updatedAt,

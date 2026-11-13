@@ -26,6 +26,7 @@ const PEAK_HOUR_ID = "00000000-0000-4000-8000-0000000000a2";
 const NEON_GRID_ID = "00000000-0000-4000-8000-0000000000c1";
 const WARM_HAZE_ID = "00000000-0000-4000-8000-0000000000c2";
 const DISCO_DOTS_ID = "00000000-0000-4000-8000-0000000000c3";
+const PINK_TUNNEL_ID = "00000000-0000-4000-8000-0000000000c4";
 const WARM_UP_SCENE_ID = "00000000-0000-4000-8000-0000000000d1";
 const PEAK_SCENE_ID = "00000000-0000-4000-8000-0000000000d2";
 const FRIDAY_SET_ID = "00000000-0000-4000-8000-0000000000b1";
@@ -331,6 +332,7 @@ describe("vjDemoStoreClips deletes, previews and media", () => {
     expect(demoDeleteVjClip(WARM_HAZE_ID)).toEqual({
       deletedClipId: WARM_HAZE_ID,
       removedFromPackCount: 2,
+      removedFromSetlistCount: 0,
     });
     const warmUpLook = vjDemoLibraryLookup.readSceneLook(WARM_UP_SCENE_ID);
     expect(warmUpLook?.source).toBeNull();
@@ -347,6 +349,24 @@ describe("vjDemoStoreClips deletes, previews and media", () => {
     });
     const changes = await takeChanges();
     expect(changes.map((change) => change.kind)).toEqual(["clip_deleted"]);
+  });
+
+  it("deleting a clip a step plays drops the step and names the set list", async () => {
+    expect(demoDeleteVjClip(PINK_TUNNEL_ID)).toMatchObject({
+      deletedClipId: PINK_TUNNEL_ID,
+      removedFromSetlistCount: 1,
+    });
+    expect(
+      vjDemoLibraryLookup.readSetlistFollow(FRIDAY_SET_ID)?.itemIds,
+    ).toHaveLength(3);
+    const changes = await takeChanges();
+    expect(changes).toEqual([
+      expect.objectContaining({
+        kind: "clip_deleted",
+        clipId: PINK_TUNNEL_ID,
+        setlistIds: [FRIDAY_SET_ID],
+      }),
+    ]);
   });
 
   it("a preview shows its URL and posts clip_preview_changed", async () => {
@@ -410,7 +430,7 @@ describe("vjDemoStoreClips deletes, previews and media", () => {
 });
 
 describe("vjDemoLibraryLookup", () => {
-  it("the lookup answers readPackForStage, readPackClipForAdvance, readSetlistItem and setlistItemCount", () => {
+  it("the lookup answers readPackForStage, readPackClipForAdvance, readSetlist and readSetlistFollow", () => {
     expect(vjDemoLibraryLookup.readPackForStage(WARM_UP_ID)).toEqual({
       eventId: SUPPER_CLUB_ID,
     });
@@ -430,26 +450,54 @@ describe("vjDemoLibraryLookup", () => {
       vjDemoLibraryLookup.readPackClipForAdvance(WARM_UP_ID, DISCO_DOTS_ID),
     ).toBeNull();
 
-    const firstItem = vjDemoLibraryLookup.readSetlistItem(FRIDAY_SET_ID, 0);
-    expect(firstItem?.itemCount).toBe(2);
-    expect(firstItem?.sceneId).toBe(WARM_UP_SCENE_ID);
-    expect(firstItem?.look?.source).toEqual({
+    const atIndex = (index: number, wrapsToFirst = false) =>
+      vjDemoLibraryLookup.readSetlist(FRIDAY_SET_ID, {
+        kind: "index",
+        index,
+        wrapsToFirst,
+      });
+    const firstStep = atIndex(0);
+    expect(firstStep).toMatchObject({
+      setlistId: FRIDAY_SET_ID,
+      isLooping: true,
+      stepDuration: { kind: "seconds", value: 8 },
+    });
+    expect(firstStep?.itemIds).toHaveLength(4);
+    expect(firstStep?.step).toMatchObject({
+      kind: "scene",
+      index: 0,
+      sceneId: WARM_UP_SCENE_ID,
+      duration: { kind: "seconds", value: 8 },
+    });
+    expect(
+      firstStep?.step?.kind === "scene" ? firstStep.step.look.source : null,
+    ).toEqual({ kind: "clip", clipId: WARM_HAZE_ID });
+    expect(atIndex(1)?.step).toMatchObject({
       kind: "clip",
-      clipId: WARM_HAZE_ID,
+      index: 1,
+      clipId: PINK_TUNNEL_ID,
     });
-    expect(vjDemoLibraryLookup.readSetlistItem(FRIDAY_SET_ID, 2)).toEqual({
-      itemCount: 2,
-      sceneId: null,
-      look: null,
+    expect(atIndex(2)?.step).toMatchObject({
+      kind: "scene",
+      sceneId: PEAK_SCENE_ID,
+      duration: { kind: "beats", value: 16 },
     });
-    expect(vjDemoLibraryLookup.readSetlistItem(FRIDAY_SET_ID, null)).toEqual({
-      itemCount: 2,
-      sceneId: null,
-      look: null,
+    expect(atIndex(4)?.step).toBeNull();
+    expect(atIndex(4, true)?.step).toMatchObject({ index: 0 });
+    expect(
+      vjDemoLibraryLookup.readSetlist(FRIDAY_SET_ID, { kind: "count" })?.step,
+    ).toBeNull();
+    expect(
+      vjDemoLibraryLookup.readSetlist(FRIDAY_SET_ID, { kind: "last" })?.step,
+    ).toMatchObject({ kind: "clip", index: 3, clipId: DISCO_DOTS_ID });
+    expect(
+      vjDemoLibraryLookup.readSetlist(UNKNOWN_ID, { kind: "count" }),
+    ).toBeNull();
+    expect(vjDemoLibraryLookup.readSetlistFollow(FRIDAY_SET_ID)).toEqual({
+      itemIds: firstStep?.itemIds,
+      isLooping: true,
     });
-    expect(vjDemoLibraryLookup.readSetlistItem(UNKNOWN_ID, 0)).toBeNull();
-    expect(vjDemoLibraryLookup.setlistItemCount(FRIDAY_SET_ID)).toBe(2);
-    expect(vjDemoLibraryLookup.setlistItemCount(UNKNOWN_ID)).toBeNull();
+    expect(vjDemoLibraryLookup.readSetlistFollow(UNKNOWN_ID)).toBeNull();
   });
 
   it("answers existence reads with lowercased ids", () => {

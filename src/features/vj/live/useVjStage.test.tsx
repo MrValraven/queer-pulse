@@ -805,8 +805,8 @@ const demoLibrary: VjDemoLibraryLookup = {
       ? { isFavorite: false }
       : null,
   readSceneLook: () => null,
-  readSetlistItem: () => null,
-  setlistItemCount: () => null,
+  readSetlist: () => null,
+  readSetlistFollow: () => null,
 };
 
 /** A Web Lock stand-in: the first request hosts at once, later ones wait. */

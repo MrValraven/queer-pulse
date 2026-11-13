@@ -16,8 +16,10 @@ import {
   type VjOverlayStyle,
   type VjQuantize,
   type VjShuffleIntervalKind,
+  type VjSetlistPlaybackStatus,
   type VjShuffleSource,
   type VjSpeed,
+  type VjStepDurationKind,
   type VjTempoSource,
   type VjTransitionId,
   type VjTransitionLengthUnit,
@@ -133,6 +135,32 @@ export interface VjScreenOverride {
   generatorVariant: string | null;
 }
 
+/** One step length: "seconds" is an integer 2..600, "beats" one of 4, 8, 16, 32, 64. */
+export interface VjStepDuration {
+  kind: VjStepDurationKind;
+  value: number;
+}
+
+/** A sequence's clock on the live stage. */
+export interface VjSetlistPlayback {
+  /** Default "manual". */
+  status: VjSetlistPlaybackStatus;
+  /** Item id of the step on screen; null when armed, and once that step was removed. */
+  itemId: string | null;
+  /** A person confirmed the flash warning for this run. False on a new stageEpoch. */
+  isFlashConfirmed: boolean;
+  /** Server epoch ms the running step's clock started (stepEndsAt - stepDurationMs); null unless "playing". */
+  stepStartedAt: number | null;
+  /** Server epoch ms the running step ends: the server timer's target. Null unless "playing". */
+  stepEndsAt: number | null;
+  /** Full length in ms of the step whose clock last ran; kept while "paused"; null when no clock ran for it. */
+  stepDurationMs: number | null;
+  /** Time left when the clock stopped; a number only while "paused". */
+  pausedRemainingMs: number | null;
+  /** Copy of the set list's saved Loop, refreshed on every read and every setlist_updated. */
+  isLooping: boolean;
+}
+
 export interface VjStageState {
   /**
    * Random uuid minted when the server creates this stage in memory. A new
@@ -170,6 +198,8 @@ export interface VjStageState {
   activeSetlistId: string | null;
   /** Index of the set list item recalled last; null when armed and nothing recalled yet. */
   setlistIndex: number | null;
+  /** Default createVjSetlistPlayback(false). */
+  setlistPlayback: VjSetlistPlayback;
   /** Server epoch ms of the last applied change (or creation). */
   updatedAt: number;
 }
@@ -197,6 +227,7 @@ export type VjStageRestore = Pick<
   | "shuffle"
   | "activeSetlistId"
   | "setlistIndex"
+  | "setlistPlayback"
 >;
 
 // Defaults (C 3.5)
@@ -256,6 +287,18 @@ export function createVjStageState(
     screenOverrides: {},
     activeSetlistId: null,
     setlistIndex: null,
+    // The same value createVjSetlistPlayback(false) answers, written inline so
+    // this file takes no runtime import from vj.sequence.ts.
+    setlistPlayback: {
+      status: "manual",
+      itemId: null,
+      isFlashConfirmed: false,
+      stepStartedAt: null,
+      stepEndsAt: null,
+      stepDurationMs: null,
+      pausedRemainingMs: null,
+      isLooping: false,
+    },
     updatedAt: now,
   };
 }

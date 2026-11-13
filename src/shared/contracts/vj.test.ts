@@ -4,14 +4,22 @@ import {
   VJ_CLIENT_UPLOAD_CODES,
   VJ_LIMITS,
   VJ_REFUSAL_CODES,
+  VJ_LIBRARY_CHANGE_KINDS,
   VJ_REMOTE_COMMAND_NAMES,
   VJ_RENDERERS,
   VJ_RENDER_MODES,
   VJ_SERVER_FRAME_NAMES,
+  VJ_SETLIST_ITEM_KINDS,
+  VJ_SETLIST_PLAYBACK_STATUSES,
   VJ_SOCKET_ERROR_CODES,
+  VJ_STAGE_CAUSES,
+  VJ_STEP_BEAT_COUNTS,
+  VJ_STEP_DURATION_KINDS,
+  createVjSetlistPlayback,
   createVjStageState,
   isVjRenderMode,
   vjShuffleIntervalMs,
+  vjStepDurationMs,
   vjStrobeFlashesPerSecond,
 } from "./vj";
 
@@ -64,6 +72,16 @@ describe("vj contract mirror", () => {
       screenOverrides: {},
       activeSetlistId: null,
       setlistIndex: null,
+      setlistPlayback: {
+        status: "manual",
+        itemId: null,
+        isFlashConfirmed: false,
+        stepStartedAt: null,
+        stepEndsAt: null,
+        stepDurationMs: null,
+        pausedRemainingMs: null,
+        isLooping: false,
+      },
       updatedAt: 1000,
     });
   });
@@ -159,6 +177,94 @@ describe("vj contract mirror", () => {
     expect(invalidIndex).toBeGreaterThan(-1);
     expect(VJ_SOCKET_ERROR_CODES[invalidIndex + 1]).toBe(
       "vj_no_screens_connected",
+    );
+  });
+});
+
+describe("vj sequences contract mirror", () => {
+  it("builds the default stage with the playback createVjSetlistPlayback(false) answers", () => {
+    expect(createVjStageState("epoch-1", 0).setlistPlayback).toEqual(
+      createVjSetlistPlayback(false),
+    );
+    expect(createVjSetlistPlayback(true)).toEqual({
+      ...createVjSetlistPlayback(false),
+      isLooping: true,
+    });
+  });
+
+  it("lists the sequence vocabulary in contract order", () => {
+    expect(VJ_SETLIST_ITEM_KINDS).toEqual(["scene", "clip"]);
+    expect(VJ_STEP_DURATION_KINDS).toEqual(["seconds", "beats"]);
+    expect(VJ_STEP_BEAT_COUNTS).toEqual([4, 8, 16, 32, 64]);
+    expect(VJ_SETLIST_PLAYBACK_STATUSES).toEqual([
+      "manual",
+      "playing",
+      "paused",
+      "takenOver",
+      "finished",
+      "needsFlashConsent",
+    ]);
+    const lastCauseIndex = VJ_STAGE_CAUSES.indexOf("countdown_end");
+    expect(VJ_STAGE_CAUSES[lastCauseIndex + 1]).toBe("setlist");
+  });
+
+  it("keeps the sequence limits", () => {
+    expect(VJ_LIMITS.setlistStepSecondsMin).toBe(2);
+    expect(VJ_LIMITS.setlistStepSecondsMax).toBe(600);
+    expect(VJ_LIMITS.setlistStepSecondsDefault).toBe(8);
+    expect(VJ_LIMITS.setlistTimerRetryMs).toBe(1000);
+    expect(VJ_LIMITS.setlistItemsMax).toBe(100);
+  });
+
+  it("times a step length in seconds and in beats", () => {
+    const { tempo } = createVjStageState("epoch-1", 0);
+    expect(vjStepDurationMs({ kind: "seconds", value: 8 }, tempo)).toBe(8000);
+    expect(vjStepDurationMs({ kind: "seconds", value: 600 }, tempo)).toBe(
+      600_000,
+    );
+    expect(vjStepDurationMs({ kind: "beats", value: 16 }, tempo)).toBe(7742);
+    expect(
+      vjStepDurationMs({ kind: "beats", value: 4 }, { ...tempo, bpm: 60 }),
+    ).toBe(4000);
+    expect(
+      vjStepDurationMs({ kind: "beats", value: 64 }, { ...tempo, bpm: 200 }),
+    ).toBe(19_200);
+  });
+
+  it("appends the sequence socket codes and frames", () => {
+    expect(VJ_SOCKET_ERROR_CODES.at(-1)).toBe("vj_setlist_flash_unconfirmed");
+    const noScreensIndex = VJ_SOCKET_ERROR_CODES.indexOf(
+      "vj_no_screens_connected",
+    );
+    expect(VJ_SOCKET_ERROR_CODES[noScreensIndex + 1]).toBe(
+      "vj_setlist_flash_unconfirmed",
+    );
+    for (const frameNames of [
+      VJ_CLIENT_FRAME_NAMES,
+      VJ_REMOTE_COMMAND_NAMES,
+    ] as const) {
+      const previousIndex = frameNames.indexOf("stage:setlistPrevious");
+      expect(frameNames[previousIndex + 1]).toBe("stage:setlistSetPlaying");
+      expect(frameNames[previousIndex + 2]).toBe("stage:setlistSetLooping");
+    }
+  });
+
+  it("appends the five sequence refusal codes after VJ_SETLIST_FULL", () => {
+    const fullIndex = VJ_REFUSAL_CODES.indexOf("VJ_SETLIST_FULL");
+    expect(VJ_REFUSAL_CODES.slice(fullIndex + 1, fullIndex + 6)).toEqual([
+      "VJ_SETLIST_STEP_INVALID",
+      "VJ_SETLIST_STEP_DURATION_INVALID",
+      "VJ_SETLIST_ITEM_NOT_FOUND",
+      "VJ_SETLIST_LOOP_INVALID",
+      "VJ_SETLIST_PATCH_EMPTY",
+    ]);
+  });
+
+  it("renames setlist_renamed to setlist_updated in place", () => {
+    const kinds: readonly string[] = VJ_LIBRARY_CHANGE_KINDS;
+    expect(kinds).not.toContain("setlist_renamed");
+    expect(kinds.indexOf("setlist_updated")).toBe(
+      kinds.indexOf("setlist_created") + 1,
     );
   });
 });

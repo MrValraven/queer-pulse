@@ -11,6 +11,7 @@ import {
   type VjClipDTO,
   type VjSceneDTO,
   type VjSetlistDTO,
+  type VjTempo,
 } from "../../../../shared/contracts/vj";
 import { Button, Collapse, IconButton } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
@@ -20,30 +21,39 @@ import { VjNameForm } from "./VjNameForm";
 import { VjOrderRow } from "./VjOrderRow";
 import { VjSetlistDeleteDialog } from "./VjSetlistDeleteDialog";
 import { VjSetlistItemsEditor } from "./VjSetlistItemsEditor";
+import { VjSetlistSettings } from "./VjSetlistSettings";
+import {
+  useVjSetlistItemsSender,
+  useVjSetlistSettingsSender,
+} from "./vjSetlistSlots";
 import styles from "./VjSetlists.module.css";
 
 /** The app's `--dur-fast`, for the swap between the rename form and the
- *  items editor. */
+ *  steps panel. */
 const SWAP_SECONDS = 0.15;
 
-/** What folds open under a set list: one at a time. */
+/** What folds open under a sequence: one at a time. */
 type VjSetlistRowPanel = "rename" | "items";
 
 export interface VjSetlistRowProps {
   setlist: VjSetlistDTO;
   scenes: readonly VjSceneDTO[];
+  /** The library's clips, newest first: the Add clip choices. */
+  clips: readonly VjClipDTO[];
   clipsById: ReadonlyMap<string, VjClipDTO>;
+  /** The live tempo for a run time in beats; null when none is known. */
+  tempo: VjTempo | null;
   /** The row's index in the list, from 0. */
   position: number;
   total: number;
   isDragging: boolean;
   gripProps: { onPointerDown: (event: ReactPointerEvent) => void };
   onMove: (direction: -1 | 1) => void;
-  /** Opens the items editor once, for a set list just created. */
+  /** Opens the steps panel once, for a sequence just created. */
   isItemsEditorOpenedOnCreate?: boolean;
 }
 
-/** Rename set list: the name form with the rename write behind it. */
+/** Rename sequence: the name form with the PATCH behind it. */
 function VjSetlistRenameForm({
   setlist,
   onDone,
@@ -53,13 +63,13 @@ function VjSetlistRenameForm({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { renameSetlist } = useVjSetlistMutations();
+  const { updateSetlist } = useVjSetlistMutations();
   const [refusal, setRefusal] = useState<unknown>(null);
 
   const rename = async (name: string) => {
     setRefusal(null);
     try {
-      const renamed = await renameSetlist.mutateAsync({
+      const renamed = await updateSetlist.mutateAsync({
         setlistId: setlist.id,
         name,
       });
@@ -80,7 +90,7 @@ function VjSetlistRenameForm({
       submitLabel={t("vj:librarySetlists.renameSubmit")}
       maxLength={VJ_LIMITS.setlistNameMax}
       blankCode="VJ_SETLIST_NAME_REQUIRED"
-      isPending={renameSetlist.isPending}
+      isPending={updateSetlist.isPending}
       refusal={refusal}
       onSubmit={(name) => void rename(name)}
       onCancel={onDone}
@@ -89,14 +99,16 @@ function VjSetlistRenameForm({
 }
 
 /**
- * One set list: its name and scene count, then Edit scenes, rename and
- * delete. Rename and the items editor fold open under the row, one at a time,
- * with a fade when switching between them.
+ * One sequence: its name and step count, then Edit steps, rename and delete.
+ * Rename and the steps panel (the sequence settings above its steps) fold
+ * open under the row, one at a time, with a fade when switching between them.
  */
 export function VjSetlistRow({
   setlist,
   scenes,
+  clips,
   clipsById,
+  tempo,
   position,
   total,
   isDragging,
@@ -106,6 +118,10 @@ export function VjSetlistRow({
 }: VjSetlistRowProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  // The row keeps the writes, so its step count and the steps panel read
+  // the values on their way, and a save outlives the panel folding away.
+  const itemsSender = useVjSetlistItemsSender(setlist);
+  const settingsSender = useVjSetlistSettingsSender(setlist);
   const [openPanel, setOpenPanel] = useState<VjSetlistRowPanel | null>(
     isItemsEditorOpenedOnCreate ? "items" : null,
   );
@@ -148,11 +164,18 @@ export function VjSetlistRow({
           {shownPanel === "rename" ? (
             <VjSetlistRenameForm setlist={setlist} onDone={closeRename} />
           ) : (
-            <VjSetlistItemsEditor
-              setlist={setlist}
-              scenes={scenes}
-              clipsById={clipsById}
-            />
+            <>
+              <VjSetlistSettings setlist={setlist} sender={settingsSender} />
+              <VjSetlistItemsEditor
+                setlist={setlist}
+                sender={itemsSender}
+                stepDuration={settingsSender.shownStepDuration}
+                scenes={scenes}
+                clips={clips}
+                clipsById={clipsById}
+                tempo={tempo}
+              />
+            </>
           )}
         </m.div>
       </AnimatePresence>
@@ -177,8 +200,8 @@ export function VjSetlistRow({
         <span className={styles.rowText}>
           <span className={styles.rowName}>{setlist.name}</span>
           <span className={styles.rowMeta}>
-            {t("vj:librarySetlists.sceneCount", {
-              count: setlist.items.length,
+            {t("vj:librarySetlists.stepCount", {
+              count: itemsSender.visibleSlots.length,
             })}
           </span>
         </span>
@@ -186,14 +209,14 @@ export function VjSetlistRow({
           <Button
             variant="quiet"
             size="sm"
-            className={styles.editScenes}
+            className={styles.editSteps}
             aria-expanded={openPanel === "items"}
-            aria-label={t("vj:librarySetlists.editScenesAria", {
+            aria-label={t("vj:librarySetlists.editStepsAria", {
               name: setlist.name,
             })}
             onClick={() => toggle("items")}
           >
-            {t("vj:librarySetlists.editScenes")}
+            {t("vj:librarySetlists.editSteps")}
           </Button>
           <IconButton
             ref={renameButtonRef}

@@ -8,9 +8,9 @@ export const subprofiles: Catalog = {
   "directory.hero.title":
     "Encontra as pessoas com quem vais querer <em>trabalhar outra vez</em>",
   "directory.hero.lead":
-    "Cada persona pertence a alguém da nossa comunidade. Vê o trabalho, segue o que te toca e fala quando quiseres fazer algo em conjunto.",
+    "Cada persona pertence a alguém da nossa comunidade. Vê o trabalho, segue o que te toca e entra em contacto quando quiseres criar algo em conjunto.",
   "directory.hero.searchLabel": "Pesquisar personas",
-  "directory.hero.searchPlaceholder": "Um DJ, terapia, Rust…",
+  "directory.hero.searchPlaceholder": "DJ, terapia, Rust…",
   "directory.hero.searchSubmit": "Encontrar pessoas",
   "directory.hero.quickFiltersLabel": "Filtros rápidos",
   "directory.hero.quick.therapists": "Terapeutas",
@@ -24,13 +24,13 @@ export const subprofiles: Catalog = {
   "directory.loading": "A carregar personas…",
   "directory.empty.title": "Ainda não há personas aqui",
   "directory.empty.description":
-    "Nada corresponde a isto por agora. Experimenta outra profissão ou limpa a pesquisa para veres toda a gente.",
+    "Por agora não há resultados. Experimenta outra profissão ou limpa a pesquisa para veres toda a gente.",
   "directory.empty.clear": "Limpar filtros",
   "directory.error.title": "Não conseguimos carregar o diretório",
   "directory.error.description":
-    "Algo correu mal ao contactar o servidor. Isto não é um diretório vazio. Tenta novamente daqui a pouco.",
+    "Não conseguimos contactar o servidor, e é por isso que não vês personas. Tenta novamente daqui a pouco.",
   "directory.error.retry": "Tentar novamente",
-  "directory.openToCollabsChip": "Aberto a colaborações",
+  "directory.openToCollabsChip": "Disponível para colaborações",
 
   // Faixa "Feito em conjunto" do diretório: trabalho recente em que personas
   // se creditaram umas às outras.
@@ -74,7 +74,7 @@ export const subprofiles: Catalog = {
   "directory.filtersSheetLabel": "Filtrar personas",
   "directory.showResultsCta_one": "Ver {count} persona",
   "directory.showResultsCta_other": "Ver {count} personas",
-  "directory.showResultsCtaNone": "Ainda não há personas, vê as opções",
+  "directory.showResultsCtaNone": "Nenhuma persona corresponde, vê as opções",
   "directory.showMore": "Ver mais",
   "directory.shownOfTotal": "{shown} de {total}",
   "directory.showMoreLoading": "A carregar…",
@@ -85,7 +85,7 @@ export const subprofiles: Catalog = {
   // persona. Esta e a metade da lista.
   "directory.tabs.ariaLabel": "Personas",
   "directory.tabs.browse": "Toda a gente",
-  "directory.tabs.following": "Que segues",
+  "directory.tabs.following": "Quem segues",
   "following.loading": "A carregar as personas que segues",
   "following.error.title": "Não conseguimos carregar as personas que segues",
   "following.error.description":
@@ -120,21 +120,21 @@ export const subprofiles: Catalog = {
 
   // Secção final do diretório
   "directory.closing.title":
-    "O teu trabalho <em>também</em> pertence a esta parede",
+    "O teu trabalho <em>também</em> merece estar nesta parede",
   "directory.closing.lead":
     "Cada persona aqui foi criada por uma pessoa da nossa comunidade. Cria uma página para o teu ofício e credita as pessoas com quem fazes coisas.",
   "directory.closing.cta": "Cria a tua persona",
 
   // Cartão do diretório (linhas de créditos, ligação, erros ao seguir)
-  "directory.card.creditLine_one": "Creditada com {count} pessoa",
-  "directory.card.creditLine_other": "Creditada com {count} pessoas",
+  "directory.card.creditLine_one": "Créditos partilhados com {count} pessoa",
+  "directory.card.creditLine_other": "Créditos partilhados com {count} pessoas",
   "directory.card.creditShort_one": "{count} crédito",
   "directory.card.creditShort_other": "{count} créditos",
   "directory.card.viewPersona": "Ver persona",
   "directory.card.viewPersonaNamed": "Ver persona {name}",
   "directory.card.byOwner": "por {name}",
   "directory.card.followError.notFollowable":
-    "Esta persona já não aceita seguidores.",
+    "Já não é possível seguir esta persona.",
   "directory.card.followError.ownPersona":
     "Geres esta persona, por isso não a podes seguir.",
 
@@ -205,10 +205,10 @@ export const subprofiles: Catalog = {
   "kind.video_creator": "Vídeo e YouTube",
   "kind.short_form_creator": "Vídeo curto",
   "kind.chef": "Cozinha",
-  "kind.mixologist": "Coquetelaria",
+  "kind.mixologist": "Mixologia",
   "kind.therapist": "Terapia",
   "kind.astrologer": "Astrologia",
-  "kind.generic": "Generalista",
+  "kind.generic": "Outra área",
   // Expanded kind labels (personas expansion — 75 new crafts)
   "kind.comedian": "Comédia",
   "kind.vocalist": "Canto",
@@ -236,8 +236,8 @@ export const subprofiles: Catalog = {
   "kind.jeweler": "Joalharia",
   "kind.textile_artist": "Têxteis",
   "kind.woodworker": "Madeira",
-  "kind.florist": "Floricultura",
-  "kind.data_scientist": "Dados",
+  "kind.florist": "Arte floral",
+  "kind.data_scientist": "Ciência de dados",
   "kind.coach": "Coaching",
   "kind.bodyworker": "Massagem",
   "kind.yoga_teacher": "Yoga e movimento",
@@ -245,7 +245,7 @@ export const subprofiles: Catalog = {
   "kind.doula": "Doula",
   "kind.personal_trainer": "Treino pessoal",
   "kind.sex_educator": "Educação sexual",
-  "kind.peer_support": "Apoio entre pares",
+  "kind.peer_support": "Apoio entre pares e serviço social",
   "kind.baker": "Pastelaria e pão",
   "kind.barista": "Barista",
   "kind.brewer": "Cerveja e destilados",
@@ -276,7 +276,7 @@ export const subprofiles: Catalog = {
   "kind.oral_historian": "História oral",
   "kind.genealogist": "Genealogia",
   "kind.heritage": "Património",
-  "kind.archival_researcher": "Pesquisa em arquivo",
+  "kind.archival_researcher": "Investigação em arquivo",
   "kind.memory_keeper": "Memória cultural",
   "kind.organizer": "Organização",
   "kind.activist": "Ativismo",
@@ -488,7 +488,7 @@ export const subprofiles: Catalog = {
   "accent.jade": "Jade",
   "accent.amber": "Âmbar",
   "accent.violet": "Violeta",
-  "availability.openToCollabs": "Aberto a colaborações",
+  "availability.openToCollabs": "Disponível para colaborações",
   "availability.booking": "A aceitar marcações",
   "availability.notAvailable": "Sem disponibilidade agora",
 
@@ -523,7 +523,7 @@ export const subprofiles: Catalog = {
   "checklist.reqHandleMet":
     "É aqui que as pessoas te vão encontrar: queerpulse.app/p/o-teu-identificador.",
   "checklist.reqHandleFailInvalid":
-    "Os identificadores têm 3–30 carateres: letras minúsculas, números e hífenes.",
+    "Os identificadores têm entre 3 e 30 caracteres: letras minúsculas, números e hífenes.",
   "checklist.reqHandleFailTaken":
     "Já existe alguém com esse identificador. Tenta outro.",
   "checklist.reqHandleFailReserved":
@@ -2274,7 +2274,7 @@ export const subprofiles: Catalog = {
   "therapist.practical.heading":
     "Dinheiro, tempo e *como dar o primeiro passo*",
   "therapist.practical.amount": "{amount}€",
-  "therapist.practical.range": "{low}–{high}€",
+  "therapist.practical.range": "{low} a {high}€",
   "therapist.practical.sessions.title": "Sessões",
   "therapist.practical.sessions.modeBoth": "presencial ou online",
   "therapist.practical.sessions.modeOnline": "só online",
@@ -2574,7 +2574,7 @@ export const subprofiles: Catalog = {
   "therapist.hero.facts.fees": "Preços",
   "therapist.hero.facts.insurance": "Seguros",
   "therapist.hero.facts.feesSliding":
-    "{standard}€ · escala variável {min}–{max}€",
+    "{standard}€ · escala variável {min} a {max}€",
   "therapist.hero.facts.feesStandard": "{standard}€",
   "therapist.hero.facts.notShared": "Ainda não partilhado",
   "therapist.hero.facts.unknown": "Desconhecido",
@@ -2632,8 +2632,8 @@ export const subprofiles: Catalog = {
 
   // Therapist profile (h1)
   "therapist.hero.facts.feesFromSliding":
-    "a partir de {lowest}€ · escala variável {min}–{max}€",
-  "therapist.hero.facts.feesSlidingOnly": "Escala variável {min}–{max}€",
+    "a partir de {lowest}€ · escala variável {min} a {max}€",
+  "therapist.hero.facts.feesSlidingOnly": "Escala variável {min} a {max}€",
   "therapist.hero.registration": "{number} (autodeclarado)",
   "therapist.hero.registrationNote":
     "A QueerPulse não verifica números de cédula profissional. Podes confirmá-lo junto da entidade que o emitiu.",

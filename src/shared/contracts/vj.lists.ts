@@ -173,6 +173,30 @@ export type VjShuffleIntervalKind = (typeof VJ_SHUFFLE_INTERVAL_KINDS)[number];
 export const VJ_SHUFFLE_BEAT_COUNTS = [4, 8, 16, 32] as const;
 export type VjShuffleBeatCount = (typeof VJ_SHUFFLE_BEAT_COUNTS)[number];
 
+/** What a step plays: a saved scene's look or one clip. */
+export const VJ_SETLIST_ITEM_KINDS = ["scene", "clip"] as const;
+export type VjSetlistItemKind = (typeof VJ_SETLIST_ITEM_KINDS)[number];
+
+/** Whether a step length counts seconds or beats of the tempo. */
+export const VJ_STEP_DURATION_KINDS = ["seconds", "beats"] as const;
+export type VjStepDurationKind = (typeof VJ_STEP_DURATION_KINDS)[number];
+
+/** The beat counts a beats step length may take. */
+export const VJ_STEP_BEAT_COUNTS = [4, 8, 16, 32, 64] as const;
+export type VjStepBeatCount = (typeof VJ_STEP_BEAT_COUNTS)[number];
+
+/** A sequence's playback status (the transition table has every transition). */
+export const VJ_SETLIST_PLAYBACK_STATUSES = [
+  "manual",
+  "playing",
+  "paused",
+  "takenOver",
+  "finished",
+  "needsFlashConsent",
+] as const;
+export type VjSetlistPlaybackStatus =
+  (typeof VJ_SETLIST_PLAYBACK_STATUSES)[number];
+
 /** The two roles a socket can attach as (v1 C 2). */
 export const VJ_ATTACH_ROLES = ["screen", "remote"] as const;
 export type VjAttachRole = (typeof VJ_ATTACH_ROLES)[number];
@@ -242,6 +266,12 @@ export const VJ_LIMITS = {
   setlistNameMax: 60,
   setlistsMax: 50,
   setlistItemsMax: 100,
+  /** Bounds of a step length in the 'seconds' kind. */
+  setlistStepSecondsMin: 2,
+  setlistStepSecondsMax: 600,
+  setlistStepSecondsDefault: 8,
+  /** A failed step read retries after this long. */
+  setlistTimerRetryMs: 1000,
   /** A remote's downbeatAt lies within this many ms of the server's clock. */
   downbeatSkewMsMax: 60_000,
   /** Earliest a quantized change may land after the server receives it. */
@@ -290,5 +320,6 @@ export const VJ_STAGE_CAUSES = [
   "mic_tempo",
   "overlay_timeout",
   "countdown_end",
+  "setlist",
 ] as const;
 export type VjStageCause = (typeof VJ_STAGE_CAUSES)[number];

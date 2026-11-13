@@ -5,11 +5,13 @@ import {
 } from "../vj.constants";
 import { VJ_DEMO_EVENT_IDS } from "./vjDemoEvents.data";
 import {
+  fillVjDemoSequenceFields,
   isVjDemoLibraryV2,
   upgradeVjDemoLibraryV1,
 } from "./vjDemoLibraryUpgrade";
 import {
   buildVjDemoSeedLibrary,
+  commitVjDemoLibrary,
   configureVjDemoStore,
   loadVjDemoLibrary,
   type StoredVjDemoLibrary,
@@ -19,6 +21,8 @@ const WARM_UP_ID = "00000000-0000-4000-8000-0000000000a1";
 const PEAK_HOUR_ID = "00000000-0000-4000-8000-0000000000a2";
 const NEON_GRID_ID = "00000000-0000-4000-8000-0000000000c1";
 const WARM_HAZE_ID = "00000000-0000-4000-8000-0000000000c2";
+const DISCO_DOTS_ID = "00000000-0000-4000-8000-0000000000c3";
+const PINK_TUNNEL_ID = "00000000-0000-4000-8000-0000000000c4";
 const WARM_UP_SCENE_ID = "00000000-0000-4000-8000-0000000000d1";
 const PEAK_SCENE_ID = "00000000-0000-4000-8000-0000000000d2";
 const FRIDAY_SET_ID = "00000000-0000-4000-8000-0000000000b1";
@@ -119,9 +123,22 @@ describe("demo library v2 seed", () => {
     });
     expect(library.setlists).toHaveLength(1);
     expect(library.setlists[0]?.id).toBe(FRIDAY_SET_ID);
-    expect(library.setlists[0]?.items.map((item) => item.sceneId)).toEqual([
-      WARM_UP_SCENE_ID,
-      PEAK_SCENE_ID,
+    expect(library.setlists[0]).toMatchObject({
+      isLooping: true,
+      stepDuration: { kind: "seconds", value: 8 },
+    });
+    expect(
+      library.setlists[0]?.items.map((item) => [
+        item.kind,
+        item.sceneId,
+        item.clipId,
+        item.duration,
+      ]),
+    ).toEqual([
+      ["scene", WARM_UP_SCENE_ID, null, null],
+      ["clip", null, PINK_TUNNEL_ID, null],
+      ["scene", PEAK_SCENE_ID, null, { kind: "beats", value: 16 }],
+      ["clip", null, DISCO_DOTS_ID, null],
     ]);
     expect(isVjDemoLibraryV2(storedLibraryOf(storage))).toBe(true);
   });
@@ -263,6 +280,26 @@ describe("demo library v1 upgrade", () => {
     ).toBe(PEAK_HOUR_ID);
   });
 
+  it("drops a seed clip step whose clip the user deleted and keeps the other step ids", () => {
+    const v1Library = buildV1Library();
+    const clips = (v1Library.clips as Record<string, unknown>[]).filter(
+      (clip) => clip.id !== PINK_TUNNEL_ID,
+    );
+    storage.setItem(
+      VJ_DEMO_LIBRARY_V1_STORAGE_KEY,
+      JSON.stringify({ ...v1Library, clips }),
+    );
+
+    const items = loadVjDemoLibrary().setlists[0]?.items ?? [];
+
+    expect(items.map((item) => item.id)).toEqual([
+      "00000000-0000-4000-8000-000000000100",
+      "00000000-0000-4000-8000-000000000102",
+      "00000000-0000-4000-8000-000000000103",
+    ]);
+    expect(items.map((item) => item.clipId)).not.toContain(PINK_TUNNEL_ID);
+  });
+
   it("answers null for a record that is no v1 library", () => {
     expect(upgradeVjDemoLibraryV1({ version: 2 }, FIXED_NOW)).toBeNull();
     expect(
@@ -323,5 +360,208 @@ describe("demo library v2 load", () => {
 
     expect(first.version).toBe(2);
     expect(second).toEqual(first);
+  });
+});
+
+/** The seed library as saved before sequences: set lists without Loop or a
+ *  default length, items as `{ id, sceneId }`. */
+function buildPreSequenceLibrary(): Record<string, unknown> {
+  const seed = buildVjDemoSeedLibrary();
+  return {
+    ...seed,
+    setlists: [
+      {
+        id: FRIDAY_SET_ID,
+        name: "Friday set",
+        items: [
+          {
+            id: "00000000-0000-4000-8000-000000000100",
+            sceneId: WARM_UP_SCENE_ID,
+          },
+          {
+            id: "00000000-0000-4000-8000-000000000101",
+            sceneId: PEAK_SCENE_ID,
+          },
+        ],
+        createdBy: null,
+        createdAt: "2026-11-01T20:00:00.000Z",
+        updatedAt: "2026-11-01T20:00:00.000Z",
+      },
+    ],
+  };
+}
+
+describe("demo library saved before sequences", () => {
+  it("loads old items as scene steps on the default length, Loop off and 8 s", () => {
+    storage.setItem(
+      VJ_DEMO_LIBRARY_STORAGE_KEY,
+      JSON.stringify(buildPreSequenceLibrary()),
+    );
+
+    const library = loadVjDemoLibrary();
+
+    expect(library.setlists).toHaveLength(1);
+    expect(library.setlists[0]).toMatchObject({
+      id: FRIDAY_SET_ID,
+      name: "Friday set",
+      isLooping: false,
+      stepDuration: { kind: "seconds", value: 8 },
+    });
+    expect(library.setlists[0]?.items).toEqual([
+      {
+        id: "00000000-0000-4000-8000-000000000100",
+        kind: "scene",
+        sceneId: WARM_UP_SCENE_ID,
+        clipId: null,
+        duration: null,
+      },
+      {
+        id: "00000000-0000-4000-8000-000000000101",
+        kind: "scene",
+        sceneId: PEAK_SCENE_ID,
+        clipId: null,
+        duration: null,
+      },
+    ]);
+    expect(library.packs).toEqual(buildVjDemoSeedLibrary().packs);
+  });
+
+  it("writes the filled library back on its next commit", () => {
+    storage.setItem(
+      VJ_DEMO_LIBRARY_STORAGE_KEY,
+      JSON.stringify(buildPreSequenceLibrary()),
+    );
+
+    const library = loadVjDemoLibrary();
+    commitVjDemoLibrary(library, { kind: "setlists_reordered" });
+
+    const stored = storedLibraryOf(storage);
+    expect(stored.setlists[0]?.isLooping).toBe(false);
+    expect(stored.setlists[0]?.items[0]?.kind).toBe("scene");
+    expect(isVjDemoLibraryV2(stored)).toBe(true);
+  });
+
+  it("falls back from a bad Loop, a bad default length and a bad step length", () => {
+    const filled = fillVjDemoSequenceFields({
+      version: 2,
+      setlists: [
+        {
+          id: FRIDAY_SET_ID,
+          isLooping: "yes",
+          stepDuration: { kind: "beats", value: 12 },
+          items: [
+            {
+              id: "a",
+              kind: "clip",
+              sceneId: null,
+              clipId: NEON_GRID_ID,
+              duration: { kind: "seconds", value: 1 },
+            },
+            {
+              id: "b",
+              kind: "scene",
+              sceneId: PEAK_SCENE_ID,
+              clipId: null,
+              duration: { kind: "beats", value: 32 },
+            },
+          ],
+        },
+      ],
+    }) as { setlists: Record<string, unknown>[] };
+
+    expect(filled.setlists[0]).toMatchObject({
+      isLooping: false,
+      stepDuration: { kind: "seconds", value: 8 },
+      items: [
+        { id: "a", kind: "clip", clipId: NEON_GRID_ID, duration: null },
+        { id: "b", duration: { kind: "beats", value: 32 } },
+      ],
+    });
+  });
+
+  it("passes a value with no set list array through unchanged", () => {
+    expect(fillVjDemoSequenceFields(null)).toBeNull();
+    const noSetlists = { version: 2, packs: [] };
+    expect(fillVjDemoSequenceFields(noSetlists)).toBe(noSetlists);
+  });
+
+  it("drops a step that names both a scene and a clip and keeps the rest of the library", () => {
+    const seed = buildVjDemoSeedLibrary();
+    const userPack = { ...seed.packs[0], id: USER_PACK_ID, name: "Late set" };
+    const stored = {
+      ...seed,
+      packs: [...seed.packs, userPack],
+      setlists: seed.setlists.map((setlist) => ({
+        ...setlist,
+        items: [
+          {
+            id: "00000000-0000-4000-8000-000000000100",
+            kind: "scene",
+            sceneId: WARM_UP_SCENE_ID,
+            clipId: NEON_GRID_ID,
+            duration: null,
+          },
+          ...setlist.items.slice(1),
+        ],
+      })),
+    };
+    storage.setItem(VJ_DEMO_LIBRARY_STORAGE_KEY, JSON.stringify(stored));
+
+    const library = loadVjDemoLibrary();
+
+    expect(library.packs.map((pack) => pack.id)).toContain(USER_PACK_ID);
+    expect(library.setlists[0]?.items.map((item) => item.id)).toEqual([
+      "00000000-0000-4000-8000-000000000101",
+      "00000000-0000-4000-8000-000000000102",
+      "00000000-0000-4000-8000-000000000103",
+    ]);
+  });
+
+  it("drops a step with an unknown kind or no id, and repairs a missing other target and length", () => {
+    const filled = fillVjDemoSequenceFields({
+      version: 2,
+      setlists: [
+        {
+          id: FRIDAY_SET_ID,
+          isLooping: true,
+          stepDuration: { kind: "seconds", value: 8 },
+          items: [
+            { id: "a", kind: "generator", sceneId: null, clipId: null },
+            { kind: "clip", sceneId: null, clipId: NEON_GRID_ID },
+            "not a step",
+            { id: "b", kind: "scene", sceneId: PEAK_SCENE_ID },
+            { id: "c", kind: "clip", clipId: NEON_GRID_ID },
+          ],
+        },
+      ],
+    }) as { setlists: { items: unknown[] }[] };
+
+    expect(filled.setlists[0]?.items).toEqual([
+      {
+        id: "b",
+        kind: "scene",
+        sceneId: PEAK_SCENE_ID,
+        clipId: null,
+        duration: null,
+      },
+      {
+        id: "c",
+        kind: "clip",
+        sceneId: null,
+        clipId: NEON_GRID_ID,
+        duration: null,
+      },
+    ]);
+  });
+
+  it("still reseeds when a set list's own shape is broken", () => {
+    const seed = buildVjDemoSeedLibrary();
+    const broken = {
+      ...seed,
+      setlists: seed.setlists.map((setlist) => ({ ...setlist, name: 7 })),
+    };
+    storage.setItem(VJ_DEMO_LIBRARY_STORAGE_KEY, JSON.stringify(broken));
+
+    expect(loadVjDemoLibrary()).toEqual(buildVjDemoSeedLibrary());
   });
 });

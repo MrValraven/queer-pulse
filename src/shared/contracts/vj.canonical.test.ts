@@ -132,6 +132,64 @@ describe("canonicalVjStageState", () => {
   });
 });
 
+describe("canonicalVjStageState setlistPlayback", () => {
+  it("lowercases the item id and copies every playback field in order", () => {
+    const stage = buildStage();
+    stage.setlistPlayback = {
+      status: "paused",
+      itemId: "ABCDEF01-2345-4678-8ABC-DEF012345678",
+      isFlashConfirmed: true,
+      stepStartedAt: null,
+      stepEndsAt: null,
+      stepDurationMs: 8000,
+      pausedRemainingMs: 3000,
+      isLooping: true,
+    };
+    const canonical = canonicalVjStageState(stage);
+    expect(canonical.setlistPlayback).toEqual({
+      status: "paused",
+      itemId: "abcdef01-2345-4678-8abc-def012345678",
+      isFlashConfirmed: true,
+      stepStartedAt: null,
+      stepEndsAt: null,
+      stepDurationMs: 8000,
+      pausedRemainingMs: 3000,
+      isLooping: true,
+    });
+    expect(Object.keys(canonical.setlistPlayback)).toEqual([
+      "status",
+      "itemId",
+      "isFlashConfirmed",
+      "stepStartedAt",
+      "stepEndsAt",
+      "stepDurationMs",
+      "pausedRemainingMs",
+      "isLooping",
+    ]);
+    expect(Object.keys(canonical).indexOf("setlistPlayback")).toBe(
+      Object.keys(canonical).indexOf("setlistIndex") + 1,
+    );
+  });
+
+  it("keeps a null item id null and builds a fresh object", () => {
+    const stage = buildStage();
+    const canonical = canonicalVjStageState(stage);
+    expect(canonical.setlistPlayback.itemId).toBeNull();
+    expect(canonical.setlistPlayback).not.toBe(stage.setlistPlayback);
+  });
+
+  it("sees a playback difference as different content and an id case difference as the same", () => {
+    const first = buildStage();
+    const second = buildStage();
+    expect(isSameVjStageContent(first, second)).toBe(true);
+    first.setlistPlayback.itemId = "ABCDEF01-2345-4678-8ABC-DEF012345678";
+    second.setlistPlayback.itemId = "abcdef01-2345-4678-8abc-def012345678";
+    expect(isSameVjStageContent(first, second)).toBe(true);
+    second.setlistPlayback.isLooping = true;
+    expect(isSameVjStageContent(first, second)).toBe(false);
+  });
+});
+
 describe("isSameVjStageContent", () => {
   it("isSameVjStageContent ignores revision and updatedAt and sees a key order difference as the same", () => {
     const first = buildStage();

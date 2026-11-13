@@ -1,7 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  createVjSetlistPlayback,
   createVjStageState,
+  type VjSetlistPlayback,
   type VjShuffle,
   type VjStageState,
 } from "../../../shared/contracts/vj";
@@ -48,6 +50,25 @@ function stageState(changes: Partial<VjStageState> = {}): VjStageState {
     shuffle: SECONDS_SHUFFLE,
     ...changes,
   };
+}
+
+/** A sequence playing its first step: the server step timer owns the stage. */
+const PLAYING_PLAYBACK: VjSetlistPlayback = {
+  ...createVjSetlistPlayback(false),
+  status: "playing",
+  itemId: "item-1",
+  stepStartedAt: 0,
+  stepEndsAt: 30_000,
+  stepDurationMs: 30_000,
+};
+
+/** stageState with an active set list at step 0 and the given playback. */
+function sequenceState(setlistPlayback: VjSetlistPlayback): VjStageState {
+  return stageState({
+    activeSetlistId: "setlist-1",
+    setlistIndex: 0,
+    setlistPlayback,
+  });
 }
 
 const OK_OUTCOME: VjCommandOutcome = {
@@ -436,5 +457,71 @@ describe("useVjScreenProgram lookahead and timing", () => {
     expect(advance).not.toHaveBeenCalled();
     await advanceTime(1);
     expect(advance).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("useVjScreenProgram while a sequence plays", () => {
+  it("runs no offline shuffle while the record shows a playing sequence", async () => {
+    const { result, advance } = renderProgram({
+      state: sequenceState(PLAYING_PLAYBACK),
+      isConnected: false,
+      isLead: false,
+    });
+
+    await advanceTime(INTERVAL_MS * 3);
+    expect(advance).not.toHaveBeenCalled();
+    expect(result.current).toMatchObject({
+      displayedClipId: "clip-1",
+      isLocal: false,
+    });
+  });
+
+  it("a connected lead reports no shuffle pick while a sequence plays", async () => {
+    const { result, advance } = renderProgram({
+      state: sequenceState(PLAYING_PLAYBACK),
+    });
+
+    expect(result.current.nextClipId).toBeNull();
+    await advanceTime(INTERVAL_MS * 3);
+    expect(advance).not.toHaveBeenCalled();
+    expect(result.current.displayedClipId).toBe("clip-1");
+    expect(result.current.nextClipId).toBeNull();
+  });
+
+  it("shuffles offline on a state from a backend older than sequences", async () => {
+    const { setlistPlayback: _setlistPlayback, ...stateBeforeSequences } =
+      stageState();
+    const { result } = renderProgram({
+      state: stateBeforeSequences as VjStageState,
+      isConnected: false,
+      isLead: false,
+    });
+
+    await advanceTime(INTERVAL_MS);
+    expect(result.current.displayedClipId).not.toBe("clip-1");
+    expect(result.current.isLocal).toBe(true);
+  });
+
+  it("shuffles offline again once the sequence stops playing", async () => {
+    const { result, update } = renderProgram({
+      state: sequenceState(PLAYING_PLAYBACK),
+      isConnected: false,
+      isLead: false,
+    });
+    await advanceTime(INTERVAL_MS * 2);
+    expect(result.current.displayedClipId).toBe("clip-1");
+
+    update({
+      state: sequenceState({
+        ...PLAYING_PLAYBACK,
+        status: "paused",
+        stepStartedAt: null,
+        stepEndsAt: null,
+        pausedRemainingMs: 12_000,
+      }),
+    });
+    await advanceTime(INTERVAL_MS);
+    expect(result.current.displayedClipId).not.toBe("clip-1");
+    expect(result.current.isLocal).toBe(true);
   });
 });

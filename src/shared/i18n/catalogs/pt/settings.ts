@@ -167,8 +167,8 @@ export const settings: Catalog = {
 
   // ── interests.data.ts — faixas etárias (só o índice é guardado) ─────────
   "interests.age.under25": "Menos de 25",
-  "interests.age.25to35": "25–35",
-  "interests.age.35to45": "35–45",
+  "interests.age.25to35": "25 a 35",
+  "interests.age.35to45": "35 a 45",
   "interests.age.45plus": "45+",
 
   // ── interests.data.ts: com que frequência o resumo do feed se junta (o

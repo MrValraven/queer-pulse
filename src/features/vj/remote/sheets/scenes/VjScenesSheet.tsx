@@ -16,11 +16,13 @@ import { useTranslation } from "../../../../../shared/i18n/useTranslation";
 import { selectVjScenesForPack, useVjScenes } from "../../../api/useVjScenes";
 import { useVjSceneMutations } from "../../../api/useVjSceneMutations";
 import { useVjSetlists } from "../../../api/useVjSetlists";
+import { useVjClips } from "../../../api/useVjClips";
 import type { TranslateOptions } from "../../../../../shared/i18n/types";
 import type { VjCommandOutcome } from "../../../live/vjStageCommands";
 import { vjErrorKeyOf, vjErrorValuesOf } from "../../../vjErrors";
 import { VjSheetFrame } from "../../kit/VjSheetFrame";
 import { VjSheetAlert } from "../../VjSheetAlert";
+import { useVjRemoteSetlistControls } from "../../page/VjRemoteShell";
 import {
   VjSceneRow,
   type VjRun,
@@ -150,13 +152,15 @@ export interface VjScenesSheetProps {
 }
 
 /**
- * Scenes and set lists. Save scene stores the current look under the next
+ * Scenes and sequences. Save scene stores the current look under the next
  * default name ("Scene 4"), filed under the active pack. This pack's scenes
  * come first, then the scenes of any pack, each with Recall, Rename and
- * Delete. Below them the set lists start, step and stop. A recall, a set
- * list start or a step onto a look that flashes asks the flash warning first.
- * REST refusals and socket refusals both land in one alert line that names
- * the reason.
+ * Delete. Below them the sequences play, pause, step, loop, stop and edit
+ * their steps through the remote's sequence actions (the shell lends them
+ * through VjRemoteSetlistContext). A recall, a Play or a step onto a look
+ * that flashes asks the flash warning first. A scene's REST and socket
+ * refusals land in one alert line that names the reason; a sequence's
+ * refusal shows in its own row.
  */
 export function VjScenesSheet({
   state,
@@ -167,7 +171,10 @@ export function VjScenesSheet({
   onClose,
 }: VjScenesSheetProps) {
   const { t } = useTranslation();
+  const setlistControls = useVjRemoteSetlistControls();
   const scenesQuery = useVjScenes();
+  // Clip steps can name clips outside the active pack.
+  const libraryClipsQuery = useVjClips();
   const setlistsQuery = useVjSetlists();
   const sceneMutations = useVjSceneMutations();
   const { createScene } = sceneMutations;
@@ -209,6 +216,14 @@ export function VjScenesSheet({
     () => new Map(allScenes.map((scene) => [scene.id, scene])),
     [allScenes],
   );
+  const shownClipsById = setlistControls.clipsById;
+  const clipsById = useMemo(() => {
+    const libraryClips = libraryClipsQuery.data;
+    if (libraryClips === undefined) return shownClipsById;
+    const byId = new Map(libraryClips.map((clip) => [clip.id, clip]));
+    for (const [clipId, clip] of shownClipsById) byId.set(clipId, clip);
+    return byId;
+  }, [libraryClipsQuery.data, shownClipsById]);
 
   const recallScene = (scene: VjSceneDTO, anchor: HTMLElement) => {
     requestSceneFlashConsent(scene, anchor, () => {
@@ -243,8 +258,15 @@ export function VjScenesSheet({
         <p role="status" className={styles.visuallyHidden}>
           {statusLine}
         </p>
+        {/* No scene at all says to save one; scenes filed under other packs
+            say this pack has none, so the line never claims the library is
+            empty while a sequence plays them. */}
         <Collapse isOpen={scenesQuery.isSuccess && shownScenes.length === 0}>
-          <p className={styles.empty}>{t("vj:strip.noScenes")}</p>
+          <p className={styles.empty}>
+            {allScenes.length === 0
+              ? t("vj:strip.noScenes")
+              : t("vj:scenes.noneForPack")}
+          </p>
         </Collapse>
         <VjSceneGroup
           title={t("vj:scenes.thisPack")}
@@ -270,9 +292,12 @@ export function VjScenesSheet({
             setlists.map((setlist) => setlist.name),
             (number) => t("vj:scenes.setlistDefaultName", { number }),
           )}
+          scenes={allScenes}
           scenesById={scenesById}
-          run={run}
-          requestSceneFlashConsent={requestSceneFlashConsent}
+          clipsById={clipsById}
+          controls={setlistControls}
+          activePackId={activePackId}
+          createScene={createScene}
           feedback={feedback}
         />
       </div>

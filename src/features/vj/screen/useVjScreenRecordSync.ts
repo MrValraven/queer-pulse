@@ -8,7 +8,7 @@
  * entry is saved too, so a reload after a pack switch still finds it.
  *
  * The v2 record (contract 9.1) also keeps the extra clips (mix, this
- * screen's override, the active set list's scene sources), the active pack's
+ * screen's override, the active sequence's clips), the active pack's
  * event card and the synced clock offset. The offset alone writes again only
  * when it first arrives or drifts by VJ_RECORD_CLOCK_DRIFT_MS, so clock
  * samples never turn into a storage write each.

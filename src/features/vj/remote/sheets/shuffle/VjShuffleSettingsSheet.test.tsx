@@ -60,6 +60,7 @@ function createClip(
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: null,
+    setlistItemCount: 0,
   };
 }
 

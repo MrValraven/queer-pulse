@@ -105,7 +105,11 @@ export function vjMirrorPendingOf(
   return knownClip === null ? null : { kind: "clip", title: knownClip.title };
 }
 
-/** The Next line from the next-up rule; the title is the clip or scene name the page resolved. */
+/**
+ * The Next line from the next-up rule; the title is the clip title, scene
+ * name or step name the page resolved. The last step of a sequence without
+ * Loop reads "Last step".
+ */
 export function vjMirrorNextCopy(
   nextUp: VjNextUp,
   nextUpTitle: string | null,
@@ -123,6 +127,8 @@ export function vjMirrorNextCopy(
           name: title,
         },
       };
+    case "setlistLast":
+      return { key: "vj:mirror.nextSetlistLast", values: {} };
     case "shuffle":
       return { key: "vj:mirror.nextShuffle", values: { title } };
     case "none":
@@ -137,13 +143,67 @@ export function vjMirrorQuantizeKey(quantize: VjQuantize): string | null {
   return null;
 }
 
-/** The ring's spoken label; whole seconds, so it changes at most once a second. */
+/** The ring's catalog key for each kind that counts down. */
+function vjMirrorRingKeyOf(ring: Exclude<VjMirrorRing, { kind: "none" }>) {
+  switch (ring.kind) {
+    case "applyAt":
+      return "vj:mirror.ringApply";
+    case "setlist":
+      return ring.isPaused
+        ? "vj:mirror.ringSetlistPaused"
+        : "vj:mirror.ringSetlist";
+    case "shuffle":
+      return "vj:mirror.ringShuffle";
+  }
+}
+
+/**
+ * The ring's spoken label; whole seconds, so it changes at most once a
+ * second. A paused sequence names the time its step has left.
+ */
 export function vjMirrorRingCopy(ring: VjMirrorRing): VjMirrorCopy | null {
   if (ring.kind === "none") return null;
   const seconds = Math.ceil(ring.msLeft / 1000);
-  return {
-    key:
-      ring.kind === "applyAt" ? "vj:mirror.ringApply" : "vj:mirror.ringShuffle",
-    values: { seconds },
-  };
+  return { key: vjMirrorRingKeyOf(ring), values: { seconds } };
+}
+
+/** Why the active sequence stopped moving, for the band's Next line and mark. */
+export type VjMirrorSequenceStatus =
+  | { kind: "paused" }
+  | { kind: "takenOver" }
+  /** The timer waits before a flashing step; `stepName` names it. */
+  | { kind: "waitingFlash"; stepName: string }
+  | { kind: "finished" };
+
+/** The band's short status line for a sequence that stopped moving. */
+export function vjMirrorSequenceCopy(
+  status: VjMirrorSequenceStatus,
+): VjMirrorCopy {
+  switch (status.kind) {
+    case "paused":
+      return { key: "vj:mirror.sequencePaused", values: {} };
+    case "takenOver":
+      return { key: "vj:mirror.sequenceTakenOver", values: {} };
+    case "waitingFlash":
+      return {
+        key: "vj:mirror.sequenceWaitingFlash",
+        values: { step: status.stepName },
+      };
+    case "finished":
+      return { key: "vj:mirror.sequenceFinished", values: {} };
+  }
+}
+
+/**
+ * A playing sequence's ring never counts more than its step's length: the
+ * timer's early frame can stamp the step a moment ahead of the synced
+ * clock, which read as 9 s on an 8 s step.
+ */
+export function vjMirrorRingWithinStep(
+  ring: VjMirrorRing,
+  stepDurationMs: number | null,
+): VjMirrorRing {
+  if (ring.kind !== "setlist" || stepDurationMs === null) return ring;
+  if (ring.msLeft <= stepDurationMs) return ring;
+  return { ...ring, msLeft: Math.max(0, stepDurationMs) };
 }

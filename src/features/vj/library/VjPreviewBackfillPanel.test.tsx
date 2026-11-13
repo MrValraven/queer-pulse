@@ -37,6 +37,7 @@ function clipOf(clipId: string, title: string): VjClipDTO {
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: null,
+    setlistItemCount: 0,
   };
 }
 

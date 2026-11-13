@@ -15,7 +15,7 @@ export const forPractitioners: Catalog = {
   "hero.title": "Uma página calma para <em>a tua prática</em>",
   "hero.lede":
     "Mostra o teu trabalho, diz com quem trabalhas e quando estás livre, para que as pessoas saibam o que esperar antes de te escreverem.",
-  "hero.frame.flash": "As flashes de exemplo de uma pessoa que tatua",
+  "hero.frame.flash": "A folha de flash de exemplo de quem tatua",
   "hero.frame.topics":
     "Os temas de exemplo de quem faz terapia e com quem trabalha",
   "hero.frame.chair":
@@ -51,7 +51,7 @@ export const forPractitioners: Catalog = {
     "Séries, exposições e uma lista numerada de obras",
   "walkthrough.work.title": "Mostra o teu trabalho",
   "walkthrough.work.body":
-    "Flashes e fotos cicatrizadas para quem tatua, séries para quem fotografa, looks para quem corta cabelo. As fotos de trabalhos cicatrizados e de cicatrizes podem ficar desfocadas até quem visita escolher vê-las.",
+    "Folhas de flash e fotos de trabalhos cicatrizados para quem tatua, séries para quem fotografa, looks para quem corta cabelo. As fotos de tatuagens cicatrizadas e de cicatrizes podem ficar desfocadas até quem visita escolher vê-las.",
   "walkthrough.work.frame": "As séries de exemplo de quem fotografa",
   "walkthrough.how.title": "Diz com quem trabalhas e como",
   "walkthrough.how.body":
@@ -64,7 +64,7 @@ export const forPractitioners: Catalog = {
     "Disponibilidade de exemplo: os estados da agenda de tatuagem e o horário de quem faz terapia",
   "walkthrough.found.title": "Deixa que as pessoas te encontrem",
   "walkthrough.found.body":
-    "Quem tem sessão iniciada percorre as páginas abertas no diretório de personas por ofício, procura-as por nome e segue as que quiser. As páginas de terapia abertas aparecem também na lista de terapeutas do guia de saúde mental.",
+    "Quem tem sessão iniciada percorre as páginas abertas no diretório de personas por ofício, pesquisa-as por nome e segue as que quiser. As páginas de terapia abertas aparecem também na lista de terapeutas do guia de saúde mental.",
   "walkthrough.found.search": "Pesquisar personas ou responsáveis",
 
   // Try it
@@ -100,10 +100,10 @@ export const forPractitioners: Catalog = {
     "A tua página mostra o que escolhes lá pôr, às pessoas que escolhes. Para quem faz terapia, a página é clara quanto aos números de cédula profissional.",
   "safety.visibility.title": "Escolhe quem a pode ver",
   "safety.visibility.body":
-    "Uma página autónoma e aberta pode ser lida por qualquer pessoa com o link, com ou sem sessão iniciada, e pode aparecer nos motores de busca. Uma página ligada só é vista por quem tem sessão iniciada. Também a podes guardar só para a tua rede, ou só para ti enquanto lhe dás forma.",
+    "Uma página autónoma e aberta pode ser lida por qualquer pessoa com o link, com ou sem sessão iniciada, e pode aparecer nos motores de busca. Uma página ligada só é vista por quem tem sessão iniciada. Também podes deixá-la visível só para a tua rede, ou só para ti enquanto lhe dás forma.",
   "safety.standalone.title": "Mantém-na à parte do teu perfil",
   "safety.standalone.body":
-    "Uma página autónoma tem o seu próprio identificador e nada nela aponta para o teu perfil principal. Liga-a só quando quiseres que as pessoas vejam que as duas são tu.",
+    "Uma página autónoma tem o seu próprio identificador e nada nela aponta para o teu perfil principal. Liga-a ao perfil só quando quiseres que as pessoas saibam que é tua.",
   "safety.messages.title": "As pessoas chegam-te primeiro por aqui",
   "safety.messages.body":
     "As pessoas enviam mensagens à tua página na QueerPulse. O teu email e o teu site só aparecem se os acrescentares.",
@@ -115,7 +115,8 @@ export const forPractitioners: Catalog = {
   "faq.whoSees.question": "Quem pode ver a minha página?",
   "faq.whoSees.answer":
     "Escolhes tu. Numa página autónoma, <b>Aberto a todas as pessoas</b> quer dizer que qualquer pessoa com o link a pode ler, com ou sem sessão iniciada, e que pode aparecer nos motores de busca. Uma página ligada só é vista por quem tem sessão iniciada. Também podes escolher <b>a tua rede</b>, ou <b>só tu</b> enquanto lhe dás forma.",
-  "faq.pause.question": "Posso pausar novas marcações ou novos clientes?",
+  "faq.pause.question":
+    "Posso pausar novas marcações ou a entrada de pessoas novas?",
   "faq.pause.answer":
     "Sim. Uma página de tatuagem mostra <b>Agenda aberta</b>, <b>Lista de espera</b> ou <b>Agenda fechada</b>, com a data em que a agenda volta a abrir. Uma página de terapia mostra <b>A aceitar novos clientes</b>, <b>Lista de espera</b> ou <b>Sem vagas para novos clientes</b>. Todas as outras páginas podem dizer <b>A aceitar marcações</b> ou <b>Sem disponibilidade agora</b>.",
   "faq.separate.question": "Posso mantê-la separada do meu perfil pessoal?",
@@ -137,7 +138,7 @@ export const forPractitioners: Catalog = {
   "sample.tattoo.depositNote":
     "conta para o preço final e passa contigo para outra data se me avisares uma semana antes",
   "sample.tattoo.cancellation":
-    "avisa-me uma semana antes e mudamos a data juntes",
+    "avisa-me uma semana antes e combinamos outra data",
   "sample.tattoo.comfortNote":
     "diz-me o que te ajuda e eu faço e não precisas de explicar",
   "sample.tattoo.city": "Lisboa",
@@ -153,21 +154,21 @@ export const forPractitioners: Catalog = {
 
   // Sample therapist (Joana Ferraz): no credentials, no outcome words
   "sample.therapist.tagline":
-    "Terapia pela conversa para pessoas queer adultas e casais, em português e inglês",
+    "Terapia pela palavra para pessoas queer adultas e casais, em português e inglês",
   "sample.therapist.bio":
     "Trabalho com pessoas queer e casais nas coisas que vêm com sermos quem somos, sair do armário e a família e o amor nas suas muitas formas e mudar de país e recomeçar",
   "sample.therapist.title": "Psicoterapeuta",
   "sample.therapist.quote": "Tu marcas o ritmo e *começamos* onde estiveres",
   "sample.therapist.where": "Arroios, Lisboa · e online",
   "sample.therapist.approach":
-    "Conversamos e eu ouço com atenção e juntes percebemos o que queres do nosso tempo, e não precisas de ter nada resolvido antes de chegares",
+    "Conversamos e eu ouço com atenção e percebemos em conjunto o que queres do nosso tempo, e não precisas de ter nada resolvido antes de chegares",
   "sample.therapist.step.hello.title": "Dizemos olá",
   "sample.therapist.step.hello.body":
     "Uma conversa curta sobre o que te traz e o que esperas",
   "sample.therapist.step.listen.title": "Tu falas, eu ouço",
   "sample.therapist.step.listen.body":
     "Partilhas o tanto ou o pouco que te parecer bem",
-  "sample.therapist.step.decide.title": "Decidimos juntes",
+  "sample.therapist.step.decide.title": "Decidimos em conjunto",
   "sample.therapist.step.decide.body":
     "Se fizer sentido escolhemos um ritmo, e se não fizer posso sugerir outra pessoa",
   "sample.therapist.firstContact":
@@ -175,7 +176,7 @@ export const forPractitioners: Catalog = {
   "sample.therapist.receipts": "Um recibo por cada sessão",
   "sample.therapist.sessionLength": "50 minutos",
   "sample.therapist.headline": "Cerca de 2 semanas",
-  "sample.therapist.hours.weekdays": "Fins de tarde à semana",
+  "sample.therapist.hours.weekdays": "Fins de tarde em dias úteis",
   "sample.therapist.hours.weekdaysTime": "18:00 às 21:00",
   "sample.therapist.hours.saturday": "Manhãs de sábado",
   "sample.therapist.hours.saturdayTime": "10:00 às 13:00",
@@ -192,16 +193,16 @@ export const forPractitioners: Catalog = {
     "Relações abertas e não monogâmicas\nFamília escolhida\nA família depois de sair do armário",
   "sample.therapist.topic.everyday.heading": "Trabalho e dia a dia",
   "sample.therapist.topic.everyday.bullets":
-    "Ser assumide no trabalho\nMudar para outro país\nGrandes mudanças e decisões",
+    "Assumir-se no trabalho\nMudar para outro país\nGrandes mudanças e decisões",
 
   // Sample hair stylist (Rafa Maré)
   "sample.chair.tagline":
     "Cortes e cor para todos os géneros, numa cadeira calma e sem pressa",
   "sample.chair.bio":
-    "curto ou comprido ou algures no meio, diz-me como te queres sentir ao sair e chegamos lá juntes",
+    "curto ou comprido ou algures no meio, diz-me como te queres sentir ao sair e chegamos lá em conjunto",
   "sample.chair.rate": "Cortes desde {amount}",
   "sample.chair.walkins": "Sábados a partir das 10:00",
-  "sample.chair.where": "No primeiro andar de um pequeno salão, Lisboa",
+  "sample.chair.where": "Pequeno salão num primeiro andar, Lisboa",
   "sample.chair.quiet":
     "Manhãs de terça, música baixa e sem conversa de circunstância",
   "sample.chair.before.photo":
@@ -225,7 +226,7 @@ export const forPractitioners: Catalog = {
   "sample.chair.look.shortBack": "Curto atrás, comprido em cima",
 
   // Sample photographer (Luz Parada)
-  "sample.studio.tagline": "Retratos para quem detesta ser fotografade",
+  "sample.studio.tagline": "Retratos para quem detesta que lhe tirem fotos",
   "sample.studio.bio":
     "retratos lentos em película, quase sempre na tua casa com a luz que já lá tens, e vês todas as fotos antes de alguma ser partilhada",
   "sample.studio.series.hands.title": "Mãos",

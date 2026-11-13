@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   VJ_REMOTE_COMMAND_NAMES,
+  createVjSetlistPlayback,
   createVjStageState,
+  type VjSetlistPlayback,
   type VjStageState,
 } from "../../../shared/contracts/vj";
 import type { VjCommandFrameName } from "../realtime/vjFrames";
@@ -11,9 +13,11 @@ import type {
 } from "./vjDemoCommandKit";
 import {
   VJ_DEMO_COMMAND_RULES,
+  VJ_DEMO_SETLIST_TAKEOVER_COMMANDS,
   applyVjStageCommand,
   isVjDemoLookSwitch,
   readVjImmediateFlag,
+  withVjDemoSetlistTakeover,
   type VjStageCommandResult,
 } from "./vjDemoStageCommands";
 
@@ -52,8 +56,8 @@ function demoLibrary(): VjDemoLibraryLookup {
       new Set(ids.filter((id) => clipIds.has(id))),
     readPackClipForAdvance: () => ({ isFavorite: false }),
     readSceneLook: () => null,
-    readSetlistItem: () => null,
-    setlistItemCount: () => null,
+    readSetlist: () => null,
+    readSetlistFollow: () => null,
   };
 }
 
@@ -571,15 +575,23 @@ describe("the dispatcher", () => {
     );
   });
 
-  it("marks recalls, set list steps and a select with an index as look switches", () => {
-    expect(isVjDemoLookSwitch("stage:recallScene", {})).toBe(true);
-    expect(isVjDemoLookSwitch("stage:setlistNext", {})).toBe(true);
-    expect(isVjDemoLookSwitch("stage:setlistPrevious", {})).toBe(true);
-    expect(isVjDemoLookSwitch("stage:setlistSelect", { index: 0 })).toBe(true);
-    expect(isVjDemoLookSwitch("stage:setlistSelect", { index: null })).toBe(
-      false,
-    );
-    expect(isVjDemoLookSwitch("stage:goClip", {})).toBe(false);
+  it("marks a recall as a look switch when the rule does not say", () => {
+    expect(isVjDemoLookSwitch("stage:recallScene")).toBe(true);
+    expect(isVjDemoLookSwitch("stage:goClip")).toBe(false);
+  });
+
+  it("a set list rule answers its own look switch and clock (a select that arms shows nothing)", () => {
+    const state = freshState();
+    expect(
+      run("stage:setlistSelect", { setlistId: null, index: null }, state),
+    ).toMatchObject({ isLookSwitch: false, setlistClock: { kind: "clear" } });
+  });
+
+  it("a command outside the set list keeps the clock and hands no reads on", () => {
+    expect(applied(run("stage:goClip", { clipId: clipAt(1) }))).toMatchObject({
+      setlistClock: { kind: "keep" },
+      setlistReads: [],
+    });
   });
 
   it("returns the change unsettled", () => {
@@ -597,5 +609,135 @@ describe("the dispatcher", () => {
         applyVjStageCommand(freshState(), "stage:setOverlay", "text", CONTEXT),
       ),
     ).toBe("vj_patch_empty");
+  });
+});
+
+describe("the sequence takeover (sequences contract 5.4)", () => {
+  function onSetlist(playback: Partial<VjSetlistPlayback>): VjStageState {
+    return {
+      ...freshState(),
+      activePackId: PACK_UNLINKED,
+      activeSetlistId: "55555555-5555-4555-8555-5555555555b1",
+      setlistIndex: 2,
+      setlistPlayback: {
+        ...createVjSetlistPlayback(true),
+        itemId: "77777777-7777-4777-8777-7777777777a3",
+        isFlashConfirmed: true,
+        ...playback,
+      },
+    };
+  }
+
+  const RUNNING: Partial<VjSetlistPlayback> = {
+    status: "playing",
+    stepStartedAt: NOW - 1_000,
+    stepEndsAt: NOW + 7_000,
+    stepDurationMs: 8_000,
+  };
+
+  const TAKEN_OVER: Partial<VjSetlistPlayback> = {
+    status: "takenOver",
+    stepStartedAt: null,
+    stepEndsAt: null,
+    stepDurationMs: null,
+    pausedRemainingMs: null,
+  };
+
+  it("lists the six manual picks", () => {
+    expect([...VJ_DEMO_SETLIST_TAKEOVER_COMMANDS].sort()).toEqual(
+      [
+        "stage:goClip",
+        "stage:goGenerator",
+        "stage:recallScene",
+        "stage:setPack",
+        "stage:setShuffle",
+        "stage:swapMix",
+      ].sort(),
+    );
+  });
+
+  it("goClip, goGenerator and setPack take a playing sequence over, index and item kept", () => {
+    for (const [name, payload] of [
+      ["stage:goClip", { clipId: clipAt(2) }],
+      ["stage:goGenerator", { generatorId: "plasma" }],
+      ["stage:setPack", { packId: PACK_LINKED }],
+    ] as const) {
+      const state = onSetlist(RUNNING);
+      const result = applied(run(name, payload, state));
+      expect(result.state.setlistIndex).toBe(2);
+      expect(result.state.setlistPlayback).toEqual({
+        ...state.setlistPlayback,
+        ...TAKEN_OVER,
+      });
+    }
+  });
+
+  it("a paused or needsFlashConsent sequence is taken over too; manual and finished stay", () => {
+    const paused = onSetlist({
+      status: "paused",
+      stepDurationMs: 8_000,
+      pausedRemainingMs: 2_000,
+    });
+    expect(
+      applied(run("stage:goClip", { clipId: clipAt(2) }, paused)).state
+        .setlistPlayback.status,
+    ).toBe("takenOver");
+    const waiting = onSetlist({ status: "needsFlashConsent" });
+    expect(
+      applied(run("stage:goClip", { clipId: clipAt(2) }, waiting)).state
+        .setlistPlayback.status,
+    ).toBe("takenOver");
+    for (const status of ["manual", "finished", "takenOver"] as const) {
+      const state = onSetlist({ status });
+      expect(
+        applied(run("stage:goClip", { clipId: clipAt(2) }, state)).state
+          .setlistPlayback,
+      ).toEqual(state.setlistPlayback);
+    }
+  });
+
+  it("an accepted recallScene takes over whatever the look holds; the other picks need a live change", () => {
+    const state = onSetlist(RUNNING);
+    expect(
+      withVjDemoSetlistTakeover("stage:recallScene", state, state)
+        .setlistPlayback.status,
+    ).toBe("takenOver");
+    expect(withVjDemoSetlistTakeover("stage:setPack", state, state)).toBe(
+      state,
+    );
+    expect(withVjDemoSetlistTakeover("stage:setTempo", state, state)).toBe(
+      state,
+    );
+  });
+
+  it("shuffle turned on takes over; a shuffle that stays off does not", () => {
+    const state = onSetlist(RUNNING);
+    const shuffled = applied(run("stage:setShuffle", { isOn: true }, state));
+    expect(shuffled.state.setlistPlayback.status).toBe("takenOver");
+    const timed = applied(
+      run(
+        "stage:setShuffle",
+        { intervalKind: "beats", intervalValue: 16 },
+        state,
+      ),
+    );
+    expect(timed.state.setlistPlayback).toEqual(state.setlistPlayback);
+  });
+
+  it("swapMix takes over: it changes the live clip", () => {
+    const state = {
+      ...onSetlist(RUNNING),
+      mix: { clipId: clipAt(3), amount: 0.5, blendMode: "screen" as const },
+    };
+    expect(
+      applied(run("stage:swapMix", {}, state)).state.setlistPlayback.status,
+    ).toBe("takenOver");
+  });
+
+  it("a refused pick changes nothing", () => {
+    const state = onSetlist(RUNNING);
+    expect(run("stage:goClip", { clipId: CLIP_MISSING }, state)).toEqual({
+      error: "vj_clip_not_found",
+    });
   });
 });

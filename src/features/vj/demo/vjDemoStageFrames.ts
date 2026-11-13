@@ -10,6 +10,8 @@ import {
   isSameVjStageContent,
   isVjRenderMode,
   type VjCommandSuccess,
+  type VjSetlistClockStamp,
+  type VjSetlistRead,
   type VjStageCause,
   type VjStageState,
 } from "../../../shared/contracts/vj";
@@ -18,7 +20,6 @@ import { VJ_CLIENT_SEQUENCES_KEPT } from "../vj.constants";
 import {
   NO_VJ_DEMO_STAMPS,
   withVjLiveClip,
-  type VjDemoCommandContext,
   type VjDemoStamps,
 } from "./vjDemoCommandKit";
 import { adoptVjDemoMicTempo } from "./vjDemoMicTempo";
@@ -36,6 +37,7 @@ import {
   type VjDemoStageContext,
   type VjDemoStageResult,
 } from "./vjDemoScreens";
+import type { VjDemoSetlistCommandContext } from "./vjDemoSceneCommands";
 import { applyVjStageCommand } from "./vjDemoStageCommands";
 import {
   frameTo,
@@ -53,17 +55,49 @@ export interface VjDemoAcceptedChange {
   stamps: VjDemoStamps;
   isLookSwitch: boolean;
   isImmediate: boolean;
+  /** The clock the landing stamps (sequences contract 3.5). */
+  setlistClock: VjSetlistClockStamp;
+  /** The step end a timer advance lands at (sequences contract 5.7); null
+   *  for every other change. */
+  scheduledAt: number | null;
 }
 
 /** A change the server makes on its own (timers, mic adoption, library,
- *  shuffle advance): isLookSwitch and isImmediate false, empty stamps. */
+ *  shuffle advance): isLookSwitch and isImmediate false, empty stamps, the
+ *  set list clock kept, no scheduled step end. */
 export function serverVjDemoChange(next: VjStageState): VjDemoAcceptedChange {
   return {
     next,
     stamps: NO_VJ_DEMO_STAMPS,
     isLookSwitch: false,
     isImmediate: false,
+    setlistClock: { kind: "keep" },
+    scheduledAt: null,
   };
+}
+
+/** Whether two set list ids name the same set list, case ignored. */
+function isSameVjSetlistId(first: string, second: string): boolean {
+  return first.toLowerCase() === second.toLowerCase();
+}
+
+/** Sequences contract 5.4: the stage's setlistItemIds after a landing. With
+ *  no active set list it is null; a read of the active set list among
+ *  `setlistReads` gives its item ids; with none the memory stays. */
+export function rememberedVjDemoSetlistItemIds(
+  stage: VjDemoStage,
+  setlistReads: readonly (VjSetlistRead | null)[],
+): string[] | null {
+  const activeSetlistId = stage.state.activeSetlistId;
+  if (activeSetlistId === null) return null;
+  const read = setlistReads.find(
+    (candidate) =>
+      candidate !== null &&
+      isSameVjSetlistId(candidate.setlistId, activeSetlistId),
+  );
+  return read === undefined || read === null
+    ? stage.setlistItemIds
+    : [...read.itemIds];
 }
 
 /** What landing one change answers: the stage after it, the command
@@ -81,7 +115,9 @@ export interface VjDemoLanding {
  * start always, so the 10 s strobe cap has its stamp), then the noop
  * compare. A noop answers applyAt null and leaves pendingApplyAt alone;
  * anything else sets pendingApplyAt, revision + 1 and updatedAt = now, and
- * broadcasts the frame with its applyAt.
+ * broadcasts the frame with its applyAt. Only the step timer's landing
+ * (cause `setlist`) places itself by its scheduled step end. Every landing,
+ * a noop included, refreshes setlistItemIds from `setlistReads`.
  */
 export function landVjDemoChange(
   stage: VjDemoStage,
@@ -89,6 +125,7 @@ export function landVjDemoChange(
   cause: VjStageCause,
   sourceClientId: string | null,
   now: number,
+  setlistReads: readonly (VjSetlistRead | null)[] = [],
 ): VjDemoLanding {
   const prunedStage: VjDemoStage = {
     ...stage,
@@ -105,17 +142,33 @@ export function landVjDemoChange(
     isImmediate: accepted.isImmediate,
     cause,
     knownScreenIds: new Set(prunedStage.screens.map((entry) => entry.screenId)),
+    setlistClock: accepted.setlistClock,
+    scheduledAt: cause === "setlist" ? accepted.scheduledAt : null,
   });
   if (isSameVjStageContent(previous, settled.state)) {
     return {
-      stage: prunedStage,
+      stage: {
+        ...prunedStage,
+        setlistItemIds: rememberedVjDemoSetlistItemIds(
+          prunedStage,
+          setlistReads,
+        ),
+      },
       success: { revision: previous.revision, isNoop: true, applyAt: null },
       outgoing: [],
     };
   }
   const { state, applyAt } = settled;
+  const landedStage: VjDemoStage = {
+    ...prunedStage,
+    state,
+    pendingApplyAt: settled.pendingApplyAt,
+  };
   return {
-    stage: { ...prunedStage, state, pendingApplyAt: settled.pendingApplyAt },
+    stage: {
+      ...landedStage,
+      setlistItemIds: rememberedVjDemoSetlistItemIds(landedStage, setlistReads),
+    },
     success: { revision: state.revision, isNoop: false, applyAt },
     outgoing: [
       frameTo("stage:state", stageFrame(state, cause, sourceClientId, applyAt)),
@@ -145,11 +198,12 @@ function rememberSequence(
 function commandContextOf(
   stage: VjDemoStage,
   context: VjDemoStageContext,
-): VjDemoCommandContext {
+): VjDemoSetlistCommandContext {
   const lead = leadOf(stage.screens);
   return {
     now: context.now,
     library: context.library,
+    writeSetlistLooping: context.writeSetlistLooping,
     connectedScreenIds: new Set(
       stage.screens
         .filter((entry) => entry.tabId !== null)
@@ -160,7 +214,8 @@ function commandContextOf(
 }
 
 /** A stamped remote command: the client id and stale checks, the rules
- *  (contract 7.5, 7.6), then the landing with cause `command`. */
+ *  (contract 7.5, 7.6, sequences 5.3), then the landing with cause
+ *  `command` and the set list reads the rule made. */
 export function reduceCommand(
   stage: VjDemoStage,
   name: VjCommandFrameName,
@@ -203,9 +258,18 @@ export function reduceCommand(
     stamps: result.stamps,
     isLookSwitch: result.isLookSwitch,
     isImmediate: result.isImmediate,
+    setlistClock: result.setlistClock,
+    scheduledAt: null,
   };
   return landingResult(
-    landVjDemoChange(sequenced, accepted, "command", clientId, now),
+    landVjDemoChange(
+      sequenced,
+      accepted,
+      "command",
+      clientId,
+      now,
+      result.setlistReads,
+    ),
     now,
   );
 }

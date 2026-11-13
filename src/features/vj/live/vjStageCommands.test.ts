@@ -179,6 +179,16 @@ const COMMAND_CASES: CommandCase[] = [
     fields: {},
   },
   {
+    name: "stage:setlistSetPlaying",
+    call: (commands) => commands.setlistSetPlaying(true),
+    fields: { isPlaying: true },
+  },
+  {
+    name: "stage:setlistSetLooping",
+    call: (commands) => commands.setlistSetLooping(false),
+    fields: { isLooping: false },
+  },
+  {
     name: "stage:setCountdown",
     call: (commands) =>
       commands.setCountdown({ isVisible: true, durationMs: 60_000 }),
@@ -197,10 +207,10 @@ const COMMAND_CASES: CommandCase[] = [
 ];
 
 describe("createVjStageCommands", () => {
-  it("covers the 20 stamped commands in the table", () => {
+  it("covers the 22 stamped commands in the table", () => {
     expect(
       new Set(COMMAND_CASES.map((commandCase) => commandCase.name)).size,
-    ).toBe(20);
+    ).toBe(22);
   });
 
   it.each(COMMAND_CASES)(
@@ -223,6 +233,105 @@ describe("createVjStageCommands", () => {
     await harness.commands.setlistNext();
     expect(harness.sent.map((frame) => frame.payload.commandSequence)).toEqual([
       1, 2,
+    ]);
+  });
+
+  it("setlistSelect sends isPlaying and isFlashConfirmed only when given", async () => {
+    const harness = createHarness();
+    await harness.commands.setlistSelect(SETLIST_ID, 2, {
+      isPlaying: true,
+      isFlashConfirmed: true,
+    });
+    await harness.commands.setlistSelect(SETLIST_ID, 0, { isPlaying: false });
+    await harness.commands.setlistSelect(SETLIST_ID, null, {});
+    expect(harness.sent.map((frame) => frame.payload)).toStrictEqual([
+      {
+        setlistId: SETLIST_ID,
+        index: 2,
+        isPlaying: true,
+        isFlashConfirmed: true,
+        clientId: CLIENT_ID,
+        commandSequence: 1,
+      },
+      {
+        setlistId: SETLIST_ID,
+        index: 0,
+        isPlaying: false,
+        clientId: CLIENT_ID,
+        commandSequence: 2,
+      },
+      {
+        setlistId: SETLIST_ID,
+        index: null,
+        clientId: CLIENT_ID,
+        commandSequence: 3,
+      },
+    ]);
+    expect(harness.sent[2]?.payload).not.toHaveProperty("isPlaying");
+    expect(harness.sent[2]?.payload).not.toHaveProperty("isFlashConfirmed");
+    expect(harness.sent[1]?.payload).not.toHaveProperty("isFlashConfirmed");
+  });
+
+  it("setlistSetPlaying sends isFlashConfirmed only when given", async () => {
+    const harness = createHarness();
+    await harness.commands.setlistSetPlaying(true, true);
+    await harness.commands.setlistSetPlaying(false);
+    expect(harness.sent.map((frame) => frame.payload)).toStrictEqual([
+      {
+        isPlaying: true,
+        isFlashConfirmed: true,
+        clientId: CLIENT_ID,
+        commandSequence: 1,
+      },
+      { isPlaying: false, clientId: CLIENT_ID, commandSequence: 2 },
+    ]);
+    expect(harness.sent[1]?.payload).not.toHaveProperty("isFlashConfirmed");
+  });
+
+  it("setlistNext and setlistPrevious send isFlashConfirmed only when given", async () => {
+    const harness = createHarness();
+    await harness.commands.setlistNext({ isFlashConfirmed: true });
+    await harness.commands.setlistPrevious({ isFlashConfirmed: false });
+    await harness.commands.setlistNext({});
+    await harness.commands.setlistPrevious();
+    expect(harness.sent).toStrictEqual([
+      {
+        name: "stage:setlistNext",
+        payload: {
+          isFlashConfirmed: true,
+          clientId: CLIENT_ID,
+          commandSequence: 1,
+        },
+      },
+      {
+        name: "stage:setlistPrevious",
+        payload: {
+          isFlashConfirmed: false,
+          clientId: CLIENT_ID,
+          commandSequence: 2,
+        },
+      },
+      {
+        name: "stage:setlistNext",
+        payload: { clientId: CLIENT_ID, commandSequence: 3 },
+      },
+      {
+        name: "stage:setlistPrevious",
+        payload: { clientId: CLIENT_ID, commandSequence: 4 },
+      },
+    ]);
+    expect(harness.sent[2]?.payload).not.toHaveProperty("isFlashConfirmed");
+    expect(harness.sent[3]?.payload).not.toHaveProperty("isFlashConfirmed");
+  });
+
+  it("setlistSetLooping sends isLooping and the stamp only", async () => {
+    const harness = createHarness();
+    await harness.commands.setlistSetLooping(true);
+    expect(harness.sent).toStrictEqual([
+      {
+        name: "stage:setlistSetLooping",
+        payload: { isLooping: true, clientId: CLIENT_ID, commandSequence: 1 },
+      },
     ]);
   });
 

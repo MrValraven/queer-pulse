@@ -17,3 +17,4 @@ export * from "./vj.status";
 export * from "./vj.rest";
 export * from "./vj.codes";
 export * from "./vj.socket";
+export * from "./vj.sequence";

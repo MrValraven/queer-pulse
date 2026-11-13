@@ -1,9 +1,11 @@
-import type {
-  VjClipDTO,
-  VjEventCardDTO,
-  VjPackDTO,
-  VjStageRestore,
-  VjStageState,
+import {
+  createVjSetlistPlayback,
+  upgradeVjStageFieldsV2,
+  type VjClipDTO,
+  type VjEventCardDTO,
+  type VjPackDTO,
+  type VjStageRestore,
+  type VjStageState,
 } from "../../../shared/contracts/vj";
 import {
   VJ_SCREEN_ID_STORAGE_KEY,
@@ -16,6 +18,7 @@ import {
   isVjFiniteNumber,
   isVjPackV2,
   isVjPlainObject,
+  isVjSetlistPlaybackFor,
   isVjStageStateV2,
 } from "./vjScreenRecordGuards";
 import { createVjUuid } from "../live/vjUuid";
@@ -34,7 +37,7 @@ export interface VjScreenRecord {
    * switch leaves the last clip playing), so a reload can still show it.
    */
   liveClip: VjClipDTO | null;
-  /** Clips the state names outside the pack: mix, this screen's override, the active set list's scene sources. */
+  /** Clips the state names outside the pack: mix, this screen's override, every clip the active set list names. */
   extraClips: VjClipDTO[];
   /** The active pack's card, so an offline reload can still show it. */
   eventCard: VjEventCardDTO | null;
@@ -154,6 +157,33 @@ export function clearVjScreenRecord(): void {
 }
 
 /**
+ * A stored v2 record with its state run through the sequences upgrade
+ * (sequences contract 6.3): a record saved before sequences gains the default
+ * setlistPlayback. A stored clock that breaks the 3.2 invariants reads as
+ * the manual default for that set list (its stored Loop kept when it is a
+ * boolean), so an offline reload keeps the look, the active set list and its
+ * index; the server's restore reads the set list's Loop again. Anything that
+ * is no plain object with a plain object state comes back as it is, so the
+ * validator rejects it.
+ */
+function withVjStageFieldsV2Upgraded(value: unknown): unknown {
+  if (!isVjPlainObject(value) || !isVjPlainObject(value.state)) return value;
+  const state = upgradeVjStageFieldsV2(value.state);
+  const { activeSetlistId, setlistPlayback } = state;
+  if (isVjSetlistPlaybackFor(activeSetlistId, setlistPlayback)) {
+    return { ...value, state };
+  }
+  const isLooping =
+    activeSetlistId !== null &&
+    isVjPlainObject(setlistPlayback) &&
+    setlistPlayback.isLooping === true;
+  return {
+    ...value,
+    state: { ...state, setlistPlayback: createVjSetlistPlayback(isLooping) },
+  };
+}
+
+/**
  * Contract 9.1 reader order: the v2 key, validated field by field; when it
  * is absent or invalid, the v1 key, upgraded. An invalid record under either
  * key is removed. A readable v2 record also removes a leftover v1 record, so
@@ -162,11 +192,12 @@ export function clearVjScreenRecord(): void {
 export function readVjScreenRecord(): VjScreenRecord | null {
   const storedRecord = readStoredValue(VJ_SCREEN_SNAPSHOT_STORAGE_KEY);
   if (storedRecord.isPresent) {
-    if (isVjScreenRecordV2(storedRecord.value)) {
+    const upgradedRecord = withVjStageFieldsV2Upgraded(storedRecord.value);
+    if (isVjScreenRecordV2(upgradedRecord)) {
       removeStoredItem(VJ_SCREEN_SNAPSHOT_V1_STORAGE_KEY);
       return {
-        ...storedRecord.value,
-        state: withVjStrobeOff(storedRecord.value.state),
+        ...upgradedRecord,
+        state: withVjStrobeOff(upgradedRecord.state),
       };
     }
     removeStoredItem(VJ_SCREEN_SNAPSHOT_STORAGE_KEY);
@@ -198,6 +229,7 @@ export function vjStageRestoreOf(state: VjStageState): VjStageRestore {
     shuffle: state.shuffle,
     activeSetlistId: state.activeSetlistId,
     setlistIndex: state.setlistIndex,
+    setlistPlayback: state.setlistPlayback,
   };
 }
 

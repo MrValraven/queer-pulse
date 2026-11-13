@@ -12,18 +12,18 @@ import styles from "./VjSetlists.module.css";
 
 export interface VjSetlistAddSceneProps {
   scenes: readonly VjSceneDTO[];
-  /** The set list holds the most scenes it may; adding is blocked. */
+  /** The sequence holds the most steps it may; adding is blocked. */
   isFull: boolean;
-  /** A save of the items is on its way. */
+  /** A save of the steps is on its way. */
   isPending: boolean;
   onAdd: (sceneId: string) => void;
 }
 
 /**
- * Picks a scene and adds it to the end of the set list. Any scene may be
- * picked again, so one scene can play twice in a show. The button stays
- * reachable and says it is blocked (`aria-disabled`) with no choice, while a
- * save runs, or when the set list is full.
+ * Picks a scene and adds it to the end of the sequence as a scene step. Any
+ * scene may be picked again, so one scene can play twice in a show. The
+ * button stays reachable and says it is blocked (`aria-disabled`) with no
+ * choice, while a save runs, or when the sequence is full.
  */
 export function VjSetlistAddScene({
   scenes,
@@ -33,6 +33,7 @@ export function VjSetlistAddScene({
 }: VjSetlistAddSceneProps) {
   const { t } = useTranslation();
   const labelId = useId();
+  const hintId = useId();
   const packsQuery = useVjPacks();
   const [chosenSceneId, setChosenSceneId] = useState<string | null>(null);
 
@@ -96,11 +97,16 @@ export function VjSetlistAddScene({
           size="sm"
           className={styles.addSubmit}
           aria-disabled={isBlocked ? "true" : undefined}
+          aria-describedby={shownChoice === null ? hintId : undefined}
           onClick={add}
         >
           <FiPlus aria-hidden="true" fill="none" focusable="false" />
           {t("vj:setlistItems.addSubmit")}
         </Button>
+        {/* Why the button is blocked with nothing chosen yet. */}
+        <span id={hintId} className="visuallyHidden">
+          {t("vj:setlistItems.addSceneHint")}
+        </span>
       </div>
     </div>
   );

@@ -14,16 +14,16 @@ import {
   VJ_EFFECT_IDS,
   VJ_LIMITS,
   VJ_TRANSITION_BEAT_COUNTS,
-  VJ_TRANSITION_CATALOG,
   vjEffectSettingOf,
+  vjSceneLookFlashes,
   type VjClipDTO,
   type VjEffectId,
   type VjEffectSettingPatch,
   type VjGeneratorId,
   type VjQuantize,
   type VjSceneDTO,
-  type VjSceneLook,
   type VjSetlistDTO,
+  type VjSetlistPlaybackStatus,
   type VjStageState,
   type VjTransitionLength,
   type VjTransitionLengthUnit,
@@ -39,6 +39,13 @@ import {
   vjPadPressUp,
   type VjPadPress,
 } from "../rules/vjPadPress";
+import {
+  vjActiveSetlistOf,
+  vjSetlistHasFlashingStep,
+  vjSetlistNextIndex,
+  vjSetlistPreviousIndex,
+  vjSetlistSkipFlashingIndexOf,
+} from "../rules/vjSetlistPlayback";
 import type { VjTrailingSender } from "../rules/vjThrottle";
 import type { VjRun } from "../useVjCommandRunner";
 
@@ -59,6 +66,12 @@ export interface VjRemoteActionContext {
   run: VjRun;
   /** `stage.latestState`: every control reads the newest received state. */
   state: VjStageState | null;
+  /**
+   * The newest received state when called, which can be newer than `state`
+   * once a flash warning has waited: a confirm checks the sequence did not
+   * move while it was open.
+   */
+  currentState: () => VjStageState | null;
   serverNow: () => number;
   /** The grid's shown order, so a slot index survives a pack switch. */
   visibleClips: readonly VjClipDTO[];
@@ -92,6 +105,38 @@ export interface VjRemoteActionContext {
     anchor: HTMLElement | null,
     onConsented: () => void,
   ) => void;
+  /**
+   * Asks the flash warning for a sequence that plays itself, then runs
+   * `onConsented`; with the show's consent already given it runs at once.
+   * The handler has already decided the sequence needs it.
+   */
+  requestSetlistConsent: (
+    setlist: Pick<VjSetlistDTO, "name">,
+    anchor: HTMLElement | null,
+    onConsented: () => void,
+  ) => void;
+  /**
+   * The per-tap warning for a step whose look this remote cannot read (its
+   * scene or its set list is not loaded): `stepNameKey` names it on the
+   * confirm. With the show's consent already given it runs at once.
+   */
+  requestStepConsent: (
+    stepNameKey: string,
+    anchor: HTMLElement | null,
+    onConsented: () => void,
+  ) => void;
+  /**
+   * The per-tap warning for a step the server refused as an unconfirmed
+   * flash although this remote read its look as calm (the look changed
+   * since the library loaded): it asks whatever the look here says, naming
+   * the step by `stepName`. With the show's consent already given it runs
+   * at once.
+   */
+  requestNamedStepConsent: (
+    stepName: string,
+    anchor: HTMLElement | null,
+    onConsented: () => void,
+  ) => void;
   /** Names the reason of a refused send that no optimistic value covers. */
   reportOutcome: (outcome: VjCommandOutcome) => void;
   onResetDone: () => void;
@@ -99,6 +144,10 @@ export interface VjRemoteActionContext {
 }
 
 export const VJ_BLACKOUT_KEY = "blackout";
+/** The optimistic key of a sequence's Loop switch, one per set list. */
+export function vjSetlistLoopKeyOf(setlistId: string): string {
+  return `setlistLoop:${setlistId}`;
+}
 /** A tap count sends its tempo from this tap on. */
 export const VJ_TAP_SEND_FROM = 4;
 /** The ms transition length moves on this step. */
@@ -135,20 +184,6 @@ export function vjServerPadIsOn(
 /** The strobe and every catalog effect marked flash-capable. */
 export function isVjPadFlashCapable(padId: VjPadId): boolean {
   return padId === "strobe" || VJ_EFFECT_CATALOG[padId].isFlashCapable;
-}
-
-/**
- * Whether recalling the look can flash: an effect it turns on is
- * flash-capable, or its transition is (the same catalog flags the pads and
- * the transition row read).
- */
-export function vjSceneLookFlashes(look: VjSceneLook): boolean {
-  if (VJ_TRANSITION_CATALOG[look.transition.mode].isFlashCapable) return true;
-  return VJ_EFFECT_IDS.some(
-    (effectId) =>
-      look.effects.settings[effectId]?.isOn === true &&
-      VJ_EFFECT_CATALOG[effectId].isFlashCapable,
-  );
 }
 
 /** The other effects of its exclusive group (the playhead trio). */
@@ -451,49 +486,476 @@ export function handlePrevious(context: VjRemoteActionContext): void {
   sendVjClip(context, previousClipId);
 }
 
-/** The scene a set list step would recall; null when the step has none or the library has not loaded it. */
-export function vjSetlistStepSceneOf(
-  context: Pick<VjRemoteActionContext, "state" | "scenes" | "setlists">,
-  direction: "next" | "previous",
-): VjSceneDTO | null {
-  const { state } = context;
-  if (state === null || state.activeSetlistId === null) return null;
-  const setlist = context.setlists.find(
-    (candidate) => candidate.id === state.activeSetlistId,
-  );
-  if (setlist === undefined) return null;
-  const targetIndex =
-    direction === "next"
-      ? (state.setlistIndex ?? -1) + 1
-      : (state.setlistIndex ?? 0) - 1;
-  const item = setlist.items[targetIndex];
-  if (item === undefined) return null;
-  return context.scenes.find((scene) => scene.id === item.sceneId) ?? null;
+/** The library's scenes by id, for the sequence flash checks. */
+function vjScenesByIdOf(
+  context: Pick<VjRemoteActionContext, "scenes">,
+): Map<string, VjSceneDTO> {
+  return new Map(context.scenes.map((scene) => [scene.id, scene]));
 }
 
-/** A step to a look that flashes asks the flash warning first, as a pad does. */
+/** A sequence moved while its flash warning waited: the send is dropped and this names why. */
+export const VJ_SETLIST_MOVED_OUTCOME: VjCommandOutcome = {
+  ok: false,
+  code: "vj_stale_setlist",
+  errorKey: "vj:error.socket.staleSetlist",
+};
+
+/**
+ * What a press acted on. A send that waits on the flash warning (or that
+ * resends after a refusal) goes only while the newest state still matches;
+ * a field left out is not compared.
+ */
+export interface VjSetlistPressMark {
+  activeSetlistId: string | null;
+  status?: VjSetlistPlaybackStatus;
+  setlistIndex?: number | null;
+}
+
+export function isVjSetlistPressCurrent(
+  state: VjStageState | null,
+  mark: VjSetlistPressMark,
+): boolean {
+  if (state === null || state.activeSetlistId !== mark.activeSetlistId) {
+    return false;
+  }
+  if (
+    mark.status !== undefined &&
+    state.setlistPlayback.status !== mark.status
+  ) {
+    return false;
+  }
+  return (
+    mark.setlistIndex === undefined || state.setlistIndex === mark.setlistIndex
+  );
+}
+
+/** Wraps a waiting send so a confirm after the sequence moved names why instead of sending. */
+function whileVjSetlistPressCurrent(
+  context: VjRemoteActionContext,
+  mark: VjSetlistPressMark | null,
+  send: () => void,
+): () => void {
+  return () => {
+    if (
+      mark !== null &&
+      !isVjSetlistPressCurrent(context.currentState(), mark)
+    ) {
+      context.reportOutcome(VJ_SETLIST_MOVED_OUTCOME);
+      return;
+    }
+    send();
+  };
+}
+
+/** How a step's recall reads for the per-tap flash warning. */
+export type VjSetlistStepFlashTarget =
+  /** A clip step, no step there, or nothing active: sends without asking. */
+  | { kind: "calm" }
+  | { kind: "scene"; scene: VjSceneDTO }
+  /** Its look cannot be read here, so it counts as flashing; the key names it. */
+  | { kind: "unknown"; stepNameKey: string };
+
+const VJ_STEP_DIRECTION_NAME_KEYS = {
+  next: "vj:strip.setlistNext",
+  previous: "vj:strip.setlistPrevious",
+} as const;
+
+/** What a step in the sequence recalls, given the list this remote holds. */
+function vjSetlistItemFlashTargetOf(
+  context: Pick<VjRemoteActionContext, "scenes">,
+  setlist: VjSetlistDTO,
+  targetIndex: number | null,
+): VjSetlistStepFlashTarget {
+  if (targetIndex === null) return { kind: "calm" };
+  const item = setlist.items[targetIndex];
+  if (item === undefined || item.kind !== "scene" || item.sceneId === null) {
+    return { kind: "calm" };
+  }
+  const scene = context.scenes.find(
+    (candidate) => candidate.id === item.sceneId,
+  );
+  return scene === undefined
+    ? { kind: "unknown", stepNameKey: "vj:setlistItems.sceneGone" }
+    : { kind: "scene", scene };
+}
+
+/**
+ * What a Next or Previous step would recall, with Loop wrapping as the
+ * server does. A scene the library has not loaded, or a set list this
+ * remote has not loaded, reads as unknown, so the warning asks.
+ */
+export function vjSetlistStepFlashTargetOf(
+  context: Pick<VjRemoteActionContext, "state" | "scenes" | "setlists">,
+  direction: "next" | "previous",
+): VjSetlistStepFlashTarget {
+  const { state } = context;
+  if (state === null || state.activeSetlistId === null) {
+    return { kind: "calm" };
+  }
+  const setlist = vjActiveSetlistOf(state, context.setlists);
+  if (setlist === null) {
+    return {
+      kind: "unknown",
+      stepNameKey: VJ_STEP_DIRECTION_NAME_KEYS[direction],
+    };
+  }
+  const itemCount = setlist.items.length;
+  const isLooping = state.setlistPlayback.isLooping;
+  const targetIndex =
+    direction === "next"
+      ? vjSetlistNextIndex(state.setlistIndex, itemCount, isLooping)
+      : vjSetlistPreviousIndex(state.setlistIndex, itemCount, isLooping);
+  return vjSetlistItemFlashTargetOf(context, setlist, targetIndex);
+}
+
+/** A step send; `isFlashConfirmed` says the warning was confirmed or the show already consented. */
+type VjStepSend = (isFlashConfirmed: boolean) => void;
+
+/**
+ * Asks the per-tap warning the target needs, then runs `send`: confirmed
+ * at once for a show that already consented, unconfirmed at once for a
+ * calm target, confirmed after the warning otherwise. A send that waited
+ * goes only while `mark` still matches the newest state.
+ */
+function askVjStepConsent(
+  context: VjRemoteActionContext,
+  target: VjSetlistStepFlashTarget,
+  anchor: HTMLElement | null,
+  send: VjStepSend,
+  mark: VjSetlistPressMark | null,
+): void {
+  if (context.hasFlashConsent) {
+    send(true);
+    return;
+  }
+  if (target.kind === "calm") {
+    send(false);
+    return;
+  }
+  if (target.kind === "scene" && !vjSceneLookFlashes(target.scene.look)) {
+    send(false);
+    return;
+  }
+  const sendAfterWarning = whileVjSetlistPressCurrent(context, mark, () =>
+    send(true),
+  );
+  if (target.kind === "unknown") {
+    context.requestStepConsent(target.stepNameKey, anchor, sendAfterWarning);
+    return;
+  }
+  context.requestSceneConsent(target.scene, anchor, sendAfterWarning);
+}
+
+/**
+ * The warning for a step the server refused as an unconfirmed flash. It
+ * always asks (the server knows the step flashes), naming the step: its
+ * scene, the key of a step this remote cannot read, or Next or Previous
+ * step when this remote read it as calm.
+ */
+function askVjRefusedStepConsent(
+  context: VjRemoteActionContext,
+  target: VjSetlistStepFlashTarget,
+  direction: "next" | "previous",
+  anchor: HTMLElement | null,
+  onConsented: () => void,
+): void {
+  if (target.kind === "scene") {
+    context.requestNamedStepConsent(target.scene.name, anchor, onConsented);
+    return;
+  }
+  const stepNameKey =
+    target.kind === "unknown"
+      ? target.stepNameKey
+      : VJ_STEP_DIRECTION_NAME_KEYS[direction];
+  context.requestStepConsent(stepNameKey, anchor, onConsented);
+}
+
+/** Next or Previous; isFlashConfirmed travels only when the step was confirmed. */
+function runVjSetlistStep(
+  context: VjRemoteActionContext,
+  direction: "next" | "previous",
+  isFlashConfirmed: boolean,
+): Promise<VjCommandOutcome> {
+  if (direction === "next") {
+    return isFlashConfirmed
+      ? context.run("setlistNext", { isFlashConfirmed: true })
+      : context.run("setlistNext");
+  }
+  return isFlashConfirmed
+    ? context.run("setlistPrevious", { isFlashConfirmed: true })
+    : context.run("setlistPrevious");
+}
+
+/**
+ * Manual Next and Previous keep the per-tap consent (design 13.3): a step to
+ * a look that flashes, or one this remote cannot read, asks the flash
+ * warning first, as a pad does, and sends confirmed. The server refuses an
+ * unconfirmed step onto a scene that flashes (vj_setlist_flash_unconfirmed);
+ * that refusal opens the warning naming the step and, once confirmed, sends
+ * again confirmed. A second refusal is named. A confirm after the step on
+ * screen moved names why and sends nothing.
+ */
 export function handleSetlistStep(
   context: VjRemoteActionContext,
   direction: "next" | "previous",
+  anchor: HTMLElement | null = null,
 ): void {
+  const { state } = context;
   if (context.isBlocked) return;
-  const sendStep = () => {
-    const outcomePromise =
-      direction === "next"
-        ? context.run("setlistNext")
-        : context.run("setlistPrevious");
-    void outcomePromise.then(context.reportOutcome);
+  const mark: VjSetlistPressMark | null =
+    state === null
+      ? null
+      : {
+          activeSetlistId: state.activeSetlistId,
+          setlistIndex: state.setlistIndex,
+        };
+  const target = vjSetlistStepFlashTargetOf(context, direction);
+  const sendConfirmedAfterRefusal = whileVjSetlistPressCurrent(
+    context,
+    mark,
+    () => {
+      void runVjSetlistStep(context, direction, true).then(
+        context.reportOutcome,
+      );
+    },
+  );
+  const sendStep: VjStepSend = (isFlashConfirmed) => {
+    void runVjSetlistStep(context, direction, isFlashConfirmed).then(
+      (outcome) => {
+        const isFlashRefusal =
+          !outcome.ok && outcome.code === "vj_setlist_flash_unconfirmed";
+        if (isFlashRefusal && !isFlashConfirmed) {
+          askVjRefusedStepConsent(
+            context,
+            target,
+            direction,
+            anchor,
+            sendConfirmedAfterRefusal,
+          );
+          return;
+        }
+        context.reportOutcome(outcome);
+      },
+    );
   };
-  const scene = vjSetlistStepSceneOf(context, direction);
-  if (
-    scene !== null &&
-    !context.hasFlashConsent &&
-    vjSceneLookFlashes(scene.look)
-  ) {
-    context.requestSceneConsent(scene, null, sendStep);
+  askVjStepConsent(context, target, anchor, sendStep, mark);
+}
+
+/** Sends a command that lets the sequence play by itself, with its flash flag. */
+type VjSetlistPlaySend = (
+  isFlashConfirmed: boolean,
+) => Promise<VjCommandOutcome>;
+
+/**
+ * Sends once; a refusal for an unconfirmed flashing step (a scene that
+ * flashes and that this remote could not see) opens the warning for the
+ * sequence and, once confirmed, sends again confirmed while the press is
+ * still current. The second send names any refusal it meets.
+ */
+function sendVjSetlistPlay(
+  context: VjRemoteActionContext,
+  setlist: VjSetlistDTO | null,
+  anchor: HTMLElement | null,
+  send: VjSetlistPlaySend,
+  isFlashConfirmed: boolean,
+  mark: VjSetlistPressMark | null,
+): void {
+  const sendConfirmed = whileVjSetlistPressCurrent(context, mark, () => {
+    void send(true).then(context.reportOutcome);
+  });
+  void send(isFlashConfirmed).then((outcome) => {
+    const isFlashRefusal =
+      !outcome.ok && outcome.code === "vj_setlist_flash_unconfirmed";
+    if (isFlashRefusal && !isFlashConfirmed && setlist !== null) {
+      context.requestSetlistConsent(setlist, anchor, sendConfirmed);
+      return;
+    }
+    context.reportOutcome(outcome);
+  });
+}
+
+/**
+ * Play, Resume and Play again (design 13.3): with the show's consent the
+ * send is confirmed at once; a sequence with a flashing scene step (or a
+ * scene step this remote cannot read) asks the warning once first and
+ * sends confirmed; any other sends unconfirmed. `mark` drops a confirm
+ * that comes after the sequence moved.
+ */
+function playVjSetlist(
+  context: VjRemoteActionContext,
+  setlist: VjSetlistDTO | null,
+  anchor: HTMLElement | null,
+  send: VjSetlistPlaySend,
+  mark: VjSetlistPressMark | null,
+): void {
+  if (context.hasFlashConsent) {
+    sendVjSetlistPlay(context, setlist, anchor, send, true, mark);
     return;
   }
-  sendStep();
+  if (
+    setlist !== null &&
+    vjSetlistHasFlashingStep(setlist, vjScenesByIdOf(context))
+  ) {
+    context.requestSetlistConsent(
+      setlist,
+      anchor,
+      whileVjSetlistPressCurrent(context, mark, () =>
+        sendVjSetlistPlay(context, setlist, anchor, send, true, mark),
+      ),
+    );
+    return;
+  }
+  sendVjSetlistPlay(context, setlist, anchor, send, false, mark);
+}
+
+function vjSetlistOf(
+  context: VjRemoteActionContext,
+  setlistId: string,
+): VjSetlistDTO | null {
+  return context.setlists.find((setlist) => setlist.id === setlistId) ?? null;
+}
+
+/**
+ * A row's Play sequence: step 1, playing. The command names its set list,
+ * so a late confirm still plays the sequence the warning named. An empty
+ * sequence sends nothing (its row shows why).
+ */
+export function handleSetlistPlay(
+  context: VjRemoteActionContext,
+  setlistId: string,
+  anchor: HTMLElement | null = null,
+): void {
+  if (context.isBlocked) return;
+  const setlist = vjSetlistOf(context, setlistId);
+  if (setlist !== null && setlist.items.length === 0) return;
+  playVjSetlist(
+    context,
+    setlist,
+    anchor,
+    (isFlashConfirmed) =>
+      context.run("setlistSelect", setlistId, 0, {
+        isPlaying: true,
+        isFlashConfirmed,
+      }),
+    null,
+  );
+}
+
+/**
+ * A row's Step through: step 1, moved on by hand. Step 1 is a recall like
+ * Next, so a scene that flashes, or one this remote cannot read, asks the
+ * per-tap warning first.
+ */
+export function handleSetlistStepThrough(
+  context: VjRemoteActionContext,
+  setlistId: string,
+  anchor: HTMLElement | null = null,
+): void {
+  if (context.isBlocked) return;
+  const setlist = vjSetlistOf(context, setlistId);
+  if (setlist !== null && setlist.items.length === 0) return;
+  const sendSelect: VjStepSend = () => {
+    void context.run("setlistSelect", setlistId, 0).then(context.reportOutcome);
+  };
+  const target: VjSetlistStepFlashTarget =
+    setlist === null
+      ? { kind: "unknown", stepNameKey: VJ_STEP_DIRECTION_NAME_KEYS.next }
+      : vjSetlistItemFlashTargetOf(context, setlist, 0);
+  // The command names its set list and step 1, so a late confirm still
+  // recalls the step the warning named.
+  askVjStepConsent(context, target, anchor, sendSelect, null);
+}
+
+/**
+ * The active controls' one play button: Pause while playing, else Play,
+ * Resume or Play again. A confirm after the active sequence or its status
+ * changed names why and sends nothing.
+ */
+export function handleSetlistTogglePlaying(
+  context: VjRemoteActionContext,
+  anchor: HTMLElement | null = null,
+): void {
+  const { state } = context;
+  if (context.isBlocked || state === null) return;
+  if (state.activeSetlistId === null) return;
+  const status = state.setlistPlayback.status;
+  if (status === "playing") {
+    void context.run("setlistSetPlaying", false).then(context.reportOutcome);
+    return;
+  }
+  playVjSetlist(
+    context,
+    vjActiveSetlistOf(state, context.setlists),
+    anchor,
+    (isFlashConfirmed) =>
+      context.run("setlistSetPlaying", true, isFlashConfirmed),
+    { activeSetlistId: state.activeSetlistId, status },
+  );
+}
+
+/**
+ * "Play the flashing step": the panel that names the step is the warning,
+ * so this press confirms it for this run (contract 5.5). The show's
+ * consent for pads stays as it was.
+ */
+export function handleSetlistPlayFlashing(
+  context: VjRemoteActionContext,
+): void {
+  const { state } = context;
+  if (context.isBlocked || state === null) return;
+  if (state.setlistPlayback.status !== "needsFlashConsent") return;
+  void context.run("setlistSetPlaying", true, true).then(context.reportOutcome);
+}
+
+/**
+ * "Skip the flashing step": plays on from the first step after it that
+ * does not flash (contract call 13), unconfirmed. A refusal names its
+ * reason; Skip never confirms the run. With no such step the panel offers
+ * Play the flashing step and Stop sequence only, so this sends nothing.
+ */
+export function handleSetlistSkipFlashing(
+  context: VjRemoteActionContext,
+): void {
+  const { state } = context;
+  if (context.isBlocked || state === null) return;
+  const setlist = vjActiveSetlistOf(state, context.setlists);
+  if (setlist === null) return;
+  const targetIndex = vjSetlistSkipFlashingIndexOf(
+    state,
+    setlist,
+    vjScenesByIdOf(context),
+  );
+  if (targetIndex === null) return;
+  void context
+    .run("setlistSelect", setlist.id, targetIndex, {
+      isPlaying: true,
+      isFlashConfirmed: false,
+    })
+    .then(context.reportOutcome);
+}
+
+/**
+ * The Loop switch of the active sequence: shown at once under its own set
+ * list's key, rolled back with its named reason on a refusal.
+ */
+export function handleSetlistSetLooping(
+  context: VjRemoteActionContext,
+  isLooping: boolean,
+): void {
+  const { state } = context;
+  if (context.isBlocked || state === null) return;
+  if (state.activeSetlistId === null) return;
+  void context.applyPad(
+    vjSetlistLoopKeyOf(state.activeSetlistId),
+    isLooping,
+    () => context.run("setlistSetLooping", isLooping),
+  );
+}
+
+/** Stop sequence: clears the selection, as before sequences played themselves. */
+export function handleSetlistStop(context: VjRemoteActionContext): void {
+  if (context.isBlocked) return;
+  void context.run("setlistSelect", null, null).then(context.reportOutcome);
 }
 
 /** The crossfader's trailing sender calls this at most once per 50 ms. */
@@ -568,6 +1030,20 @@ function handlePress(
       return handleSetlistStep(context, "next");
     case "setlistPrevious":
       return handleSetlistStep(context, "previous");
+    case "setlistPlay":
+      return handleSetlistPlay(context, action.setlistId);
+    case "setlistStepThrough":
+      return handleSetlistStepThrough(context, action.setlistId);
+    case "setlistTogglePlaying":
+      return handleSetlistTogglePlaying(context);
+    case "setlistSetLooping":
+      return handleSetlistSetLooping(context, action.isLooping);
+    case "setlistStop":
+      return handleSetlistStop(context);
+    case "setlistPlayFlashing":
+      return handleSetlistPlayFlashing(context);
+    case "setlistSkipFlashing":
+      return handleSetlistSkipFlashing(context);
     case "openShortcuts":
       return context.onOpenSheet("shortcuts");
   }

@@ -178,11 +178,33 @@ export const VJ_DEMO_REFUSALS: Record<VjRefusalCode, VjRefusalRule> = {
   },
   VJ_SETLIST_ITEMS_INVALID: {
     status: 400,
-    message: "sceneIds must be an array of scene ids.",
+    message: "items must be an array of steps.",
   },
   VJ_SETLIST_FULL: {
     status: 409,
-    message: `A set list holds at most ${VJ_LIMITS.setlistItemsMax} scenes.`,
+    message: `A set list holds at most ${VJ_LIMITS.setlistItemsMax} steps.`,
+  },
+  VJ_SETLIST_STEP_INVALID: {
+    status: 400,
+    message:
+      "Each step needs a kind of scene or clip, the matching uuid, and only the fields id, kind, sceneId, clipId and duration.",
+  },
+  VJ_SETLIST_STEP_DURATION_INVALID: {
+    status: 400,
+    message:
+      "A step length must be 2 to 600 seconds, or 4, 8, 16, 32 or 64 beats.",
+  },
+  VJ_SETLIST_ITEM_NOT_FOUND: {
+    status: 404,
+    message: "A step id names no item of this set list.",
+  },
+  VJ_SETLIST_LOOP_INVALID: {
+    status: 400,
+    message: "isLooping must be true or false.",
+  },
+  VJ_SETLIST_PATCH_EMPTY: {
+    status: 400,
+    message: "The update names no field to change.",
   },
   VJ_CONNECTION_NOT_FOUND: {
     status: 404,
@@ -202,6 +224,7 @@ export type VjDemoRefusalExtra =
   | "maxBytes"
   | "setlistId"
   | "sceneId"
+  | "clipId"
   | "lookField";
 
 /** The extra body fields each code carries (backend VJ_REFUSAL_EXTRAS).
@@ -218,7 +241,7 @@ export const VJ_DEMO_REFUSAL_EXTRAS: Record<
   VJ_PACK_REORDER_MISMATCH: [],
   VJ_PACK_FULL: ["packId"],
   VJ_PACK_CLIPS_REORDER_MISMATCH: [],
-  VJ_CLIP_NOT_FOUND: [],
+  VJ_CLIP_NOT_FOUND: ["clipId"],
   VJ_CLIP_ALREADY_IN_PACK: ["packId"],
   VJ_CLIP_NOT_IN_PACK: ["packId"],
   VJ_CLIP_TITLE_REQUIRED: [],
@@ -257,16 +280,22 @@ export const VJ_DEMO_REFUSAL_EXTRAS: Record<
   VJ_SETLIST_REORDER_MISMATCH: [],
   VJ_SETLIST_ITEMS_INVALID: [],
   VJ_SETLIST_FULL: ["setlistId"],
+  VJ_SETLIST_STEP_INVALID: [],
+  VJ_SETLIST_STEP_DURATION_INVALID: [],
+  VJ_SETLIST_ITEM_NOT_FOUND: [],
+  VJ_SETLIST_LOOP_INVALID: [],
+  VJ_SETLIST_PATCH_EMPTY: [],
   VJ_CONNECTION_NOT_FOUND: [],
   VJ_CONNECTION_NOT_YOURS: [],
 };
 
 /** What a caller may hand `vjRefusal` (backend VjErrorOptions). `sceneId`
- *  goes only on a set list item refusal, and `lookField` is a dot path of
- *  schema names with no value in it. */
+ *  and `clipId` go only on a set list item refusal, and `lookField` is a dot
+ *  path of schema names with no value in it. */
 export interface VjDemoRefusalOptions {
   packId?: string;
   sceneId?: string;
+  clipId?: string;
   setlistId?: string;
   lookField?: string;
   field?: "storageKey" | "thumbnailStorageKey" | "previewStorageKey";

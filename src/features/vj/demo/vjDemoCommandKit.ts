@@ -8,6 +8,9 @@ import {
   type VjGeneratorId,
   type VjMix,
   type VjSceneLook,
+  type VjSetlistFollowRead,
+  type VjSetlistRead,
+  type VjSetlistReadPosition,
   type VjSocketErrorCode,
   type VjStageState,
 } from "../../../shared/contracts/vj";
@@ -25,15 +28,16 @@ export interface VjDemoLibraryLookup {
     clipId: string,
   ): { isFavorite: boolean } | null;
   readSceneLook(sceneId: string): VjSceneLook | null;
-  readSetlistItem(
+  /** One read per step (sequences contract 5.8, call 6): item ids, Loop, the
+   *  default length and the step at `position`; null when no set list has
+   *  the id or the id is malformed. */
+  readSetlist(
     setlistId: string,
-    index: number | null,
-  ): {
-    itemCount: number;
-    sceneId: string | null;
-    look: VjSceneLook | null;
-  } | null;
-  setlistItemCount(setlistId: string): number | null;
+    position: VjSetlistReadPosition,
+  ): VjSetlistRead | null;
+  /** The item ids and Loop after a library change (sequences contract 7);
+   *  null when no set list has the id. */
+  readSetlistFollow(setlistId: string): VjSetlistFollowRead | null;
 }
 
 export interface VjDemoCommandContext {

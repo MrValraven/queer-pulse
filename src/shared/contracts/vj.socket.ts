@@ -189,12 +189,27 @@ export type VjResetLookPayload = {
   isImmediate?: boolean;
 } & VjClientCommandFields;
 export type VjRecallScenePayload = { sceneId: string } & VjClientCommandFields;
-/** index null arms the set list without recalling; a number recalls that item. */
+/** `stage:setlistSelect`: index null arms; isPlaying true plays from index (null reads as 0). */
 export type VjSetlistSelectPayload = {
   setlistId: string | null;
   index: number | null;
+  isPlaying?: boolean;
+  isFlashConfirmed?: boolean;
 } & VjClientCommandFields;
-export type VjSetlistStepPayload = VjClientCommandFields;
+/** `stage:setlistSetPlaying`: Play, Pause, Resume and Play again. */
+export type VjSetlistSetPlayingPayload = {
+  isPlaying: boolean;
+  isFlashConfirmed?: boolean;
+} & VjClientCommandFields;
+/** `stage:setlistSetLooping`: saves Loop on the active set list. */
+export type VjSetlistSetLoopingPayload = {
+  isLooping: boolean;
+} & VjClientCommandFields;
+/** `stage:setlistNext` and `stage:setlistPrevious`: isFlashConfirmed records
+ *  the flash warning consent for the step the tap lands. */
+export type VjSetlistStepPayload = {
+  isFlashConfirmed?: boolean;
+} & VjClientCommandFields;
 export type VjSetCountdownPayload = {
   isVisible?: boolean;
   /** Absolute server epoch ms; or send durationMs. */
@@ -271,7 +286,7 @@ export const VJ_LIBRARY_CHANGE_KINDS = [
   "scene_deleted",
   "scenes_reordered",
   "setlist_created",
-  "setlist_renamed",
+  "setlist_updated",
   "setlist_items_changed",
   "setlist_deleted",
   "setlists_reordered",
@@ -320,6 +335,8 @@ export const VJ_CLIENT_FRAME_NAMES = [
   "stage:setlistSelect",
   "stage:setlistNext",
   "stage:setlistPrevious",
+  "stage:setlistSetPlaying",
+  "stage:setlistSetLooping",
   "stage:setCountdown",
   "stage:setLogo",
   "stage:setEventCard",
@@ -360,6 +377,8 @@ export const VJ_REMOTE_COMMAND_NAMES = [
   "stage:setlistSelect",
   "stage:setlistNext",
   "stage:setlistPrevious",
+  "stage:setlistSetPlaying",
+  "stage:setlistSetLooping",
   "stage:setCountdown",
   "stage:setLogo",
   "stage:setEventCard",

@@ -27,7 +27,7 @@ export const forCommunities: Catalog = {
   "frame.threads": "Exemplo de tópicos na Discussão de uma comunidade",
   "frame.hosts":
     "Exemplo de quem organiza um evento, com coorganização e uma comunidade convidada",
-  "frame.guestList": "Exemplo da lista de convidados à porta",
+  "frame.guestList": "Exemplo da lista de pessoas convidadas à porta",
   "lineup.title": "Lineup",
 
   // ── Sample content ──
@@ -54,9 +54,9 @@ export const forCommunities: Catalog = {
   "scatter.title": "A tua comunidade vive em seis sítios ao mesmo tempo",
   "scatter.lede":
     "Se organizas um coletivo, já conheces a história. Cada parte está numa app diferente, e és tu quem segura tudo junto.",
-  "scatter.chat.label": "O grupo de chat",
+  "scatter.chat.label": "O grupo de conversa",
   "scatter.chat.quote":
-    "trezentas mensagens durante a noite e a data do próximo encontro está algures lá no meio",
+    "trezentas mensagens durante a noite e a data do próximo evento está algures lá no meio",
   "scatter.sheet.label": "A folha de cálculo",
   "scatter.sheet.quote":
     "quem fez a folha de inscrições saiu e agora ninguém a consegue editar",
@@ -82,7 +82,7 @@ export const forCommunities: Catalog = {
   "walkthrough.join.body":
     "Aberta a todas as pessoas, por pedido, por convite pessoal, ou privada e escondida do Descobrir. Os pedidos chegam à fila da tua equipa, que aprova ou recusa cada um.",
   "walkthrough.tier.public":
-    "Qualquer pessoa no QueerPulse entra com um toque.",
+    "Qualquer pessoa na QueerPulse entra com um toque.",
   "walkthrough.tier.request": "As pessoas pedem e a tua equipa responde.",
   "walkthrough.tier.invite": "Só entra quem convidas pelo nome.",
   "walkthrough.tier.private":
@@ -91,18 +91,18 @@ export const forCommunities: Catalog = {
   "walkthrough.team.body":
     "Uma pessoa responsável, cotitulares com quase todos os poderes dela, e mods que mantêm o ambiente bom. O trabalho é partilhado e ninguém fica com tudo às costas.",
   "walkthrough.team.rosterTitle": "Quem organiza",
-  "walkthrough.talk.title": "Conversem onde toda a gente vos encontra",
+  "walkthrough.talk.title": "Conversem num sítio fácil de encontrar",
   "walkthrough.talk.body":
     "Publicações rápidas com reações no Pulso, conversas mais longas na Discussão. Fica tudo na página da comunidade, à espera da próxima pessoa que entrar.",
   "walkthrough.events.title": "Façam eventos com a vossa gente",
   "walkthrough.events.body":
-    "Anuncia a noite, junta coanfitriões, convida outras comunidades e monta o lineup. Quem organiza convida pessoas para o cartaz, e quando aceitam aparecem com o seu ofício ao lado do nome.",
-  "walkthrough.door.title": "Abre a porta na noite",
+    "Anuncia a noite, junta pessoas coanfitriãs, convida outras comunidades como convidadas e monta o lineup. Quem organiza convida pessoas para o cartaz, e quando aceitam aparecem com o seu ofício ao lado do nome.",
+  "walkthrough.door.title": "Abre a porta na noite do evento",
   "walkthrough.door.body":
-    "Faz o check-in das pessoas pela lista de convidados ou lendo o cartão QueerPulse, e vê as entradas a encher. Depois do evento, quem organiza junta as fotos ao álbum do evento.",
+    "Faz o check-in pela lista de pessoas convidadas ou lendo o cartão de membro, e vê as entradas a crescer. Depois do evento, quem organiza junta as fotos ao álbum do evento.",
 
   // ── Try it ──
-  "tryIt.title": "Leva um evento por toda a sua vida",
+  "tryIt.title": "Acompanha um evento do início ao fim",
   "tryIt.lede":
     "Escolhe um momento e vê os componentes reais do evento mudarem com ele.",
   "tryIt.switchLabel": "Momento da vida do evento",
@@ -115,11 +115,11 @@ export const forCommunities: Catalog = {
   "tryIt.frame.doors": "Exemplo do contador de entradas na noite",
   "tryIt.frame.photos": "Exemplo do álbum de fotos de um evento",
   "tryIt.caption.announce":
-    "O cartaz sobe com a data, o bairro e quem organiza, e as pessoas dizem que vão.",
+    "Sai o cartaz com a data, o bairro e quem organiza, e as pessoas dizem que vão.",
   "tryIt.caption.lineup":
-    "O lineup enche à medida que DJs, artistas drag e quem dança aceitam os convites, cada um com o seu ofício ao lado do nome.",
+    "O lineup enche à medida que DJs, artistas drag e quem dança aceitam os convites, cada pessoa com o seu ofício ao lado do nome.",
   "tryIt.caption.doors":
-    "A porta abre e o contador soma as entradas enquanto quem organiza risca a lista.",
+    "A porta abre e o contador soma as entradas enquanto quem organiza risca os nomes da lista.",
   "tryIt.caption.photos":
     "Depois do evento quem organiza junta as fotos, e só quem organiza e as pessoas que iam as podem ver.",
 
@@ -127,7 +127,7 @@ export const forCommunities: Catalog = {
   "allInOne.title": "Uma página no lugar da pilha",
   "allInOne.lede":
     "As ferramentas que hoje coses umas às outras, e o que a página da comunidade põe no lugar delas.",
-  "allInOne.before.chat": "Um grupo de chat que nunca dorme",
+  "allInOne.before.chat": "Um grupo de conversa que nunca dorme",
   "allInOne.before.sheet": "Uma folha de cálculo de quem está dentro",
   "allInOne.before.tickets": "Um site de bilhetes para cada evento",
   "allInOne.before.photos": "Uma pasta partilhada de fotos",
@@ -135,7 +135,7 @@ export const forCommunities: Catalog = {
   "allInOne.after.page":
     "Uma página da comunidade com a vossa gente, publicações e conversas",
   "allInOne.after.events":
-    "Eventos com coanfitriões, comunidades convidadas e lineup",
+    "Eventos com coorganização, comunidades convidadas e lineup",
   "allInOne.after.door": "Check-in à porta e um álbum depois",
   "allInOne.after.support": "Um separador Apoiar com as formas de vos ajudar",
   "allInOne.after.quiz":
@@ -163,13 +163,13 @@ export const forCommunities: Catalog = {
   "safety.photos.body":
     "Quem pode ver uma foto do evento pode denunciá-la, e quem a juntou pode retirá-la.",
   "safety.conduct.body":
-    "O código de conduta do QueerPulse aplica-se em toda a plataforma, incluindo a tua comunidade e os seus eventos.",
+    "O código de conduta da QueerPulse aplica-se em toda a plataforma, incluindo a tua comunidade e os seus eventos.",
   "safety.conduct.cta": "Ler o código de conduta",
 
   // ── Questions ──
   "faq.whoSees.question": "Quem pode ver a nossa comunidade?",
   "faq.whoSees.answer":
-    "O QueerPulse funciona só por convite, por isso só quem está no QueerPulse vê comunidades. As comunidades abertas, por pedido e só por convite aparecem no Descobrir. Uma comunidade <b>privada</b> fica escondida, e a sua página só abre para a sua gente e para quem tem convite.",
+    "A QueerPulse funciona só por convite, por isso só quem está na QueerPulse vê comunidades. As comunidades abertas, por pedido e só por convite aparecem no Descobrir. Uma comunidade <b>privada</b> fica escondida, e a sua página só abre para a sua gente e para quem tem convite.",
   "faq.private.question": "Podemos mantê-la privada?",
   "faq.private.answer":
     "Sim. Escolhe <b>Privada</b> e a comunidade sai do Descobrir. Só se entra com um convite da tua equipa.",
@@ -178,10 +178,10 @@ export const forCommunities: Catalog = {
     "Sim. Há uma pessoa <b>responsável</b>, e podes juntar <b>cotitulares</b> com quase todos os poderes dela, mais <b>mods</b> que cuidam das publicações, dos pedidos e das pessoas. Só a pessoa responsável pode passar a comunidade a outra pessoa ou arquivá-la.",
   "faq.together.question": "Podemos fazer eventos com outras comunidades?",
   "faq.together.answer":
-    "Sim. Junta coanfitriões a um evento e convida outras comunidades a participar. Cada uma aceita ou recusa o convite.",
+    "Sim. Junta pessoas coanfitriãs a um evento e convida outras comunidades a participar como convidadas. Cada uma aceita ou recusa o convite.",
   "faq.support.question": "As pessoas podem apoiar-nos com dinheiro?",
   "faq.support.answer":
-    "A tua comunidade pode ter um separador <b>Apoiar</b> com as formas de ajudar: um link de angariação, um número MB WAY ou uma transferência bancária, com uma linha sobre o destino do apoio. O dinheiro vai direto para a comunidade, e o QueerPulse nunca lhe toca.",
+    "A tua comunidade pode ter um separador <b>Apoiar</b> com as formas de ajudar: um link de angariação, um número MB WAY ou uma transferência bancária, com uma linha sobre o destino do apoio. O dinheiro vai direto para a comunidade, e a QueerPulse nunca lhe toca.",
 
   // ── Closing ──
   "closing.title": "Traz a tua gente <em>para casa</em>",

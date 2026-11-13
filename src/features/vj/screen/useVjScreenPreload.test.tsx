@@ -149,6 +149,7 @@ function clipOf(clipId: string, packId: string): VjClipDTO {
     loopOutMs: null,
     loopMode: "loop",
     previewUrl: null,
+    setlistItemCount: 0,
   };
 }
 
@@ -508,6 +509,56 @@ describe("useVjScreenPreload", () => {
 
     const lastRunIndex = harness.runs.length - 1;
     expect(runClipIds(lastRunIndex)).toEqual([CLIP_GRID, CLIP_DUST]);
+  });
+});
+
+describe("useVjScreenPreload sequence library changes", () => {
+  it("refetches scenes and set lists on every scene and set list change, which name no pack", async () => {
+    servePack(PACK_WARM, [CLIP_GRID]);
+    harness.cache = createFakeClipCache([CLIP_GRID]);
+    const stage = createLibraryStage();
+    renderPreload({ packId: PACK_WARM, record: null, stage });
+    await settleRun(0);
+    harness.invalidate.mockClear();
+
+    const sequenceKinds = [
+      "scene_created",
+      "scene_updated",
+      "scene_deleted",
+      "scenes_reordered",
+      "setlist_created",
+      "setlist_updated",
+      "setlist_items_changed",
+      "setlist_deleted",
+      "setlists_reordered",
+    ] as const;
+    const sequenceChanges = sequenceKinds.map((kind) =>
+      changeOf({ kind, packId: null, clipId: null, packIds: [] }),
+    );
+    for (const sequenceChange of sequenceChanges) {
+      act(() => stage.emit(sequenceChange));
+    }
+    expect(harness.invalidate).toHaveBeenCalledTimes(sequenceChanges.length);
+    sequenceChanges.forEach((sequenceChange, changeIndex) => {
+      expect(harness.invalidate).toHaveBeenNthCalledWith(
+        changeIndex + 1,
+        sequenceChange,
+      );
+    });
+  });
+
+  it("refetches a set list change with no active pack yet", () => {
+    const stage = createLibraryStage();
+    renderPreload({ packId: null, record: null, stage });
+    harness.invalidate.mockClear();
+    const stepsChange = changeOf({
+      kind: "setlist_items_changed",
+      packId: null,
+      clipId: null,
+      packIds: [],
+    });
+    act(() => stage.emit(stepsChange));
+    expect(harness.invalidate).toHaveBeenCalledWith(stepsChange);
   });
 });
 
@@ -907,7 +958,7 @@ describe("useVjScreenPreload cache retention", () => {
       record: null,
       stage,
       screenId: SCREEN_ID,
-      setlistSceneClipIds: [CLIP_WAVE],
+      setlistClipIds: [CLIP_WAVE],
     });
 
     expect(harness.runs).toHaveLength(2);

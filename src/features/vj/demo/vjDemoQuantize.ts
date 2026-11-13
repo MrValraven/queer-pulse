@@ -5,18 +5,26 @@
 
 import {
   canonicalVjStageState,
+  stampVjSetlistClock,
   vjIsQuantizedChange,
   vjQuantizedApplyAt,
+  vjSetlistAdvanceApplyAt,
   type VjScreenOverride,
+  type VjSetlistClockStamp,
   type VjStageCause,
   type VjStageState,
 } from "../../../shared/contracts/vj";
 import type { VjDemoStamps } from "./vjDemoCommandKit";
 
-/** The causes whose change may land on the tempo grid. Timer causes
- *  (`overlay_timeout`, `countdown_end`, `mic_tempo`) and `library` never
- *  compute a grid time; they only inherit a pending one. */
-const VJ_DEMO_GRID_CAUSES: readonly VjStageCause[] = ["command", "shuffle"];
+/** The causes whose change may land on the tempo grid: commands, shuffle
+ *  and the step timer (`setlist`). Timer causes (`overlay_timeout`,
+ *  `countdown_end`, `mic_tempo`) and `library` never compute a grid time;
+ *  they only inherit a pending one. */
+const VJ_DEMO_GRID_CAUSES: readonly VjStageCause[] = [
+  "command",
+  "shuffle",
+  "setlist",
+];
 
 /** The causes that always land at once with every pending change: the 10 s
  *  strobe cap is absolute, so strobe-off never waits for a pending bar
@@ -36,11 +44,33 @@ export interface VjDemoSettleInput {
   pendingApplyAt: number | null;
   isLookSwitch: boolean;
   isImmediate: boolean;
-  /** Why the change happens: only `command` and `shuffle` compute a grid
-   *  time, and `strobe_timeout` always lands at once (C 7.4). */
+  /** Why the change happens: only `command`, `shuffle` and `setlist`
+   *  compute a grid time, and `strobe_timeout` always lands at once (C 7.4). */
   cause: VjStageCause;
   /** Screens the stage still lists; overrides naming others are dropped (C 7.10). */
   knownScreenIds: ReadonlySet<string>;
+  /** The clock the landing stamps (sequences contract 3.5); keep when absent. */
+  setlistClock?: VjSetlistClockStamp;
+  /** The step end a timer advance lands at (sequences contract 5.7); null or
+   *  absent for every other change. A number places the change with
+   *  vjSetlistAdvanceApplyAt whatever isLookSwitch says. */
+  scheduledAt?: number | null;
+}
+
+/** The time this change computes before the pending rule: a timer advance
+ *  lands at its step end (quantize off) or the first boundary at or after
+ *  it (quantize on); any other grid change lands on the next boundary when
+ *  it switches the look or moves a quantized field; the rest compute
+ *  nothing. */
+function computedVjDemoApplyAt(input: VjDemoSettleInput): number | null {
+  const scheduledAt = input.scheduledAt ?? null;
+  if (scheduledAt !== null) {
+    return vjSetlistAdvanceApplyAt(input.next.tempo, scheduledAt, input.now);
+  }
+  const isOnGrid =
+    !isVjDemoTimerOrLibraryCause(input.cause) &&
+    (input.isLookSwitch || vjIsQuantizedChange(input.previous, input.next));
+  return isOnGrid ? vjQuantizedApplyAt(input.next.tempo, input.now) : null;
 }
 
 /** Steps 2 and 3: the server time every client applies this change at, or
@@ -51,12 +81,7 @@ function vjDemoApplyAtFor(input: VjDemoSettleInput): number | null {
   if (input.isImmediate || VJ_DEMO_IMMEDIATE_CAUSES.includes(input.cause)) {
     return null;
   }
-  const isOnGrid =
-    !isVjDemoTimerOrLibraryCause(input.cause) &&
-    (input.isLookSwitch || vjIsQuantizedChange(input.previous, input.next));
-  const computed = isOnGrid
-    ? vjQuantizedApplyAt(input.next.tempo, input.now)
-    : null;
+  const computed = computedVjDemoApplyAt(input);
   const pending =
     input.pendingApplyAt !== null && input.pendingApplyAt > input.now
       ? input.pendingApplyAt
@@ -126,7 +151,8 @@ function knownVjScreenOverrides(
 }
 
 /** C 7.4 steps 2 to 6 for one applied change: its applyAt, the new
- *  pendingApplyAt, and the state stamped at applyAt ?? now with overrides of
+ *  pendingApplyAt, and the state stamped at applyAt ?? now (the set list
+ *  clock included, sequences contract 3.5) with overrides of
  *  pruned screens dropped, revision + 1, updatedAt = now, canonical. Pruning
  *  runs after the quantize test, so dropping a gone screen's override never
  *  moves an unquantized change onto the grid. */
@@ -140,6 +166,11 @@ export function settleVjDemoChange(input: VjDemoSettleInput): {
   const { previous, next } = input;
   const state = canonicalVjStageState({
     ...next,
+    setlistPlayback: stampVjSetlistClock(
+      next.setlistPlayback,
+      input.setlistClock ?? { kind: "keep" },
+      stampAt,
+    ),
     liveSince: stampedLiveSince(input, stampAt),
     effects: {
       ...next.effects,

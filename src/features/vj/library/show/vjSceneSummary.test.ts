@@ -37,6 +37,7 @@ const CLIP: VjClipDTO = {
   loopOutMs: null,
   loopMode: "loop",
   previewUrl: null,
+  setlistItemCount: 0,
 };
 
 const CLIPS_BY_ID: ReadonlyMap<string, VjClipDTO> = new Map([[CLIP.id, CLIP]]);

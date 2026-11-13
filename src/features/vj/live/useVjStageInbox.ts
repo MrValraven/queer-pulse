@@ -1,10 +1,12 @@
 import { useCallback, useRef, useState } from "react";
-import type {
-  VjLibraryChange,
-  VjScreenIdentifyFrame,
-  VjScreenRenderModeFrame,
-  VjScreenStatus,
-  VjStageFrame,
+import {
+  upgradeVjStageFieldsV2,
+  type VjLibraryChange,
+  type VjScreenIdentifyFrame,
+  type VjScreenRenderModeFrame,
+  type VjScreenStatus,
+  type VjStageFrame,
+  type VjStageState,
 } from "../../../shared/contracts/vj";
 import type { VjServerFrame } from "../realtime/vjFrames";
 import {
@@ -14,6 +16,28 @@ import {
 } from "../realtime/vjTransport";
 
 const NO_SCREENS: readonly VjScreenStatus[] = [];
+
+/**
+ * A received stage frame with its state run through the v2 upgrade, so a
+ * state from a backend older than sequences (no `setlistPlayback`) reads
+ * as a stage with no sequence playing. A payload whose state is not an
+ * object comes back as it was.
+ */
+export function upgradeVjStageFrame(frame: VjStageFrame): VjStageFrame {
+  const receivedState: unknown = frame.state;
+  if (
+    typeof receivedState !== "object" ||
+    receivedState === null ||
+    Array.isArray(receivedState)
+  ) {
+    return frame;
+  }
+  const upgradedState = upgradeVjStageFieldsV2(
+    receivedState as Record<string, unknown>,
+  );
+  if (upgradedState === receivedState) return frame;
+  return { ...frame, state: upgradedState as unknown as VjStageState };
+}
 
 /** A listener set with a subscribe that answers its unsubscribe. */
 function useVjListenerSet<Payload>() {
@@ -57,7 +81,7 @@ export function useVjStageInbox(onStageFrame: (frame: VjStageFrame) => void) {
     (frame: VjServerFrame) => {
       switch (frame.event) {
         case "stage:state":
-          onStageFrame(frame.payload);
+          onStageFrame(upgradeVjStageFrame(frame.payload));
           return;
         case "screen:role":
           setIsLead(frame.payload.isLead);

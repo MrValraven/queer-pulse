@@ -89,18 +89,43 @@ describe("vjInvalidationTargetsOf", () => {
     ).toEqual([{ kind: "scenes" }, { kind: "setlists" }]);
   });
 
-  it("set list kinds refresh set lists, and item changes and deletes refresh scenes too", () => {
-    expect(targetsOfKind("setlist_created")).toEqual([{ kind: "setlists" }]);
-    expect(targetsOfKind("setlist_renamed")).toEqual([{ kind: "setlists" }]);
+  it("set list kinds refresh set lists; creates, item changes and deletes refresh scenes, clips and pack clip lists too", () => {
+    const withCounts = [
+      { kind: "setlists" },
+      { kind: "scenes" },
+      { kind: "clips" },
+      { kind: "packClipsRoot" },
+    ];
+    expect(targetsOfKind("setlist_updated")).toEqual([{ kind: "setlists" }]);
     expect(targetsOfKind("setlists_reordered")).toEqual([{ kind: "setlists" }]);
-    expect(targetsOfKind("setlist_items_changed")).toEqual([
-      { kind: "setlists" },
-      { kind: "scenes" },
-    ]);
-    expect(targetsOfKind("setlist_deleted")).toEqual([
-      { kind: "setlists" },
-      { kind: "scenes" },
-    ]);
+    expect(targetsOfKind("setlist_created")).toEqual(withCounts);
+    expect(targetsOfKind("setlist_items_changed")).toEqual(withCounts);
+    expect(targetsOfKind("setlist_deleted")).toEqual(withCounts);
+  });
+
+  it("a Loop or default length change reads set lists again (setlist_updated)", () => {
+    expect(
+      vjInvalidationTargetsOf(
+        vjLibraryChangeOf({
+          kind: "setlist_updated",
+          setlistId: "setlist-1",
+          setlistIds: ["setlist-1"],
+        }),
+      ),
+    ).toEqual([{ kind: "setlists" }]);
+  });
+
+  it("a clip delete that removed clip steps reads the whole library, set lists included", () => {
+    expect(
+      vjInvalidationTargetsOf(
+        vjLibraryChangeOf({
+          kind: "clip_deleted",
+          clipId: "clip-1",
+          packIds: ["pack-1"],
+          setlistIds: ["setlist-1", "setlist-2"],
+        }),
+      ),
+    ).toEqual([{ kind: "root" }]);
   });
 
   it("covers every kind the contract lists", () => {

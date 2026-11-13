@@ -8,6 +8,7 @@ import {
   type VjClipDTO,
   type VjSceneDTO,
   type VjSetlistDTO,
+  type VjTempo,
 } from "../../../../shared/contracts/vj";
 import {
   Button,
@@ -17,6 +18,7 @@ import {
 } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { useVjClips } from "../../api/useVjClips";
 import { useVjScenes } from "../../api/useVjScenes";
 import { useVjSetlistMutations } from "../../api/useVjSetlistMutations";
 import { useVjSetlists } from "../../api/useVjSetlists";
@@ -31,23 +33,27 @@ import styles from "./VjSetlists.module.css";
 const FADE_SECONDS = 0.25;
 const SKELETON_ROW_KEYS = ["first", "second", "third"] as const;
 
-/** The library holds 50 set lists at most: New set list names that cap
+/** The library holds 50 sequences at most: New sequence names that cap
  *  before any request, as the server would. */
 const SETLIST_LIMIT_REFUSAL = new ApiError(400, "VJ_SETLIST_LIMIT_REACHED", {
   statusCode: 400,
   code: "VJ_SETLIST_LIMIT_REACHED",
 });
 
-/** The set lists in their saved order: drag a grip or use up and down. */
+/** The sequences in their saved order: drag a grip or use up and down. */
 function VjSetlistList({
   setlists,
   scenes,
+  clips,
   clipsById,
+  tempo,
   freshSetlistId,
 }: {
   setlists: readonly VjSetlistDTO[];
   scenes: readonly VjSceneDTO[];
+  clips: readonly VjClipDTO[];
   clipsById: ReadonlyMap<string, VjClipDTO>;
+  tempo: VjTempo | null;
   freshSetlistId: string | null;
 }) {
   const { t } = useTranslation();
@@ -87,7 +93,9 @@ function VjSetlistList({
               key={setlist.id}
               setlist={setlist}
               scenes={scenes}
+              clips={clips}
               clipsById={clipsById}
+              tempo={tempo}
               position={setlistIndex}
               total={total}
               isDragging={draggingIndex === setlistIndex}
@@ -106,7 +114,7 @@ function VjSetlistList({
   );
 }
 
-/** New set list: the opener, the name form and the 50 cap. */
+/** New sequence: the opener, the name form and the 50 cap. */
 function VjSetlistCreate({
   setlistCount,
   onCreated,
@@ -183,43 +191,57 @@ function VjSetlistCreate({
   );
 }
 
+export interface VjSetlistPanelProps {
+  clipsById: ReadonlyMap<string, VjClipDTO>;
+  /** The live tempo, for the run time of a sequence with steps in beats.
+   *  Left out (or null) while no tempo is known: that run time is left out. */
+  tempo?: VjTempo | null;
+}
+
 /**
- * Set lists, library wide: create, rename, reorder and delete them, and edit
- * the scenes each one plays in order. The body fades between loading, a load
- * error with a retry, the empty state and the list.
+ * Sequences, library wide: create, rename, reorder and delete them, set each
+ * one's default step length and Loop, and edit the clips and scenes it plays
+ * in order. The body fades between loading, a load error with a retry, the
+ * empty state and the list; it waits for the clips too, so a clip step never
+ * reads as gone while the clips load.
  */
 export function VjSetlistPanel({
   clipsById,
-}: {
-  clipsById: ReadonlyMap<string, VjClipDTO>;
-}) {
+  tempo = null,
+}: VjSetlistPanelProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const headingId = useId();
   const setlistsQuery = useVjSetlists();
   const scenesQuery = useVjScenes();
+  const clipsQuery = useVjClips();
   const [freshSetlistId, setFreshSetlistId] = useState<string | null>(null);
 
   const setlists = setlistsQuery.data;
   const scenes = scenesQuery.data;
+  const clips = clipsQuery.data;
   const failedQuery =
     setlists === undefined && setlistsQuery.isError
       ? setlistsQuery
       : scenes === undefined && scenesQuery.isError
         ? scenesQuery
-        : null;
+        : clips === undefined && clipsQuery.isError
+          ? clipsQuery
+          : null;
   const bodyKey =
     failedQuery !== null
       ? "error"
-      : setlists === undefined || scenes === undefined
+      : setlists === undefined || scenes === undefined || clips === undefined
         ? "loading"
         : setlists.length === 0
           ? "empty"
           : "list";
-  const isRetrying = setlistsQuery.isFetching || scenesQuery.isFetching;
+  const isRetrying =
+    setlistsQuery.isFetching || scenesQuery.isFetching || clipsQuery.isFetching;
   const retry = () => {
     if (setlists === undefined) void setlistsQuery.refetch();
     if (scenes === undefined) void scenesQuery.refetch();
+    if (clips === undefined) void clipsQuery.refetch();
   };
 
   return (
@@ -286,7 +308,9 @@ export function VjSetlistPanel({
             <VjSetlistList
               setlists={setlists}
               scenes={scenes ?? []}
+              clips={clips ?? []}
               clipsById={clipsById}
+              tempo={tempo}
               freshSetlistId={freshSetlistId}
             />
           )}
