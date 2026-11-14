@@ -3814,7 +3814,7 @@ export const marketing: Catalog = {
   "changelog.entries.lead-page-opens-to-read.title":
     "A lead's page opens as a clean record you can read",
   "changelog.entries.lead-page-opens-to-read.body":
-    "Details sit in one card with links, dates and due follow-ups, and the form opens only on Edit details.",
+    "Details sit in one card, the form opens only on Edit details, and Back to leads keeps your filters.",
   "changelog.entries.lead-stage-moves-undo-cleanly.title":
     "Move a lead's stage from the list and undo it cleanly",
   "changelog.entries.lead-stage-moves-undo-cleanly.body":

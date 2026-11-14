@@ -3908,7 +3908,7 @@ export const marketing: Catalog = {
   "changelog.entries.lead-page-opens-to-read.title":
     "A página de um contacto abre como uma ficha para ler",
   "changelog.entries.lead-page-opens-to-read.body":
-    "Os detalhes ficam num só cartão com links, datas e seguimentos, e o formulário só abre em Editar detalhes.",
+    "Os detalhes ficam num só cartão, o formulário só abre em Editar detalhes e Voltar aos contactos guarda os teus filtros.",
   "changelog.entries.lead-stage-moves-undo-cleanly.title":
     "Muda a fase de um contacto na lista e desfaz sem rasto",
   "changelog.entries.lead-stage-moves-undo-cleanly.body":

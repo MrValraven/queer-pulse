@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { FiCheck, FiFileText, FiMapPin } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminAvatar } from "../ui";
@@ -8,7 +8,11 @@ import type { LeadListItemDTO } from "./api/leads.types";
 import { LEAD_TYPE_AVATAR_TONE, LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
 import { lisbonLeadDay } from "./leadDates";
 import { LeadLinkIcons } from "./LeadLinkIcons";
-import { adminLeadPath } from "./leadPaths";
+import {
+  adminLeadPath,
+  LEADS_LIST_SEARCH_STATE_KEY,
+  type LeadPageLocationState,
+} from "./leadPaths";
 import { LeadPersonaThumb } from "./LeadPersonaThumb";
 import { LeadRowFollowUpMenu, LeadRowStageMenu } from "./LeadRowControls";
 import { leadActivityText } from "./leadRowDates";
@@ -94,9 +98,13 @@ function LeadRowActivity({ row }: { row: LeadListItemDTO }) {
  */
 export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
   const { t } = useTranslation();
+  const location = useLocation();
   const typeId = useId();
   const detailsId = useId();
   const persona = row.linkedPersona;
+  const leadPageState: LeadPageLocationState = {
+    [LEADS_LIST_SEARCH_STATE_KEY]: location.search,
+  };
 
   return (
     <div className={styles.row}>
@@ -105,6 +113,7 @@ export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
         <span className={styles.rowNameText}>
           <Link
             to={adminLeadPath(row.id)}
+            state={leadPageState}
             className={styles.rowLink}
             aria-label={t("admin:leads.action.openLead", { name: row.name })}
             aria-describedby={`${typeId} ${detailsId}`}

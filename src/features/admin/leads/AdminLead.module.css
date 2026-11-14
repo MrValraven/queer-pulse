@@ -23,6 +23,39 @@
   }
 }
 
+/* "Back to leads" above the page body. Only the text is clickable. */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  width: fit-content;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+  transition: color 0.16s var(--ease);
+}
+
+.backLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.backLink svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .backLink:hover {
+    color: var(--text-strong);
+  }
+}
+
 /* ── States ─────────────────────────────────────────────────────────────── */
 /* The not-found and load error states sit in a reading column. */
 .statePage {
