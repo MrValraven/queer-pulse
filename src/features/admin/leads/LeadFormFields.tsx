@@ -8,6 +8,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   LEAD_FOLLOW_UP_MAX,
   LEAD_FOLLOW_UP_MIN,
+  LEAD_LOCATION_MAX,
   LEAD_NAME_MAX,
   LEAD_NOTE_MAX,
   LEAD_STAGES,
@@ -15,7 +16,11 @@ import {
   isLeadStage,
   isLeadType,
 } from "./api/leads.types";
-import { LeadContactFields, LeadTextField } from "./LeadContactFields";
+import {
+  LeadContactFields,
+  LeadFormSection,
+  LeadTextField,
+} from "./LeadContactFields";
 import type {
   LeadFieldError,
   LeadFormField,
@@ -46,9 +51,61 @@ function refusalFor(
   return fieldError?.field === field ? fieldError : null;
 }
 
-/** The type select, and the stage select beside it while `shouldShowStage`
- *  holds (the Add lead dialog; the lead page saves its stage on its own). */
-function LeadTypeStageFields({
+/** One select with its refusal line below. */
+function LeadSelectField({
+  id,
+  label,
+  placeholder,
+  options,
+  value,
+  refusal,
+  openLeadPath,
+  isRequired = false,
+  isDisabled,
+  onValueChange,
+}: {
+  id: string;
+  label: string;
+  placeholder?: string;
+  options: { value: string; label: string }[];
+  value: string | null;
+  refusal: LeadFieldError | null;
+  openLeadPath: (leadId: string) => string;
+  isRequired?: boolean;
+  isDisabled: boolean;
+  onValueChange: (next: string | null) => void;
+}) {
+  const refusalId = `${id}-refusal`;
+  return (
+    <div className={styles.fieldBlock}>
+      <FormField label={label} required={isRequired} className={styles.field}>
+        <Select
+          id={id}
+          label={label}
+          placeholder={placeholder}
+          options={options}
+          value={value}
+          disabled={isDisabled}
+          aria-invalid={refusal !== null || undefined}
+          aria-describedby={refusal !== null ? refusalId : undefined}
+          onChange={onValueChange}
+        />
+      </FormField>
+      <LeadRefusalLine
+        error={refusal}
+        openLeadPath={openLeadPath}
+        id={refusalId}
+      />
+    </div>
+  );
+}
+
+/**
+ * Type, the stage while `shouldShowStage` holds (the Add lead dialog; the
+ * lead page saves its stage on its own), and location. On a wide form the
+ * three share a row; with the stage hidden, type and location pair up.
+ */
+function LeadKindFields({
   idPrefix,
   values,
   onChange,
@@ -58,10 +115,6 @@ function LeadTypeStageFields({
   shouldShowStage,
 }: LeadFieldsProps & { shouldShowStage: boolean }) {
   const { t } = useTranslation();
-  const typeRefusal = refusalFor(fieldError, "type");
-  const stageRefusal = refusalFor(fieldError, "stage");
-  const typeRefusalId = `${idPrefix}-type-refusal`;
-  const stageRefusalId = `${idPrefix}-stage-refusal`;
   const typeOptions = LEAD_TYPES.map((type) => ({
     value: type,
     label: t(LEAD_TYPE_LABEL_KEY[type]),
@@ -72,111 +125,68 @@ function LeadTypeStageFields({
   }));
 
   return (
-    <div className={styles.pairGrid}>
-      <div className={styles.fieldBlock}>
-        <FormField
-          label={t("admin:leads.field.type")}
-          required
-          className={styles.field}
-        >
-          <Select
-            id={`${idPrefix}-type`}
-            label={t("admin:leads.field.type")}
-            placeholder={t("admin:leads.field.typePlaceholder")}
-            options={typeOptions}
-            value={values.type}
-            disabled={isDisabled}
-            aria-invalid={typeRefusal !== null || undefined}
-            aria-describedby={typeRefusal !== null ? typeRefusalId : undefined}
-            onChange={(type) => {
-              if (isLeadType(type)) onChange({ ...values, type });
-            }}
-          />
-        </FormField>
-        <LeadRefusalLine
-          error={typeRefusal}
-          openLeadPath={openLeadPath}
-          id={typeRefusalId}
-        />
-      </div>
+    <div className={styles.kindGrid}>
+      <LeadSelectField
+        id={`${idPrefix}-type`}
+        label={t("admin:leads.field.type")}
+        placeholder={t("admin:leads.field.typePlaceholder")}
+        options={typeOptions}
+        value={values.type}
+        refusal={refusalFor(fieldError, "type")}
+        openLeadPath={openLeadPath}
+        isRequired
+        isDisabled={isDisabled}
+        onValueChange={(type) => {
+          if (isLeadType(type)) onChange({ ...values, type });
+        }}
+      />
       <Collapse isOpen={shouldShowStage}>
-        <div className={styles.fieldBlock}>
-          <FormField
-            label={t("admin:leads.field.stage")}
-            className={styles.field}
-          >
-            <Select
-              id={`${idPrefix}-stage`}
-              label={t("admin:leads.field.stage")}
-              options={stageOptions}
-              value={values.stage}
-              disabled={isDisabled}
-              aria-invalid={stageRefusal !== null || undefined}
-              aria-describedby={
-                stageRefusal !== null ? stageRefusalId : undefined
-              }
-              onChange={(stage) => {
-                if (isLeadStage(stage)) onChange({ ...values, stage });
-              }}
-            />
-          </FormField>
-          <LeadRefusalLine
-            error={stageRefusal}
-            openLeadPath={openLeadPath}
-            id={stageRefusalId}
-          />
-        </div>
+        <LeadSelectField
+          id={`${idPrefix}-stage`}
+          label={t("admin:leads.field.stage")}
+          options={stageOptions}
+          value={values.stage}
+          refusal={refusalFor(fieldError, "stage")}
+          openLeadPath={openLeadPath}
+          isDisabled={isDisabled}
+          onValueChange={(stage) => {
+            if (isLeadStage(stage)) onChange({ ...values, stage });
+          }}
+        />
       </Collapse>
+      <LeadTextField
+        id={`${idPrefix}-location`}
+        label={t("admin:leads.field.location")}
+        placeholder={t("admin:leads.field.locationPlaceholder")}
+        value={values.location}
+        maxLength={LEAD_LOCATION_MAX}
+        refusal={refusalFor(fieldError, "location")}
+        openLeadPath={openLeadPath}
+        isDisabled={isDisabled}
+        onValueChange={(location) => onChange({ ...values, location })}
+      />
     </div>
   );
 }
 
-/**
- * Every field of a lead, in reading order: name, type (and stage when
- * shown), location, email and phone, links, the follow-up date, and the
- * first note when shown. Each refusal shows under the field it names.
- */
-export function LeadFormFields(
-  props: LeadFieldsProps & {
-    shouldShowStage: boolean;
-    shouldShowNote: boolean;
-  },
-) {
+/** The follow-up date, and the first note while `shouldShowNote` holds. */
+function LeadFollowUpFields({
+  idPrefix,
+  values,
+  onChange,
+  fieldError,
+  openLeadPath,
+  isDisabled = false,
+  shouldShowNote,
+}: LeadFieldsProps & { shouldShowNote: boolean }) {
   const { t } = useTranslation();
-  const {
-    idPrefix,
-    values,
-    onChange,
-    fieldError,
-    openLeadPath,
-    isDisabled = false,
-    shouldShowNote,
-  } = props;
   const followUpRefusal = refusalFor(fieldError, "followUpOn");
   const noteRefusal = refusalFor(fieldError, "note");
   const followUpRefusalId = `${idPrefix}-follow-up-refusal`;
-  // Only the Add lead dialog (the one form with a first note) clears the
-  // date inside the picker; the lead page has its own Clear follow-up,
-  // which saves at once, so a second clear there would act differently.
-  const isFollowUpClearable = shouldShowNote;
   const noteRefusalId = `${idPrefix}-note-refusal`;
 
   return (
-    <div className={styles.form}>
-      <LeadTextField
-        id={`${idPrefix}-name`}
-        label={t("admin:leads.field.name")}
-        value={values.name}
-        maxLength={LEAD_NAME_MAX}
-        isRequired
-        refusal={refusalFor(fieldError, "name")}
-        openLeadPath={openLeadPath}
-        isDisabled={isDisabled}
-        onValueChange={(name) => onChange({ ...values, name })}
-      />
-      <LeadTypeStageFields {...props} />
-      <LeadContactFields {...props} />
-      <LeadLinksField {...props} />
+    <>
       <div className={styles.fieldBlock}>
         <FormField
           label={t("admin:leads.field.followUp")}
@@ -190,7 +200,9 @@ export function LeadFormFields(
             value={values.followUpOn}
             min={LEAD_FOLLOW_UP_MIN}
             max={LEAD_FOLLOW_UP_MAX}
-            clearable={isFollowUpClearable}
+            // The picker's own clear empties the date in the form alone; it
+            // is saved with the other fields.
+            clearable
             disabled={isDisabled}
             aria-invalid={followUpRefusal !== null || undefined}
             aria-describedby={
@@ -234,6 +246,55 @@ export function LeadFormFields(
           />
         </div>
       </Collapse>
+    </>
+  );
+}
+
+/**
+ * Every field of a lead in four titled sections, in reading order: About
+ * (name, type, the stage when shown, location), Contact (email, phone),
+ * Links, and Follow-up (the date, and the first note when shown). Each
+ * refusal shows under the field it names.
+ */
+export function LeadFormFields(
+  props: LeadFieldsProps & {
+    shouldShowStage: boolean;
+    shouldShowNote: boolean;
+  },
+) {
+  const { t } = useTranslation();
+  const {
+    idPrefix,
+    values,
+    onChange,
+    fieldError,
+    openLeadPath,
+    isDisabled = false,
+  } = props;
+
+  return (
+    <div className={styles.form}>
+      <LeadFormSection heading={t("admin:leads.form.sectionAbout")}>
+        <LeadTextField
+          id={`${idPrefix}-name`}
+          label={t("admin:leads.field.name")}
+          value={values.name}
+          maxLength={LEAD_NAME_MAX}
+          isRequired
+          refusal={refusalFor(fieldError, "name")}
+          openLeadPath={openLeadPath}
+          isDisabled={isDisabled}
+          onValueChange={(name) => onChange({ ...values, name })}
+        />
+        <LeadKindFields {...props} />
+      </LeadFormSection>
+      <LeadFormSection heading={t("admin:leads.form.sectionContact")}>
+        <LeadContactFields {...props} />
+      </LeadFormSection>
+      <LeadLinksField {...props} />
+      <LeadFormSection heading={t("admin:leads.form.sectionFollowUp")}>
+        <LeadFollowUpFields {...props} />
+      </LeadFormSection>
     </div>
   );
 }

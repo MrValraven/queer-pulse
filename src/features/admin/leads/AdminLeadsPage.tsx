@@ -69,6 +69,7 @@ export function AdminLeadsPage() {
           controls={controls}
           stageCounts={list.stageCounts}
           totalCount={list.totalCount}
+          dueCount={list.dueCount}
         />
       </FadeIn>
 

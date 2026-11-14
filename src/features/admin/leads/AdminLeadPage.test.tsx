@@ -39,6 +39,19 @@ function renderLeadPage(leadId: string = CAVE_ID) {
   return user;
 }
 
+/** The Details card's section, which the page labels by its heading. */
+function detailsRegion() {
+  return screen.getByRole("region", { name: "Details" });
+}
+
+/** Opens edit mode and waits for the form to take focus on the name. */
+async function openEditMode(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: "Edit details" }));
+  await waitFor(() =>
+    expect(within(detailsRegion()).getByLabelText(/^Name/)).toHaveFocus(),
+  );
+}
+
 /** The reason code a demo read of the lead answers with, or null when the
  *  lead is still there. */
 function readReasonOf(leadId: string) {
@@ -71,6 +84,10 @@ describe("AdminLeadPage (demo)", () => {
       "href",
       "tel:+351000000223",
     );
+    // Email and Call sit in the page header, outside the Details card.
+    expect(
+      within(detailsRegion()).queryByRole("link", { name: "Email Cave 23" }),
+    ).not.toBeInTheDocument();
   });
 
   it("saves a stage change at once and logs it", async () => {
@@ -89,32 +106,10 @@ describe("AdminLeadPage (demo)", () => {
     expect(demoGetLead(CAVE_ID).stage).toBe("on_board");
   });
 
-  it("saves edited details with Save changes", async () => {
-    const user = renderLeadPage();
-    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
-    expect(
-      screen.queryByRole("button", { name: "Save changes" }),
-    ).not.toBeInTheDocument();
-
-    const location = screen.getByLabelText("Location");
-    await user.clear(location);
-    await user.type(location, "Lisbon, Beato");
-    await user.click(
-      await screen.findByRole("button", { name: "Save changes" }),
-    );
-
-    expect(await screen.findByText("Changes saved")).toBeInTheDocument();
-    expect(demoGetLead(CAVE_ID).location).toBe("Lisbon, Beato");
-    await waitFor(() =>
-      expect(
-        screen.queryByRole("button", { name: "Save changes" }),
-      ).not.toBeInTheDocument(),
-    );
-  });
-
   it("follows a colleague's change while the form holds no edits", async () => {
     const user = renderLeadPage();
     await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    await openEditMode(user);
 
     // A colleague moves the lead; our next write answers with the whole
     // lead, their change with it.
@@ -127,14 +122,16 @@ describe("AdminLeadPage (demo)", () => {
     await waitFor(() =>
       expect(screen.getByLabelText("Location")).toHaveValue("Porto, Bonfim"),
     );
+    // Nothing differs from the stored lead, so there is nothing to save.
     expect(
-      screen.queryByRole("button", { name: "Save changes" }),
-    ).not.toBeInTheDocument();
+      screen.getByRole("button", { name: "Save changes" }),
+    ).toHaveAttribute("aria-disabled", "true");
   });
 
   it("keeps our edit and a colleague's change apart when saving", async () => {
     const user = renderLeadPage();
     await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    await openEditMode(user);
 
     const phone = screen.getByLabelText("Phone");
     await user.clear(phone);
@@ -169,10 +166,11 @@ describe("AdminLeadPage (demo)", () => {
         screen.queryByRole("button", { name: "Clear follow-up" }),
       ).not.toBeInTheDocument(),
     );
-    // The form follows the stored lead, so nothing is left to save.
+    // The read view stays open, and the follow-up's place reads empty.
     expect(
       screen.queryByRole("button", { name: "Save changes" }),
     ).not.toBeInTheDocument();
+    expect(within(detailsRegion()).getByText("Not added")).toBeInTheDocument();
   });
 
   it("deletes the lead after the confirm", async () => {
@@ -217,5 +215,153 @@ describe("AdminLeadPage (demo)", () => {
     expect(
       screen.queryByRole("heading", { level: 1, name: "Cave 23" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("AdminLeadPage details card (demo)", () => {
+  beforeEach(() => resetDemoLeads());
+
+  it("opens in the read view with no inputs", async () => {
+    renderLeadPage();
+    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    const details = detailsRegion();
+
+    expect(within(details).queryByRole("textbox")).not.toBeInTheDocument();
+    expect(
+      within(details).queryByRole("button", { name: "Save changes" }),
+    ).not.toBeInTheDocument();
+    expect(within(details).getByText("Lisbon, Marvila")).toBeInTheDocument();
+    expect(
+      within(details).getByRole("link", { name: "bookings@cave23.example" }),
+    ).toHaveAttribute("href", "mailto:bookings@cave23.example");
+    expect(
+      within(details).getByRole("link", { name: /^Instagram/ }),
+    ).toHaveAttribute("target", "_blank");
+    // The stage is the list's first row, a select named by its label.
+    expect(within(details).getAllByRole("term")[0]).toHaveTextContent("Stage");
+    expect(
+      within(details).getByRole("button", { name: "Stage" }),
+    ).toBeInTheDocument();
+    // The demo follow-up day has passed.
+    expect(within(details).getByText(/^Overdue since /)).toBeInTheDocument();
+  });
+
+  it("shows the form on Edit details and focuses the name", async () => {
+    const user = renderLeadPage();
+    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+
+    await openEditMode(user);
+
+    expect(within(detailsRegion()).getByLabelText("Location")).toHaveValue(
+      "Lisbon, Marvila",
+    );
+    expect(
+      within(detailsRegion()).getByRole("button", { name: "Save changes" }),
+    ).toHaveAttribute("aria-disabled", "true");
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("button", { name: "Edit details" }),
+      ).not.toBeInTheDocument(),
+    );
+  });
+
+  it("keeps the stage row and drops Clear follow-up in edit mode", async () => {
+    const user = renderLeadPage();
+    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    await openEditMode(user);
+    const details = detailsRegion();
+
+    expect(
+      within(details).getByRole("button", { name: "Stage" }),
+    ).toBeInTheDocument();
+    expect(
+      within(details).getByText("Stage saves as soon as you pick it"),
+    ).toBeInTheDocument();
+    expect(
+      within(details).queryByRole("button", { name: "Clear follow-up" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("clears the follow-up date in the form without saving it", async () => {
+    const user = renderLeadPage();
+    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    const storedFollowUp = demoGetLead(CAVE_ID).followUpOn;
+    expect(storedFollowUp).not.toBeNull();
+    await openEditMode(user);
+
+    await user.click(
+      within(detailsRegion()).getByRole("button", { name: "Clear" }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Save changes" }),
+    ).not.toHaveAttribute("aria-disabled");
+    expect(demoGetLead(CAVE_ID).followUpOn).toBe(storedFollowUp);
+
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    await waitFor(() =>
+      expect(
+        within(detailsRegion()).queryByRole("textbox"),
+      ).not.toBeInTheDocument(),
+    );
+    expect(demoGetLead(CAVE_ID).followUpOn).toBe(storedFollowUp);
+  });
+
+  it("drops the edits on Cancel and returns to the read view", async () => {
+    const user = renderLeadPage();
+    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    await openEditMode(user);
+
+    const location = within(detailsRegion()).getByLabelText("Location");
+    await user.clear(location);
+    await user.type(location, "Porto, Bonfim");
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+    await waitFor(() =>
+      expect(
+        within(detailsRegion()).queryByRole("textbox"),
+      ).not.toBeInTheDocument(),
+    );
+    expect(
+      within(detailsRegion()).getByText("Lisbon, Marvila"),
+    ).toBeInTheDocument();
+    expect(demoGetLead(CAVE_ID).location).toBe("Lisbon, Marvila");
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Edit details" }),
+      ).toHaveFocus(),
+    );
+  });
+
+  it("saves edited details and returns to the read view", async () => {
+    const user = renderLeadPage();
+    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    expect(
+      screen.queryByRole("button", { name: "Save changes" }),
+    ).not.toBeInTheDocument();
+    await openEditMode(user);
+
+    const location = within(detailsRegion()).getByLabelText("Location");
+    await user.clear(location);
+    await user.type(location, "Lisbon, Beato");
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+
+    expect(await screen.findByText("Changes saved")).toBeInTheDocument();
+    expect(demoGetLead(CAVE_ID).location).toBe("Lisbon, Beato");
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("button", { name: "Save changes" }),
+      ).not.toBeInTheDocument(),
+    );
+    expect(
+      within(detailsRegion()).queryByRole("textbox"),
+    ).not.toBeInTheDocument();
+    expect(
+      within(detailsRegion()).getByText("Lisbon, Beato"),
+    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Edit details" }),
+      ).toHaveFocus(),
+    );
   });
 });

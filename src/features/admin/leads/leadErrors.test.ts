@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { ApiError } from "../../../shared/api/client";
-import { LEAD_REASON_CODES } from "./api/leads.types";
 import {
+  LEAD_REASON_CODES,
+  LEAD_REVERT_REFUSAL_REASONS,
+} from "./api/leads.types";
+import {
+  LEAD_NOT_REVERTIBLE_KEY,
   LEAD_REASON_KEY,
   leadErrorKeyOf,
   leadErrorValuesOf,
@@ -29,7 +33,7 @@ describe("leadErrors", () => {
   });
 
   it("gives each code its own line", () => {
-    expect(new Set(Object.values(LEAD_REASON_KEY)).size).toBe(23);
+    expect(new Set(Object.values(LEAD_REASON_KEY)).size).toBe(25);
   });
 
   it.each(["draft", "not_open", "removed", "taken_down"] as const)(
@@ -55,6 +59,38 @@ describe("leadErrors", () => {
         }),
       ),
     ).toBe("admin:leads.error.personaNotListed.unknownState");
+  });
+
+  it.each(LEAD_REVERT_REFUSAL_REASONS)(
+    "names the %s reason on a not-revertible refusal",
+    (reason) => {
+      expect(
+        leadErrorKeyOf(
+          refusalWith(409, { code: "LEAD_ENTRY_NOT_REVERTIBLE", reason }),
+        ),
+      ).toBe(`admin:leads.error.entryNotRevertible.${reason}`);
+    },
+  );
+
+  it("gives each revert reason its own line", () => {
+    expect(new Set(Object.values(LEAD_NOT_REVERTIBLE_KEY)).size).toBe(5);
+  });
+
+  it("says the change can no longer be undone for an unknown revert reason", () => {
+    expect(
+      leadErrorKeyOf(
+        refusalWith(409, {
+          code: "LEAD_ENTRY_NOT_REVERTIBLE",
+          reason: "moon_phase",
+        }),
+      ),
+    ).toBe("admin:leads.error.entryNotRevertible.unknownReason");
+  });
+
+  it("names a missing history line on a revert", () => {
+    expect(
+      leadErrorKeyOf(refusalWith(404, { code: "LEAD_ENTRY_NOT_FOUND" })),
+    ).toBe("admin:leads.error.entryNotFound");
   });
 
   it("names missing access for a 403 with no code", () => {

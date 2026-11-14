@@ -1,76 +1,135 @@
 /* The lead fields: the Add lead dialog and the lead page's details share
-   them. Fields stack one per row on a phone; wider forms pair type with
-   stage and set location, email and phone three across. */
+   them. Four titled sections (About, Contact, Links, Follow-up) split by a
+   hairline. The grids size their columns from their own width, so they
+   follow whatever holds the form: one column on a phone, type and location
+   paired in the lead page's edit card (about 520px) with email and phone
+   stacked, and in the Add lead dialog (about 630px) type, stage and
+   location three across with email and phone side by side. */
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
   min-width: 0;
 }
 
+/* ── Sections ───────────────────────────────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* The small gap on both sides of the hairline keeps the sections compact,
+   so at a 900px viewport the Follow-up title shows above the dialog's
+   footer and says the body scrolls. */
+.section + .section {
+  margin-top: var(--gap-sm);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* A quiet serif title, set apart from the uppercase field labels under it. */
+.sectionHeading {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
 /* A field and the refusal line under it. The FormField's own bottom margin
-   gives way to the form's gap, so the refusal sits right under its field. */
+   gives way to the section's gap, so the refusal sits right under its
+   field. */
 .fieldBlock {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.fieldBlock > .field {
+.fieldBlock .field {
   margin-bottom: 0;
 }
 
-/* Type and stage share a row once both fit at a comfortable width; with
-   the stage hidden, the type takes the whole row. */
+/* ── Grids ──────────────────────────────────────────────────────────────── */
+/* The form is no size container on purpose: one would make it a stacking
+   context, and the type and stage panels would open under the lead page's
+   sticky Save bar. So each grid sizes its columns with auto-fit, and empty
+   tracks fold, so a pair always splits the row in halves. */
+.kindGrid,
 .pairGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-  gap: 18px 16px;
+  gap: 16px;
   align-items: start;
 }
 
-/* The contact trio measures the form it sits in, so the grid follows the
-   dialog or the page column, whichever holds it. Three across needs about
-   230px a column for a full email and its refusal line, so the 630px Add
-   lead dialog and the 572px lead page column both keep one per row. */
-.contactShell {
-  container-type: inline-size;
+/* Type with location (and the stage between them in the dialog). A column
+   needs 180px, so a phone gets one, the edit card two and the dialog
+   three. */
+.kindGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
 }
 
-.contactGrid {
-  display: grid;
-  gap: 18px;
-  align-items: start;
+/* Email with phone. An email address needs a wider column than a type, so
+   a column here needs 17rem: the two stack in the edit card, where a half
+   would cut a long address short, and sit side by side in the dialog. */
+.pairGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
 }
 
-@container (min-width: 720px) {
-  .contactGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
+/* ── Text inputs ────────────────────────────────────────────────────────── */
+/* The FormField input look at the select's 48px height. Two classes here
+   outrank FormField's `.field input`, which would otherwise set the
+   padding. */
+.textFieldShell {
+  position: relative;
+  min-width: 0;
+}
+
+.textFieldShell .textInput {
+  height: 48px;
+  padding-block: 0;
+}
+
+.textFieldShell .textInputWithIcon {
+  padding-inline-start: 44px;
+}
+
+/* The input is the field's last box, so the icon sits on the field's
+   bottom 48px, in the same place the link rows draw their platform icon. */
+.textFieldIcon {
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  color: var(--ink-60);
+  pointer-events: none;
+}
+
+.textFieldIcon svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* ── Links ──────────────────────────────────────────────────────────────── */
-/* The group label and hint read like a FormField label and helper. */
-.groupLabel {
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
 .groupHint {
-  margin: 6px 0 0;
+  margin: 0;
   font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
   text-wrap: pretty;
 }
 
+/* The hint reads as the heading's subtitle, close under it. */
+.sectionHeading + .groupHint {
+  margin-top: -10px;
+}
+
 .linkList {
-  margin: 10px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -84,10 +143,12 @@
   padding-bottom: 8px;
 }
 
+/* No gap here: a folded slot is still a flex item, and a gap beside it
+   would leave the input short of the other inputs' right edge. The space
+   before a control lives in the slot itself (see .linkSlot). */
 .linkControls {
   display: flex;
   align-items: center;
-  gap: 4px;
   min-width: 0;
 }
 
@@ -113,12 +174,13 @@
   height: 18px;
 }
 
-/* The FormField input look, with room on the left for the platform icon.
-   16px type keeps iOS Safari from zooming in on focus. */
+/* The FormField input look at the select's 48px height, with room on the
+   left for the platform icon. 16px type keeps iOS Safari from zooming in on
+   focus. */
 .linkInput {
   width: 100%;
-  min-height: 48px;
-  padding: 12px 15px 12px 44px;
+  height: 48px;
+  padding: 0 15px 0 44px;
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
   border-radius: var(--radius-12);
   background: var(--cream);
@@ -152,23 +214,39 @@
   opacity: 0.7;
 }
 
-/* Motion sets the width: 44px while the row holds a link to open, none
-   while it does not. The open link inside keeps its own 44px box, so it
-   never squeezes while the slot opens. */
-.linkOpenSlot {
+/* Motion sets the width: 48px while the slot holds its control (open link,
+   Remove link), none while it does not. The control keeps its own 44px box
+   at the slot's end, so the slot's first 4px are the space before it, and
+   that space folds away with the slot. The control never squeezes while
+   the slot opens. */
+.linkSlot {
   display: inline-flex;
   flex: none;
+  justify-content: flex-end;
   height: 44px;
 }
 
-.linkOpen {
+.linkSlotControl {
   display: inline-flex;
   flex: none;
 }
 
+/* Add link sits under the inputs as a text-style action: no fill at rest,
+   the quiet wash on hover, and its plus lined up with the row icons. */
 .linkAddRow {
   display: flex;
-  padding-top: 2px;
+  margin-top: -12px;
+}
+
+.linkAddRow .linkAdd {
+  background: transparent;
+  color: var(--ink-60);
+}
+
+@media (hover: hover) {
+  .linkAddRow .linkAdd:hover:not([aria-disabled="true"]) {
+    color: var(--ink);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

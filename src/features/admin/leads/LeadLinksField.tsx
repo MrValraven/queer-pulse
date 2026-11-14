@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { FiExternalLink, FiLink, FiPlus, FiTrash2 } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
@@ -14,6 +14,7 @@ import {
 } from "./leadForm.model";
 import type { LeadFieldsProps } from "./LeadFormFields";
 import { leadLinkPlatform } from "./leadLinkPlatform";
+import { LeadFormSection } from "./LeadContactFields";
 import { LeadRefusalLine } from "./LeadRefusalLine";
 import styles from "./LeadForm.module.css";
 
@@ -21,8 +22,59 @@ import styles from "./LeadForm.module.css";
 const LINK_ROW_DURATION_S = 0.2;
 /** The app's front-loaded ease, the same curve `Collapse` folds with. */
 const LINK_ROW_EASE = [0.22, 0.68, 0.16, 1] as const;
-/** The open-link slot's width while it holds a link: one 44px target. */
-const OPEN_SLOT_WIDTH = 44;
+/** The space between the input (or the slot before) and a shown control. */
+const SLOT_GAP = 4;
+/** A trailing slot's width while it holds its control: the gap and one
+ *  44px target, so a folded slot leaves no space behind. */
+const SLOT_WIDTH = SLOT_GAP + 44;
+
+/**
+ * A trailing control slot on a link row. It opens to 48px while `isShown`
+ * holds and folds to nothing while it does not, and the control inside
+ * fades and scales with it, so the input beside it never jumps in one frame.
+ */
+function LeadLinkRowSlot({
+  isShown,
+  slotKey,
+  children,
+}: {
+  isShown: boolean;
+  slotKey: string;
+  children: ReactNode;
+}) {
+  const { reducedMotion } = useMotionPrefs();
+  const duration = reducedMotion ? 0 : LINK_ROW_DURATION_S;
+  return (
+    <m.span
+      className={styles.linkSlot}
+      initial={false}
+      animate={{
+        width: isShown ? SLOT_WIDTH : 0,
+        overflow: isShown ? "visible" : "hidden",
+      }}
+      transition={{
+        duration,
+        ease: LINK_ROW_EASE,
+        overflow: { duration: 0, delay: isShown ? duration : 0 },
+      }}
+    >
+      <AnimatePresence initial={false}>
+        {isShown ? (
+          <m.span
+            key={slotKey}
+            className={styles.linkSlotControl}
+            initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.85 }}
+            transition={{ duration }}
+          >
+            {children}
+          </m.span>
+        ) : null}
+      </AnimatePresence>
+    </m.span>
+  );
+}
 
 interface LeadLinkRowItemProps {
   row: LeadLinkRow;
@@ -32,6 +84,9 @@ interface LeadLinkRowItemProps {
   refusal: LeadFieldError | null;
   openLeadPath: (leadId: string) => string;
   isDisabled: boolean;
+  /** False for the only row while it is empty, where Remove link would
+   *  have nothing to do, so the control folds away. */
+  isRemovable: boolean;
   registerInput: (rowKey: string, input: HTMLInputElement | null) => void;
   onTextChange: (text: string) => void;
   onRemove: () => void;
@@ -39,7 +94,8 @@ interface LeadLinkRowItemProps {
 
 /**
  * One link row: the platform icon read live from what is typed, the input,
- * an "open in a new tab" link once the text is a real link, and Remove link.
+ * an "open in a new tab" link once the text is a real link, and Remove link
+ * while there is something to remove.
  * The row grows in and folds away inside `AnimatePresence`, and turns inert
  * while it leaves, so focus never lands on a row on its way out.
  */
@@ -51,6 +107,7 @@ function LeadLinkRowItem({
   refusal,
   openLeadPath,
   isDisabled,
+  isRemovable,
   registerInput,
   onTextChange,
   onRemove,
@@ -124,54 +181,26 @@ function LeadLinkRowItem({
               onChange={(event) => onTextChange(event.target.value)}
             />
           </div>
-          {/* The slot opens to 44px with the first real link and folds to
-              nothing while there is none to open, so an empty row keeps its
-              width for the input and typing never makes the input jump. */}
-          <m.span
-            className={styles.linkOpenSlot}
-            initial={false}
-            animate={{
-              width: isOpenable ? OPEN_SLOT_WIDTH : 0,
-              overflow: isOpenable ? "visible" : "hidden",
-            }}
-            transition={{
-              duration,
-              ease: LINK_ROW_EASE,
-              overflow: { duration: 0, delay: isOpenable ? duration : 0 },
-            }}
-          >
-            <AnimatePresence initial={false}>
-              {isOpenable ? (
-                <m.span
-                  key="open"
-                  className={styles.linkOpen}
-                  initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.85 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.85 }}
-                  transition={{ duration }}
-                >
-                  <Button
-                    variant="icon"
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={t("admin:leads.field.openLinkAria", {
-                      position,
-                    })}
-                  >
-                    <FiExternalLink aria-hidden />
-                  </Button>
-                </m.span>
-              ) : null}
-            </AnimatePresence>
-          </m.span>
-          <IconButton
-            aria-label={t("admin:leads.field.removeLinkAria", { position })}
-            disabled={isDisabled}
-            onClick={onRemove}
-          >
-            <FiTrash2 aria-hidden />
-          </IconButton>
+          <LeadLinkRowSlot isShown={isOpenable} slotKey="open">
+            <Button
+              variant="icon"
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("admin:leads.field.openLinkAria", { position })}
+            >
+              <FiExternalLink aria-hidden />
+            </Button>
+          </LeadLinkRowSlot>
+          <LeadLinkRowSlot isShown={isRemovable} slotKey="remove">
+            <IconButton
+              aria-label={t("admin:leads.field.removeLinkAria", { position })}
+              disabled={isDisabled}
+              onClick={onRemove}
+            >
+              <FiTrash2 aria-hidden />
+            </IconButton>
+          </LeadLinkRowSlot>
         </div>
         <LeadRefusalLine
           error={refusal}
@@ -187,8 +216,9 @@ function LeadLinkRowItem({
  * The links of a lead, one input per row. Add link appends an empty row and
  * moves focus to it, up to {@link LEAD_LINKS_MAX} rows; Remove link takes a
  * row out and hands focus to the row now in its place (removing the only
- * row empties it). A link refusal shows under the row it names, or under
- * the whole list when it names no row.
+ * row empties it, so an only row that is already empty shows no Remove
+ * link). A link refusal shows under the row it names, or under the whole
+ * list when it names no row.
  */
 export function LeadLinksField({
   idPrefix,
@@ -199,7 +229,6 @@ export function LeadLinksField({
   isDisabled = false,
 }: LeadFieldsProps) {
   const { t } = useTranslation();
-  const labelId = useId();
   const hintId = useId();
   const fullId = useId();
   const inputsRef = useRef(new Map<string, HTMLInputElement>());
@@ -256,15 +285,10 @@ export function LeadLinksField({
   }
 
   return (
-    <div
-      className={styles.fieldBlock}
-      role="group"
-      aria-labelledby={labelId}
-      aria-describedby={listRefusal !== null ? listRefusalId : undefined}
+    <LeadFormSection
+      heading={t("admin:leads.field.links")}
+      describedBy={listRefusal !== null ? listRefusalId : undefined}
     >
-      <span id={labelId} className={styles.groupLabel}>
-        {t("admin:leads.field.links")}
-      </span>
       <p id={hintId} className={styles.groupHint}>
         {t("admin:leads.field.linksHint")}
       </p>
@@ -284,6 +308,7 @@ export function LeadLinksField({
               }
               openLeadPath={openLeadPath}
               isDisabled={isDisabled}
+              isRemovable={rows.length > 1 || row.text !== ""}
               registerInput={registerInput}
               onTextChange={(text) => changeText(rowIndex, text)}
               onRemove={() => removeRow(rowIndex)}
@@ -298,8 +323,9 @@ export function LeadLinksField({
       />
       <div className={styles.linkAddRow}>
         <Button
-          variant="ghost"
+          variant="quiet"
           size="sm"
+          className={styles.linkAdd}
           aria-disabled={isFull || isDisabled || undefined}
           aria-describedby={isFull ? fullId : undefined}
           onClick={addRow}
@@ -313,6 +339,6 @@ export function LeadLinksField({
           {t("admin:leads.field.linksFull", { max: LEAD_LINKS_MAX })}
         </p>
       </Collapse>
-    </div>
+    </LeadFormSection>
   );
 }

@@ -3437,6 +3437,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-14.headline":
+    "Leads gets a cleaner list, a sectioned Add lead form and a lead page that opens to read.",
   "changelog.releases.2026-11-13.headline":
     "Build VJ sequences of clips and scenes that play and loop on their own.",
   "changelog.releases.2026-11-09.headline":
@@ -3805,6 +3807,18 @@ export const marketing: Catalog = {
     "Richer partner cards in the directory",
   "changelog.entries.partner-cards-redesign.body":
     "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.leads-list-and-add-lead-tidied.title":
+    "A cleaner leads list and Add lead form",
+  "changelog.entries.leads-list-and-add-lead-tidied.body":
+    "Rows show overdue follow-ups and last activity at a glance, and Add lead groups its fields into sections.",
+  "changelog.entries.lead-page-opens-to-read.title":
+    "A lead's page opens as a clean record you can read",
+  "changelog.entries.lead-page-opens-to-read.body":
+    "Details sit in one card with links, dates and due follow-ups, and the form opens only on Edit details.",
+  "changelog.entries.lead-stage-moves-undo-cleanly.title":
+    "Move a lead's stage from the list and undo it cleanly",
+  "changelog.entries.lead-stage-moves-undo-cleanly.body":
+    "The move saves at once, and Undo takes it back for 10 minutes without a second line in the lead's history.",
   "changelog.entries.vj-sequences.title": "VJ sequences that play themselves",
   "changelog.entries.vj-sequences.body":
     "Line up clips and scenes with their own lengths, then press Play and let them run and loop.",

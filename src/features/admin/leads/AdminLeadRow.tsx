@@ -1,14 +1,17 @@
 import { useId } from "react";
 import { FiCheck, FiFileText, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminAvatar } from "../ui";
 import type { LeadListItemDTO } from "./api/leads.types";
 import { LEAD_TYPE_AVATAR_TONE, LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
+import { lisbonLeadDay } from "./leadDates";
 import { LeadLinkIcons } from "./LeadLinkIcons";
 import { adminLeadPath } from "./leadPaths";
 import { LeadPersonaThumb } from "./LeadPersonaThumb";
 import { LeadRowFollowUpMenu, LeadRowStageMenu } from "./LeadRowControls";
+import { leadActivityText } from "./leadRowDates";
 import styles from "./AdminLeads.module.css";
 
 /** Up to two initials from the words of a lead's name that start with a
@@ -47,13 +50,47 @@ function LeadRowAvatar({ row }: { row: LeadListItemDTO }) {
   );
 }
 
+/** When the lead last moved ("3 days ago"), with its note count as a quiet
+ *  icon and number after it. The eye reads the short form; assistive tech
+ *  reads "Last activity 3 days ago, 2 notes". */
+function LeadRowActivity({ row }: { row: LeadListItemDTO }) {
+  const { t, language } = useTranslation();
+  const formatters = useFormat();
+  const activity = leadActivityText(
+    row.lastEntryAt,
+    lisbonLeadDay(),
+    language,
+    formatters,
+  );
+  return (
+    <span className={styles.rowActivity}>
+      <span className={styles.rowActivityTime} aria-hidden>
+        {activity}
+      </span>
+      {row.noteCount > 0 ? (
+        <span className={styles.rowNoteCount} aria-hidden>
+          <FiFileText className={styles.rowMetaIcon} />
+          {row.noteCount}
+        </span>
+      ) : null}
+      <span className="visuallyHidden">
+        {t("admin:leads.list.lastActivity", { time: activity })}
+        {row.noteCount > 0
+          ? `, ${t("admin:leads.list.noteCount", { count: row.noteCount })}`
+          : null}
+      </span>
+    </span>
+  );
+}
+
 /**
  * One lead in the list. The name is the link to the lead page, and its hit
  * area stretches over the whole row; the stage and the follow-up sit above
  * it as their own menus, so a lead moves on without opening it. The link is
  * named "Open <name>" and described by the rest of the row. A wide list
  * reads each row as one line of a table; a narrow one stacks it into a
- * card: name on the left, the stage on the right, details below.
+ * card: name and type beside the stage, then the follow-up beside the last
+ * activity, then the location beside the links.
  */
 export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
   const { t } = useTranslation();
@@ -95,12 +132,7 @@ export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
           <span className={styles.rowLinks}>
             <LeadLinkIcons links={row.links} linkCount={row.linkCount} />
           </span>
-          <span className={`${styles.rowMeta} ${styles.rowNotes}`}>
-            <FiFileText className={styles.rowMetaIcon} aria-hidden />
-            <span>
-              {t("admin:leads.list.noteCount", { count: row.noteCount })}
-            </span>
-          </span>
+          <LeadRowActivity row={row} />
           {persona !== null ? (
             <span className="visuallyHidden">
               {t("admin:leads.list.personaLinked", {

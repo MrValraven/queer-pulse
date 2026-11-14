@@ -20,6 +20,7 @@ import {
   type LeadListFilters,
   type LeadPersonaPublicState,
   type LeadReasonCode,
+  type LeadRevertRefusalReason,
   type LeadStage,
   type LeadType,
   type UpdateLeadBody,
@@ -46,6 +47,7 @@ export function leadRefusal(
     leadName: string;
     index: number;
     publicState: Exclude<LeadPersonaPublicState, "shown">;
+    reason: LeadRevertRefusalReason;
   }>,
 ): ApiError {
   return new ApiError(status, STATUS_TEXT[status], {

@@ -3,7 +3,6 @@ import { FiClock } from "react-icons/fi";
 import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { LEAD_STAGES, type LeadStage } from "./api/leads.types";
-import { useLeadDueCountFor } from "./api/useLeadDueCountFor";
 import { LEAD_STAGE_LABEL_KEY } from "./leadLabels.data";
 import type { LeadListControls } from "./useLeadListFilters";
 import styles from "./LeadPipeline.module.css";
@@ -17,7 +16,8 @@ const STAGE_BAR_CLASS: Record<LeadStage, string | undefined> = {
   not_now: styles.barPlum,
 };
 
-/** One stage tile: its name, its count and its share of all leads. */
+/** One stage tile: its name, its count and its share of all leads. The All
+ *  tile has no share to show, so its track keeps its place unseen. */
 function PipelineTile({
   label,
   count,
@@ -25,6 +25,7 @@ function PipelineTile({
   ariaLabel,
   isPressed,
   barClass,
+  hasShareBar = true,
   onPress,
 }: {
   label: string;
@@ -32,7 +33,8 @@ function PipelineTile({
   share: number | null;
   ariaLabel: string | undefined;
   isPressed: boolean;
-  barClass: string | undefined;
+  barClass?: string;
+  hasShareBar?: boolean;
   onPress: () => void;
 }) {
   return (
@@ -51,7 +53,11 @@ function PipelineTile({
           <RollingNumber value={String(count)} numericValue={count} />
         )}
       </span>
-      <span className={styles.tileTrack} aria-hidden>
+      <span
+        className={styles.tileTrack}
+        data-hidden={hasShareBar ? undefined : true}
+        aria-hidden
+      >
         <span
           className={[styles.tileBar, barClass].filter(Boolean).join(" ")}
           style={{ inlineSize: `${Math.round((share ?? 0) * 100)}%` }}
@@ -66,23 +72,25 @@ function PipelineTile({
  * with how many leads sit in it and its share of the whole (both follow the
  * search and the type), All first. Beside it, the Follow-up due switch,
  * with how many open leads wait on a follow-up, over the same search and
- * type, so every number in the strip answers the same question.
- * On a phone the tiles scroll sideways in one row.
+ * type, so every number in the strip answers the same question. Every
+ * count comes from the list's first page.
+ * On a phone the tiles sit in a grid of three by two.
  */
 export function LeadPipeline({
   controls,
   stageCounts,
   totalCount,
+  dueCount,
 }: {
   controls: LeadListControls;
   stageCounts: Record<LeadStage, number> | null;
   totalCount: number | null;
+  dueCount: number | null;
 }) {
   const { t } = useTranslation();
   const groupLabelId = useId();
   const dueCountId = useId();
   const { filters } = controls;
-  const due = useLeadDueCountFor(filters.q, filters.type);
   const allLabel = t("admin:leads.list.stageAll");
   const shareOf = (count: number | null) =>
     count === null || totalCount === null || totalCount === 0
@@ -107,10 +115,10 @@ export function LeadPipeline({
           <PipelineTile
             label={allLabel}
             count={totalCount}
-            share={totalCount === null ? null : 1}
+            share={null}
             ariaLabel={ariaOf(allLabel, totalCount)}
             isPressed={filters.stage === null}
-            barClass={styles.barAll}
+            hasShareBar={false}
             onPress={() => controls.setStage(null)}
           />
           {LEAD_STAGES.map((stage) => {
@@ -137,9 +145,9 @@ export function LeadPipeline({
           role="switch"
           aria-checked={filters.isDueOnly}
           aria-label={t("admin:leads.list.dueOnly")}
-          aria-describedby={due === null ? undefined : dueCountId}
+          aria-describedby={dueCount === null ? undefined : dueCountId}
           className={styles.due}
-          data-has-due={(due?.count ?? 0) > 0 || undefined}
+          data-has-due={(dueCount ?? 0) > 0 || undefined}
           onClick={() => controls.setIsDueOnly(!filters.isDueOnly)}
         >
           <span className={styles.dueIcon} aria-hidden>
@@ -150,14 +158,9 @@ export function LeadPipeline({
               {t("admin:leads.list.dueOnly")}
             </span>
             <span id={dueCountId} className={styles.dueCount}>
-              {due === null
+              {dueCount === null
                 ? null
-                : t(
-                    due.isCapped
-                      ? "admin:leads.pipeline.dueCountCapped"
-                      : "admin:leads.pipeline.dueCount",
-                    { count: due.count },
-                  )}
+                : t("admin:leads.pipeline.dueCount", { count: dueCount })}
             </span>
           </span>
           <span className={styles.dueSwitch} aria-hidden />

@@ -10083,7 +10083,8 @@ export const admin: Catalog = {
   "leads.list.typeAll": "All types",
   "leads.list.dueOnly": "Follow-up due",
   "leads.list.followUpOn": "Follow up {date}",
-  "leads.list.followUpDue": "Follow-up due {date}",
+  "leads.list.followUpOverdue": "Overdue · {date}",
+  "leads.list.lastActivity": "Last activity {time}",
   "leads.list.noteCount_one": "{count} note",
   "leads.list.noteCount": "{count} notes",
   "leads.list.linksLabel": "Links: {platforms}",
@@ -10100,11 +10101,10 @@ export const admin: Catalog = {
     "Try another name or stage, or clear the filters",
   "leads.empty.clearFilters": "Clear filters",
   "leads.column.lead": "Lead",
-  "leads.column.notes": "Notes",
+  "leads.column.lastActivity": "Last activity",
   "leads.column.followUp": "Follow-up",
   "leads.pipeline.dueCount_one": "{count} waiting",
   "leads.pipeline.dueCount": "{count} waiting",
-  "leads.pipeline.dueCountCapped": "{count}+ waiting",
   "leads.toolbar.count_one": "{count} lead",
   "leads.toolbar.count": "{count} leads",
   "leads.toolbar.showingOf": "Showing {shown} of {count}",
@@ -10162,6 +10162,13 @@ export const admin: Catalog = {
   "leads.field.email": "Email",
   "leads.field.phone": "Phone",
   "leads.field.links": "Links",
+  "leads.form.subtitle":
+    "Someone we're reaching out to. A name and a type are enough to start",
+  "leads.form.sectionAbout": "About",
+  "leads.form.sectionContact": "Contact",
+  "leads.form.sectionFollowUp": "Follow-up",
+  "leads.form.emailPlaceholder": "name@example.com",
+  "leads.form.phonePlaceholder": "+351 912 345 678",
   "leads.field.linksHint":
     "Paste any link and we spot the platform from the address",
   "leads.field.linkLabel": "Link {position}",
@@ -10180,7 +10187,16 @@ export const admin: Catalog = {
   "leads.addDialog.submit": "Add lead",
   "leads.details.heading": "Details",
   "leads.details.save": "Save changes",
-  "leads.details.discard": "Discard changes",
+  "leads.details.cancel": "Cancel",
+  "leads.details.edit": "Edit details",
+  "leads.details.notAdded": "Not added",
+  "leads.details.followUpDue": "Due {date}",
+  "leads.details.followUpDueToday": "Due today",
+  "leads.details.followUpOverdue": "Overdue since {date}",
+  "leads.details.stageSavesOnPick": "Stage saves as soon as you pick it",
+  "leads.details.opensInNewTab": "opens in a new tab",
+  "leads.details.addedOn": "Added {date}",
+  "leads.details.changedOn": "Last changed {date}",
   "leads.details.saved": "Changes saved",
   "leads.details.stageSaved": "Moved to {stage}",
   "leads.details.clearFollowUp": "Clear follow-up",
@@ -10294,6 +10310,20 @@ export const admin: Catalog = {
     "Only notes can be edited or deleted. Stage and persona lines stay as the record",
   "leads.error.cursorInvalid":
     "The list changed while you were paging. Load the leads again",
+  "leads.error.entryNotFound":
+    "This stage change is gone from the lead's history, so there is nothing left to undo",
+  "leads.error.entryNotRevertible.not_stage_change":
+    "Only a stage change can be undone this way",
+  "leads.error.entryNotRevertible.not_newest":
+    "Someone moved this lead to another stage after you, so this move can no longer be undone",
+  "leads.error.entryNotRevertible.stage_moved":
+    "This lead's stage changed again after your move, so it can no longer be undone",
+  "leads.error.entryNotRevertible.not_yours":
+    "Only the person who made this stage change or an admin can undo it",
+  "leads.error.entryNotRevertible.too_old":
+    "Stage changes can be undone for 10 minutes. Move the lead again from its row",
+  "leads.error.entryNotRevertible.unknownReason":
+    "This stage change can no longer be undone",
   "leads.failure.offline":
     "You're offline, so this didn't reach QueerPulse. Check your connection and try again",
   "leads.failure.timeout": "QueerPulse took too long to answer. Try again",

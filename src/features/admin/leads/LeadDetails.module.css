@@ -1,0 +1,411 @@
+/* The lead page's Details card: the stage as the first row, then either
+   the fields as a definition list to read or the form to edit them. The
+   card's rhythm runs on 12 (between rows), 16 (around blocks) and the
+   card padding. */
+
+/* ── Panel header ───────────────────────────────────────────────────────── */
+/* The heading and Edit details share a line. The button's negative block
+   margin centres it on the heading's line without making the line taller,
+   so the heading tops out level with Persona across the page and nothing
+   moves when the button fades out in edit mode. */
+.panelHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+/* (40px button - 28.8px heading line) / 2, rounded. */
+.editButton {
+  margin-block: -6px;
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+/* The radius matches the persona card and the Delete lead zone, so the
+   page reads as one family. `--details-pad` is the card padding, which the
+   sticky edit bar bleeds through to reach the card's edges. */
+.card {
+  --details-pad: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--details-pad);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-e1);
+}
+
+/* ── Read view ──────────────────────────────────────────────────────────── */
+/* The view measures itself, so the list sets its labels beside the values
+   whenever the card is wide enough, whatever column holds it. */
+.view {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+/* A narrow card stacks each label over its value. */
+.detailRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  padding-block: 12px;
+}
+
+/* The stage row opens the card, so it starts flush with the padding. */
+.stageList > .detailRow {
+  padding-top: 0;
+}
+
+/* Every row of the read view sits under a hairline, the first one too,
+   since the stage row is above it. The last row leaves the same 16 above
+   the footer's hairline as the footer leaves below it. */
+.view .detailRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.view .detailRow:last-child {
+  padding-bottom: 16px;
+}
+
+@container (min-width: 420px) {
+  .detailRow {
+    /* A label column wide enough for "Follow-up date" in both languages. */
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: 16px;
+    align-items: baseline;
+  }
+}
+
+/* The labels read like the form's field labels. */
+.detailLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.detailValue {
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.notAdded {
+  font-style: italic;
+  color: var(--ink-60);
+}
+
+/* An email, an address or a place breaks anywhere before it would push
+   the card sideways on a phone. */
+.longValue {
+  overflow-wrap: anywhere;
+}
+
+.valueLink {
+  border-radius: var(--radius-4);
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--accent-rgb), 0.45);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-fast) var(--ease);
+}
+
+.valueLink:focus-visible,
+.linkRow:focus-visible,
+.followUpFocus:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .valueLink:hover {
+    text-decoration-color: var(--accent);
+  }
+}
+
+/* ── Links ──────────────────────────────────────────────────────────────── */
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.linkItem {
+  min-width: 0;
+}
+
+/* The list gives back its rows' block padding, so the first link's name
+   sits on the label's line and the row keeps the spacing of the others.
+   Stacked under its label, the list keeps the label's 4px gap above. */
+.linkList {
+  margin-bottom: -6px;
+}
+
+@container (min-width: 420px) {
+  .linkList {
+    margin-top: -6px;
+  }
+}
+
+/* Each link is a row with the platform icon, its name over the address,
+   and the new tab icon at the end. The name sits on the text baseline the
+   label reads on and the icons centre on the row. The negative inline
+   margin lines the icon up with the other values while the hover wash
+   keeps its padding. */
+.linkRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  margin-inline: -8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-10);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.linkRow:hover {
+    background: rgba(var(--ink-rgb), 0.05);
+  }
+
+  a.linkRow:hover .linkOpenIcon {
+    color: var(--accent-text);
+  }
+}
+
+.linkPlatformIcon {
+  flex: none;
+  align-self: center;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-60);
+}
+
+.linkText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* The platform name reads at the size and near the weight of the other
+   values. */
+.linkPlatform {
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.linkAddress {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.linkOpenIcon {
+  flex: none;
+  align-self: center;
+  width: 14px;
+  height: 14px;
+  color: var(--ink-60);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+/* ── Follow-up ──────────────────────────────────────────────────────────── */
+.followUpLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+}
+
+/* The date's place takes focus in code once Clear follow-up folds away;
+   the ring shows for keyboard use only. */
+.followUpFocus {
+  display: inline-flex;
+  min-width: 0;
+  border-radius: var(--radius-4);
+}
+
+.followUpFocus:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.followUpDate {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+}
+
+.followUpIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  color: var(--ink-60);
+}
+
+/* A due follow-up is a line in the warn ink with a clock, and its words
+   ("Due today", "Overdue since") carry the state beside the colour. */
+.followUpDate[data-due] {
+  font-weight: 600;
+  color: var(--amber-ink);
+}
+
+.followUpDate[data-due] .followUpIcon {
+  color: inherit;
+}
+
+/* A closed lead's old date reads quietly, with no icon. */
+.followUpDate[data-past] {
+  font-style: italic;
+  color: var(--ink-60);
+}
+
+.followUpClearSlot {
+  min-width: 0;
+}
+
+.clearFollowUp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* The quiet small button is 36px on a 24px line; the negative block
+   margin keeps the row as tall as the others, and the button's own hit
+   area still reaches 44px. */
+.clearFollowUpButton {
+  margin-block: -6px;
+}
+
+/* ── Footer: the dates ──────────────────────────────────────────────────── */
+.viewFooter {
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* ── Header: Email and Call ─────────────────────────────────────────────── */
+/* The cap lets a long name wrap inside the header's actions slot, which
+   otherwise takes the width of its content and squeezes the title. */
+.contactActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 26rem;
+}
+
+/* Once both have folded away the row, and the header slot holding it,
+   draw nothing, so the header keeps no gap for them. */
+.contactActions:empty,
+:has(> .contactActions:empty) {
+  display: none;
+}
+
+/* The fold is the flex item, so it is what may shrink to the row; the
+   button inside then wraps a long name across lines and never pushes the
+   card sideways. */
+.contactActionSlot {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.contactActionSlot > .contactAction {
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* ── Edit mode ──────────────────────────────────────────────────────────── */
+/* The form sits under a hairline below the stage row. */
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* Save changes and Cancel stick to the bottom of the screen for as long
+   as the form runs past it. The bar bleeds through the card padding to
+   the card's edges and closes the card at rest, so its corners take the
+   card's inner radius. The bottom padding clears the home indicator where
+   the screen has one. */
+.editBar {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 calc(-1 * var(--details-pad)) calc(-1 * var(--details-pad));
+  padding: 16px var(--details-pad) max(16px, var(--bottom-inset));
+  background: var(--paper);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 0 0 var(--radius-15) var(--radius-15);
+}
+
+.editActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ── Phone ──────────────────────────────────────────────────────────────── */
+@media (--md) {
+  .card {
+    --details-pad: 16px;
+  }
+
+  /* The small buttons keep a 44px target on a phone, whatever the pointer
+     reports. */
+  .phoneTarget,
+  .contactActionSlot > .contactAction {
+    min-height: 44px;
+  }
+
+  .editButton {
+    margin-block: -8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .valueLink,
+  .linkRow,
+  .linkOpenIcon {
+    transition: none;
+  }
+}

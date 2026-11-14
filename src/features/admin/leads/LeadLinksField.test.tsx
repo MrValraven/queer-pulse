@@ -91,6 +91,27 @@ describe("LeadLinksField", () => {
     expect(screen.getByRole("textbox")).toHaveValue("instagram.com/second");
   });
 
+  it("shows Remove link on the only row once it holds text", async () => {
+    const user = await renderLinks([""]);
+    expect(
+      screen.queryByRole("button", { name: "Remove link 1" }),
+    ).not.toBeInTheDocument();
+    await user.type(screen.getByLabelText("Link 1"), "ra.co/dj/cave");
+    const removeButton = await screen.findByRole("button", {
+      name: "Remove link 1",
+    });
+    await user.click(removeButton);
+    await waitFor(() =>
+      expect(screen.getByLabelText("Link 1")).toHaveValue(""),
+    );
+    expect(screen.getByLabelText("Link 1")).toHaveFocus();
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("button", { name: "Remove link 1" }),
+      ).not.toBeInTheDocument(),
+    );
+  });
+
   it("stops at twelve links and says so", async () => {
     const user = await renderLinks(
       Array.from(

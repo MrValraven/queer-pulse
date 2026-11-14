@@ -13,12 +13,15 @@ import {
   leadRefusalDetailOf,
   type HiddenLeadPersonaState,
   type LeadReasonCode,
+  type LeadRevertRefusalReason,
 } from "./api/leads.types";
 
 /** The line each lead refusal shows, one per reason code the server sends
  *  (contract 10.4). A not-listed refusal that names its state reads
  *  {@link LEAD_NOT_LISTED_KEY} first; this line names all four causes for a
- *  body that carries none. */
+ *  body that carries none. A not-revertible refusal that names its reason
+ *  reads {@link LEAD_NOT_REVERTIBLE_KEY} first; this line says the change
+ *  can no longer be undone for a body that carries none. */
 export const LEAD_REASON_KEY: Record<LeadReasonCode, string> = {
   LEAD_NOT_FOUND: "admin:leads.error.notFound",
   LEAD_NAME_REQUIRED: "admin:leads.error.nameRequired",
@@ -43,6 +46,9 @@ export const LEAD_REASON_KEY: Record<LeadReasonCode, string> = {
   LEAD_NOTE_NOT_YOURS: "admin:leads.error.noteNotYours",
   LEAD_ENTRY_NOT_EDITABLE: "admin:leads.error.entryNotEditable",
   LEAD_CURSOR_INVALID: "admin:leads.error.cursorInvalid",
+  LEAD_ENTRY_NOT_FOUND: "admin:leads.error.entryNotFound",
+  LEAD_ENTRY_NOT_REVERTIBLE:
+    "admin:leads.error.entryNotRevertible.unknownReason",
 };
 
 /** The link refusal's line for each state a not-listed body can name. */
@@ -52,6 +58,16 @@ export const LEAD_NOT_LISTED_KEY: Record<HiddenLeadPersonaState, string> = {
   removed: "admin:leads.error.personaNotListed.removed",
   taken_down: "admin:leads.error.personaNotListed.taken_down",
 };
+
+/** The revert refusal's line for each reason its body can name. */
+export const LEAD_NOT_REVERTIBLE_KEY: Record<LeadRevertRefusalReason, string> =
+  {
+    not_stage_change: "admin:leads.error.entryNotRevertible.not_stage_change",
+    not_newest: "admin:leads.error.entryNotRevertible.not_newest",
+    stage_moved: "admin:leads.error.entryNotRevertible.stage_moved",
+    not_yours: "admin:leads.error.entryNotRevertible.not_yours",
+    too_old: "admin:leads.error.entryNotRevertible.too_old",
+  };
 
 /** The line for a failure that carries no lead reason: the connection, the
  *  server, or the account's access. */
@@ -79,7 +95,8 @@ export const LEAD_ERROR_MAX: Partial<Record<LeadReasonCode, number>> = {
 
 /**
  * The catalog key that names why a lead read or write failed. A not-listed
- * refusal with a known `publicState` names that state; any other known code
+ * refusal with a known `publicState` names that state, and a not-revertible
+ * refusal with a known `reason` names that reason; any other known code
  * reads its own line; a failure with no lead code names the connection,
  * server or access cause.
  */
@@ -88,6 +105,10 @@ export function leadErrorKeyOf(cause: unknown): string {
   if (reasonCode === "LEAD_PERSONA_NOT_LISTED") {
     const { publicState } = leadRefusalDetailOf(cause);
     if (publicState !== null) return LEAD_NOT_LISTED_KEY[publicState];
+  }
+  if (reasonCode === "LEAD_ENTRY_NOT_REVERTIBLE") {
+    const { revertReason } = leadRefusalDetailOf(cause);
+    if (revertReason !== null) return LEAD_NOT_REVERTIBLE_KEY[revertReason];
   }
   if (reasonCode !== null) return LEAD_REASON_KEY[reasonCode];
   return LEAD_FAILURE_KEY[studioReasonOf(cause)];

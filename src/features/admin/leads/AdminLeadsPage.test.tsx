@@ -19,6 +19,9 @@ vi.mock("../../../shared/components/layout/AdminShell", () => ({
 
 const ROW_NAME = /^Open /;
 
+/** What a due follow-up cell reads: "Overdue · <date>" or "Due today". */
+const DUE_TEXT = /^(Overdue · |Due today$)/;
+
 /** Prints the current search params, so a test can read the URL. */
 function LocationProbe() {
   const location = useLocation();
@@ -75,7 +78,7 @@ function rowLabels(): (string | null)[] {
 describe("AdminLeadsPage", () => {
   beforeEach(() => resetDemoLeads());
 
-  it("lists due follow-ups first with the due date in the warn tone", async () => {
+  it("lists due follow-ups first with their state in the warn tone", async () => {
     renderPage();
     const rows = await screen.findAllByRole("link", { name: ROW_NAME });
     expect(
@@ -89,11 +92,20 @@ describe("AdminLeadsPage", () => {
     const firstRow = rowOf(elementAt(rows, 0));
     expect(
       within(firstRow)
-        .getByText(/Follow-up due/)
-        .closest("[data-due]"),
+        .getByText(/^Overdue · /)
+        .closest('[data-state="overdue"]'),
+    ).not.toBeNull();
+    const fourthRow = rowOf(elementAt(rows, 3));
+    expect(
+      within(fourthRow).getByText("Due today").closest('[data-state="today"]'),
     ).not.toBeNull();
     const fifthRow = rowOf(elementAt(rows, 4));
-    expect(within(fifthRow).queryByText(/Follow-up due/)).toBeNull();
+    expect(within(fifthRow).queryByText(DUE_TEXT)).toBeNull();
+    expect(
+      within(fifthRow).getByRole("button", {
+        name: /^Sala Âmbar: Follow up /,
+      }),
+    ).toBeInTheDocument();
   });
 
   it("filters by stage with counted chips", async () => {
@@ -122,9 +134,7 @@ describe("AdminLeadsPage", () => {
     await user.click(screen.getByRole("switch", { name: "Follow-up due" }));
     await waitFor(() => expect(rowLabels()).toHaveLength(4));
     for (const link of screen.getAllByRole("link", { name: ROW_NAME })) {
-      expect(
-        within(rowOf(link)).getByText(/Follow-up due/),
-      ).toBeInTheDocument();
+      expect(within(rowOf(link)).getByText(DUE_TEXT)).toBeInTheDocument();
     }
     expect(screen.getByTestId("location-search")).toHaveTextContent("due=1");
   });
@@ -190,6 +200,15 @@ describe("AdminLeadsPage", () => {
     expect(
       screen.getByRole("button", { name: "All, 12 leads" }),
     ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("shows when each lead last moved", async () => {
+    renderPage();
+    const link = await screen.findByRole("link", { name: "Open Cave 23" });
+    expect(
+      within(rowOf(link)).getByText(/^Last activity /),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Notes")).toBeNull();
   });
 
   it("opens a lead from its row", async () => {

@@ -133,12 +133,6 @@
     grid-area: delete;
   }
 
-  /* The stage select keeps its own width beside the wide form; on a
-     narrow page it runs the full width like every other field. */
-  .stageControl {
-    max-width: 320px;
-  }
-
   .skeletonBody {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   }
@@ -146,25 +140,12 @@
 
 /* ── Panels ─────────────────────────────────────────────────────────────── */
 /* Panels group with space and a serif heading, the persona wall's idiom;
-   only the persona card and the notes draw a surface. */
+   the details card, the persona card and the notes draw a surface. */
 .section {
   display: flex;
   flex-direction: column;
   gap: 20px;
   min-width: 0;
-}
-
-/* The heading takes focus in code after Save changes or Discard changes
-   folds the bar away; the ring shows for keyboard use only. */
-.sectionHeading:focus-visible {
-  border-radius: var(--radius-4);
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-.sectionHeading:focus:not(:focus-visible) {
-  outline: none;
 }
 
 .sectionHeading {
@@ -178,13 +159,22 @@
 }
 
 /* ── Stage ──────────────────────────────────────────────────────────────── */
-.stageControl {
-  display: flex;
-  flex-direction: column;
+/* The stage row's select sizes to the stage it shows, with a floor wide
+   enough for the longest stage name in both languages. */
+.stageSelect {
+  width: fit-content;
+  min-width: 11rem;
+  max-width: 100%;
 }
 
-.stageControl > .field {
-  margin-bottom: 0;
+/* Edit mode's caption under the stage. The top padding sits inside the
+   fold, so the gap opens and closes with it. */
+.stageNote {
+  margin: 0;
+  padding-top: 8px;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
 }
 
 /* The top padding sits inside the fold, so the gap opens and closes with
@@ -205,63 +195,6 @@
   flex: none;
   width: 15px;
   height: 15px;
-}
-
-/* ── Quick actions ──────────────────────────────────────────────────────── */
-.quickActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* Each folding wrapper is a flex item; an empty fold takes no gap of its
-   own once it has gone. */
-.quickActions:not(:has(> *)) {
-  display: none;
-}
-
-/* The fold is the flex item, so it is what may shrink to the row; the
-   button inside then wraps a long name across lines and never pushes the
-   page sideways. */
-.quickActionSlot {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.quickActionSlot > .quickAction {
-  max-width: 100%;
-  white-space: normal;
-  text-align: start;
-  overflow-wrap: anywhere;
-}
-
-/* ── Follow-up and saving ───────────────────────────────────────────────── */
-.followUpRow {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-/* The small buttons keep a 44px target on a phone, whatever the pointer
-   reports. */
-@media (--md) {
-  .quickActionSlot > .quickAction,
-  .followUpRow > .phoneTarget {
-    min-height: 44px;
-  }
-}
-
-.saveBar {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-top: 4px;
-}
-
-.saveActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
 /* ── Delete lead ────────────────────────────────────────────────────────── */

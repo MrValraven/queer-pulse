@@ -6,6 +6,7 @@ import { AdminPageHeader } from "../ui";
 import { leadReasonOf, type LeadDTO } from "./api/leads.types";
 import { useLead } from "./api/useLead";
 import { AdminLeadFrame } from "./AdminLeadFrame";
+import { LeadContactActions } from "./LeadContactActions";
 import { LeadDeleteSection } from "./LeadDeleteSection";
 import { LeadDetailsPanel } from "./LeadDetailsPanel";
 import { LeadHistoryPanel } from "./LeadHistoryPanel";
@@ -74,11 +75,15 @@ function AdminLeadBody({ leadId }: { leadId: string }) {
   );
 }
 
-/** The type, then the location after a pin when the lead has one. */
+/** The stage pill, the type, then the location after a pin when the lead
+ *  has one: one line right under the name, so the stage reads with the
+ *  title. The stage stays out of the heading itself, which names the lead
+ *  alone. */
 function LeadHeaderSub({ lead }: { lead: LeadDTO }) {
   const { t } = useTranslation();
   return (
     <span className={styles.headerSub}>
+      <LeadStagePill stage={lead.stage} />
       <span>{t(LEAD_TYPE_LABEL_KEY[lead.type])}</span>
       <LeadFadeInline isShown={lead.location !== null}>
         <span className={styles.headerLocation}>
@@ -90,10 +95,11 @@ function LeadHeaderSub({ lead }: { lead: LeadDTO }) {
   );
 }
 
-/** The header and the two columns: details on the left, persona then
- *  history on the right, Delete lead across both at the bottom. The DOM
- *  keeps the reading order (details, persona, history, delete), which is
- *  how a narrow page stacks them; the grid places them side by side. */
+/** The header with Email and Call beside the name (under it on a phone),
+ *  then the two columns: details on the left, persona then history on the
+ *  right, Delete lead across both at the bottom. The DOM keeps the reading
+ *  order (details, persona, history, delete), which is how a narrow page
+ *  stacks them; the grid places them side by side. */
 function AdminLeadContent({ lead }: { lead: LeadDTO }) {
   const { t } = useTranslation();
   return (
@@ -102,7 +108,7 @@ function AdminLeadContent({ lead }: { lead: LeadDTO }) {
         eyebrow={t("admin:leads.title")}
         title={lead.name}
         sub={<LeadHeaderSub lead={lead} />}
-        actions={<LeadStagePill stage={lead.stage} />}
+        actions={<LeadContactActions lead={lead} />}
       />
       <div className={styles.bodyFrame}>
         <div className={styles.body}>

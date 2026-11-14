@@ -198,7 +198,8 @@ const toEntryDTO = ({ personaId, ...entry }: StoredEntry): LeadEntryDTO => {
   };
 };
 
-const newestFirst = (first: StoredEntry, second: StoredEntry): number =>
+/** History order: the newest stamp first, then the higher id. */
+export const newestFirst = (first: StoredEntry, second: StoredEntry): number =>
   compareText(second.createdAt, first.createdAt) ||
   compareText(second.id, first.id);
 

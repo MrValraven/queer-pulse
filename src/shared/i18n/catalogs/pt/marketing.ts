@@ -3530,6 +3530,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-14.headline":
+    "Os contactos ganham uma lista mais limpa, um formulário por secções e uma página que abre para ler.",
   "changelog.releases.2026-11-13.headline":
     "Cria sequências VJ de clips e cenas que tocam e repetem sozinhas.",
   "changelog.releases.2026-11-09.headline":
@@ -3899,6 +3901,18 @@ export const marketing: Catalog = {
     "Cartões de parceiros mais ricos no diretório",
   "changelog.entries.partner-cards-redesign.body":
     "Os negócios parceiros têm um cartão largo com a foto, uma etiqueta de parceria e a nota da nossa equipa.",
+  "changelog.entries.leads-list-and-add-lead-tidied.title":
+    "Lista de contactos e formulário mais limpos",
+  "changelog.entries.leads-list-and-add-lead-tidied.body":
+    "As linhas mostram seguimentos em atraso e a última atividade, e Adicionar contacto agrupa os campos em secções.",
+  "changelog.entries.lead-page-opens-to-read.title":
+    "A página de um contacto abre como uma ficha para ler",
+  "changelog.entries.lead-page-opens-to-read.body":
+    "Os detalhes ficam num só cartão com links, datas e seguimentos, e o formulário só abre em Editar detalhes.",
+  "changelog.entries.lead-stage-moves-undo-cleanly.title":
+    "Muda a fase de um contacto na lista e desfaz sem rasto",
+  "changelog.entries.lead-stage-moves-undo-cleanly.body":
+    "A mudança grava logo, e Desfazer anula-a durante 10 minutos sem deixar uma segunda linha no histórico do contacto.",
   "changelog.entries.vj-sequences.title": "Sequências VJ que tocam sozinhas",
   "changelog.entries.vj-sequences.body":
     "Alinha clips e cenas com a duração de cada passo, carrega em Tocar e deixa-as correr e repetir.",

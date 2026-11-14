@@ -10231,7 +10231,8 @@ export const admin: Catalog = {
   "leads.list.typeAll": "Todos os tipos",
   "leads.list.dueOnly": "Seguimento pendente",
   "leads.list.followUpOn": "Seguimento a {date}",
-  "leads.list.followUpDue": "Seguimento pendente desde {date}",
+  "leads.list.followUpOverdue": "Em atraso · {date}",
+  "leads.list.lastActivity": "Última atividade {time}",
   "leads.list.noteCount_one": "{count} nota",
   "leads.list.noteCount": "{count} notas",
   "leads.list.linksLabel": "Links: {platforms}",
@@ -10248,11 +10249,10 @@ export const admin: Catalog = {
     "Experimenta outro nome ou fase, ou limpa os filtros",
   "leads.empty.clearFilters": "Limpar filtros",
   "leads.column.lead": "Contacto",
-  "leads.column.notes": "Notas",
+  "leads.column.lastActivity": "Última atividade",
   "leads.column.followUp": "Seguimento",
   "leads.pipeline.dueCount_one": "{count} à espera",
   "leads.pipeline.dueCount": "{count} à espera",
-  "leads.pipeline.dueCountCapped": "{count}+ à espera",
   "leads.toolbar.count_one": "{count} contacto",
   "leads.toolbar.count": "{count} contactos",
   "leads.toolbar.showingOf": "A mostrar {shown} de {count}",
@@ -10310,6 +10310,13 @@ export const admin: Catalog = {
   "leads.field.email": "Email",
   "leads.field.phone": "Telefone",
   "leads.field.links": "Links",
+  "leads.form.subtitle":
+    "Alguém que estamos a contactar. Basta um nome e um tipo para começar",
+  "leads.form.sectionAbout": "Sobre o contacto",
+  "leads.form.sectionContact": "Como contactar",
+  "leads.form.sectionFollowUp": "Seguimento",
+  "leads.form.emailPlaceholder": "nome@exemplo.com",
+  "leads.form.phonePlaceholder": "+351 912 345 678",
   "leads.field.linksHint":
     "Cola qualquer link e reconhecemos a plataforma pelo endereço",
   "leads.field.linkLabel": "Link {position}",
@@ -10327,7 +10334,16 @@ export const admin: Catalog = {
   "leads.addDialog.submit": "Adicionar contacto",
   "leads.details.heading": "Detalhes",
   "leads.details.save": "Guardar alterações",
-  "leads.details.discard": "Descartar alterações",
+  "leads.details.cancel": "Cancelar",
+  "leads.details.edit": "Editar detalhes",
+  "leads.details.notAdded": "Por preencher",
+  "leads.details.followUpDue": "Pendente desde {date}",
+  "leads.details.followUpDueToday": "Para hoje",
+  "leads.details.followUpOverdue": "Em atraso desde {date}",
+  "leads.details.stageSavesOnPick": "A fase fica guardada assim que a escolhes",
+  "leads.details.opensInNewTab": "abre num novo separador",
+  "leads.details.addedOn": "Adicionado a {date}",
+  "leads.details.changedOn": "Última alteração a {date}",
   "leads.details.saved": "Alterações guardadas",
   "leads.details.stageSaved": "Passou para {stage}",
   "leads.details.clearFollowUp": "Limpar seguimento",
@@ -10444,6 +10460,20 @@ export const admin: Catalog = {
     "Só as notas podem ser editadas ou apagadas. As linhas de fase e de persona ficam como registo",
   "leads.error.cursorInvalid":
     "A lista mudou enquanto paginavas. Carrega os contactos de novo",
+  "leads.error.entryNotFound":
+    "Esta mudança de fase já não está no histórico do contacto, por isso não há nada para desfazer",
+  "leads.error.entryNotRevertible.not_stage_change":
+    "Só uma mudança de fase pode ser desfeita desta forma",
+  "leads.error.entryNotRevertible.not_newest":
+    "Alguém mudou este contacto de fase depois de ti, por isso esta mudança já não pode ser desfeita",
+  "leads.error.entryNotRevertible.stage_moved":
+    "A fase deste contacto voltou a mudar entretanto, por isso esta mudança já não pode ser desfeita",
+  "leads.error.entryNotRevertible.not_yours":
+    "Só quem fez esta mudança de fase ou um admin a pode desfazer",
+  "leads.error.entryNotRevertible.too_old":
+    "As mudanças de fase só podem ser desfeitas durante 10 minutos. Muda o contacto de fase outra vez na sua linha",
+  "leads.error.entryNotRevertible.unknownReason":
+    "Esta mudança de fase já não pode ser desfeita",
   "leads.failure.offline":
     "Estás offline, por isso isto não chegou ao QueerPulse. Verifica a ligação e tenta de novo",
   "leads.failure.timeout":

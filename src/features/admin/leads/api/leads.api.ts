@@ -100,6 +100,15 @@ export const deleteLeadNote = (
   entryId: string,
 ): Promise<LeadDTO> => apiDelete<LeadDTO>(entryPathOf(leadId, entryId));
 
+/** POST /admin/leads/:id/entries/:entryId/revert: takes back a stage change.
+ *  The stage goes back to the line's `fromStage` and the line is deleted,
+ *  with no new line written. */
+export const revertLeadStageChange = (
+  leadId: string,
+  entryId: string,
+): Promise<LeadDTO> =>
+  apiPost<LeadDTO>(`${entryPathOf(leadId, entryId)}/revert`);
+
 /** `GET /admin/leads/personas/search` answers with a wrapped list. */
 interface LeadPersonaSearchResponseDTO {
   items: LeadPersonaSearchResultDTO[];

@@ -99,6 +99,32 @@ describe("AddLeadDialog", () => {
     await waitFor(() => expect(nameInput()).toHaveFocus());
   });
 
+  it("groups the fields into About, Contact, Links and Follow-up", async () => {
+    renderDialog();
+    const dialog = await waitForDialog();
+    const about = within(dialog).getByRole("group", { name: "About" });
+    expect(within(about).getByRole("textbox", { name: /^Name/ })).toBe(
+      nameInput(),
+    );
+    expect(
+      within(about).getByRole("textbox", { name: /^Location/ }),
+    ).toBeInTheDocument();
+    const contact = within(dialog).getByRole("group", { name: "Contact" });
+    expect(
+      within(contact).getByRole("textbox", { name: /^Email/ }),
+    ).toBeInTheDocument();
+    expect(
+      within(contact).getByRole("textbox", { name: /^Phone/ }),
+    ).toBeInTheDocument();
+    expect(
+      within(dialog).getByRole("group", { name: "Links" }),
+    ).toBeInTheDocument();
+    const followUp = within(dialog).getByRole("group", { name: "Follow-up" });
+    expect(
+      within(followUp).getByRole("textbox", { name: /^First note/ }),
+    ).toBeInTheDocument();
+  });
+
   it("adds a lead and closes", async () => {
     const { onClose, user } = renderDialog();
     const dialog = await waitForDialog();
@@ -164,6 +190,16 @@ describe("AddLeadDialog", () => {
     expect(
       await screen.findByText("Nova Onda is in the leads"),
     ).toBeInTheDocument();
+  });
+
+  it("marks Add lead disabled until the name and type are filled", async () => {
+    const { user } = renderDialog();
+    const dialog = await waitForDialog();
+    expect(submitButton(dialog)).toHaveAttribute("aria-disabled", "true");
+    await user.type(nameInput(), "Nova Onda");
+    expect(submitButton(dialog)).toHaveAttribute("aria-disabled", "true");
+    await chooseType(user, "Band");
+    expect(submitButton(dialog)).not.toHaveAttribute("aria-disabled");
   });
 
   it("names a missing name before sending", async () => {

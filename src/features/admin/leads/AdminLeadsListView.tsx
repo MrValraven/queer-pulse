@@ -23,30 +23,29 @@ function AdminLeadsTableHead() {
   return (
     <div className={styles.tableHead} aria-hidden>
       <span className={styles.headName}>{t("admin:leads.column.lead")}</span>
-      <span className={styles.headStage}>{t("admin:leads.field.stage")}</span>
-      <span className={styles.headLocation}>
-        {t("admin:leads.field.location")}
-      </span>
-      <span className={styles.headLinks}>{t("admin:leads.field.links")}</span>
-      <span className={styles.headNotes}>{t("admin:leads.column.notes")}</span>
-      <span className={styles.headFollowUp}>
-        {t("admin:leads.column.followUp")}
-      </span>
+      <span>{t("admin:leads.field.stage")}</span>
+      <span>{t("admin:leads.field.location")}</span>
+      <span>{t("admin:leads.field.links")}</span>
+      <span>{t("admin:leads.column.lastActivity")}</span>
+      <span>{t("admin:leads.column.followUp")}</span>
     </div>
   );
 }
 
-/** Row-shaped placeholders while the first page loads. */
+/** Row-shaped placeholders while the first page loads, in the list's own
+ *  frame: rounded cards on a narrow list, and on a wide one the table card
+ *  with its column head and square rows split by hairlines. */
 function AdminLeadsSkeleton() {
   return (
-    <div className={styles.skeletonRows} aria-hidden>
-      {LEAD_LIST_SKELETON_ROWS.map((skeletonIndex) => (
-        <SkeletonLine
-          key={skeletonIndex}
-          height={72}
-          style={{ borderRadius: "var(--radius-card)" }}
-        />
-      ))}
+    <div className={styles.table} aria-hidden>
+      <AdminLeadsTableHead />
+      <div className={styles.skeletonRows}>
+        {LEAD_LIST_SKELETON_ROWS.map((skeletonIndex) => (
+          <div key={skeletonIndex} className={styles.skeletonRow}>
+            <SkeletonLine height={64} style={{ borderRadius: 0 }} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

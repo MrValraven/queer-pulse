@@ -6,8 +6,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routes } from "../../../app/routeMap";
 import { TestProviders } from "../../../test/TestProviders";
 import { AdminLeadsPage } from "./AdminLeadsPage";
-import { LEAD_UNDO_TOAST_MS } from "./leadsList.data";
-import { demoGetLead, resetDemoLeads } from "./leadsDemoStore";
+import { demoGetLead, demoUpdateLead, resetDemoLeads } from "./leadsDemoStore";
 
 // The list's in-place controls: the row menus, Undo, the result count and
 // the page keys. TestProviders forces demo mode, so the demo store answers.
@@ -115,7 +114,11 @@ describe("AdminLeadsPage quick controls", () => {
       await screen.findByText(/^Follow up with Afterhours on /),
     ).toBeInTheDocument();
     await waitFor(() =>
-      expect(within(rowOf(link)).getByText(/^Follow up /)).toBeInTheDocument(),
+      expect(
+        within(rowOf(link)).getByRole("button", {
+          name: /^Afterhours: Follow up /,
+        }),
+      ).toBeInTheDocument(),
     );
   });
 
@@ -166,12 +169,13 @@ describe("AdminLeadsPage quick controls", () => {
     await waitFor(() => expect(rowLabels()).toHaveLength(12));
   });
 
-  it("holds a stage move, so Undo writes no history", async () => {
+  it("saves a stage move at once, and Undo reverts its history line", async () => {
     renderPage();
     const user = userEvent.setup();
     const before = stageChangesOf(CAVE_ID);
     await moveCaveToOnBoard(user);
-    expect(demoGetLead(CAVE_ID).stage).toBe("in_talks");
+    expect(demoGetLead(CAVE_ID).stage).toBe("on_board");
+    expect(stageChangesOf(CAVE_ID)).toBe(before + 1);
     await user.click(screen.getByRole("button", { name: "Undo" }));
     expect(await screen.findByText("Change undone")).toBeInTheDocument();
     await waitFor(() =>
@@ -183,51 +187,31 @@ describe("AdminLeadsPage quick controls", () => {
     expect(stageChangesOf(CAVE_ID)).toBe(before);
   });
 
-  it("saves a held move once the Undo window ends", async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    try {
-      renderPage();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-      const before = stageChangesOf(CAVE_ID);
-      await moveCaveToOnBoard(user);
-      vi.advanceTimersByTime(LEAD_UNDO_TOAST_MS);
-      await waitFor(() => expect(demoGetLead(CAVE_ID).stage).toBe("on_board"));
-      expect(stageChangesOf(CAVE_ID)).toBe(before + 1);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it("saves a held move when the page goes away", async () => {
-    const view = renderPage();
+  it("names why an Undo was refused after a later stage change", async () => {
+    renderPage();
     const user = userEvent.setup();
     await moveCaveToOnBoard(user);
-    view.unmount();
-    await waitFor(() => expect(demoGetLead(CAVE_ID).stage).toBe("on_board"));
-  });
-
-  it("keeps a held move on screen when the list reads again", async () => {
-    const view = renderPage();
-    const user = userEvent.setup();
-    await moveCaveToOnBoard(user);
-    // A follow-up change on another lead saves at once and reads the
-    // lists again; the held move must survive that answer.
-    const link = screen.getByRole("link", { name: "Open Afterhours" });
-    await user.click(
-      within(rowOf(link)).getByRole("button", { name: /^Afterhours:/ }),
-    );
-    await user.click(screen.getByRole("menuitem", { name: /Tomorrow/ }));
-    await screen.findByText(/^Follow up with Afterhours on /);
-    await waitFor(() =>
-      expect(demoGetLead("demo-lead-afterhours").followUpOn).not.toBeNull(),
-    );
+    // Another tab moves the lead again before Undo is pressed.
+    demoUpdateLead(CAVE_ID, { stage: "not_now" });
+    await user.click(screen.getByRole("button", { name: "Undo" }));
     expect(
-      screen.getByRole("button", { name: /^Stage of Cave 23: On board/ }),
+      await screen.findByText(
+        "Someone moved this lead to another stage after you, so this move can no longer be undone",
+      ),
     ).toBeInTheDocument();
-    expect(demoGetLead(CAVE_ID).stage).toBe("in_talks");
-    // Settle the held move here, so its save cannot land in the next test.
-    view.unmount();
-    await waitFor(() => expect(demoGetLead(CAVE_ID).stage).toBe("on_board"));
+    expect(demoGetLead(CAVE_ID).stage).toBe("not_now");
+  });
+
+  it("offers no Undo when the move wrote no stage change", async () => {
+    renderPage();
+    const user = userEvent.setup();
+    await screen.findByRole("link", { name: "Open Cave 23" });
+    // Another tab already took the lead to On board through Not now, so the
+    // list's move changes nothing and its answer holds no line of its own.
+    demoUpdateLead(CAVE_ID, { stage: "not_now" });
+    demoUpdateLead(CAVE_ID, { stage: "on_board" });
+    await moveCaveToOnBoard(user);
+    expect(screen.queryByRole("button", { name: "Undo" })).toBeNull();
   });
 
   it("counts due follow-ups over the search and type", async () => {

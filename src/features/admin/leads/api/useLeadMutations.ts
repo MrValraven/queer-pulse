@@ -11,6 +11,7 @@ import {
   deleteLead,
   deleteLeadNote,
   editLeadNote,
+  revertLeadStageChange,
   updateLead,
 } from "./leads.api";
 import { leadKeys } from "./leadKeys";
@@ -18,12 +19,23 @@ import {
   leadReasonOf,
   type CreateLeadBody,
   type LeadDTO,
+  type LeadReasonCode,
+  type LeadStage,
   type UpdateLeadBody,
 } from "./leads.types";
 
 /** Every lead write shares this key, so a page can tell a write is in
  *  flight and ignore a second press. */
 export const LEAD_WRITE_KEY = ["admin", "leads", "write"] as const;
+
+/** Refusals that mean the cached lead is stale: the lead, a note or a
+ *  history line changed in another tab. */
+const STALE_LEAD_REASONS: ReadonlySet<LeadReasonCode> = new Set([
+  "LEAD_NOT_FOUND",
+  "LEAD_NOTE_NOT_FOUND",
+  "LEAD_ENTRY_NOT_FOUND",
+  "LEAD_ENTRY_NOT_REVERTIBLE",
+]);
 
 /** Each control shows its own reason line, so the global toast stays quiet.
  *  No write passes a `logLabel`: lead text never reaches a log. */
@@ -46,15 +58,29 @@ function useLeadCache() {
   };
   // An answer older than the cached lead (a slow write settling after a
   // newer one) leaves the cache alone, so the newer lead stays on screen.
-  const saveLead = (lead: LeadDTO) => {
+  const putLead = (lead: LeadDTO) => {
     const detailKey = leadKeys.detail(lead.id, demoMode);
     const cachedLead = queryClient.getQueryData<LeadDTO>(detailKey);
     const isOlderAnswer =
       cachedLead !== undefined &&
       Date.parse(cachedLead.updatedAt) > Date.parse(lead.updatedAt);
     if (!isOlderAnswer) queryClient.setQueryData(detailKey, lead);
+  };
+  const saveLead = (lead: LeadDTO) => {
+    putLead(lead);
     invalidate(leadKeys.listRoot);
     invalidate(leadKeys.dueCountRoot);
+  };
+  // A list row write waits for the list to read again before it settles,
+  // so the row keeps its pending value until the new one arrives and never
+  // shows the old stage in between.
+  const saveLeadAndReread = async (lead: LeadDTO): Promise<LeadDTO> => {
+    putLead(lead);
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: leadKeys.listRoot }),
+      queryClient.invalidateQueries({ queryKey: leadKeys.dueCountRoot }),
+    ]);
+    return lead;
   };
   const refreshPersonaSearch = () => invalidate(leadKeys.personaSearchRoot);
   const dropLead = (leadId: string) => {
@@ -63,16 +89,24 @@ function useLeadCache() {
     invalidate(leadKeys.dueCountRoot);
     invalidate(leadKeys.personaSearchRoot);
   };
-  // A lead or a note deleted in another tab: the page reads the lead again
-  // (and lands on its not-found state), and the list drops the row.
+  // A lead, a note or a history line changed in another tab: the page reads
+  // the lead again (a deleted lead lands on its not-found state), and the
+  // list follows.
   const refetchIfGone = (cause: unknown, leadId: string) => {
     const reason = leadReasonOf(cause);
-    if (reason !== "LEAD_NOT_FOUND" && reason !== "LEAD_NOTE_NOT_FOUND") return;
+    if (reason === null || !STALE_LEAD_REASONS.has(reason)) return;
     invalidate([...leadKeys.detailRoot, leadId]);
     invalidate(leadKeys.listRoot);
     invalidate(leadKeys.dueCountRoot);
   };
-  return { demoMode, saveLead, refreshPersonaSearch, dropLead, refetchIfGone };
+  return {
+    demoMode,
+    saveLead,
+    saveLeadAndReread,
+    refreshPersonaSearch,
+    dropLead,
+    refetchIfGone,
+  };
 }
 
 /** True while any lead write is in flight. */
@@ -154,17 +188,53 @@ export function useQuickUpdateLead(): UseMutationResult<
   Error,
   LeadQuickUpdate
 > {
-  const { demoMode, saveLead, refetchIfGone } = useLeadCache();
+  const { demoMode, saveLeadAndReread, refetchIfGone } = useLeadCache();
   return useDemoAwareMutation<LeadDTO, Error, LeadQuickUpdate>({
     demoMode,
     demoLatencyMs: 0,
     meta: SILENT_META,
     mutationKey: LEAD_WRITE_KEY,
     demoResult: async ({ leadId, body }) =>
-      (await loadDemoStore()).demoUpdateLead(leadId, body),
-    live: ({ leadId, body }) => updateLead(leadId, body),
+      saveLeadAndReread((await loadDemoStore()).demoUpdateLead(leadId, body)),
+    live: async ({ leadId, body }) =>
+      saveLeadAndReread(await updateLead(leadId, body)),
     onError: (cause, { leadId }) => refetchIfGone(cause, leadId),
-    onSuccess: (lead) => saveLead(lead),
+  });
+}
+
+/** What a stage change revert sends: the lead and the `stage_changed` line
+ *  to take back. `fromStage` is the stage the lead goes back to, for the
+ *  row's pending state; the route reads only the ids. */
+export interface LeadStageRevert {
+  leadId: string;
+  entryId: string;
+  fromStage: LeadStage;
+}
+
+/**
+ * POST /admin/leads/:id/entries/:entryId/revert, the Undo of a stage move
+ * from the list. Held by the list page, as {@link useQuickUpdateLead} is,
+ * so it settles after its row leaves the view. It answers with the lead, so
+ * the caches update as after any other lead write.
+ */
+export function useRevertLeadStageChange(): UseMutationResult<
+  LeadDTO,
+  Error,
+  LeadStageRevert
+> {
+  const { demoMode, saveLeadAndReread, refetchIfGone } = useLeadCache();
+  return useDemoAwareMutation<LeadDTO, Error, LeadStageRevert>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: SILENT_META,
+    mutationKey: LEAD_WRITE_KEY,
+    demoResult: async ({ leadId, entryId }) =>
+      saveLeadAndReread(
+        (await loadDemoStore()).demoRevertLeadStageChange(leadId, entryId),
+      ),
+    live: async ({ leadId, entryId }) =>
+      saveLeadAndReread(await revertLeadStageChange(leadId, entryId)),
+    onError: (cause, { leadId }) => refetchIfGone(cause, leadId),
   });
 }
 

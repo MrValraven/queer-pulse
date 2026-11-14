@@ -1,12 +1,14 @@
 import { foldForSearch } from "../../../shared/lib/foldForSearch";
 import {
   DEFAULT_LEAD_STAGE,
+  LEAD_REVERT_WINDOW_MS,
   type CreateLeadBody,
   type LeadDTO,
   type LeadEntryKind,
   type LeadListFilters,
   type LeadListPageDTO,
   type LeadPersonaSearchResultDTO,
+  type LeadRevertRefusalReason,
   type UpdateLeadBody,
 } from "./api/leads.types";
 import { lisbonLeadDay } from "./leadDates";
@@ -15,6 +17,7 @@ import {
   compareForList,
   hasLeadChanged,
   isDueLead,
+  newestFirst,
   searchLeadPersonasIn,
   seededLead,
   stageCountsOf,
@@ -77,7 +80,8 @@ function findLead(leadId: string): StoredLead {
 }
 
 /** `GET /admin/leads` in demo: every match in one page. Due follow-ups come
- *  first, oldest date first, then the newest change. */
+ *  first, oldest date first, then the newest change. The stage counts and
+ *  the due count follow the search and the type only. */
 export function demoListLeads(
   filters: LeadListFilters,
   today: string = lisbonLeadDay(),
@@ -104,6 +108,7 @@ export function demoListLeads(
     nextCursor: null,
     stageCounts: stageCountsOf(searched),
     totalCount: searched.length,
+    dueCount: searched.filter((lead) => isDueLead(lead, today)).length,
   };
 }
 
@@ -283,6 +288,65 @@ export function demoDeleteLeadNote(
   const entry = noteOf(lead, entryId);
   lead.entries = lead.entries.filter((candidate) => candidate !== entry);
   lead.updatedAt = new Date().toISOString();
+  return toLeadDTO(lead, today);
+}
+
+/** Who sends a demo write. The demo viewer is an Admin. */
+export interface DemoLeadCaller {
+  userId: string;
+  isAdmin: boolean;
+}
+
+const viewerCaller = (): DemoLeadCaller => ({
+  userId: viewerAuthor().id,
+  isAdmin: true,
+});
+
+/** Why a stage change cannot be taken back, in the server's check order, or
+ *  null when it can. */
+function revertRefusalOf(
+  lead: StoredLead,
+  entry: StoredEntry,
+  caller: DemoLeadCaller,
+  nowMs: number,
+): LeadRevertRefusalReason | null {
+  if (entry.kind !== "stage_changed") return "not_stage_change";
+  const newestStageChange = lead.entries
+    .filter((candidate) => candidate.kind === "stage_changed")
+    .sort(newestFirst)[0];
+  if (newestStageChange !== entry) return "not_newest";
+  if (lead.stage !== entry.toStage) return "stage_moved";
+  if (!caller.isAdmin && entry.author?.id !== caller.userId) {
+    return "not_yours";
+  }
+  if (nowMs - Date.parse(entry.createdAt) > LEAD_REVERT_WINDOW_MS) {
+    return "too_old";
+  }
+  return null;
+}
+
+/** `POST /admin/leads/:id/entries/:entryId/revert` in demo: the stage goes
+ *  back to the line's `fromStage` and the line is deleted, with no new line
+ *  written. `nowMs` and `caller` stand in for the clock and the session. */
+export function demoRevertLeadStageChange(
+  leadId: string,
+  entryId: string,
+  {
+    today = lisbonLeadDay(),
+    nowMs = Date.now(),
+    caller = viewerCaller(),
+  }: { today?: string; nowMs?: number; caller?: DemoLeadCaller } = {},
+): LeadDTO {
+  const lead = findLead(leadId);
+  const entry = lead.entries.find((candidate) => candidate.id === entryId);
+  if (!entry) throw leadRefusal("LEAD_ENTRY_NOT_FOUND", 404);
+  const reason = revertRefusalOf(lead, entry, caller, nowMs);
+  if (reason !== null) {
+    throw leadRefusal("LEAD_ENTRY_NOT_REVERTIBLE", 409, { reason });
+  }
+  lead.stage = entry.fromStage ?? lead.stage;
+  lead.entries = lead.entries.filter((candidate) => candidate !== entry);
+  lead.updatedAt = new Date(nowMs).toISOString();
   return toLeadDTO(lead, today);
 }
 

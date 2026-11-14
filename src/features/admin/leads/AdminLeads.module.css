@@ -21,11 +21,41 @@
   max-width: none;
 }
 
+/* The search and the type select read as one family: the same pill, the
+   same hairline on paper, the same height. On a fine pointer the field
+   trims to the small Select's 40px (the padding moves into the fixed
+   height) and keeps its 16px type, so iOS never zooms. */
+@media (pointer: fine) {
+  .search input {
+    height: 40px;
+    padding-block: 0;
+  }
+}
+
+.typeSelect > button:first-of-type {
+  border-radius: var(--radius-pill);
+  padding-inline: 16px 14px;
+}
+
+/* At rest the trigger takes the search field's paper and hairline; open
+   and focused it keeps the Select's own states. */
+.typeSelect > button:first-of-type:not([aria-expanded="true"], :focus-visible) {
+  background: var(--paper);
+  border-color: rgba(var(--line-rgb), 0.14);
+}
+
+/* On touch both controls reach the 44px target. */
+@media not (pointer: fine) {
+  .typeSelect > button:first-of-type {
+    min-height: var(--tap-min);
+  }
+}
+
 /* The `/` key, shown where a keyboard is likely; it hides once text is in. */
 .keyHint {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-end: 14px;
+  inset-inline-end: 12px;
   display: none;
   place-items: center;
   min-inline-size: 22px;
@@ -70,6 +100,7 @@
   margin: 0;
   font-size: var(--text-14);
   font-weight: 500;
+  line-height: 1.2;
   font-variant-numeric: tabular-nums;
   color: var(--ink-60);
 }
@@ -103,8 +134,8 @@
 
 .table {
   /* The columns of a wide list, shared by the head and every row. */
-  --lead-columns: minmax(0, 1.8fr) 9.5rem minmax(0, 1.1fr) 6.5rem 5.5rem
-    minmax(0, 1.5fr);
+  --lead-columns: minmax(0, 1.9fr) 9rem minmax(0, 1.1fr) 6.5rem
+    minmax(0, 1fr) minmax(0, 1.15fr);
 }
 
 .tableHead {
@@ -135,13 +166,22 @@
   margin-block-end: var(--gap-xs);
 }
 
+/* A narrow list loads as rounded cards; the wide table squares them off
+   (below). The wrapper clips the shimmer to its corners. */
+.skeletonRow {
+  overflow: clip;
+  border-radius: var(--radius-16);
+}
+
 .loadMore {
   display: flex;
   justify-content: center;
   padding-block: var(--gap-sm) var(--gap-grid);
 }
 
-/* ── One row: a card on a narrow list ── */
+/* ── One row: a card on a narrow list ──
+   Name and type beside the stage; under the name, the follow-up beside the
+   last activity, then the location beside the links. */
 .row {
   position: relative;
   display: grid;
@@ -150,7 +190,7 @@
     "name stage"
     "details details";
   align-items: center;
-  gap: var(--gap-sm);
+  gap: 10px var(--gap-sm);
   min-height: var(--tap-min);
   margin-block-end: var(--gap-xs);
   padding: var(--gap-sm);
@@ -166,7 +206,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .row:hover {
-    border-color: rgba(var(--accent-rgb), 0.4);
+    border-color: rgba(var(--line-rgb), 0.18);
     box-shadow: var(--shadow-lift);
   }
 }
@@ -208,15 +248,18 @@
 }
 
 /* The name is the row's link; its hit area stretches over the whole row,
-   under the stage and follow-up menus. */
+   under the stage and follow-up menus. A table line sets it in the UI face
+   at body size, so a column of names scans like data; Fraunces stays with
+   the page heading and the pipeline counts. */
 .rowLink {
-  font-family: var(--serif);
-  font-size: var(--text-17);
+  font-family: var(--sans);
+  font-size: var(--text-body);
   font-weight: 600;
-  line-height: 1.3;
-  color: var(--ink);
+  line-height: 1.35;
+  color: var(--text-strong);
   text-decoration: none;
   overflow-wrap: anywhere;
+  transition: color var(--dur-fast) var(--ease);
 }
 
 .rowLink::after {
@@ -244,7 +287,8 @@
 }
 
 .rowType {
-  font-size: var(--text-13);
+  font-size: var(--text-caption);
+  line-height: 1.35;
   color: var(--ink-60);
 }
 
@@ -254,30 +298,50 @@
   align-self: start;
 }
 
-.stageTrigger {
-  gap: 2px;
+/* The stage menu is one pill: the stage's tone, its label and the chevron
+   inside it. One fixed height with the border inside it, so the outlined
+   To contact pill matches the filled ones. */
+.stagePill {
+  box-sizing: border-box;
+  block-size: 26px;
+  gap: 4px;
+  justify-content: space-between;
+  padding-inline-end: 8px;
 }
 
-.triggerChevron {
+.stageChevron {
   flex: none;
-  font-size: var(--text-14);
-  color: var(--ink-40);
-  transition: color var(--dur-fast) var(--ease);
+  font-size: var(--text-13);
+  opacity: 0.75;
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.stageTrigger[data-open] .stageChevron {
+  transform: rotate(180deg);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .stageTrigger:hover .triggerChevron {
-    color: var(--ink);
+  .stageTrigger:hover .stageChevron {
+    opacity: 1;
   }
 }
 
+/* The details under the name on a card: a two-column grid, so the
+   follow-up and the location start under the name and the activity and
+   links end at the card's edge. */
 .rowDetails {
   grid-area: details;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "followUp activity"
+    "location links";
   align-items: center;
-  gap: var(--icon-gap-inline) var(--gap-sm);
+  gap: 6px var(--gap-sm);
   min-width: 0;
+  padding-inline-start: 52px;
   font-size: var(--text-13-5);
   color: var(--ink-60);
 }
@@ -286,21 +350,13 @@
   display: contents;
 }
 
-/* On a card the follow-up leads the details on a line of its own: it is
-   what to act on. */
 .rowFollowUp {
-  order: -1;
+  grid-area: followUp;
   display: flex;
-  flex-basis: 100%;
   min-width: 0;
 }
 
-.followUpValue {
-  white-space: nowrap;
-}
-
-.rowMeta,
-.followUpValue {
+.rowMeta {
   display: inline-flex;
   align-items: center;
   gap: var(--icon-gap-inline);
@@ -313,10 +369,18 @@
 
 .rowMetaText {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowLocation {
+  grid-area: location;
 }
 
 .rowLinks {
+  grid-area: links;
+  justify-self: end;
   display: inline-flex;
   min-width: 0;
 }
@@ -326,31 +390,83 @@
   display: none;
 }
 
+/* Last activity: the time, then the note count as a quiet icon and
+   number. */
+.rowActivity {
+  grid-area: activity;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.rowActivityTime {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowNoteCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-12-5);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+}
+
+/* ── Follow-up cell ──
+   The day, short, with its state in ink and icon. Due states carry their
+   words ("Overdue", "Due today") beside the warn ink, as on the lead page,
+   so the state never rides on colour alone. */
 .followUp {
   font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
-/* No follow-up yet: an offer to set one, quiet until the row is in use. */
-.followUpValue[data-empty] {
+.followUpValue {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.followUpIcon {
+  flex: none;
+  inline-size: 15px;
+  block-size: 15px;
+}
+
+.followUpText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.followUpValue[data-state="overdue"],
+.followUpValue[data-state="today"] {
+  font-weight: 600;
+  color: var(--amber-ink);
+}
+
+/* No follow-up yet: an action to set one, in the accent ink with a plus,
+   so it never passes for a date. */
+.followUpValue[data-state="none"] {
+  font-weight: 500;
+  color: var(--accent-text);
+}
+
+/* A closed lead's kept day reads as history: muted ink and a dimmed
+   calendar that keeps its text in line with the dates above it. */
+.followUpValue[data-state="closed"] {
   color: var(--ink-40);
 }
 
-/* A closed lead's old date reads quietly, with no clock. */
-.followUpValue[data-past] {
-  font-style: italic;
-  color: var(--ink-60);
-}
-
-/* A due follow-up reads in the warn tone, with a tint behind it so the
-   state never rides on colour alone beside its "due" wording. */
-.followUpValue[data-due] {
-  /* A hairline of block padding keeps the tag compact. */
-  padding: 2px var(--gap-xs);
-  font-weight: 600;
-  color: var(--amber-ink);
-  background: rgba(var(--amber-rgb), 0.18);
-  border-radius: var(--radius-pill);
+.followUpValue[data-state="closed"] .followUpIcon {
+  opacity: 0.6;
 }
 
 /* ── A wide list: one table, a line per lead ── */
@@ -366,11 +482,13 @@
   .tableHead {
     display: grid;
     grid-template-columns: var(--lead-columns);
+    align-items: center;
     gap: var(--gap-sm);
-    padding: 12px 24px;
-    font-size: var(--text-12);
+    min-height: 40px;
+    padding: 0 20px;
+    font-size: var(--text-11-5);
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-60);
     background: rgba(var(--line-rgb), 0.025);
@@ -381,11 +499,27 @@
     padding-inline-start: 52px;
   }
 
+  /* The loading table: the same head, then square rows split by the row
+     hairline. */
+  .skeletonRows {
+    gap: 0;
+    margin: 0;
+  }
+
+  .skeletonRow {
+    border-radius: 0;
+  }
+
+  .skeletonRow + .skeletonRow {
+    border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
+  }
+
   .row {
     grid-template-columns: var(--lead-columns);
-    grid-template-areas: "name stage location links notes followUp";
+    grid-template-areas: "name stage location links activity followUp";
+    min-height: 64px;
     margin: 0;
-    padding: 12px 24px;
+    padding: 10px 20px;
     background: transparent;
     border: none;
     border-radius: 0;
@@ -412,13 +546,19 @@
     align-self: center;
   }
 
+  /* One width for every stage pill, so the column reads as a column. */
+  .stagePill {
+    min-inline-size: 7.75rem;
+  }
+
+  /* The column head names the location, so a table line drops the pin. */
+  .rowLocation .rowMetaIcon {
+    display: none;
+  }
+
   /* The details join the row's own columns, so every row lines up. */
   .rowDetails {
     display: contents;
-  }
-
-  .rowLocation {
-    grid-area: location;
   }
 
   .rowLocation:empty,
@@ -426,36 +566,37 @@
     display: inline-flex;
   }
 
-  .rowLinks {
-    grid-area: links;
+  .rowLinks,
+  .rowActivity {
+    justify-self: start;
   }
 
-  .rowNotes {
-    grid-area: notes;
-  }
-
-  .rowFollowUp {
-    grid-area: followUp;
-    order: 0;
+  /* One width for the time, so the note counts after it line up. */
+  .rowActivityTime {
+    min-inline-size: 6rem;
+    font-variant-numeric: tabular-nums;
   }
 
   /* A table line offers "Set follow-up" only while the row is in use, so
      an empty column stays quiet. */
   @media (hover: hover) and (pointer: fine) {
-    .followUpValue[data-empty] {
+    .followUpValue[data-state="none"] {
       opacity: 0;
       transition: opacity var(--dur-fast) var(--ease);
     }
 
-    .row:hover .followUpValue[data-empty],
-    .row:focus-within .followUpValue[data-empty] {
+    .row:hover .followUpValue[data-state="none"],
+    .row:focus-within .followUpValue[data-state="none"] {
       opacity: 1;
     }
   }
+}
 
-  .skeletonRows {
-    gap: 0;
-    padding: 0;
+/* A phone-wide card drops the indent under the name, so the details get
+   the whole width. */
+@container leads-list (max-width: 420px) {
+  .rowDetails {
+    padding-inline-start: 0;
   }
 }
 
@@ -514,8 +655,9 @@
 @media (prefers-reduced-motion: reduce) {
   .rows,
   .row,
-  .triggerChevron,
-  .followUpValue[data-empty] {
+  .rowLink,
+  .stageChevron,
+  .followUpValue[data-state="none"] {
     transition: none;
   }
 }

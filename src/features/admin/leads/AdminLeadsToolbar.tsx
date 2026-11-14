@@ -48,8 +48,9 @@ function ResultSummary({
 
 /**
  * The search over name, email and links (with its `/` key shown on a
- * keyboard device), the type select, and a line that counts the leads in
- * view, with Clear filters beside it while any filter is on and rows show.
+ * keyboard device), the type select in the same height and pill shape, and
+ * a line that counts the leads in view, with Clear filters beside it while
+ * any filter is on and rows show.
  * The stage and due filters live in the pipeline strip above.
  */
 export function AdminLeadsToolbar({
@@ -96,6 +97,8 @@ export function AdminLeadsToolbar({
       <div className={styles.typeFilter}>
         <Select
           id={typeSelectId}
+          size="sm"
+          className={styles.typeSelect}
           clearable
           label={t("admin:leads.list.typeFilterLabel")}
           placeholder={t("admin:leads.list.typeAll")}

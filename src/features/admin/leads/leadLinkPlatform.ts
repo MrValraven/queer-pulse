@@ -34,3 +34,19 @@ export function leadLinkPlatform(link: string): LeadLinkPlatform {
   );
   return platform ?? LEAD_WEBSITE_PLATFORM;
 }
+
+/** How a link reads on the lead page: its host without one leading `www.`,
+ *  then its path without trailing slashes. The scheme, query and fragment
+ *  stay off the label. Text that does not parse as a link reads as typed. */
+export function leadLinkAddressOf(link: string): string {
+  const trimmed = link.trim();
+  try {
+    const url = new URL(trimmed);
+    if (url.hostname === "") return trimmed;
+    const host = url.hostname.replace(/^www\./, "");
+    const path = url.pathname.replace(/\/+$/, "");
+    return `${host}${path}`;
+  } catch {
+    return trimmed;
+  }
+}

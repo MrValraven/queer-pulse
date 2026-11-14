@@ -17,6 +17,9 @@ export interface LeadListResult {
   stageCounts: Record<LeadStage, number> | null;
   /** The sum of `stageCounts`; null before the first page. */
   totalCount: number | null;
+  /** Open leads with a follow-up due, over the search and type only; null
+   *  before the first page. */
+  dueCount: number | null;
   /** The first page has not answered yet. */
   isLoading: boolean;
   /** The first page failed, so there is nothing to show. */
@@ -71,6 +74,7 @@ export function useLeadList(filters: LeadListFilters): LeadListResult {
     rows,
     stageCounts: firstPage?.stageCounts ?? null,
     totalCount: firstPage?.totalCount ?? null,
+    dueCount: firstPage?.dueCount ?? null,
     isLoading: query.isPending,
     // A failed next page also sets `isError`; keying on loaded data keeps
     // that failure from replacing a list that is already on screen.

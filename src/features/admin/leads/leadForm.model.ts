@@ -245,6 +245,8 @@ const LEAD_REASON_FIELD: Record<LeadReasonCode, LeadFormField | null> = {
   LEAD_NOTE_NOT_YOURS: null,
   LEAD_ENTRY_NOT_EDITABLE: null,
   LEAD_CURSOR_INVALID: null,
+  LEAD_ENTRY_NOT_FOUND: null,
+  LEAD_ENTRY_NOT_REVERTIBLE: null,
 };
 
 /** The refusals whose `index` names one sent link. */

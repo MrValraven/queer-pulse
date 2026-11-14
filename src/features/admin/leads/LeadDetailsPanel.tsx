@@ -1,272 +1,117 @@
-import { useId, useRef, useState } from "react";
-import { FiMail, FiPhone, FiXCircle } from "react-icons/fi";
-import { useToast } from "../../../shared/components/feedback/useToast";
+import { useEffect, useId, useRef, useState } from "react";
+import { FiEdit2 } from "react-icons/fi";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Button, Collapse } from "../../../shared/components/ui";
+import type { CollapseTransition } from "../../../shared/components/ui/Collapse";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { LeadDTO } from "./api/leads.types";
-import { useLeadIsWriting, useUpdateLead } from "./api/useLeadMutations";
-import {
-  isLeadFormDirty,
-  leadFieldErrorOf,
-  leadFormValuesOf,
-  leadUpdateBodyOf,
-  sentLinksOf,
-  type LeadFieldError,
-  type LeadFormValues,
-  type LeadLinkRow,
-} from "./leadForm.model";
-import { LeadFormFields } from "./LeadFormFields";
-import { adminLeadPath } from "./leadPaths";
-import { LeadRefusalLine } from "./LeadRefusalLine";
+import { LeadDetailsEditor } from "./LeadDetailsEditor";
+import { LeadDetailsView } from "./LeadDetailsView";
+import { LeadFadeInline } from "./LeadFadeInline";
 import { LeadStageControl } from "./LeadStageControl";
-import styles from "./AdminLead.module.css";
+import adminStyles from "./AdminLead.module.css";
+import styles from "./LeadDetails.module.css";
 
-/** A dialable number: digits and a leading plus, nothing else. */
-const telHrefOf = (phone: string): string =>
-  `tel:${phone.replace(/[^\d+]/g, "")}`;
+/** One fold of the swap between the list and the form. The editor waits
+ *  this long after it mounts before Name takes focus, so the focus ring
+ *  lands on a panel that has stopped moving. */
+const DETAILS_FOLD: CollapseTransition = {
+  duration: 0.28,
+  ease: [0.22, 0.68, 0.16, 1],
+};
 
-const textsOf = (rows: readonly LeadLinkRow[]): string[] =>
-  rows.map((row) => row.text);
-
-const hasSameTexts = (first: readonly string[], second: readonly string[]) =>
-  first.length === second.length &&
-  first.every((text, index) => text === second[index]);
-
-/**
- * The form after the stored lead moved from `previousLead` to `nextLead`
- * (a colleague's save reaching us with any write, or our own). Each field
- * this viewer left as seeded takes the new stored value; each field they
- * changed keeps their text. A form that ends up matching the stored lead is
- * seeded from it whole, so it reads exactly as stored. Link rows whose
- * texts did not change keep their keys, so an input never remounts under
- * the caret.
- */
-function rebasedValuesOf(
-  previousLead: LeadDTO,
-  nextLead: LeadDTO,
-  values: LeadFormValues,
-): LeadFormValues {
-  const seeded = leadFormValuesOf(previousLead);
-  const stored = leadFormValuesOf(nextLead);
-  const isLinksTouched = !hasSameTexts(
-    textsOf(values.links),
-    textsOf(seeded.links),
-  );
-  const rebased: LeadFormValues = {
-    ...values,
-    name: values.name === seeded.name ? stored.name : values.name,
-    type: values.type === seeded.type ? stored.type : values.type,
-    location:
-      values.location === seeded.location ? stored.location : values.location,
-    email: values.email === seeded.email ? stored.email : values.email,
-    phone: values.phone === seeded.phone ? stored.phone : values.phone,
-    links: isLinksTouched ? values.links : stored.links,
-    followUpOn:
-      values.followUpOn === seeded.followUpOn
-        ? stored.followUpOn
-        : values.followUpOn,
-  };
-  const settled = isLeadFormDirty(nextLead, rebased) ? rebased : stored;
-  return hasSameTexts(textsOf(settled.links), textsOf(values.links))
-    ? { ...settled, links: values.links }
-    : settled;
-}
-
-/** True when focus sits on the page itself or inside `container`, a part
- *  that is folding away. Focus the viewer moved elsewhere is left alone. */
-function isFocusLostOrWithin(container: HTMLElement | null): boolean {
-  const focused = document.activeElement;
-  if (focused === null || focused === document.body) return true;
-  return container?.contains(focused) === true;
-}
-
-/** Email and Call, each folding in while the lead has that contact. Each
- *  fold may shrink to the row, so a long name wraps on a phone. */
-function LeadQuickActions({ lead }: { lead: LeadDTO }) {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.quickActions}>
-      <Collapse isOpen={lead.email !== null} className={styles.quickActionSlot}>
-        <Button
-          variant="ghost"
-          size="sm"
-          href={`mailto:${lead.email ?? ""}`}
-          className={styles.quickAction}
-        >
-          <FiMail aria-hidden />
-          {t("admin:leads.details.emailAction", { name: lead.name })}
-        </Button>
-      </Collapse>
-      <Collapse isOpen={lead.phone !== null} className={styles.quickActionSlot}>
-        <Button
-          variant="ghost"
-          size="sm"
-          href={telHrefOf(lead.phone ?? "")}
-          className={styles.quickAction}
-        >
-          <FiPhone aria-hidden />
-          {t("admin:leads.details.phoneAction", { name: lead.name })}
-        </Button>
-      </Collapse>
-    </div>
-  );
-}
-
-/** Clear follow-up: one press empties the stored date at once. The
- *  button folds away under the finger, so `onCleared` hears whether focus
- *  was left there (or on the page) and should move on. */
-function LeadClearFollowUp({
-  lead,
-  onCleared,
-}: {
-  lead: LeadDTO;
-  onCleared: (shouldMoveFocus: boolean) => void;
-}) {
-  const { t } = useTranslation();
-  const clearFollowUp = useUpdateLead(lead.id);
-  const isWriting = useLeadIsWriting();
-  const [refusal, setRefusal] = useState<LeadFieldError | null>(null);
-  const rowRef = useRef<HTMLDivElement>(null);
-
-  const clear = () => {
-    if (isWriting) return;
-    setRefusal(null);
-    clearFollowUp.mutate(
-      { followUpOn: null },
-      {
-        onSuccess: () => onCleared(isFocusLostOrWithin(rowRef.current)),
-        onError: (cause) => setRefusal(leadFieldErrorOf(cause)),
-      },
-    );
-  };
-
-  return (
-    <Collapse isOpen={lead.followUpOn !== null}>
-      <div ref={rowRef} className={styles.followUpRow}>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={styles.phoneTarget}
-          aria-disabled={isWriting || undefined}
-          onClick={clear}
-        >
-          <FiXCircle aria-hidden />
-          {t("admin:leads.details.clearFollowUp")}
-        </Button>
-        <LeadRefusalLine error={refusal} openLeadPath={adminLeadPath} />
-      </div>
-    </Collapse>
-  );
-}
+type DetailsPane = "view" | "editor";
 
 /**
- * The lead's details. The stage saves on its own at the top; the other
- * fields are edited in place and saved together with Save changes, which
- * folds in once something differs from the stored lead. Fields the viewer
- * has not touched follow the stored lead, so a change saved elsewhere (a
- * colleague's edit, a cleared follow-up) shows at once and is never sent
- * back over.
+ * The lead's details in a card. It opens to read: the stage as the first
+ * row (it saves on its own, so it stays in reach in both modes), then every
+ * field as a list. Edit details folds the list away first and only then
+ * folds the form in, so the card never holds both; Name takes focus once
+ * the form has opened. Leaving the form (a save or Cancel) runs the same
+ * swap the other way and puts focus back on Edit details.
  */
 export function LeadDetailsPanel({ lead }: { lead: LeadDTO }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const { reducedMotion } = useMotionPrefs();
   const headingId = useId();
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const saveBarRef = useRef<HTMLDivElement>(null);
-  const saveDetails = useUpdateLead(lead.id);
-  const isWriting = useLeadIsWriting();
+  const editButtonRef = useRef<HTMLButtonElement>(null);
+  const shouldFocusEditButtonRef = useRef(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [shownPane, setShownPane] = useState<DetailsPane>("view");
   const idPrefix = `lead-${lead.id}-details`;
-  const [values, setValues] = useState<LeadFormValues>(() =>
-    leadFormValuesOf(lead),
-  );
-  const [seededLead, setSeededLead] = useState(lead);
-  const [fieldError, setFieldError] = useState<LeadFieldError | null>(null);
+  const cardId = `${idPrefix}-card`;
+  const isViewOpen = !isEditing && shownPane === "view";
+  const isEditorOpen = isEditing && shownPane === "editor";
 
-  // The stored lead changed: untouched fields follow it, edits stay.
-  if (lead.updatedAt !== seededLead.updatedAt) {
-    setSeededLead(lead);
-    setValues(rebasedValuesOf(seededLead, lead, values));
-  }
-  const isDirty = isLeadFormDirty(lead, values);
+  // Edit details mounts again as edit mode closes, so it takes focus once
+  // it is back.
+  useEffect(() => {
+    if (isEditing || !shouldFocusEditButtonRef.current) return;
+    shouldFocusEditButtonRef.current = false;
+    editButtonRef.current?.focus();
+  }, [isEditing]);
 
-  const changeValues = (next: LeadFormValues) => {
-    setValues(next);
-    setFieldError(null);
+  // Name takes focus once the form has finished folding in, so its ring
+  // is never clipped by the moving fold.
+  useEffect(() => {
+    if (!isEditorOpen) return;
+    const delay = reducedMotion ? 0 : DETAILS_FOLD.duration * 1000;
+    const timer = window.setTimeout(() => {
+      document.getElementById(`${idPrefix}-name`)?.focus();
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [isEditorOpen, idPrefix, reducedMotion]);
+
+  const finishEditing = (shouldMoveFocus: boolean) => {
+    shouldFocusEditButtonRef.current = shouldMoveFocus;
+    setIsEditing(false);
   };
-
-  // Save changes and Discard changes fold away with the bar, so focus goes
-  // to the panel's heading. Discard is at once; a save lands later, so it
-  // moves focus only when focus was left in the bar or on the page.
-  const discard = () => {
-    setValues(leadFormValuesOf(lead));
-    setFieldError(null);
-    headingRef.current?.focus();
-  };
-
-  const save = () => {
-    if (isWriting || !isDirty) return;
-    const sentLinks = sentLinksOf(values.links);
-    setFieldError(null);
-    saveDetails.mutate(leadUpdateBodyOf(lead, values), {
-      onSuccess: () => {
-        showToast(t("admin:leads.details.saved"), "success");
-        if (isFocusLostOrWithin(saveBarRef.current)) {
-          headingRef.current?.focus();
-        }
-      },
-      onError: (cause) => setFieldError(leadFieldErrorOf(cause, sentLinks)),
-    });
-  };
-
-  const followUpCleared = (shouldMoveFocus: boolean) => {
-    setValues((current) => ({ ...current, followUpOn: null }));
-    // The date field's opener carries the field's id.
-    if (shouldMoveFocus) {
-      document.getElementById(`${idPrefix}-follow-up`)?.focus();
-    }
-  };
-
-  const formRefusal = fieldError?.field === null ? fieldError : null;
 
   return (
-    <section className={styles.section} aria-labelledby={headingId}>
-      <h2
-        id={headingId}
-        ref={headingRef}
-        tabIndex={-1}
-        className={styles.sectionHeading}
-      >
-        {t("admin:leads.details.heading")}
-      </h2>
-      <LeadStageControl lead={lead} />
-      <LeadQuickActions lead={lead} />
-      <LeadFormFields
-        idPrefix={idPrefix}
-        values={values}
-        onChange={changeValues}
-        fieldError={fieldError}
-        openLeadPath={adminLeadPath}
-        shouldShowStage={false}
-        shouldShowNote={false}
-      />
-      <LeadClearFollowUp lead={lead} onCleared={followUpCleared} />
-      <Collapse isOpen={isDirty}>
-        <div ref={saveBarRef} className={styles.saveBar}>
-          <LeadRefusalLine error={formRefusal} openLeadPath={adminLeadPath} />
-          <div className={styles.saveActions}>
-            <Button
-              variant="primary"
-              aria-disabled={isWriting || undefined}
-              onClick={save}
-            >
-              {t("admin:leads.details.save")}
-            </Button>
-            <Button variant="ghost" onClick={discard}>
-              {t("admin:leads.details.discard")}
-            </Button>
-          </div>
-        </div>
-      </Collapse>
+    <section className={adminStyles.section} aria-labelledby={headingId}>
+      <div className={styles.panelHeader}>
+        <h2 id={headingId} className={adminStyles.sectionHeading}>
+          {t("admin:leads.details.heading")}
+        </h2>
+        <LeadFadeInline isShown={!isEditing}>
+          <Button
+            ref={editButtonRef}
+            variant="ghost"
+            size="sm"
+            className={`${styles.phoneTarget} ${styles.editButton}`}
+            aria-controls={cardId}
+            onClick={() => setIsEditing(true)}
+          >
+            <FiEdit2 aria-hidden />
+            {t("admin:leads.details.edit")}
+          </Button>
+        </LeadFadeInline>
+      </div>
+      <div id={cardId} className={styles.card}>
+        <LeadStageControl lead={lead} shouldShowSaveNote={isEditing} />
+        <Collapse
+          isOpen={isViewOpen}
+          transition={DETAILS_FOLD}
+          onExitComplete={() => {
+            if (isEditing) setShownPane("editor");
+          }}
+        >
+          <LeadDetailsView lead={lead} idPrefix={idPrefix} />
+        </Collapse>
+        <Collapse
+          isOpen={isEditorOpen}
+          transition={DETAILS_FOLD}
+          onExitComplete={() => {
+            if (!isEditing) setShownPane("view");
+          }}
+        >
+          <LeadDetailsEditor
+            lead={lead}
+            idPrefix={idPrefix}
+            onDone={finishEditing}
+          />
+        </Collapse>
+      </div>
     </section>
   );
 }

@@ -19,9 +19,12 @@ import { LeadRefusalLine } from "./LeadRefusalLine";
 import styles from "./AdminLeads.module.css";
 
 /**
- * Add lead: every field of a lead, the stage (To contact by default) and an
- * optional first note. A blank name or a missing type is named before
- * anything is sent. A refusal shows under the field it names, a taken email
+ * Add lead: every field of a lead in titled sections, the stage (To contact
+ * by default) and an optional first note, under a one-line subtitle that
+ * says what a lead is and what it needs. Add lead reads as disabled until
+ * the name and type are filled; it stays focusable and pressable, and a
+ * press (or Enter) while one is missing names it under its field, so
+ * nothing is sent. A refusal shows under the field it names, a taken email
  * or link with "Open <name>" for the lead that holds it, and folds away on
  * the next edit (a link refusal is placed by row, so an edit could move it
  * onto another link). Enter in a field submits, since the footer's Add lead
@@ -51,6 +54,7 @@ export function AddLeadDialog({ onClose }: { onClose: () => void }) {
   const createLead = useCreateLead();
   const isWriting = useLeadIsWriting();
   const isBusy = createLead.isPending || isWriting;
+  const isMissingRequired = localLeadRefusalOf(values) !== null;
   const formError = fieldError?.field === null ? fieldError : null;
 
   // A create in flight keeps the dialog open (Cancel, Escape, the scrim and
@@ -93,6 +97,7 @@ export function AddLeadDialog({ onClose }: { onClose: () => void }) {
   return (
     <Modal
       title={t("admin:leads.addDialog.title")}
+      sub={t("admin:leads.form.subtitle")}
       onClose={close}
       initialFocusRef={nameInputRef}
       wide
@@ -109,7 +114,7 @@ export function AddLeadDialog({ onClose }: { onClose: () => void }) {
             type="submit"
             form={formId}
             variant="primary"
-            aria-disabled={isBusy || undefined}
+            aria-disabled={isBusy || isMissingRequired || undefined}
             aria-busy={createLead.isPending || undefined}
             aria-describedby={formError !== null ? formErrorId : undefined}
           >

@@ -1,9 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   EMPTY_LEAD_FILTERS,
+  LEAD_REVERT_WINDOW_MS,
   type CreateLeadBody,
   type LeadDTO,
+  type LeadStage,
 } from "./api/leads.types";
+import type { DemoLeadsSeed } from "./leadsDemo.data";
 import {
   demoAddLeadNote,
   demoCreateLead,
@@ -13,6 +16,7 @@ import {
   demoGetLead,
   demoLeadDueCount,
   demoListLeads,
+  demoRevertLeadStageChange,
   demoSearchLeadPersonas,
   demoUpdateLead,
   resetDemoLeads,
@@ -41,6 +45,54 @@ function refusalOf(call: () => unknown): unknown {
 
 const newestKindsOf = (lead: LeadDTO, count: number) =>
   lead.entries.slice(0, count).map((entry) => entry.kind);
+
+/** One lead whose last stage change Marta wrote two days ago, from To
+ *  contact to Contacted, now sitting in `stage`. */
+function seedWithStageChange(stage: LeadStage): DemoLeadsSeed {
+  return {
+    leads: [
+      {
+        id: "demo-lead-solo",
+        name: "Solo",
+        type: "dj",
+        stage,
+        location: null,
+        email: null,
+        phone: null,
+        links: [],
+        followUpOffsetDays: null,
+        linkedPersonaId: null,
+        entries: [
+          {
+            kind: "created",
+            daysAgo: 3,
+            authorId: "demo-staff-marta",
+            toStage: "to_contact",
+          },
+          {
+            kind: "stage_changed",
+            daysAgo: 2,
+            authorId: "demo-staff-marta",
+            fromStage: "to_contact",
+            toStage: "contacted",
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const SOLO_ID = "demo-lead-solo";
+
+/** The id of the solo lead's seeded stage change line. */
+const soloStageChangeId = (): string =>
+  demoGetLead(SOLO_ID).entries.find((entry) => entry.kind === "stage_changed")
+    ?.id ?? "";
+
+/** Moves Cave 23 to `stage` and hands back the line the move wrote. */
+function moveCave(stage: LeadStage): string {
+  return demoUpdateLead(CAVE_ID, { stage }).entries[0]?.id ?? "";
+}
 
 beforeEach(() => resetDemoLeads());
 
@@ -81,6 +133,28 @@ describe("leadsDemoStore list", () => {
     });
     expect(page.totalCount).toBe(2);
     expect(page.nextCursor).toBeNull();
+  });
+
+  it("counts due follow-ups for the search and type only", () => {
+    expect(demoListLeads(EMPTY_LEAD_FILTERS).dueCount).toBe(4);
+    expect(
+      demoListLeads({
+        ...EMPTY_LEAD_FILTERS,
+        stage: "on_board",
+        isDueOnly: true,
+      }).dueCount,
+    ).toBe(4);
+    expect(
+      demoListLeads({ ...EMPTY_LEAD_FILTERS, type: "venue" }).dueCount,
+    ).toBe(1);
+    expect(demoListLeads({ ...EMPTY_LEAD_FILTERS, q: "Cave" }).dueCount).toBe(
+      1,
+    );
+  });
+
+  it("drops a lead from the due count when it closes", () => {
+    demoUpdateLead(CAVE_ID, { stage: "on_board" });
+    expect(demoListLeads(EMPTY_LEAD_FILTERS).dueCount).toBe(3);
   });
 
   it("searches name, email and links with folded accents", () => {
@@ -332,5 +406,122 @@ describe("leadsDemoStore notes and delete", () => {
       "id",
       "kind",
     ]);
+  });
+});
+
+describe("leadsDemoStore stage change revert", () => {
+  it("puts the stage back and deletes the line, writing none", () => {
+    const before = demoGetLead(CAVE_ID).entries.length;
+    const entryId = moveCave("on_board");
+    const reverted = demoRevertLeadStageChange(CAVE_ID, entryId);
+    expect(reverted.stage).toBe("in_talks");
+    expect(reverted.entries).toHaveLength(before);
+    expect(reverted.entries.some((entry) => entry.id === entryId)).toBe(false);
+    expect(demoListLeads(EMPTY_LEAD_FILTERS).dueCount).toBe(4);
+  });
+
+  it("refuses a lead that is gone", () => {
+    expect(
+      refusalOf(() => demoRevertLeadStageChange("demo-lead-nope", "entry")),
+    ).toMatchObject({ status: 404, data: { code: "LEAD_NOT_FOUND" } });
+  });
+
+  it("refuses a line that is gone or sits on another lead", () => {
+    const entryId = moveCave("on_board");
+    expect(
+      refusalOf(() => demoRevertLeadStageChange(ZINE_ID, entryId)),
+    ).toMatchObject({ status: 404, data: { code: "LEAD_ENTRY_NOT_FOUND" } });
+    demoRevertLeadStageChange(CAVE_ID, entryId);
+    expect(
+      refusalOf(() => demoRevertLeadStageChange(CAVE_ID, entryId)),
+    ).toMatchObject({ status: 404, data: { code: "LEAD_ENTRY_NOT_FOUND" } });
+  });
+
+  it("refuses a line that is no stage change", () => {
+    const created = demoGetLead(CAVE_ID).entries.find(
+      (entry) => entry.kind === "created",
+    );
+    expect(
+      refusalOf(() => demoRevertLeadStageChange(CAVE_ID, created?.id ?? "")),
+    ).toMatchObject({
+      status: 409,
+      data: { code: "LEAD_ENTRY_NOT_REVERTIBLE", reason: "not_stage_change" },
+    });
+  });
+
+  it("refuses a stage change with a later one after it", () => {
+    const firstEntryId = moveCave("on_board");
+    moveCave("not_now");
+    expect(
+      refusalOf(() => demoRevertLeadStageChange(CAVE_ID, firstEntryId)),
+    ).toMatchObject({
+      status: 409,
+      data: { code: "LEAD_ENTRY_NOT_REVERTIBLE", reason: "not_newest" },
+    });
+    expect(demoGetLead(CAVE_ID).stage).toBe("not_now");
+  });
+
+  it("refuses a stage change when the stage moved since", () => {
+    resetDemoLeads(seedWithStageChange("on_board"));
+    expect(
+      refusalOf(() => demoRevertLeadStageChange(SOLO_ID, soloStageChangeId())),
+    ).toMatchObject({
+      status: 409,
+      data: { code: "LEAD_ENTRY_NOT_REVERTIBLE", reason: "stage_moved" },
+    });
+  });
+
+  it("refuses someone else's stage change to a caller who is no Admin", () => {
+    resetDemoLeads(seedWithStageChange("contacted"));
+    const caller = { userId: "demo-staff-rafa", isAdmin: false };
+    expect(
+      refusalOf(() =>
+        demoRevertLeadStageChange(SOLO_ID, soloStageChangeId(), { caller }),
+      ),
+    ).toMatchObject({
+      status: 409,
+      data: { code: "LEAD_ENTRY_NOT_REVERTIBLE", reason: "not_yours" },
+    });
+  });
+
+  it("refuses a stage change older than ten minutes", () => {
+    resetDemoLeads(seedWithStageChange("contacted"));
+    expect(
+      refusalOf(() => demoRevertLeadStageChange(SOLO_ID, soloStageChangeId())),
+    ).toMatchObject({
+      status: 409,
+      data: { code: "LEAD_ENTRY_NOT_REVERTIBLE", reason: "too_old" },
+    });
+    resetDemoLeads();
+    const entryId = moveCave("on_board");
+    const movedAtMs = Date.parse(
+      demoGetLead(CAVE_ID).entries[0]?.createdAt ?? "",
+    );
+    expect(
+      refusalOf(() =>
+        demoRevertLeadStageChange(CAVE_ID, entryId, {
+          nowMs: movedAtMs + LEAD_REVERT_WINDOW_MS + 1,
+        }),
+      ),
+    ).toMatchObject({ data: { reason: "too_old" } });
+    expect(
+      demoRevertLeadStageChange(CAVE_ID, entryId, {
+        nowMs: movedAtMs + LEAD_REVERT_WINDOW_MS,
+      }).stage,
+    ).toBe("in_talks");
+  });
+
+  it("lets the author revert their own stage change", () => {
+    resetDemoLeads(seedWithStageChange("contacted"));
+    const entryId = soloStageChangeId();
+    const writtenAtMs = Date.parse(
+      demoGetLead(SOLO_ID).entries.find((entry) => entry.id === entryId)
+        ?.createdAt ?? "",
+    );
+    const reverted = demoRevertLeadStageChange(SOLO_ID, entryId, {
+      caller: { userId: "demo-staff-marta", isAdmin: false },
+      nowMs: writtenAtMs + 1000,
+    });
+    expect(reverted.stage).toBe("to_contact");
   });
 });

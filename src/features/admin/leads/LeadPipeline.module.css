@@ -6,14 +6,17 @@
   margin-block-start: var(--gap-sm);
 }
 
+/* The stages and the due switch share one height (the grid stretches
+   both), one radius, one hairline and one resting shadow. */
 .pipeline {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
   gap: var(--gap-xs);
 }
 
 /* One surface split into equal tiles by hairlines, so the stages read as
-   one pipeline rather than six buttons. */
+   one pipeline. */
 .stages {
   display: grid;
   grid-auto-columns: minmax(0, 1fr);
@@ -51,16 +54,18 @@
   }
 }
 
+/* Inside the clipped strip the ring sits on the tile's inner edge. */
 .tile:focus-visible {
   z-index: 1;
   outline: var(--focus-ring);
   outline-offset: -3px;
 }
 
-/* The chosen stage: a plum wash and a coral line under it, so the state
-   never rides on the wash alone. */
+/* The chosen stage: a wash that follows the theme, a coral line along its
+   foot and its label in full ink, so the state never rides on the wash
+   alone. */
 .tile[aria-pressed="true"] {
-  background: rgba(var(--plum-rgb), 0.05);
+  background: rgba(var(--line-rgb), 0.055);
 }
 
 .tile[aria-pressed="true"]::after {
@@ -112,17 +117,18 @@
   border-radius: var(--radius-pill);
 }
 
+/* The All tile: no share to draw, and nothing to stack over the selected
+   line. The track keeps its height so every tile shares one rhythm. */
+.tileTrack[data-hidden] {
+  visibility: hidden;
+}
+
 .tileBar {
   display: block;
   block-size: 100%;
   min-inline-size: 0;
   border-radius: inherit;
   transition: inline-size var(--dur-slow) var(--ease);
-}
-
-/* Plum on the light page, light ink on the dark one. */
-.barAll {
-  background: var(--text-strong);
 }
 
 .barGhost {
@@ -150,9 +156,9 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--gap-xs);
+  gap: var(--gap-sm);
   min-inline-size: 15rem;
-  padding: 14px 16px;
+  padding: 14px 16px 16px;
   font: inherit;
   color: var(--ink);
   text-align: start;
@@ -175,6 +181,7 @@
 .due:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .due[aria-checked="true"] {
@@ -250,7 +257,7 @@
 }
 
 /* A narrower list stacks the switch under the stages; a phone-wide one
-   scrolls the tiles sideways in one row. */
+   sets the six tiles in a grid of three by two, all in view. */
 @container lead-pipeline (max-width: 980px) {
   .pipeline {
     grid-template-columns: minmax(0, 1fr);
@@ -259,20 +266,24 @@
 
 @container lead-pipeline (max-width: 700px) {
   .stages {
-    grid-auto-columns: minmax(6.5rem, 1fr);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    scroll-snap-type: x proximity;
-  }
-
-  .stages::-webkit-scrollbar {
-    display: none;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
   }
 
   .tile {
-    scroll-snap-align: start;
     padding: 12px 14px 14px;
+  }
+
+  /* Hairlines between the tiles. The group's hidden label is a span, so
+     counting buttons by type leaves it out. The first tile of each line
+     drops its leading hairline; the second line takes one along its top. */
+  .tile:nth-of-type(3n + 1) {
+    border-inline-start: none;
+  }
+
+  .tile:nth-of-type(n + 4) {
+    border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
   }
 
   .tileCount {

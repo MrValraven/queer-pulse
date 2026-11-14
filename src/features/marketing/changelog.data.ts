@@ -63,6 +63,24 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "leads-list-and-add-lead-tidied",
+        category: "improvement",
+        date: "14 Nov 2026",
+        ...entryKeys("leads-list-and-add-lead-tidied"),
+      },
+      {
+        id: "lead-page-opens-to-read",
+        category: "improvement",
+        date: "14 Nov 2026",
+        ...entryKeys("lead-page-opens-to-read"),
+      },
+      {
+        id: "lead-stage-moves-undo-cleanly",
+        category: "improvement",
+        date: "14 Nov 2026",
+        ...entryKeys("lead-stage-moves-undo-cleanly"),
+      },
+      {
         id: "vj-sequences",
         category: "feature",
         date: "13 Nov 2026",

@@ -125,6 +125,9 @@ export interface LeadListPageDTO {
   stageCounts: Record<LeadStage, number>;
   /** The sum of `stageCounts`. */
   totalCount: number;
+  /** Leads in an open stage whose follow-up is today or earlier in Lisbon,
+   *  over the search and type only, as `stageCounts` counts them. */
+  dueCount: number;
 }
 
 export interface LeadEntryAuthorDTO {
@@ -180,7 +183,8 @@ export interface LeadPersonaSearchResultDTO {
   linkedLead: { id: string; name: string } | null;
 }
 
-/** Every reason code a lead refusal carries (contract section 3, table order). */
+/** Every reason code a lead refusal carries (contract section 3, table
+ *  order), then the two codes of the stage change revert route. */
 export const LEAD_REASON_CODES = [
   "LEAD_NOT_FOUND",
   "LEAD_NAME_REQUIRED",
@@ -205,8 +209,27 @@ export const LEAD_REASON_CODES = [
   "LEAD_NOTE_NOT_YOURS",
   "LEAD_ENTRY_NOT_EDITABLE",
   "LEAD_CURSOR_INVALID",
+  "LEAD_ENTRY_NOT_FOUND",
+  "LEAD_ENTRY_NOT_REVERTIBLE",
 ] as const;
 export type LeadReasonCode = (typeof LEAD_REASON_CODES)[number];
+
+/** Why a stage change revert answers `LEAD_ENTRY_NOT_REVERTIBLE`, in the
+ *  server's check order: the line is another kind, a later stage change
+ *  exists, the stage moved since, the caller neither wrote it nor is an
+ *  Admin, or the change is older than {@link LEAD_REVERT_WINDOW_MS}. */
+export const LEAD_REVERT_REFUSAL_REASONS = [
+  "not_stage_change",
+  "not_newest",
+  "stage_moved",
+  "not_yours",
+  "too_old",
+] as const;
+export type LeadRevertRefusalReason =
+  (typeof LEAD_REVERT_REFUSAL_REASONS)[number];
+
+/** How long a stage change stays revertible, in ms. */
+export const LEAD_REVERT_WINDOW_MS = 10 * 60 * 1000;
 
 export interface LeadListFilters {
   q: string;
@@ -297,6 +320,8 @@ export interface LeadRefusalDetail {
   leadName: string | null;
   index: number | null;
   publicState: Exclude<LeadPersonaPublicState, "shown"> | null;
+  /** Why a stage change revert was refused. */
+  revertReason: LeadRevertRefusalReason | null;
 }
 
 /** Reads each extra field off a refusal body; a field that is missing or of
@@ -307,11 +332,14 @@ export function leadRefusalDetailOf(error: unknown): LeadRefusalDetail {
   const leadName = body?.leadName;
   const index = body?.index;
   const publicState = body?.publicState;
+  const reason = body?.reason;
   return {
     leadId: typeof leadId === "string" ? leadId : null,
     leadName: typeof leadName === "string" ? leadName : null,
     index: typeof index === "number" && Number.isInteger(index) ? index : null,
     publicState:
       HIDDEN_LEAD_PERSONA_STATES.find((state) => state === publicState) ?? null,
+    revertReason:
+      LEAD_REVERT_REFUSAL_REASONS.find((known) => known === reason) ?? null,
   };
 }

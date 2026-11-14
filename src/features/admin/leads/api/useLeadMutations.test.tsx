@@ -16,6 +16,7 @@ import {
   useCreateLead,
   useDeleteLead,
   useLeadIsWriting,
+  useRevertLeadStageChange,
   useUpdateLead,
 } from "./useLeadMutations";
 
@@ -111,6 +112,70 @@ describe("useLeadMutations in demo", () => {
       fromStage: "in_talks",
       toStage: "on_board",
     });
+  });
+
+  it("reverts a stage change and the caches follow", async () => {
+    const { queryClient, wrapper } = setup();
+    const { result } = renderHook(
+      () => ({
+        update: useUpdateLead(CAVE_ID),
+        revert: useRevertLeadStageChange(),
+        dueCount: useLeadDueCount({ isEnabled: true }),
+        list: useLeadList(EMPTY_LEAD_FILTERS),
+      }),
+      { wrapper },
+    );
+    await waitFor(() => expect(result.current.dueCount.data).toBe(4));
+    let moved: LeadDTO | undefined;
+    await act(async () => {
+      moved = await result.current.update.mutateAsync({ stage: "on_board" });
+    });
+    await waitFor(() => expect(result.current.dueCount.data).toBe(3));
+    const entryId = moved?.entries[0]?.id ?? "";
+    await act(async () => {
+      await result.current.revert.mutateAsync({
+        leadId: CAVE_ID,
+        entryId,
+        fromStage: "in_talks",
+      });
+    });
+    await waitFor(() => expect(result.current.dueCount.data).toBe(4));
+    await waitFor(() =>
+      expect(
+        result.current.list.rows.find((row) => row.id === CAVE_ID)?.stage,
+      ).toBe("in_talks"),
+    );
+    const cached = queryClient.getQueryData<LeadDTO>(
+      leadKeys.detail(CAVE_ID, true),
+    );
+    expect(cached?.stage).toBe("in_talks");
+    expect(cached?.entries.some((entry) => entry.id === entryId)).toBe(false);
+  });
+
+  it("refuses to revert a line that is no stage change", async () => {
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useRevertLeadStageChange(), {
+      wrapper,
+    });
+    const createdLine = demoGetLead(CAVE_ID).entries.find(
+      (entry) => entry.kind === "created",
+    );
+    await act(async () => {
+      await expect(
+        result.current.mutateAsync({
+          leadId: CAVE_ID,
+          entryId: createdLine?.id ?? "",
+          fromStage: "in_talks",
+        }),
+      ).rejects.toMatchObject({
+        status: 409,
+        data: {
+          code: "LEAD_ENTRY_NOT_REVERTIBLE",
+          reason: "not_stage_change",
+        },
+      });
+    });
+    expect(demoGetLead(CAVE_ID).stage).toBe("in_talks");
   });
 
   it("drops the detail query after a delete", async () => {

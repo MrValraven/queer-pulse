@@ -4,7 +4,11 @@ import {
   LEAD_LINK_PLATFORMS,
   LEAD_WEBSITE_PLATFORM,
 } from "./leadLinkPlatform.data";
-import { leadLinkHost, leadLinkPlatform } from "./leadLinkPlatform";
+import {
+  leadLinkAddressOf,
+  leadLinkHost,
+  leadLinkPlatform,
+} from "./leadLinkPlatform";
 
 describe("leadLinkPlatform", () => {
   it.each([
@@ -43,5 +47,16 @@ describe("leadLinkPlatform", () => {
       "cave23.example",
     );
     expect(leadLinkHost("not a link")).toBeNull();
+  });
+});
+
+describe("leadLinkAddressOf", () => {
+  it.each([
+    ["https://www.instagram.com/ana.dj/", "instagram.com/ana.dj"],
+    ["https://cave23.example", "cave23.example"],
+    ["https://example.org/press?id=4#top", "example.org/press"],
+    ["  not a link  ", "not a link"],
+  ])("reads %s as %s", (link, address) => {
+    expect(leadLinkAddressOf(link)).toBe(address);
   });
 });

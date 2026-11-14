@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 interface ApiClientMocks {
   apiGet: Mock<(path: string) => Promise<unknown>>;
   apiPatch: Mock<(path: string, body?: unknown) => Promise<unknown>>;
+  apiPost: Mock<(path: string, body?: unknown) => Promise<unknown>>;
 }
 
 const mocks: ApiClientMocks = vi.hoisted(() => ({
@@ -12,18 +13,26 @@ const mocks: ApiClientMocks = vi.hoisted(() => ({
   apiPatch: vi.fn<(path: string, body?: unknown) => Promise<unknown>>(() =>
     Promise.resolve(undefined),
   ),
+  apiPost: vi.fn<(path: string, body?: unknown) => Promise<unknown>>(() =>
+    Promise.resolve(undefined),
+  ),
 }));
 
 vi.mock("../../../../shared/api/client", () => ({
   apiGet: (path: string) => mocks.apiGet(path),
   apiPatch: (path: string, body?: unknown) => mocks.apiPatch(path, body),
-  apiPost: vi.fn(),
+  apiPost: (path: string, body?: unknown) => mocks.apiPost(path, body),
   apiDelete: vi.fn(),
   // `leads.types` reads it for refusals; nothing here refuses.
   ApiError: class ApiErrorStub extends Error {},
 }));
 
-import { editLeadNote, getLeads, searchLeadPersonas } from "./leads.api";
+import {
+  editLeadNote,
+  getLeads,
+  revertLeadStageChange,
+  searchLeadPersonas,
+} from "./leads.api";
 import { EMPTY_LEAD_FILTERS } from "./leads.types";
 
 beforeEach(() => vi.clearAllMocks());
@@ -58,6 +67,14 @@ describe("leads.api", () => {
     expect(mocks.apiPatch).toHaveBeenCalledWith(
       "/admin/leads/lead%2F1/entries/entry%202",
       { body: "Hi" },
+    );
+  });
+
+  it("posts a stage change revert with no body", async () => {
+    await revertLeadStageChange("lead/1", "entry 2");
+    expect(mocks.apiPost).toHaveBeenCalledWith(
+      "/admin/leads/lead%2F1/entries/entry%202/revert",
+      undefined,
     );
   });
 
