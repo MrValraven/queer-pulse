@@ -1,22 +1,14 @@
-import { useId } from "react";
-import {
-  FilterChips,
-  SearchInput,
-  Select,
-  Toggle,
-  type ChipOption,
-} from "../../../shared/components/ui";
+import { useId, type RefObject } from "react";
+import { FiX } from "react-icons/fi";
+import { Button, SearchInput, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   LEAD_SEARCH_QUERY_MAX,
-  LEAD_STAGES,
   LEAD_TYPES,
-  isLeadStage,
   isLeadType,
-  type LeadStage,
 } from "./api/leads.types";
-import { LEAD_STAGE_LABEL_KEY, LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
-import { ALL_STAGES_CHIP } from "./leadsList.data";
+import { LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
+import { LEAD_LIST_SHORTCUT } from "./leadsList.data";
 import type { LeadListControls } from "./useLeadListFilters";
 import styles from "./AdminLeads.module.css";
 
@@ -29,112 +21,102 @@ function cutToSearchMax(text: string): string {
     : text;
 }
 
+/** "12 leads", or "Showing 50 of 64" while more pages wait. */
+function ResultSummary({
+  shownCount,
+  matchCount,
+}: {
+  shownCount: number;
+  matchCount: number | null;
+}) {
+  const { t } = useTranslation();
+  const text =
+    matchCount === null
+      ? t("admin:leads.toolbar.shown", { count: shownCount })
+      : matchCount > shownCount
+        ? t("admin:leads.toolbar.showingOf", {
+            shown: shownCount,
+            count: matchCount,
+          })
+        : t("admin:leads.toolbar.count", { count: matchCount });
+  return (
+    <p className={styles.summary} role="status">
+      {text}
+    </p>
+  );
+}
+
 /**
- * The leads list filters: a search over name, email and links, the stage
- * chips with how many leads sit in each (All counts them all), a type
- * select and the Follow-up due switch. Counts follow the search and type,
- * so a chip says what pressing it would show. On a phone the chips scroll
- * sideways in one row.
+ * The search over name, email and links (with its `/` key shown on a
+ * keyboard device), the type select, and a line that counts the leads in
+ * view, with Clear filters beside it while any filter is on and rows show.
+ * The stage and due filters live in the pipeline strip above.
  */
 export function AdminLeadsToolbar({
   controls,
-  stageCounts,
-  totalCount,
+  searchRef,
+  shownCount,
+  matchCount,
+  hasRows,
 }: {
   controls: LeadListControls;
-  stageCounts: Record<LeadStage, number> | null;
-  totalCount: number | null;
+  searchRef: RefObject<HTMLInputElement | null>;
+  shownCount: number;
+  matchCount: number | null;
+  hasRows: boolean;
 }) {
   const { t } = useTranslation();
-  const stageLabelId = useId();
   const typeSelectId = useId();
-  const dueToggleId = useId();
   const { filters } = controls;
-  const allLabel = t("admin:leads.list.stageAll");
-
-  const stageOptions: ChipOption[] = [
-    {
-      value: ALL_STAGES_CHIP,
-      label: allLabel,
-      count: totalCount ?? undefined,
-      isUnavailable: false,
-      ariaLabel:
-        totalCount === null
-          ? undefined
-          : t("admin:leads.list.stageChipAria", {
-              stage: allLabel,
-              count: totalCount,
-            }),
-    },
-    ...LEAD_STAGES.map((stage) => {
-      const stageLabel = t(LEAD_STAGE_LABEL_KEY[stage]);
-      const count = stageCounts?.[stage];
-      return {
-        value: stage,
-        label: stageLabel,
-        count,
-        ariaLabel:
-          count === undefined
-            ? undefined
-            : t("admin:leads.list.stageChipAria", { stage: stageLabel, count }),
-      };
-    }),
-  ];
 
   return (
     <div className={styles.toolbar}>
-      <SearchInput
-        className={styles.search}
-        value={controls.searchText}
-        onChange={(text) => controls.setSearchText(cutToSearchMax(text))}
-        ariaLabel={t("admin:leads.list.searchLabel")}
-        placeholder={t("admin:leads.list.searchPlaceholder")}
-        clearable
-      />
-      <div className={styles.stageGroup}>
-        <span id={stageLabelId} className="visuallyHidden">
-          {t("admin:leads.list.stageFilterLabel")}
-        </span>
-        <FilterChips
-          className={styles.stageChips}
-          labelledBy={stageLabelId}
-          size="touch"
-          options={stageOptions}
-          value={filters.stage ?? ALL_STAGES_CHIP}
-          onChange={(value) =>
-            controls.setStage(isLeadStage(value) ? value : null)
-          }
+      <div className={styles.searchWrap}>
+        <SearchInput
+          className={styles.search}
+          inputRef={searchRef}
+          value={controls.searchText}
+          onChange={(text) => controls.setSearchText(cutToSearchMax(text))}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && controls.searchText !== "") {
+              event.stopPropagation();
+              controls.setSearchText("");
+            }
+          }}
+          ariaLabel={t("admin:leads.list.searchLabel")}
+          placeholder={t("admin:leads.list.searchPlaceholder")}
+          clearable
+        />
+        {controls.searchText === "" ? (
+          <kbd className={styles.keyHint} aria-hidden>
+            {LEAD_LIST_SHORTCUT.search}
+          </kbd>
+        ) : null}
+      </div>
+      <div className={styles.typeFilter}>
+        <Select
+          id={typeSelectId}
+          clearable
+          label={t("admin:leads.list.typeFilterLabel")}
+          placeholder={t("admin:leads.list.typeAll")}
+          options={LEAD_TYPES.map((type) => ({
+            value: type,
+            label: t(LEAD_TYPE_LABEL_KEY[type]),
+          }))}
+          value={filters.type}
+          onChange={(type) => controls.setType(isLeadType(type) ? type : null)}
         />
       </div>
-      <div className={styles.toolbarRow}>
-        <div className={styles.typeFilter}>
-          <Select
-            id={typeSelectId}
-            clearable
-            label={t("admin:leads.list.typeFilterLabel")}
-            placeholder={t("admin:leads.list.typeAll")}
-            options={LEAD_TYPES.map((type) => ({
-              value: type,
-              label: t(LEAD_TYPE_LABEL_KEY[type]),
-            }))}
-            value={filters.type}
-            onChange={(type) =>
-              controls.setType(isLeadType(type) ? type : null)
-            }
-          />
-        </div>
-        <div className={styles.dueToggle}>
-          <label htmlFor={dueToggleId} className={styles.dueToggleLabel}>
-            {t("admin:leads.list.dueOnly")}
-          </label>
-          <Toggle
-            id={dueToggleId}
-            tone="coral"
-            label={t("admin:leads.list.dueOnly")}
-            checked={filters.isDueOnly}
-            onChange={controls.setIsDueOnly}
-          />
-        </div>
+      <div className={styles.toolbarEnd}>
+        {hasRows ? (
+          <ResultSummary shownCount={shownCount} matchCount={matchCount} />
+        ) : null}
+        {hasRows && controls.hasFilters ? (
+          <Button variant="ghost" size="sm" onClick={controls.clearFilters}>
+            <FiX aria-hidden />
+            {t("admin:leads.empty.clearFilters")}
+          </Button>
+        ) : null}
       </div>
     </div>
   );

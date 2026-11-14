@@ -136,6 +136,38 @@ export function useUpdateLead(
   });
 }
 
+/** What a quick update from the list sends: the lead and its change. */
+export interface LeadQuickUpdate {
+  leadId: string;
+  body: UpdateLeadBody;
+}
+
+/**
+ * PATCH /admin/leads/:id from the list, for any row. The list page holds
+ * one of these, so a write (and its Undo) still settles after its row
+ * leaves the view, for example when the new stage no longer matches the
+ * stage filter. It sends only the stage or the follow-up, so the persona
+ * search never goes stale here.
+ */
+export function useQuickUpdateLead(): UseMutationResult<
+  LeadDTO,
+  Error,
+  LeadQuickUpdate
+> {
+  const { demoMode, saveLead, refetchIfGone } = useLeadCache();
+  return useDemoAwareMutation<LeadDTO, Error, LeadQuickUpdate>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: SILENT_META,
+    mutationKey: LEAD_WRITE_KEY,
+    demoResult: async ({ leadId, body }) =>
+      (await loadDemoStore()).demoUpdateLead(leadId, body),
+    live: ({ leadId, body }) => updateLead(leadId, body),
+    onError: (cause, { leadId }) => refetchIfGone(cause, leadId),
+    onSuccess: (lead) => saveLead(lead),
+  });
+}
+
 /** DELETE /admin/leads/:id: the detail query goes with the lead. */
 export function useDeleteLead(): UseMutationResult<
   { ok: true },

@@ -24,3 +24,22 @@ export const LEAD_FOLLOW_UP_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
   month: "short",
   year: "numeric",
 };
+
+/** The quick follow-up choices on a row, as days after today in Lisbon.
+ *  Each key names its label under `admin:leads.quick.followUp.*`. */
+export const LEAD_FOLLOW_UP_PRESETS = [
+  { key: "tomorrow", days: 1 },
+  { key: "inThreeDays", days: 3 },
+  { key: "nextWeek", days: 7 },
+  { key: "inTwoWeeks", days: 14 },
+  { key: "inAMonth", days: 30 },
+] as const;
+
+/** The keys that work anywhere on the list page (not while typing). */
+export const LEAD_LIST_SHORTCUT = {
+  search: "/",
+  add: "n",
+} as const;
+
+/** How long a quick change's toast keeps its Undo, in ms. */
+export const LEAD_UNDO_TOAST_MS = 8000;

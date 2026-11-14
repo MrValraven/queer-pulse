@@ -59,6 +59,13 @@ function elementAt(elements: HTMLElement[], index: number): HTMLElement {
   return element;
 }
 
+/** The whole row around a row's "Open <name>" link. */
+function rowOf(link: HTMLElement): HTMLElement {
+  const row = link.closest("li");
+  if (row === null) throw new Error("Expected the link inside a row");
+  return row;
+}
+
 function rowLabels(): (string | null)[] {
   return screen
     .getAllByRole("link", { name: ROW_NAME })
@@ -79,13 +86,13 @@ describe("AdminLeadsPage", () => {
       "Open Coletivo Maré",
       "Open Kai Duarte",
     ]);
-    const firstRow = elementAt(rows, 0);
+    const firstRow = rowOf(elementAt(rows, 0));
     expect(
       within(firstRow)
         .getByText(/Follow-up due/)
         .closest("[data-due]"),
     ).not.toBeNull();
-    const fifthRow = elementAt(rows, 4);
+    const fifthRow = rowOf(elementAt(rows, 4));
     expect(within(fifthRow).queryByText(/Follow-up due/)).toBeNull();
   });
 
@@ -114,8 +121,10 @@ describe("AdminLeadsPage", () => {
     await screen.findAllByRole("link", { name: ROW_NAME });
     await user.click(screen.getByRole("switch", { name: "Follow-up due" }));
     await waitFor(() => expect(rowLabels()).toHaveLength(4));
-    for (const row of screen.getAllByRole("link", { name: ROW_NAME })) {
-      expect(within(row).getByText(/Follow-up due/)).toBeInTheDocument();
+    for (const link of screen.getAllByRole("link", { name: ROW_NAME })) {
+      expect(
+        within(rowOf(link)).getByText(/Follow-up due/),
+      ).toBeInTheDocument();
     }
     expect(screen.getByTestId("location-search")).toHaveTextContent("due=1");
   });

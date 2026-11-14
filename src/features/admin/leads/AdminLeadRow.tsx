@@ -1,106 +1,118 @@
 import { useId } from "react";
-import { FiClock, FiFileText, FiMapPin } from "react-icons/fi";
+import { FiCheck, FiFileText, FiMapPin } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { formatDate } from "../../../shared/lib/date";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AdminAvatar } from "../ui";
 import type { LeadListItemDTO } from "./api/leads.types";
-import { lisbonLeadDay } from "./leadDates";
-import { LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
+import { LEAD_TYPE_AVATAR_TONE, LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
 import { LeadLinkIcons } from "./LeadLinkIcons";
 import { adminLeadPath } from "./leadPaths";
 import { LeadPersonaThumb } from "./LeadPersonaThumb";
-import { LEAD_FOLLOW_UP_DATE_OPTIONS } from "./leadsList.data";
-import { LeadStagePill } from "./LeadStagePill";
+import { LeadRowFollowUpMenu, LeadRowStageMenu } from "./LeadRowControls";
 import styles from "./AdminLeads.module.css";
 
+/** Up to two initials from the words of a lead's name that start with a
+ *  letter: "Coletivo Maré" reads "CM", "Cave 23" reads "C". */
+function initialsOf(name: string): string {
+  const letters = name
+    .trim()
+    .split(/\s+/)
+    .map((word) => Array.from(word)[0] ?? "")
+    .filter((first) => /\p{L}/u.test(first))
+    .slice(0, 2)
+    .join("");
+  return letters === "" ? "#" : letters.toLocaleUpperCase();
+}
+
+/** The persona's picture when one is linked (with a jade check), else the
+ *  lead's initials on a tint that follows its type. Decorative. */
+function LeadRowAvatar({ row }: { row: LeadListItemDTO }) {
+  const persona = row.linkedPersona;
+  return (
+    <span className={styles.rowAvatar} aria-hidden>
+      {persona !== null ? (
+        <>
+          <LeadPersonaThumb persona={persona} size={40} />
+          <span className={styles.rowAvatarBadge}>
+            <FiCheck />
+          </span>
+        </>
+      ) : (
+        <AdminAvatar
+          initials={initialsOf(row.name)}
+          tone={LEAD_TYPE_AVATAR_TONE[row.type]}
+        />
+      )}
+    </span>
+  );
+}
+
 /**
- * One lead in the list. The whole row is a single link to the lead page,
- * named "Open <name>" and described by everything else it shows: type,
- * stage, location, links, the follow-up (in the warn tone when due), how
- * many notes it holds and the linked persona. Desktop reads it as one line;
- * a narrow list stacks it into a card: name on the left, the stage and the
- * persona stacked on the right, and the details across the full width.
+ * One lead in the list. The name is the link to the lead page, and its hit
+ * area stretches over the whole row; the stage and the follow-up sit above
+ * it as their own menus, so a lead moves on without opening it. The link is
+ * named "Open <name>" and described by the rest of the row. A wide list
+ * reads each row as one line of a table; a narrow one stacks it into a
+ * card: name on the left, the stage on the right, details below.
  */
 export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
   const typeId = useId();
-  const stageId = useId();
   const detailsId = useId();
-  const followUpDate =
-    row.followUpOn === null
-      ? null
-      : formatDate(row.followUpOn, language, LEAD_FOLLOW_UP_DATE_OPTIONS);
   const persona = row.linkedPersona;
-  // A closed lead (On board, Not now) can keep an old date that no longer
-  // counts as due; it reads muted, as history.
-  const isPastFollowUp =
-    !row.isFollowUpDue &&
-    row.followUpOn !== null &&
-    row.followUpOn < lisbonLeadDay();
 
   return (
-    <Link
-      to={adminLeadPath(row.id)}
-      className={styles.row}
-      aria-label={t("admin:leads.action.openLead", { name: row.name })}
-      aria-describedby={`${typeId} ${stageId} ${detailsId}`}
-    >
+    <div className={styles.row}>
       <span className={styles.rowName}>
-        <span className={styles.rowTitle}>{row.name}</span>
-        <span id={typeId} className={styles.rowType}>
-          {t(LEAD_TYPE_LABEL_KEY[row.type])}
+        <LeadRowAvatar row={row} />
+        <span className={styles.rowNameText}>
+          <Link
+            to={adminLeadPath(row.id)}
+            className={styles.rowLink}
+            aria-label={t("admin:leads.action.openLead", { name: row.name })}
+            aria-describedby={`${typeId} ${detailsId}`}
+          >
+            {row.name}
+          </Link>
+          <span id={typeId} className={styles.rowType}>
+            {t(LEAD_TYPE_LABEL_KEY[row.type])}
+          </span>
         </span>
       </span>
-      <div className={styles.rowAside}>
-        <span id={stageId} className={styles.rowStage}>
-          <LeadStagePill stage={row.stage} />
-        </span>
-        <div className={styles.rowPersona}>
-          {persona !== null ? (
-            <LeadPersonaThumb persona={persona} size={32} />
-          ) : null}
-        </div>
-      </div>
-      <span id={detailsId} className={styles.rowDetails}>
-        {row.location !== null ? (
-          <span className={`${styles.rowMeta} ${styles.rowLocation}`}>
-            <FiMapPin className={styles.rowMetaIcon} aria-hidden />
-            <span className={styles.rowMetaText}>{row.location}</span>
+      <span className={styles.rowStage}>
+        <LeadRowStageMenu row={row} />
+      </span>
+      <span className={styles.rowDetails}>
+        <span id={detailsId} className={styles.rowDetailsText}>
+          {row.location !== null ? (
+            <span className={`${styles.rowMeta} ${styles.rowLocation}`}>
+              <FiMapPin className={styles.rowMetaIcon} aria-hidden />
+              <span className={styles.rowMetaText}>{row.location}</span>
+            </span>
+          ) : (
+            <span className={styles.rowLocation} aria-hidden />
+          )}
+          <span className={styles.rowLinks}>
+            <LeadLinkIcons links={row.links} linkCount={row.linkCount} />
           </span>
-        ) : null}
-        <span className={styles.rowLinks}>
-          <LeadLinkIcons links={row.links} linkCount={row.linkCount} />
-        </span>
-        {followUpDate !== null ? (
-          <span
-            className={styles.followUp}
-            data-due={row.isFollowUpDue || undefined}
-            data-past={isPastFollowUp || undefined}
-          >
-            {isPastFollowUp ? null : (
-              <FiClock className={styles.rowMetaIcon} aria-hidden />
-            )}
+          <span className={`${styles.rowMeta} ${styles.rowNotes}`}>
+            <FiFileText className={styles.rowMetaIcon} aria-hidden />
             <span>
-              {row.isFollowUpDue
-                ? t("admin:leads.list.followUpDue", { date: followUpDate })
-                : t("admin:leads.list.followUpOn", { date: followUpDate })}
+              {t("admin:leads.list.noteCount", { count: row.noteCount })}
             </span>
           </span>
-        ) : null}
-        <span className={`${styles.rowMeta} ${styles.rowNotes}`}>
-          <FiFileText className={styles.rowMetaIcon} aria-hidden />
-          <span>
-            {t("admin:leads.list.noteCount", { count: row.noteCount })}
-          </span>
+          {persona !== null ? (
+            <span className="visuallyHidden">
+              {t("admin:leads.list.personaLinked", {
+                name: persona.displayName,
+              })}
+            </span>
+          ) : null}
         </span>
-        {persona !== null ? (
-          <span className="visuallyHidden">
-            {t("admin:leads.list.personaLinked", {
-              name: persona.displayName,
-            })}
-          </span>
-        ) : null}
+        <span className={styles.rowFollowUp}>
+          <LeadRowFollowUpMenu row={row} />
+        </span>
       </span>
-    </Link>
+    </div>
   );
 }
