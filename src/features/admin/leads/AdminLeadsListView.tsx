@@ -16,6 +16,26 @@ import type { LeadListViewName } from "./leadListView";
 import { LEAD_LIST_SKELETON_ROWS } from "./leadsList.data";
 import styles from "./AdminLeads.module.css";
 
+/** The column names over a wide list. The rows name their own parts to
+ *  assistive tech, so this line is for the eye only. */
+function AdminLeadsTableHead() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.tableHead} aria-hidden>
+      <span className={styles.headName}>{t("admin:leads.column.lead")}</span>
+      <span className={styles.headStage}>{t("admin:leads.field.stage")}</span>
+      <span className={styles.headLocation}>
+        {t("admin:leads.field.location")}
+      </span>
+      <span className={styles.headLinks}>{t("admin:leads.field.links")}</span>
+      <span className={styles.headNotes}>{t("admin:leads.column.notes")}</span>
+      <span className={styles.headFollowUp}>
+        {t("admin:leads.column.followUp")}
+      </span>
+    </div>
+  );
+}
+
 /** Row-shaped placeholders while the first page loads. */
 function AdminLeadsSkeleton() {
   return (
@@ -111,20 +131,23 @@ export function AdminLeadsListView({
   }
   return (
     <>
-      <ul
-        className={styles.rows}
-        aria-label={t("admin:leads.title")}
-        aria-busy={list.isShowingPreviousResults || undefined}
-        data-stale={list.isShowingPreviousResults || undefined}
-      >
-        <AnimatePresence initial={false}>
-          {list.rows.map((row) => (
-            <FadeListItem key={row.id}>
-              <AdminLeadRow row={row} />
-            </FadeListItem>
-          ))}
-        </AnimatePresence>
-      </ul>
+      <div className={styles.table}>
+        <AdminLeadsTableHead />
+        <ul
+          className={styles.rows}
+          aria-label={t("admin:leads.title")}
+          aria-busy={list.isShowingPreviousResults || undefined}
+          data-stale={list.isShowingPreviousResults || undefined}
+        >
+          <AnimatePresence initial={false}>
+            {list.rows.map((row) => (
+              <FadeListItem key={row.id}>
+                <AdminLeadRow row={row} />
+              </FadeListItem>
+            ))}
+          </AnimatePresence>
+        </ul>
+      </div>
       <LoadMoreStatus
         isFetchingNextPage={list.isFetchingMore}
         isFetchNextPageError={list.isLoadMoreError}

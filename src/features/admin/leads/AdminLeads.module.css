@@ -1,92 +1,97 @@
-/* The leads directory (AdminLeadsPage): toolbar, list and rows, the Add
+/* The leads directory (AdminLeadsPage): toolbar, table and rows, the Add
    lead dialog's form, and the lead page's persona panel. */
 
 /* ── Toolbar ── */
 .toolbar {
-  display: grid;
-  gap: var(--gap-sm);
-  margin-block-start: var(--gap-sm);
-}
-
-.search {
-  /* A search field reads best at about a name and an email long. */
-  max-width: 28rem;
-}
-
-.stageGroup {
-  min-width: 0;
-}
-
-.toolbarRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--gap-xs) var(--gap-sm);
+  margin-block-start: var(--gap-sm);
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1 1 18rem;
+  /* A search field reads best at about a name and an email long. */
+  max-width: 28rem;
+}
+
+.search {
+  max-width: none;
+}
+
+/* The `/` key, shown where a keyboard is likely; it hides once text is in. */
+.keyHint {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 14px;
+  display: none;
+  place-items: center;
+  min-inline-size: 22px;
+  block-size: 22px;
+  padding-inline: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: rgba(var(--line-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-6);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .keyHint {
+    display: inline-grid;
+  }
+
+  .searchWrap:focus-within .keyHint {
+    display: none;
+  }
 }
 
 .typeFilter {
   /* Wide enough for the longest type label beside its clear button. */
+  flex: 0 1 13rem;
   min-width: 12rem;
 }
 
-.dueToggle {
-  display: inline-flex;
+.toolbarEnd {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--gap-xs);
-  min-height: var(--tap-min);
+  margin-inline-start: auto;
 }
 
-/* The visible label is part of the switch's tap target. */
-.dueToggleLabel {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap-min);
+.summary {
+  margin: 0;
   font-size: var(--text-14);
   font-weight: 500;
-  color: var(--ink);
-  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
 }
 
-/* A phone keeps the stage chips on one row that scrolls sideways, bled to
-   the screen edge so the last chip shows it continues. */
 @media (--md) {
-  .search {
+  .searchWrap {
     max-width: none;
-  }
-
-  /* Two classes, so the one-row scroller outranks FilterChips' own
-     wrapping row whichever stylesheet loads last. */
-  .stageGroup .stageChips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    scroll-snap-type: x proximity;
-    margin-inline: calc(-1 * var(--wrap-px));
-    padding-inline: var(--wrap-px);
-    scroll-padding-inline: var(--wrap-px);
-    /* Room for the focus ring, which the scroller would otherwise clip. */
-    padding-block: 6px;
-    margin-block: -6px;
-  }
-
-  .stageGroup .stageChips::-webkit-scrollbar {
-    display: none;
-  }
-
-  .stageGroup .stageChips > * {
-    flex: none;
-    white-space: nowrap;
-    scroll-snap-align: start;
+    flex-basis: 100%;
   }
 
   .typeFilter {
     flex: 1 1 12rem;
   }
+
+  .toolbarEnd {
+    margin-inline-start: 0;
+  }
 }
 
 /* ── The list ── */
 .panel {
+  container: leads-list / inline-size;
   margin-block-start: var(--gap-sm);
 }
 
@@ -96,10 +101,19 @@
   position: relative;
 }
 
+.table {
+  /* The columns of a wide list, shared by the head and every row. */
+  --lead-columns: minmax(0, 1.8fr) 9.5rem minmax(0, 1.1fr) 6.5rem 5.5rem
+    minmax(0, 1.5fr);
+}
+
+.tableHead {
+  display: none;
+}
+
 /* Rows carry their own block-end margin, so a row that leaves takes its gap
-   with it. The list is the container the rows lay themselves out against. */
+   with it. */
 .rows {
-  container: leads-list / inline-size;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -124,7 +138,7 @@
 .loadMore {
   display: flex;
   justify-content: center;
-  padding-block: var(--gap-xs) var(--gap-grid);
+  padding-block: var(--gap-sm) var(--gap-grid);
 }
 
 /* ── One row: a card on a narrow list ── */
@@ -136,16 +150,16 @@
     "name stage"
     "details details";
   align-items: center;
-  gap: var(--gap-xs) var(--gap-sm);
+  gap: var(--gap-sm);
   min-height: var(--tap-min);
   margin-block-end: var(--gap-xs);
   padding: var(--gap-sm);
   color: var(--ink);
-  text-decoration: none;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-16);
   transition:
+    background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease),
     box-shadow var(--dur-fast) var(--ease);
 }
@@ -157,26 +171,76 @@
   }
 }
 
-/* After the hover rule, so a hovered row that has focus keeps its ring. */
-.row:focus-visible {
+.rowName {
+  grid-area: name;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.rowAvatar {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+/* A linked persona: a jade check on its picture. */
+.rowAvatarBadge {
+  position: absolute;
+  inset-block-end: -2px;
+  inset-inline-end: -2px;
+  display: grid;
+  place-items: center;
+  inline-size: 16px;
+  block-size: 16px;
+  font-size: var(--text-10);
+  color: var(--paper);
+  background: var(--jade);
+  border: 2px solid var(--paper);
+  border-radius: var(--radius-pill);
+}
+
+.rowNameText {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+/* The name is the row's link; its hit area stretches over the whole row,
+   under the stage and follow-up menus. */
+.rowLink {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.rowLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.rowLink:focus-visible {
+  outline: none;
+}
+
+.rowLink:focus-visible::after {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
 
-.rowName {
-  grid-area: name;
-  display: grid;
-  gap: 2px;
-  min-width: 0;
-}
-
-.rowTitle {
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  font-weight: 600;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .rowLink {
+    color: var(--accent-text);
+  }
 }
 
 .rowType {
@@ -184,19 +248,27 @@
   color: var(--ink-60);
 }
 
-/* The stage and the persona thumb share the top-right cell on a narrow
-   card, stacked and end-aligned, so the details below get the full width. */
-.rowAside {
+.rowStage {
   grid-area: stage;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--icon-gap-inline);
+  justify-self: end;
   align-self: start;
 }
 
-.rowStage {
-  grid-area: stage;
+.stageTrigger {
+  gap: 2px;
+}
+
+.triggerChevron {
+  flex: none;
+  font-size: var(--text-14);
+  color: var(--ink-40);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stageTrigger:hover .triggerChevron {
+    color: var(--ink);
+  }
 }
 
 .rowDetails {
@@ -210,8 +282,25 @@
   color: var(--ink-60);
 }
 
+.rowDetailsText {
+  display: contents;
+}
+
+/* On a card the follow-up leads the details on a line of its own: it is
+   what to act on. */
+.rowFollowUp {
+  order: -1;
+  display: flex;
+  flex-basis: 100%;
+  min-width: 0;
+}
+
+.followUpValue {
+  white-space: nowrap;
+}
+
 .rowMeta,
-.followUp {
+.followUpValue {
   display: inline-flex;
   align-items: center;
   gap: var(--icon-gap-inline);
@@ -232,19 +321,30 @@
   min-width: 0;
 }
 
-.rowLinks:empty {
+.rowLinks:empty,
+.rowLocation:empty {
   display: none;
 }
 
+.followUp {
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+/* No follow-up yet: an offer to set one, quiet until the row is in use. */
+.followUpValue[data-empty] {
+  color: var(--ink-40);
+}
+
 /* A closed lead's old date reads quietly, with no clock. */
-.followUp[data-past] {
+.followUpValue[data-past] {
   font-style: italic;
   color: var(--ink-60);
 }
 
 /* A due follow-up reads in the warn tone, with a tint behind it so the
    state never rides on colour alone beside its "due" wording. */
-.followUp[data-due] {
+.followUpValue[data-due] {
   /* A hairline of block padding keeps the tag compact. */
   padding: 2px var(--gap-xs);
   font-weight: 600;
@@ -253,37 +353,63 @@
   border-radius: var(--radius-pill);
 }
 
-.rowPersona {
-  grid-area: persona;
-  display: inline-flex;
-  justify-self: end;
-}
-
-.rowPersona:empty {
-  display: none;
-}
-
-/* ── One row: a single line on a wide list ── */
+/* ── A wide list: one table, a line per lead ── */
 @container leads-list (min-width: 760px) {
-  .row {
-    grid-template-columns:
-      minmax(0, 1.6fr) 8.5rem minmax(0, 1.2fr) 6rem minmax(0, 1.5fr)
-      5.5rem 32px;
-    grid-template-areas: "name stage location links followUp notes persona";
-    padding-block: var(--gap-xs);
+  .table {
+    overflow: clip;
+    background: var(--paper);
+    border: 1px solid rgba(var(--line-rgb), 0.09);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-e1);
   }
 
-  /* The stage and the persona go back to their own columns. */
-  .rowAside {
-    display: contents;
+  .tableHead {
+    display: grid;
+    grid-template-columns: var(--lead-columns);
+    gap: var(--gap-sm);
+    padding: 12px 24px;
+    font-size: var(--text-12);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+    background: rgba(var(--line-rgb), 0.025);
+    border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+  }
+
+  .headName {
+    padding-inline-start: 52px;
+  }
+
+  .row {
+    grid-template-columns: var(--lead-columns);
+    grid-template-areas: "name stage location links notes followUp";
+    margin: 0;
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .rows > li + li .row {
+    border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .row:hover {
+      background: rgba(var(--line-rgb), 0.03);
+      box-shadow: none;
+    }
+  }
+
+  .rowLink:focus-visible::after {
+    outline-offset: -3px;
+    box-shadow: none;
   }
 
   .rowStage {
     justify-self: start;
-  }
-
-  .rowPersona:empty {
-    display: inline-flex;
+    align-self: center;
   }
 
   /* The details join the row's own columns, so every row lines up. */
@@ -295,21 +421,41 @@
     grid-area: location;
   }
 
-  .rowLinks {
-    grid-area: links;
-  }
-
+  .rowLocation:empty,
   .rowLinks:empty {
     display: inline-flex;
   }
 
-  .followUp {
-    grid-area: followUp;
-    justify-self: start;
+  .rowLinks {
+    grid-area: links;
   }
 
   .rowNotes {
     grid-area: notes;
+  }
+
+  .rowFollowUp {
+    grid-area: followUp;
+    order: 0;
+  }
+
+  /* A table line offers "Set follow-up" only while the row is in use, so
+     an empty column stays quiet. */
+  @media (hover: hover) and (pointer: fine) {
+    .followUpValue[data-empty] {
+      opacity: 0;
+      transition: opacity var(--dur-fast) var(--ease);
+    }
+
+    .row:hover .followUpValue[data-empty],
+    .row:focus-within .followUpValue[data-empty] {
+      opacity: 1;
+    }
+  }
+
+  .skeletonRows {
+    gap: 0;
+    padding: 0;
   }
 }
 
@@ -367,7 +513,31 @@
 
 @media (prefers-reduced-motion: reduce) {
   .rows,
-  .row {
+  .row,
+  .triggerChevron,
+  .followUpValue[data-empty] {
     transition: none;
+  }
+}
+
+/* The `n` key on Add lead, on a device with a keyboard. */
+.buttonKey {
+  display: none;
+  place-items: center;
+  min-inline-size: 20px;
+  block-size: 20px;
+  margin-inline-start: 4px;
+  padding-inline: 5px;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-6);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .buttonKey {
+    display: inline-grid;
   }
 }

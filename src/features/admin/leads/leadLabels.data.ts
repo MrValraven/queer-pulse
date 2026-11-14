@@ -1,4 +1,4 @@
-import type { AdminTone } from "../ui";
+import type { AdminTone, AvatarTone } from "../ui";
 import type {
   HiddenLeadPersonaState,
   LeadStage,
@@ -42,4 +42,17 @@ export const LEAD_STAGE_TONE: Record<LeadStage, AdminTone> = {
   in_talks: "amber",
   on_board: "jade",
   not_now: "plum",
+};
+
+/** The tint of a lead's initials avatar, by type, so a scan of the list
+ *  groups venues, artists and the rest at a glance. */
+export const LEAD_TYPE_AVATAR_TONE: Record<LeadType, AvatarTone> = {
+  artist: "coral",
+  dj: "violet",
+  band: "amber",
+  venue: "jade",
+  promoter: "plum",
+  collective: "coral",
+  business: "jade",
+  other: "plum",
 };

@@ -13,6 +13,17 @@ export const leadKeys = {
   dueCountRoot: ["admin", "leads", "dueCount"] as const,
   dueCount: (isDemoMode: boolean) =>
     ["admin", "leads", "dueCount", { demo: isDemoMode }] as const,
+  /** The due count for a search and a type. Under `dueCountRoot`, so every
+   *  write that refreshes the badge refreshes this too. */
+  dueCountFor: (q: string, type: string | null, isDemoMode: boolean) =>
+    [
+      "admin",
+      "leads",
+      "dueCount",
+      "for",
+      { q, type },
+      { demo: isDemoMode },
+    ] as const,
   personaSearchRoot: ["admin", "leads", "personaSearch"] as const,
   personaSearch: (term: string, isDemoMode: boolean) =>
     ["admin", "leads", "personaSearch", term, { demo: isDemoMode }] as const,

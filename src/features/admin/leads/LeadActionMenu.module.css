@@ -1,0 +1,153 @@
+/* The row menus of the leads list (LeadActionMenu): a quiet trigger that
+   shows a value, and a floating menu portalled to the body. */
+
+.trigger {
+  position: relative;
+  /* Above the row's stretched link, so a press opens the menu. */
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+  max-width: 100%;
+  padding: 3px;
+  margin: -3px;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+/* The trigger reaches the 44px target without growing its value. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  inset: -8px -4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover,
+  .trigger[data-open] {
+    background: rgba(var(--line-rgb), 0.07);
+  }
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.menu {
+  z-index: var(--z-popover);
+  min-width: 13.5rem;
+  max-width: calc(100vw - 24px);
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e3);
+  visibility: hidden;
+  transform-origin: top right;
+}
+
+.menu[data-placed] {
+  visibility: visible;
+  animation: qpMenuIn var(--dur-fast) var(--ease) both;
+}
+
+.menu[data-flipped] {
+  transform-origin: bottom right;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 500;
+  color: var(--ink);
+  text-align: start;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-8);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.item[data-divider] {
+  position: relative;
+  margin-block-start: 11px;
+}
+
+.item[data-divider]::before {
+  content: "";
+  position: absolute;
+  inset-inline: 4px;
+  inset-block-start: -6px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background: rgba(var(--line-rgb), 0.06);
+  }
+}
+
+.item:focus-visible {
+  outline: none;
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.item[aria-checked="true"] {
+  font-weight: 600;
+}
+
+.item[aria-disabled="true"] {
+  color: var(--ink-40);
+  cursor: progress;
+}
+
+.itemIcon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  color: var(--accent-text);
+}
+
+.itemLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemHint {
+  flex: none;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+@media (--md) {
+  .item {
+    min-height: var(--tap-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger,
+  .item {
+    transition: none;
+  }
+
+  .menu[data-placed] {
+    animation: none;
+  }
+}
