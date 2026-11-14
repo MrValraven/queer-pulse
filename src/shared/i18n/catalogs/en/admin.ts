@@ -10104,6 +10104,7 @@ export const admin: Catalog = {
   "leads.column.followUp": "Follow-up",
   "leads.pipeline.dueCount_one": "{count} waiting",
   "leads.pipeline.dueCount": "{count} waiting",
+  "leads.pipeline.dueCountCapped": "{count}+ waiting",
   "leads.toolbar.count_one": "{count} lead",
   "leads.toolbar.count": "{count} leads",
   "leads.toolbar.showingOf": "Showing {shown} of {count}",

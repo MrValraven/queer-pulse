@@ -3,7 +3,7 @@ import { FiClock } from "react-icons/fi";
 import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { LEAD_STAGES, type LeadStage } from "./api/leads.types";
-import { useLeadDueCount } from "./api/useLeadDueCount";
+import { useLeadDueCountFor } from "./api/useLeadDueCountFor";
 import { LEAD_STAGE_LABEL_KEY } from "./leadLabels.data";
 import type { LeadListControls } from "./useLeadListFilters";
 import styles from "./LeadPipeline.module.css";
@@ -65,7 +65,8 @@ function PipelineTile({
  * The pipeline at a glance, and the stage filter in one: a tile per stage
  * with how many leads sit in it and its share of the whole (both follow the
  * search and the type), All first. Beside it, the Follow-up due switch,
- * with how many open leads wait on a follow-up across the whole directory.
+ * with how many open leads wait on a follow-up, over the same search and
+ * type, so every number in the strip answers the same question.
  * On a phone the tiles scroll sideways in one row.
  */
 export function LeadPipeline({
@@ -80,8 +81,8 @@ export function LeadPipeline({
   const { t } = useTranslation();
   const groupLabelId = useId();
   const dueCountId = useId();
-  const dueCount = useLeadDueCount({ isEnabled: true }).data ?? null;
   const { filters } = controls;
+  const due = useLeadDueCountFor(filters.q, filters.type);
   const allLabel = t("admin:leads.list.stageAll");
   const shareOf = (count: number | null) =>
     count === null || totalCount === null || totalCount === 0
@@ -136,9 +137,9 @@ export function LeadPipeline({
           role="switch"
           aria-checked={filters.isDueOnly}
           aria-label={t("admin:leads.list.dueOnly")}
-          aria-describedby={dueCount === null ? undefined : dueCountId}
+          aria-describedby={due === null ? undefined : dueCountId}
           className={styles.due}
-          data-has-due={(dueCount ?? 0) > 0 || undefined}
+          data-has-due={(due?.count ?? 0) > 0 || undefined}
           onClick={() => controls.setIsDueOnly(!filters.isDueOnly)}
         >
           <span className={styles.dueIcon} aria-hidden>
@@ -149,9 +150,14 @@ export function LeadPipeline({
               {t("admin:leads.list.dueOnly")}
             </span>
             <span id={dueCountId} className={styles.dueCount}>
-              {dueCount === null
+              {due === null
                 ? null
-                : t("admin:leads.pipeline.dueCount", { count: dueCount })}
+                : t(
+                    due.isCapped
+                      ? "admin:leads.pipeline.dueCountCapped"
+                      : "admin:leads.pipeline.dueCount",
+                    { count: due.count },
+                  )}
             </span>
           </span>
           <span className={styles.dueSwitch} aria-hidden />

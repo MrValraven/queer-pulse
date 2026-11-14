@@ -10252,6 +10252,7 @@ export const admin: Catalog = {
   "leads.column.followUp": "Seguimento",
   "leads.pipeline.dueCount_one": "{count} à espera",
   "leads.pipeline.dueCount": "{count} à espera",
+  "leads.pipeline.dueCountCapped": "{count}+ à espera",
   "leads.toolbar.count_one": "{count} contacto",
   "leads.toolbar.count": "{count} contactos",
   "leads.toolbar.showingOf": "A mostrar {shown} de {count}",
