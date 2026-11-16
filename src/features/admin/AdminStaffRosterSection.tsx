@@ -1,4 +1,5 @@
-import { useId, type RefObject } from "react";
+import type { RefObject } from "react";
+import { FiUsers } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AdminStaffRosterRowDTO } from "./api/adminStaffRoster.api";
@@ -7,13 +8,15 @@ import type {
   StaffRosterFilters,
   StaffTierFilter,
 } from "./adminStaffRoster.utils";
+import { AdminEmptyState, AdminPanel } from "./ui";
 import { AdminStaffToolbar } from "./AdminStaffToolbar";
 import { AdminStaffRows } from "./AdminStaffRows";
 import styles from "./AdminStaffRows.module.css";
 
 /**
- * The roster half of the page: its heading, the toolbar, then the grouped
- * rows, or a filtered-empty state with a way back to everyone.
+ * The roster half of the page: one flush panel with its heading, the
+ * toolbar, then the grouped rows, or a filtered-empty state with a way back
+ * to everyone.
  */
 export function AdminStaffRosterSection({
   visibleRows,
@@ -41,48 +44,52 @@ export function AdminStaffRosterSection({
   onManage: (memberId: string) => void;
 }) {
   const { t } = useTranslation();
-  const headingId = useId();
 
   return (
-    <section className={styles.roster} aria-labelledby={headingId}>
-      <h2 id={headingId} ref={headingRef} className={styles.rosterTitle}>
-        {t("admin:staff.roster.heading")}
-      </h2>
-      <AdminStaffToolbar
-        filters={filters}
-        shownCount={visibleRows.length}
-        totalCount={totalCount}
-        onSearchChange={onSearchChange}
-        onTierChange={onTierChange}
-        onClearGrant={onClearGrant}
-        onClearFilters={onClearFilters}
-      />
+    <AdminPanel
+      titleRef={headingRef}
+      className={styles.rosterPanel}
+      title={t("admin:staff.roster.heading")}
+      padding="flush"
+    >
+      <div className={styles.toolbarStrip}>
+        <AdminStaffToolbar
+          filters={filters}
+          shownCount={visibleRows.length}
+          totalCount={totalCount}
+          onSearchChange={onSearchChange}
+          onTierChange={onTierChange}
+          onClearGrant={onClearGrant}
+          onClearFilters={onClearFilters}
+        />
+      </div>
       {visibleRows.length === 0 ? (
-        <div className={styles.filteredEmpty}>
-          <p className={styles.filteredEmptyTitle}>
-            {unheldGrant
-              ? t("admin:staff.filteredEmpty.unheldTitle", {
-                  grant: t(unheldGrant.labelKey),
-                })
-              : t("admin:staff.filteredEmpty.title")}
-          </p>
-          <p className={styles.filteredEmptyBody}>
-            {unheldGrant
-              ? t("admin:staff.filteredEmpty.unheldBody")
-              : t("admin:staff.filteredEmpty.body")}
-          </p>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={styles.filteredEmptyClear}
-            onClick={onClearFilters}
-          >
-            {t("admin:staff.toolbar.clear")}
-          </Button>
+        <div className={styles.emptyBand}>
+          <AdminEmptyState
+            size="inline"
+            icon={FiUsers}
+            title={
+              unheldGrant
+                ? t("admin:staff.filteredEmpty.unheldTitle", {
+                    grant: t(unheldGrant.labelKey),
+                  })
+                : t("admin:staff.filteredEmpty.title")
+            }
+            body={
+              unheldGrant
+                ? t("admin:staff.filteredEmpty.unheldBody")
+                : t("admin:staff.filteredEmpty.body")
+            }
+            action={
+              <Button variant="ghost" size="sm" onClick={onClearFilters}>
+                {t("admin:staff.toolbar.clear")}
+              </Button>
+            }
+          />
         </div>
       ) : (
         <AdminStaffRows rows={visibleRows} onManage={onManage} />
       )}
-    </section>
+    </AdminPanel>
   );
 }

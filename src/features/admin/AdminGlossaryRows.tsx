@@ -3,6 +3,8 @@ import { Button } from "../../shared/components/ui";
 import { formatDate } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AdminGlossaryTermDTO } from "./api/adminResourceGuides.api";
+import { AdminRowActions, adminTableClasses } from "./ui";
+import { ListingOverflowMenu } from "./ListingOverflowMenu";
 import styles from "./AdminGlossaryPage.module.css";
 
 export interface AdminGlossaryRowsProps {
@@ -38,11 +40,14 @@ export function AdminGlossaryRows({
   const today = todayIsoDate();
 
   return (
-    <div className={styles.rows}>
+    <div>
       {terms.map((term) => {
         const isOverdue = term.reviewDueOn !== null && term.reviewDueOn < today;
         return (
-          <div key={term.id} className={styles.row}>
+          <div
+            key={term.id}
+            className={`${adminTableClasses.row} ${styles.row}`}
+          >
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowName}>{term.term}</span>
@@ -88,20 +93,35 @@ export function AdminGlossaryRows({
                 )}
               </div>
             </div>
-            <div className={styles.rowActions}>
-              <Button variant="ghost" size="sm" onClick={() => onPreview(term)}>
-                {t("admin:adminGlossary.preview.rowCta")}
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => onReview(term)}>
-                {t("admin:adminResourceGuides.row.reviewCta")}
-              </Button>
+            <AdminRowActions className={styles.rowActions}>
               <Button variant="ghost" size="sm" onClick={() => onEdit(term)}>
                 {t("admin:adminResourceGuides.row.editCta")}
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => onDelete(term)}>
-                {t("admin:common.delete")}
-              </Button>
-            </div>
+              <ListingOverflowMenu
+                ariaLabel={t("admin:adminListings.actions.moreAriaLabel", {
+                  name: term.term,
+                })}
+                disabled={false}
+                items={[
+                  {
+                    key: "review",
+                    label: t("admin:adminResourceGuides.row.reviewCta"),
+                    onSelect: () => onReview(term),
+                  },
+                  {
+                    key: "preview",
+                    label: t("admin:adminGlossary.preview.rowCta"),
+                    onSelect: () => onPreview(term),
+                  },
+                  {
+                    key: "delete",
+                    label: t("admin:common.delete"),
+                    tone: "danger",
+                    onSelect: () => onDelete(term),
+                  },
+                ]}
+              />
+            </AdminRowActions>
           </div>
         );
       })}

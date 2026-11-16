@@ -34,37 +34,18 @@
 
 /* ── What waits on the team ── */
 .attention {
-  display: grid;
-  margin-block-start: var(--gap-sm);
-  margin-block-end: var(--gap-sm);
-  padding: var(--gap-xs) var(--gap-sm);
-  background: rgba(var(--accent-rgb), 0.08);
-  border: 1px solid rgba(var(--accent-rgb), 0.24);
-  border-radius: var(--radius-card);
+  margin-block: var(--gap-sm);
 }
 
 .attentionLine {
-  display: flex;
-  align-items: center;
-  gap: var(--icon-gap-inline);
   margin: 0;
-  padding-block: var(--icon-gap-inline);
+  padding-block: 2px;
   font-size: var(--text-14);
   color: var(--ink);
 }
 
 /* The lineup line only informs the team, so it reads quieter. */
 .attentionLineQuiet {
-  color: var(--ink-60);
-}
-
-.attentionIcon {
-  display: inline-flex;
-  flex-shrink: 0;
-  color: var(--accent-text);
-}
-
-.attentionLineQuiet .attentionIcon {
   color: var(--ink-60);
 }
 
@@ -83,12 +64,16 @@
   position: relative;
 }
 
-/* Rows carry their own spacing (the row's block-end margin) so a row that
-   leaves folds its gap away with it inside CollapseListItem. */
+/* The rows sit in one flush panel. Each row carries its own padding and its
+   divider (the row's top hairline). */
 .rows {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.rows > li + li .row {
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 
 .listState {
@@ -97,8 +82,10 @@
 
 .skeletonRows {
   display: grid;
-  gap: var(--gap-xs);
-  margin-block-end: var(--gap-xs);
+}
+
+.skeletonRows > * + * {
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.06);
 }
 
 .loadMore {
@@ -110,15 +97,13 @@
 /* ── One row ── */
 .row {
   display: grid;
+  flex: 1;
+  min-width: 0;
   /* The cover thumb's width; it matches COVER_THUMB_WIDTH's fetch size. */
   grid-template-columns: 104px minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--gap-sm);
-  margin-block-end: var(--gap-xs);
-  padding: var(--gap-xs);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
+  padding: var(--admin-row-pad);
 }
 
 .cover {
@@ -206,10 +191,6 @@
   color: var(--danger);
 }
 
-.rowAction {
-  min-height: var(--tap-min);
-}
-
 /* A phone keeps the cover and the text side by side, and drops the button
    to its own full-width line under them. */
 @media (max-width: 640px) {
@@ -221,6 +202,9 @@
 
   .rowAction {
     grid-column: 1 / -1;
+  }
+  .rowAction > * {
+    flex: 1 1 auto;
     justify-content: center;
   }
 }

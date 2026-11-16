@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip } from "./ui";
+import { AdminPageHeader, AdminTabs, AdminChip, AdminRowActions } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -88,7 +88,7 @@ function ConcernRow({
         </div>
       </div>
       <div className={styles.rowActions}>
-        <div className={styles.rowActionButtons}>
+        <AdminRowActions>
           {ACTIONS.map((status) => (
             <Button
               key={status}
@@ -100,7 +100,7 @@ function ConcernRow({
               {t(`admin:adminConcerns.action.${status}`)}
             </Button>
           ))}
-        </div>
+        </AdminRowActions>
       </div>
     </div>
   );
@@ -154,7 +154,7 @@ export function AdminConcernsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminConcerns.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:adminConcerns.header.title"

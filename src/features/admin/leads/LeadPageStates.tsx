@@ -1,7 +1,8 @@
-import { FiAlertCircle, FiUsers } from "react-icons/fi";
+import { FiUsers } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
-import { EmptyState, SkeletonLine } from "../../../shared/components/ui";
+import { Button, SkeletonLine } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AdminEmptyState, AdminNotice, AdminPageHeader } from "../ui";
 import { leadErrorKeyOf, leadErrorValuesOf } from "./leadErrors";
 import styles from "./AdminLead.module.css";
 
@@ -9,8 +10,16 @@ import styles from "./AdminLead.module.css";
 // inside one `AdminLeadFrame`, so the admin rail stays put while the body
 // swaps from the outline to the lead, or to one of these.
 
-// Swallows presses while a retry runs; the button stays focusable.
-const ignorePress = () => {};
+/** The page's h1 for a state with no lead to name: the section's own title. */
+function LeadStateHeader() {
+  const { t } = useTranslation();
+  return (
+    <AdminPageHeader
+      eyebrow={t("shared:adminNav.sections.communities")}
+      title={t("admin:leads.title")}
+    />
+  );
+}
 
 /**
  * The lead is gone: deleted here, in another tab, or never there (a typo in
@@ -21,15 +30,16 @@ export function AdminLeadNotFound() {
   const { t } = useTranslation();
   return (
     <div className={styles.statePage}>
-      <EmptyState
-        headingLevel={1}
-        icon={<FiUsers aria-hidden />}
+      <LeadStateHeader />
+      <AdminEmptyState
+        icon={FiUsers}
         title={t("admin:leads.page.notFound.title")}
-        description={t("admin:leads.page.notFound.body")}
-        action={{
-          label: t("admin:leads.page.backCta"),
-          to: routes.adminLeads,
-        }}
+        body={t("admin:leads.page.notFound.body")}
+        action={
+          <Button to={routes.adminLeads}>
+            {t("admin:leads.page.backCta")}
+          </Button>
+        }
       />
     </div>
   );
@@ -52,24 +62,27 @@ export function AdminLeadLoadError({
   const { t } = useTranslation();
   return (
     <div className={styles.statePage}>
-      <EmptyState
-        headingLevel={1}
-        icon={<FiAlertCircle aria-hidden />}
+      <LeadStateHeader />
+      <AdminNotice
+        tone="error"
         title={t("admin:leads.page.loadError.title")}
-        description={t(leadErrorKeyOf(error), leadErrorValuesOf(error))}
         action={
-          isRetrying
-            ? {
-                label: t("shared:loadError.retryingCta"),
-                onClick: ignorePress,
-                isBusy: true,
-              }
-            : {
-                label: t("admin:leads.page.loadError.retryCta"),
-                onClick: onRetry,
-              }
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-disabled={isRetrying || undefined}
+            onClick={() => {
+              if (!isRetrying) onRetry();
+            }}
+          >
+            {isRetrying
+              ? t("shared:loadError.retryingCta")
+              : t("admin:leads.page.loadError.retryCta")}
+          </Button>
         }
-      />
+      >
+        {t(leadErrorKeyOf(error), leadErrorValuesOf(error))}
+      </AdminNotice>
     </div>
   );
 }

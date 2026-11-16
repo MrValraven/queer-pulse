@@ -550,7 +550,6 @@ export const system: Catalog = {
   // are one feature, and the public half already lives here.
   "statusAdmin.navLabel": "Status incidents",
   "statusAdmin.breadcrumb": "Admin",
-  "statusAdmin.eyebrow": "Platform",
   "statusAdmin.title": "Status <em>incidents</em>",
   "statusAdmin.headerSub":
     "What members see on the public status page. Anything published here is readable with no account, including by someone who can't sign in.",

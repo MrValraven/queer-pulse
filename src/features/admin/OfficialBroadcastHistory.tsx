@@ -1,7 +1,14 @@
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminNotice,
+  AdminPanel,
+  adminTableClasses,
+  type AdminTone,
+} from "./ui";
 import type {
   OfficialBroadcastDTO,
   OfficialBroadcastStatusDTO,
@@ -30,26 +37,29 @@ export function OfficialBroadcastHistory() {
   const { data: broadcasts, isLoading, isError } = useOfficialBroadcasts();
 
   return (
-    <section
-      className={styles.history}
-      aria-labelledby="official-broadcast-history-title"
+    <AdminPanel
+      title={t("admin:officialMessages.history.title")}
+      titleId="official-broadcast-history-title"
+      padding="flush"
     >
-      <h2 id="official-broadcast-history-title" className={styles.panelTitle}>
-        {t("admin:officialMessages.history.title")}
-      </h2>
       {isLoading ? (
-        <div className={styles.historyList}>
+        <div className={styles.historyInset}>
           <SkeletonLine />
           <SkeletonLine />
         </div>
       ) : isError ? (
-        <p className={styles.historyEmpty} role="alert">
-          {t("admin:officialMessages.history.loadFailed")}
-        </p>
+        <div className={styles.historyInset}>
+          <AdminNotice tone="error">
+            {t("admin:officialMessages.history.loadFailed")}
+          </AdminNotice>
+        </div>
       ) : !broadcasts || broadcasts.length === 0 ? (
-        <p className={styles.historyEmpty}>
-          {t("admin:officialMessages.history.empty")}
-        </p>
+        <div className={styles.historyInset}>
+          <AdminEmptyState
+            size="inline"
+            title={t("admin:officialMessages.history.empty")}
+          />
+        </div>
       ) : (
         <ul className={styles.historyList}>
           {broadcasts.map((broadcast) => (
@@ -57,7 +67,7 @@ export function OfficialBroadcastHistory() {
           ))}
         </ul>
       )}
-    </section>
+    </AdminPanel>
   );
 }
 
@@ -68,7 +78,7 @@ function OfficialBroadcastRow({
 }) {
   const { t, language } = useTranslation();
   return (
-    <li className={styles.historyRow}>
+    <li className={[adminTableClasses.row, styles.historyRow].join(" ")}>
       <p className={styles.historyBody}>{broadcast.body}</p>
       <div className={styles.historyMeta}>
         <AdminChip tone={STATUS_TONE[broadcast.status]} dot>

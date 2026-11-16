@@ -1,10 +1,11 @@
+import { FiUsers } from "react-icons/fi";
 import { FadeIn, LoadErrorState } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader } from "./ui";
+import { AdminEmptyState, AdminPageHeader } from "./ui";
 import { useAdminStaffRosterRows } from "./api/useAdminStaffRoster";
 import { AdminMemberDrawer } from "./AdminMemberDrawer";
 import { AdminMemberCardLoadingDrawer } from "./AdminMemberCardSelection";
@@ -12,7 +13,6 @@ import { useAdminMemberCardSelection } from "./useAdminMemberCardSelection";
 import { hasFailedWithoutData, isRetryingFailedRead } from "./queryLoadFailure";
 import { AdminStaffBoard } from "./AdminStaffBoard";
 import { AdminStaffSkeleton } from "./AdminStaffSkeleton";
-import styles from "./AdminStaffPage.module.css";
 
 /**
  * `/admin/staff`: every admin, moderator and staff-grant holder on the
@@ -51,11 +51,7 @@ export function AdminStaffPage() {
     }
     if (rows === undefined) return <AdminStaffSkeleton />;
     if (rows.length === 0) {
-      return (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>{t("admin:staff.empty")}</p>
-        </div>
-      );
+      return <AdminEmptyState icon={FiUsers} title={t("admin:staff.empty")} />;
     }
     return <AdminStaffBoard rows={rows} onManage={selectMember} />;
   };
@@ -71,7 +67,7 @@ export function AdminStaffPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:staff.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.people")}
           title={
             <Translation
               i18nKey="admin:staff.title"

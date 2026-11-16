@@ -195,7 +195,10 @@ summary,
    chrome by default. Any button with its own class-level background/border
    still wins (a class is 0,1,0 vs this element rule's 0,0,1), so the
    <Button> component and every purpose-styled button are unaffected; only
-   the previously-leaking bare buttons change. */
+   the previously-leaking bare buttons change. `font-family: inherit` hands a
+   bare button the surrounding typeface, so a row rendered as a <button> never
+   falls back to the system font; size, weight and line height stay as each
+   class sets them, so existing buttons keep their measurements. */
 button {
   appearance: none;
   -webkit-appearance: none;
@@ -203,6 +206,7 @@ button {
   border: none;
   cursor: pointer;
   color: inherit;
+  font-family: inherit;
 }
 
 /* Standard `[hidden]` rule — also absent without a normalize dependency.

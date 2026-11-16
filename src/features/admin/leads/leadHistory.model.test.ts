@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { LeadEntryDTO, LeadPersonaDTO } from "./api/leads.types";
+import type {
+  LeadEntryDTO,
+  LeadPersonaDTO,
+  LeadStaffSummaryDTO,
+} from "./api/leads.types";
 import { leadHistoryLineOf } from "./leadHistory.model";
 
 const translate = (key: string): string => key;
@@ -20,6 +24,14 @@ const AFTERHOURS_PERSONA: LeadPersonaDTO = {
   avatarCrop: null,
 };
 
+const ANA: LeadStaffSummaryDTO = {
+  id: "staff-ana",
+  slug: "ana-reis-demo",
+  displayName: "Ana Reis",
+  avatarUrl: null,
+  avatarCrop: null,
+};
+
 function entryWith(overrides: Partial<LeadEntryDTO>): LeadEntryDTO {
   return {
     id: "entry-1",
@@ -32,6 +44,7 @@ function entryWith(overrides: Partial<LeadEntryDTO>): LeadEntryDTO {
     createdAt: "2026-11-01T10:00:00.000Z",
     editedAt: null,
     canEdit: false,
+    subject: null,
     ...overrides,
   };
 }
@@ -136,5 +149,83 @@ describe("leadHistory.model", () => {
         translate,
       ),
     ).toBeNull();
+  });
+
+  it("reads an assignment by someone else", () => {
+    expect(
+      leadHistoryLineOf(
+        entryWith({ kind: "assignee_added", subject: ANA }),
+        translate,
+      ),
+    ).toEqual({
+      key: "admin:leads.history.assigneeAdded",
+      values: { author: "Marta Lobo", subject: "Ana Reis" },
+    });
+  });
+
+  it("reads a self assignment and a self unassignment", () => {
+    const self = { ...ANA, id: MARTA.id };
+    expect(
+      leadHistoryLineOf(
+        entryWith({ kind: "assignee_added", subject: self }),
+        translate,
+      ),
+    ).toEqual({
+      key: "admin:leads.history.assigneeAddedSelf",
+      values: { author: "Marta Lobo" },
+    });
+    expect(
+      leadHistoryLineOf(
+        entryWith({ kind: "assignee_removed", subject: self }),
+        translate,
+      )?.key,
+    ).toBe("admin:leads.history.assigneeRemovedSelf");
+  });
+
+  it("names a gone subject as a former team member", () => {
+    expect(
+      leadHistoryLineOf(
+        entryWith({ kind: "assignee_removed", subject: null }),
+        translate,
+      ),
+    ).toEqual({
+      key: "admin:leads.history.assigneeRemoved",
+      values: {
+        author: "Marta Lobo",
+        subject: "admin:leads.history.unknownSubject",
+      },
+    });
+  });
+
+  it("reads an access-ended line with no author", () => {
+    expect(
+      leadHistoryLineOf(
+        entryWith({
+          kind: "assignee_access_ended",
+          author: null,
+          subject: ANA,
+        }),
+        translate,
+      ),
+    ).toEqual({
+      key: "admin:leads.history.assigneeAccessEnded",
+      values: { subject: "Ana Reis" },
+    });
+  });
+
+  it("reads an access-ended line whose subject is gone", () => {
+    expect(
+      leadHistoryLineOf(
+        entryWith({
+          kind: "assignee_access_ended",
+          author: null,
+          subject: null,
+        }),
+        translate,
+      ),
+    ).toEqual({
+      key: "admin:leads.history.assigneeAccessEndedGone",
+      values: {},
+    });
   });
 });

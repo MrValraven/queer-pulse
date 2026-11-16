@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  type AdminTone,
+  AdminRowActions,
+  adminRowActionClasses,
+} from "./ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -10,6 +15,7 @@ import type {
   MagazineSubmissionDecision,
   MagazineSubmissionStatus,
 } from "./api/adminMagazineSubmissions.api";
+import { AdminMagazinePieceDisclosure } from "./AdminMagazinePieceDisclosure";
 import { AdminMagazineSubmissionReopenAction } from "./AdminMagazineSubmissionReopenAction";
 import { useDecideMagazineSubmission } from "./api/useDecideMagazineSubmission";
 import styles from "./AdminSubmissionList.module.css";
@@ -107,12 +113,7 @@ export function AdminMagazineSubmissionRow({
           <div className={styles.rowNote}>{submission.deck}</div>
         )}
         {submission.body && (
-          <details className={styles.rowNote}>
-            <summary>
-              {t("admin:adminMagazineSubmissions.row.readPiece")}
-            </summary>
-            <p>{submission.body}</p>
-          </details>
+          <AdminMagazinePieceDisclosure body={submission.body} />
         )}
         {submission.coverUrl && (
           <img
@@ -194,8 +195,9 @@ export function AdminMagazineSubmissionRow({
             value={replyNote}
             onChange={(event) => setReplyNote(event.target.value)}
           />
-          <div className={styles.rowActionButtons}>
+          <AdminRowActions>
             <Button
+              className={adminRowActionClasses.danger}
               variant="ghost"
               size="sm"
               disabled={pending}
@@ -204,7 +206,7 @@ export function AdminMagazineSubmissionRow({
               {t("admin:adminMagazineSubmissions.row.declineCta")}
             </Button>
             <Button
-              variant="jade"
+              variant="ghost"
               size="sm"
               disabled={pending}
               onClick={() => decideWith("accepted")}
@@ -219,7 +221,7 @@ export function AdminMagazineSubmissionRow({
             >
               {t("admin:adminMagazineSubmissions.row.commissionCta")}
             </Button>
-          </div>
+          </AdminRowActions>
         </div>
       )}
 
@@ -228,7 +230,7 @@ export function AdminMagazineSubmissionRow({
           <p className={styles.rowNote}>
             {t("admin:adminMagazineSubmissions.row.acceptNotOnDesk")}
           </p>
-          <div className={styles.rowActionButtons}>
+          <AdminRowActions>
             <Button
               variant="jade"
               size="sm"
@@ -237,7 +239,7 @@ export function AdminMagazineSubmissionRow({
             >
               {t("admin:adminMagazineSubmissions.row.createDeskPieceCta")}
             </Button>
-          </div>
+          </AdminRowActions>
         </div>
       )}
 

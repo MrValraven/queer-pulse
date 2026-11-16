@@ -451,9 +451,10 @@ describe("request budget (live mode)", () => {
     async () => {
       registerSessionHandlers();
       registerAppWideHandlers();
-      // The wizard's SavedDraftsPanel now reads the caller's in-progress drafts
-      // (`GET /listing-drafts`, cross-device drafts) on mount — a resume list,
-      // not the `/listings/mine` published-listings read this test guards against.
+      // The create landing reads the caller's in-progress drafts
+      // (`GET /listing-drafts`, cross-device drafts) on mount to choose between
+      // its Continue screen and the wizard. That drafts list is a separate read
+      // from the `/listings/mine` published-listings read this test guards against.
       server.use(
         http.get(`${API_V1}/listing-drafts`, () => HttpResponse.json([])),
       );
@@ -471,8 +472,8 @@ describe("request budget (live mode)", () => {
       expect(seen).not.toContain("/v1/listings/mine");
 
       // OBSERVED (see file header): ListBusinessPage is a PageShell marketing
-      // wizard. Its one route-level read is the SavedDraftsPanel's
-      // `/v1/listing-drafts` resume list; everything else comes from the shared
+      // wizard. Its one route-level read is the create landing's
+      // `/v1/listing-drafts` drafts list; everything else comes from the shared
       // session layer alone — nothing else route-specific, and nothing app-wide
       // (those reads are App-chrome-level, not mounted by this harness — see the
       // budget constants). That keeps it a clean guard that no *listings* read

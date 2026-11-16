@@ -1,34 +1,30 @@
 /**
- * The ban-evasion signal panel on a join request in the invite review console.
+ * The ban-evasion signal panel on a join request in the invite review console
+ * and on an escalation card.
  *
- * Reads as a note pinned to the card, deliberately quieter than a decision
- * control: a tinted inset with a hairline, no filled block, no red. The tier
- * only changes the tint and the left rule, so a "high" panel is more present
- * without ever looking like a verdict has already been reached.
+ * Reads as a note pinned under the card's own content, deliberately quieter
+ * than a decision control: a hairline above it and no box of its own, so it
+ * never nests a card inside a card. The tier shows in the hairline and the
+ * icon, so a "high" panel is more present without ever looking like a verdict
+ * has already been reached.
  */
 
 .panel {
-  margin: 10px 0 0;
-  padding: 10px 12px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-left: 3px solid var(--amber-ink);
-  border-radius: var(--radius-10);
-  background: rgba(var(--amber-rgb), 0.08);
+  margin: 14px 0 0;
+  padding: 12px 0 0;
+  border-top: 1px solid rgba(var(--amber-rgb), 0.3);
 }
 
 .panel--low {
-  border-left-color: rgba(var(--line-rgb), 0.28);
-  background: rgba(var(--line-rgb), 0.04);
+  border-top-color: rgba(var(--line-rgb), 0.16);
 }
 
 .panel--medium {
-  border-left-color: var(--amber-ink);
-  background: rgba(var(--amber-rgb), 0.08);
+  border-top-color: rgba(var(--amber-rgb), 0.3);
 }
 
 .panel--high {
-  border-left-color: var(--accent-ink);
-  background: rgba(var(--accent-rgb), 0.08);
+  border-top-color: rgba(var(--accent-rgb), 0.32);
 }
 
 .head {

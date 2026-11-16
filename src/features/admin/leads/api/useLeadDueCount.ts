@@ -6,9 +6,9 @@ import { leadKeys } from "./leadKeys";
 const LIVE_STALE_MS = 30_000;
 
 /**
- * How many open leads have a follow-up due today or earlier: the nav
- * badge's number. Off while `isEnabled` is false (no leads access), so it
- * sends no request then.
+ * How many open leads have a follow-up due today or earlier and are the
+ * caller's or nobody's: the nav badge's number. Off while `isEnabled` is
+ * false (no leads access), so it sends no request then.
  */
 export function useLeadDueCount(options: {
   isEnabled: boolean;

@@ -100,13 +100,36 @@
   opacity: 0.6;
 }
 
+/* The table frame: the kit's panel look around the header and the rows.
+   `overflow: clip` rounds the corners without becoming a scroll container,
+   so the header can still stick to the modal's scrolling body. */
 .table {
   display: flex;
   flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
+  overflow: clip;
 }
 
-.headerRow {
+/* The kit's header row, hidden until the list has the room for columns. The
+   two-class selector outranks the kit's one-class display. */
+.table .headerRow {
   display: none;
+  background-color: var(--paper);
+  background-image: linear-gradient(
+    rgba(var(--plum-rgb), 0.03),
+    rgba(var(--plum-rgb), 0.03)
+  );
+}
+
+:global([data-theme="dark"]) .table .headerRow {
+  background-color: var(--paper);
+  background-image: linear-gradient(
+    rgba(var(--cream-rgb), 0.06),
+    rgba(var(--cream-rgb), 0.06)
+  );
 }
 
 .list {
@@ -115,13 +138,11 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-16);
-  overflow: hidden;
 }
 
-.row {
+/* The kit's row supplies the divider, hover tint and selected bar; the local
+   layout stacks a row's cells until the table has the room. */
+.list .row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
@@ -130,23 +151,10 @@
     "limit action";
   align-items: center;
   column-gap: var(--gap-sm);
-  padding: 14px 16px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  padding: var(--admin-row-pad);
   animation: quotaRowIn 0.32s var(--ease) both;
   transition: background-color 0.2s var(--ease);
   transition-property: background-color;
-}
-
-.row:first-child {
-  border-top: 0;
-}
-
-.row[data-editing] {
-  background: rgba(var(--plum-rgb), 0.035);
-}
-
-:global([data-theme="dark"]) .row[data-editing] {
-  background: rgba(var(--cream-rgb), 0.05);
 }
 
 @keyframes quotaRowIn {
@@ -460,24 +468,17 @@
     column-gap: 16px;
   }
 
-  /* 17px = the row's 16px padding plus the list's 1px border, so each
-     heading sits over its column. It sticks right under the search bar
-     (whose top is -4px), so the headings stay in view while the rows
-     scroll; the -8px margin keeps the resting layout where it was while
-     the 8px padding gives the stuck header room under the bar. */
-  .headerRow {
+  /* The header and the rows share the table's columns and the same 16px
+     inset, so each heading sits over its column. It sticks right under the
+     search bar (whose top is -4px), so the headings stay in view while the
+     rows scroll. */
+  .table .headerRow {
     position: sticky;
     top: calc(var(--quota-search-bar-size) - 4px);
     z-index: 1;
     display: grid;
     grid-column: 1 / -1;
     grid-template-columns: subgrid;
-    margin-block-start: -8px;
-    padding: 8px 17px;
-    font-size: var(--text-12);
-    font-weight: 600;
-    color: var(--ink-60);
-    background: var(--cream);
   }
 
   .list {
@@ -488,7 +489,7 @@
 
   /* `normal` takes the table's gap through the subgrid, so the cells line
      up under the headings. */
-  .row {
+  .list .row {
     grid-column: 1 / -1;
     grid-template-columns: subgrid;
     grid-template-areas: none;
@@ -550,7 +551,7 @@
 /* ── Reduced motion ────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .row {
+  .list .row {
     animation: none;
   }
 
@@ -562,14 +563,14 @@
 
   .busyLine,
   .results,
-  .row,
+  .list .row,
   .meterFill,
   .editorInput {
     transition-property: none;
   }
 }
 
-:global(html[data-reduce-motion="true"]) .row {
+:global(html[data-reduce-motion="true"]) .list .row {
   animation: none;
 }
 
@@ -581,7 +582,7 @@
 
 :global(html[data-reduce-motion="true"]) .busyLine,
 :global(html[data-reduce-motion="true"]) .results,
-:global(html[data-reduce-motion="true"]) .row,
+:global(html[data-reduce-motion="true"]) .list .row,
 :global(html[data-reduce-motion="true"]) .meterFill,
 :global(html[data-reduce-motion="true"]) .editorInput {
   transition-property: none;

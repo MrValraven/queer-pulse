@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { FiChevronDown, FiChevronUp, FiPlus, FiTrash2 } from "react-icons/fi";
+import {
+  FiChevronDown,
+  FiChevronUp,
+  FiPlus,
+  FiRadio,
+  FiTrash2,
+} from "react-icons/fi";
 import {
   Avatar,
   Button,
   ConfirmDialog,
-  EmptyState,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
-import { AdminChip, AdminToggle } from "./ui";
+import { AdminChip, AdminEmptyState, AdminToggle } from "./ui";
 import { AdminPressKitFields } from "./AdminPressKitFields";
 import {
   emptyPressKitValue,
@@ -105,9 +110,10 @@ export function AdminPressKitList({
           description={t("admin:pressKit.list.loadError.body")}
         />
       ) : rows.length === 0 ? (
-        <EmptyState
+        <AdminEmptyState
+          icon={FiRadio}
           title={t(`admin:pressKit.list.empty.${kind}.title`)}
-          description={t(`admin:pressKit.list.empty.${kind}.body`)}
+          body={t(`admin:pressKit.list.empty.${kind}.body`)}
         />
       ) : (
         rows.map((row, index) => (

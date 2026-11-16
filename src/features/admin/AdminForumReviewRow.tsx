@@ -6,7 +6,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { formatRelative } from "../../shared/lib/date";
 import { thread as threadPath } from "../../app/routeMap";
 import { contentWarningLabels } from "../forum/forumWarnings.helpers";
-import { AdminChip } from "./ui";
+import { AdminChip, AdminRowActions, adminRowActionClasses } from "./ui";
 import { AdminFundingFacts } from "./AdminFundingFacts";
 import type { AdminForumReviewThread } from "./api/adminForumReview.api";
 import submissionStyles from "./AdminSubmissionList.module.css";
@@ -119,11 +119,10 @@ export function AdminForumReviewRow({
           )}
         </div>
       </div>
-      <div className={styles.rowActions}>
+      <AdminRowActions>
         <Button
           variant="jade"
           size="sm"
-          className={styles.actionButton}
           disabled={isPending}
           aria-describedby={titleId}
           onClick={onApprove}
@@ -133,14 +132,14 @@ export function AdminForumReviewRow({
         <Button
           variant="ghost"
           size="sm"
-          className={styles.actionButton}
+          className={adminRowActionClasses.danger}
           disabled={isPending}
           aria-describedby={titleId}
           onClick={onDecline}
         >
           {t("admin:adminForumReview.action.reject")}
         </Button>
-      </div>
+      </AdminRowActions>
     </article>
   );
 }

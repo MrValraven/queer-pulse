@@ -3,7 +3,15 @@ import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
-import { AdminChip } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminNotice,
+  AdminPanel,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import { useAdminJoinRequests } from "./api/useAdminHousingCoops";
 import { useTriageJoinRequest } from "./api/useAdminHousingMutations";
 import type { AdminJoinRequestDTO } from "./api/adminHousing.api";
@@ -21,8 +29,8 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * ones here, which meant a platform carrying 200 decided requests newer than one
  * pending request showed an empty queue while somebody waited. The count line
  * quotes the server's `total`, so the number on screen is how many people are
- * actually waiting rather than how many rows happened to arrive, and "Load more"
- * is how an admin reaches past the first page. Mirrors AdminHousingGroupsPage's
+ * actually waiting, and "Load more" is how an admin reaches past the first
+ * page. Mirrors AdminHousingGroupsPage's
  * queue for the sibling housing-groups surface.
  */
 export function AdminHousingJoinRequests() {
@@ -67,79 +75,88 @@ export function AdminHousingJoinRequests() {
   if (isLoading) return null;
 
   return (
-    <div className={styles.joinRequests}>
-      <h2 className={styles.sectionTitle}>
-        {t("admin:housingRequests.title")}
-      </h2>
-      {!isError && total > 0 && (
-        <p className={styles.queueCount} role="status">
-          {t("admin:housingRequests.pendingCount", { count: total })}
-        </p>
-      )}
-      {isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
-            {t("admin:housingRequests.loadError")}
-          </p>
-        </div>
-      ) : requests.length === 0 ? (
-        <p className={styles.emptyText}>{t("admin:housingRequests.empty")}</p>
-      ) : (
-        <>
-          <div className={styles.rows}>
-            {requests.map((request, index) => (
-              <FadeIn key={request.id} delay={Math.min(index, 8) * 50}>
-                <div className={styles.row}>
-                  <div className={styles.rowMain}>
-                    <div className={styles.rowTop}>
-                      <span className={styles.rowName}>{request.name}</span>
-                      <AdminChip tone="plum" dot>
-                        {request.coop?.name ??
-                          t("admin:housingRequests.unknownCoop")}
-                      </AdminChip>
-                    </div>
-                    <div className={styles.rowMeta}>
-                      {t("admin:housingRequests.householdSize", {
-                        size: request.householdSize,
-                      })}
-                      {request.note ? ` · "${request.note}"` : ""}
-                    </div>
-                  </div>
-                  <div className={styles.rowActions}>
-                    <Button
-                      variant="ghost"
-                      size="md"
-                      onClick={() => decide(request, "declined")}
-                    >
-                      {t("admin:housingRequests.declineCta")}
-                    </Button>
-                    <Button
-                      variant="jade"
-                      size="md"
-                      onClick={() => decide(request, "accepted")}
-                    >
-                      {t("admin:housingRequests.acceptCta")}
-                    </Button>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
+    <div className={styles.section}>
+      <AdminPanel
+        title={t("admin:housingRequests.title")}
+        description={
+          !isError &&
+          total > 0 && (
+            <span role="status">
+              {t("admin:housingRequests.pendingCount", { count: total })}
+            </span>
+          )
+        }
+        padding="flush"
+      >
+        {isError ? (
+          <div className={styles.panelInset}>
+            <AdminNotice tone="error">
+              {t("admin:housingRequests.loadError")}
+            </AdminNotice>
           </div>
-          {hasNextPage && (
-            <div className={styles.loadMore}>
-              <Button
-                variant="ghost"
-                size="md"
-                disabled={isFetchingNextPage}
-                onClick={() => void fetchNextPage()}
-              >
-                {isFetchingNextPage
-                  ? t("admin:housingRequests.loadingMore")
-                  : t("admin:housingRequests.loadMore")}
-              </Button>
-            </div>
-          )}
-        </>
+        ) : requests.length === 0 ? (
+          <div className={styles.panelInset}>
+            <AdminEmptyState
+              size="inline"
+              title={t("admin:housingRequests.empty")}
+            />
+          </div>
+        ) : (
+          requests.map((request, index) => (
+            <FadeIn
+              key={request.id}
+              delay={Math.min(index, 8) * 50}
+              className={`${adminTableClasses.row} ${styles.row}`}
+            >
+              <div className={styles.rowMain}>
+                <div className={styles.rowTop}>
+                  <span className={styles.rowName}>{request.name}</span>
+                  <AdminChip tone="plum" dot>
+                    {request.coop?.name ??
+                      t("admin:housingRequests.unknownCoop")}
+                  </AdminChip>
+                </div>
+                <div className={styles.rowMeta}>
+                  {t("admin:housingRequests.householdSize", {
+                    size: request.householdSize,
+                  })}
+                  {request.note ? ` · "${request.note}"` : ""}
+                </div>
+              </div>
+              <AdminRowActions className={styles.rowActions}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={adminRowActionClasses.danger}
+                  onClick={() => decide(request, "declined")}
+                >
+                  {t("admin:housingRequests.declineCta")}
+                </Button>
+                <Button
+                  variant="jade"
+                  size="sm"
+                  onClick={() => decide(request, "accepted")}
+                >
+                  {t("admin:housingRequests.acceptCta")}
+                </Button>
+              </AdminRowActions>
+            </FadeIn>
+          ))
+        )}
+      </AdminPanel>
+      {!isError && requests.length > 0 && hasNextPage && (
+        <div className={styles.loadMore}>
+          <Button
+            variant="ghost"
+            size="md"
+            disabled={isFetchingNextPage}
+            onClick={() => void fetchNextPage()}
+          >
+            {isFetchingNextPage
+              ? t("admin:housingRequests.loadingMore")
+              : t("admin:housingRequests.loadMore")}
+          </Button>
+        </div>
       )}
     </div>
   );

@@ -4,7 +4,14 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { intlLocale } from "../../shared/i18n/locale";
 import { formatDate } from "../../shared/lib/date";
 import { businessPath } from "../../app/routeMap";
-import { AdminChip } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminPanel,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import {
   AdminSafeSpaceBadgeActionModal,
   type BadgeActionTarget,
@@ -30,21 +37,26 @@ export function AdminSafeSpaceReReviewRows({
 
   if (spaces.length === 0) {
     return (
-      <p className={styles.emptyLine}>
-        {t("safety:governance.reReview.empty")}
-      </p>
+      <AdminEmptyState
+        size="inline"
+        title={t("safety:governance.reReview.empty")}
+      />
     );
   }
 
   return (
     <>
-      <div className={styles.rows}>
+      <AdminPanel padding="flush" isOverflowVisible>
         {spaces.map((space, index) => (
-          <FadeIn key={space.listingId} delay={Math.min(index, 8) * 50}>
+          <FadeIn
+            key={space.listingId}
+            delay={Math.min(index, 8) * 50}
+            className={styles.item}
+          >
             <ReReviewRow space={space} onAct={setTarget} />
           </FadeIn>
         ))}
-      </div>
+      </AdminPanel>
 
       {target && (
         <AdminSafeSpaceBadgeActionModal
@@ -67,7 +79,7 @@ function ReReviewRow({
   const locale = intlLocale(language);
 
   return (
-    <div className={styles.row}>
+    <div className={`${adminTableClasses.row} ${styles.row}`}>
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
           <span className={styles.rowName}>{space.name}</span>
@@ -100,10 +112,10 @@ function ReReviewRow({
         </div>
       </div>
 
-      <div className={styles.rowChips}>
+      <AdminRowActions className={styles.rowChips}>
         <Button
           variant="ghost"
-          size="md"
+          size="sm"
           to={businessPath(space.slug)}
           target="_blank"
           rel="noopener noreferrer"
@@ -112,7 +124,10 @@ function ReReviewRow({
         </Button>
         <Button
           variant="ghost"
-          size="md"
+          size="sm"
+          className={
+            space.isBadgeSuspended ? undefined : adminRowActionClasses.danger
+          }
           onClick={() =>
             onAct({
               ref: space.ref,
@@ -127,7 +142,7 @@ function ReReviewRow({
               : "safety:governance.badge.suspendCta",
           )}
         </Button>
-      </div>
+      </AdminRowActions>
     </div>
   );
 }

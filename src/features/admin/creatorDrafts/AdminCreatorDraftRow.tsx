@@ -5,7 +5,12 @@ import { memberRefToPerson } from "../../../shared/api/refs";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { formatDate } from "../../../shared/lib/date";
 import type { AdminCreatorDraftRow as AdminCreatorDraftRowData } from "../api/adminCreatorDrafts.api";
-import { AdminAvatar, AdminChip, type AvatarTone } from "../ui";
+import {
+  AdminAvatar,
+  AdminChip,
+  adminTableClasses,
+  type AvatarTone,
+} from "../ui";
 import {
   CREATOR_DRAFT_KIND_LABEL_KEYS,
   creatorDraftMadeForText,
@@ -47,71 +52,75 @@ export function AdminCreatorDraftRow({
     .join(" ");
 
   return (
-    <article className={styles.card}>
-      <div className={styles.cardTop}>
-        <Link
-          className={styles.titleLink}
-          to={adminCreatorDraftPath(row.kind, row.id)}
-          aria-describedby={describedBy}
-        >
-          {creatorDraftTitleText(row, t)}
-        </Link>
-        <AdminChip tone="plum">
-          <span id={kindId}>{t(CREATOR_DRAFT_KIND_LABEL_KEYS[row.kind])}</span>
-        </AdminChip>
-      </div>
+    <article className={adminTableClasses.row}>
+      <div className={styles.card}>
+        <div className={styles.cardTop}>
+          <Link
+            className={styles.titleLink}
+            to={adminCreatorDraftPath(row.kind, row.id)}
+            aria-describedby={describedBy}
+          >
+            {creatorDraftTitleText(row, t)}
+          </Link>
+          <AdminChip tone="plum">
+            <span id={kindId}>
+              {t(CREATOR_DRAFT_KIND_LABEL_KEYS[row.kind])}
+            </span>
+          </AdminChip>
+        </div>
 
-      <p className={styles.meta}>
-        {madeForText && (
-          <span id={madeForId} className={styles.metaItem}>
-            {madeForText}
-          </span>
-        )}
-        {progressText && (
-          <span className={styles.metaItem}>{progressText}</span>
-        )}
-        <span className={styles.metaItem}>
-          {t("admin:creatorDrafts.lastSaved", {
-            date: formatDate(row.lastSavedAt, language),
-          })}
-        </span>
-      </p>
-
-      <div className={styles.owner}>
-        <span aria-hidden>
-          <AdminAvatar
-            initials={owner?.initials ?? "?"}
-            tone={(owner?.tint as AvatarTone | undefined) ?? "anon"}
-            size="sm"
-            src={owner?.avatarUrl ?? undefined}
-          />
-        </span>
-        <span id={ownerId} className={styles.ownerName}>
-          {t("admin:creatorDrafts.startedBy", {
-            name: owner?.name ?? t("admin:creatorDrafts.unknownOwner"),
-          })}
-        </span>
-      </div>
-
-      {visibleMissingLabels.length > 0 && (
-        <p className={styles.missing}>
-          <span className={styles.missingLabel}>
-            {t("admin:creatorDrafts.strip.missing")}
-          </span>
-          {visibleMissingLabels.map((label) => (
-            <AdminChip key={label} tone="ghost">
-              {label}
-            </AdminChip>
-          ))}
-          {hiddenMissingCount > 0 && (
-            <span className={styles.missingMore}>
-              {t("admin:creatorDrafts.moreMissing", {
-                count: hiddenMissingCount,
-              })}
+        <p className={styles.meta}>
+          {madeForText && (
+            <span id={madeForId} className={styles.metaItem}>
+              {madeForText}
             </span>
           )}
+          {progressText && (
+            <span className={styles.metaItem}>{progressText}</span>
+          )}
+          <span className={styles.metaItem}>
+            {t("admin:creatorDrafts.lastSaved", {
+              date: formatDate(row.lastSavedAt, language),
+            })}
+          </span>
         </p>
-      )}
+
+        <div className={styles.owner}>
+          <span aria-hidden>
+            <AdminAvatar
+              initials={owner?.initials ?? "?"}
+              tone={(owner?.tint as AvatarTone | undefined) ?? "anon"}
+              size="sm"
+              src={owner?.avatarUrl ?? undefined}
+            />
+          </span>
+          <span id={ownerId} className={styles.ownerName}>
+            {t("admin:creatorDrafts.startedBy", {
+              name: owner?.name ?? t("admin:creatorDrafts.unknownOwner"),
+            })}
+          </span>
+        </div>
+
+        {visibleMissingLabels.length > 0 && (
+          <p className={styles.missing}>
+            <span className={styles.missingLabel}>
+              {t("admin:creatorDrafts.strip.missing")}
+            </span>
+            {visibleMissingLabels.map((label) => (
+              <AdminChip key={label} tone="ghost">
+                {label}
+              </AdminChip>
+            ))}
+            {hiddenMissingCount > 0 && (
+              <span className={styles.missingMore}>
+                {t("admin:creatorDrafts.moreMissing", {
+                  count: hiddenMissingCount,
+                })}
+              </span>
+            )}
+          </p>
+        )}
+      </div>
     </article>
   );
 }

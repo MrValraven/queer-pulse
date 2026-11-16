@@ -24,6 +24,7 @@ import {
 import { studioAdminSaveErrorKeyOf } from "./studioAdmin.model";
 import { focusNeighbourControl } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminFounding.module.css";
+import { AdminPanel } from "./ui";
 
 /** The Waiting for Studio tab: members who asked for Studio access, artists
  *  first, then the longest wait. Grant Studio access acts at once; Dismiss
@@ -104,18 +105,14 @@ export function StudioAdminWaiting() {
   }
 
   return (
-    <section className={css.section} aria-labelledby={headingId}>
-      <div className={css.head}>
-        <h2
-          id={headingId}
-          ref={headingRef}
-          tabIndex={-1}
-          className={css.heading}
-        >
-          {t("admin:studioAdmin.waiting.heading")}
-        </h2>
-        <p className={css.sub}>{t("admin:studioAdmin.waiting.sub")}</p>
-      </div>
+    <AdminPanel
+      title={t("admin:studioAdmin.waiting.heading")}
+      titleId={headingId}
+      titleRef={headingRef}
+      isTitleFocusable
+      description={t("admin:studioAdmin.waiting.sub")}
+      bodyClassName={css.section}
+    >
       <Collapse isOpen={loadState.isLoading}>
         <SkeletonLine height={160} style={{ borderRadius: 14 }} />
       </Collapse>
@@ -189,6 +186,6 @@ export function StudioAdminWaiting() {
         })}
         confirmLabel={t("admin:studioAdmin.waiting.dismissCta")}
       />
-    </section>
+    </AdminPanel>
   );
 }

@@ -6,6 +6,11 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { photoOf } from "../communities/communityPeople";
 import { RoleBadge } from "../communities/CommunityBadges";
 import type { RosterMember } from "../communities/community.model";
+import {
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import styles from "./ModPanel.module.css";
 
 /** One roster action (DES-425). The shared `<Button>` brings the house focus
@@ -32,7 +37,7 @@ function RowAction({
     <Button
       variant="ghost"
       size="sm"
-      className={[styles.rowAction, className].filter(Boolean).join(" ")}
+      className={className}
       aria-disabled={isDisabled || undefined}
       onClick={() => {
         if (!isDisabled) onActivate();
@@ -50,9 +55,8 @@ function RowAction({
  * presentational: the tab owns the promote/demote/remove writes, their
  * optimistic state and their toasts.
  *
- * "Remove" asks the tab to open a confirm dialog rather than acting on the
- * tap, so a mis-tap cannot take someone off the roster with nothing to undo
- * it.
+ * "Remove" asks the tab to open a confirm dialog, so a mis-tap cannot take
+ * someone off the roster with nothing to undo it.
  */
 export function MembersTabRow({
   member,
@@ -78,7 +82,13 @@ export function MembersTabRow({
   const { demoMode } = useDemoMode();
 
   return (
-    <div className={[styles.modRow, styles.modRowWithActions].join(" ")}>
+    <div
+      className={[
+        adminTableClasses.row,
+        styles.listRow,
+        styles.modRowWithActions,
+      ].join(" ")}
+    >
       <Avatar
         initials={member.initials}
         tint={member.tint}
@@ -92,7 +102,7 @@ export function MembersTabRow({
         </div>
         {member.title && <div className={styles.modMeta}>{member.title}</div>}
       </div>
-      <div className={styles.modActions}>
+      <AdminRowActions className={styles.modActions}>
         {!isMod && (
           <RowAction
             isDisabled={isBusy}
@@ -117,7 +127,7 @@ export function MembersTabRow({
         )}
         {member.role !== "owner" && (
           <RowAction
-            className={styles.removeBtn}
+            className={adminRowActionClasses.danger}
             isDisabled={isBusy}
             onActivate={onRequestRemove}
             icon={<FiX aria-hidden />}
@@ -132,7 +142,7 @@ export function MembersTabRow({
             <FiShield aria-hidden /> {t("admin:modPanel.members.ownerTag")}
           </span>
         )}
-      </div>
+      </AdminRowActions>
     </div>
   );
 }

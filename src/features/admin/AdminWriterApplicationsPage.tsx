@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { FiFeather } from "react-icons/fi";
 import { FadeIn, SkeletonLine, Button } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -11,6 +12,7 @@ import {
 } from "./api/useAdminWriterApplications";
 import { AdminWriterApplicationsRow } from "./AdminWriterApplicationsRow";
 import styles from "./AdminSubmissionList.module.css";
+import stateStyles from "./AdminInboxStates.module.css";
 
 const FILTERS: AdminWriterApplicationFilter[] = [
   "all",
@@ -59,7 +61,7 @@ export function AdminWriterApplicationsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminWriterApplications.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.editorial")}
           title={
             <Translation
               i18nKey="admin:adminWriterApplications.header.title"
@@ -85,13 +87,17 @@ export function AdminWriterApplicationsPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminWriterApplications.error")}
-          </p>
+          <div className={stateStyles.notice}>
+            <AdminNotice tone="error">
+              {t("admin:adminWriterApplications.error")}
+            </AdminNotice>
+          </div>
         ) : applications.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminWriterApplications.empty")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            icon={FiFeather}
+            title={t("admin:adminWriterApplications.empty")}
+          />
         ) : (
           <>
             <div className={styles.rows}>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminNotice, AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -10,7 +10,7 @@ import { AdminIntakesBrowse } from "./AdminIntakesBrowse";
 import { AdminInquiriesBrowse } from "./AdminInquiriesBrowse";
 import { useAdminIntakes } from "./api/useAdminIntakes";
 import { useAdminInquiries } from "./api/useAdminInquiries";
-import styles from "./AdminSubmissionList.module.css";
+import styles from "./AdminIntakes.module.css";
 
 type ConsoleTab = "waiting" | "intakes" | "inquiries";
 
@@ -62,7 +62,7 @@ export function AdminIntakesPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminIntakes.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:adminIntakes.header.title"
@@ -71,9 +71,11 @@ export function AdminIntakesPage() {
           }
           sub={t("admin:adminIntakes.header.sub")}
         />
-        <p className={styles.noEmailNote}>
-          {t("admin:adminIntakes.header.noEmailNote")}
-        </p>
+        <div className={styles.note}>
+          <AdminNotice tone="info" liveRole="none">
+            {t("admin:adminIntakes.header.noEmailNote")}
+          </AdminNotice>
+        </div>
       </FadeIn>
 
       <FadeIn delay={60}>

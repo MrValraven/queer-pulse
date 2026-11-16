@@ -6,6 +6,7 @@ import { AdminPageHeader } from "../ui";
 import { leadReasonOf, type LeadDTO } from "./api/leads.types";
 import { useLead } from "./api/useLead";
 import { AdminLeadFrame } from "./AdminLeadFrame";
+import { LeadAssigneesPanel } from "./LeadAssigneesPanel";
 import { LeadContactActions } from "./LeadContactActions";
 import { LeadDeleteSection } from "./LeadDeleteSection";
 import { LeadDetailsPanel } from "./LeadDetailsPanel";
@@ -23,9 +24,10 @@ import styles from "./AdminLead.module.css";
 
 /**
  * One lead (`/admin/leads/:leadId`, Admins and the Music manager & producer
- * grant): its details with the stage, the linked persona, the history with
- * notes, and Delete lead at the bottom. The admin frame stays mounted while
- * the body moves from the outline to the lead or to a state.
+ * grant): its details with the stage, the staff in charge, the linked
+ * persona, the history with notes, and Delete lead at the bottom. The
+ * admin frame stays mounted while the body moves from the outline to the
+ * lead or to a state.
  */
 export function AdminLeadPage() {
   const { leadId = "" } = useParams();
@@ -96,16 +98,17 @@ function LeadHeaderSub({ lead }: { lead: LeadDTO }) {
 }
 
 /** The header with Email and Call beside the name (under it on a phone),
- *  then the two columns: details on the left, persona then history on the
- *  right, Delete lead across both at the bottom. The DOM keeps the reading
- *  order (details, persona, history, delete), which is how a narrow page
- *  stacks them; the grid places them side by side. */
+ *  then the two columns: details on the left, In charge then persona then
+ *  history on the right (In charge opens the right column), Delete lead
+ *  across both at the bottom. The DOM keeps the reading order (details, in
+ *  charge, persona, history, delete), which is how a narrow page stacks
+ *  them; the grid places them side by side. */
 function AdminLeadContent({ lead }: { lead: LeadDTO }) {
   const { t } = useTranslation();
   return (
     <div className={styles.page}>
       <AdminPageHeader
-        eyebrow={t("admin:leads.title")}
+        eyebrow={t("shared:adminNav.sections.communities")}
         title={lead.name}
         sub={<LeadHeaderSub lead={lead} />}
         actions={<LeadContactActions lead={lead} />}
@@ -114,6 +117,9 @@ function AdminLeadContent({ lead }: { lead: LeadDTO }) {
         <div className={styles.body}>
           <div className={styles.detailsArea}>
             <LeadDetailsPanel key={lead.id} lead={lead} />
+          </div>
+          <div className={styles.assigneesArea}>
+            <LeadAssigneesPanel key={lead.id} lead={lead} />
           </div>
           <div className={styles.personaArea}>
             <LeadPersonaPanel lead={lead} />

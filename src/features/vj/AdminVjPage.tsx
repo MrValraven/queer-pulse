@@ -18,6 +18,7 @@ import {
   tabPanelProps,
 } from "../../shared/components/ui";
 import type { VjClipDTO, VjPackDTO } from "../../shared/contracts/vj";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminPageHeader } from "../admin/ui/AdminPageHeader";
 import { useVjClips } from "./api/useVjClips";
@@ -422,13 +423,18 @@ export function AdminVjPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:common.adminBreadcrumb")}
-          title={t("vj:page.title")}
+          eyebrow={t("shared:adminNav.sections.platform")}
+          title={
+            <Translation
+              i18nKey="vj:page.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("vj:page.intro")}
           actions={<VjLibraryActions />}
         />
       </FadeIn>
-      <div className={css.page}>
+      <div>
         <VjLiveConnectionsPanel />
         <VjLibraryViewTabs
           className={css.tabs}

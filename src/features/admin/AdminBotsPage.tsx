@@ -1,7 +1,16 @@
 import { useState } from "react";
+import { FiCpu } from "react-icons/fi";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminAvatar } from "./ui";
+import {
+  AdminAvatar,
+  AdminEmptyState,
+  AdminPageHeader,
+  AdminPanel,
+  adminTableClasses,
+  AdminRowActions,
+} from "./ui";
 import { Button, SkeletonLine } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAdminBots } from "./api/useAdminBots";
 import { AdminBotEditorDrawer } from "./AdminBotEditorDrawer";
@@ -21,24 +30,32 @@ export function AdminBotsPage() {
   return (
     <AdminShell title={t("admin:bots.title")}>
       <AdminPageHeader
-        eyebrow={t("admin:bots.eyebrow")}
-        title={t("admin:bots.title")}
+        eyebrow={t("shared:adminNav.sections.platform")}
+        title={
+          <Translation
+            i18nKey="admin:bots.header.title"
+            components={{ em: <em /> }}
+          />
+        }
         sub={t("admin:bots.subtitle")}
       />
 
       {isLoading ? (
-        <div className={styles.list}>
+        <div className={styles.skeletons}>
           <SkeletonLine />
           <SkeletonLine />
         </div>
       ) : !bots || bots.length === 0 ? (
-        <p className={styles.empty}>{t("admin:bots.empty")}</p>
+        <AdminEmptyState icon={FiCpu} title={t("admin:bots.empty")} />
       ) : (
-        <div className={styles.list}>
+        <AdminPanel padding="flush">
           {bots.map((bot) => {
             const displayName = `${bot.firstName} ${bot.lastName}`.trim();
             return (
-              <div className={styles.row} key={bot.userId}>
+              <div
+                className={[adminTableClasses.row, styles.row].join(" ")}
+                key={bot.userId}
+              >
                 <AdminAvatar
                   src={bot.avatarUrl ?? undefined}
                   initials={(bot.firstName[0] ?? "?").toUpperCase()}
@@ -48,13 +65,19 @@ export function AdminBotsPage() {
                   <span className={styles.name}>{displayName}</span>
                   <span className={styles.handle}>@{bot.slug}</span>
                 </div>
-                <Button variant="ghost" onClick={() => setEditingBot(bot)}>
-                  {t("admin:bots.edit")}
-                </Button>
+                <AdminRowActions>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setEditingBot(bot)}
+                  >
+                    {t("admin:bots.edit")}
+                  </Button>
+                </AdminRowActions>
               </div>
             );
           })}
-        </div>
+        </AdminPanel>
       )}
 
       {editingBot && (

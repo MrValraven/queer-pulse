@@ -3,7 +3,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { FeatureUsageStateBadge } from "./FeatureUsageLegend";
+import { FeatureUsageStateBadge } from "./FeatureUsageStateBadge";
 import { FeatureUsageReachCell } from "./FeatureUsageReachCell";
 import { FeatureUsageDetailPanel } from "./FeatureUsageDetailPanel";
 import { featureDisplayName, reachOnlyReason } from "./featureUsageLabels";
@@ -15,7 +15,11 @@ import type {
   AdminFeatureUsageDTO,
   ClassifiedFeature,
 } from "./api/adminFeatureUsage.api";
+import { adminTableClasses } from "./ui";
 import styles from "./AdminFeatureUsagePage.module.css";
+
+/** Matches the Created and Total headers in `FeatureUsageTable`. */
+const NUMBER_CELL = `${adminTableClasses.numeric} ${styles.numberCell}`;
 
 /** Clicks on these keep their own meaning, so the row leaves them alone. */
 const ROW_TOGGLE_IGNORED_TARGETS = 'button, a, input, [role="button"]';
@@ -125,10 +129,8 @@ export function FeatureUsageRow({
         </td>
         {feature.depth !== null && feature.depthTotal !== null ? (
           <>
-            <td className={styles.numberCell}>{fmt.number(feature.depth)}</td>
-            <td className={styles.numberCell}>
-              {fmt.number(feature.depthTotal)}
-            </td>
+            <td className={NUMBER_CELL}>{fmt.number(feature.depth)}</td>
+            <td className={NUMBER_CELL}>{fmt.number(feature.depthTotal)}</td>
           </>
         ) : (
           <td className={styles.depthReason} colSpan={2}>

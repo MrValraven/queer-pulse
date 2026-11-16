@@ -1,53 +1,18 @@
-/* ---- tab pills ---- */
-.tabs {
+/* ---- tab layout ---- */
+.tabPanel {
+  margin-top: var(--admin-header-gap);
+}
+/* A tab's toolbar, panel and load-more button, one section gap apart. */
+.tabStack {
   display: flex;
-  gap: 6px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: var(--admin-section-gap);
 }
-.tab {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  background: transparent;
-  color: var(--ink-60);
-  border-radius: var(--radius-pill);
-  padding: 7px 16px;
-  cursor: pointer;
-  transition:
-    background 0.18s var(--ease),
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .tab:not(.tabActive):hover {
-    border-color: rgba(var(--line-rgb), 0.28);
-    color: var(--ink);
-  }
-}
-.tabActive {
-  background: var(--plum);
-  border-color: var(--line-strong);
-  color: rgba(var(--cream-rgb), 1);
+.tabStack > .loadMore {
+  margin-block-start: 0;
 }
 
-/* ---- section label ---- */
-.secLbl {
-  font-family: var(--sans);
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.secLbl + * {
-  margin-top: 0;
-}
+/* The count beside a panel title. */
 .tabCount {
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--ink-60);
@@ -56,82 +21,22 @@
   font-weight: 700;
   padding: 2px 8px;
 }
-
-/* ---- search row ---- */
-.searchRow {
-  position: relative;
-  margin-bottom: 18px;
-}
-.searchIcon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 15px;
-  height: 15px;
-  color: var(--ink-40);
-  pointer-events: none;
-}
-.search {
-  width: 100%;
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  padding: 11px 14px 11px 38px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-12);
-  background: var(--paper);
-  color: var(--ink);
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.2s var(--ease);
-}
-.search:focus {
-  border-color: rgba(var(--line-rgb), 0.3);
-}
-
-/* ---- filter chips ---- */
-.chips {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 22px;
-  flex-wrap: wrap;
-}
-.chip {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  background: transparent;
-  color: var(--ink-60);
-  border-radius: var(--radius-pill);
-  padding: 6px 14px;
-  cursor: pointer;
-  transition:
-    background 0.18s var(--ease),
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .chip:not(.chipOn):hover {
-    border-color: rgba(var(--line-rgb), 0.28);
-    color: var(--ink);
-  }
-}
-.chipOn {
-  background: var(--plum);
-  border-color: var(--line-strong);
-  color: rgba(var(--cream-rgb), 1);
-}
-
-/* ---- bulk action row ---- */
-.bulkRow {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-bottom: 16px;
+[data-theme="dark"] .tabCount {
+  background: rgba(var(--cream-rgb), 0.1);
 }
 
 /* ---- mod rows ---- */
+/* A row inside a flush AdminPanel: adminTableClasses.row brings the height,
+   hairline and hover; this adds the inset and the avatar gap. */
+.listRow {
+  gap: 13px;
+  padding: var(--admin-row-pad);
+}
+/* An empty tab inside its panel keeps the panel inset. */
+.panelEmpty {
+  padding: 0 var(--admin-panel-pad) var(--admin-panel-pad);
+}
+/* The transfer modal's radio rows keep their own card look. */
 .modRow {
   display: flex;
   align-items: center;
@@ -192,22 +97,6 @@
   margin-inline-start: auto;
   justify-content: flex-end;
 }
-/* Roster actions are sm Buttons (40px) for desk density; a thumb gets the
-   full tap floor. */
-@media (pointer: coarse) {
-  .modActions .rowAction {
-    min-height: var(--tap-min);
-  }
-}
-/* Roster "Remove" is a ghost <Button>; its hover warms to the accent so the
-   one irreversible action reads apart from the role toggles. The extra
-   selectors outrank the ghost hover rule in Button.module.css. */
-@media (hover: hover) {
-  .modActions .removeBtn:hover:not(:disabled):not([aria-disabled="true"]) {
-    border-color: var(--accent);
-    color: var(--accent-ink);
-  }
-}
 .ownerTag {
   display: inline-flex;
   align-items: center;
@@ -223,11 +112,14 @@
 
 /* ---- report cards ---- */
 .reportCard {
-  background: var(--paper);
-  border: 1px solid rgba(var(--accent-rgb), 0.25);
-  border-radius: var(--radius-14);
-  padding: 16px 18px;
-  margin-bottom: 10px;
+  padding: var(--admin-row-pad);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.reportCard:last-child {
+  border-bottom: 0;
+}
+.reportActions {
+  margin-top: 12px;
 }
 .reportReason {
   display: inline-flex;
@@ -281,37 +173,6 @@
 .settingsInput:focus {
   border-color: rgba(var(--line-rgb), 0.3);
 }
-.modeRow {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.modeChip {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  background: transparent;
-  color: var(--ink-60);
-  border-radius: var(--radius-pill);
-  padding: 7px 18px;
-  cursor: pointer;
-  transition:
-    background 0.18s var(--ease),
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .modeChip:not(.modeChipActive):hover {
-    border-color: rgba(var(--line-rgb), 0.28);
-    color: var(--ink);
-  }
-}
-.modeChipActive {
-  background: var(--plum);
-  border-color: var(--line-strong);
-  color: rgba(var(--cream-rgb), 1);
-}
 .rulesArea {
   width: 100%;
   font-family: var(--sans);
@@ -334,25 +195,19 @@
 .saveRow {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 32px;
 }
 
-/* ---- danger zone (plum-tinted, not white) ---- */
-.dangerZone {
-  background: rgba(var(--plum-rgb), 0.06);
-  border: 1px solid rgba(var(--line-rgb), 0.18);
-  border-radius: var(--radius-16);
-  padding: 22px 24px;
-  margin-top: 8px;
+/* ---- danger zone: an AdminPanel with a danger edge. The two-class
+   selector outranks the panel's own border and background. ---- */
+.tabStack > .dangerZone {
+  border-color: rgba(var(--danger-rgb), 0.35);
+  background: rgba(var(--danger-rgb), 0.04);
 }
-.danger {
-  font-family: var(--sans);
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text-strong);
-  margin-bottom: 16px;
+.dangerIcon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  color: var(--danger);
 }
 .dangerRow {
   display: flex;
@@ -361,6 +216,9 @@
   gap: 16px;
   padding: 14px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.dangerRow:first-child {
+  padding-top: 0;
 }
 .dangerRow:last-child {
   border-bottom: none;
@@ -382,10 +240,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tab,
-  .chip,
-  .modeChip,
-  .search,
   .settingsInput,
   .rulesArea {
     transition: none;

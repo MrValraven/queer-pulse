@@ -2,7 +2,7 @@ import type { AdminMagazineSubmissionDTO } from "./api/adminMagazineSubmissions.
 
 /**
  * Demo-mode sample of platform-wide magazine story submissions for the admin
- * oversight page, so it renders fully with no backend. Fabricated data — it must
+ * oversight page, so it renders fully with no backend. Fabricated data: it must
  * never appear as platform truth in live mode (the hook only serves this when
  * `demoMode` is on). Mirrors {@link AdminMagazineSubmissionDTO}.
  *
@@ -70,7 +70,7 @@ export const ADMIN_MAGAZINE_SUBMISSIONS: AdminMagazineSubmissionDTO[] = [
     status: "accepted",
     decision: "commissioned",
     decisionNote:
-      "Beautiful. We'd like this for the winter issue — the desk will be in touch about frame selection.",
+      "Beautiful. We'd like this for the winter issue. The desk will be in touch about frame selection.",
     decidedAt: "2026-07-20T10:00:00.000Z",
     reopenedBy: null,
     reopenedAt: null,

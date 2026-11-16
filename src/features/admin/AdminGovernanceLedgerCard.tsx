@@ -12,7 +12,9 @@ import {
   LedgerRow,
   RemainderRow,
 } from "./AdminGovernanceLedgerParts";
+import { AdminEmptyState, AdminPanel } from "./ui";
 import styles from "./AdminGovernancePage.module.css";
+import { formatEuro } from "./adminEuro";
 
 type LedgerKind = "income" | "expense";
 
@@ -27,8 +29,8 @@ const EMPTY_COPY: Record<LedgerKind, { lineKey: string; ctaKey: string }> = {
   },
 };
 
-/** One "where it comes from / where it goes" card: a stacked bar of the
- *  enabled lines against the card total, then one row per line. */
+/** One "where it comes from / where it goes" panel: a stacked bar of the
+ *  enabled lines against the panel total, then one row per line. */
 export function LedgerCard({
   titleKey,
   subKey,
@@ -54,18 +56,19 @@ export function LedgerCard({
   const hasLines = shownLines.length > 0;
 
   return (
-    <div className={styles.ledgerCard}>
-      <div className={styles.cardHead}>
-        <h2 className={styles.cardTitle}>
-          <Translation
-            i18nKey={`admin:${titleKey}`}
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <p className={styles.cardSub}>
-          {t(`admin:${subKey}`, { amount: fmt.currency(total ?? 0, "EUR") })}
-        </p>
-      </div>
+    <AdminPanel
+      className={styles.ledgerCard}
+      bodyClassName={styles.ledgerBody}
+      title={
+        <Translation
+          i18nKey={`admin:${titleKey}`}
+          components={{ em: <em /> }}
+        />
+      }
+      description={t(`admin:${subKey}`, {
+        amount: formatEuro(fmt, total ?? 0),
+      })}
+    >
       {hasLines ? (
         <>
           <CompositionBar composition={composition} />
@@ -90,7 +93,7 @@ export function LedgerCard({
           <p className={styles.ledgerNote}>{note}</p>
         </div>
       )}
-    </div>
+    </AdminPanel>
   );
 }
 
@@ -104,12 +107,15 @@ function LedgerEmpty({
   const { t } = useTranslation();
   const copy = EMPTY_COPY[kind];
   return (
-    <div className={styles.ledgerEmpty}>
-      <p className={styles.ledgerEmptyLine}>{t(`admin:${copy.lineKey}`)}</p>
-      <Button variant="ghost" size="sm" onClick={onEdit}>
-        <FiPlus aria-hidden />
-        {t(`admin:${copy.ctaKey}`)}
-      </Button>
-    </div>
+    <AdminEmptyState
+      size="inline"
+      title={t(`admin:${copy.lineKey}`)}
+      action={
+        <Button variant="ghost" size="sm" onClick={onEdit}>
+          <FiPlus aria-hidden />
+          {t(`admin:${copy.ctaKey}`)}
+        </Button>
+      }
+    />
   );
 }

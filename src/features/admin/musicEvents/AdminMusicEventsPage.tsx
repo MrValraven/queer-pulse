@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
+import { FiPlus } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
 import { Button, FadeIn } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { Translation } from "../../../shared/i18n/Translation";
 import {
   MUSIC_EVENT_BUCKETS,
   type MusicEventBucket,
@@ -56,12 +58,17 @@ export function AdminMusicEventsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:musicEvents.eyebrow")}
-          title={t("admin:musicEvents.title")}
+          eyebrow={t("shared:adminNav.sections.communities")}
+          title={
+            <Translation
+              i18nKey="admin:musicEvents.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("admin:musicEvents.sub")}
           actions={
             <Button to={routes.adminMusicEventNew}>
-              {t("admin:musicEvents.createCta")}
+              <FiPlus aria-hidden /> {t("admin:musicEvents.createCta")}
             </Button>
           }
         />

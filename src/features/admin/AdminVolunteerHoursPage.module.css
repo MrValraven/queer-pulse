@@ -1,116 +1,19 @@
-/* SUS-05 — the volunteer-hours report. A reporting surface, so it is built
-   from a headline row and two plain tables; there is no chart, because a
-   funder asks for figures and a chart of four rows would only make them
-   harder to read. Tokens follow `TransparencyPage.module.css`, the other
-   place in the app where numbers are published rather than browsed. */
+/* SUS-05, the volunteer-hours report. A reporting surface, so it is built
+   from stat tiles and two plain tables; there is no chart, because a funder
+   asks for figures and a chart of four rows would only make them harder to
+   read. The header, toolbar, tiles, notices, panels and tables come from the
+   admin kit; this file holds only what is specific to this report. */
 
-.periodRow {
+.stack {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin: 14px 0 20px;
+  flex-direction: column;
+  gap: var(--admin-section-gap);
 }
 
 .periodLabel {
-  font-size: var(--text-caption);
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
-}
-
-.headlines {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
-}
-
-.headline {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  padding: 18px 20px;
-}
-
-.headlineValue {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-40);
-  line-height: 1.05;
-  color: var(--text-strong);
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-.headlineLabel {
-  margin-top: 8px;
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  line-height: 1.5;
-}
-
-.note {
-  margin: 0 0 22px;
-  font-size: var(--text-13);
-  line-height: 1.6;
-  color: var(--ink-60);
-  max-width: 62ch;
-  overflow-wrap: anywhere;
-}
-
-.tables {
-  display: grid;
-  gap: 18px;
-}
-
-/* Wide tables scroll inside their own box; the page body never scrolls
-   sideways on a phone. */
-.tableWrap {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-14);
-}
-
-.table caption {
-  text-align: left;
-  padding: 16px 20px 0;
-  font-size: var(--text-12);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-
-.table th,
-.table td {
-  padding: 12px 20px;
-  text-align: left;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
-}
-
-.table thead th {
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--ink-40);
-  white-space: nowrap;
-}
-
-.table tbody tr:last-child th,
-.table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.table tbody th {
-  font-weight: 500;
-  color: var(--ink);
-  overflow-wrap: anywhere;
 }
 
 .rowSub {
@@ -118,33 +21,33 @@
   margin-top: 2px;
   font-size: var(--text-12);
   font-weight: 400;
-  color: var(--ink-40);
-}
-
-.numberCell {
-  text-align: right;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-strong);
-  font-weight: 600;
+  color: var(--ink-60);
 }
 
 .capped {
   margin: 0;
-  padding: 10px 20px 14px;
-  font-size: var(--text-12);
+  padding: var(--admin-row-pad);
+  font-size: var(--text-12-5);
   line-height: 1.5;
-  color: var(--ink-40);
-}
-
-.emptyLine {
-  margin: 0;
-  padding: 14px 20px 18px;
-  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
 .skeletons {
   display: grid;
-  gap: 14px;
+  gap: var(--gap-sm);
+}
+
+/* The inline empty line sits inside a flush panel, so it takes the panel inset. */
+.emptyInset {
+  padding-inline: var(--admin-panel-pad);
+}
+
+/* How the figures are counted: a quiet footnote under the tiles. */
+.note {
+  margin: 0;
+  max-width: 72ch;
+  font-size: var(--text-13-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
 }

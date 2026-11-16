@@ -5,7 +5,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminSeg, AdminTabs } from "./ui";
+import { AdminSeg, AdminTabs, AdminToolbar } from "./ui";
 import { FLAG_STATE_OPTIONS } from "./adminSafeSpaceGovernance.data";
 import { AdminSafeSpaceFlagRows } from "./AdminSafeSpaceFlagRows";
 import { AdminSafeSpaceReReviewRows } from "./AdminSafeSpaceReReviewRows";
@@ -72,8 +72,8 @@ export function AdminSafeSpaceFlagsPanel() {
       </FadeIn>
 
       {pane === "flags" ? (
-        <FadeIn delay={110}>
-          <div className={styles.toolbar}>
+        <FadeIn delay={110} className={styles.stack}>
+          <AdminToolbar label={t("shared:filterPage.filtersCta")}>
             <AdminSeg
               options={FLAG_STATE_OPTIONS.map((option) => ({
                 value: option.value,
@@ -82,7 +82,7 @@ export function AdminSafeSpaceFlagsPanel() {
               value={flagState}
               onChange={(value) => setFlagState(value as AdminFlagState)}
             />
-          </div>
+          </AdminToolbar>
           <p className={styles.summary} role="status">
             {t("safety:governance.summary.flags", {
               count: total,
@@ -108,7 +108,7 @@ export function AdminSafeSpaceFlagsPanel() {
           )}
         </FadeIn>
       ) : (
-        <FadeIn delay={110}>
+        <FadeIn delay={110} className={styles.stack}>
           <p className={styles.summary} role="status">
             {t("safety:governance.summary.reReview", { count: due.length })}
           </p>

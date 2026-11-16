@@ -386,9 +386,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
       {
         // `AdminLeadsController`: Admin or the `music_manager_producer`
         // grant, mirrored in the authGate elevated pattern list. The pill
-        // counts open leads with a follow-up due today or earlier.
+        // counts open leads with a follow-up due today or earlier that are
+        // the viewer's or nobody's, and the link opens that view. The
+        // literal `assignedTo` mirrors `LEAD_LIST_PARAM.assignedTo`; shared
+        // layout does not import the leads feature.
         labelKey: "shared:adminNav.items.leads",
-        to: routes.adminLeads,
+        to: `${routes.adminLeads}?assignedTo=me_or_unassigned`,
         icon: FiUsers,
         capabilities: ["music_manager_producer"],
         badge: "leads",

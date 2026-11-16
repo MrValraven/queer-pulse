@@ -1,0 +1,179 @@
+/* Table kit. Native tables get their look from descendant selectors on .wrap;
+   div tables and row lists use the exported classes (.headRow .row .cell
+   .numeric .isSelected) and get the same values. */
+
+.wrap {
+  --admin-table-row-h: var(--admin-row-h);
+  max-width: 100%;
+  overflow-x: auto;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
+}
+.compact {
+  --admin-table-row-h: var(--admin-row-h-compact);
+}
+/* The sticky header needs a wrapper that scrolls vertically too. */
+.sticky {
+  max-height: min(70vh, 40rem);
+  overflow-y: auto;
+}
+/* Inside a flush AdminPanel the panel owns the border, corner and shadow. */
+.bare {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.wrap:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+}
+.caption {
+  padding: 12px 16px;
+  text-align: start;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+/* ── Header ── */
+.table thead th,
+.headRow {
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.03);
+  text-align: start;
+  white-space: nowrap;
+}
+.table thead th {
+  padding: 0 16px;
+  height: 40px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.sticky .table thead th {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-raised);
+  /* Opaque, so rows scrolling underneath do not show through the tint. */
+  background-color: var(--paper);
+  background-image: linear-gradient(
+    rgba(var(--plum-rgb), 0.03),
+    rgba(var(--plum-rgb), 0.03)
+  );
+}
+.headRow {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* ── Rows ── */
+.table td,
+.table tbody th[scope="row"],
+.cell {
+  padding: 0 16px;
+  vertical-align: middle;
+}
+.table td,
+.table tbody th[scope="row"] {
+  height: var(--admin-table-row-h);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+/* A row header reads as a body cell: the header rules above only reach thead. */
+.table tbody th[scope="row"] {
+  font-size: inherit;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  text-align: start;
+  white-space: normal;
+  color: var(--ink);
+  background: none;
+}
+.table tbody tr:last-child td,
+.table tbody tr:last-child th[scope="row"] {
+  border-bottom: 0;
+}
+.row {
+  display: flex;
+  align-items: center;
+  min-height: var(--admin-table-row-h, var(--admin-row-h));
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+@media (hover: hover) {
+  .table tbody tr:not([aria-selected="true"]):hover,
+  .row:not(.isSelected):hover {
+    background: rgba(var(--plum-rgb), 0.03);
+  }
+}
+
+/* ── Numbers ── */
+.table th.numeric,
+.table td.numeric,
+.numeric {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Selected row: a 3px accent bar on the leading edge ── */
+.table tbody tr[aria-selected="true"] > :first-child,
+.isSelected {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.table tbody tr[aria-selected="true"],
+.isSelected {
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+/* ── Dark theme ── --plum-rgb does not flip, so the tints become cream washes. */
+:global([data-theme="dark"]) .table thead th,
+:global([data-theme="dark"]) .headRow {
+  background: rgba(var(--cream-rgb), 0.06);
+}
+:global([data-theme="dark"]) .sticky .table thead th {
+  background-color: var(--paper);
+  background-image: linear-gradient(
+    rgba(var(--cream-rgb), 0.06),
+    rgba(var(--cream-rgb), 0.06)
+  );
+}
+@media (hover: hover) {
+  :global([data-theme="dark"])
+    .table
+    tbody
+    tr:not([aria-selected="true"]):hover,
+  :global([data-theme="dark"]) .row:not(.isSelected):hover {
+    background: rgba(var(--cream-rgb), 0.06);
+  }
+}
+
+/* ── Phone ── panels go edge to edge with the mobile gutter. */
+@media (max-width: 719.98px) {
+  .wrap:not(.bare) {
+    margin-inline: calc(var(--admin-gutter-mobile) * -1);
+    max-width: none;
+    border-radius: 0;
+    border-inline: 0;
+  }
+  .table thead th,
+  .table tbody th[scope="row"],
+  .table td {
+    padding: 0 12px;
+  }
+}

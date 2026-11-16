@@ -100,34 +100,6 @@
   font-weight: 600;
 }
 
-/* ===== Resume-draft banner ===== */
-.draftBanner {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius-14);
-  padding: 14px 18px;
-  margin-top: 18px;
-}
-.draftBanner .dbTxt {
-  font-size: var(--text-14);
-  color: var(--ink);
-}
-.draftBanner .dbTxt b {
-  color: var(--text-strong);
-  font-weight: 700;
-}
-.draftBanner .dbActions {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
 /* ===== Layout ===== */
 /* The page is a container so the form/preview split follows the room the
    page actually has. Inside the admin console a 248px sidebar takes width a
@@ -157,6 +129,15 @@
 /* ===== Wizard chrome ===== */
 .wizTop {
   margin-bottom: 26px;
+  /* Scrolled to when the Continue screen opens the wizard: lands below the
+     fixed nav. */
+  scroll-margin-top: calc(var(--sticky-top) + var(--gap-sm));
+}
+/* It takes focus from script only, as a landing point for the step it
+   introduces, so it draws no ring around the whole wizard top. */
+.wizTop:focus,
+.wizTop:focus-visible {
+  outline: none;
 }
 .pills {
   display: flex;
@@ -2069,9 +2050,6 @@
   }
   .draftStatus {
     animation: lbFadeIn 300ms var(--ease-out) both;
-  }
-  .draftBanner {
-    animation: lbBarIn 320ms var(--ease-out) both;
   }
 
   /* --- Live preview: new nodes glide in as data is entered. React keeps

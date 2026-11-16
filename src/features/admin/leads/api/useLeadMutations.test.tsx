@@ -21,7 +21,8 @@ import {
 } from "./useLeadMutations";
 
 // TestProviders forces demo mode, so every hook here reads and writes the
-// demo leads store.
+// demo leads store. The badge counts due leads that are the viewer's or
+// nobody's, so the seed reads 3 (Kai Duarte is Rafa's).
 
 interface CreateHold {
   pending: Promise<void> | null;
@@ -99,11 +100,11 @@ describe("useLeadMutations in demo", () => {
       }),
       { wrapper },
     );
-    await waitFor(() => expect(result.current.dueCount.data).toBe(4));
+    await waitFor(() => expect(result.current.dueCount.data).toBe(3));
     await act(async () => {
       await result.current.update.mutateAsync({ stage: "on_board" });
     });
-    await waitFor(() => expect(result.current.dueCount.data).toBe(3));
+    await waitFor(() => expect(result.current.dueCount.data).toBe(2));
     const cached = queryClient.getQueryData<LeadDTO>(
       leadKeys.detail(CAVE_ID, true),
     );
@@ -125,12 +126,12 @@ describe("useLeadMutations in demo", () => {
       }),
       { wrapper },
     );
-    await waitFor(() => expect(result.current.dueCount.data).toBe(4));
+    await waitFor(() => expect(result.current.dueCount.data).toBe(3));
     let moved: LeadDTO | undefined;
     await act(async () => {
       moved = await result.current.update.mutateAsync({ stage: "on_board" });
     });
-    await waitFor(() => expect(result.current.dueCount.data).toBe(3));
+    await waitFor(() => expect(result.current.dueCount.data).toBe(2));
     const entryId = moved?.entries[0]?.id ?? "";
     await act(async () => {
       await result.current.revert.mutateAsync({
@@ -139,7 +140,7 @@ describe("useLeadMutations in demo", () => {
         fromStage: "in_talks",
       });
     });
-    await waitFor(() => expect(result.current.dueCount.data).toBe(4));
+    await waitFor(() => expect(result.current.dueCount.data).toBe(3));
     await waitFor(() =>
       expect(
         result.current.list.rows.find((row) => row.id === CAVE_ID)?.stage,

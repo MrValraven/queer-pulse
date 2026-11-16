@@ -7,15 +7,24 @@
   color: var(--ink-60);
 }
 
-/* Rows carry their own spacing (the card's block-end margin) so a row that
-   leaves folds its gap away with it inside CollapseListItem. */
+/* The rows sit in one flush panel. Each row carries its own padding and its
+   divider (the card's top hairline) so a row that leaves folds both away with
+   it inside CollapseListItem. */
+.rowsPanel {
+  margin-block-start: var(--gap-sm);
+}
+
 .rows {
-  margin: var(--gap-sm) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* The empty panel sits where the rows would start. */
+.rows > li + li .card {
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+}
+
+/* The empty state sits where the rows would start. */
 .empty {
   margin-block-start: var(--gap-sm);
 }
@@ -34,12 +43,10 @@
 
 .card {
   display: grid;
+  flex: 1;
   gap: var(--gap-xs);
-  margin-block-end: var(--gap-xs);
-  padding: var(--gap-sm) var(--gap-grid);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
+  min-width: 0;
+  padding: var(--admin-row-pad);
 }
 
 .cardTop {

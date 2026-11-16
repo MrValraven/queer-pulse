@@ -36,15 +36,14 @@ export function AdminMembersHeader({
   const hasTrustCases = trustCaseCount !== undefined && trustCaseCount > 0;
   return (
     <AdminPageHeader
-      eyebrow={t("admin:members.header.eyebrow")}
+      eyebrow={t("shared:adminNav.sections.people")}
       title={
         <>
           {total === undefined
             ? t("admin:members.header.titleLine1NoCount")
             : t("admin:members.header.titleLine1", {
                 total: fmt.number(total),
-              })}
-          <br />
+              })}{" "}
           <Translation
             i18nKey="admin:members.header.titleLine2"
             components={{ em: <em /> }}

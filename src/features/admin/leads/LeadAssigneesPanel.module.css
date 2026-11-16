@@ -1,0 +1,123 @@
+/* In charge on the lead page: the heading row with Assign staff, the
+   empty line or the pills, then the refusal line. The panel heading and
+   its gap come from AdminLead.module.css `.section`. */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* The pills wrap onto as many lines as they need. */
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chipItem {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* The kit chip sized for a 30px avatar and the Unassign button. The list
+   class lifts it over the kit's own padding, and a long name wraps. */
+.chipList .chip {
+  gap: 8px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 3px;
+  font-size: var(--text-13);
+  white-space: normal;
+}
+
+/* The avatar is decoration beside the name, so it holds its size. */
+.chipAvatar {
+  display: inline-flex;
+  flex: none;
+}
+
+.chipName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A compact Unassign inside the pill. The hit area reaches past the 30px
+   pill to the 44px target. */
+.chipList .chip .unassignButton {
+  flex: none;
+  position: relative;
+  gap: 4px;
+  min-height: 30px;
+  padding: 0 12px 0 10px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.chipList .chip .unassignButton::after {
+  content: "";
+  position: absolute;
+  inset: -7px 0;
+}
+
+.chipList .chip .unassignButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chipList .chip .unassignButton[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.55;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chipList .chip .unassignButton:hover:not([aria-disabled="true"]) {
+    color: var(--text-strong);
+  }
+}
+
+.unassignIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+/* The heading with Assign staff at its end. Above the pills, the button
+   (the picker's anchor) holds its place as pills come and go; on a narrow
+   screen it wraps under the heading. */
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+/* (40px button - 28.8px heading line) / 2, rounded, as Edit details. */
+.assignButton {
+  margin-block: -6px;
+}
+
+/* The picker sheet on a phone: the list grows into the sheet's height,
+   which is 92svh less the head, search, hint and footer around the list,
+   so every preview row shows before the list scrolls. */
+.sheetBody [role="listbox"] {
+  max-height: max(
+    140px,
+    calc(92svh - var(--keyboard-inset, 0px) - 300px)
+  );
+}
+
+@media (--md) {
+  /* The small button keeps a 44px target on a phone. */
+  .assignButton {
+    min-height: 44px;
+    margin-block: -8px;
+  }
+}

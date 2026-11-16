@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useId, useState } from "react";
+import { FiBarChart2, FiCalendar, FiClock, FiUsers } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { routes } from "../../app/routeMap";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminPageHeader, AdminSeg } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminSeg,
+  AdminStat,
+  AdminStatTiles,
+  AdminToolbar,
+} from "./ui";
 import { useAdminVolunteerHours } from "./api/useAdminVolunteerHours";
 import {
   VOLUNTEER_HOURS_PERIODS,
@@ -17,22 +26,12 @@ import {
 } from "./AdminVolunteerHoursTables";
 import styles from "./AdminVolunteerHoursPage.module.css";
 
-/** One headline figure with its plain label. */
-function Headline({ value, label }: { value: string; label: string }) {
-  return (
-    <div className={styles.headline}>
-      <div className={styles.headlineValue}>{value}</div>
-      <div className={styles.headlineLabel}>{label}</div>
-    </div>
-  );
-}
-
 function ReportSkeleton() {
   return (
     <div className={styles.skeletons}>
-      <SkeletonLine height={104} style={{ borderRadius: 12 }} />
-      <SkeletonLine height={180} style={{ borderRadius: 12 }} />
-      <SkeletonLine height={180} style={{ borderRadius: 12 }} />
+      <SkeletonLine height={104} />
+      <SkeletonLine height={180} />
+      <SkeletonLine height={180} />
     </div>
   );
 }
@@ -55,6 +54,7 @@ function ReportSkeleton() {
 export function AdminVolunteerHoursPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const periodLabelId = useId();
   const [period, setPeriod] = useState<VolunteerHoursPeriod>("months12");
   const { report, isLoading, isError } = useAdminVolunteerHours(period);
 
@@ -72,7 +72,7 @@ export function AdminVolunteerHoursPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:volunteerHours.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="admin:volunteerHours.header.title"
@@ -86,61 +86,72 @@ export function AdminVolunteerHoursPage() {
       {/* Above the figures, because the period is what the figures mean.
           Kept mounted through loading and empty states so a reader can always
           change it back. */}
-      <div className={styles.periodRow}>
-        <span className={styles.periodLabel}>
-          {t("admin:volunteerHours.periodLabel")}
-        </span>
-        <AdminSeg
-          options={VOLUNTEER_HOURS_PERIODS.map((option) => ({
-            value: option,
-            label: t(`admin:volunteerHours.period.${option}`),
-          }))}
-          value={period}
-          onChange={(next) => setPeriod(next as VolunteerHoursPeriod)}
-        />
+      <div className={styles.stack}>
+        <AdminToolbar label={t("shared:filterPage.filtersCta")}>
+          <span id={periodLabelId} className={styles.periodLabel}>
+            {t("admin:volunteerHours.periodLabel")}
+          </span>
+          <AdminSeg
+            ariaLabelledby={periodLabelId}
+            options={VOLUNTEER_HOURS_PERIODS.map((option) => ({
+              value: option,
+              label: t(`admin:volunteerHours.period.${option}`),
+            }))}
+            value={period}
+            onChange={(next) => setPeriod(next as VolunteerHoursPeriod)}
+          />
+        </AdminToolbar>
+
+        {isLoading ? (
+          <ReportSkeleton />
+        ) : isError || !report ? (
+          <AdminNotice tone="error">
+            {t("admin:volunteerHours.error")}
+          </AdminNotice>
+        ) : (
+          <FadeIn className={styles.stack}>
+            <AdminStatTiles columns={3}>
+              <AdminStat
+                icon={FiClock}
+                label={t("admin:volunteerHours.headline.hours")}
+                value={fmt.number(report.hoursContributed)}
+              />
+              <AdminStat
+                icon={FiCalendar}
+                label={t("admin:volunteerHours.headline.sessions")}
+                value={fmt.number(report.sessionCount)}
+              />
+              <AdminStat
+                icon={FiUsers}
+                label={t("admin:volunteerHours.headline.volunteers")}
+                value={fmt.number(report.volunteerCount)}
+              />
+            </AdminStatTiles>
+
+            <p className={styles.note}>{t("admin:volunteerHours.method")}</p>
+
+            {report.sessionCount === 0 ? (
+              <AdminEmptyState
+                icon={FiBarChart2}
+                title={t("admin:volunteerHours.empty")}
+              />
+            ) : (
+              <>
+                <VolunteerHoursByOpportunityTable
+                  rows={report.byOpportunity}
+                  isCapped={report.isOpportunityBreakdownCapped}
+                  limit={report.breakdownLimit}
+                />
+                <VolunteerHoursByCommunityTable
+                  rows={report.byCommunity}
+                  isCapped={report.isCommunityBreakdownCapped}
+                  limit={report.breakdownLimit}
+                />
+              </>
+            )}
+          </FadeIn>
+        )}
       </div>
-
-      {isLoading ? (
-        <ReportSkeleton />
-      ) : isError || !report ? (
-        <p className={styles.note}>{t("admin:volunteerHours.error")}</p>
-      ) : (
-        <FadeIn>
-          <div className={styles.headlines}>
-            <Headline
-              value={fmt.number(report.hoursContributed)}
-              label={t("admin:volunteerHours.headline.hours")}
-            />
-            <Headline
-              value={fmt.number(report.sessionCount)}
-              label={t("admin:volunteerHours.headline.sessions")}
-            />
-            <Headline
-              value={fmt.number(report.volunteerCount)}
-              label={t("admin:volunteerHours.headline.volunteers")}
-            />
-          </div>
-
-          <p className={styles.note}>{t("admin:volunteerHours.method")}</p>
-
-          {report.sessionCount === 0 ? (
-            <p className={styles.note}>{t("admin:volunteerHours.empty")}</p>
-          ) : (
-            <div className={styles.tables}>
-              <VolunteerHoursByOpportunityTable
-                rows={report.byOpportunity}
-                isCapped={report.isOpportunityBreakdownCapped}
-                limit={report.breakdownLimit}
-              />
-              <VolunteerHoursByCommunityTable
-                rows={report.byCommunity}
-                isCapped={report.isCommunityBreakdownCapped}
-                limit={report.breakdownLimit}
-              />
-            </div>
-          )}
-        </FadeIn>
-      )}
     </AdminShell>
   );
 }

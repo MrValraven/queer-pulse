@@ -1,160 +1,87 @@
-/* Feature usage panel: a classification surface, emphasizing decision drivers
-   over raw statistics. The "browsed but empty" state carries the panel (see
-   AdminFeatureUsagePage docblock), so its legend card and table rows get real
-   visual weight; an accent left edge and tinted background provide emphasis
-   beyond the badge colour alone. */
+/* Feature usage: a classification surface, emphasizing decision drivers
+   over raw statistics. The header, notices, headline tiles, panel and table
+   come from the admin kit; this file holds what is specific to the feature
+   table. The "browsed but empty" state carries the page (see the
+   AdminFeatureUsagePage docblock), so its table rows get real visual weight:
+   an accent left edge and a tinted background beside the badge colour. */
 
-.legend {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
-}
-
-.legendCard {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  padding: 16px 18px;
-}
-
-.legendCard_browsedButEmpty {
-  background: rgba(var(--danger-rgb), 0.06);
-  border-color: rgba(var(--danger-rgb), 0.28);
-  border-left: 3px solid var(--danger);
-}
-
-.legendExplainer {
-  margin: 10px 0 0;
-  font-size: var(--text-13);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
-.reachSignalNotice {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin: 0 0 22px;
-  padding: 14px 16px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-12);
-  color: var(--ink-60);
-  font-size: var(--text-13);
-  line-height: 1.5;
-}
-
-.reachSignalNotice svg {
-  flex: none;
-  width: 18px;
-  height: 18px;
-  margin-top: 1px;
-  color: var(--accent-ink);
-}
-
-.reachSignalNotice p {
-  margin: 0;
-}
-
-.note {
-  margin: 0 0 22px;
-  font-size: var(--text-13);
-  line-height: 1.6;
-  color: var(--ink-60);
-  max-width: 68ch;
-  overflow-wrap: anywhere;
+/* The no-reach-signal notice folds in and out; the padding keeps the gap
+   to the tiles inside the fold, so it closes to nothing. */
+.noticeFold {
+  padding-bottom: var(--admin-section-gap);
 }
 
 .skeletons {
   display: grid;
   gap: 14px;
-  margin-bottom: 22px;
 }
 
-/* Wide tables scroll inside their own box; the page body never scrolls
-   sideways on a phone. The wrapper is an inline-size container so an open
-   detail panel can size itself to the visible box (`100cqi`) and stay put
-   while the table scrolls under it. While a new range loads, the previous
-   range stays on screen dimmed. */
-.tableWrap {
+/* The kit table scrolls inside this stage. The stage is an inline-size
+   container so an open detail panel can size itself to the visible box
+   (`100cqi`) and stay put while the table scrolls under it. While a new
+   range loads, the previous range stays on screen dimmed. */
+.tableStage {
   container-type: inline-size;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  overflow-x: auto;
   transition-property: opacity;
   transition-duration: 0.2s;
   transition-timing-function: var(--ease);
 }
 
-.tableWrapStale {
+.tableStageStale {
   opacity: 0.6;
 }
 
 /* The body's `overflow-wrap: anywhere` lets a table squeeze a column down
    to single letters on a phone, so the table turns it back to `normal`: the
    wrapper scrolls sideways and every word stays whole. */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-14);
+.tableStage table {
   overflow-wrap: normal;
 }
 
-.table th,
-.table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
-  vertical-align: middle;
-}
-
-.table thead th {
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--ink-40);
-  white-space: nowrap;
-}
-
 /* Body rows draw their hairline on top, so a row and its open detail row
-   below share one band, and the last row never doubles the wrapper's own
-   border. */
-.table tbody td,
-.table tbody th {
-  border-bottom: none;
-}
-
-.row {
-  cursor: pointer;
-}
-
-.row > td,
-.row > th {
+   below share one band. The kit's bottom hairline is dropped for the same
+   reason, and the first row leans on the header's own rule. */
+.tableStage tr.row > td,
+.tableStage tr.row > th {
+  border-bottom: 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
   transition-property: background-color;
   transition-duration: 0.2s;
   transition-timing-function: var(--ease);
 }
 
+.tableStage tbody tr.row:first-child > td,
+.tableStage tbody tr.row:first-child > th {
+  border-top: 0;
+}
+
+.row {
+  cursor: pointer;
+}
+
+/* Every cell of a tinted row takes the tint, the row header included: the
+   kit clears a row header's background with an attribute selector, so these
+   rules name it the same way to outrank it and keep the row one band. */
 .rowOpen > td,
-.rowOpen > th {
+.tableStage tbody tr.rowOpen > th[scope="row"] {
   background-color: rgba(var(--line-rgb), 0.03);
 }
 
-/* The hover wash is a gradient layer, so it sits over a row's own tint
-   (open, or browsed but empty) and leaves that tint in place. It only
-   applies to a pointer that hovers, so a tap on a phone leaves no wash
-   stuck on the row. */
+/* The kit's hover tint sits on the row, under a tinted cell. On an open or
+   browsed-but-empty row the wash is a gradient layer over the cell's own
+   tint, so it still shows. It only applies to a pointer that hovers, so a
+   tap on a phone leaves no wash stuck on the row. */
 @media (hover: hover) {
-  .row:hover > td,
-  .row:hover > th {
+  .rowOpen:hover > td,
+  .tableStage tbody tr.rowOpen:hover > th[scope="row"],
+  .rowBrowsedButEmpty:hover > td,
+  .tableStage tbody tr.rowBrowsedButEmpty:hover > th[scope="row"] {
     background-image: linear-gradient(var(--wash), var(--wash));
   }
 }
 
 .rowBrowsedButEmpty > td,
-.rowBrowsedButEmpty > th {
+.tableStage tbody tr.rowBrowsedButEmpty > th[scope="row"] {
   background-color: rgba(var(--danger-rgb), 0.05);
 }
 
@@ -165,15 +92,16 @@
 /* Column widths. The feature, state and number columns shrink to their
    content (`width: 1%` on an auto table), so the spare width goes to Reach,
    whose bars and comparison need it most. */
-.table .fitColumn {
+.tableStage .fitColumn {
   width: 1%;
 }
 
-.table .reachColumn {
+.tableStage .reachColumn {
   width: auto;
 }
 
-.featureCell {
+/* Outranks the kit's row-header ink. */
+.tableStage tbody th[scope="row"].featureCell {
   font-weight: 600;
   color: var(--text-strong);
   white-space: nowrap;
@@ -186,12 +114,11 @@
   font-weight: 600;
 }
 
-/* Alignment and width are qualified with `.table` so they outrank the
-   `.table th, .table td` left alignment above; the colour stays on the bare
-   class, so the header keeps its muted header ink. */
-.table .numberCell {
+/* The kit's numeric class right-aligns these; the width is qualified with
+   the stage so it outranks the kit's cell rules, and the colour stays on the
+   bare class, so the header keeps its muted header ink. */
+.tableStage .numberCell {
   width: 1%;
-  text-align: right;
 }
 
 .reachCell {
@@ -212,18 +139,18 @@
    the room; the first column keeps 12px on its left, clear of the
    browsed-but-empty red edge. */
 @container (max-width: 640px) {
-  .table th,
-  .table td {
+  .tableStage table tr > th,
+  .tableStage table tr > td {
     padding-left: 8px;
     padding-right: 8px;
   }
 
-  .table .featureCell,
-  .table thead th:first-child {
+  .tableStage tr > th.featureCell,
+  .tableStage thead tr > th:first-child {
     padding-left: 12px;
   }
 
-  .featureCell {
+  .tableStage tbody th[scope="row"].featureCell {
     white-space: normal;
   }
 
@@ -238,7 +165,7 @@
     white-space: nowrap;
   }
 
-  .table .stateCell {
+  .tableStage tr > .stateCell {
     width: 0;
     padding: 0;
   }
@@ -259,7 +186,7 @@
 /* A not-launched row reads quieter through muted ink on its own text, which
    stays above 4.5:1 on the paper in both themes (an opacity fade took it
    under). Its state chip is the ghost tone, already muted ink. */
-.rowNotLaunched > .featureCell,
+.tableStage tbody tr.rowNotLaunched > th[scope="row"].featureCell,
 .rowNotLaunched > .numberCell,
 .rowNotLaunched > .reachCell,
 .rowNotLaunched > .reachCell * {
@@ -335,7 +262,7 @@
   max-width: 40ch;
 }
 
-.table .expandCell {
+.tableStage tr > .expandCell {
   text-align: center;
   width: 40px;
 }
@@ -344,8 +271,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-8);
   background: transparent;
@@ -377,7 +304,8 @@
    part of it, and keeps the tint until the fold has finished closing. The
    panel keeps the page's `overflow-wrap: anywhere`, so a long label inside
    it wraps and never widens the table. */
-.table .detailCell {
+.tableStage tr > td.detailCell {
+  height: auto;
   padding: 0;
   border: none;
   overflow-wrap: anywhere;
@@ -386,15 +314,15 @@
   transition-timing-function: var(--ease);
 }
 
-.table .detailCellOpen {
+.tableStage tr > td.detailCellOpen {
   background-color: rgba(var(--line-rgb), 0.03);
 }
 
-/* An open browsed-but-empty row hands its own tint and red left edge on
-   to its panel, so the two read as one attached block. */
-.table .detailCellBrowsedButEmpty {
+/* An open browsed-but-empty row hands its tint on to its panel, so the two
+   read as one attached block. The red edge stays on the row alone, beside
+   the state it marks. */
+.tableStage tr > td.detailCellBrowsedButEmpty {
   background-color: rgba(var(--danger-rgb), 0.05);
-  box-shadow: inset 3px 0 0 var(--danger);
 }
 
 /* The fold itself, pinned to the visible box of the scrolling table, so
@@ -408,10 +336,8 @@
   width: min(100%, 100cqi);
 }
 
-.emptyCell {
-  text-align: center;
-  color: var(--ink-40);
-  padding: 28px 16px;
+.tableStage tr > td.emptyCell {
+  padding: var(--admin-band-pad);
 }
 
 .srOnly {
@@ -427,21 +353,21 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tableWrap,
-  .row > td,
-  .row > th,
+  .tableStage,
+  .tableStage tr.row > td,
+  .tableStage tr.row > th,
   .reachInfoBtn,
   .expandBtn,
-  .table .detailCell {
+  .tableStage tr > td.detailCell {
     transition: none;
   }
 }
 
-:global(html[data-reduce-motion="true"]) .tableWrap,
-:global(html[data-reduce-motion="true"]) .row > td,
-:global(html[data-reduce-motion="true"]) .row > th,
+:global(html[data-reduce-motion="true"]) .tableStage,
+:global(html[data-reduce-motion="true"]) .tableStage tr.row > td,
+:global(html[data-reduce-motion="true"]) .tableStage tr.row > th,
 :global(html[data-reduce-motion="true"]) .reachInfoBtn,
 :global(html[data-reduce-motion="true"]) .expandBtn,
-:global(html[data-reduce-motion="true"]) .table .detailCell {
+:global(html[data-reduce-motion="true"]) .tableStage tr > td.detailCell {
   transition: none;
 }

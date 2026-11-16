@@ -1,7 +1,13 @@
 import { useMemo, useState } from "react";
 import { FiKey } from "react-icons/fi";
-import { Button, FadeIn, LoadErrorState } from "../../shared/components/ui";
-import { AdminTabs, type AdminTab } from "./ui";
+import {
+  Button,
+  FadeIn,
+  FilterChips,
+  LoadErrorState,
+} from "../../shared/components/ui";
+import { adminToolbarClasses } from "./ui";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useListingClaims } from "./api/useListingClaims";
 import {
@@ -10,6 +16,7 @@ import {
   type ListingClaimFilter,
 } from "./ListingClaimRows";
 import type { ListingClaimDTO } from "./api/listingClaims.api";
+import { filterChip, mergeDecidedClaims } from "./listingClaimsFilters";
 import styles from "./ListingClaims.module.css";
 
 const FILTERS: ListingClaimFilter[] = [
@@ -26,17 +33,19 @@ const FILTERS: ListingClaimFilter[] = [
  * `ListingsController` exposes under `admin/*`).
  *
  * Built as one panel like the Submissions queue: a head saying what the queue
- * is, the status tabs, then the body. The Pending tab carries the queue depth
- * as its count, and a visually hidden status line announces it when it moves.
+ * is, the status chips, then the body. The Pending chip carries the queue
+ * depth as its count, and a visually hidden status line announces it when it
+ * moves.
  *
  * The queue is paginated (ENG-41), and the endpoint only ever returns PENDING
- * claims, so the load-more button belongs to the Pending and All tabs. The
- * Approved and Declined tabs hold the claims decided on this page while it
+ * claims, so the load-more button belongs to the Pending and All chips. The
+ * Approved and Declined chips hold the claims decided on this page while it
  * stays open: each decided claim is kept whole in `decidedClaims`, because the
  * live queue refetches after a decision and the claim drops out of `rows`.
  */
 export function ListingClaimsSection() {
   const { t } = useTranslation();
+  const format = useFormat();
   const [filter, setFilter] = useState<ListingClaimFilter>("pending");
   const {
     rows,
@@ -102,18 +111,21 @@ export function ListingClaimsSection() {
             <FiKey aria-hidden className={styles.introIcon} />
             {t("admin:listingClaims.intro")}
           </p>
-          <AdminTabs
-            tabs={FILTERS.map((value) =>
-              filterTab(value, {
+          <FilterChips
+            className={adminToolbarClasses.chips}
+            label={t("admin:adminListings.filter.ariaLabel")}
+            options={FILTERS.map((value) =>
+              filterChip(value, {
                 label: t(`admin:listingClaims.filter.${value}`),
-                pendingCount: hasSettled ? pendingCount : undefined,
-                decidedCount: hasSettled
-                  ? claims.filter((claim) => claim.status === value).length
-                  : undefined,
-                isPendingCountUnavailable: isShowingError,
+                count: !hasSettled
+                  ? undefined
+                  : value === "pending"
+                    ? pendingCount
+                    : claims.filter((claim) => claim.status === value).length,
+                formatCount: (count) => format.number(count),
               }),
             )}
-            active={filter}
+            value={filter}
             onChange={(value) => setFilter(value as ListingClaimFilter)}
           />
         </div>
@@ -161,52 +173,4 @@ export function ListingClaimsSection() {
       )}
     </FadeIn>
   );
-}
-
-/** One status tab. Pending carries the queue depth (or an alert mark when the
- *  read failed); Approved and Declined carry how many were decided on this
- *  page, from zero, so a first decision rolls the number instead of popping a
- *  new pill in; All carries no count. */
-function filterTab(
-  value: ListingClaimFilter,
-  {
-    label,
-    pendingCount,
-    decidedCount,
-    isPendingCountUnavailable,
-  }: {
-    label: string;
-    pendingCount: number | undefined;
-    decidedCount: number | undefined;
-    isPendingCountUnavailable: boolean;
-  },
-): AdminTab {
-  if (value === "pending") {
-    return {
-      id: value,
-      label,
-      count: pendingCount,
-      isCountRolling: true,
-      isCountUnavailable: isPendingCountUnavailable,
-    };
-  }
-  if (value === "all") return { id: value, label };
-  return { id: value, label, count: decidedCount, isCountRolling: true };
-}
-
-/** The loaded queue with this page's decisions laid over it. A decided claim
- *  the refetched queue no longer returns is appended, so it stays on the
- *  Approved, Declined and All tabs. */
-function mergeDecidedClaims(
-  rows: ListingClaimDTO[],
-  decidedClaims: Record<string, ListingClaimDTO>,
-): ListingClaimDTO[] {
-  const loadedIds = new Set(rows.map((row) => row.id));
-  const decidedOffQueue = Object.values(decidedClaims).filter(
-    (claim) => !loadedIds.has(claim.id),
-  );
-  return [
-    ...rows.map((row) => decidedClaims[row.id] ?? row),
-    ...decidedOffQueue,
-  ];
 }

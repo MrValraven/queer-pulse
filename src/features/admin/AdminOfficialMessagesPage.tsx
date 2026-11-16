@@ -1,6 +1,7 @@
 import { routes } from "../../app/routeMap";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Button } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMailboxes } from "../messages/api/useMailboxes";
 import { MAILBOX_PARAM } from "../messages/mailboxes/useActiveMailbox";
@@ -26,8 +27,13 @@ export function AdminOfficialMessagesPage() {
   return (
     <AdminShell title={t("admin:officialMessages.title")}>
       <AdminPageHeader
-        eyebrow={t("admin:officialMessages.eyebrow")}
-        title={t("admin:officialMessages.title")}
+        eyebrow={t("shared:adminNav.sections.platform")}
+        title={
+          <Translation
+            i18nKey="admin:officialMessages.header.title"
+            components={{ em: <em /> }}
+          />
+        }
         sub={t("admin:officialMessages.subtitle")}
         actions={
           teamMailbox && (

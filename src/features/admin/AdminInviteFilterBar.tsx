@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { FiCheck, FiCheckSquare } from "react-icons/fi";
 import { Button, Select } from "../../shared/components/ui";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { AdminInviteRefreshAllExpired } from "./AdminInviteRefreshAllExpired";
@@ -133,10 +134,10 @@ function SelectModeToggle({
 }
 
 /**
- * The row under the invite tabs: the "Sent by" filter on the left (only once
- * there is more than one sender to pick from), and on the right "Refresh all
- * N expired" on the Expired tab and the Select toggle, shown while the list
- * has invites to pick.
+ * The shared toolbar under the invite tabs: the "Sent by" filter on the left
+ * (only once there is more than one sender to pick from), and on the right
+ * "Refresh all N expired" on the Expired tab and the Select toggle, shown
+ * while the list has invites to pick.
  */
 export function AdminInviteFilterBar({
   inviterOptions,
@@ -168,14 +169,36 @@ export function AdminInviteFilterBar({
   const { t } = useTranslation();
 
   return (
-    <div className={styles.filterBar}>
+    <AdminToolbar
+      label={t("admin:adminInvites.filterByInviter")}
+      end={
+        <>
+          <AdminInviteRefreshAllExpired
+            isShown={isRefreshAllShown}
+            count={expiredTotal}
+            inviterSlug={inviterSlug}
+            inviterName={inviterName}
+            onRowLeavingChange={onRowLeavingChange}
+          />
+          <AnimatePresence initial={false}>
+            {isSelectToggleShown && (
+              <SelectModeToggle
+                key="select-toggle"
+                isSelectMode={isSelectMode}
+                onToggle={onToggleSelectMode}
+              />
+            )}
+          </AnimatePresence>
+        </>
+      }
+    >
       {inviterOptions.length > 1 && (
-        <div className={styles.filterGroup}>
+        <>
           <span className={styles.filterLabel} id="invite-inviter-label">
             {t("admin:adminInvites.filterByInviter")}
           </span>
           <Select
-            className={styles.filterSelect}
+            className={adminToolbarClasses.select}
             labelledBy="invite-inviter-label"
             size="sm"
             clearable
@@ -184,26 +207,8 @@ export function AdminInviteFilterBar({
             options={inviterOptions}
             onChange={onInviterChange}
           />
-        </div>
+        </>
       )}
-      <div className={styles.filterBarActions}>
-        <AdminInviteRefreshAllExpired
-          isShown={isRefreshAllShown}
-          count={expiredTotal}
-          inviterSlug={inviterSlug}
-          inviterName={inviterName}
-          onRowLeavingChange={onRowLeavingChange}
-        />
-        <AnimatePresence initial={false}>
-          {isSelectToggleShown && (
-            <SelectModeToggle
-              key="select-toggle"
-              isSelectMode={isSelectMode}
-              onToggle={onToggleSelectMode}
-            />
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
+    </AdminToolbar>
   );
 }

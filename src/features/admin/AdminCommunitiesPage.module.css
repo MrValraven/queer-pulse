@@ -15,27 +15,9 @@
   }
 }
 
-/* ── Communities grid · load error ───────────────────────────────────────── */
-.loadError {
-  margin: 0;
-  padding: 16px 18px;
-  border-radius: var(--radius-14);
-  background: rgba(var(--danger-rgb), 0.08);
-  color: var(--danger);
-  font-size: var(--text-14);
-  font-weight: 600;
-}
-
-/* ── Communities grid / queue · scan-limit notice (informational, not an
-   error — same visual language as .queueMore below) ─────────────────────── */
-.truncatedNotice {
-  margin: 0 0 16px;
-  padding: 14px 18px;
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  background: rgba(var(--plum-rgb), 0.04);
-  border: 1px dashed rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-card, 22px);
+/* The scan-limit notice above the grid. */
+.gridNotice {
+  margin-bottom: var(--admin-header-gap);
 }
 
 /* ── Health card ─────────────────────────────────────────────────────────── */
@@ -49,10 +31,11 @@
   gap: 16px;
   width: 100%;
   text-align: left;
-  padding: 20px;
+  padding: var(--admin-panel-pad);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
   font: inherit;
   color: inherit;
   cursor: pointer;
@@ -78,7 +61,7 @@
   padding: 0;
   border: 0;
   background: none;
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
@@ -197,74 +180,6 @@
   color: var(--ink-40);
 }
 
-/* ── Detail · back link ──────────────────────────────────────────────────── */
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 22px;
-  padding: 0;
-  background: none;
-  border: none;
-  font: inherit;
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  color: var(--ink-60);
-  cursor: pointer;
-  transition: color 0.16s var(--ease);
-}
-@media (hover: hover) {
-  .backLink:hover {
-    color: var(--text-strong);
-  }
-}
-.backLink svg {
-  width: 15px;
-  height: 15px;
-}
-
-/* ── Detail · hero ───────────────────────────────────────────────────────── */
-.hero {
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-  margin-bottom: 26px;
-}
-.heroMain {
-  flex: 1;
-  min-width: 0;
-}
-.heroName {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-title);
-  font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -0.015em;
-  color: var(--text-strong);
-}
-[data-theme="dark"] .heroName {
-  color: var(--ink);
-}
-.heroName em {
-  color: var(--accent-ink);
-  font-style: italic;
-}
-.heroDesc {
-  margin: 12px 0 0;
-  max-width: 580px;
-  font-size: var(--text-15);
-  line-height: 1.6;
-  color: var(--ink-60);
-}
-.heroChips {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 16px;
-  flex-wrap: wrap;
-}
-
 /* Clickable health chip → breakdown modal */
 .healthChip {
   display: inline-flex;
@@ -303,78 +218,12 @@
   color: var(--accent-ink);
 }
 
-/* ── Detail · support banner ─────────────────────────────────────────────── */
-.supportBanner {
+/* ── Detail · notice, stat tiles and spaces under the header ── */
+.detailStack {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  padding: 20px 22px;
-  margin-bottom: 24px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-left: 4px solid var(--accent-ink);
-  border-radius: var(--radius-card, 22px);
-}
-.bannerTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 400;
-  color: var(--text-strong);
-  line-height: 1.2;
-}
-[data-theme="dark"] .bannerTitle {
-  color: var(--ink);
-}
-.bannerTitle em {
-  color: var(--accent-ink);
-  font-style: italic;
-}
-.bannerText {
-  margin: 8px 0 0;
-  max-width: 560px;
-  font-size: var(--text-13-5);
-  line-height: 1.55;
-  color: var(--ink-60);
-}
-
-/* ── Detail · stat bar ───────────────────────────────────────────────────── */
-.statBar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: rgba(var(--plum-rgb), 0.09);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-  overflow: hidden;
-  margin-bottom: 26px;
-}
-@media (max-width: 620px) {
-  .statBar {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-.statCell {
-  background: var(--paper);
-  padding: 18px 20px;
-}
-.statVal {
-  font-family: var(--serif);
-  font-size: var(--text-28);
-  font-weight: 600;
-  line-height: 1;
-  color: var(--text-strong);
-}
-[data-theme="dark"] .statVal {
-  color: var(--ink);
-}
-.statLabel {
-  margin-top: 7px;
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--ink-60);
+  flex-direction: column;
+  gap: var(--admin-section-gap);
+  margin-bottom: var(--admin-section-gap);
 }
 
 .detailTabs {
@@ -390,14 +239,9 @@
 
 /* Scoped report row */
 .reportRow {
-  display: flex;
-  align-items: center;
   gap: 16px;
-  padding: 16px 18px 16px 0;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-  overflow: hidden;
+  padding: var(--admin-row-pad);
+  padding-inline-start: 0;
 }
 .severity {
   flex: none;
@@ -442,7 +286,7 @@
 .calmPanel {
   position: relative;
   background: var(--plum);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
   padding: 30px 28px;
   text-align: center;
 }
@@ -480,43 +324,11 @@
   color: rgba(var(--cream-rgb), 0.78);
 }
 
-/* Communities grid — empty state (no community founded yet; no CTA by design) */
-.emptyPanel {
-  position: relative;
-  background: var(--plum);
-  border-radius: var(--radius-card, 22px);
-  padding: 30px 28px;
-  text-align: center;
-}
-.emptyTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-24);
-  font-weight: 400;
-  color: rgba(var(--cream-rgb), 1);
-  line-height: 1.15;
-}
-.emptyTitle em {
-  color: var(--accent);
-  font-style: italic;
-}
-.emptyText {
-  margin: 12px auto 0;
-  max-width: 440px;
-  font-size: var(--text-14-5);
-  line-height: 1.6;
-  color: rgba(var(--cream-rgb), 0.78);
-}
-
-/* Member set-row */
-.memberRow {
-  display: flex;
-  align-items: center;
+/* A row inside a flush AdminPanel: adminTableClasses.row brings the height,
+   hairline and hover; this adds the inset. */
+.panelRow {
   gap: 14px;
-  padding: 14px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-row-pad);
 }
 .memberMeta {
   flex: 1;
@@ -559,21 +371,22 @@
   }
 }
 
-/* Space row: a <button> variant of .memberRow. The whole row opens that
-   space's (or the parent's) admin detail, so it needs the button resets
-   .memberRow itself doesn't carry. */
+/* Space row: a <button> row inside the spaces panel. The whole row opens that
+   space's admin detail, so it resets the button box; adminTableClasses.row
+   keeps its bottom hairline and hover tint. */
 .spaceRowBtn {
   width: 100%;
   text-align: left;
   font: inherit;
   color: inherit;
+  background: none;
+  border-top: 0;
+  border-inline: 0;
   cursor: pointer;
-  transition: border-color 0.16s var(--ease);
 }
-@media (hover: hover) {
-  .spaceRowBtn:hover {
-    border-color: rgba(var(--line-rgb), 0.2);
-  }
+.spaceRowBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
 }
 .spaceRowChevron {
   flex: none;
@@ -581,14 +394,15 @@
 }
 
 /* Settings set-row */
+/* The settings tab: one panel, its rows split by hairlines. */
+.settingsRows > * + * {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
 .setRow {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-panel-pad);
 }
 .setTop {
   display: flex;
@@ -608,13 +422,7 @@
   line-height: 1.55;
   color: var(--ink-60);
 }
-.setChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* Admin overrides (freeze/unfreeze, archive, reassign owner) — the button
+/* Admin overrides (freeze/unfreeze, archive, reassign owner): the button
    row under .setRow's label + .setDetail sub copy. */
 .overrideActions {
   display: flex;
@@ -623,7 +431,7 @@
   margin-top: 4px;
 }
 
-/* Reassign-owner picker — a radiogroup of roster members inside a
+/* Reassign-owner picker: a radiogroup of roster members inside a
    ConfirmDialog, mirroring ModPanel.module.css's .modRow/.modMain/.modName/
    .modMeta (the member-facing TransferOwnershipModal). */
 .ownerPickList {
@@ -665,7 +473,7 @@
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px dashed rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
 }
 
 /* Removable moderator chips */
@@ -728,7 +536,7 @@
   }
 }
 
-/* Add-moderator picker (live mode) — a full-width list of promotable members
+/* Add-moderator picker (live mode): a full-width list of promotable members
    that drops below the moderator chips. */
 .modPicker {
   flex-basis: 100%;
@@ -738,7 +546,7 @@
   gap: 8px;
   margin-top: 4px;
   padding: 12px;
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px dashed rgba(var(--line-rgb), 0.16);
 }
@@ -785,10 +593,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-panel-pad);
 }
 .toggleText {
   min-width: 0;

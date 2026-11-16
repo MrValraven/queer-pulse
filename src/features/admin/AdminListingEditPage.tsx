@@ -123,7 +123,7 @@ export function AdminListingEditPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:listingEdit.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={t("admin:listingEdit.title")}
           // The sub says what a save will do; once it has, the success panel
           // says what it did. `sub` renders as a paragraph, which cannot hold

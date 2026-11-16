@@ -7,7 +7,16 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader, AdminChip } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminPanel,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import {
   useAdminGroupJoinRequests,
   useTriageGroupJoinRequest,
@@ -31,10 +40,10 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * to the pending ones here, which meant a group carrying 200 decided requests
  * newer than one pending request showed an empty queue while somebody waited.
  * The count line quotes the server's `total`, so the number on screen is how
- * many people are actually waiting rather than how many rows happened to arrive.
+ * many people are actually waiting.
  *
- * The co-op relocation queue this comment used to defer has been REMOVED, not
- * deferred: `coop_relocation_requests` never had a submission affordance, so no
+ * The co-op relocation queue this comment used to defer has been REMOVED for
+ * good: `coop_relocation_requests` never had a submission affordance, so no
  * member could ever file one and the table was always empty. Building a console
  * for it would have been a second triage pipeline alongside the live one in
  * `src/intakes/`. If the need becomes real, it belongs there as an intake kind.
@@ -99,7 +108,7 @@ export function AdminHousingGroupsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:housingGroups.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.communities")}
           title={
             <Translation
               i18nKey="admin:housingGroups.title"
@@ -110,103 +119,125 @@ export function AdminHousingGroupsPage() {
         />
       </FadeIn>
 
-      <div className={styles.joinRequests}>
-        <h2 className={styles.sectionTitle}>
-          {t("admin:housingGroups.requests.title")}
-        </h2>
-        {!isLoading && !isError && total > 0 && (
-          <p className={styles.queueCount} role="status">
-            {t("admin:housingGroups.requests.pendingCount", { count: total })}
-          </p>
-        )}
-        {isLoading ? (
-          <div className={styles.rows}>
-            {[0, 1, 2].map((skeletonIndex) => (
-              <SkeletonLine
-                key={skeletonIndex}
-                height={64}
-                style={{ borderRadius: 14 }}
-              />
-            ))}
-          </div>
-        ) : isError ? (
-          <div className={styles.notice}>
-            <p className={styles.noticeText}>
-              {forbidden
-                ? t("admin:common.panelForbidden")
-                : t("admin:housingGroups.requests.loadError")}
-            </p>
-          </div>
-        ) : requests.length === 0 ? (
-          <p className={styles.emptyText}>
-            {t("admin:housingGroups.requests.empty")}
-          </p>
-        ) : (
-          <>
-            <div className={styles.rows}>
-              {requests.map((request, index) => (
-                <FadeIn key={request.id} delay={Math.min(index, 8) * 50}>
-                  <div className={styles.row}>
-                    <div className={styles.rowMain}>
-                      <div className={styles.rowTop}>
-                        <span className={styles.rowName}>{request.name}</span>
-                        <AdminChip tone="plum" dot>
-                          {request.group?.name ??
-                            t("admin:housingGroups.requests.unknownGroup")}
-                        </AdminChip>
-                        {request.mutualConnections != null &&
-                          request.mutualConnections > 0 && (
-                            <AdminChip tone="jade">
-                              {t("admin:housingGroups.requests.mutuals", {
-                                count: request.mutualConnections,
-                              })}
-                            </AdminChip>
-                          )}
-                      </div>
-                      <div className={styles.rowMeta}>
-                        {request.relationship}
-                        {request.note ? ` · "${request.note}"` : ""}
-                      </div>
-                    </div>
-                    <div className={styles.rowActions}>
-                      <Button
-                        variant="ghost"
-                        size="md"
-                        onClick={() => decide(request, "declined")}
-                      >
-                        {t("admin:housingGroups.requests.declineCta")}
-                      </Button>
-                      <Button
-                        variant="jade"
-                        size="md"
-                        onClick={() => decide(request, "approved")}
-                      >
-                        {t("admin:housingGroups.requests.approveCta")}
-                      </Button>
-                    </div>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
-            {hasNextPage && (
-              <div className={styles.loadMore}>
-                <Button
-                  variant="ghost"
-                  size="md"
-                  disabled={isFetchingNextPage}
-                  onClick={() => void fetchNextPage()}
-                >
-                  {isFetchingNextPage
-                    ? t("admin:housingGroups.requests.loadingMore")
-                    : t("admin:housingGroups.requests.loadMore")}
-                </Button>
+      <div className={styles.sections}>
+        <div className={styles.section}>
+          <AdminPanel
+            title={t("admin:housingGroups.requests.title")}
+            description={
+              !isLoading &&
+              !isError &&
+              total > 0 && (
+                <span role="status">
+                  {t("admin:housingGroups.requests.pendingCount", {
+                    count: total,
+                  })}
+                </span>
+              )
+            }
+            padding="flush"
+          >
+            {isLoading ? (
+              <div className={`${styles.panelInset} ${styles.skeletons}`}>
+                {[0, 1, 2].map((skeletonIndex) => (
+                  <SkeletonLine key={skeletonIndex} height={52} />
+                ))}
               </div>
+            ) : isError ? (
+              <div className={styles.panelInset}>
+                <AdminNotice tone="error">
+                  {forbidden
+                    ? t("admin:common.panelForbidden")
+                    : t("admin:housingGroups.requests.loadError")}
+                </AdminNotice>
+              </div>
+            ) : requests.length === 0 ? (
+              <div className={styles.panelInset}>
+                <AdminEmptyState
+                  size="inline"
+                  title={t("admin:housingGroups.requests.empty")}
+                />
+              </div>
+            ) : (
+              requests.map((request, index) => (
+                <GroupJoinRequestRow
+                  key={request.id}
+                  request={request}
+                  delay={Math.min(index, 8) * 50}
+                  onDecide={(action) => decide(request, action)}
+                />
+              ))
             )}
-          </>
-        )}
-      </div>
+          </AdminPanel>
+          {!isLoading && !isError && requests.length > 0 && hasNextPage && (
+            <div className={styles.loadMore}>
+              <Button
+                variant="ghost"
+                size="md"
+                disabled={isFetchingNextPage}
+                onClick={() => void fetchNextPage()}
+              >
+                {isFetchingNextPage
+                  ? t("admin:housingGroups.requests.loadingMore")
+                  : t("admin:housingGroups.requests.loadMore")}
+              </Button>
+            </div>
+          )}
+        </div>
 
-      {!forbidden && <AdminGroupListingsSection />}
+        {!forbidden && <AdminGroupListingsSection />}
+      </div>
     </AdminShell>
+  );
+}
+
+/** One pending join request: who is asking, for which group, any mutual
+ *  connections as a trust signal, and the two decisions. */
+function GroupJoinRequestRow({
+  request,
+  delay,
+  onDecide,
+}: {
+  request: AdminGroupJoinRequestDTO;
+  delay: number;
+  onDecide: (action: GroupTriageAction) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <FadeIn delay={delay} className={`${adminTableClasses.row} ${styles.row}`}>
+      <div className={styles.rowMain}>
+        <div className={styles.rowTop}>
+          <span className={styles.rowName}>{request.name}</span>
+          <AdminChip tone="plum" dot>
+            {request.group?.name ??
+              t("admin:housingGroups.requests.unknownGroup")}
+          </AdminChip>
+          {request.mutualConnections != null &&
+            request.mutualConnections > 0 && (
+              <AdminChip tone="jade">
+                {t("admin:housingGroups.requests.mutuals", {
+                  count: request.mutualConnections,
+                })}
+              </AdminChip>
+            )}
+        </div>
+        <div className={styles.rowMeta}>
+          {request.relationship}
+          {request.note ? ` · "${request.note}"` : ""}
+        </div>
+      </div>
+      <AdminRowActions className={styles.rowActions}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={adminRowActionClasses.danger}
+          onClick={() => onDecide("declined")}
+        >
+          {t("admin:housingGroups.requests.declineCta")}
+        </Button>
+        <Button variant="jade" size="sm" onClick={() => onDecide("approved")}>
+          {t("admin:housingGroups.requests.approveCta")}
+        </Button>
+      </AdminRowActions>
+    </FadeIn>
   );
 }

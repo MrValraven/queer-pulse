@@ -1,9 +1,17 @@
+import { FiStar } from "react-icons/fi";
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
-import { AdminToggle } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminNotice,
+  AdminPanel,
+  AdminToggle,
+  adminTableClasses,
+} from "./ui";
 import { ApiError } from "../../shared/api/client";
 import { useAdminPartners } from "./api/useAdminPartners";
 import { useUpdatePartnerAdmin } from "./api/useUpdatePartnerAdmin";
@@ -50,44 +58,46 @@ export function AdminApprovedPartners() {
 
   return (
     <div className={styles.featuredSection}>
-      <h2 className={styles.sectionTitle}>
-        {t("admin:approvedPartners.title")}
-      </h2>
-
-      {isLoading ? (
-        <div className={styles.rows}>
-          {[0, 1].map((skeletonIndex) => (
-            <SkeletonLine
-              key={skeletonIndex}
-              height={64}
-              style={{ borderRadius: 14 }}
-            />
-          ))}
-        </div>
-      ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
+      <AdminPanel
+        title={t("admin:approvedPartners.title")}
+        padding={partners.length > 0 ? "flush" : "default"}
+      >
+        {isLoading ? (
+          <div className={styles.skeletons}>
+            {[0, 1].map((skeletonIndex) => (
+              <SkeletonLine
+                key={skeletonIndex}
+                height={64}
+                style={{ borderRadius: 14 }}
+              />
+            ))}
+          </div>
+        ) : isError ? (
+          <AdminNotice tone="error">
             {t("admin:approvedPartners.loadError")}
-          </p>
-        </div>
-      ) : partners.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>
-            {t("admin:approvedPartners.empty")}
-          </p>
-        </div>
-      ) : (
-        <div className={styles.rows}>
-          {partners.map((partner, i) => (
-            <FadeIn key={partner.id} delay={Math.min(i, 8) * 50}>
-              <div className={styles.row}>
+          </AdminNotice>
+        ) : partners.length === 0 ? (
+          <AdminEmptyState
+            size="inline"
+            icon={FiStar}
+            title={t("admin:approvedPartners.empty")}
+          />
+        ) : (
+          <ul className={styles.rows}>
+            {partners.map((partner, i) => (
+              <FadeIn
+                key={partner.id}
+                as="li"
+                delay={Math.min(i, 8) * 50}
+                className={`${adminTableClasses.row} ${styles.row}`}
+              >
                 <div className={styles.rowMain}>
                   <div className={styles.rowTop}>
                     <span className={styles.rowName}>{partner.name}</span>
                     {partner.featured && (
-                      <span className={styles.featuredTag}>
+                      <AdminChip tone="coral">
                         {t("admin:common.featured")}
-                      </span>
+                      </AdminChip>
                     )}
                   </div>
                   <div className={styles.rowMeta}>
@@ -115,11 +125,11 @@ export function AdminApprovedPartners() {
                     {t("admin:approvedPartners.editCta")}
                   </Button>
                 </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      )}
+              </FadeIn>
+            ))}
+          </ul>
+        )}
+      </AdminPanel>
 
       {editingPartner && (
         <AdminPartnerTestimonialModal

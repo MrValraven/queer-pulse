@@ -1,0 +1,73 @@
+/* The wrapper owns the card (same look as the shared EmptyState), so the
+   action sits inside it. The inner EmptyState is stripped to its content. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--accent-rgb), 0.05),
+    rgba(var(--plum-rgb), 0.02)
+  );
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-card);
+}
+.panel .panelBare {
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+/* A calmer serif title than the shared 22px, so an admin empty panel reads as
+   a quiet note inside the console. (0,2,1) over the shared `.title`. */
+.panel .panelBare :is(h2, h3) {
+  font-size: var(--text-18);
+  line-height: 1.35;
+}
+/* With an action, the action row closes the card and sets the bottom space. */
+.hasAction {
+  padding-bottom: 24px;
+}
+.hasAction .panelBare {
+  padding-bottom: 0;
+}
+.panelAction {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding-inline: 24px;
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 16px 0;
+  color: var(--ink-60);
+}
+.inlineIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+}
+.inlineText {
+  flex: 1 1 200px;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+}
+/* The inline line is one quiet sentence: the title keeps the regular weight
+   and the muted ink of the text around it. */
+.inlineTitle {
+  font-weight: 400;
+  color: var(--ink-60);
+}
+.inlineBody {
+  color: var(--ink-60);
+}
+.inlineAction {
+  flex: none;
+}

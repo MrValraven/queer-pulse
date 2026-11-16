@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import {
   Avatar,
   SearchInput,
@@ -24,6 +25,7 @@ import type {
   AdminEligibleEntityDTO,
   LandingSection,
 } from "./api/landingFeatures.api";
+import { AdminEmptyState, AdminPanel } from "./ui";
 import styles from "./AdminLandingPage.module.css";
 
 /** Members, communities and changemakers are searched by name. Gatherings and
@@ -105,7 +107,7 @@ export function AdminLandingEligiblePicker({
   }
 
   return (
-    <div className={styles.picker}>
+    <AdminPanel as="div" bodyClassName={styles.picker}>
       <SearchInput
         value={searchInput}
         onChange={setSearchInput}
@@ -122,11 +124,15 @@ export function AdminLandingEligiblePicker({
           <SkeletonLine height={40} style={{ borderRadius: 12 }} />
         </div>
       ) : options.length === 0 ? (
-        <p className={styles.pickerEmpty}>
-          {debouncedSearch
-            ? t("admin:landing.picker.noResults", { search: debouncedSearch })
-            : t(`admin:landing.picker.empty.${section}`)}
-        </p>
+        <AdminEmptyState
+          size="inline"
+          icon={FiSearch}
+          title={
+            debouncedSearch
+              ? t("admin:landing.picker.noResults", { search: debouncedSearch })
+              : t(`admin:landing.picker.empty.${section}`)
+          }
+        />
       ) : (
         <ul className={styles.pickerList}>
           {options.map((option) => (
@@ -147,7 +153,7 @@ export function AdminLandingEligiblePicker({
           ))}
         </ul>
       )}
-    </div>
+    </AdminPanel>
   );
 }
 

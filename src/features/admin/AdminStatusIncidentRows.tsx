@@ -8,13 +8,20 @@ import {
 } from "../system/statusLive.data";
 import type { PlatformIncidentState } from "../system/api/platformStatus.api";
 import type { AdminStatusIncidentDTO } from "./api/adminStatusIncidents.api";
+import {
+  AdminChip,
+  AdminPanel,
+  AdminRowActions,
+  adminTableClasses,
+  type AdminTone,
+} from "./ui";
 import styles from "./AdminStatusIncidentsPage.module.css";
 
-/** Class map keyed by incident state — depends on the CSS module import. */
-const STATE_CLASS: Record<PlatformIncidentState, string | undefined> = {
-  open: styles.stateOpen,
-  monitoring: styles.stateMonitoring,
-  resolved: styles.stateResolved,
+/** The chip tone for each incident state. */
+const STATE_TONE: Record<PlatformIncidentState, AdminTone> = {
+  open: "coral",
+  monitoring: "amber",
+  resolved: "jade",
 };
 
 /**
@@ -37,68 +44,69 @@ export function AdminStatusIncidentRows({
   const format = useFormat();
 
   return (
-    <ul className={styles.rows}>
-      {incidents.map((incident) => {
-        const StateIcon = INCIDENT_STATE_ICON[incident.status];
-        return (
-          <li className={styles.row} key={incident.id}>
-            <div className={styles.rowMain}>
-              <div className={styles.rowTop}>
-                <span
-                  className={[styles.statePill, STATE_CLASS[incident.status]]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  <StateIcon aria-hidden />
-                  {t(INCIDENT_STATE_LABEL_KEY[incident.status])}
-                </span>
-                <span className={styles.rowName}>{incident.title}</span>
+    <AdminPanel padding="flush">
+      <ul className={styles.rows}>
+        {incidents.map((incident) => {
+          const StateIcon = INCIDENT_STATE_ICON[incident.status];
+          return (
+            <li
+              className={[adminTableClasses.row, styles.row].join(" ")}
+              key={incident.id}
+            >
+              <div className={styles.rowMain}>
+                <div className={styles.rowTop}>
+                  <AdminChip tone={STATE_TONE[incident.status]}>
+                    <StateIcon aria-hidden />
+                    {t(INCIDENT_STATE_LABEL_KEY[incident.status])}
+                  </AdminChip>
+                  <span className={styles.rowName}>{incident.title}</span>
+                </div>
+                <p className={styles.rowMeta}>
+                  {t("system:statusAdmin.row.started", {
+                    date: format.date(new Date(incident.startedAt)),
+                  })}
+                  {incident.resolvedAt
+                    ? ` · ${t("system:statusAdmin.row.resolved", {
+                        date: format.date(new Date(incident.resolvedAt)),
+                      })}`
+                    : ""}
+                  {` · ${t("system:statusAdmin.row.author", {
+                    name: incident.authoredByLabel,
+                  })}`}
+                </p>
+                <p className={styles.rowMeta}>
+                  {incident.affectedComponents.length > 0
+                    ? t("system:statusAdmin.row.affects", {
+                        components: incident.affectedComponents
+                          .map((id) => t(STATUS_COMPONENT_NAME_KEY[id]))
+                          .join(", "),
+                      })
+                    : t("system:statusAdmin.row.affectsNone")}
+                </p>
               </div>
-              <p className={styles.rowMeta}>
-                {t("system:statusAdmin.row.started", {
-                  date: format.date(new Date(incident.startedAt)),
-                })}
-                {incident.resolvedAt
-                  ? ` · ${t("system:statusAdmin.row.resolved", {
-                      date: format.date(new Date(incident.resolvedAt)),
-                    })}`
-                  : ""}
-                {` · ${t("system:statusAdmin.row.author", {
-                  name: incident.authoredByLabel,
-                })}`}
-              </p>
-              <p className={styles.rowMeta}>
-                {incident.affectedComponents.length > 0
-                  ? t("system:statusAdmin.row.affects", {
-                      components: incident.affectedComponents
-                        .map((id) => t(STATUS_COMPONENT_NAME_KEY[id]))
-                        .join(", "),
-                    })
-                  : t("system:statusAdmin.row.affectsNone")}
-              </p>
-            </div>
-            <div className={styles.rowActions}>
-              <Button
-                variant="ghost"
-                size="md"
-                onClick={() => onEdit(incident)}
-              >
-                {t("system:statusAdmin.action.edit")}
-              </Button>
-              {incident.status !== "resolved" && (
+              <AdminRowActions className={styles.rowActions}>
                 <Button
                   variant="ghost"
-                  size="md"
-                  disabled={isResolving}
-                  onClick={() => onResolve(incident)}
+                  size="sm"
+                  onClick={() => onEdit(incident)}
                 >
-                  {t("system:statusAdmin.action.resolve")}
+                  {t("system:statusAdmin.action.edit")}
                 </Button>
-              )}
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+                {incident.status !== "resolved" && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={isResolving}
+                    onClick={() => onResolve(incident)}
+                  >
+                    {t("system:statusAdmin.action.resolve")}
+                  </Button>
+                )}
+              </AdminRowActions>
+            </li>
+          );
+        })}
+      </ul>
+    </AdminPanel>
   );
 }

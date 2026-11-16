@@ -1,0 +1,51 @@
+/* The animated slot around each optional control. */
+.slot {
+  display: inline-flex;
+}
+
+/* The grant filter, shown as a removable chip beside the tier chips. */
+.grantChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--admin-control-h);
+  padding: 0 var(--gap-xs) 0 var(--gap-sm);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-text);
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .grantChip:hover {
+    background: rgba(var(--accent-rgb), 0.18);
+  }
+}
+
+.grantChipIcon {
+  flex: none;
+  font-size: var(--text-13);
+}
+
+.grantChip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (pointer: coarse) {
+  .grantChip {
+    min-height: var(--tap-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grantChip {
+    transition: none;
+  }
+}

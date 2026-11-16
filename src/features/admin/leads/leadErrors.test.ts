@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import {
+  LEAD_ASSIGNEE_REFUSAL_REASONS,
   LEAD_REASON_CODES,
   LEAD_REVERT_REFUSAL_REASONS,
 } from "./api/leads.types";
@@ -19,6 +20,18 @@ function refusalWith(status: number, body: Record<string, unknown>): ApiError {
   });
 }
 
+const refusalOf = (
+  status: number,
+  code: string,
+  extra: Record<string, unknown> = {},
+) =>
+  new ApiError(status, "Refused", {
+    statusCode: status,
+    message: "Refused",
+    code,
+    ...extra,
+  });
+
 describe("leadErrors", () => {
   it.each(LEAD_REASON_CODES)("names the cause for %s", (code) => {
     expect(
@@ -33,7 +46,7 @@ describe("leadErrors", () => {
   });
 
   it("gives each code its own line", () => {
-    expect(new Set(Object.values(LEAD_REASON_KEY)).size).toBe(25);
+    expect(new Set(Object.values(LEAD_REASON_KEY)).size).toBe(29);
   });
 
   it.each(["draft", "not_open", "removed", "taken_down"] as const)(
@@ -121,6 +134,49 @@ describe("leadErrors", () => {
     expect(
       leadErrorValuesOf(refusalWith(400, { code: "LEAD_TOO_MANY_LINKS" })),
     ).toEqual({ max: 12 });
+  });
+
+  it.each(LEAD_ASSIGNEE_REFUSAL_REASONS)(
+    "names the %s cause on a not-staff refusal",
+    (reason) => {
+      expect(
+        leadErrorKeyOf(refusalOf(400, "LEAD_ASSIGNEE_NOT_STAFF", { reason })),
+      ).toBe(`admin:leads.error.assigneeNotStaff.${reason}`);
+    },
+  );
+
+  it("names a changed account when a not-staff body carries no reason", () => {
+    expect(leadErrorKeyOf(refusalOf(400, "LEAD_ASSIGNEE_NOT_STAFF"))).toBe(
+      "admin:leads.error.assigneeNotStaff.unknownReason",
+    );
+  });
+
+  it("reads each reason list only for its own code", () => {
+    expect(
+      leadErrorKeyOf(
+        refusalOf(409, "LEAD_ENTRY_NOT_REVERTIBLE", { reason: "suspended" }),
+      ),
+    ).toBe("admin:leads.error.entryNotRevertible.unknownReason");
+    expect(
+      leadErrorKeyOf(
+        refusalOf(400, "LEAD_ASSIGNEE_NOT_STAFF", { reason: "too_old" }),
+      ),
+    ).toBe("admin:leads.error.assigneeNotStaff.unknownReason");
+  });
+
+  it("quotes the assignee limit", () => {
+    expect(
+      leadErrorValuesOf(refusalOf(409, "LEAD_TOO_MANY_ASSIGNEES")),
+    ).toEqual({ max: 10 });
+  });
+
+  it("names the bad In charge view and the missing account", () => {
+    expect(leadErrorKeyOf(refusalOf(400, "LEAD_ASSIGNED_TO_INVALID"))).toBe(
+      "admin:leads.error.assignedToInvalid",
+    );
+    expect(leadErrorKeyOf(refusalOf(404, "LEAD_ASSIGNEE_NOT_FOUND"))).toBe(
+      "admin:leads.error.assigneeNotFound",
+    );
   });
 
   it("quotes nothing for a failure with no body", () => {

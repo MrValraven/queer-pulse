@@ -6,6 +6,7 @@ import {
 } from "../shared/components/layout/adminNav.data";
 import type { StaffRoleId } from "../features/admin/staffRoles.registry";
 import { adminLeadPath } from "../features/admin/leads/leadPaths";
+import { LEAD_LIST_PARAM } from "../features/admin/leads/leadsList.data";
 import { elevatingCapabilities, requiredRole } from "./authGate";
 import { routes } from "./routeMap";
 
@@ -16,6 +17,21 @@ function navDestinations(options: {
 }): string[] {
   return visibleAdminNavSections(options).flatMap((section) =>
     section.items.map((item) => item.to),
+  );
+}
+
+/** The Leads item's destination: the list opened on the viewer's and nobody's leads. */
+const LEADS_NAV_TO = `${routes.adminLeads}?assignedTo=me_or_unassigned`;
+
+function leadsItem() {
+  return ADMIN_NAV_SECTIONS.flatMap((section) => section.items).find(
+    (candidate) => candidate.to.startsWith(routes.adminLeads),
+  );
+}
+
+function reachesLeads(options: Parameters<typeof navDestinations>[0]): boolean {
+  return navDestinations(options).some((to) =>
+    to.startsWith(routes.adminLeads),
   );
 }
 
@@ -43,34 +59,39 @@ describe("Leads directory gate", () => {
 
   it("puts Leads on a grant holder's rail with the badge", () => {
     expect(
-      navDestinations({
+      reachesLeads({
         isFullConsole: false,
         isAdmin: false,
         staffRoles: ["music_manager_producer"],
       }),
-    ).toContain(routes.adminLeads);
-    const item = ADMIN_NAV_SECTIONS.flatMap((section) => section.items).find(
-      (candidate) => candidate.to === routes.adminLeads,
-    );
-    expect(item?.labelKey).toBe("shared:adminNav.items.leads");
-    expect(item?.badge).toBe("leads");
-    expect(item?.icon).toBe(FiUsers);
-    expect(item?.capabilities).toEqual(["music_manager_producer"]);
+    ).toBe(true);
+    expect(leadsItem()).toMatchObject({
+      labelKey: "shared:adminNav.items.leads",
+      badge: "leads",
+      icon: FiUsers,
+      capabilities: ["music_manager_producer"],
+    });
   });
 
-  it("leaves it off a moderator's rail", () => {
+  it("opens Leads on the mine and unassigned view", () => {
+    expect(leadsItem()?.to).toBe(LEADS_NAV_TO);
     expect(
-      navDestinations({ isFullConsole: true, isAdmin: false, staffRoles: [] }),
-    ).not.toContain(routes.adminLeads);
+      new URLSearchParams(LEADS_NAV_TO.split("?")[1]).get(
+        LEAD_LIST_PARAM.assignedTo,
+      ),
+    ).toBe("me_or_unassigned");
   });
 
-  it("leaves it off a partnerships grant holder's rail", () => {
+  it("leaves it off a moderator's and a partnerships holder's rail", () => {
     expect(
-      navDestinations({
+      reachesLeads({ isFullConsole: true, isAdmin: false, staffRoles: [] }),
+    ).toBe(false);
+    expect(
+      reachesLeads({
         isFullConsole: false,
         isAdmin: false,
         staffRoles: ["partnerships"],
       }),
-    ).not.toContain(routes.adminLeads);
+    ).toBe(false);
   });
 });

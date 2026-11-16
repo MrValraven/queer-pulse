@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { FiInbox, FiSearch } from "react-icons/fi";
 import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { adminTableClasses } from "./ui";
 import { AdminListingRow } from "./AdminListingRow";
 import { EmptyQueueState } from "./EmptyQueueState";
 import type {
@@ -9,6 +10,9 @@ import type {
   ListingQueueRow,
 } from "./api/adminListings.api";
 import styles from "./AdminListingRows.module.css";
+
+/** The column header row: the kit's table header look plus the queue's grid. */
+const HEAD_ROW_CLASS = `${adminTableClasses.headRow} ${styles.columnHeader}`;
 
 /** Words the empty body by its cause: a search that matched nothing, an empty
  *  status tab, or a truly clear queue (the only one that earns a celebration). */
@@ -94,7 +98,7 @@ export function AdminListingRows({
   }
   return (
     <div className={styles.rows}>
-      <div className={styles.columnHeader}>
+      <div className={HEAD_ROW_CLASS}>
         <label
           className={`${styles.cellCheck} ${styles.checkHit} ${styles.selectAll}`}
         >
@@ -158,7 +162,7 @@ const SKELETON_ROW_KEYS = [0, 1, 2, 3];
 export function ListingRowsSkeleton() {
   return (
     <div className={styles.rows} aria-hidden="true">
-      <div className={styles.columnHeader} />
+      <div className={HEAD_ROW_CLASS} />
       {SKELETON_ROW_KEYS.map((skeletonKey) => (
         <div
           key={skeletonKey}

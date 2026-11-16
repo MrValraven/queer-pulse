@@ -1,6 +1,12 @@
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+  type AdminTone,
+} from "./ui";
 import type { AdminResourceListingDTO } from "./api/adminResourceListings.api";
 import styles from "./AdminResourceListingsPage.module.css";
 
@@ -22,9 +28,12 @@ export function AdminResourceListingRows({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.rows}>
+    <div>
       {listings.map((listing) => (
-        <div className={styles.row} key={listing.id}>
+        <div
+          className={`${adminTableClasses.row} ${styles.row}`}
+          key={listing.id}
+        >
           <div className={styles.rowMain}>
             <div className={styles.rowTop}>
               <span className={styles.rowName}>{listing.title}</span>
@@ -42,14 +51,19 @@ export function AdminResourceListingRows({
               {listing.region ?? t("admin:adminResourceListings.row.noRegion")}
             </div>
           </div>
-          <div className={styles.rowActions}>
-            <Button variant="ghost" size="md" onClick={() => onEdit(listing)}>
+          <AdminRowActions className={styles.rowActions}>
+            <Button variant="ghost" size="sm" onClick={() => onEdit(listing)}>
               {t("admin:common.edit")}
             </Button>
-            <Button variant="ghost" size="md" onClick={() => onDelete(listing)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={adminRowActionClasses.danger}
+              onClick={() => onDelete(listing)}
+            >
               {t("admin:common.delete")}
             </Button>
-          </div>
+          </AdminRowActions>
         </div>
       ))}
     </div>

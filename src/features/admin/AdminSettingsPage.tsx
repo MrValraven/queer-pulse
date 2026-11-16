@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminPageHeader, AdminTabs } from "./ui";
@@ -30,8 +31,13 @@ export function AdminSettingsPage() {
       ]}
     >
       <AdminPageHeader
-        eyebrow={t("admin:settings.eyebrow")}
-        title={t("admin:settings.title")}
+        eyebrow={t("shared:adminNav.sections.platform")}
+        title={
+          <Translation
+            i18nKey="admin:settings.header.title"
+            components={{ em: <em /> }}
+          />
+        }
         sub={t("admin:settings.sub")}
       />
       {data?.lockdownEnabled && <LockdownBanner />}

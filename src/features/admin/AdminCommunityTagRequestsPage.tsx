@@ -1,7 +1,15 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminTabs,
+  AdminChip,
+  AdminRowActions,
+  type AdminTone,
+} from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -79,7 +87,7 @@ function TagRequestRow({
           {t(`admin:adminCommunityTagRequests.status.${request.status}`)}
         </AdminChip>
         {request.status === "pending" && (
-          <div className={styles.rowActionButtons}>
+          <AdminRowActions className={styles.rowActionButtons}>
             <Button
               variant="jade"
               size="sm"
@@ -88,7 +96,7 @@ function TagRequestRow({
             >
               {t("admin:adminCommunityTagRequests.action.resolve")}
             </Button>
-          </div>
+          </AdminRowActions>
         )}
       </div>
     </div>
@@ -162,7 +170,7 @@ export function AdminCommunityTagRequestsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminCommunityTagRequests.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.communities")}
           title={
             <Translation
               i18nKey="admin:adminCommunityTagRequests.header.title"
@@ -190,13 +198,18 @@ export function AdminCommunityTagRequestsPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminCommunityTagRequests.error")}
-          </p>
+          <div className={styles.rows}>
+            <AdminNotice tone="error">
+              {t("admin:adminCommunityTagRequests.error")}
+            </AdminNotice>
+          </div>
         ) : requests.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminCommunityTagRequests.empty")}
-          </p>
+          <div className={styles.rows}>
+            <AdminEmptyState
+              size="inline"
+              title={t("admin:adminCommunityTagRequests.empty")}
+            />
+          </div>
         ) : (
           <>
             <div className={styles.rows}>

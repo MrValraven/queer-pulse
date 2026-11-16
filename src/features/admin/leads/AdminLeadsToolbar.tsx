@@ -2,12 +2,14 @@ import { useId, type RefObject } from "react";
 import { FiX } from "react-icons/fi";
 import { Button, SearchInput, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AdminToolbar, adminToolbarClasses } from "../ui";
 import {
   LEAD_SEARCH_QUERY_MAX,
   LEAD_TYPES,
   isLeadType,
 } from "./api/leads.types";
 import { LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
+import { LeadAssigneeFilter } from "./LeadAssigneeFilter";
 import { LEAD_LIST_SHORTCUT } from "./leadsList.data";
 import type { LeadListControls } from "./useLeadListFilters";
 import styles from "./AdminLeads.module.css";
@@ -22,35 +24,25 @@ function cutToSearchMax(text: string): string {
 }
 
 /** "12 leads", or "Showing 50 of 64" while more pages wait. */
-function ResultSummary({
-  shownCount,
-  matchCount,
-}: {
-  shownCount: number;
-  matchCount: number | null;
-}) {
+function useResultSummary(shownCount: number, matchCount: number | null) {
   const { t } = useTranslation();
-  const text =
-    matchCount === null
-      ? t("admin:leads.toolbar.shown", { count: shownCount })
-      : matchCount > shownCount
-        ? t("admin:leads.toolbar.showingOf", {
-            shown: shownCount,
-            count: matchCount,
-          })
-        : t("admin:leads.toolbar.count", { count: matchCount });
-  return (
-    <p className={styles.summary} role="status">
-      {text}
-    </p>
-  );
+  if (matchCount === null) {
+    return t("admin:leads.toolbar.shown", { count: shownCount });
+  }
+  return matchCount > shownCount
+    ? t("admin:leads.toolbar.showingOf", {
+        shown: shownCount,
+        count: matchCount,
+      })
+    : t("admin:leads.toolbar.count", { count: matchCount });
 }
 
 /**
  * The search over name, email and links (with its `/` key shown on a
- * keyboard device), the type select in the same height and pill shape, and
- * a line that counts the leads in view, with Clear filters beside it while
- * any filter is on and rows show.
+ * keyboard device), the type select and the In charge view, laid out by the
+ * shared admin toolbar at one control height. The count of leads in view
+ * follows them, with Clear filters at the end while any filter is on and rows
+ * show.
  * The stage and due filters live in the pipeline strip above.
  */
 export function AdminLeadsToolbar({
@@ -69,12 +61,24 @@ export function AdminLeadsToolbar({
   const { t } = useTranslation();
   const typeSelectId = useId();
   const { filters } = controls;
+  const summary = useResultSummary(shownCount, matchCount);
 
   return (
-    <div className={styles.toolbar}>
+    <AdminToolbar
+      label={t("admin:leads.title")}
+      count={hasRows ? summary : undefined}
+      end={
+        hasRows && controls.hasFilters ? (
+          <Button variant="ghost" size="sm" onClick={controls.clearFilters}>
+            <FiX aria-hidden />
+            {t("admin:leads.empty.clearFilters")}
+          </Button>
+        ) : undefined
+      }
+    >
       <div className={styles.searchWrap}>
         <SearchInput
-          className={styles.search}
+          className={adminToolbarClasses.search}
           inputRef={searchRef}
           value={controls.searchText}
           onChange={(text) => controls.setSearchText(cutToSearchMax(text))}
@@ -94,33 +98,21 @@ export function AdminLeadsToolbar({
           </kbd>
         ) : null}
       </div>
-      <div className={styles.typeFilter}>
-        <Select
-          id={typeSelectId}
-          size="sm"
-          className={styles.typeSelect}
-          clearable
-          label={t("admin:leads.list.typeFilterLabel")}
-          placeholder={t("admin:leads.list.typeAll")}
-          options={LEAD_TYPES.map((type) => ({
-            value: type,
-            label: t(LEAD_TYPE_LABEL_KEY[type]),
-          }))}
-          value={filters.type}
-          onChange={(type) => controls.setType(isLeadType(type) ? type : null)}
-        />
-      </div>
-      <div className={styles.toolbarEnd}>
-        {hasRows ? (
-          <ResultSummary shownCount={shownCount} matchCount={matchCount} />
-        ) : null}
-        {hasRows && controls.hasFilters ? (
-          <Button variant="ghost" size="sm" onClick={controls.clearFilters}>
-            <FiX aria-hidden />
-            {t("admin:leads.empty.clearFilters")}
-          </Button>
-        ) : null}
-      </div>
-    </div>
+      <Select
+        id={typeSelectId}
+        size="sm"
+        className={adminToolbarClasses.select}
+        clearable
+        label={t("admin:leads.list.typeFilterLabel")}
+        placeholder={t("admin:leads.list.typeAll")}
+        options={LEAD_TYPES.map((type) => ({
+          value: type,
+          label: t(LEAD_TYPE_LABEL_KEY[type]),
+        }))}
+        value={filters.type}
+        onChange={(type) => controls.setType(isLeadType(type) ? type : null)}
+      />
+      <LeadAssigneeFilter controls={controls} />
+    </AdminToolbar>
   );
 }

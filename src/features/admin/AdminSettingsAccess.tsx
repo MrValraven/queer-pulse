@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { SkeletonLine } from "../../shared/components/ui";
+import { AdminNotice } from "./ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUpdatePlatformSettings } from "./api/usePlatformSettings";
@@ -9,7 +11,6 @@ import type {
 import { isoToDatetimeLocalValue } from "./adminDateTimeLocal";
 import { useSeededDraft } from "./useSeededDraft";
 import { AdminSettingsAccessCards } from "./AdminSettingsAccessCards";
-import styles from "./AdminSettingsPage.module.css";
 
 /**
  * The three kill switches.
@@ -124,9 +125,11 @@ export function AdminSettingsAccess({
     });
   }
 
-  if (isLoading) return <div className={styles.loading} aria-busy="true" />;
+  if (isLoading) return <SkeletonLine height={220} />;
   if (isError || !settings)
-    return <p className={styles.error}>{t("admin:settings.saveError")}</p>;
+    return (
+      <AdminNotice tone="error">{t("admin:settings.saveError")}</AdminNotice>
+    );
 
   return (
     <AdminSettingsAccessCards

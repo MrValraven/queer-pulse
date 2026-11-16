@@ -28,7 +28,9 @@
 
 .previewColumn {
   position: sticky;
-  top: calc(var(--sticky-top) + 110px);
+  /* The sticky header's height (about 64px) below the shell's top bar, with a
+     16px gap. */
+  top: calc(var(--admin-topbar-h, var(--sticky-top)) + 80px);
 }
 
 .state {

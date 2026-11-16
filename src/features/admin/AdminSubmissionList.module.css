@@ -6,24 +6,35 @@
 .rows {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: var(--admin-header-gap);
 }
 
+/* Nothing in the list: a quiet tinted band that keeps the width of the rows
+   it stands in for. */
 .emptyLine {
-  font-size: var(--text-14);
+  margin: var(--admin-header-gap) 0;
+  padding: var(--admin-band-pad);
+  border-radius: var(--admin-panel-radius);
+  background: rgba(var(--plum-rgb), 0.03);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
   color: var(--ink-60);
-  margin: 20px 0;
+}
+[data-theme="dark"] .emptyLine {
+  background: rgba(var(--cream-rgb), 0.04);
 }
 
 .row {
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  padding: 16px 18px;
+  min-height: var(--admin-row-h);
+  padding: var(--admin-row-pad);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
 }
 
 .rowMain {
@@ -104,15 +115,32 @@
   gap: 8px;
 }
 
+/* The reviewer's note beside a row's decision buttons. It takes the page type
+   and the 36px control height of the console's toolbars, and is wide enough
+   that the placeholder shows whole. A coarse pointer gets the 16px text that
+   keeps iOS from zooming on focus, and the touch target height. */
 .rowNoteInput {
+  box-sizing: border-box;
   width: 100%;
-  min-width: 180px;
-  padding: 8px 10px;
+  min-width: 240px;
+  height: var(--admin-control-h);
+  padding: 0 var(--admin-field-pad-x);
   border-radius: var(--radius-10);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
-  font-size: var(--text-13);
+  font: inherit;
+  font-size: var(--text-13-5);
   color: var(--text-strong);
+}
+.rowNoteInput::placeholder {
+  color: var(--ink-60);
+  opacity: 1;
+}
+@media (pointer: coarse) {
+  .rowNoteInput {
+    height: var(--tap-min);
+    font-size: var(--text-16);
+  }
 }
 
 .rowNoteInput:focus-visible {
@@ -135,6 +163,11 @@
   .rowActionButtons {
     justify-content: flex-start;
   }
+
+  /* On a phone the note spans the row. */
+  .rowNoteInput {
+    min-width: 0;
+  }
 }
 
 .loadMore {
@@ -155,10 +188,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 2px 4px 4px;
+  min-height: var(--admin-row-h-compact);
+  padding: var(--admin-check-row-pad);
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--ink-40);
+  color: var(--ink-60);
   letter-spacing: 0.02em;
   cursor: pointer;
   width: fit-content;
@@ -381,7 +415,7 @@
 .waitingSections {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: var(--admin-section-gap);
   margin-top: 12px;
 }
 
@@ -391,9 +425,11 @@
 
 .sectionHeading {
   margin: 0;
-  font-size: var(--text-15);
+  font-size: var(--text-11);
   font-weight: 700;
-  color: var(--text-strong);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
 }
 
 .sectionNote {

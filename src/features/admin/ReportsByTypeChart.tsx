@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ChartFrame, useChartTooltip } from "../../shared/components/charts";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WeekBar } from "./adminDashboard.data";
@@ -18,6 +18,8 @@ interface ReportsByTypeChartProps {
   /** Plot width / height; defaults to the wide dashboard shape. */
   aspect?: number;
   loading?: boolean;
+  /** Drawn in the frame head above the legend, e.g. an export button. */
+  headAction?: ReactNode;
 }
 
 export function ReportsByTypeChart({
@@ -25,6 +27,7 @@ export function ReportsByTypeChart({
   series,
   aspect = 640 / 240,
   loading = false,
+  headAction,
 }: ReportsByTypeChartProps) {
   const { t } = useTranslation();
   const tip = useChartTooltip<ReportTip>();
@@ -39,19 +42,24 @@ export function ReportsByTypeChart({
       return next;
     });
 
+  // With a head action (the Reports export) the action takes the head slot
+  // and the legend moves to the top of the body, under the title row.
+  const legend = (
+    <ReportsByTypeLegend
+      series={series}
+      hiddenIds={hiddenIds}
+      onToggle={toggleSeries}
+    />
+  );
+
   return (
     <ChartFrame
       title={t("admin:dashboard.charts.reportsByType.title")}
       subtitle={t("admin:dashboard.charts.reportsByType.sub")}
-      legend={
-        <ReportsByTypeLegend
-          series={series}
-          hiddenIds={hiddenIds}
-          onToggle={toggleSeries}
-        />
-      }
+      legend={headAction ?? legend}
       loading={loading}
     >
+      {headAction && legend}
       {/* eslint-disable-next-line react-hooks/refs -- tip.containerRef is visx's callback ref (useTooltipInPortal); this ATTACHES it via the ref attribute and never reads ref.current during render. */}
       <div ref={tip.containerRef} className={chartStyles.plot}>
         <ReportsByTypePlot

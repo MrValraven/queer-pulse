@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
-import { AccessTierBadge } from "../communities/CommunityBadges";
-import { AdminAvatar, AdminChip, type AdminTone } from "./ui";
+import {
+  AdminAvatar,
+  AdminChip,
+  AdminRowActions,
+  adminRowActionClasses,
+  type AdminTone,
+} from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { formatRelative } from "../../shared/lib/date";
@@ -64,7 +69,13 @@ export function AdminCommunitySpaceRequestRow({
             </Link>
           )}
           {request.community && (
-            <AccessTierBadge tier={request.community.accessTier} />
+            <AdminChip tone="ghost">
+              {t("admin:adminCommunitySpaceRequests.row.accessTier", {
+                tier: t(
+                  `communities:badges.tier.${request.community.accessTier}`,
+                ),
+              })}
+            </AdminChip>
           )}
         </div>
         <div className={styles.rowMeta}>
@@ -91,7 +102,7 @@ export function AdminCommunitySpaceRequestRow({
           {t(`admin:adminCommunitySpaceRequests.status.${request.status}`)}
         </AdminChip>
         {request.status === "open" && (
-          <div className={styles.rowActionButtons}>
+          <AdminRowActions className={styles.rowActionButtons}>
             <Button
               variant="jade"
               size="sm"
@@ -103,12 +114,13 @@ export function AdminCommunitySpaceRequestRow({
             <Button
               variant="ghost"
               size="sm"
+              className={adminRowActionClasses.danger}
               disabled={isPending}
               onClick={onDecline}
             >
               {t("admin:adminCommunitySpaceRequests.action.decline")}
             </Button>
-          </div>
+          </AdminRowActions>
         )}
       </div>
     </div>

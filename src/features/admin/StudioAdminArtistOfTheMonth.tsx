@@ -17,6 +17,7 @@ import {
 } from "./StudioAdminSpotlightParts";
 import { StudioAdminSpotlightPicker } from "./StudioAdminSpotlightPicker";
 import css from "./StudioAdminSpotlight.module.css";
+import { AdminPanel } from "./ui";
 
 const PICKED_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
   day: "numeric",
@@ -82,17 +83,13 @@ export function StudioAdminArtistOfTheMonth({
   }
 
   return (
-    <section className={css.section} aria-labelledby={headingId}>
-      <div className={css.head}>
-        <h2
-          id={headingId}
-          ref={headingRef}
-          tabIndex={-1}
-          className={css.heading}
-        >
-          {t("admin:studioAdmin.spotlight.monthTitle")}
-        </h2>
-      </div>
+    <AdminPanel
+      title={t("admin:studioAdmin.spotlight.monthTitle")}
+      titleId={headingId}
+      titleRef={headingRef}
+      isTitleFocusable
+      bodyClassName={css.section}
+    >
       <Collapse isOpen={!isSet}>
         <div className={css.emptyCard}>
           <p className={css.empty}>
@@ -188,6 +185,6 @@ export function StudioAdminArtistOfTheMonth({
           />
         )}
       </AnimatePresence>
-    </section>
+    </AdminPanel>
   );
 }

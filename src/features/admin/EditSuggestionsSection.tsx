@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import {
   FadeIn,
+  FilterChips,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { AdminTabs } from "./ui";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEditSuggestions } from "./api/useEditSuggestions";
 import { EditSuggestionRows } from "./EditSuggestionRows";
@@ -49,14 +50,18 @@ export function EditSuggestionsSection() {
   return (
     <>
       <FadeIn delay={80}>
-        <AdminTabs
-          tabs={FILTERS.map((value) => ({
-            id: value,
-            label: t(`admin:editSuggestions.filter.${value}`),
-          }))}
-          active={filter}
-          onChange={(value) => setFilter(value as StatusFilter)}
-        />
+        <AdminToolbar label={t("admin:adminListings.filter.ariaLabel")}>
+          <FilterChips
+            className={adminToolbarClasses.chips}
+            label={t("admin:adminListings.filter.ariaLabel")}
+            options={FILTERS.map((value) => ({
+              value,
+              label: t(`admin:editSuggestions.filter.${value}`),
+            }))}
+            value={filter}
+            onChange={(value) => setFilter(value as StatusFilter)}
+          />
+        </AdminToolbar>
       </FadeIn>
 
       <FadeIn delay={100}>

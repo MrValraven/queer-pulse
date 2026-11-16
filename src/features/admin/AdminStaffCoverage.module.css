@@ -1,181 +1,55 @@
-/* ── Grant coverage panel ───────────────────────────────── */
-/* A container, so the card grid answers to the panel's own width. */
-.panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-sm);
-  min-width: 0;
-  container-type: inline-size;
+/* The coverage panel brings its own heading into view from the uncovered
+   summary tile, so the heading clears the sticky top bar. */
+.panel h2 {
+  scroll-margin-top: calc(var(--admin-bar-h) + 16px);
 }
 
-.panelHead {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+/* The tiles sit in a flush body so a folded panel carries no dead padding.
+   The two-class selector outranks the panel's header-to-body margin. */
+.panel > div.body {
+  margin-top: 0;
 }
 
-.panelTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-22);
-  font-weight: 500;
-  line-height: 1.2;
-  color: var(--text-strong);
-  scroll-margin-top: calc(var(--sticky-top) + 16px);
+.tiles {
+  padding: var(--gap-sm) var(--admin-panel-pad) var(--admin-panel-pad);
 }
 
-[data-theme="dark"] .panelTitle {
-  color: var(--ink);
+/* Folded: the header alone, closed by the panel's own bottom padding. */
+.isClosed {
+  padding-bottom: var(--admin-panel-pad);
 }
 
-.panelTitle:focus-visible {
+.panel h2:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
   border-radius: var(--radius-6);
 }
 
-.panelSub {
-  max-width: 65ch;
-  margin: 0;
-  font-size: var(--text-14);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
-/* Explicit counts that divide the eight grants evenly: two compact cards per
-   row on a phone, two full cards once there is room for a description, four
-   on a wide console. */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap-xs);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-@container (min-width: 56rem) {
-  .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.gridItem {
-  display: flex;
-  min-width: 0;
-}
-
-/* ── One grant card ─────────────────────────────────────── */
-.card,
-.cardSkeleton {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
-  padding: 14px 16px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-badge);
-}
-
-.card {
-  font: inherit;
-  text-align: start;
-  color: var(--ink);
-  cursor: pointer;
-  transition:
-    border-color var(--dur-base) var(--ease),
-    box-shadow var(--dur-base) var(--ease),
-    background var(--dur-base) var(--ease);
-}
-
-@media (hover: hover) {
-  .card:hover {
-    border-color: var(--line-2);
-    box-shadow: var(--shadow-e2);
-  }
-}
-
-.card:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-/* The grant filtering the roster: a firmer edge, a coral wash and a check. */
-.cardActive {
-  border-color: var(--accent);
-  background: rgba(var(--accent-rgb), 0.06);
-}
-
-.cardTop {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.cardTitle {
-  font-family: var(--serif);
-  font-size: var(--text-16);
-  font-weight: 600;
-  line-height: 1.25;
-  color: var(--ink);
-}
-
-.cardCheck {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--paper);
-  font-size: var(--text-12);
-}
-
-/* Hidden on a phone, where the title, count and faces carry the card. Two
-   lines tall at least once shown, so a one-line description keeps every
-   card's holder row on the same line as its neighbours'. */
-.cardDesc {
-  display: none;
-  min-height: calc(var(--text-12-5) * 1.45 * 2);
+/* Hint rows of a coverage tile: what the grant covers (two lines at most),
+   the suspended-holder note, then the faces of the people who hold it. */
+.description {
+  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
   font-size: var(--text-12-5);
   line-height: 1.45;
-  color: var(--ink-60);
 }
 
-@container (min-width: 30rem) {
-  .cardDesc {
-    display: -webkit-box;
-  }
-}
-
-/* Holders sit on the card's bottom edge whatever the description's length. */
-.cardFoot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 10px;
-  min-height: 30px;
-  margin-top: auto;
-  padding-top: 4px;
+.inactive {
+  display: block;
+  margin-block-start: 4px;
 }
 
 .stack {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  margin-block-start: 8px;
 }
 
-/* Overlapping faces, each punched out of the card by a paper ring. */
+/* Overlapping faces, each punched out of the tile by a paper ring. */
 .stackAvatar,
 .stackMore {
   box-shadow: var(--ring-paper);
@@ -198,61 +72,4 @@
   color: var(--ink-60);
   font-size: var(--text-11);
   font-weight: 600;
-}
-
-.count {
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--ink-60);
-}
-
-.nobody {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--amber-rgb), 0.2);
-  color: var(--amber-ink);
-  font-size: var(--text-12);
-  font-weight: 600;
-}
-
-.nobodyIcon {
-  flex: none;
-  font-size: var(--text-13);
-}
-
-/* An uncovered grant keeps an amber edge even while it is filtering. */
-.cardUncovered {
-  border-color: rgba(var(--amber-rgb), 0.55);
-}
-
-.cardUncovered.cardActive {
-  border-color: var(--accent);
-}
-
-.inactive {
-  font-size: var(--text-12);
-  line-height: 1.4;
-  color: var(--ink-60);
-}
-
-/* Compact phone cards: a little less padding, so the amber "nobody" pill
-   keeps to one line in a half-width card. */
-@container (width < 30rem) {
-  .card {
-    padding: 12px;
-  }
-
-  .nobody {
-    gap: 4px;
-    padding-inline: 8px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card {
-    transition: none;
-  }
 }

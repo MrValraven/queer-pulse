@@ -2,7 +2,6 @@ import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../../shared/hooks/usePrefersReducedMotion";
-import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { MissingFieldsBar } from "./MissingFieldsBar";
 import {
@@ -19,7 +18,7 @@ import chrome from "./ListBusinessChrome.module.css";
  *  Mobile step-progress: on narrow screens the shared pill labels collapse to
  *  bare numbers, so the row becomes a self-contained horizontal scroller (never
  *  clipping or forcing page scroll) with the active pill scrolled into view, and
- *  a compact "Step N of N — Label" line names the current step + announces it.
+ *  a compact "Step N of N: Label" line names the current step + announces it.
  *
  *  Pill jump: pass `onJump` to turn every VISITED (completed) pill into a
  *  button that returns to that step. WizardFormPane wires its `goToStep` through
@@ -53,32 +52,49 @@ export function WizardChrome({
   const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const activePillRef = useRef<HTMLDivElement | null>(null);
+  const pillRowRef = useRef<HTMLDivElement | null>(null);
   const firstStep = firstWizardStep(isEdit);
   const pills = PILL_LABEL_KEYS.slice(firstStep);
   const lastIndex = TOTAL_STEPS - 1 - firstStep;
   const currentIndex = step - firstStep; // pill position (0-based) of the current step
   const fill = (currentIndex / lastIndex) * 100;
 
-  // Keep the active pill visible when the row is a narrow horizontal scroller.
-  // block:"nearest" avoids yanking the page vertically when it's already in view.
+  // Keep the active pill centred when the row is a narrow horizontal scroller.
+  // Only the row scrolls, sideways: a `scrollIntoView` here would also move the
+  // window and cut short a page scroll already running (the Continue screen's
+  // scroll to this step line).
   useEffect(() => {
-    activePillRef.current?.scrollIntoView({
-      behavior: reducedMotion ? "auto" : "smooth",
-      inline: "center",
-      block: "nearest",
-    });
+    const row = pillRowRef.current;
+    const pill = activePillRef.current;
+    if (!row || !pill) return;
+    const rowBox = row.getBoundingClientRect();
+    const pillBox = pill.getBoundingClientRect();
+    const left =
+      row.scrollLeft +
+      (pillBox.left - rowBox.left) -
+      (row.clientWidth - pillBox.width) / 2;
+    row.scrollTo({ left, behavior: reducedMotion ? "auto" : "smooth" });
   }, [step, reducedMotion]);
 
   return (
-    <div className={styles.wizTop}>
-      <p className={chrome.stepMeta} aria-live="polite">
+    // `data-wizard-top` is where the create landing scrolls and moves focus
+    // when it opens the wizard from its Continue screen (see
+    // `scrollToWizardTop`): the step line, or this container where the step
+    // line is hidden. Both take focus from script only.
+    <div className={styles.wizTop} data-wizard-top="" tabIndex={-1}>
+      <p
+        className={chrome.stepMeta}
+        aria-live="polite"
+        data-wizard-step-line=""
+        tabIndex={-1}
+      >
         {t("marketing:listBusiness.wizard.stepOf", {
           number: currentIndex + 1,
           total: pills.length,
           label: t(pills[currentIndex] ?? pills[pills.length - 1]!),
         })}
       </p>
-      <div className={chrome.pillRow}>
+      <div className={chrome.pillRow} ref={pillRowRef}>
         {pills.map((labelKey, index) => {
           const pillStep = index + firstStep; // the wizard step this pill stands for
           const isDone = index < currentIndex;
@@ -166,35 +182,6 @@ export function WizardChrome({
   );
 }
 
-/** Resume-draft banner shown when a saved draft is found on mount. */
-export function DraftBanner({
-  onResume,
-  onDiscard,
-}: {
-  onResume: () => void;
-  onDiscard: () => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className={`${styles.draftBanner} wrap`}>
-      <div className={styles.dbTxt}>
-        <Translation
-          i18nKey="marketing:listBusiness.draftBanner.text"
-          components={{ b: <b /> }}
-        />
-      </div>
-      <div className={styles.dbActions}>
-        <Button variant="ghost" onClick={onDiscard}>
-          {t("marketing:listBusiness.draftBanner.startFresh")}
-        </Button>
-        <Button variant="primary" onClick={onResume}>
-          {t("marketing:listBusiness.draftBanner.resume")}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
 /** Serif pane title (with coral `<em>`) + supporting sub-copy. */
 export function PaneHeader({
   title,
@@ -216,8 +203,8 @@ export function PaneHeader({
 }
 
 /** Sending-in-flight status panel shown while the listing submits/saves.
- *  Edit mode PATCHes and stays Live — no moderation queue — so it gets its
- *  own copy instead of the create flow's "sent to the team" wording. */
+ *  Edit mode PATCHes and stays Live with no moderation queue, so it has its
+ *  own copy where the create flow says "sent to the team". */
 export function SendingPanel({ isEdit = false }: { isEdit?: boolean }) {
   const { t } = useTranslation();
   return (

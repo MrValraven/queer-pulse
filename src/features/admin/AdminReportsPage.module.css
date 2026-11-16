@@ -1,138 +1,117 @@
+/* Platform reports. The header, panels, stat tiles and table come from the
+   admin kit; this file holds the section rhythm, the trends heading above its
+   two chart panels, and the chart slots that give the shared ChartFrame the
+   panel look. */
+
 /* ── Page layout ─────────────────────────────────────────────────────────── */
 .sections {
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  margin-top: 22px;
-}
-
-/* ── Card heads (mirrors AdminGovernancePage.module.css's .cardHead pattern) */
-.card {
-  padding: 24px 26px;
-}
-.cardHead {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-.cardTitle {
-  font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--text-strong);
-  margin: 0;
-}
-[data-theme="dark"] .cardTitle {
-  color: var(--ink);
-}
-.cardSub {
-  font-size: var(--text-13);
-  line-height: 1.5;
-  color: var(--ink-60);
-  margin: 6px 0 0;
+  gap: var(--admin-section-gap);
 }
 
 /* ── Growth + reports-by-type ────────────────────────────────────────────── */
+.trends {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* The section's own heading row: its title and sub on the left, the range
+   both charts share on the right. It sits on the canvas, so the two chart
+   panels below are not nested in a third. */
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+.sectionHeadText {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.sectionTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+.sectionSub {
+  margin: 4px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
 .chartRow {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--admin-section-gap);
+}
+/* The export in a chart's head keeps its own width when the head wraps to
+   a second row on a phone. */
+.chartExport {
+  display: flex;
 }
 .chartCol {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
   min-width: 0;
 }
-/* Both chart cards fill their column so the pair share one height. */
+/* The chart slot: the shared ChartFrame takes the panel's padding, corner,
+   elevation and title size, the same treatment as the Overview's charts.
+   Both fill their column so the pair share one height. */
 .chartCol > figure {
   flex: 1;
+  align-self: stretch;
+  min-width: 0;
   margin: 0;
+  padding: var(--admin-panel-pad);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
+}
+.chartCol figcaption {
+  font-size: var(--text-16);
+  font-weight: 500;
+  line-height: 1.25;
 }
 @media (max-width: 900px) {
   .chartRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* ── Finance summary strip ───────────────────────────────────────────────── */
+/* ── Finance summary line (the chart panel's lead) ──────────────────────── */
 .financeSummary {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 20px;
+  gap: 6px 20px;
+  margin: 0 0 12px;
   font-size: var(--text-13-5);
   color: var(--ink-60);
-  margin-bottom: 16px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Community health snapshot ───────────────────────────────────────────── */
-.healthSummary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 18px;
+/* The tiles and the skeleton sit in the panel's padding; the table below
+   runs edge to edge. */
+.healthBand {
+  padding: 0 var(--admin-panel-pad) var(--admin-panel-pad);
 }
-.healthStat {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--text-strong);
-}
-[data-theme="dark"] .healthStat {
-  color: var(--ink);
-}
-
-.healthTable {
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--radius-12);
-  overflow: hidden;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-}
-.healthRowHead,
-.healthRow {
-  display: grid;
-  grid-template-columns: 1.6fr 0.7fr 1fr 0.9fr 1.1fr;
-  align-items: center;
-  gap: 14px;
-  padding: 11px 14px;
-}
-.healthRowHead {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-}
-.healthRow {
-  font-size: var(--text-13-5);
-  color: var(--ink);
-  border-top: 1px solid rgba(var(--line-rgb), 0.06);
-}
-.healthRow:first-of-type {
-  border-top: none;
+.notMeasured {
+  font-style: italic;
+  font-size: var(--text-20);
+  color: var(--ink-60);
 }
 .healthOpenReports {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
-}
-@media (max-width: 720px) {
-  .healthRowHead,
-  .healthRow {
-    grid-template-columns: 1.4fr 0.7fr 1fr;
-  }
-  .healthRowHead span:nth-child(4),
-  .healthRowHead span:nth-child(5),
-  .healthRow span:nth-child(4),
-  .healthRow span:nth-child(5) {
-    display: none;
-  }
 }

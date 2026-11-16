@@ -1656,6 +1656,10 @@ export const notifications: Catalog = {
   "type.listing_team_member_accepted.meta": "Convite aceite",
   "type.listing_team_member_accepted.memberNameFallback": "Um membro",
   "type.listing_team_member_accepted.listingNameFallback": "o teu negócio",
+  "type.lead_assigned.text": "Ficaste responsável por um contacto.",
+  "type.lead_assigned.textNamed":
+    "<profile>{name}</profile> pôs-te como responsável por um contacto.",
+  "type.lead_assigned.meta": "Contactos",
   "actions.reviewTeamInvite": "Ver convite",
   "actions.reviewTeamRequest": "Ver pedido",
 };

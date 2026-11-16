@@ -18,6 +18,7 @@ import {
   AdminLandlordReasonModal,
   type LandlordReasonKind,
 } from "./AdminLandlordsReasonModal";
+import { AdminPanel } from "./ui";
 import styles from "./AdminLandlordsPage.module.css";
 
 /** A decision waiting on the words it owes the member who suggested the entry. */
@@ -166,18 +167,20 @@ export function AdminLandlordsDirectory({
       <p className={styles.count} role="status">
         {t("admin:landlords.count", { count: total })}
       </p>
-      <ul className={styles.rows}>
-        {landlords.map((landlord) => (
-          <AdminLandlordRow
-            key={landlord.id}
-            landlord={landlord}
-            isPending={isPending}
-            onPublish={() => publish(landlord)}
-            onHoldBack={() => setPending({ landlord, kind: "holdBack" })}
-            onRemove={() => setPending({ landlord, kind: "remove" })}
-          />
-        ))}
-      </ul>
+      <AdminPanel padding="flush" isOverflowVisible>
+        <ul className={styles.rows}>
+          {landlords.map((landlord) => (
+            <AdminLandlordRow
+              key={landlord.id}
+              landlord={landlord}
+              isPending={isPending}
+              onPublish={() => publish(landlord)}
+              onHoldBack={() => setPending({ landlord, kind: "holdBack" })}
+              onRemove={() => setPending({ landlord, kind: "remove" })}
+            />
+          ))}
+        </ul>
+      </AdminPanel>
 
       {hasNextPage && (
         <div className={styles.loadMore}>

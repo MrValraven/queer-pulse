@@ -7,7 +7,7 @@ import type {
   HousingListingDecisionAction,
 } from "./api/adminHousingListings.api";
 import { allowedDecisions } from "./adminHousingListingsStatus";
-import { AdminModal } from "./ui";
+import { AdminModal, AdminRowActions, adminRowActionClasses } from "./ui";
 import styles from "./AdminHousingListingsPage.module.css";
 
 const DECISION_META: Record<
@@ -117,21 +117,18 @@ export function AdminHousingListingDecisionBar({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.decisionBar}>
+    <AdminRowActions className={styles.decisionBar}>
       {allowedDecisions(listing.status).map((action) => {
         const meta = DECISION_META[action];
         const DecisionIcon = meta.icon;
+        const isDestructive =
+          action !== "approve" && action !== "request_changes";
         return (
           <Button
             key={action}
-            size="md"
-            variant={
-              action === "approve"
-                ? "jade"
-                : action === "request_changes"
-                  ? "ghost"
-                  : "danger"
-            }
+            size="sm"
+            variant={action === "approve" ? "jade" : "ghost"}
+            className={isDestructive ? adminRowActionClasses.danger : undefined}
             disabled={isPending}
             onClick={() => onDecide(action)}
           >
@@ -140,6 +137,6 @@ export function AdminHousingListingDecisionBar({
           </Button>
         );
       })}
-    </div>
+    </AdminRowActions>
   );
 }

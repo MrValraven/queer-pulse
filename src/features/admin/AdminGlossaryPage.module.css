@@ -8,15 +8,18 @@
   gap: 10px;
 }
 
+/* The toolbar, notices and the list, one gap apart. */
+.body {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* Sits on the kit's table row (hover, divider, minimum height). */
 .row {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 16px;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-14);
-  background: var(--cream);
+  padding: var(--admin-row-pad);
 }
 
 .rowMain {
@@ -78,43 +81,6 @@
   display: flex;
   gap: 8px;
   flex: none;
-}
-
-.staleBanner {
-  margin: 0 0 16px;
-  padding: 10px 14px;
-  border-radius: var(--radius-12);
-  border: 1px solid rgba(var(--accent-rgb), 0.3);
-  background: rgba(var(--accent-rgb), 0.06);
-  font-size: var(--text-13-5);
-  color: var(--text-strong);
-}
-
-.empty,
-.notice {
-  padding: 28px 20px;
-  border: 1px dashed rgba(var(--line-rgb), 0.25);
-  border-radius: var(--radius-14);
-  text-align: center;
-}
-
-.emptyText,
-.noticeText {
-  margin: 0 0 12px;
-  font-size: var(--text-14);
-  color: var(--ink-60);
-}
-
-/* Sits in the page header's action row, so it is width-capped rather than
-   filling the row the way the editor's full-width fields do. */
-.searchInput {
-  width: min(260px, 100%);
-  padding: 9px 12px;
-  border: 1px solid rgba(var(--line-rgb), 0.2);
-  border-radius: var(--radius-10);
-  background: var(--paper);
-  font: inherit;
-  color: inherit;
 }
 
 /* ---- Editor ---- */

@@ -216,11 +216,11 @@ describe("AdminLeadsPage quick controls", () => {
 
   it("counts due follow-ups over the search and type", async () => {
     renderPage(`${routes.adminLeads}?type=venue`);
-    const dueSwitch = await screen.findByRole("switch", {
-      name: "Follow-up due",
+    const dueTile = await screen.findByRole("button", {
+      name: /^Follow-up due/,
     });
     await waitFor(() =>
-      expect(dueSwitch).toHaveAccessibleDescription("1 waiting"),
+      expect(dueTile).toHaveAccessibleName(/^Follow-up due\s*1 waiting$/),
     );
   });
 });

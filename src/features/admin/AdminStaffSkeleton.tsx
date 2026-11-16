@@ -1,42 +1,46 @@
 import { SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminPanel, AdminStat, AdminStatTiles, adminTableClasses } from "./ui";
 import pageStyles from "./AdminStaffPage.module.css";
-import coverageStyles from "./AdminStaffCoverage.module.css";
-import rosterStyles from "./AdminStaffRows.module.css";
 import rowStyles from "./AdminStaffRow.module.css";
 
-const TILE_KEYS = ["admins", "moderators", "holders", "uncovered"];
-const CARD_KEYS = ["first", "second", "third", "fourth"];
+const TILE_LABEL_KEYS = [
+  "admin:staff.summary.admins",
+  "admin:staff.summary.moderators",
+  "admin:staff.summary.grantHolders",
+  "admin:staff.summary.uncovered",
+];
+const COVERAGE_KEYS = ["first", "second", "third", "fourth"];
 const ROW_KEYS = ["first", "second", "third", "fourth"];
 
-/** The loaded layout in outline: four tiles, coverage cards, roster rows. */
+/** The loaded layout in outline: four tiles, coverage tiles, roster rows. */
 export function AdminStaffSkeleton() {
+  const { t } = useTranslation();
   return (
     <div className={pageStyles.board} aria-hidden>
-      <div className={pageStyles.summary}>
-        {TILE_KEYS.map((tileKey) => (
-          <div key={tileKey} className={pageStyles.tileSkeleton}>
-            <SkeletonLine width="45%" height={10} />
-            <SkeletonLine width="30%" height={30} />
-            <SkeletonLine width="70%" height={10} />
-          </div>
+      <AdminStatTiles>
+        {TILE_LABEL_KEYS.map((labelKey) => (
+          <AdminStat key={labelKey} label={t(labelKey)} value="" isLoading />
         ))}
-      </div>
-      <div className={coverageStyles.panel}>
-        <SkeletonLine width={180} height={22} />
-        <div className={coverageStyles.grid}>
-          {CARD_KEYS.map((cardKey) => (
-            <div key={cardKey} className={coverageStyles.cardSkeleton}>
-              <SkeletonLine width="55%" height={14} />
-              <SkeletonLine height={10} />
-              <SkeletonLine width="80%" height={10} />
-              <SkeletonLine width="40%" height={24} />
-            </div>
+      </AdminStatTiles>
+      <AdminPanel title={t("admin:staff.coverage.heading")}>
+        <AdminStatTiles>
+          {COVERAGE_KEYS.map((coverageKey) => (
+            <AdminStat
+              key={coverageKey}
+              label={<SkeletonLine width={90} height={10} />}
+              value=""
+              isLoading
+            />
           ))}
-        </div>
-      </div>
-      <div className={rosterStyles.rows}>
+        </AdminStatTiles>
+      </AdminPanel>
+      <AdminPanel title={t("admin:staff.roster.heading")} padding="flush">
         {ROW_KEYS.map((rowKey) => (
-          <div key={rowKey} className={rowStyles.rowSkeleton}>
+          <div
+            key={rowKey}
+            className={`${adminTableClasses.row} ${rowStyles.rowSkeleton}`}
+          >
             <SkeletonAvatar size={40} />
             <div className={rowStyles.rowSkeletonText}>
               <SkeletonLine width="40%" height={14} />
@@ -45,7 +49,7 @@ export function AdminStaffSkeleton() {
             <SkeletonLine width={96} height={32} />
           </div>
         ))}
-      </div>
+      </AdminPanel>
     </div>
   );
 }

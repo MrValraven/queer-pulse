@@ -1,47 +1,10 @@
 /* The group-listing review console: a queue somebody works through every
- * morning. Cards rather than a dense table, because one decision needs the
+ * morning. Cards, because one decision needs the
  * poster, the risk reasoning, the room's own words and any prior decision
  * side by side, and a table row cannot carry that and stay readable. */
 
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px 20px;
-  margin-block: 18px 10px;
-}
-
-.groupField {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: min(260px, 100%);
-}
-
-.groupLabel {
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
-.groupInput {
-  font-family: var(--sans);
-  font-size: var(--text-15);
-  color: var(--ink);
-  background: var(--paper);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-12);
-  padding: 9px 13px;
-  min-width: 0;
-}
-
-.groupInput:focus {
-  outline: none;
-  border-color: var(--line-strong);
-  box-shadow: var(--ring-plum-soft);
+.toolbar {
+  margin-block: var(--admin-header-gap) 10px;
 }
 
 .keyHint {
@@ -80,8 +43,9 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  padding: 20px 22px;
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
+  padding: var(--admin-panel-pad);
   scroll-margin-block: 90px;
   transition:
     border-color var(--dur-base) var(--ease),
@@ -137,6 +101,20 @@
   margin: 0 0 14px;
   font-size: var(--text-13-5);
   color: var(--ink-60);
+}
+
+/* One fact with its icon. The middle dot trails each fact but the last. */
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.fact > svg {
+  flex: none;
+}
+.fact:not(:last-child)::after {
+  content: "\00B7";
 }
 
 .cardDescription {
@@ -339,15 +317,6 @@
 }
 
 @media (--xs) {
-  .controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .card {
-    padding: 16px 15px;
-  }
-
   .cardAge {
     margin-inline-start: 0;
   }

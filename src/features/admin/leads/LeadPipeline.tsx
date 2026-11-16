@@ -1,171 +1,101 @@
-import { useId } from "react";
 import { FiClock } from "react-icons/fi";
 import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AdminStat, AdminStatTiles } from "../ui";
 import { LEAD_STAGES, type LeadStage } from "./api/leads.types";
 import { LEAD_STAGE_LABEL_KEY } from "./leadLabels.data";
 import type { LeadListControls } from "./useLeadListFilters";
-import styles from "./LeadPipeline.module.css";
 
-/** The colour of each stage's share bar, by the tone its pill keeps. */
-const STAGE_BAR_CLASS: Record<LeadStage, string | undefined> = {
-  to_contact: styles.barGhost,
-  contacted: styles.barViolet,
-  in_talks: styles.barAmber,
-  on_board: styles.barJade,
-  not_now: styles.barPlum,
-};
+/** A count as a rolling figure, so a stage move ticks the tile it left and
+ *  the tile it joined. */
+function rollingCount(count: number) {
+  return <RollingNumber value={String(count)} numericValue={count} />;
+}
 
-/** One stage tile: its name, its count and its share of all leads. The All
- *  tile has no share to show, so its track keeps its place unseen. */
-function PipelineTile({
-  label,
-  count,
-  share,
-  ariaLabel,
-  isPressed,
-  barClass,
-  hasShareBar = true,
-  onPress,
-}: {
-  label: string;
-  count: number | null;
-  share: number | null;
-  ariaLabel: string | undefined;
-  isPressed: boolean;
-  barClass?: string;
-  hasShareBar?: boolean;
-  onPress: () => void;
-}) {
+/** The visible figure hides from assistive tech; the hidden phrase carries
+ *  the stage, the count and the unit ("On board, 2 leads"). */
+function SpokenCount({ count, phrase }: { count: number; phrase: string }) {
   return (
-    <button
-      type="button"
-      className={styles.tile}
-      aria-pressed={isPressed}
-      aria-label={ariaLabel}
-      onClick={onPress}
-    >
-      <span className={styles.tileLabel}>{label}</span>
-      <span className={styles.tileCount}>
-        {count === null ? (
-          <span className={styles.tileCountPending} aria-hidden />
-        ) : (
-          <RollingNumber value={String(count)} numericValue={count} />
-        )}
-      </span>
-      <span
-        className={styles.tileTrack}
-        data-hidden={hasShareBar ? undefined : true}
-        aria-hidden
-      >
-        <span
-          className={[styles.tileBar, barClass].filter(Boolean).join(" ")}
-          style={{ inlineSize: `${Math.round((share ?? 0) * 100)}%` }}
-        />
-      </span>
-    </button>
+    <>
+      <span aria-hidden>{rollingCount(count)}</span>
+      <span className="visuallyHidden">{phrase}</span>
+    </>
   );
 }
 
 /**
  * The pipeline at a glance, and the stage filter in one: a tile per stage
- * with how many leads sit in it and its share of the whole (both follow the
- * search and the type), All first. Beside it, the Follow-up due switch,
- * with how many open leads wait on a follow-up, over the same search and
- * type, so every number in the strip answers the same question. Every
- * count comes from the list's first page.
- * On a phone the tiles sit in a grid of three by two.
+ * with how many leads sit in it (the counts follow the search and the type),
+ * then the Follow-up due tile with how many open leads wait on a follow-up,
+ * over the same search and type, so every number in the strip answers the
+ * same question. Pressing a tile filters the list by it, and pressing the
+ * chosen tile again clears it. Every count comes from the list's first page.
  */
 export function LeadPipeline({
   controls,
   stageCounts,
-  totalCount,
   dueCount,
 }: {
   controls: LeadListControls;
   stageCounts: Record<LeadStage, number> | null;
-  totalCount: number | null;
   dueCount: number | null;
 }) {
   const { t } = useTranslation();
-  const groupLabelId = useId();
-  const dueCountId = useId();
   const { filters } = controls;
-  const allLabel = t("admin:leads.list.stageAll");
-  const shareOf = (count: number | null) =>
-    count === null || totalCount === null || totalCount === 0
-      ? null
-      : count / totalCount;
-  const ariaOf = (stage: string, count: number | null) =>
-    count === null
-      ? undefined
-      : t("admin:leads.list.stageChipAria", { stage, count });
 
   return (
-    <div className={styles.frame}>
-      <div className={styles.pipeline}>
-        <div
-          className={styles.stages}
-          role="group"
-          aria-labelledby={groupLabelId}
-        >
-          <span id={groupLabelId} className="visuallyHidden">
-            {t("admin:leads.list.stageFilterLabel")}
-          </span>
-          <PipelineTile
-            label={allLabel}
-            count={totalCount}
-            share={null}
-            ariaLabel={ariaOf(allLabel, totalCount)}
-            isPressed={filters.stage === null}
-            hasShareBar={false}
-            onPress={() => controls.setStage(null)}
+    <AdminStatTiles columns={3} label={t("admin:leads.list.stageFilterLabel")}>
+      {LEAD_STAGES.map((stage) => {
+        const stageLabel = t(LEAD_STAGE_LABEL_KEY[stage]);
+        const count = stageCounts?.[stage] ?? null;
+        return (
+          <AdminStat
+            key={stage}
+            label={
+              <span aria-hidden={count === null ? undefined : true}>
+                {stageLabel}
+              </span>
+            }
+            value={
+              count === null ? null : (
+                <SpokenCount
+                  count={count}
+                  phrase={t("admin:leads.list.stageChipAria", {
+                    stage: stageLabel,
+                    count,
+                  })}
+                />
+              )
+            }
+            isLoading={count === null}
+            isPressed={filters.stage === stage}
+            onClick={() =>
+              controls.setStage(filters.stage === stage ? null : stage)
+            }
           />
-          {LEAD_STAGES.map((stage) => {
-            const stageLabel = t(LEAD_STAGE_LABEL_KEY[stage]);
-            const count = stageCounts?.[stage] ?? null;
-            return (
-              <PipelineTile
-                key={stage}
-                label={stageLabel}
-                count={count}
-                share={shareOf(count)}
-                ariaLabel={ariaOf(stageLabel, count)}
-                isPressed={filters.stage === stage}
-                barClass={STAGE_BAR_CLASS[stage]}
-                onPress={() =>
-                  controls.setStage(filters.stage === stage ? null : stage)
-                }
-              />
-            );
-          })}
-        </div>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={filters.isDueOnly}
-          aria-label={t("admin:leads.list.dueOnly")}
-          aria-describedby={dueCount === null ? undefined : dueCountId}
-          className={styles.due}
-          data-has-due={(dueCount ?? 0) > 0 || undefined}
-          onClick={() => controls.setIsDueOnly(!filters.isDueOnly)}
-        >
-          <span className={styles.dueIcon} aria-hidden>
-            <FiClock />
-          </span>
-          <span className={styles.dueText} aria-hidden>
-            <span className={styles.tileLabel}>
-              {t("admin:leads.list.dueOnly")}
-            </span>
-            <span id={dueCountId} className={styles.dueCount}>
-              {dueCount === null
-                ? null
-                : t("admin:leads.pipeline.dueCount", { count: dueCount })}
-            </span>
-          </span>
-          <span className={styles.dueSwitch} aria-hidden />
-        </button>
-      </div>
-    </div>
+        );
+      })}
+      <AdminStat
+        icon={FiClock}
+        label={t("admin:leads.list.dueOnly")}
+        value={
+          dueCount === null ? null : (
+            <span aria-hidden>{rollingCount(dueCount)}</span>
+          )
+        }
+        delta={
+          dueCount === null
+            ? undefined
+            : {
+                text: t("admin:leads.pipeline.dueCount", { count: dueCount }),
+                tone: dueCount > 0 ? "warn" : "flat",
+              }
+        }
+        isLoading={dueCount === null}
+        tone={(dueCount ?? 0) > 0 ? "warn" : "default"}
+        isPressed={filters.isDueOnly}
+        onClick={() => controls.setIsDueOnly(!filters.isDueOnly)}
+      />
+    </AdminStatTiles>
   );
 }

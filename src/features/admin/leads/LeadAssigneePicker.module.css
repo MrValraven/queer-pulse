@@ -1,0 +1,68 @@
+/* The Assign staff picker (LeadAssigneePicker) and the floating panel it
+   opens in on wider screens (LeadAssigneePopover). The panel wears the
+   same surface as the leads row menus in LeadActionMenu.module.css. */
+
+.picker {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.picker[aria-busy="true"] {
+  cursor: progress;
+}
+
+/* While a change saves, the rows dim, so a press that waits reads as held. */
+.picker [role="listbox"] {
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.picker[aria-busy="true"] [role="listbox"] {
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .picker [role="listbox"] {
+    transition: none;
+  }
+}
+
+.hint {
+  margin: 0;
+  padding-inline: 2px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.retry {
+  display: flex;
+  padding-block: 2px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.popover {
+  z-index: var(--z-popover);
+  inline-size: min(22.5rem, calc(100vw - 24px));
+  padding: 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e3);
+  visibility: hidden;
+}
+
+.popover[data-placed] {
+  visibility: visible;
+}

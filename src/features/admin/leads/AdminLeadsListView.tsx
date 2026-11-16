@@ -1,8 +1,8 @@
 import { AnimatePresence } from "motion/react";
-import { FiAlertCircle, FiSearch, FiUsers } from "react-icons/fi";
+import { FiSearch, FiUsers } from "react-icons/fi";
 import {
+  Button,
   Collapse,
-  EmptyState,
   LoadMoreButton,
   LoadMoreStatus,
   SkeletonLine,
@@ -10,7 +10,9 @@ import {
 import { FadeListItem } from "../../../shared/components/ui/ViewFade";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { LeadListResult } from "./api/useLeadList";
+import { AdminEmptyState, AdminNotice, adminTableClasses } from "../ui";
 import { AdminLeadRow } from "./AdminLeadRow";
+import { LeadAssigneeEmptyState } from "./LeadAssigneeEmptyState";
 import { leadErrorKeyOf, leadErrorValuesOf } from "./leadErrors";
 import type { LeadListViewName } from "./leadListView";
 import { LEAD_LIST_SKELETON_ROWS } from "./leadsList.data";
@@ -21,11 +23,15 @@ import styles from "./AdminLeads.module.css";
 function AdminLeadsTableHead() {
   const { t } = useTranslation();
   return (
-    <div className={styles.tableHead} aria-hidden>
+    <div
+      className={`${adminTableClasses.headRow} ${styles.tableHead}`}
+      aria-hidden
+    >
       <span className={styles.headName}>{t("admin:leads.column.lead")}</span>
       <span>{t("admin:leads.field.stage")}</span>
       <span>{t("admin:leads.field.location")}</span>
       <span>{t("admin:leads.field.links")}</span>
+      <span>{t("admin:leads.list.assigneeFilterLabel")}</span>
       <span>{t("admin:leads.column.lastActivity")}</span>
       <span>{t("admin:leads.column.followUp")}</span>
     </div>
@@ -55,25 +61,31 @@ function AdminLeadsSkeleton() {
  *  say "Load the leads again". */
 function AdminLeadsLoadError({ list }: { list: LeadListResult }) {
   const { t } = useTranslation();
-  const ignorePress = () => {};
   return (
-    <EmptyState
-      className={styles.listState}
-      compact
-      headingLevel={2}
-      icon={<FiAlertCircle aria-hidden />}
-      title={t("admin:leads.list.loadError")}
-      description={t(leadErrorKeyOf(list.error), leadErrorValuesOf(list.error))}
-      action={
-        list.isRetrying
-          ? {
-              label: t("shared:loadError.retryingCta"),
-              onClick: ignorePress,
-              isBusy: true,
-            }
-          : { label: t("admin:leads.list.retryCta"), onClick: list.retry }
-      }
-    />
+    <div className={styles.listState}>
+      <AdminNotice
+        tone="error"
+        action={
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-disabled={list.isRetrying || undefined}
+            onClick={() => {
+              if (!list.isRetrying) list.retry();
+            }}
+          >
+            {list.isRetrying
+              ? t("shared:loadError.retryingCta")
+              : t("admin:leads.list.retryCta")}
+          </Button>
+        }
+      >
+        <h2 className={styles.noticeTitle}>
+          {t("admin:leads.list.loadError")}
+        </h2>
+        {t(leadErrorKeyOf(list.error), leadErrorValuesOf(list.error))}
+      </AdminNotice>
+    </div>
   );
 }
 
@@ -88,11 +100,13 @@ export function AdminLeadsListView({
   list,
   onAdd,
   onClearFilters,
+  onShowEveryone,
 }: {
   viewName: LeadListViewName;
   list: LeadListResult;
   onAdd: () => void;
   onClearFilters: () => void;
+  onShowEveryone: () => void;
 }) {
   const { t } = useTranslation();
 
@@ -101,31 +115,44 @@ export function AdminLeadsListView({
   if (viewName === "none") return null;
   if (viewName === "emptyNone") {
     return (
-      <EmptyState
-        className={styles.listState}
-        compact
-        headingLevel={2}
-        icon={<FiUsers aria-hidden />}
-        title={t("admin:leads.empty.none.title")}
-        description={t("admin:leads.empty.none.body")}
-        action={{ label: t("admin:leads.addCta"), onClick: onAdd }}
-      />
+      <div className={styles.listState}>
+        <AdminEmptyState
+          icon={FiUsers}
+          title={t("admin:leads.empty.none.title")}
+          body={t("admin:leads.empty.none.body")}
+          action={<Button onClick={onAdd}>{t("admin:leads.addCta")}</Button>}
+        />
+      </div>
     );
   }
   if (viewName === "emptyFiltered") {
     return (
-      <EmptyState
-        className={styles.listState}
-        compact
-        headingLevel={2}
-        icon={<FiSearch aria-hidden />}
-        title={t("admin:leads.empty.filtered.title")}
-        description={t("admin:leads.empty.filtered.body")}
-        action={{
-          label: t("admin:leads.empty.clearFilters"),
-          onClick: onClearFilters,
-        }}
-      />
+      <div className={styles.listState}>
+        <AdminEmptyState
+          icon={FiSearch}
+          title={t("admin:leads.empty.filtered.title")}
+          body={t("admin:leads.empty.filtered.body")}
+          action={
+            <Button onClick={onClearFilters}>
+              {t("admin:leads.empty.clearFilters")}
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
+  if (
+    viewName === "emptyMine" ||
+    viewName === "emptyMineAndUnassigned" ||
+    viewName === "emptyUnassigned"
+  ) {
+    return (
+      <div className={styles.listState}>
+        <LeadAssigneeEmptyState
+          viewName={viewName}
+          onShowEveryone={onShowEveryone}
+        />
+      </div>
     );
   }
   return (

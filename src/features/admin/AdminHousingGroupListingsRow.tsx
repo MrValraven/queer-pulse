@@ -177,18 +177,24 @@ export function AdminHousingGroupListingRow({
         {listing.title}
       </h3>
 
+      {/* Each fact keeps its icon with its words, so a wrap never leaves an
+          icon alone at the end of a line. */}
       <p className={styles.cardFacts}>
-        <FiMapPin aria-hidden />
-        {listing.neighbourhood}
-        {" · "}
-        {t("admin:groupListingQueue.row.perMonth", {
-          amount: fmt.currency(listing.priceEuros, "EUR", {
-            maximumFractionDigits: 0,
-          }),
-        })}
-        {" · "}
-        <FiHome aria-hidden />
-        {listing.accessibilityInfo}
+        <span className={styles.fact}>
+          <FiMapPin aria-hidden />
+          {listing.neighbourhood}
+        </span>
+        <span className={styles.fact}>
+          {t("admin:groupListingQueue.row.perMonth", {
+            amount: fmt.currency(listing.priceEuros, "EUR", {
+              maximumFractionDigits: 0,
+            }),
+          })}
+        </span>
+        <span className={styles.fact}>
+          <FiHome aria-hidden />
+          {listing.accessibilityInfo}
+        </span>
       </p>
 
       <p className={styles.cardDescription}>{listing.description}</p>

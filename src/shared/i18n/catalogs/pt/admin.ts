@@ -38,7 +38,6 @@ export const admin: Catalog = {
   "queueAssignment.filter.unassigned": "Sem responsável",
 
   // ── Consola de verificação de identidade ──────────────────────────────────
-  "verifications.eyebrow": "Confiança e segurança",
   "verifications.title": "Verificação de <em>identidade</em>",
   "verifications.sub":
     "Rever e ajustar o nível de verificação das pessoas após uma revisão manual.",
@@ -328,6 +327,7 @@ export const admin: Catalog = {
     "{count} respostas · {percent}% do total",
 
   "dashboard.notMeasuredYet": "Ainda não medido",
+  "dashboard.statsLabel": "A plataforma num relance",
 
   "dashboard.feed.title": "Atividade em direto",
   "dashboard.feed.live": "Direto",
@@ -337,7 +337,6 @@ export const admin: Catalog = {
   "dashboard.feed.seeAllCta": "Ver toda a atividade",
   "platformLog.navLabel": "Registo da plataforma",
   "platformLog.title": "Registo da <em>plataforma</em>",
-  "platformLog.eyebrow": "Supervisão",
   "platformLog.header.title": "Registo da <em>plataforma</em>",
   "platformLog.filters.label": "Filtrar o registo",
   "platformLog.filters.categories": "Categorias",
@@ -731,7 +730,6 @@ export const admin: Catalog = {
 
   // ── Pessoas ────────────────────────────────────────────────────────────────
   "members.title": "Pessoas · <em>a comunidade</em>",
-  "members.header.eyebrow": "Diretório de pessoas",
   "members.header.titleLine1": "{total} pessoas,",
   "members.header.titleLine2":
     "cada uma <em>com voto de confiança de alguém</em>.",
@@ -747,6 +745,7 @@ export const admin: Catalog = {
   "members.header.trustNetworkBadgeAria_other":
     "{count} casos de confiança para rever",
   "members.filterAriaLabel": "Filtrar pessoas",
+  "members.toolbarAriaLabel": "Procurar e filtrar pessoas",
   "members.searchPlaceholder": "Pesquisar por nome…",
   "members.searchAriaLabel": "Pesquisar pessoas por nome ou pronome",
   "members.tabs.all": "Todas as pessoas",
@@ -1297,7 +1296,6 @@ export const admin: Catalog = {
 
   // ── Equipa (/admin/staff): admins, moderadores e titulares de atribuições
   "staff.title": "Equipa e <em>papéis</em>",
-  "staff.header.eyebrow": "Quem gere a QueerPulse",
   "staff.header.sub":
     "Todos os admins, moderadores e titulares de atribuições da plataforma, e que atribuições têm hoje alguém que possa agir. Gerir abre o registo da pessoa aqui mesmo, para mudares o nível ou as atribuições nesta página.",
   "staff.grantsLabel": "Atribuições",
@@ -1314,18 +1312,22 @@ export const admin: Catalog = {
   "staff.summary.uncoveredHint": "Vê quais precisam de titular",
   "staff.summary.uncoveredHintNone": "Todas as atribuições têm titular",
   "staff.coverage.heading": "Cobertura das atribuições",
-  "staff.coverage.sub":
-    "Quem tem cada atribuição de equipa hoje. Escolhe uma para veres os titulares abaixo.",
   "staff.coverage.holders_one": "{count} titular",
   "staff.coverage.holders_other": "{count} titulares",
   "staff.coverage.nobody": "Ninguém tem esta atribuição",
   "staff.coverage.inactive_one": "{count} titular suspenso ou desativado",
   "staff.coverage.inactive_other": "{count} titulares suspensos ou desativados",
   "staff.coverage.more": "+{count}",
+  "staff.coverage.summary_one":
+    "{covered} de {total} atribuições têm titular, {count} precisa de um",
+  "staff.coverage.summary_other":
+    "{covered} de {total} atribuições têm titular, {count} precisam de um",
+  "staff.coverage.show": "Mostrar as {total} atribuições",
+  "staff.coverage.hide": "Ocultar atribuições",
   "staff.roster.heading": "Toda a equipa",
   "staff.toolbar.searchLabel": "Pesquisar na equipa",
   "staff.toolbar.searchPlaceholder": "Nome ou @utilizador",
-  "staff.toolbar.searchClear": "Limpar a pesquisa",
+  "staff.toolbar.ariaLabel": "Filtrar equipa",
   "staff.toolbar.tierLabel": "Mostrar",
   "staff.toolbar.tier.all": "Todos",
   "staff.toolbar.tier.admin": "Admins",
@@ -1395,7 +1397,7 @@ export const admin: Catalog = {
     "Mantém a página inicial, o kit de imprensa e os vídeos de marketing atualizados. As histórias submetidas e as candidaturas a redator continuam com a equipa Editorial.",
   "staffRoles.musicManagerProducer.label": "Gestão e produção musical",
   "staffRoles.musicManagerProducer.desc":
-    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas. Também mantém o diretório de contactos: adiciona, edita e apaga contactos, os links, as notas e os seguimentos, e liga um contacto a uma persona.",
+    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas. Também mantém o diretório de contactos: adiciona, edita e apaga contactos, os links, as notas e os seguimentos, liga um contacto a uma persona e põe pessoas da equipa como responsáveis por um contacto.",
   "staffRoles.vjOperator.label": "Operação VJ",
   "staffRoles.vjOperator.desc":
     "Gere o VJ: a biblioteca de clips, o ecrã do projetor e o comando no telemóvel. O resto da consola de administração fica fechado a esta função.",
@@ -1501,6 +1503,7 @@ export const admin: Catalog = {
     "Noite de clube, karaoke, jam session",
   "musicEvents.house.capacityHint": "Quantas pessoas podem vir",
   "musicEvents.house.titleExample": "Noite de clube de sexta em Marvila",
+  "musicEvents.header.title": "Eventos de <em>música</em>",
 
   "members.timeline.title": "Histórico de moderação: a favor e contra",
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
@@ -1643,7 +1646,6 @@ export const admin: Catalog = {
 
   // ── Espaços seguros (/admin/safe-spaces) ────────────────────────────────────
   "adminSafeSpaces.title": "Espaços seguros · <em>a lista verificada</em>",
-  "adminSafeSpaces.header.eyebrow": "Confiança e segurança",
   "adminSafeSpaces.header.title": "Verificar <em>espaços seguros</em>",
   "adminSafeSpaces.header.sub":
     "Marca um espaço como seguro e verificado, edita o perfil público, ou remove um que já não merece essa confiança.",
@@ -1733,7 +1735,6 @@ export const admin: Catalog = {
   // ── Fila de espaços do diretório ──────────────────────────────────────────
   // ── Supervisão de convites (/admin/invites) ──────────────────────────
   "adminInvites.title": "Supervisão de <em>convites</em>",
-  "adminInvites.header.eyebrow": "Confiança e segurança",
   "adminInvites.header.title": "Todos os <em>convites</em>",
   "adminInvites.header.sub":
     "Todo o grafo de convites com voto de confiança: quem enviou o quê, quem aceitou, e o que ainda está aberto. Filtra por estado para auditar as ligações da rede.",
@@ -1971,7 +1972,6 @@ export const admin: Catalog = {
     "Não foi possível renovar os convites expirados",
 
   "adminCommissionInterests.title": "Interesse em <em>encomendas</em>",
-  "adminCommissionInterests.header.eyebrow": "Cultura",
   "adminCommissionInterests.header.title":
     "Interesse no <em>quadro de encomendas</em>",
   "adminCommissionInterests.header.sub":
@@ -1990,7 +1990,6 @@ export const admin: Catalog = {
 
   "adminChangemakerNominations.title":
     "Nomeações de <em>agentes de mudança</em>",
-  "adminChangemakerNominations.header.eyebrow": "Comunidade",
   "adminChangemakerNominations.header.title":
     "Quem os membros <em>propõem</em>",
   "adminChangemakerNominations.header.sub":
@@ -2016,7 +2015,6 @@ export const admin: Catalog = {
   "adminChangemakerNominations.loadingMore": "A carregar…",
 
   "adminReadingGroupProposals.title": "Propostas de <em>grupos de leitura</em>",
-  "adminReadingGroupProposals.header.eyebrow": "Comunidade",
   "adminReadingGroupProposals.header.title":
     "Grupos que os membros <em>querem criar</em>",
   "adminReadingGroupProposals.header.sub":
@@ -2050,7 +2048,6 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.loadingMore": "A carregar…",
 
   "adminGuideFeedback.title": "Feedback dos <em>guias</em>",
-  "adminGuideFeedback.header.eyebrow": "Recursos",
   "adminGuideFeedback.header.title": "O que está realmente a <em>ajudar</em>",
   "adminGuideFeedback.header.sub":
     "Todos os guias de recursos que os membros avaliaram como úteis ou não, dos piores para os melhores.",
@@ -2064,10 +2061,9 @@ export const admin: Catalog = {
   "adminGuideFeedback.row.counts": "{helpful} úteis · {notHelpful} não úteis",
 
   "adminConcerns.title": "Preocupações <em>levantadas</em>",
-  "adminConcerns.header.eyebrow": "Confiança e segurança",
   "adminConcerns.header.title": "O que os membros <em>estão a sinalizar</em>",
   "adminConcerns.header.sub":
-    "Todas as preocupações submetidas pelo formulário de governação: denúncias, contestações e problemas. Filtra por estado de triagem e marca cada uma como em análise, resolvida ou descartada.",
+    "Todas as preocupações enviadas pelo formulário de governação. Filtra por estado de triagem e marca cada uma como em análise, resolvida ou descartada.",
   "adminConcerns.empty": "Nenhuma preocupação corresponde a este filtro ainda.",
   "adminConcerns.error":
     "Não foi possível carregar as preocupações. Tenta novamente.",
@@ -2096,10 +2092,9 @@ export const admin: Catalog = {
 
   // ── ACQ-03: consola de submissões em /admin/intakes ────────────────
   "adminIntakes.title": "Tudo o que <em>nos enviaram</em>",
-  "adminIntakes.header.eyebrow": "Receção",
   "adminIntakes.header.title": "O que as pessoas <em>nos enviaram</em>",
   "adminIntakes.header.sub":
-    "Todos os formulários da plataforma vão parar a uma de duas caixas: os formulários de submissão (bolsas, sugestões de correção, ofertas para eventos sem álcool, inscrições no painel, incubadora e cultura) e as mensagens enviadas pela página de contacto. É aqui que uma pessoa as lê.",
+    "Cada formulário da plataforma cai numa de duas caixas: os formulários de submissão e as mensagens da página de contacto. É aqui que uma pessoa os lê.",
   "adminIntakes.header.noEmailNote":
     "A QueerPulse não envia email a partir daqui. Marcar como tratada regista que alguém da nossa equipa leu. Qualquer resposta sai da tua própria caixa de correio, para o endereço que vem na mensagem.",
 
@@ -2234,7 +2229,6 @@ export const admin: Catalog = {
   "adminIntakes.field.why": "Porquê",
 
   "adminMagazineSubmissions.title": "Propostas de <em>histórias</em>",
-  "adminMagazineSubmissions.header.eyebrow": "Revista",
   "adminMagazineSubmissions.header.title": "Propostas dos <em>leitores</em>",
   "adminMagazineSubmissions.header.sub":
     "Todas as propostas de histórias que os leitores enviaram à revista: o título provisório, o formato, a proposta e o estado. Filtra por estado.",
@@ -2303,7 +2297,6 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.loadingMore": "A carregar…",
 
   "adminWriterApplications.title": "Candidaturas a <em>escritor</em>",
-  "adminWriterApplications.header.eyebrow": "Revista",
   "adminWriterApplications.header.title": "Candidaturas a <em>escritor</em>",
   "adminWriterApplications.header.sub":
     "Membros a candidatarem-se a escrever para a revista, com a sua proposta e amostra de escrita.",
@@ -2329,7 +2322,6 @@ export const admin: Catalog = {
   "adminWriterApplications.loadingMore": "A carregar…",
 
   "adminListings.title": "Espaços do <em>diretório</em>",
-  "adminListings.header.eyebrow": "Moderação",
   "adminListings.header.title": "Rever <em>submissões</em>",
   "adminListings.header.sub":
     "Todos os espaços que alguém adicionou ao diretório. Avança um espaço quando estiver pronto, ou devolve-o com uma pergunta rápida.",
@@ -2348,6 +2340,7 @@ export const admin: Catalog = {
   "adminListings.filter.question": "Pergunta rápida",
   "adminListings.filter.live": "Publicado",
   "adminListings.filter.ariaLabel": "Filtrar por estado",
+  "adminListings.toolbar.ariaLabel": "Filtros de listagens",
   "adminListings.search.placeholder": "Pesquisar por nome, autor ou ref…",
   "adminListings.search.ariaLabel": "Pesquisar listagens",
   "adminListings.sort.label": "Ordenar",
@@ -2503,7 +2496,6 @@ export const admin: Catalog = {
 
   // ── Ficheiros enviados (consola de media do admin) ───────────────────────
   "media.title": "Ficheiros <em>enviados</em>",
-  "media.header.eyebrow": "Ferramenta de segurança",
   "media.header.title": "Ficheiros <em>enviados</em>",
   "media.header.sub":
     "Todos os objetos guardados no bucket de uploads da plataforma, com dono e detalhes de armazenamento por ficheiro para revisão de segurança.",
@@ -2635,7 +2627,7 @@ export const admin: Catalog = {
   "moderation.header.title_other": "{count} precisam de ti <em>primeiro</em>.",
   "moderation.header.titleClear": "Ninguém à <em>espera</em>.",
   "moderation.header.sub":
-    "As denúncias são ordenadas por quem está mais em risco, por isso o maior perigo vem primeiro, seja qual for a ordem de chegada. Outing e doxxing sobem sempre ao topo, com um prazo mais apertado de 1 hora. Cada ação regista um motivo que a pessoa vai ler.",
+    "Ordenadas por quem está mais em risco, seja qual for a hora de chegada. Outing e doxxing sobem ao topo com prazo de 1 hora. Cada ação regista um motivo que a pessoa vai ler.",
   "moderation.tabs.open": "Em aberto",
   "moderation.tabs.appeals": "Recursos",
   "moderation.tabs.resolved": "Resolvidas",
@@ -2962,7 +2954,7 @@ export const admin: Catalog = {
     "Cuidada por {count} pessoas moderadoras · fundada em {founded}.",
   "communities.detail.foundedOnly": "Fundada em {founded}.",
   "communities.detail.healthChip": "Saúde {score} · {label}",
-  "communities.detail.settingsCta": "Definições",
+  "communities.detail.settingsCta": "Abrir painel de moderação",
   "communities.detail.supportBanner.title":
     "Esta comunidade podia usar <em>uma ajuda</em>.",
   "communities.detail.supportBanner.textAlone":
@@ -3292,8 +3284,7 @@ export const admin: Catalog = {
 
   // ── Governança ─────────────────────────────────────────────────────────────
   "governance.title": "Governança · <em>responsabilização</em>",
-  "governance.header.eyebrow": "Governança e transparência",
-  "governance.header.title": "Nada aqui está <em>escondido</em>.",
+  "governance.header.title": "Nada aqui está <em>escondido</em>",
   "governance.header.sub":
     "De onde vem o dinheiro, para onde vai, cada mudança de regras e cada ação que uma pessoa moderadora já tomou, tudo aberto às pessoas que nos financiam.",
   "governance.header.publishCta": "Publicar relatório",
@@ -3318,7 +3309,6 @@ export const admin: Catalog = {
     "Calculado em tempo real a partir das contas ativas. Não é editável aqui.",
 
   // ── Separador Propostas (COM-1) ─────────────────────────────────────────────
-  "governance.proposals.header.eyebrow": "Propostas",
   "governance.proposals.header.title": "Pôr a <em>votos</em>",
   "governance.proposals.header.sub":
     "Encerrar um lugar no conselho e mudanças de política de financiamento são decididas por voto das pessoas da comunidade. Abre a proposta aqui; a votação acontece na página pública de Governação.",
@@ -3329,13 +3319,22 @@ export const admin: Catalog = {
     "A falha é do nosso lado. Pode haver propostas abertas que esta lista não conseguiu ler. Tenta de novo.",
   "governance.proposals.list.status.passed": "Aprovada",
   "governance.proposals.list.status.failed": "Não aprovada",
+  "governance.proposals.list.status.gathering": "A recolher assinaturas",
+  "governance.proposals.list.status.screening": "Em análise",
+  "governance.proposals.list.status.open": "Votação aberta",
+  "governance.proposals.list.status.rejected": "Não foi a votos",
+  "governance.proposals.list.status.lapsed": "Sem assinaturas suficientes",
   "governance.proposals.list.type.council_removal":
     "Encerramento de lugar no conselho",
   "governance.proposals.list.type.funding_change": "Mudança de financiamento",
+  "governance.proposals.list.type.member_motion": "Moção da comunidade",
   "governance.proposals.list.tally":
     "{forCount} a favor · {againstCount} contra · {forPercent}% a favor",
   "governance.proposals.list.closes": "Votação encerra {date}",
   "governance.proposals.list.closedOn": "Votação encerrada a {date}",
+  "governance.proposals.list.cosignaturesClose":
+    "As assinaturas fecham a {date}",
+  "governance.proposals.list.screeningNote": "Nota da análise: {note}",
   "governance.proposals.form.eyebrow": "Nova proposta",
   "governance.proposals.form.title": "Abrir uma <em>proposta</em>",
   "governance.proposals.form.sub":
@@ -3367,7 +3366,6 @@ export const admin: Catalog = {
   // agenda a votação; rejeitar uma publica o motivo escrito na página
   // pública de Governação, por isso a cópia diz isso antes de a decisão
   // ser tomada, e não depois.
-  "governance.motions.header.eyebrow": "Moções da comunidade",
   "governance.motions.header.title": "Moções <em>a aguardar análise</em>",
   "governance.motions.header.sub":
     "Moções levantadas por membros que atingiram o limiar de assinaturas. Aprova uma para agendar a votação, ou rejeita-a com um motivo que toda a comunidade vai ler.",
@@ -3732,8 +3730,7 @@ export const admin: Catalog = {
   "partnerProfile.website": "Site",
   "partnerProfile.address": "Morada",
   "partners.title": "Candidaturas a parceiro · <em>revisão</em>",
-  "partners.header.eyebrow": "Parcerias",
-  "partners.header.title": "Quem quer ser <em>parceiro</em>.",
+  "partners.header.title": "Quem quer ser <em>parceiro</em>",
   "partners.header.sub":
     "Organizações que se candidataram a parceria com a QueerPulse. Lê o que fazem e depois aprova-as para a página pública de parceiros ou deixa a candidatura de lado, com uma nota que vão ler.",
   "partners.forbidden": "Esta fila é apenas para administração.",
@@ -3743,8 +3740,6 @@ export const admin: Catalog = {
   "partners.approvedToast": "{name} é agora parceira da QueerPulse",
   "partners.rejectedToast": "A candidatura de {name} foi arquivada",
   "partners.emptyText": "Nada à espera. Todas as candidaturas já têm decisão.",
-  "partners.intro":
-    "Estas organizações pediram para ser parceiras. Aprovar uma lista-a na página pública de parceiros.",
   "partners.card.noteLabel": "Uma nota para {name} (opcional)",
   "partners.card.notePlaceholder":
     "O que ajudaria a candidatarem-se de novo, ou porque não é boa altura.",
@@ -3788,8 +3783,10 @@ export const admin: Catalog = {
   "modPanel.reports.emptyDesc":
     "Nada foi sinalizado. A comunidade cuida de si própria.",
   "modPanel.reports.metaLine":
-    "De {author} · sinalizado por {reporter} · há {time}",
-  "modPanel.reports.metaLiveLine": "Sinalizado · há {time}",
+    "De {author} · sinalizado por {reporter} · {time}",
+  "modPanel.reports.metaLiveLine": "Sinalizado · {time}",
+  "modPanel.requests.toolbarLabel": "Pesquisar e aprovar pedidos",
+  "modPanel.members.toolbarLabel": "Pesquisar e filtrar pessoas",
   "modPanel.reports.removeCta": "Remover publicação",
   "modPanel.reports.dismissCta": "Rejeitar",
   "modPanel.reports.escalationNote":
@@ -4252,7 +4249,6 @@ export const admin: Catalog = {
 
   // ── Definições da plataforma (/admin/settings) ────────────────────────────
   "settings.breadcrumb": "Definições",
-  "settings.eyebrow": "Plataforma",
   "settings.title": "Definições da plataforma",
   "settings.sub":
     "Controlos de emergência para o registo e o acesso. As alterações fazem efeito em cerca de 10 segundos.",
@@ -4337,7 +4333,7 @@ export const admin: Catalog = {
 
   "settings.note.label": "Nota (opcional)",
   "settings.note.placeholder": "Porque estás a fazer esta alteração?",
-  "settings.note.hint": "Aplica-se à próxima alteração que fizeres abaixo.",
+  "settings.note.hint": "Aplica-se à próxima alteração que guardares acima.",
   "settings.saveError": "Não foi possível guardar. Nada foi alterado.",
 
   "settings.history.title": "Alterações recentes",
@@ -4376,9 +4372,9 @@ export const admin: Catalog = {
     "Ocultar automaticamente após (opcional)",
   "settings.announcement.expiresAt.hint":
     "Depois desta hora, a faixa deixa de aparecer mesmo que o interruptor acima continue ligado.",
+  "settings.header.title": "Definições da <em>plataforma</em>",
 
   // ── Contas de sistema (bots) ──────────────────────────────────────────────
-  "bots.eyebrow": "Plataforma",
   "bots.title": "Contas de sistema",
   "bots.subtitle": "As vozes que não são uma pessoa. Mantém-nas atualizadas.",
   "bots.empty": "Ainda não há contas de sistema.",
@@ -4405,6 +4401,7 @@ export const admin: Catalog = {
   "bots.saveFailed":
     "Não foi possível guardar. Verifica a ligação e tenta de novo.",
   "bots.usernameTaken": "Esse identificador já está a ser usado.",
+  "bots.header.title": "Contas de <em>sistema</em>",
 
   // ── Escalões de parceria (/admin/org-tiers) — página, formulário, linhas ───
   // NOMES de escalões/parceiros ficam em inglês — conteúdo DTO da API. O
@@ -4419,7 +4416,8 @@ export const admin: Catalog = {
   "orgTier.form.createCta": "Criar escalão",
   "orgTier.loadError":
     "A lista de escalões não carregou de momento. Tenta novamente.",
-  "orgTier.empty": "Ainda não há escalões. Cria o primeiro abaixo.",
+  "orgTier.empty":
+    "Ainda não há escalões. Usa Novo escalão para criar o primeiro.",
   "orgTier.delete.title": "Remover {name}?",
   "orgTier.delete.confirmCta": "Remover escalão",
   "orgTier.delete.body":
@@ -4479,7 +4477,6 @@ export const admin: Catalog = {
   // ── Cooperativas de habitação (/admin/housing) — página, formulário, linhas ─
   // NOMES / cidades das cooperativas ficam em inglês — conteúdo DTO da API.
   "housingCoop.title": "Cooperativas de <em>habitação</em>",
-  "housingCoop.header.eyebrow": "Economia local",
   "housingCoop.header.sub":
     "Todas as cooperativas na plataforma, publicadas ou ainda em formação: cria uma, mantém os detalhes atualizados, e trata da fila de pedidos de adesão abaixo.",
   "housingCoop.newCta": "Nova cooperativa",
@@ -4489,7 +4486,6 @@ export const admin: Catalog = {
   "housingCoop.form.createCta": "Criar cooperativa",
   "housingCoop.loadError":
     "A lista de cooperativas não carregou de momento. Tenta novamente.",
-  "housingCoop.empty": "Ainda não há cooperativas. Cria a primeira abaixo.",
   "housingCoop.delete.title": "Remover {name}?",
   "housingCoop.delete.confirmCta": "Remover cooperativa",
   "housingCoop.delete.body":
@@ -4544,6 +4540,8 @@ export const admin: Catalog = {
   "housingCoop.toggle.operational.title": "Operacional",
   "housingCoop.toggle.sharesAreTarget.title": "O valor da quota é uma meta",
   "housingCoop.toggle.published.title": "Publicado",
+  "housingCoop.emptyTitle": "Ainda não há cooperativas",
+  "housingCoop.emptyBody": "Usa Nova cooperativa para criar a primeira.",
 
   // ── AdminHousingJoinRequests.tsx — triagem de pedidos de adesão ────────────
   // Nomes de candidatos, nomes de cooperativas, notas ficam em inglês (DTO).
@@ -4565,7 +4563,6 @@ export const admin: Catalog = {
 
   // ── Grupos de habitação (/admin/housing-groups) — triagem + normas ─────────
   "housingGroups.title": "Grupos de <em>habitação</em>",
-  "housingGroups.header.eyebrow": "Habitação verificada",
   "housingGroups.header.sub":
     "Analisa quem pede para entrar nos grupos restritos e mantém os anúncios honestos, escondendo os que quebram as regras.",
   "housingGroups.requests.title": "Pedidos de adesão",
@@ -4608,6 +4605,9 @@ export const admin: Catalog = {
   // ── Roteiro (/admin/roadmap) — quadro, fila de ideias, estatísticas ────────
   "roadmap.title": "Roteiro · <em>o que vem a seguir</em>",
   "roadmap.loading": "A carregar o roteiro…",
+  "roadmap.toolbar.ariaLabel": "Filtros do roadmap",
+  "roadmap.guidesView.languageCovered": "{lang} escrito",
+  "roadmap.guidesView.languageMissing": "{lang} em falta",
   "roadmap.tabs.board": "Quadro",
 
   // AdminRoadmapBoard.tsx, AdminRoadmapItemRow.tsx, AdminRoadmapItemModal.tsx,
@@ -4644,10 +4644,9 @@ export const admin: Catalog = {
   "roadmap.categories.platform": "Plataforma",
 
   // ── Estrutura da página — eyebrow/título/subtítulo + ações do cabeçalho ──
-  "roadmap.page.eyebrow": "Roteiro",
   "roadmap.page.title": "Molda o <em>roteiro</em>",
   "roadmap.page.sub":
-    "Arrasta itens entre colunas, tria o que os membros pediram e controla exatamente o que a página pública mostra. Uma data alterada pede-te sempre um motivo. É esse o objetivo.",
+    "Arrasta itens entre colunas, tria o que os membros pediram e escolhe o que a página pública mostra. Mudar uma data pede-te sempre um motivo.",
   "roadmap.page.newItemCta": "Novo item",
   "roadmap.page.draftDigestCta": "Rascunhar resumo",
   "roadmap.page.previewPublicCta": "Pré-visualizar página pública",
@@ -5175,9 +5174,9 @@ export const admin: Catalog = {
   "roadmap.toasts.boardReset": "Quadro reposto com o roteiro semeado",
 
   // ── Página inicial (/admin/landing) ─────────────────────────────────────
-  "landing.header.eyebrow": "Site público",
   "landing.header.sub":
     "Cura as secções que os visitantes não autenticados veem na página inicial.",
+  "landing.header.title": "Página <em>inicial</em>",
   "landing.quickLinks.heading": "Atalhos",
   "landing.quickLinks.helper":
     "Cada atalho abre num novo separador. A página inicial e o Studio mostram a vista de um visitante não autenticado.",
@@ -5325,9 +5324,9 @@ export const admin: Catalog = {
     "Estes aparecem como cartões completos quando os dados ao vivo carregarem.",
 
   // ── Kit de imprensa (/admin/press-kit) ────────────────────────────────────
-  "pressKit.header.eyebrow": "Site público",
   "pressKit.header.sub":
     "Faz a curadoria da cobertura de imprensa e dos contactos mostrados no kit de imprensa público.",
+  "pressKit.header.title": "Kit de <em>imprensa</em>",
 
   "pressKit.tabs.coverage": "Cobertura",
   "pressKit.tabs.team": "Equipa",
@@ -5415,7 +5414,6 @@ export const admin: Catalog = {
 
   // ── Relatórios consolidados da plataforma (ADM-17/ADM-19) — /admin/reports ──
   "reports.title": "<em>Relatórios</em> da plataforma",
-  "reports.header.eyebrow": "Relatórios",
   "reports.header.title": "<em>Relatórios</em> da plataforma",
   "reports.header.sub":
     "Crescimento, denúncias por tipo, finanças da governação e saúde das comunidades, num só lugar.",
@@ -5442,8 +5440,6 @@ export const admin: Catalog = {
   "reports.communityHealth.asOfNow":
     "A partir das {time}. Uma fotografia num momento.",
   "reports.communityHealth.notMeasured": "Ainda não medido",
-  "reports.communityHealth.averageScore": "Pontuação média: {score}",
-  "reports.communityHealth.needingSupport": "{count} a precisar de apoio",
   "reports.communityHealth.needsSupportChip": "Precisa de apoio",
   "reports.communityHealth.columns.name": "Comunidade",
   "reports.communityHealth.columns.score": "Pontuação",
@@ -5480,12 +5476,9 @@ export const admin: Catalog = {
 
   // ── CNT-14: CRUD de diretório de recursos (admin) ───────────────────────
   "adminResourceListings.title": "Diretório de <em>recursos</em>",
-  "adminResourceListings.header.eyebrow": "Diretório",
   "adminResourceListings.header.sub":
     "As organizações reais e verificadas de Apoio Jurídico e Testagem de Saúde Sexual que os membros podem contactar. Publicar aqui é sempre um passo deliberado: aprovar uma sugestão nunca cria um recurso automaticamente.",
   "adminResourceListings.newCta": "Novo recurso",
-  "adminResourceListings.empty":
-    "Ainda não há recursos. Crie o primeiro, ou consulte a fila de sugestões para ideias.",
   "adminResourceListings.loadError": "Não foi possível carregar os recursos.",
   "adminResourceListings.category.legal_aid": "Apoio Jurídico",
   "adminResourceListings.category.sexual_health_testing":
@@ -5512,10 +5505,12 @@ export const admin: Catalog = {
   "adminResourceListings.delete.body":
     "Este recurso deixará de ser mostrado aos membros. Esta ação não pode ser desfeita aqui.",
   "adminResourceListings.delete.confirmCta": "Remover recurso",
+  "adminResourceListings.emptyTitle": "Ainda não há recursos",
+  "adminResourceListings.emptyBody":
+    "Cria o primeiro, ou espreita a fila de sugestões para ideias.",
 
   // ── CNT-14: fila de revisão de sugestões (admin) ────────────────────────
   "adminResourceSuggestions.title": "Sugestões de <em>recursos</em>",
-  "adminResourceSuggestions.header.eyebrow": "Fila de revisão",
   "adminResourceSuggestions.header.title": "Sugestões de <em>recursos</em>",
   "adminResourceSuggestions.header.sub":
     "Todos os recursos de Apoio Jurídico / Testagem de Saúde Sexual sugeridos por membros. Aprovar aqui apenas regista a decisão: publica o recurso real e verificado manualmente em Diretório de recursos.",
@@ -5558,7 +5553,6 @@ export const admin: Catalog = {
 
   // ── Pedidos de etiquetas de comunidades (AdminCommunityTagRequestsPage) ───
   "adminCommunityTagRequests.title": "Pedidos de <em>etiquetas</em>",
-  "adminCommunityTagRequests.header.eyebrow": "Fila de revisão",
   "adminCommunityTagRequests.header.title": "Pedidos de <em>etiquetas</em>",
   "adminCommunityTagRequests.header.sub":
     "Sugestões de etiquetas de proprietários e moderadores de comunidades, para etiquetas que ainda não existem.",
@@ -5583,7 +5577,6 @@ export const admin: Catalog = {
 
   // ── Pedidos de espaços de comunidades (AdminCommunitySpaceRequestsPage) ───
   "adminCommunitySpaceRequests.title": "Pedidos de <em>espaços</em>",
-  "adminCommunitySpaceRequests.header.eyebrow": "Comunidades",
   "adminCommunitySpaceRequests.header.title": "Pedidos de <em>espaços</em>",
   "adminCommunitySpaceRequests.header.sub":
     "Pessoas responsáveis e cotitulares a pedir para abrir espaços dentro da sua comunidade. Aprovar ativa os espaços de imediato.",
@@ -5598,6 +5591,7 @@ export const admin: Catalog = {
   "adminCommunitySpaceRequests.row.by": "Pedido por {name}",
   "adminCommunitySpaceRequests.row.sent": "Pedido {age}",
   "adminCommunitySpaceRequests.row.declineReason": "Recusado: {reason}",
+  "adminCommunitySpaceRequests.row.accessTier": "Acesso ao espaço: {tier}",
   "adminCommunitySpaceRequests.unknownRequester": "Uma pessoa que já saiu",
   "adminCommunitySpaceRequests.withheldRequester":
     "A pessoa responsável ou cotitular",
@@ -5807,6 +5801,9 @@ export const admin: Catalog = {
   "governance.overview.decisions.sub":
     "Que decisões aparecem no registo público, das mais recentes para as mais antigas.",
   "members.verify.mutualLabel": "Conhecimento em comum",
+  "members.verify.page.title": "Pedidos de <em>convite</em>",
+  "members.verify.page.sub":
+    "Todas as pessoas que pediram um convite. Abre o guia aqui em baixo antes da primeira análise.",
   "errors.updatePartner":
     "Não foi possível atualizar essa organização parceira",
   "errors.saveChanges": "Não foi possível guardar essas alterações",
@@ -6101,7 +6098,6 @@ export const admin: Catalog = {
   // notificação QueerPulse.
   "adminDsar.navLabel": "Pedidos de dados",
   "adminDsar.title": "Pedidos de <em>dados</em>",
-  "adminDsar.header.eyebrow": "Fila de revisão",
   "adminDsar.header.title": "Pedidos sobre <em>dados pessoais</em>",
   "adminDsar.header.sub":
     "Todos os pedidos de dados submetidos por membros, com o prazo legal mais próximo à cabeça. Cada um tem 30 dias.",
@@ -6175,10 +6171,10 @@ export const admin: Catalog = {
   "topics.empty":
     "Ainda não há tópicos. Cria o primeiro e fica já no diretório.",
   "topics.loadError": "Não foi possível carregar o diretório de tópicos.",
-  "topics.postsCount_one": "{count} publicação",
-  "topics.postsCount_other": "{count} publicações",
-  "topics.followersCount_one": "{count} seguidor",
-  "topics.followersCount_other": "{count} seguidores",
+  "topics.postsCount_one": "{countLabel} publicação",
+  "topics.postsCount_other": "{countLabel} publicações",
+  "topics.followersCount_one": "{countLabel} seguidor",
+  "topics.followersCount_other": "{countLabel} seguidores",
   "topics.crisisBadge": "Cartão de apoio em crise",
   "topics.archivedBadge": "Arquivado",
   "topics.archiveCta": "Arquivar",
@@ -6219,7 +6215,6 @@ export const admin: Catalog = {
   // Ver a nota no catálogo EN.
   "adminGlossary.title": "O <em>glossário</em>",
   "adminGlossary.guidesBreadcrumb": "Guias de recursos",
-  "adminGlossary.header.eyebrow": "Editorial",
   "adminGlossary.header.sub":
     "Todos os termos que as pessoas leem, dos mais antigos primeiro. Acrescenta uma palavra, corrige uma definição e termina o português: um termo sem português mostra na mesma o inglês, por isso a falha não se vê de fora.",
   "adminGlossary.searchLabel": "Pesquisar termos",
@@ -6229,8 +6224,6 @@ export const admin: Catalog = {
     "{count} termo ainda não tem definição em português.",
   "adminGlossary.untranslatedBanner_other":
     "{count} termos ainda não têm definição em português.",
-  "adminGlossary.empty":
-    "Ainda não há termos. Adiciona o primeiro, ou corre a migração de preenchimento.",
   "adminGlossary.noMatches": "Nenhum termo corresponde a essa pesquisa.",
   "adminGlossary.viewPublicGlossaryCta": "Abrir o glossário público",
   "adminGlossary.loadError.title":
@@ -6280,9 +6273,10 @@ export const admin: Catalog = {
   "adminGlossary.error.save": "Não foi possível guardar o termo.",
   "adminGlossary.error.review": "Não foi possível registar a revisão.",
   "adminGlossary.error.delete": "Não foi possível apagar o termo.",
+  "adminGlossary.emptyTitle": "Ainda não há termos",
+  "adminGlossary.emptyBody": "Adiciona o primeiro com Adicionar termo.",
 
   "adminResourceGuides.title": "Guias de <em>recursos</em>",
-  "adminResourceGuides.header.eyebrow": "Editorial",
   "adminResourceGuides.header.sub":
     "Todos os guias da plataforma, os mais desatualizados primeiro. Edite o texto aqui em vez de fazer um deploy, e marque a revisão quando tiver lido um de ponta a ponta.",
   "adminResourceGuides.sortLabel": "Ordenar guias",
@@ -6298,8 +6292,6 @@ export const admin: Catalog = {
     "{count} guia passou a data de revisão.",
   "adminResourceGuides.overdueBanner_other":
     "{count} guias passaram a data de revisão.",
-  "adminResourceGuides.empty":
-    "Ainda não há guias. Assim que a migração de conteúdo correr, todos aparecem aqui.",
   "adminResourceGuides.viewPublicIndexCta": "Abrir o índice público de guias",
   "adminResourceGuides.loadError": "Não foi possível carregar os guias.",
 
@@ -6521,9 +6513,8 @@ export const admin: Catalog = {
     'Uma secção "guides" substitui os cartões dos guias e as respetivas avaliações.',
 
   // ── AdminHousingListingsPage — consola de revisão de habitação (LOC-01) ──
-  "housingListings.title": "Revisão de <em>habitação.</em>",
-  "housingListings.eyebrow": "Quadro de habitação",
-  "housingListings.header.title": "Casas à espera de uma <em>decisão.</em>",
+  "housingListings.title": "Revisão de <em>habitação</em>",
+  "housingListings.header.title": "Casas à espera de uma <em>decisão</em>",
   "housingListings.header.sub":
     "Cada anúncio publicado por alguém espera aqui até uma pessoa o ler. Primeiro os de maior risco, com os sinais que os puseram lá.",
   "housingListings.keyHint":
@@ -6656,6 +6647,9 @@ export const admin: Catalog = {
   "adminResourceGuides.toast.reviewed": "{title} marcado como revisto.",
   "adminResourceGuides.error.save": "Não foi possível guardar o guia.",
   "adminResourceGuides.error.review": "Não foi possível registar a revisão.",
+  "adminResourceGuides.emptyTitle": "Ainda não há guias",
+  "adminResourceGuides.emptyBody":
+    "Cada guia publicado aparece aqui para revisão.",
 
   // ── Trust, safety and moderation (section 1 build) ──────────────────────
   // Community attribution on the report queue (TS-14).
@@ -6737,7 +6731,7 @@ export const admin: Catalog = {
   "moderation.templates.removeError": "Não foi possível remover essa resposta",
   "moderation.templates.reorderError": "Não foi possível alterar a ordem",
   "moderation.templates.sub":
-    "As mensagens que os moderadores podem preencher numa decisão. Cada nota continua a ser editada e aprovada antes de ser enviada.",
+    "As mensagens que os moderadores podem preencher numa decisão. Cada nota é editada e aprovada antes de ser enviada.",
   "moderation.templates.title": "Respostas <em>guardadas</em>",
   "moderation.templates.toast.created": '"{label}" adicionada',
   "moderation.templates.toast.removed": '"{label}" removida',
@@ -6791,8 +6785,7 @@ export const admin: Catalog = {
 
   // ── Fila de revisão de quartos de grupo (/admin/housing-group-listings) ────
   "groupListingQueue.title": "Quartos à <em>espera</em>",
-  "groupListingQueue.eyebrow": "Habitação verificada",
-  "groupListingQueue.header.title": "Quartos à espera de <em>ti</em>",
+  "groupListingQueue.header.title": "Anúncios de grupo à espera de <em>ti</em>",
   "groupListingQueue.header.sub":
     "Todos os quartos publicados num grupo de habitação chegam aqui antes de alguém os ver. Publica, faz uma pergunta a quem publicou, ou diz claramente que não vai avançar.",
   "groupListingQueue.keyHint":
@@ -6905,7 +6898,6 @@ export const admin: Catalog = {
 
   // ── Consola do diretório de senhorios (/admin/landlords) ───────────────────
   "landlords.title": "Diretório de <em>senhorios</em>",
-  "landlords.eyebrow": "Habitação",
   "landlords.header.title": "Senhorios que vale a pena <em>conhecer</em>",
   "landlords.header.sub":
     "As pessoas sugerem senhorios de quem já arrendaram, e pedem para serem apresentadas. As duas coisas estão à espera de uma resposta tua.",
@@ -7178,7 +7170,6 @@ export const admin: Catalog = {
     "Conversas do fórum à espera de revisão",
   "moderationHealth.queue.safety_inquiries": "Mensagens de segurança",
   "adminForumReview.title": "Revisão do <em>fórum</em>",
-  "adminForumReview.header.eyebrow": "Fórum",
   "adminForumReview.header.title": "Conversas à espera de <em>leitura</em>",
   "adminForumReview.header.sub":
     "Estas conversas ficaram à espera de moderação. Mais ninguém as vê até as aprovares.",
@@ -7335,7 +7326,6 @@ export const admin: Catalog = {
   // Supervisão do voluntariado: sessões e horas confirmadas num período.
   // Só agregados. Não há aqui nenhum ranking por pessoa nem string para um.
   "volunteerHours.title": "Horas de <em>voluntariado</em>",
-  "volunteerHours.header.eyebrow": "Relatórios",
   "volunteerHours.header.title": "Horas de <em>voluntariado</em>",
   "volunteerHours.header.sub":
     "Sessões de voluntariado confirmadas e as horas que somaram, para a equipa poder responder a um parceiro com um número.",
@@ -7464,7 +7454,6 @@ export const admin: Catalog = {
   // ── PRD-32: registo de exigências legais e do Estado ──────────────────────
   "legalRequests.navLabel": "Pedidos legais",
   "legalRequests.title": "Exigências <em>legais e do Estado</em>",
-  "legalRequests.eyebrow": "Registo de transparência",
   "legalRequests.headerSub":
     "Todas as exigências de dados de membros vindas de um tribunal, de uma força policial, de um ministério ou de qualquer outro braço do Estado. O relatório público de transparência conta estas linhas e não publica nenhum dos seus campos.",
   "legalRequests.recordCta": "Registar uma exigência",
@@ -7485,7 +7474,9 @@ export const admin: Catalog = {
   "legalRequests.row.openAriaLabel":
     "Abrir a exigência de {body}, recebida a {date}",
   "legalRequests.row.meta": "{jurisdiction}, recebida a {date}",
-  "legalRequests.row.accounts":
+  "legalRequests.row.accounts_one":
+    "{affected} conta nomeada, {notified} avisada",
+  "legalRequests.row.accounts_other":
     "{affected} contas nomeadas, {notified} avisadas",
   "legalRequests.type.subpoena": "Intimação",
   "legalRequests.type.court_order": "Ordem judicial",
@@ -7632,9 +7623,8 @@ export const admin: Catalog = {
   // ── PRD-31: fila de escalamentos de evasão a banimentos ───────────────────
   "banEvasionEscalations.navLabel": "Escalamentos de evasão",
   "banEvasionEscalations.title": "Escalamentos de <em>evasão a banimentos</em>",
-  "banEvasionEscalations.eyebrow": "Fila da equipa",
   "banEvasionEscalations.headerSub":
-    "Quem modera uma comunidade sabe uma coisa sobre quem se candidata: se corresponde a alguém que essa comunidade barrou. Escalar é a forma de pedir o resto do quadro, e é aqui que ele é lido.",
+    "Quem modera uma comunidade vê uma só coisa sobre quem se candidata: se corresponde a alguém que essa comunidade barrou. Escalar pede o resto, e é lido aqui.",
   "banEvasionEscalations.demoNotice":
     "O modo de demonstração mostra escalamentos de exemplo. Nada aqui é uma candidatura real, e resolver um não envia nada.",
   "banEvasionEscalations.status.open": "Abertos",
@@ -7781,14 +7771,12 @@ export const admin: Catalog = {
   // `moderationHealth.queue.*` block, because two hand-curated lists mirroring
   // one taxonomy drift apart silently.
   "adminQueues.title": "O que está à <em>espera</em>",
-  "adminQueues.header.eyebrow": "Triagem",
   "adminQueues.header.title": "O que está à <em>espera</em>",
   "adminQueues.header.sub":
     "Todas as filas em que podes trabalhar, num só ecrã, com a coisa mais antiga à espera em cada uma.",
   "adminQueues.asOf": "Contado às {time}",
   "adminQueues.refresh": "Atualizar",
   "adminQueues.refreshing": "A atualizar",
-  "adminQueues.verdict.overdueTitle": "Há coisas fora do prazo",
   "adminQueues.verdict.overdueBody":
     "Começa pelas linhas marcadas como fora do prazo em baixo. Cada uma é uma promessa que a plataforma já fez.",
   "adminQueues.verdict.clearTitle": "Nada está fora do prazo",
@@ -7830,7 +7818,6 @@ export const admin: Catalog = {
 
   // Feature usage panel. Feature display names cover every key in the
   // backend's launchedFeatures, so no row can render a raw key.
-  "featureUsage.eyebrow": "Onde vai o esforço",
   "featureUsage.title": "Utilização de <em>funcionalidades</em>",
   "featureUsage.header.title": "Utilização de <em>funcionalidades</em>",
   "featureUsage.sub":
@@ -7840,7 +7827,13 @@ export const admin: Catalog = {
   "featureUsage.range.d30": "Últimos 30 dias",
   "featureUsage.range.d90": "Últimos 90 dias",
   "featureUsage.reachOnlyNote":
-    "Há funcionalidades que não têm nada que um membro possa criar. As colunas Criados e Total explicam porquê em vez de mostrar um número, para uma célula vazia nunca ser confundida com um zero.",
+    "Há funcionalidades que não têm nada que um membro possa criar. As colunas Criados e Total explicam porquê com uma nota curta, para uma célula vazia nunca ser confundida com um zero.",
+  "reports.communityHealth.stat.averageScore": "Pontuação média",
+  "reports.communityHealth.stat.needingSupport":
+    "Comunidades a precisar de apoio",
+  "reports.communityHealth.tableLabel": "Comunidades por saúde",
+  "legalRequests.filter.toolbarLabel": "Filtrar o registo",
+  "communities.governanceLog.toolbarLabel": "Filtrar o registo",
   "featureUsage.table.caption":
     "Alcance e criação por funcionalidade, ordenados pelo que precisa de decisão primeiro.",
   "featureUsage.column.feature": "Funcionalidade",
@@ -7995,7 +7988,6 @@ export const admin: Catalog = {
 
   // Scan section 9: official messages console (AdminOfficialMessagesPage).
   // `status.*` resolves dynamically from the broadcast row's status.
-  "officialMessages.eyebrow": "Plataforma",
   "officialMessages.title": "Mensagens oficiais",
   "officialMessages.subtitle":
     "Fala como QueerPulse, na conversa oficial de cada membro. Só para admins.",
@@ -8052,6 +8044,7 @@ export const admin: Catalog = {
   "officialMessages.status.sending": "A enviar",
   "officialMessages.status.completed": "Entregue",
   "officialMessages.status.failed": "Interrompido",
+  "officialMessages.header.title": "Mensagens <em>oficiais</em>",
 
   // Criador de packs de stickers (AdminStickerPacksPage, src/features/admin/stickerBuilder/)
   "stickerPacks.title": "<em>Packs</em> de stickers",
@@ -8343,7 +8336,6 @@ export const admin: Catalog = {
   "stickerPacks.review.skipping_other": "Ignorar {count} que já estão no pack",
   "stickerPacks.review.target": "Para {pack} ({status})",
   "stickerPacks.review.replacingTag": "(a substituir)",
-  "stickerPacks.page.title": "Packs de stickers",
   "stickerPacks.page.empty.title": "Cria o teu primeiro pack",
   "stickerPacks.page.empty.body":
     "Um pack junta stickers que os membros podem enviar no chat. Começa como rascunho, por isso os membros só o veem quando o publicares.",
@@ -8417,7 +8409,6 @@ export const admin: Catalog = {
   // espaço não pertence a ninguém até um membro aceitar, por isso tudo o que
   // diz respeito a quem o gere fica por preencher até essa pessoa concordar.
   "listingNew.title": "Adicionar um espaço",
-  "listingNew.eyebrow": "Diretório",
   "listingNew.sub":
     "Escreve sobre um espaço que ainda não se juntou. Podes passá-lo a quem o gere quando quiseres.",
   // Uma etiqueta simples só para a migalha, porque `adminListings.title` traz
@@ -8471,6 +8462,7 @@ export const admin: Catalog = {
   "listingNew.fromDraft.loadError.title": "Este rascunho não carregou",
   "listingNew.fromDraft.loadError.body":
     "Verifica a ligação e tenta outra vez.",
+  "listingNew.header.title": "Adicionar um <em>espaço</em>",
 
   // ── Edição pela administração de um espaço ao cuidado da plataforma
   // (`/admin/listings/:ref/edit`) ────────────────────────────────────────────
@@ -8478,7 +8470,6 @@ export const admin: Catalog = {
   // QueerPulse. Se entretanto ganhou um proprietário, a página mostra o
   // estado hasOwner em vez do editor.
   "listingEdit.title": "Editar espaço",
-  "listingEdit.eyebrow": "Diretório",
   "listingEdit.sub":
     "A QueerPulse cuida deste espaço até alguém o assumir. Num espaço publicado, as tuas alterações aparecem no diretório assim que gravares.",
   "listingEdit.queueBreadcrumb": "Espaços",
@@ -8839,7 +8830,6 @@ export const admin: Catalog = {
     "A cópia não funcionou neste navegador. Tenta outra vez.",
   // QueerPulse Ambassadors admin page (/admin/ambassadors) and member-drawer line.
   "ambassadors.title": "Pessoas embaixadoras",
-  "ambassadors.header.eyebrow": "Parcerias",
   "ambassadors.header.title": "<em>Pessoas embaixadoras</em> QueerPulse",
   "ambassadors.header.sub":
     "Pessoas da comunidade que apoiam publicamente a QueerPulse. Atribui o estatuto, define a área de foco de cada pessoa e guarda o registo de quem o atribuiu ou retirou e porquê.",
@@ -9029,9 +9019,9 @@ export const admin: Catalog = {
   "ambassadors.history.empty": "Não há estatutos registados para esta pessoa.",
   "ambassadors.circle.notFounded":
     "O círculo abre quando for atribuído o estatuto à primeira pessoa embaixadora.",
-  "marketingVideos.header.eyebrow": "Filmes, flyers e merch",
   "marketingVideos.header.sub":
     "Os nossos filmes de lançamento, flyers de eventos, stories, banners de eventos e merch da equipa, guardados como código. Vê um filme e transforma-o num ficheiro de vídeo, ou descarrega ficheiros para imprimir, stories e banners, sempre que precisares.",
+  "marketingVideos.header.title": "Ficheiros de <em>marketing</em>",
   "marketingVideos.sections.films": "Filmes",
   "marketingVideos.sections.flyers": "Flyers",
   "marketingVideos.sections.eventBanners": "Banners de eventos",
@@ -9159,9 +9149,9 @@ export const admin: Catalog = {
   "marketingVideos.studio.unsupported":
     "Para gerar vídeos precisas do Chrome ou do Edge num computador. Podes pré-visualizar todos os filmes aqui na mesma.",
   // ── Conceitos de logótipo (/admin/logo-concepts) ─────────────────────────
-  "logoConcepts.header.eyebrow": "Marca",
   "logoConcepts.header.sub":
     "Marcas candidatas para os avatares nas redes sociais, feitas a partir do Q do início de sessão: compara-as em cada esquema de cores e tamanho e descarrega os ficheiros.",
+  "logoConcepts.header.title": "Conceitos de <em>logótipo</em>",
   "logoConcepts.current.title": "Marca atual",
   "logoConcepts.current.body":
     "Os pontos de pulso que usamos hoje, a 96px e como avatar de 40px, para comparares cada conceito.",
@@ -9316,7 +9306,6 @@ export const admin: Catalog = {
   // por acabar. `missing.<kind>.<code>` dá nome ao que ainda falta; um código
   // sem chave aqui junta-se em `missing.other`.
   "creatorDrafts.title": "Rascunhos <em>em curso</em>",
-  "creatorDrafts.header.eyebrow": "Ajuda a caminho",
   "creatorDrafts.header.title": "Rascunhos que estão <em>a nascer</em>",
   "creatorDrafts.header.sub":
     "Páginas por acabar de comunidades, personas e negócios. Abre uma para a veres como o público a veria. Se alguém parecer ter encravado, escreve-lhe",
@@ -9470,10 +9459,9 @@ export const admin: Catalog = {
   "creatorDrafts.missing.listing_edit.accessibility":
     "Respostas de acessibilidade",
   // ── Consola da descoberta no Studio (/admin/studio) ───────────────────────
-  "studioAdmin.eyebrow": "Studio",
   "studioAdmin.title": "Descoberta no <em>Studio</em>",
   "studioAdmin.sub":
-    "Define o lançamento em destaque, arruma as duas prateleiras, gere as cenas, escolhe quem entra em Artista do mês e Novas estrelas na página inicial do Studio, cuida da página do Studio, escolhe artistas da fundação e abre o Studio a quem está à espera",
+    "Gere a página inicial do Studio: lançamento em destaque, prateleiras, cenas, Artista do mês e Novas estrelas, a página do Studio, artistas da fundação e quem entra a seguir",
   "studioAdmin.subCurator":
     "Define o lançamento em destaque, arruma as prateleiras, gere as cenas e escolhe quem entra em Artista do mês e Novas estrelas na página inicial do Studio",
   "studioAdmin.tabs.shelves": "Prateleiras",
@@ -9508,8 +9496,6 @@ export const admin: Catalog = {
   "studioAdmin.pick.addNoteAria": "Juntar nota a {title}",
   "studioAdmin.pick.removeCta": "Remover escolha",
   "studioAdmin.pick.removeAria": "Remover escolha {title} de {shelf}",
-  "studioAdmin.moveUpCta": "Subir",
-  "studioAdmin.moveDownCta": "Descer",
   "studioAdmin.moveUpAria": "Subir: {name}",
   "studioAdmin.moveDownAria": "Descer: {name}",
   "studioAdmin.dragAria": "Arrasta {name} para mudar a ordem",
@@ -10215,6 +10201,7 @@ export const admin: Catalog = {
     "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
   "personaWall.failure.unknown":
     "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
+  "personaWall.header.title": "Mural do <em>diretório</em>",
 
   // ── Leads (Admin and music_manager_producer) ──
   "leads.title": "Contactos",
@@ -10224,7 +10211,6 @@ export const admin: Catalog = {
   "leads.list.searchLabel": "Pesquisar contactos",
   "leads.list.searchPlaceholder": "Nome, email ou link",
   "leads.list.stageFilterLabel": "Fase",
-  "leads.list.stageAll": "Todos",
   "leads.list.stageChipAria_one": "{stage}, {count} contacto",
   "leads.list.stageChipAria": "{stage}, {count} contactos",
   "leads.list.typeFilterLabel": "Tipo",
@@ -10492,4 +10478,68 @@ export const admin: Catalog = {
     "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
   "leads.failure.unknown":
     "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
+  // Leads: staff in charge (assignees contract, sections 4 and 9)
+  "leads.assignees.heading": "Responsáveis",
+  "leads.assignees.none": "Ainda não há responsáveis",
+  "leads.assignees.assignCta": "Atribuir equipa",
+  "leads.assignees.unassign": "Remover",
+  "leads.assignees.unassignAria": "Remover {name}",
+  "leads.assignees.unassignSelfAria": "Remover-te",
+  "leads.assignees.you": "Tu",
+  "leads.assignees.pickerListLabel": "Equipa com acesso aos contactos",
+  "leads.assignees.searchLabel": "Procurar na equipa",
+  "leads.assignees.searchPlaceholder": "Procura pelo nome",
+  "leads.assignees.previewHint":
+    "Procura para encontrares mais pessoas da equipa",
+  "leads.assignees.searchEmpty":
+    "Ninguém da equipa com acesso aos contactos corresponde a {query}",
+  "leads.assignees.capReached":
+    "Um contacto pode ter até {max} responsáveis. Remove alguém para adicionares outra pessoa",
+  "leads.assignees.loadError": "Não conseguimos carregar a lista da equipa",
+  "leads.assignees.retry": "Carregar a lista da equipa outra vez",
+  "leads.assignees.close": "Fechar",
+  "leads.assignees.assignedToast": "{name} é responsável por este contacto",
+  "leads.assignees.assignedSelfToast": "És responsável por este contacto",
+  "leads.assignees.unassignedToast": "{name} deixou de ser responsável",
+  "leads.assignees.unassignedSelfToast": "Deixaste de ser responsável",
+  "leads.list.assigneeFilterLabel": "Responsáveis",
+  "leads.list.assignee.everyone": "Todos",
+  "leads.list.assignee.me": "Atribuídos a mim",
+  "leads.list.assignee.me_or_unassigned": "Meus e sem responsável",
+  "leads.list.assignee.unassigned": "Sem responsável",
+  "leads.list.assigneesAria": "Responsáveis: {names}",
+  "leads.list.assigneesMoreAria": "Responsáveis: {names} e mais {count}",
+  "leads.list.assigneesMore": "+{count}",
+  "leads.empty.mine.title": "Não tens contactos atribuídos",
+  "leads.empty.mine.body":
+    "Os contactos pelos quais ficares responsável aparecem aqui",
+  "leads.empty.mineAndUnassigned.title":
+    "Não há contactos teus nem sem responsável",
+  "leads.empty.unassigned.title": "Todos os contactos têm responsável",
+  "leads.empty.showEveryone": "Mostrar todos",
+  "leads.history.assigneeAdded": "{author} atribuiu este contacto a {subject}",
+  "leads.history.assigneeAddedSelf":
+    "{author} ficou responsável por este contacto",
+  "leads.history.assigneeRemoved":
+    "{author} removeu {subject} dos responsáveis",
+  "leads.history.assigneeRemovedSelf": "{author} saiu dos responsáveis",
+  "leads.history.assigneeAccessEnded":
+    "{subject} saiu dos responsáveis quando perdeu o acesso aos contactos",
+  "leads.history.assigneeAccessEndedGone":
+    "Alguém que já não está na equipa saiu dos responsáveis quando perdeu o acesso aos contactos",
+  "leads.history.unknownSubject": "alguém que já não está na equipa",
+  "leads.error.assignedToInvalid":
+    "Esta vista de responsáveis não existe. Escolhe Todos, Atribuídos a mim, Meus e sem responsável ou Sem responsável",
+  "leads.error.assigneeNotFound":
+    "Esta conta já não existe, por isso não pode ficar responsável",
+  "leads.error.assigneeNotStaff.no_access":
+    "Esta pessoa não tem acesso aos contactos, por isso não pode ficar responsável",
+  "leads.error.assigneeNotStaff.suspended":
+    "Esta conta está suspensa, por isso não pode ficar responsável",
+  "leads.error.assigneeNotStaff.deactivated":
+    "Esta conta está desativada, por isso não pode ficar responsável",
+  "leads.error.assigneeNotStaff.unknownReason":
+    "Esta pessoa não pode ficar responsável porque a conta ou o acesso aos contactos mudou",
+  "leads.error.tooManyAssignees":
+    "Um contacto pode ter até {max} responsáveis. Remove alguém primeiro",
 };

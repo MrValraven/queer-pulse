@@ -1,107 +1,27 @@
-/* Shared by RoadmapToolbar, SavedViewChips and BulkBar — three thin
-   horizontal strips of controls that sit directly under the tab bar, so
-   they share one visual language (pill controls, --paper strip on --cream)
-   rather than each reinventing it. */
+/* Shared by RoadmapToolbar and SavedViewChips: the two strips of controls
+   under the tab bar. The controls themselves come from the admin kit
+   (AdminToolbar with the shared SearchInput, Select and FilterChips); this
+   file only spaces the strips and styles the two quiet extras at the end. */
 
 .toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin: 14px 0 0;
-  padding: 12px 14px;
-  border-radius: var(--radius-card, 22px);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
+  margin-top: var(--gap-sm);
 }
 
-.searchField {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1 1 220px;
-  min-width: 0;
-  padding: 9px 14px;
-  border-radius: var(--radius-pill);
-  background: var(--cream);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  color: var(--ink-60);
-}
-
-.searchField input {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  background: none;
-  font: inherit;
-  font-size: var(--text-13-5);
-  color: var(--ink);
-}
-
-.searchField input::placeholder {
-  color: var(--ink-40);
-}
-
-.searchField input:focus-visible {
-  outline: none;
-}
-
-.searchField:focus-within {
-  border-color: var(--focus-field-border);
-  box-shadow: var(--focus-field-glow);
-}
-
-.select {
-  font: inherit;
-  font-size: var(--text-13);
-  color: var(--ink);
-  padding: 8px 28px 8px 12px;
-  background: var(--cream);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--ink-40) 50%),
-    linear-gradient(135deg, var(--ink-40) 50%, transparent 50%);
-  background-position:
-    calc(100% - 16px) center,
-    calc(100% - 11px) center;
-  background-size:
-    5px 5px,
-    5px 5px;
-  background-repeat: no-repeat;
-}
-
-.select:focus-visible {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 1px;
-}
-
-/* The move-to select when it sits on the shared plum `BulkActionBar`. Applied
-   alongside `.select`; replaces the old descendant `.bulkBar .select` rule now
-   that the bar's chrome comes from the shared primitive. */
-.bulkSelect {
-  background: rgba(var(--cream-rgb), 0.12);
-  border-color: rgba(var(--cream-rgb), 0.28);
-  color: rgba(var(--cream-rgb), 1);
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(var(--cream-rgb), 0.6) 50%),
-    linear-gradient(135deg, rgba(var(--cream-rgb), 0.6) 50%, transparent 50%);
+.savedViews {
+  margin-top: 10px;
 }
 
 .denseToggleGroup {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--text-12-5);
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
 .dragHint {
-  margin-inline-start: auto;
   font-size: var(--text-12);
-  color: var(--ink-40);
+  color: var(--ink-60);
   white-space: nowrap;
 }
 
@@ -109,80 +29,4 @@
   .dragHint {
     display: none;
   }
-}
-
-/* ── Saved-view chips ─────────────────────────────────────────────────── */
-.chipsRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 14px 0 0;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  background: var(--paper);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--ink-60);
-  cursor: pointer;
-  transition: background var(--dur-fast, 0.15s) var(--ease);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .chip:hover {
-    background: var(--cream);
-  }
-}
-
-.chip:focus-visible {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 1px;
-}
-
-.chipOn {
-  background: var(--plum);
-  border-color: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-}
-
-.chipCount {
-  font-size: var(--text-11);
-  font-weight: 600;
-  padding: 1px 7px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--line-rgb), 0.12);
-  color: inherit;
-}
-
-.chipOn .chipCount {
-  background: rgba(var(--cream-rgb), 0.2);
-}
-
-/* ── View placeholder (Tasks C2–C8 replace each view's real content) ────── */
-.stubView {
-  margin: 22px 0;
-  padding: var(--section-y-48) 24px;
-  border-radius: var(--radius-card, 22px);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  text-align: center;
-}
-
-.stubViewTitle {
-  margin: 0 0 6px;
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  color: var(--ink);
-}
-
-.stubViewNote {
-  margin: 0;
-  font-size: var(--text-13);
-  color: var(--ink-60);
 }

@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Button, FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -18,6 +18,7 @@ import {
 } from "./adminAmbassadors.api";
 import { useGrantAmbassador } from "./useAdminAmbassadors";
 import { AdminAmbassadorMemberField } from "./AdminAmbassadorMemberField";
+import { AdminPanel } from "../ui";
 import styles from "./AdminAmbassadorsPage.module.css";
 
 /** The grant form: who, which focus area, and why. Every field is required;
@@ -25,7 +26,6 @@ import styles from "./AdminAmbassadorsPage.module.css";
 export function AdminAmbassadorGrantPanel() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const headingId = useId();
   const grant = useGrantAmbassador();
   const [picked, setPicked] = useState<StrangerMemberResult | null>(null);
   const [focusArea, setFocusArea] = useState<AmbassadorFocusArea | "">("");
@@ -53,11 +53,10 @@ export function AdminAmbassadorGrantPanel() {
   }
 
   return (
-    <section className={styles.panel} aria-labelledby={headingId}>
-      <h2 id={headingId} className={styles.panelTitle}>
-        {t("admin:ambassadors.grant.title")}
-      </h2>
-      <p className={styles.panelHint}>{t("admin:ambassadors.grant.hint")}</p>
+    <AdminPanel
+      title={t("admin:ambassadors.grant.title")}
+      description={t("admin:ambassadors.grant.hint")}
+    >
       <form className={styles.grantForm} onSubmit={handleSubmit}>
         <AdminAmbassadorMemberField
           picked={picked}
@@ -111,6 +110,6 @@ export function AdminAmbassadorGrantPanel() {
             : t("admin:ambassadors.grant.submit")}
         </Button>
       </form>
-    </section>
+    </AdminPanel>
   );
 }

@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminToggle } from "./ui";
+import { AdminPanel, AdminToggle } from "./ui";
 import type {
   PlatformSettingsDTO,
   UpdatePlatformSettingsInput,
@@ -46,7 +46,7 @@ export function AdminAnnouncementCard({
   const expiresFieldId = useId();
 
   return (
-    <section className={styles.card}>
+    <AdminPanel bodyClassName={styles.cardBody}>
       <div className={styles.switchRow}>
         <div className={styles.switchText}>
           <h2>{t("admin:settings.announcement.title")}</h2>
@@ -93,6 +93,6 @@ export function AdminAnnouncementCard({
           {t("admin:settings.announcement.expiresAt.hint")}
         </p>
       </div>
-    </section>
+    </AdminPanel>
   );
 }

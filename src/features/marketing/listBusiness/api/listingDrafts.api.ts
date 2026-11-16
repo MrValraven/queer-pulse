@@ -15,11 +15,21 @@ export interface ListingDraftPayload {
   step: number;
 }
 
-/** GET /listing-drafts list row — enough to render + resume the drafts list. */
+/** The English stand-in name the backend puts on a summary whose draft has no
+ *  name typed yet. Read it as blank, so each surface shows its own catalog
+ *  copy in the member's language. */
+export const BACKEND_UNTITLED_DRAFT_NAME = "Untitled listing";
+
+/** GET /listing-drafts list row: enough to render + resume the drafts list. */
 export interface ListingDraftSummary {
   id: string;
-  /** The place name typed so far — may be empty on a barely-started draft. */
+  /** The place name typed so far. A barely-started draft comes back blank or
+   *  as `BACKEND_UNTITLED_DRAFT_NAME`. */
   name: string;
+  /** Wizard step index the draft had reached. The backend reads a negative or
+   *  non-integer stored step as 0; the frontend clamps one past the last step
+   *  with `clampDraftStep`. */
+  step: number;
   /** ISO 8601 timestamp of the last autosave. */
   updatedAt: string;
 }
@@ -32,12 +42,12 @@ export interface ListingDraftRecord {
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
-/** GET /listing-drafts — the caller's in-progress drafts (owner-scoped). */
+/** GET /listing-drafts: the caller's in-progress drafts (owner-scoped). */
 export const listListingDrafts = () =>
   apiGet<ListingDraftSummary[]>("/listing-drafts");
 
 /**
- * POST /listing-drafts — upsert a draft. Omit `id` (or pass an unknown one) to
+ * POST /listing-drafts: upsert a draft. Omit `id` (or pass an unknown one) to
  * mint a new row; pass a known `id` to overwrite it in place. Returns the row
  * id so the autosave loop can keep writing back to the same draft.
  */
@@ -47,16 +57,16 @@ export const saveListingDraft = (payload: ListingDraftPayload, id?: string) =>
     id ? { id, payload } : { payload },
   );
 
-/** GET /listing-drafts/:id — one owned draft with its full payload. */
+/** GET /listing-drafts/:id: one owned draft with its full payload. */
 export const getListingDraft = (id: string) =>
   apiGet<ListingDraftRecord>(`/listing-drafts/${id}`);
 
-/** DELETE /listing-drafts/:id — discard an owned draft (204 No Content). */
+/** DELETE /listing-drafts/:id: discard an owned draft (204 No Content). */
 export const deleteListingDraft = (id: string) =>
   apiDelete<void>(`/listing-drafts/${id}`);
 
 /**
- * GET /listing-drafts/resume/:token — resolve a `?draft=<token>` deep link to
+ * GET /listing-drafts/resume/:token: resolve a `?draft=<token>` deep link to
  * the draft it points at, so a member can pick up on another device. Nothing
  * hands that link out: QueerPulse delivers no email, so it works only for a URL
  * the member carries themselves, and the drafts LIST is the path that needs no

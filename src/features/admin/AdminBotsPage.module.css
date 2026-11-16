@@ -1,18 +1,15 @@
-.list {
+/* The kit owns the header, panel, row height, hairlines and empty state. This
+   file holds the bot row layout. */
+
+.skeletons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
+  gap: var(--gap-xs);
 }
 
 .row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-14);
-  background: var(--paper);
+  gap: var(--gap-sm);
+  padding: var(--admin-row-pad);
 }
 
 .rowText {
@@ -36,10 +33,5 @@
   font-size: var(--text-13);
   font-weight: 400;
   line-height: 1.2;
-  color: var(--ink-60);
-}
-
-.empty {
-  margin-top: 24px;
   color: var(--ink-60);
 }

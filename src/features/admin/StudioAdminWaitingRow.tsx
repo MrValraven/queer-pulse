@@ -12,7 +12,7 @@ import type { StudioLoadState } from "../studio/api/studioLoadState";
 import { studioReasonCopyKey } from "../studio/studioReason";
 import type { AdminStudioAccessRequestDTO } from "./api/studioAccessRequestsAdmin.api";
 import { isStudioAdminForbidden } from "./studioAdmin.model";
-import { AdminAvatar, AdminChip } from "./ui";
+import { AdminAvatar, AdminChip, AdminNotice, AdminRowActions } from "./ui";
 import {
   STUDIO_DISCLOSURE,
   STUDIO_DISCLOSURE_EXIT,
@@ -45,7 +45,9 @@ export function StudioAdminLoadPanel({
   if (!loadState.isRetrying && settledReason !== liveReason)
     setSettledReason(liveReason);
   if (isStudioAdminForbidden(error))
-    return <p className={css.notice}>{t("admin:studioAdmin.forbidden")}</p>;
+    return (
+      <AdminNotice tone="error">{t("admin:studioAdmin.forbidden")}</AdminNotice>
+    );
   const reason = loadState.isRetrying ? settledReason : liveReason;
   return (
     <LoadErrorState
@@ -139,7 +141,7 @@ export function StudioAdminWaitingRow({
             )}
           </div>
         </div>
-        <div className={css.actions}>
+        <AdminRowActions className={css.actions}>
           <Button
             variant="primary"
             size="sm"
@@ -163,7 +165,7 @@ export function StudioAdminWaitingRow({
           >
             <FiX aria-hidden /> {t("admin:studioAdmin.waiting.dismissCta")}
           </Button>
-        </div>
+        </AdminRowActions>
       </div>
     </m.li>
   );

@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { FiHeart } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminPageHeader, AdminModal } from "./ui";
+import { AdminEmptyState, AdminModal, AdminPageHeader } from "./ui";
 import { AdminChangemakerRows } from "./AdminChangemakerRows";
 import { AdminChangemakerStatsCard } from "./AdminChangemakerStatsCard";
 import { AdminChangemakerEditor } from "./AdminChangemakerEditor";
@@ -65,8 +61,14 @@ export function AdminChangemakersPage() {
     <AdminShell title={t("community:changemakers.admin.title")}>
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("community:changemakers.admin.navLabel")}
-          title={t("community:changemakers.admin.title")}
+          eyebrow={t("shared:adminNav.sections.partners")}
+          title={
+            <Translation
+              i18nKey="community:changemakers.admin.header.title"
+              components={{ em: <em /> }}
+            />
+          }
+          sub={t("community:changemakers.admin.header.sub")}
           actions={
             <Button
               variant="primary"
@@ -87,10 +89,10 @@ export function AdminChangemakersPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : profiles.length === 0 ? (
-          <EmptyState
-            icon={<FiHeart aria-hidden />}
+          <AdminEmptyState
+            icon={FiHeart}
             title={t("community:changemakers.admin.empty.title")}
-            description={t("community:changemakers.admin.empty.description")}
+            body={t("community:changemakers.admin.empty.description")}
           />
         ) : (
           <AdminChangemakerRows
@@ -141,7 +143,7 @@ export function AdminChangemakersPage() {
 
 function RowsSkeleton() {
   return (
-    <div className={styles.rows}>
+    <div className={styles.skeletons}>
       {[0, 1, 2].map((skeletonIndex) => (
         <SkeletonLine
           key={skeletonIndex}

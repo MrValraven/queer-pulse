@@ -111,7 +111,7 @@ export function AdminPlatformLogPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:platformLog.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="admin:platformLog.header.title"

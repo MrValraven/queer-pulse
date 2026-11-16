@@ -2,7 +2,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { formatRelative } from "../../shared/lib/date";
 import { categoryLabel } from "../marketing/localCategories";
-import { AdminChip } from "./ui";
+import { AdminChip, AdminRowActions, adminTableClasses } from "./ui";
 import { ListingModerationActions } from "./ListingModerationActions";
 import { ListingRowThumb } from "./ListingRowThumb";
 import { listingAgeLabel, listingProvenanceLabel } from "./listingProvenance";
@@ -50,9 +50,10 @@ export function AdminListingRow({
 
   return (
     <div
-      className={[styles.row, isSelected && styles.rowSelected]
+      className={[styles.row, isSelected && adminTableClasses.isSelected]
         .filter(Boolean)
         .join(" ")}
+      data-selected={isSelected ? "" : undefined}
     >
       <label className={`${styles.cellCheck} ${styles.checkHit}`}>
         <input
@@ -96,9 +97,9 @@ export function AdminListingRow({
             {t(`admin:adminListings.status.${row.status}`)}
           </AdminChip>
         </div>
-        <div className={styles.cellActions}>
+        <AdminRowActions className={styles.cellActions}>
           <ListingModerationActions variant="row" row={row} />
-        </div>
+        </AdminRowActions>
       </div>
     </div>
   );

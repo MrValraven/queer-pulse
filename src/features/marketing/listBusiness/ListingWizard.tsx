@@ -15,11 +15,10 @@ import { useListingForm, type ListingSeed } from "./useListingForm";
 import { withAppointmentAnswersInStep } from "./listingAppointmentLink";
 import { healLegacyListingDraft } from "./listingLegacyAttributes";
 import { useListingDraft } from "./useListingDraft";
-import { DraftBanner, SendingPanel } from "./ListBusinessChrome";
+import { SendingPanel } from "./ListBusinessChrome";
 import { WizardFormPane } from "./WizardFormPane";
 import { ListBusinessSuccess } from "./ListBusinessSuccess";
 import { WizardFormChrome } from "./WizardExtras";
-import { useListingDraftBanner } from "./useListingDraftBanner";
 import { useListingSubmit } from "./useListingSubmit";
 import {
   useListingWizardSubmit,
@@ -51,7 +50,7 @@ export interface ListingWizardProps {
   /** The wizard step the resumed draft had reached. */
   initialStep?: number;
   /** Live resume: the server draft-row id, so autosave keeps upserting the
-   *  same row instead of minting a duplicate. */
+   *  same row and never mints a duplicate. */
   initialDraftId?: string;
   /** Persist the finished draft and resolve with the created record.
    *  Defaults to the member's own `addListing(draft, profile.slug)`. */
@@ -83,7 +82,7 @@ export interface ListingWizardProps {
    *  "Send it to the team". An admin console editing a listing passes its
    *  own copy (e.g. "Save changes"). */
   submitLabel?: string;
-  /** Whether the sending phase is an edit save rather than a new
+  /** Whether the sending phase is an edit save. False means a new
    *  submission. Defaults to false, the member behaviour, which renders
    *  `SendingPanel`'s create copy. True renders `<SendingPanel isEdit />`. */
   isEditSave?: boolean;
@@ -95,7 +94,7 @@ export interface ListingWizardProps {
   /** The ref of the listing being edited. Defaults to undefined, a new
    *  submission. An admin console editing an existing listing passes it, so
    *  the duplicate-name check skips the listing itself and the create-only
-   *  Path step (0) disappears: no pill, never reachable, and Back on Basics
+   *  Path step (0) disappears: no pill and no way to reach it, and Back on Basics
    *  leaves the wizard through `onCancel` under the "Cancel" label. */
   editRef?: string;
   /** The label of a save button on every step's footer. Defaults to
@@ -178,8 +177,6 @@ export function ListingWizard({
   const loadedDraft = draftOnLoad(initialDraft);
   const form = useListingForm(loadedDraft, resolvedSeed);
   const { draft } = form;
-  // A draft resumed from the landing list / a `?draft` deep link.
-  const isResumed = Boolean(initialDraft);
   const firstStep = firstWizardStep(editRef !== undefined);
   const [storedStep, setStep] = useState(initialStep ?? firstStep);
   // Every path that sets a step (a resume, a 422 routed to its field, the
@@ -193,24 +190,11 @@ export function ListingWizard({
   const loadedName = editRef !== undefined ? initialDraft?.name : undefined;
 
   const isAutosaveOn = isDraftAutosaveEnabled ?? true;
-  // A resumed draft keeps autosaving but doesn't re-offer the in-wizard banner.
-  const { saved, savedAt, clearDraft, saveAndExit } = useListingDraft(
-    draft,
-    step,
-    {
-      enabled: isAutosaveOn,
-      offerResume: !isResumed,
-      initialDraftId,
-    },
-  );
-  const { isBannerVisible, resumeDraft, discardDraft } = useListingDraftBanner(
-    saved,
-    clearDraft,
-    (resumed) => {
-      form.reset(healedDraft(resumed.draft));
-      setStep(resumed.step);
-    },
-  );
+  // The page's Continue screen is the one way back into a saved draft.
+  const draftStore = useListingDraft(draft, step, {
+    enabled: isAutosaveOn,
+    initialDraftId,
+  });
   // Item #4 (server 422 → step routing) + item #11 (save & finish later).
   const {
     serverError,
@@ -220,7 +204,7 @@ export function ListingWizard({
     saveAndFinishLater,
   } = useListingSubmit({
     setStep,
-    saveAndExit,
+    saveAndExit: draftStore.saveAndExit,
     flashClass: styles.fieldFlash,
     onPhotosRejected: form.setRejectedPhotoSlots,
     isEdit: editRef !== undefined,
@@ -234,7 +218,7 @@ export function ListingWizard({
     submit: submitListing,
     setPhase,
     setListing,
-    clearDraft,
+    clearDraft: draftStore.clearDraft,
     routeSubmitError,
     setServerError,
     scrollUp,
@@ -289,6 +273,7 @@ export function ListingWizard({
     finishWizard();
   };
   const listAnother = () => {
+    draftStore.startFreshDraft(); // a new listing gets its own draft
     form.reset();
     setListing(null);
     setStep(0);
@@ -296,63 +281,82 @@ export function ListingWizard({
     scrollUp();
   };
   return (
-    <>
-      {phase === "form" && isBannerVisible && saved && (
-        <DraftBanner onResume={resumeDraft} onDiscard={discardDraft} />
+    <div className="wrap">
+      {phase === "form" && (
+        <>
+          {/* "Save and finish later" persists through the same autosave
+              layer, so with autosave off the save can only fail. Offer it
+              only while there is somewhere for it to write. */}
+          <WizardFormChrome
+            serverError={serverError}
+            onDismissError={() => setServerError(null)}
+            isSaveLaterVisible={isAutosaveOn && draft.path !== ""}
+            onSaveLater={() => void saveAndFinishLater()}
+            isSavingLater={savingLater}
+          />
+          <WizardFormPane
+            form={form}
+            step={step}
+            savedAt={draftStore.savedAt}
+            userName={resolvedUserName}
+            userInitials={resolvedUserInitials}
+            draft={draft}
+            goToStep={goToStep}
+            onBack={back}
+            onNext={() => void next()}
+            submitLabel={submitLabel}
+            isJumpAheadEnabled={isJumpAheadEnabled}
+            editRef={editRef}
+            saveNowLabel={saveNowLabel}
+            onSave={() => void saveNowFlow.saveNow(draft)}
+            previewFootnote={previewFootnote}
+            isNeededBarFocusPending={saveNowFlow.neededBarFocusStep === step}
+            onNeededBarFocused={saveNowFlow.clearNeededBarFocus}
+            duplicateCheckBaselineName={loadedName}
+          />
+        </>
       )}
-      <div className="wrap">
-        {phase === "form" && (
-          <>
-            {/* "Save and finish later" persists through the same autosave
-                layer, so with autosave off the save can only fail. Offer it
-                only while there is somewhere for it to write. */}
-            <WizardFormChrome
-              serverError={serverError}
-              onDismissError={() => setServerError(null)}
-              isSaveLaterVisible={isAutosaveOn && draft.path !== ""}
-              onSaveLater={() => void saveAndFinishLater()}
-              isSavingLater={savingLater}
-            />
-            <WizardFormPane
-              form={form}
-              step={step}
-              savedAt={savedAt}
-              userName={resolvedUserName}
-              userInitials={resolvedUserInitials}
-              draft={draft}
-              goToStep={goToStep}
-              onBack={back}
-              onNext={() => void next()}
-              submitLabel={submitLabel}
-              isJumpAheadEnabled={isJumpAheadEnabled}
-              editRef={editRef}
-              saveNowLabel={saveNowLabel}
-              onSave={() => void saveNowFlow.saveNow(draft)}
-              previewFootnote={previewFootnote}
-              isNeededBarFocusPending={saveNowFlow.neededBarFocusStep === step}
-              onNeededBarFocused={saveNowFlow.clearNeededBarFocus}
-              duplicateCheckBaselineName={loadedName}
-            />
-          </>
-        )}
+      {phase === "sending" && <SendingPanel isEdit={isEditSave} />}
+      {phase === "success" && listing && (
+        <WizardSuccess
+          listing={listing}
+          renderSuccess={renderSuccess}
+          onEdit={editSubmission}
+          onWithdraw={withdraw}
+          onAnother={listAnother}
+        />
+      )}
+    </div>
+  );
+}
 
-        {phase === "sending" && <SendingPanel isEdit={isEditSave} />}
-
-        {phase === "success" && listing && (
-          <div className={styles.page}>
-            {renderSuccess ? (
-              renderSuccess(listing)
-            ) : (
-              <ListBusinessSuccess
-                listing={listing}
-                onEdit={editSubmission}
-                onWithdraw={withdraw}
-                onAnother={listAnother}
-              />
-            )}
-          </div>
-        )}
-      </div>
-    </>
+/** The success phase: a console's own panel when it supplies one, otherwise
+ *  the member flow's `ListBusinessSuccess`. */
+function WizardSuccess({
+  listing,
+  renderSuccess,
+  onEdit,
+  onWithdraw,
+  onAnother,
+}: {
+  listing: PendingListing;
+  renderSuccess?: (created: PendingListing) => ReactNode;
+  onEdit: () => void;
+  onWithdraw: () => void;
+  onAnother: () => void;
+}) {
+  return (
+    <div className={styles.page}>
+      {renderSuccess ? (
+        renderSuccess(listing)
+      ) : (
+        <ListBusinessSuccess
+          listing={listing}
+          onEdit={onEdit}
+          onWithdraw={onWithdraw}
+          onAnother={onAnother}
+        />
+      )}
+    </div>
   );
 }

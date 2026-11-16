@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
+import { FiMapPin } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button, Collapse, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -13,12 +14,13 @@ import { StudioAdminSceneDialog } from "./StudioAdminSceneDialog";
 import { StudioAdminSceneRow } from "./StudioAdminSceneRow";
 import { StudioAdminSceneSheet } from "./StudioAdminSceneSheet";
 import {
-  isStudioAdminForbidden,
   movedIds,
   sortedAdminScenes,
   studioAdminSaveErrorKeyOf,
 } from "./studioAdmin.model";
 import { focusNeighbourControl } from "./useStudioAdminReorderRow";
+import { AdminEmptyState, AdminPanel } from "./ui";
+import { StudioAdminReadNotice } from "./StudioAdminReadNotice";
 import css from "./StudioAdminScenes.module.css";
 
 /** The Scenes tab: active scenes in home-row order, archived ones after, a
@@ -106,23 +108,10 @@ export function StudioAdminScenes() {
 
   if (isLoading)
     return <SkeletonLine height={160} style={{ borderRadius: 14 }} />;
-  if (isError && data === undefined) {
-    const isForbidden = isStudioAdminForbidden(error);
+  if (isError && data === undefined)
     return (
-      <div className={css.notice}>
-        <p className={css.noticeText}>
-          {isForbidden
-            ? t("admin:studioAdmin.forbidden")
-            : t("admin:studioAdmin.loadError")}
-        </p>
-        {!isForbidden && (
-          <Button variant="ghost" size="sm" onClick={() => void refetch()}>
-            {t("admin:studioAdmin.retryCta")}
-          </Button>
-        )}
-      </div>
+      <StudioAdminReadNotice error={error} onRetry={() => void refetch()} />
     );
-  }
 
   const rowsOf = (group: AdminStudioSceneDTO[]) =>
     group.map((scene, index) => (
@@ -153,39 +142,37 @@ export function StudioAdminScenes() {
         </Button>
       </div>
       <Collapse isOpen={scenes.length === 0}>
-        <p className={css.hint}>{t("admin:studioAdmin.scenes.empty")}</p>
+        <AdminEmptyState
+          size="inline"
+          icon={FiMapPin}
+          title={t("admin:studioAdmin.scenes.empty")}
+        />
       </Collapse>
       <Collapse isOpen={active.length > 0}>
-        <section aria-labelledby={activeHeadingId}>
-          <h2
-            id={activeHeadingId}
-            ref={activeHeadingRef}
-            tabIndex={-1}
-            className={css.groupTitle}
-          >
-            {t("admin:studioAdmin.scenes.activeHeading")}
-          </h2>
+        <AdminPanel
+          title={t("admin:studioAdmin.scenes.activeHeading")}
+          titleId={activeHeadingId}
+          titleRef={activeHeadingRef}
+          isTitleFocusable
+        >
           <ol ref={activeListRef} className={css.sceneList}>
             <AnimatePresence initial={false}>{rowsOf(active)}</AnimatePresence>
           </ol>
-        </section>
+        </AdminPanel>
       </Collapse>
       <Collapse isOpen={archived.length > 0}>
-        <section aria-labelledby={archivedHeadingId}>
-          <h2
-            id={archivedHeadingId}
-            ref={archivedHeadingRef}
-            tabIndex={-1}
-            className={css.groupTitle}
-          >
-            {t("admin:studioAdmin.scenes.archivedHeading")}
-          </h2>
+        <AdminPanel
+          title={t("admin:studioAdmin.scenes.archivedHeading")}
+          titleId={archivedHeadingId}
+          titleRef={archivedHeadingRef}
+          isTitleFocusable
+        >
           <ul ref={archivedListRef} className={css.sceneList}>
             <AnimatePresence initial={false}>
               {rowsOf(archived)}
             </AnimatePresence>
           </ul>
-        </section>
+        </AdminPanel>
       </Collapse>
       <p className="visuallyHidden" role="status">
         {statusMessage}

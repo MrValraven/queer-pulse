@@ -1,9 +1,9 @@
 import { useId } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminLegalRequestAmendmentEntry } from "./AdminLegalRequestAmendmentEntry";
 import { useAdminLegalRequestAmendments } from "./api/useAdminLegalRequests";
+import { AdminEmptyState, AdminNotice } from "./ui";
 import styles from "./AdminLegalRequestsPage.module.css";
 
 /**
@@ -34,7 +34,7 @@ export function AdminLegalRequestAmendments({
         {t("admin:legalRequests.history.title")}
       </h3>
       {isLoading ? (
-        <div className={styles.rows}>
+        <div className={styles.skeletons}>
           {[0, 1].map((skeletonIndex) => (
             <SkeletonLine
               key={skeletonIndex}
@@ -44,16 +44,16 @@ export function AdminLegalRequestAmendments({
           ))}
         </div>
       ) : isError || !amendments ? (
-        <p className={`${styles.notice} ${styles.errorNotice}`}>
-          <FiAlertTriangle aria-hidden className={styles.noticeIcon} />
+        <AdminNotice tone="error">
           {t("admin:legalRequests.history.loadError")}
-        </p>
+        </AdminNotice>
       ) : amendments.length === 0 ? (
-        <p className={styles.notice}>
-          {t("admin:legalRequests.history.empty")}
-        </p>
+        <AdminEmptyState
+          size="inline"
+          title={t("admin:legalRequests.history.empty")}
+        />
       ) : (
-        <ol className={`${styles.rows} ${styles.historyList}`}>
+        <ol className={styles.historyList}>
           {amendments.map((amendment) => (
             <AdminLegalRequestAmendmentEntry
               key={amendment.id}

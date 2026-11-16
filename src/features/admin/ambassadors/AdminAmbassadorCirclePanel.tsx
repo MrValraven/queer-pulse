@@ -1,4 +1,3 @@
-import { useId } from "react";
 import { FiArrowRight, FiUsers } from "react-icons/fi";
 import { Button, SkeletonLine } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -9,6 +8,7 @@ import {
   useAdminAmbassadorCircle,
   useTakeAmbassadorCircleStaffSeat,
 } from "./useAdminAmbassadors";
+import { AdminNotice, AdminPanel } from "../ui";
 import styles from "./AdminAmbassadorsPage.module.css";
 
 /**
@@ -21,7 +21,6 @@ import styles from "./AdminAmbassadorsPage.module.css";
 export function AdminAmbassadorCirclePanel() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const headingId = useId();
   const { data: circle, isLoading, isError } = useAdminAmbassadorCircle();
   const takeSeat = useTakeAmbassadorCircleStaffSeat();
 
@@ -34,18 +33,22 @@ export function AdminAmbassadorCirclePanel() {
   }
 
   return (
-    <section className={styles.panel} aria-labelledby={headingId}>
-      <h2 id={headingId} className={styles.panelTitle}>
-        <FiUsers aria-hidden className={styles.panelIcon} />
-        {t("admin:ambassadors.circle.title")}
-      </h2>
-      <p className={styles.panelHint}>{t("admin:ambassadors.circle.hint")}</p>
+    <AdminPanel
+      bodyClassName={styles.panelBody}
+      title={
+        <span className={styles.panelTitle}>
+          <FiUsers aria-hidden className={styles.panelIcon} />
+          {t("admin:ambassadors.circle.title")}
+        </span>
+      }
+      description={t("admin:ambassadors.circle.hint")}
+    >
       {isLoading ? (
         <SkeletonLine height={44} />
       ) : isError || !circle ? (
-        <p className={styles.panelHint}>
+        <AdminNotice tone="error">
           {t("admin:ambassadors.circle.error")}
-        </p>
+        </AdminNotice>
       ) : !circle.isFounded || !circle.slug ? (
         <p className={styles.panelHint}>
           {t("admin:ambassadors.circle.notFounded")}
@@ -74,6 +77,6 @@ export function AdminAmbassadorCirclePanel() {
           </div>
         </>
       )}
-    </section>
+    </AdminPanel>
   );
 }

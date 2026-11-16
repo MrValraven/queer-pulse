@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiMail } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
 import { ApiError } from "../../../shared/api/client";
@@ -8,7 +9,14 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { AdminModal, AdminPageHeader } from "../ui";
+import {
+  AdminEmptyState,
+  AdminModal,
+  AdminNotice,
+  AdminPageHeader,
+  AdminPanel,
+  adminTableClasses,
+} from "../ui";
 import {
   useAdminEmailTemplates,
   useDeleteEmailTemplate,
@@ -18,6 +26,7 @@ import type { EmailTemplateAdminDTO } from "./emailTemplate.types";
 import { AdminEmailTemplatePreviewModal } from "./AdminEmailTemplatePreviewModal";
 import { AdminEmailTemplateRows } from "./AdminEmailTemplateRows";
 import styles from "./AdminEmailTemplates.module.css";
+import listStyles from "./AdminEmailTemplateList.module.css";
 
 /**
  * `/admin/email-templates`: the emails staff send by hand. QueerPulse sends
@@ -77,7 +86,7 @@ export function AdminEmailTemplatesPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:emailTemplates.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.people")}
           title={title}
           sub={t("admin:emailTemplates.sub")}
           actions={
@@ -92,34 +101,38 @@ export function AdminEmailTemplatesPage() {
         />
       </FadeIn>
       {isLoading ? (
-        <div className={styles.rows}>
+        <AdminPanel as="div" padding="flush">
           {[0, 1].map((skeletonIndex) => (
-            <SkeletonLine
+            <div
               key={skeletonIndex}
-              height={72}
-              style={{ borderRadius: 14 }}
-            />
+              className={`${adminTableClasses.row} ${listStyles.row}`}
+              aria-hidden
+            >
+              <SkeletonLine width="35%" height={16} />
+              <SkeletonLine width={160} height={30} />
+            </div>
           ))}
-        </div>
+        </AdminPanel>
       ) : isError ? (
-        <div className={styles.notice}>
-          <p>
-            {isForbidden
-              ? t("admin:common.panelForbidden")
-              : t("admin:emailTemplates.loadError")}
-          </p>
-        </div>
+        <AdminNotice tone="error">
+          {isForbidden
+            ? t("admin:common.panelForbidden")
+            : t("admin:emailTemplates.loadError")}
+        </AdminNotice>
       ) : !data || data.length === 0 ? (
-        <div className={styles.notice}>
-          <p>{t("admin:emailTemplates.empty")}</p>
-        </div>
-      ) : (
-        <AdminEmailTemplateRows
-          templates={data}
-          onToggleActive={toggleActive}
-          onDelete={setDeleteTarget}
-          onPreview={setPreviewTarget}
+        <AdminEmptyState
+          icon={FiMail}
+          title={t("admin:emailTemplates.empty")}
         />
+      ) : (
+        <AdminPanel as="div" padding="flush">
+          <AdminEmailTemplateRows
+            templates={data}
+            onToggleActive={toggleActive}
+            onDelete={setDeleteTarget}
+            onPreview={setPreviewTarget}
+          />
+        </AdminPanel>
       )}
       {previewTarget && (
         <AdminEmailTemplatePreviewModal

@@ -10,6 +10,7 @@ import { useReissueJoinRequestInvite } from "./api/useReissueJoinRequestInvite";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import type { JoinRequestInviteState } from "./joinRequestInviteState";
 import { JoinRequestRevokeInviteAction } from "./JoinRequestRevokeInviteAction";
+import { AdminRowActions } from "./ui";
 import { WelcomeEmailSendGroup } from "./emailTemplates/WelcomeEmailSendGroup";
 import styles from "./AdminVerifyDecided.module.css";
 
@@ -98,11 +99,11 @@ export function JoinRequestDecidedInvitePanel({
       )}
       <WelcomeEmailSendGroup item={item} />
       {hasInviteAction && (
-        <div className={styles.inviteActions}>
+        <AdminRowActions className={styles.inviteActions}>
           {inviteState.isReissuable && (
             <Button
               variant="ghost"
-              size="md"
+              size="sm"
               disabled={isReissuing}
               onClick={reissue}
             >
@@ -113,7 +114,7 @@ export function JoinRequestDecidedInvitePanel({
             </Button>
           )}
           <JoinRequestRevokeInviteAction item={item} />
-        </div>
+        </AdminRowActions>
       )}
       {reissueError && (
         <p className={styles.inviteError} role="status">

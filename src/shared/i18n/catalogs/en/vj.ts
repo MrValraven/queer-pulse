@@ -18,6 +18,7 @@ export const vj: Catalog = {
     "Your clips are still uploading. If you leave now the uploads stop, and you'll need to add those files again",
   "page.leaveWhileMakingPreviews.body":
     "Previews are still being made. Leaving this page stops them",
+  "page.header.title": "VJ <em>library</em>",
   "library.sub": "Every clip you've uploaded, newest first",
   "pack.sub": "The remote shows this pack's clips in this order",
 

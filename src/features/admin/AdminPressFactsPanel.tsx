@@ -1,6 +1,8 @@
+import { FiBarChart2 } from "react-icons/fi";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { usePressKitFacts } from "./api/useAdminPressKit";
+import { AdminEmptyState, AdminPanel } from "./ui";
 import styles from "./AdminPressKitPage.module.css";
 
 /**
@@ -18,13 +20,10 @@ export function AdminPressFactsPanel() {
   const { facts, isLoading } = usePressKitFacts();
 
   return (
-    <aside
-      className={styles.factsPanel}
-      aria-label={t("admin:pressKit.facts.title")}
+    <AdminPanel
+      title={t("admin:pressKit.facts.title")}
+      description={t("admin:pressKit.facts.sub")}
     >
-      <h2 className={styles.factsTitle}>{t("admin:pressKit.facts.title")}</h2>
-      <p className={styles.factsSub}>{t("admin:pressKit.facts.sub")}</p>
-
       {isLoading ? (
         <div className={styles.factsList}>
           <SkeletonLine height={44} style={{ borderRadius: 12 }} />
@@ -32,7 +31,11 @@ export function AdminPressFactsPanel() {
           <SkeletonLine height={44} style={{ borderRadius: 12 }} />
         </div>
       ) : facts.length === 0 ? (
-        <p className={styles.factsEmpty}>{t("admin:pressKit.facts.empty")}</p>
+        <AdminEmptyState
+          size="inline"
+          icon={FiBarChart2}
+          title={t("admin:pressKit.facts.empty")}
+        />
       ) : (
         <dl className={styles.factsList}>
           {facts.map((fact) => {
@@ -48,6 +51,6 @@ export function AdminPressFactsPanel() {
           })}
         </dl>
       )}
-    </aside>
+    </AdminPanel>
   );
 }

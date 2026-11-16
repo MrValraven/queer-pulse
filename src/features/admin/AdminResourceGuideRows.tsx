@@ -4,11 +4,14 @@ import {
   FiClock,
   FiEyeOff,
 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { formatDate } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AdminResourceGuideDTO } from "./api/adminResourceGuides.api";
+import { AdminRowActions, adminTableClasses } from "./ui";
+import { ListingOverflowMenu } from "./ListingOverflowMenu";
 import styles from "./AdminResourceGuidesPage.module.css";
 
 export interface AdminResourceGuideRowsProps {
@@ -31,15 +34,19 @@ export function AdminResourceGuideRows({
   onReview,
 }: AdminResourceGuideRowsProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const today = TODAY();
 
   return (
-    <div className={styles.rows}>
+    <div>
       {guides.map((guide) => {
         const isOverdue =
           guide.reviewDueOn !== null && guide.reviewDueOn < today;
         return (
-          <div key={guide.id} className={styles.row}>
+          <div
+            key={guide.id}
+            className={`${adminTableClasses.row} ${styles.row}`}
+          >
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowName}>{guide.title}</span>
@@ -90,17 +97,7 @@ export function AdminResourceGuideRows({
                 )}
               </div>
             </div>
-            <div className={styles.rowActions}>
-              <Button
-                variant="ghost"
-                size="sm"
-                to={`${routes.adminResourceGuidePreview}/${guide.id}`}
-              >
-                {t("admin:guidePreview.row.previewCta")}
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => onReview(guide)}>
-                {t("admin:adminResourceGuides.row.reviewCta")}
-              </Button>
+            <AdminRowActions className={styles.rowActions}>
               <Button
                 variant="ghost"
                 size="sm"
@@ -108,7 +105,28 @@ export function AdminResourceGuideRows({
               >
                 {t("admin:adminResourceGuides.row.editCta")}
               </Button>
-            </div>
+              <ListingOverflowMenu
+                ariaLabel={t("admin:adminListings.actions.moreAriaLabel", {
+                  name: guide.title,
+                })}
+                disabled={false}
+                items={[
+                  {
+                    key: "review",
+                    label: t("admin:adminResourceGuides.row.reviewCta"),
+                    onSelect: () => onReview(guide),
+                  },
+                  {
+                    key: "preview",
+                    label: t("admin:guidePreview.row.previewCta"),
+                    onSelect: () =>
+                      void navigate(
+                        `${routes.adminResourceGuidePreview}/${guide.id}`,
+                      ),
+                  },
+                ]}
+              />
+            </AdminRowActions>
           </div>
         );
       })}

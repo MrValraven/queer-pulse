@@ -111,9 +111,7 @@ describe("AdminLeadsPage", () => {
   it("filters by stage with counted chips", async () => {
     const user = renderPage();
     await screen.findAllByRole("link", { name: ROW_NAME });
-    expect(
-      screen.getByRole("button", { name: "All, 12 leads" }),
-    ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("12 leads")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "On board, 2 leads" }));
     await waitFor(() => expect(rowLabels()).toHaveLength(2));
     expect([...rowLabels()].sort()).toEqual([
@@ -131,7 +129,7 @@ describe("AdminLeadsPage", () => {
   it("shows only due leads with Follow-up due", async () => {
     const user = renderPage();
     await screen.findAllByRole("link", { name: ROW_NAME });
-    await user.click(screen.getByRole("switch", { name: "Follow-up due" }));
+    await user.click(screen.getByRole("button", { name: /^Follow-up due/ }));
     await waitFor(() => expect(rowLabels()).toHaveLength(4));
     for (const link of screen.getAllByRole("link", { name: ROW_NAME })) {
       expect(within(rowOf(link)).getByText(DUE_TEXT)).toBeInTheDocument();
@@ -197,9 +195,19 @@ describe("AdminLeadsPage", () => {
     expect(screen.getByRole("searchbox", { name: "Search leads" })).toHaveValue(
       "",
     );
-    expect(
-      screen.getByRole("button", { name: "All, 12 leads" }),
-    ).toHaveAttribute("aria-pressed", "true");
+    expect(rowLabels()).toHaveLength(12);
+    for (const tileName of [
+      "To contact",
+      "Contacted",
+      "In talks",
+      "On board",
+      "Not now",
+      "Follow-up due",
+    ]) {
+      expect(
+        screen.getByRole("button", { name: new RegExp(`^${tileName}`) }),
+      ).toHaveAttribute("aria-pressed", "false");
+    }
   });
 
   it("shows when each lead last moved", async () => {

@@ -1,9 +1,10 @@
-import { useId } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ADMIN_LANDING_QUICK_LINKS } from "./adminLandingQuickLinks.data";
+import { AdminPanel } from "./ui";
 import styles from "./AdminLandingPage.module.css";
+import phone from "./adminPhoneActions.module.css";
 
 /**
  * The "Quick links" row on `/admin/landing`: opens each public landing page
@@ -13,18 +14,13 @@ import styles from "./AdminLandingPage.module.css";
  */
 export function AdminLandingQuickLinks() {
   const { t } = useTranslation();
-  const headingId = useId();
   return (
-    <section className={styles.quickLinks} aria-labelledby={headingId}>
-      <div className={styles.quickLinksText}>
-        <h2 id={headingId} className={styles.quickLinksHeading}>
-          {t("admin:landing.quickLinks.heading")}
-        </h2>
-        <p className={styles.quickLinksHelper}>
-          {t("admin:landing.quickLinks.helper")}
-        </p>
-      </div>
-      <ul className={styles.quickLinksList}>
+    <AdminPanel
+      className={styles.quickLinks}
+      title={t("admin:landing.quickLinks.heading")}
+      description={t("admin:landing.quickLinks.helper")}
+    >
+      <ul className={`${styles.quickLinksList} ${phone.scrollRow}`}>
         {ADMIN_LANDING_QUICK_LINKS.map((link) => (
           <li key={link.id}>
             <Button
@@ -44,6 +40,6 @@ export function AdminLandingQuickLinks() {
           </li>
         ))}
       </ul>
-    </section>
+    </AdminPanel>
   );
 }

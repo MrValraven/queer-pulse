@@ -13,10 +13,16 @@ import {
   useAdminCommunityGovernanceLog,
 } from "./api/useAdminCommunityGovernanceLog";
 import { AdminCommunityGovernanceLogRow } from "./AdminCommunityGovernanceLogRow";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import styles from "./AdminCommunityGovernanceLog.module.css";
 
-/** Filter sentinel for "no action filter" — never sent to the backend, which
- *  treats an absent `action` as unfiltered. */
+/** Filter sentinel for "no action filter". It stays on this side: the
+ *  backend reads an absent `action` as unfiltered. */
 const ALL_ACTIONS = "all";
 
 /**
@@ -60,12 +66,12 @@ export function GovernanceLogPane({ slug }: { slug: string }) {
 
   // A refetch can shrink the trail under a page the admin already advanced to
   // (an entry filtered away, a narrower result set). Snap back to the last real
-  // page instead of rendering the resulting empty slice, which would otherwise
-  // read as "this community has no governance history".
+  // page: the resulting empty slice would read as "this community has no
+  // governance history".
   const pageSize = data?.pageSize || GOVERNANCE_LOG_PAGE_SIZE;
   const pageCount = data ? Math.max(1, Math.ceil(data.total / pageSize)) : 1;
   const isPageOutOfRange = data !== undefined && page > pageCount;
-  // Adjust during render rather than in an effect: the condition above is
+  // Adjust during render: the condition above is
   // already derived from render-available values, and setting it here (as
   // opposed to in a post-commit effect) avoids painting the stale out-of-range
   // page before snapping back. React re-renders immediately with the
@@ -77,18 +83,19 @@ export function GovernanceLogPane({ slug }: { slug: string }) {
 
   return (
     <div className={styles.pane}>
-      <div className={styles.head}>
-        <p className={styles.intro}>
-          {t("admin:communities.governanceLog.intro")}
-        </p>
+      <p className={styles.intro}>
+        {t("admin:communities.governanceLog.intro")}
+      </p>
+      <AdminToolbar label={t("admin:communities.governanceLog.toolbarLabel")}>
         <Select
           size="sm"
+          className={adminToolbarClasses.select}
           label={t("admin:communities.governanceLog.filterLabel")}
           value={action}
           options={actionOptions}
           onChange={(next) => changeAction(next ?? ALL_ACTIONS)}
         />
-      </div>
+      </AdminToolbar>
 
       {isPending || isPageOutOfRange ? (
         <SkeletonTrail />
@@ -124,19 +131,21 @@ export function GovernanceLogPane({ slug }: { slug: string }) {
   );
 }
 
-/** Honest failure: says the request failed and offers the retry, instead of
- *  rendering as an empty trail. */
+/** Honest failure: says the request failed and offers the retry, so a failed
+ *  read looks different from an empty trail. */
 function ErrorPanel({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.errorPanel} role="alert">
-      <p className={styles.errorText}>
-        {t("admin:communities.governanceLog.loadError")}
-      </p>
-      <Button variant="ghost" size="md" onClick={onRetry}>
-        {t("admin:communities.governanceLog.retryCta")}
-      </Button>
-    </div>
+    <AdminNotice
+      tone="error"
+      action={
+        <Button variant="ghost" size="md" onClick={onRetry}>
+          {t("admin:communities.governanceLog.retryCta")}
+        </Button>
+      }
+    >
+      {t("admin:communities.governanceLog.loadError")}
+    </AdminNotice>
   );
 }
 
@@ -153,29 +162,27 @@ function EmptyPanel({
   const { t } = useTranslation();
   const suffix = isFiltered ? "Filtered" : "";
   return (
-    <div className={styles.emptyPanel}>
-      <h3 className={styles.emptyTitle}>
+    <AdminEmptyState
+      title={
         <Translation
           i18nKey={`admin:communities.governanceLog.empty${suffix}Title`}
           components={{ em: <em /> }}
         />
-      </h3>
-      <p className={styles.emptyText}>
-        {t(`admin:communities.governanceLog.empty${suffix}Text`)}
-      </p>
-      {isFiltered && (
-        <div className={styles.emptyCta}>
-          <Button variant="ghost-dark" size="md" onClick={onClearFilter}>
+      }
+      body={t(`admin:communities.governanceLog.empty${suffix}Text`)}
+      action={
+        isFiltered && (
+          <Button variant="ghost" size="md" onClick={onClearFilter}>
             {t("admin:communities.governanceLog.clearFilterCta")}
           </Button>
-        </div>
-      )}
-    </div>
+        )
+      }
+    />
   );
 }
 
-/** Prev/next rather than one button per page: a long-lived community's trail
- *  can run to hundreds of entries, and a numbered strip that wide is unusable. */
+/** Prev/next paging: a long-lived community's trail can run to hundreds of
+ *  entries, and a numbered strip that wide is unusable. */
 function Pager({
   page,
   pageCount,

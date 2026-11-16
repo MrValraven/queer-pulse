@@ -8,7 +8,7 @@
 .row {
   position: relative;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
+  border-radius: var(--admin-panel-radius);
   background: var(--paper);
   box-shadow: var(--shadow-e1);
   overflow: hidden;
@@ -22,7 +22,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 20px;
-  padding: var(--card-pad);
+  padding: var(--admin-panel-pad);
 }
 
 .rowBody > * {
@@ -372,7 +372,6 @@
 @container queue-card (max-width: 560px) {
   .rowBody {
     gap: 16px;
-    padding: 18px;
   }
 }
 
@@ -385,40 +384,7 @@
   }
 }
 
-/* ── The compact indicator, for surfaces a moderator already opens. ─────── */
-
+/* The compact indicator on a page that does not space its own children. */
 .indicator {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 0 0 16px;
-  padding: 10px 14px;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-left-width: 4px;
-  border-radius: var(--radius-14);
-  background: var(--paper);
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  color: var(--ink);
-}
-
-.indicatorWarning {
-  border-left-color: var(--amber);
-}
-
-.indicatorCritical {
-  border-left-color: var(--danger);
-}
-
-.indicatorIcon {
-  flex: none;
-  width: 18px;
-  height: 18px;
-}
-
-.indicatorLink {
-  margin-left: auto;
-  color: var(--text-strong);
-  font-weight: 600;
+  margin-bottom: 16px;
 }

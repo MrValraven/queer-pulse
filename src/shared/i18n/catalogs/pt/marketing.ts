@@ -1451,10 +1451,6 @@ export const marketing: Catalog = {
   "listBusiness.wizard.stepGoToAria": "Ir para o passo {number}: {label}",
   "listBusiness.wizard.stepOf": "Passo {number} de {total}: {label}",
   "listBusiness.wizard.draftSaved": "Rascunho guardado",
-  "listBusiness.draftBanner.text":
-    "<b>Tens um rascunho guardado.</b> Queres continuar onde ficaste?",
-  "listBusiness.draftBanner.startFresh": "Começar de novo",
-  "listBusiness.draftBanner.resume": "Retomar rascunho",
   "listBusiness.paneActions.back": "Voltar",
   "listBusiness.paneActions.cancel": "Cancelar",
   "listBusiness.paneActions.neededLabel": "Faltam algumas coisas",
@@ -1493,14 +1489,29 @@ export const marketing: Catalog = {
   "listBusiness.saveLater.cause.superseded":
     "Este rascunho já foi enviado ou descartado enquanto guardávamos, por isso não havia nada para manter.",
   "listBusiness.drafts.title": "Retoma onde ficaste",
-  "listBusiness.drafts.count": "{count} em curso",
   "listBusiness.drafts.teamNote":
     "A nossa equipa vê os dados do negócio no teu rascunho e até onde chegaste. As tuas respostas sobre ti ficam privadas. Se precisares, podemos dar uma ajuda ou terminar o anúncio para depois o aceitares.",
   "listBusiness.drafts.untitled": "Anúncio sem título",
-  "listBusiness.drafts.updated": "Última edição {when}",
-  "listBusiness.drafts.resume": "Retomar",
   "listBusiness.drafts.resuming": "A abrir…",
   "listBusiness.drafts.delete": "Eliminar rascunho",
+  "listBusiness.drafts.continue": "Continuar",
+  "listBusiness.drafts.saved": "Guardado {when}",
+  "listBusiness.drafts.savedJustNow": "agora mesmo",
+  "listBusiness.drafts.savedUnknown": "há algum tempo",
+  "listBusiness.drafts.startAnother": "Registar outro negócio",
+  "listBusiness.drafts.deleteAndStartOver": "Eliminar e começar de novo",
+  "listBusiness.drafts.deleted": "Rascunho eliminado",
+  "listBusiness.drafts.deleteConfirm.title": "Eliminar {name}?",
+  "listBusiness.drafts.deleteConfirm.body":
+    "O rascunho e tudo o que preencheste desaparecem. Não dá para desfazer.",
+  "listBusiness.drafts.deleteConfirm.cancel": "Manter",
+  "listBusiness.drafts.gone": "Este rascunho já foi enviado ou eliminado.",
+  "listBusiness.drafts.openError": "Não conseguimos abrir este rascunho.",
+  "listBusiness.drafts.deleteError": "Não conseguimos eliminar este rascunho.",
+  "listBusiness.drafts.startOverConfirm.title":
+    "Eliminar {name} e começar de novo?",
+  "listBusiness.drafts.startOverConfirm.body":
+    "O rascunho e tudo o que preencheste desaparecem, e abre-se um anúncio novo. Não dá para desfazer.",
   "listBusiness.drafts.loadError":
     "Não conseguimos carregar os teus rascunhos agora.",
   "listBusiness.resume.invalidTitle": "Este link de rascunho já não é válido",
@@ -3530,6 +3541,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-16.headline":
+    "Os contactos ganham responsáveis, os rascunhos esperam num cartão Continuar e a administração renova-se.",
   "changelog.releases.2026-11-14.headline":
     "Os contactos ganham uma lista mais limpa, um formulário por secções e uma página que abre para ler.",
   "changelog.releases.2026-11-13.headline":
@@ -3901,6 +3914,18 @@ export const marketing: Catalog = {
     "Cartões de parceiros mais ricos no diretório",
   "changelog.entries.partner-cards-redesign.body":
     "Os negócios parceiros têm um cartão largo com a foto, uma etiqueta de parceria e a nota da nossa equipa.",
+  "changelog.entries.admin-console-redesign.title":
+    "Todas as páginas de administração partilham agora um design calmo e compacto",
+  "changelog.entries.admin-console-redesign.body":
+    "Uma nova barra lateral, pesquisa de páginas com Cmd+K, uma lista de alertas real e os mesmos separadores, tabelas e avisos.",
+  "changelog.entries.staff-leads-assignees.title":
+    "A equipa pode pôr colegas como responsáveis por um contacto",
+  "changelog.entries.staff-leads-assignees.body":
+    "Cada contacto mostra quem o acompanha, a lista filtra os teus e o número em Contactos conta os teus ou sem responsável.",
+  "changelog.entries.listing-draft-continue.title":
+    "Os anúncios por acabar ficam à tua espera",
+  "changelog.entries.listing-draft-continue.body":
+    "Sair do formulário do negócio no telemóvel guarda tudo, e ao voltar tens um cartão Continuar no teu passo.",
   "changelog.entries.leads-list-and-add-lead-tidied.title":
     "Lista de contactos e formulário mais limpos",
   "changelog.entries.leads-list-and-add-lead-tidied.body":
@@ -10848,6 +10873,8 @@ export const marketing: Catalog = {
   "directory.hero.note":
     "Verificado pela comunidade · mantido pelas pessoas da comunidade e pelos próprios negócios",
   "directory.hero.cta": "Regista o teu negócio",
+  "directory.hero.continueNamed": "Continuar {name}",
+  "directory.hero.continueListing": "Continuar o teu anúncio",
   "directory.search.placeholder": "Pesquisa por nome, bairro ou tipo…",
   "directory.cat.all": "Tudo",
   "directory.cat.food": "Comida e bebida",

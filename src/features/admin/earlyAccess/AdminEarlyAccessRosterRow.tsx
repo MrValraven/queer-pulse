@@ -5,7 +5,12 @@ import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../../shared/lib/initials";
 import { routes } from "../../../app/routeMap";
-import { AdminAvatar } from "../ui";
+import {
+  AdminAvatar,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "../ui";
 import type { EarlyAccessRosterRowDTO } from "../api/adminEarlyAccess.types";
 import styles from "./AdminEarlyAccessPage.module.css";
 
@@ -35,7 +40,10 @@ export function AdminEarlyAccessRosterRow({
   const grantedDate = formatters.date(new Date(row.grantedAt), DATE_OPTIONS);
 
   return (
-    <article className={styles.row} aria-label={member.displayName}>
+    <article
+      className={`${adminTableClasses.row} ${styles.row}`}
+      aria-label={member.displayName}
+    >
       <div className={styles.identity}>
         <AdminAvatar
           size="md"
@@ -68,17 +76,19 @@ export function AdminEarlyAccessRosterRow({
           </span>
         </div>
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        id={revokeId}
-        className={styles.revoke}
-        // Every row's button reads "Revoke access"; its name adds whose.
-        aria-labelledby={`${revokeId} ${nameId}`}
-        onClick={onRevoke}
-      >
-        {t("admin:earlyAccess.roster.revokeCta")}
-      </Button>
+      <AdminRowActions className={styles.revoke}>
+        <Button
+          variant="ghost"
+          size="sm"
+          id={revokeId}
+          className={adminRowActionClasses.danger}
+          // Every row's button reads "Revoke access"; its name adds whose.
+          aria-labelledby={`${revokeId} ${nameId}`}
+          onClick={onRevoke}
+        >
+          {t("admin:earlyAccess.roster.revokeCta")}
+        </Button>
+      </AdminRowActions>
     </article>
   );
 }

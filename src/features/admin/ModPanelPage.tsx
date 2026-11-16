@@ -6,9 +6,10 @@ import { ModPanel } from "./ModPanel";
 export function ModPanelPage() {
   const { t } = useTranslation();
   const { slug = "" } = useParams();
+  const title = t("admin:modPanel.pageTitle");
   return (
-    <AdminShell title={t("admin:modPanel.pageTitle")}>
-      <ModPanel slug={slug} />
+    <AdminShell title={title}>
+      <ModPanel slug={slug} title={title} />
     </AdminShell>
   );
 }

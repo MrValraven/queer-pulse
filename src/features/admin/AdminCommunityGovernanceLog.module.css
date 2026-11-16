@@ -5,15 +5,7 @@
   gap: 14px;
 }
 
-.head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 14px;
-}
 .intro {
-  flex: 1 1 260px;
   margin: 0;
   max-width: 52ch;
   font-size: var(--text-13);
@@ -22,23 +14,27 @@
 }
 
 /* ── The trail ───────────────────────────────────────────────────────────── */
+/* One panel, its entries split by hairlines. */
 .list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
 }
 
 .entry {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-row-pad);
+}
+.entry + .entry {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .entryBody {
   flex: 1;
@@ -75,9 +71,6 @@
   flex-direction: column;
   gap: 4px;
   margin: 10px 0 0;
-  padding: 10px 12px;
-  background: rgba(var(--plum-rgb), 0.04);
-  border-radius: var(--radius-12);
 }
 .metaRow {
   display: flex;
@@ -96,55 +89,6 @@
   min-width: 0;
   color: var(--ink-60);
   overflow-wrap: anywhere;
-}
-
-/* ── Failure, kept visibly distinct from an empty trail ──────────────────── */
-.errorPanel {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 16px 18px;
-  background: rgba(var(--danger-rgb), 0.08);
-  border-radius: var(--radius-card, 22px);
-}
-.errorText {
-  flex: 1 1 220px;
-  margin: 0;
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--danger);
-}
-
-/* ── Genuinely empty trail ───────────────────────────────────────────────── */
-.emptyPanel {
-  position: relative;
-  padding: 30px 28px;
-  background: var(--plum);
-  border-radius: var(--radius-card, 22px);
-  text-align: center;
-}
-.emptyTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-24);
-  font-weight: 400;
-  line-height: 1.15;
-  color: rgba(var(--cream-rgb), 1);
-}
-.emptyTitle em {
-  color: var(--accent);
-  font-style: italic;
-}
-.emptyText {
-  margin: 12px auto 0;
-  max-width: 440px;
-  font-size: var(--text-14-5);
-  line-height: 1.6;
-  color: rgba(var(--cream-rgb), 0.78);
-}
-.emptyCta {
-  margin-top: 18px;
 }
 
 /* ── Pager ───────────────────────────────────────────────────────────────── */

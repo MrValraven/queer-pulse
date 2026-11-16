@@ -14,6 +14,7 @@ export const LEAD_LIST_PARAM = {
   stage: "stage",
   type: "type",
   isDueOnly: "due",
+  assignedTo: "assignedTo",
 } as const;
 
 /** `due=1` turns the due filter on; any other value reads as off. */

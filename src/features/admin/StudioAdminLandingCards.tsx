@@ -17,6 +17,7 @@ import { StudioAdminLandingCardRow } from "./StudioAdminLandingCardRow";
 import { movedIds, studioAdminSaveErrorKeyOf } from "./studioAdmin.model";
 import { focusNeighbourControl } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminLandingCards.module.css";
+import { AdminPanel } from "./ui";
 
 type CardDialog =
   | { kind: "closed" }
@@ -101,11 +102,13 @@ export function StudioAdminLandingCards({
   }
 
   return (
-    <section className={css.section} aria-labelledby={headingId}>
-      <div className={css.head}>
-        <h2 id={headingId} ref={headingRef} tabIndex={-1} className={css.title}>
-          {t("admin:studioAdmin.landing.cards.heading")}
-        </h2>
+    <AdminPanel
+      title={t("admin:studioAdmin.landing.cards.heading")}
+      titleId={headingId}
+      titleRef={headingRef}
+      isTitleFocusable
+      description={t("admin:studioAdmin.landing.cards.sub")}
+      actions={
         <Button
           variant="primary"
           size="sm"
@@ -117,8 +120,9 @@ export function StudioAdminLandingCards({
         >
           {t("admin:studioAdmin.landing.cards.addCta")}
         </Button>
-      </div>
-      <p className={css.sub}>{t("admin:studioAdmin.landing.cards.sub")}</p>
+      }
+      bodyClassName={css.section}
+    >
       <Collapse isOpen={isFull}>
         <p id={fullLineId} className={css.hint}>
           {t("admin:studioAdmin.landing.cards.full")}
@@ -175,6 +179,6 @@ export function StudioAdminLandingCards({
         description={t("admin:studioAdmin.landing.cards.removeConfirm.body")}
         confirmLabel={t("admin:studioAdmin.landing.cards.removeCta")}
       />
-    </section>
+    </AdminPanel>
   );
 }

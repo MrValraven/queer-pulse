@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiPlus } from "react-icons/fi";
+import { FiBookOpen, FiPlus } from "react-icons/fi";
 import {
   Button,
   FadeIn,
@@ -12,7 +12,14 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
 import { todayIso } from "../../shared/lib/date";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminPanel,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import { useAdminResourceGuides } from "./api/useAdminResourceGuides";
 import { AdminResourceGuideRows } from "./AdminResourceGuideRows";
 import { AdminResourceGuideReviewModal } from "./AdminResourceGuideReviewModal";
@@ -84,7 +91,7 @@ export function AdminResourceGuidesPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminResourceGuides.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:adminResourceGuides.title"
@@ -93,74 +100,81 @@ export function AdminResourceGuidesPage() {
           }
           sub={t("admin:adminResourceGuides.header.sub")}
           actions={
-            <div className={styles.headerActions}>
-              <Button
-                to={routes.adminResourceGuideNew}
-                variant="primary"
-                size="sm"
-              >
-                <FiPlus aria-hidden /> {t("admin:guideWorkspace.newGuideCta")}
-              </Button>
-              <Select
-                aria-label={t("admin:adminResourceGuides.sortLabel")}
-                value={sort}
-                options={SORTS.map((value) => ({
-                  value,
-                  label: t(`admin:adminResourceGuides.sort.${value}`),
-                }))}
-                onChange={(value) =>
-                  setSort((value ?? "reviewDue") as AdminResourceSort)
-                }
-              />
-            </div>
+            <Button
+              to={routes.adminResourceGuideNew}
+              variant="primary"
+              size="sm"
+            >
+              <FiPlus aria-hidden /> {t("admin:guideWorkspace.newGuideCta")}
+            </Button>
           }
         />
       </FadeIn>
 
-      {!isLoading && !isError && staleCount > 0 && (
-        <p className={styles.staleBanner}>
-          {t("admin:adminResourceGuides.staleBanner", { count: staleCount })}
-        </p>
-      )}
+      <div className={styles.body}>
+        <AdminToolbar label={t("shared:filterPage.filtersCta")}>
+          <Select
+            size="sm"
+            className={adminToolbarClasses.select}
+            aria-label={t("admin:adminResourceGuides.sortLabel")}
+            value={sort}
+            options={SORTS.map((value) => ({
+              value,
+              label: t(`admin:adminResourceGuides.sort.${value}`),
+            }))}
+            onChange={(value) =>
+              setSort((value ?? "reviewDue") as AdminResourceSort)
+            }
+          />
+        </AdminToolbar>
 
-      {!isLoading && !isError && overdueCount > 0 && (
-        <p className={styles.staleBanner}>
-          {t("admin:adminResourceGuides.overdueBanner", {
-            count: overdueCount,
-          })}
-        </p>
-      )}
+        {!isLoading && !isError && staleCount > 0 && (
+          <AdminNotice tone="warn">
+            {t("admin:adminResourceGuides.staleBanner", { count: staleCount })}
+          </AdminNotice>
+        )}
 
-      {isLoading ? (
-        <div className={styles.rows}>
-          {[0, 1, 2, 3].map((skeletonIndex) => (
-            <SkeletonLine
-              key={skeletonIndex}
-              height={68}
-              style={{ borderRadius: 14 }}
-            />
-          ))}
-        </div>
-      ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
+        {!isLoading && !isError && overdueCount > 0 && (
+          <AdminNotice tone="warn">
+            {t("admin:adminResourceGuides.overdueBanner", {
+              count: overdueCount,
+            })}
+          </AdminNotice>
+        )}
+
+        {isLoading ? (
+          <div className={styles.rows}>
+            {[0, 1, 2, 3].map((skeletonIndex) => (
+              <SkeletonLine
+                key={skeletonIndex}
+                height={68}
+                style={{ borderRadius: 14 }}
+              />
+            ))}
+          </div>
+        ) : isError ? (
+          <AdminNotice tone="error">
             {isForbidden
               ? t("admin:common.panelForbidden")
               : t("admin:adminResourceGuides.loadError")}
-          </p>
-        </div>
-      ) : guides.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>
-            {t("admin:adminResourceGuides.empty")}
-          </p>
-          <Button to={routes.guideIndex} variant="ghost" size="sm">
-            {t("admin:adminResourceGuides.viewPublicIndexCta")}
-          </Button>
-        </div>
-      ) : (
-        <AdminResourceGuideRows guides={guides} onReview={setReviewing} />
-      )}
+          </AdminNotice>
+        ) : guides.length === 0 ? (
+          <AdminEmptyState
+            icon={FiBookOpen}
+            title={t("admin:adminResourceGuides.emptyTitle")}
+            body={t("admin:adminResourceGuides.emptyBody")}
+            action={
+              <Button to={routes.guideIndex} variant="ghost" size="sm">
+                {t("admin:adminResourceGuides.viewPublicIndexCta")}
+              </Button>
+            }
+          />
+        ) : (
+          <AdminPanel padding="flush" isOverflowVisible>
+            <AdminResourceGuideRows guides={guides} onReview={setReviewing} />
+          </AdminPanel>
+        )}
+      </div>
 
       {reviewing && (
         <AdminResourceGuideReviewModal

@@ -8,6 +8,7 @@ import { AdminGovernanceMotionApproveModal } from "./AdminGovernanceMotionApprov
 import { useAdminGovernanceMotionReject } from "../governance/api/useGovernanceProposals";
 import type { GovernanceProposalDTO } from "../governance/api/governanceProposals.api";
 import styles from "./AdminGovernancePage.module.css";
+import { AdminRowActions, adminRowActionClasses } from "./ui";
 
 const REJECT_NOTE_MAX_LENGTH = 2000;
 
@@ -52,9 +53,9 @@ export function AdminGovernanceMotionRow({
   };
 
   return (
-    <div className={[styles.card, styles.proposalAdminCard].join(" ")}>
+    <article className={styles.govListRow}>
       <div className={styles.proposalAdminHead}>
-        <h3 className={styles.cardTitle}>{motion.title}</h3>
+        <h3 className={styles.govListRowTitle}>{motion.title}</h3>
         <span className={styles.motionCosignCount}>
           <FiUsers aria-hidden />{" "}
           {t("admin:governance.motions.list.cosignatures", {
@@ -73,7 +74,7 @@ export function AdminGovernanceMotionRow({
           date: fmt.date(new Date(motion.opensAt)),
         })}
       </p>
-      <div className={styles.motionActions}>
+      <AdminRowActions className={styles.motionActions}>
         <Button
           variant="primary"
           size="sm"
@@ -84,6 +85,7 @@ export function AdminGovernanceMotionRow({
           {t("admin:governance.motions.approveCta")}
         </Button>
         <Button
+          className={adminRowActionClasses.danger}
           variant="ghost"
           size="sm"
           type="button"
@@ -92,7 +94,7 @@ export function AdminGovernanceMotionRow({
           <FiSlash aria-hidden />
           {t("admin:governance.motions.rejectCta")}
         </Button>
-      </div>
+      </AdminRowActions>
 
       {isApproving && (
         <AdminGovernanceMotionApproveModal
@@ -121,6 +123,6 @@ export function AdminGovernanceMotionRow({
           onConfirm={submitRejection}
         />
       )}
-    </div>
+    </article>
   );
 }

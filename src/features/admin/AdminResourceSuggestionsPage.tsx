@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminRowActions,
+  AdminTabs,
+  adminRowActionClasses,
+  type AdminTone,
+} from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -146,19 +155,24 @@ function SuggestionRow({
             {t("admin:adminResourceSuggestions.publishedChip")}
           </AdminChip>
         )}
-        <div className={styles.rowActionButtons}>
+        <AdminRowActions className={styles.rowActionButtons}>
           {ACTIONS.map(({ decision, status }) => (
             <Button
               key={decision}
-              variant="ghost"
+              variant={decision === "approve" ? "jade" : "ghost"}
               size="sm"
+              className={
+                decision === "decline"
+                  ? adminRowActionClasses.danger
+                  : undefined
+              }
               disabled={pending || !isDecisionOpen(suggestion, status)}
               onClick={() => onDecide(decision)}
             >
               {t(`admin:adminResourceSuggestions.action.${decision}`)}
             </Button>
           ))}
-        </div>
+        </AdminRowActions>
       </div>
     </div>
   );
@@ -255,7 +269,7 @@ export function AdminResourceSuggestionsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminResourceSuggestions.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:adminResourceSuggestions.header.title"
@@ -286,13 +300,14 @@ export function AdminResourceSuggestionsPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
+          <AdminNotice tone="error">
             {t("admin:adminResourceSuggestions.error")}
-          </p>
+          </AdminNotice>
         ) : suggestions.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminResourceSuggestions.empty")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            title={t("admin:adminResourceSuggestions.empty")}
+          />
         ) : (
           <>
             <div className={styles.rows}>

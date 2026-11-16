@@ -248,7 +248,19 @@ export const shared: Catalog = {
   // AdminShell
   "adminShell.toggleTheme": "Alternar tema",
   "adminShell.alerts": "Alertas",
-  "adminShell.toastNoAlerts": "Sem alertas novos",
+  "adminShell.alertsWaiting": "Alertas, {count} à espera",
+  // Paleta de comandos da administração (Cmd/Ctrl+K na consola)
+  "adminShell.palette.trigger": "Saltar para uma página",
+  "adminShell.palette.placeholder": "Procurar páginas de administração",
+  "adminShell.palette.empty":
+    "Nenhuma página de administração corresponde a {query}",
+  "adminShell.palette.hintMac": "⌘K",
+  "adminShell.palette.hintOther": "Ctrl K",
+  // Popover de alertas por baixo do sino da barra de topo
+  "adminShell.alerts.title": "À espera da equipa",
+  "adminShell.alerts.empty": "Não tens nada à tua espera",
+  "adminShell.alerts.unavailable": "Contagem indisponível",
+  "adminShell.alerts.open": "Abrir {label}",
 
   // AdminSidebar
   "adminSidebar.badge": "Admin",
@@ -257,9 +269,6 @@ export const shared: Catalog = {
   "adminSidebar.homeAria": "Início da administração QueerPulse",
   "adminSidebar.collapseRail": "Recolher menu",
   "adminSidebar.expandRail": "Expandir menu",
-  "adminSidebar.search.label": "Procurar páginas de administração",
-  "adminSidebar.search.placeholder": "Procurar páginas",
-  "adminSidebar.search.empty": "Nenhuma página de administração corresponde.",
   "adminSidebar.search.results_one": "{count} página",
   "adminSidebar.search.results_other": "{count} páginas",
 

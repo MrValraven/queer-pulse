@@ -19,6 +19,7 @@ import {
 } from "./api/platformLog.adapters";
 import type { PlatformLogQuery } from "./api/usePlatformLog";
 import { PlatformLogRow } from "./PlatformLogRow";
+import { AdminPanel, adminTableClasses } from "../ui";
 import styles from "./AdminPlatformLogPage.module.css";
 
 const SKELETON_ROWS = 6;
@@ -54,13 +55,15 @@ export function PlatformLogList({
 
   if (query.isPending) {
     return (
-      <div className={styles.card} aria-busy="true">
-        {Array.from({ length: SKELETON_ROWS }, (_, index) => (
-          <div key={index} className={styles.skeletonRow}>
-            <SkeletonLine height={42} />
-          </div>
-        ))}
-      </div>
+      <AdminPanel padding="flush">
+        <div aria-busy="true">
+          {Array.from({ length: SKELETON_ROWS }, (_, index) => (
+            <div key={index} className={styles.skeletonRow}>
+              <SkeletonLine height={42} />
+            </div>
+          ))}
+        </div>
+      </AdminPanel>
     );
   }
 
@@ -86,7 +89,7 @@ export function PlatformLogList({
   const now = new Date();
   const todayKey = localDayKey(now);
   return (
-    <div className={styles.card}>
+    <AdminPanel padding="flush">
       {groupByDay(rows).map((group) => {
         const headingId = `platform-log-day-${group.dayKey}`;
         return (
@@ -95,7 +98,10 @@ export function PlatformLogList({
             aria-labelledby={headingId}
             className={styles.day}
           >
-            <h2 id={headingId} className={styles.dayHeading}>
+            <h2
+              id={headingId}
+              className={`${adminTableClasses.headRow} ${styles.dayHeading}`}
+            >
               {dayLabel(group.dayKey, now, t, fmt)}
             </h2>
             <ol className={styles.list}>
@@ -122,6 +128,6 @@ export function PlatformLogList({
           errorMessage={t("admin:platformLog.loadMoreError")}
         />
       ) : null}
-    </div>
+    </AdminPanel>
   );
 }

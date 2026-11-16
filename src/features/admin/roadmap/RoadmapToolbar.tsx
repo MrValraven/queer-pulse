@@ -1,8 +1,7 @@
 import { useMemo, useRef } from "react";
-import { FiSearch } from "react-icons/fi";
-import { Select } from "../../../shared/components/ui";
+import { SearchInput, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { AdminToggle } from "../ui";
+import { AdminToggle, AdminToolbar, adminToolbarClasses } from "../ui";
 import type {
   AdminRoadmapItemDTO,
   RoadmapTeamMemberDTO,
@@ -40,21 +39,37 @@ export function RoadmapToolbar({
   });
 
   return (
-    <div className={styles.toolbar}>
-      <label className={styles.searchField}>
-        <FiSearch aria-hidden />
-        <input
-          ref={searchInputRef}
-          type="search"
-          value={filters.q}
-          onChange={(event) => setFilter("q", event.target.value)}
-          placeholder={t("admin:roadmap.toolbar.searchPlaceholder")}
-          aria-label={t("admin:roadmap.toolbar.searchAriaLabel")}
-        />
-      </label>
+    <AdminToolbar
+      className={styles.toolbar}
+      label={t("admin:roadmap.toolbar.ariaLabel")}
+      end={
+        <>
+          <span className={styles.denseToggleGroup}>
+            <AdminToggle
+              checked={filters.dense}
+              onChange={(checked) => setFilter("dense", checked)}
+              label={t("admin:roadmap.toolbar.denseToggle")}
+            />
+            {t("admin:roadmap.toolbar.denseToggle")}
+          </span>
+          <span className={styles.dragHint}>
+            {t("admin:roadmap.toolbar.dragHint")}
+          </span>
+        </>
+      }
+    >
+      <SearchInput
+        className={adminToolbarClasses.search}
+        inputRef={searchInputRef}
+        value={filters.q}
+        onChange={(value) => setFilter("q", value)}
+        placeholder={t("admin:roadmap.toolbar.searchPlaceholder")}
+        ariaLabel={t("admin:roadmap.toolbar.searchAriaLabel")}
+      />
 
       <Select
         size="sm"
+        className={adminToolbarClasses.select}
         label={t("admin:roadmap.toolbar.categoryAll")}
         value={filters.category}
         options={[
@@ -69,6 +84,7 @@ export function RoadmapToolbar({
 
       <Select
         size="sm"
+        className={adminToolbarClasses.select}
         label={t("admin:roadmap.toolbar.ownerAll")}
         value={filters.owner}
         options={[
@@ -87,6 +103,7 @@ export function RoadmapToolbar({
 
       <Select
         size="sm"
+        className={adminToolbarClasses.select}
         label={t("admin:roadmap.toolbar.sortManual")}
         value={filters.sort}
         options={SORT_OPTIONS.map((option) => ({
@@ -97,19 +114,6 @@ export function RoadmapToolbar({
           setFilter("sort", (value ?? filters.sort) as RoadmapSort)
         }
       />
-
-      <span className={styles.denseToggleGroup}>
-        <AdminToggle
-          checked={filters.dense}
-          onChange={(checked) => setFilter("dense", checked)}
-          label={t("admin:roadmap.toolbar.denseToggle")}
-        />
-        {t("admin:roadmap.toolbar.denseToggle")}
-      </span>
-
-      <span className={styles.dragHint}>
-        {t("admin:roadmap.toolbar.dragHint")}
-      </span>
-    </div>
+    </AdminToolbar>
   );
 }

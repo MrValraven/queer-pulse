@@ -3,7 +3,7 @@
    `--admin-topbar-h` is the sticky top bar's height, written on this element
    by useAdminTopbarHeight, so sticky page chrome can stop right under it. */
 .shell {
-  --admin-rail-w: 248px;
+  --admin-rail-w: var(--admin-sidebar-w);
   display: grid;
   grid-template-columns: var(--admin-rail-w) 1fr;
   min-height: 100svh;
@@ -12,18 +12,18 @@
 }
 /* The icon rail. Everything the wide rail shows is still reachable: names move
    into tooltips, pending pills become corner dots, and the two menus float out
-   to their own width instead of matching a 68px column. */
+   to their own width beside the narrow column. */
 .shellCollapsed {
-  --admin-rail-w: 68px;
+  --admin-rail-w: var(--admin-sidebar-w-collapsed);
 }
 /* Fixed chrome portaled to the body (the quiz template save bar) sits outside
    the shell, so the body carries the same width. Chrome inside the shell keeps
    reading the `.shell` value above. */
 :global(body):has(.shell) {
-  --admin-rail-w: 248px;
+  --admin-rail-w: var(--admin-sidebar-w);
 }
 :global(body):has(.shellCollapsed) {
-  --admin-rail-w: 68px;
+  --admin-rail-w: var(--admin-sidebar-w-collapsed);
 }
 @media (prefers-reduced-motion: reduce) {
   .shell {
@@ -33,8 +33,8 @@
 
 /* ── Sidebar dock ────────────────────────────────────────────────────────────
    Wraps the sidebar. On desktop it is `display: contents`, so the <aside> stays
-   the first grid column exactly as before. Below the mobile breakpoint it turns
-   into a fixed, slide-in off-canvas panel (see the media query at the bottom). */
+   the first grid column. Below the mobile breakpoint it turns into a fixed,
+   slide-in off-canvas panel (see the media query near the bottom). */
 .sidebarDock {
   display: contents;
 }
@@ -71,90 +71,49 @@
   height: 100svh;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 18px 14px 16px;
+  padding: 0 var(--admin-rail-pad-x);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
 }
 
-/* Wordmark and the collapse toggle share a row while the rail is wide, and
-   stack while it is an icon column. */
+/* Wordmark and the collapse control. The 48px row sits 4px from the top, so
+   its centre lines up with the 56px top bar beside it. */
 .brandRow {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-bottom: 14px;
-}
-.sidebarCollapsed .brandRow {
-  flex-direction: column;
-  gap: 8px;
+  height: var(--admin-brand-row-h);
+  margin-block: 4px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex: 1;
   min-width: 0;
-  /* Trimmed on the right only: the dot keeps the left inset it shares with the
-     rest of the rail, and the room comes off the collapse control's side. */
-  padding: 6px 6px 6px 8px;
-  border-radius: var(--radius-11);
+  height: 100%;
+  padding: 0 var(--admin-nav-row-pad-x);
+  border-radius: var(--radius-10);
   text-decoration: none;
   color: rgba(var(--cream-rgb), 1);
 }
-.sidebarCollapsed .brand {
-  flex: none;
-  justify-content: center;
-  width: 44px;
-  height: 40px;
-  padding: 0;
-}
-
-.collapseBtn {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 28px;
-  height: 32px;
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: var(--radius-9);
-  background: rgba(var(--cream-rgb), 0.05);
-  color: rgba(var(--cream-rgb), 0.72);
-  cursor: pointer;
-  transition:
-    background var(--dur, 0.18s) var(--ease, ease),
-    color var(--dur, 0.18s) var(--ease, ease);
-}
-.collapseBtn svg {
-  width: 16px;
-  height: 16px;
-}
-@media (hover: hover) {
-  .collapseBtn:hover {
-    background: rgba(var(--cream-rgb), 0.11);
-    color: rgba(var(--cream-rgb), 1);
-  }
-}
-.sidebarCollapsed .collapseBtn {
-  width: 44px;
-}
 .brandDot {
+  /* Centred over the 17px nav icons below it. */
+  position: relative;
+  margin-inline: 4px;
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.22);
   flex: none;
-  animation: axPulse 2.4s var(--ease, ease) infinite;
 }
 .brandName {
   font-family: var(--serif);
   font-size: var(--text-18);
   font-weight: 500;
   letter-spacing: -0.01em;
-  /* The collapse control shares this row now: the wordmark holds one line and
-     the badge beside it gives way, rather than the mark breaking mid-word. */
   white-space: nowrap;
 }
 .brandName em {
@@ -162,48 +121,74 @@
   font-style: italic;
 }
 .brandBadge {
-  /* Sits with the wordmark it qualifies, so the slack in the row falls between
-     the badge and the collapse control rather than pinning the two together. */
   flex: none;
   white-space: nowrap;
-  padding: 3px 7px;
+  padding: var(--admin-pill-pad);
   border-radius: var(--radius-pill);
   font-size: var(--text-9);
   font-weight: 700;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   background: rgba(var(--cream-rgb), 0.12);
   color: rgba(var(--cream-rgb), 0.82);
 }
 
+/* The pulse is a soft halo scaling out from behind the dot. */
+.brandDot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.22);
+  animation: axPulse 2.4s var(--ease, ease) infinite;
+}
 @keyframes axPulse {
   0%,
   100% {
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.22);
+    transform: scale(0.85);
+    opacity: 1;
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.05);
+    transform: scale(1.25);
+    opacity: 0.25;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .brandDot {
+  .brandDot::after {
     animation: none;
   }
 }
 
-/* ── Role switcher ───────────────────────────────────────────────────────── */
+/* The shared IconButton, sized down to the rail's 32px control. */
+.brandRow .collapseBtn {
+  flex: none;
+  width: var(--admin-rail-icon-btn);
+  min-width: var(--admin-rail-icon-btn);
+  height: var(--admin-rail-icon-btn);
+  min-height: var(--admin-rail-icon-btn);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: var(--radius-9);
+  background: rgba(var(--cream-rgb), 0.05);
+  color: rgba(var(--cream-rgb), 0.72);
+  font-size: var(--text-16);
+}
+
+/* ── Role switcher: one 44px row ─────────────────────────────────────────── */
 .switch {
+  flex: none;
   position: relative;
-  margin-bottom: 14px;
+  padding-bottom: var(--admin-rail-gap);
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
 }
 .switchBtn {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 9px 10px;
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: var(--radius-12);
+  height: var(--admin-switch-row-h);
+  padding: 0 var(--admin-switch-pad-x);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  border-radius: var(--radius-10);
   background: rgba(var(--cream-rgb), 0.05);
   color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
@@ -216,10 +201,10 @@
   }
 }
 .switchAv {
-  /* 30 / 12, in em so the box scales with its glyph. */
-  width: 2.5em;
-  height: 2.5em;
-  border-radius: var(--radius-9);
+  /* 28 / 12, in em so the box scales with its glyph. */
+  width: 2.3333em;
+  height: 2.3333em;
+  border-radius: var(--radius-8);
   display: grid;
   place-items: center;
   flex: none;
@@ -241,14 +226,21 @@
   flex-direction: column;
   min-width: 0;
   flex: 1;
+  line-height: 1.25;
 }
 .switchRole {
   font-size: var(--text-13);
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .switchScope {
   font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .switchChev {
   flex: none;
@@ -261,7 +253,7 @@
 
 .switchMenu {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% - var(--admin-rail-gap) + 6px);
   left: 0;
   right: 0;
   z-index: var(--z-popover);
@@ -269,7 +261,7 @@
   border-radius: var(--radius-14);
   background: var(--plum-deep);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-e4);
   animation: axMenuIn 0.16s var(--ease, ease);
 }
 @keyframes axMenuIn {
@@ -339,159 +331,76 @@
   display: block;
 }
 
-/* ── Rail search ─────────────────────────────────────────────────────────── */
-/* SearchInput is styled for a paper card; on the plum rail it takes the same
-   cream tints every other control here uses. The selectors are descendants
-   because the field's own class names are hashed inside its module — there is
-   exactly one input, one icon span and one clear button inside the wrap, so
-   nothing else can be caught by them. */
-.navSearch {
-  flex: none;
-  margin: 8px 0 2px;
-}
-.navSearch input {
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--cream-rgb), 0.07);
-  border-color: rgba(var(--cream-rgb), 0.14);
-  border-radius: var(--radius-11);
-  padding: 10px 34px 10px 38px;
-}
-.navSearch input::placeholder {
-  color: rgba(var(--cream-rgb), 0.45);
-}
-.navSearch input:focus {
-  background: rgba(var(--cream-rgb), 0.12);
-  border-color: rgba(var(--cream-rgb), 0.42);
-  box-shadow: none;
-}
-/* SearchInput drops the outline and puts back a plum-tinted ring, which is
-   invisible against plum. Keyboard focus takes the global two-tone ring
-   instead, restated from its tokens as effects.css asks. */
-.navSearch input:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-.navSearch span {
-  left: 13px;
-  color: rgba(var(--cream-rgb), 0.5);
-}
-.navSearch button {
-  right: 9px;
-  background: rgba(var(--cream-rgb), 0.14);
-  color: rgba(var(--cream-rgb), 0.85);
-}
-@media (hover: hover) {
-  .navSearch button:hover {
-    background: rgba(var(--cream-rgb), 0.24);
-  }
-}
-
-/* Collapsed rail: the field becomes the icon it was prefixed with. Sized like
-   the other icon controls so the column stays one straight line. */
-.navSearchBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: 6px 0 2px;
-  padding: 10px 0;
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: var(--radius-11);
-  background: rgba(var(--cream-rgb), 0.05);
-  color: rgba(var(--cream-rgb), 0.72);
-  cursor: pointer;
-  transition:
-    background var(--dur, 0.18s) var(--ease, ease),
-    color var(--dur, 0.18s) var(--ease, ease);
-}
-.navSearchBtn svg {
-  width: 18px;
-  height: 18px;
-}
-@media (hover: hover) {
-  .navSearchBtn:hover {
-    background: rgba(var(--cream-rgb), 0.11);
-    color: rgba(var(--cream-rgb), 1);
-  }
-}
-
-/* Results replace the sections while a query is running. */
-.navSearchResults {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.navSearchGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 7px;
-}
-/* Reads as the section heading it stands in for, minus the chevron: there is
-   nothing to open or shut here. */
-.navSearchHead {
-  margin: 0;
-  padding: 8px 12px 4px;
-  font-size: var(--text-10);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.5);
-}
-.navSearchEmpty {
-  margin: 0;
-  padding: 14px 12px;
-  font-size: var(--text-13);
-  line-height: 1.5;
-  color: rgba(var(--cream-rgb), 0.6);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .navSearchBtn {
-    transition: none;
-  }
-}
-
 /* ── Nav ─────────────────────────────────────────────────────────────────── */
+/* The scroller runs edge to edge of the rail (negative margin, padding put
+   back), so the sticky heads cover the full width and the scrollbar sits on
+   the rail's edge clear of the rows. */
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  /* Air under the search field, so Overview reads as the start of the nav
-     rather than a row attached to the field above it. */
-  margin-top: 8px;
-  /* Absorb the free vertical space and scroll internally so a tall nav list
-     never pushes the footer / user card off the fixed-height sidebar. */
+  gap: 1px;
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  margin-inline: calc(-1 * var(--admin-rail-pad-x));
+  padding: 0 var(--admin-rail-pad-x) var(--admin-rail-gap);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--cream-rgb), 0.18) transparent;
+}
+/* Air above the first row, held as margin: a top padding on the scroller
+   would let rows show through above a stuck section head. */
+.nav > :first-child {
+  margin-top: var(--admin-rail-gap);
 }
 
-/* A collapsible group: its heading button plus the links it holds. The top
-   margin also separates the first section from the loose Overview link. */
+/* A collapsible group: its sticky head plus the links it holds. */
 .navSection {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-top: 7px;
+  gap: 1px;
+  margin-top: 6px;
 }
 
-/* The section heading is a real toggle button, so it carries aria-expanded and
+/* Pinned to the top of the scroller while its section scrolls through, on a
+   plum ground so the rows pass under it. The bare 1 lifts it over its own
+   section's rows only. */
+/* A column, so the tooltip wrapper the icon rail adds stretches to the full
+   width and the head's mark centres over the row icons. */
+.navHeadRow {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  /* The head's box runs a rail gap below the button and fades out there, so a
+     row passing under a stuck head dissolves into the plum before it reaches
+     the label. At rest the fade lies over the plum ground between the head
+     and its first row, where it cannot be seen. */
+  padding-bottom: var(--admin-rail-gap);
+  background: linear-gradient(
+    var(--plum) calc(100% - var(--admin-rail-gap)),
+    transparent
+  );
+}
+
+/* The section head is a real toggle button, so it carries aria-expanded and
    picks up the global :focus-visible halo. */
 .navHead {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  padding: 8px 12px 7px;
+  min-height: var(--admin-nav-head-h);
+  padding: 0 var(--admin-nav-row-pad-x);
   border: 0;
-  border-radius: var(--radius-11);
+  border-radius: var(--radius-9);
   background: none;
   font-family: inherit;
-  font-size: var(--text-10);
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
+  line-height: 1.3;
   text-transform: uppercase;
   text-align: left;
   color: rgba(var(--cream-rgb), 0.5);
@@ -509,10 +418,15 @@
 .navHeadLabel {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
+/* A 17px box, the nav icons' width, so the head's label starts on the same
+   line as the row labels below it. */
 .navHeadChevron {
-  width: 14px;
-  height: 14px;
+  width: 17px;
+  height: 13px;
   flex: none;
   /* Points right while shut, down while open. */
   transform: rotate(-90deg);
@@ -565,31 +479,37 @@
 .navSectionLinks {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-height: 0;
 }
+
+/* A 34px row at rest. A long Portuguese label stays on one line and ends in an
+   ellipsis, with the full name in the row's hover title, so every row keeps
+   its height and the rail never scrolls sideways. */
 .navItem {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 10px 12px;
-  border-radius: var(--radius-11);
-  color: rgba(var(--cream-rgb), 0.78);
+  gap: 10px;
+  min-height: var(--admin-nav-row-h);
+  padding: var(--admin-nav-row-pad);
+  border-radius: var(--radius-9);
+  color: rgba(var(--cream-rgb), 0.76);
   text-decoration: none;
-  font-size: var(--text-14);
+  font-size: var(--text-13-5);
   font-weight: 500;
+  line-height: 1.3;
   transition:
     background var(--dur, 0.18s) var(--ease, ease),
     color var(--dur, 0.18s) var(--ease, ease);
 }
 .navItem svg {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
   flex: none;
 }
 @media (hover: hover) {
   .navItem:hover {
-    background: rgba(var(--cream-rgb), 0.08);
+    background: rgba(var(--cream-rgb), 0.07);
     color: rgba(var(--cream-rgb), 1);
   }
 }
@@ -607,15 +527,20 @@
 .navLabel {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .navCount {
   flex: none;
-  min-width: 22px;
-  padding: 1px 7px;
+  min-width: 20px;
+  padding: var(--admin-pill-pad);
   border-radius: var(--radius-pill);
   font-size: var(--text-11);
   font-weight: 700;
+  line-height: 1.45;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 .navCountAlert {
   background: var(--danger);
@@ -629,41 +554,55 @@
   color: var(--plum);
 }
 
-/* ── User footer ─────────────────────────────────────────────────────────── */
-.backToPlatform {
-  margin-top: auto;
-  margin-bottom: 8px;
+/* ── Rail foot: account menu and Back to platform in one 56px row ────────── */
+/* Full-bleed like the nav, so its hairline crosses the whole rail. It is the
+   positioning context for the account menu, which opens upward across the
+   foot's full width. */
+.railFoot {
+  flex: none;
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 12px;
-  border-radius: var(--radius-11);
-  color: rgba(var(--cream-rgb), 0.7);
+  gap: 6px;
+  min-height: var(--admin-foot-row-h);
+  margin-inline: calc(-1 * var(--admin-rail-pad-x));
+  padding: 0 var(--admin-rail-pad-x);
+  border-top: 1px solid rgba(var(--cream-rgb), 0.08);
+}
+
+.backToPlatform {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--admin-rail-icon-btn);
+  height: var(--admin-rail-icon-btn);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: var(--radius-9);
+  background: rgba(var(--cream-rgb), 0.05);
+  color: rgba(var(--cream-rgb), 0.72);
   text-decoration: none;
-  font-size: var(--text-13);
-  font-weight: 600;
   transition:
     background var(--dur, 0.18s) var(--ease, ease),
     color var(--dur, 0.18s) var(--ease, ease);
 }
 .backToPlatform svg {
-  width: 17px;
-  height: 17px;
-  flex: none;
+  width: 16px;
+  height: 16px;
   transition: transform var(--dur, 0.18s) var(--ease, ease);
 }
 @media (hover: hover) {
   .backToPlatform:hover {
-    background: rgba(var(--cream-rgb), 0.08);
+    background: rgba(var(--cream-rgb), 0.12);
     color: rgba(var(--cream-rgb), 1);
   }
-}
-@media (hover: hover) {
   .backToPlatform:hover svg {
     transform: translateX(-2px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .backToPlatform svg {
+    transition: none;
+  }
   @media (hover: hover) {
     .backToPlatform:hover svg {
       transform: none;
@@ -671,11 +610,11 @@
   }
 }
 
-/* ── Account menu (sidebar foot) ─────────────────────────────────────────────
-   Positioning context for the menu, which opens UPWARD: the trigger is the last
-   thing in the rail, so there is nothing below it to open into. */
+/* ── Account menu (rail foot) ────────────────────────────────────────────── */
+/* Static on purpose: the menu anchors to `.railFoot`, so it spans the rail. */
 .meWrap {
-  position: relative;
+  flex: 1;
+  min-width: 0;
 }
 
 .me {
@@ -683,9 +622,10 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 10px;
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: var(--radius-13);
+  height: var(--admin-touch-target);
+  padding: 0 var(--admin-switch-pad-x);
+  border: 0;
+  border-radius: var(--radius-10);
   background: transparent;
   color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
@@ -694,7 +634,7 @@
 }
 @media (hover: hover) {
   .me:hover {
-    background: rgba(var(--cream-rgb), 0.06);
+    background: rgba(var(--cream-rgb), 0.07);
   }
 }
 .meTx {
@@ -702,6 +642,7 @@
   flex-direction: column;
   min-width: 0;
   flex: 1;
+  line-height: 1.25;
 }
 .meName {
   font-size: var(--text-13);
@@ -710,7 +651,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* The account address. Long ones must ellipsis rather than widen the rail. */
+/* The account address. Long ones must ellipsis and leave the rail's width
+   alone. */
 .meRole {
   font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.55);
@@ -735,14 +677,14 @@
 .meMenu {
   position: absolute;
   bottom: calc(100% + 6px);
-  left: 0;
-  right: 0;
+  left: var(--admin-rail-pad-x);
+  right: var(--admin-rail-pad-x);
   z-index: var(--z-popover);
   padding: 6px;
   border-radius: var(--radius-14);
   background: var(--plum-deep);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-e4);
   animation: axMenuUpIn 0.16s var(--ease, ease);
 }
 /* Declared in THIS module: a CSS-module `animation` name is localized, so
@@ -763,7 +705,7 @@
   }
 }
 
-/* Which powers this account actually holds — the tier plus any additive staff
+/* Which powers this account actually holds: the tier plus any additive staff
    grants. The role chip at the top of the rail never shows the grants. */
 .meMenuAccess {
   display: flex;
@@ -826,30 +768,34 @@
   min-width: 0;
 }
 
+/* Three columns on a wide screen: the breadcrumb, the palette trigger held in
+   the centre so it sits in the same place on every page, and the theme and
+   alerts controls. Installed on iOS the status bar is drawn over the page, so
+   the notch inset is added above the 56px. */
 .topbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  /* Installed on iOS the status bar is translucent and drawn over the page
-     (index.html: black-translucent + viewport-fit=cover), so a bar stuck at
-     `top: 0` puts its buttons under the clock, where taps go to the system.
-     The inset is added on top of the padding, so the bar's cream runs up
-     behind the status bar and the buttons sit below it. Zero elsewhere. */
-  padding: calc(14px + env(safe-area-inset-top, 0px)) 30px 14px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
-  background: var(--cream);
   position: sticky;
   top: 0;
   z-index: var(--z-nav);
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) minmax(0, var(--admin-trigger-w))
+    minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--admin-bar-gap);
+  min-height: calc(var(--admin-bar-h) + env(safe-area-inset-top, 0px));
+  padding: env(safe-area-inset-top, 0px) var(--admin-content-pad-x) 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
 }
 .crumb {
   display: flex;
-  /* `center`, not `baseline`: the separator is now a CSS dot on .crumbCrumb
-     rather than a typed glyph, and a dot has no baseline to align to. */
   align-items: center;
   gap: 8px;
-  flex: none;
-  font-size: var(--text-14);
+  min-width: 0;
+  /* Clipped with room to spare, so a crumb link's focus ring still shows. */
+  overflow: clip;
+  overflow-clip-margin: 4px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   white-space: nowrap;
 }
@@ -857,10 +803,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex: none;
 }
-/* Breadcrumb separator, drawn rather than typed: the markup used to carry a
-   literal "·" glyph, which the repo bans as a text affordance and which
-   renders differently across fonts. A dot after every crumb, none after the
+/* Breadcrumb separator, drawn in CSS: a dot after every crumb, none after the
    last one before the page title. */
 .crumbCrumb::after {
   content: "";
@@ -874,6 +819,7 @@
 .crumbLink {
   color: var(--ink-60);
   text-decoration: none;
+  transition: color var(--dur, 0.18s) var(--ease, ease);
 }
 @media (hover: hover) {
   .crumbLink:hover {
@@ -881,6 +827,9 @@
   }
 }
 .crumbTitle {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--ink);
   font-weight: 600;
 }
@@ -891,76 +840,149 @@
   font-weight: 400;
 }
 
-/* Off-canvas toggle. Hidden on desktop; revealed at the mobile breakpoint. */
-.menuBtn {
-  display: none;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  flex: none;
+/* The shared ghost Button, drawn as a quiet search field. Scoped under
+   .topbar so it outranks the variant's own rules, hover included. */
+.topbar .paletteTrigger {
+  justify-self: stretch;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  height: var(--admin-control-h);
+  min-height: var(--admin-control-h);
+  padding: var(--admin-trigger-pad);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-11);
+  border-radius: var(--radius-10);
   background: var(--paper);
+  box-shadow: var(--shadow-e1);
   color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    background var(--dur, 0.18s) var(--ease, ease),
-    color var(--dur, 0.18s) var(--ease, ease);
-}
-.menuBtn svg {
-  width: 20px;
-  height: 20px;
+  font-size: var(--text-13-5);
+  font-weight: 500;
 }
 @media (hover: hover) {
-  .menuBtn:hover {
-    background: var(--cream);
-    color: var(--text-strong);
+  .topbar .paletteTrigger:hover:not(:disabled):not([aria-disabled="true"]) {
+    border-color: rgba(var(--line-rgb), 0.24);
+    background: var(--paper);
+    color: var(--ink);
+    transform: none;
   }
+}
+.triggerIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+.triggerLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.triggerKbd {
+  flex: none;
+  padding: var(--admin-kbd-pad);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-6);
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--ink-60);
 }
 
 .topRight {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex: none;
-  /* Holds the icons against the right edge now that nothing between them and
-     the breadcrumb absorbs the free space. */
-  margin-left: auto;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
 }
-.iconBtn {
+
+/* The shared IconButton at the bar's 36px control size, with the same paper
+   and hairline as the palette trigger. */
+.topbar .barIconBtn {
   position: relative;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
+  flex: none;
+  width: var(--admin-control-h);
+  min-width: var(--admin-control-h);
+  height: var(--admin-control-h);
+  min-height: var(--admin-control-h);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-11);
+  border-radius: var(--radius-10);
   background: var(--paper);
-  color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    background var(--dur, 0.18s) var(--ease, ease),
-    color var(--dur, 0.18s) var(--ease, ease);
+  font-size: var(--text-16);
 }
 @media (hover: hover) {
-  .iconBtn:hover {
-    background: var(--cream);
+  .topbar .barIconBtn:hover:not(:disabled):not([aria-disabled="true"]) {
+    border-color: rgba(var(--line-rgb), 0.24);
+    background: var(--paper);
     color: var(--text-strong);
   }
 }
-.iconDot {
-  position: absolute;
-  top: 8px;
-  right: 9px;
-  width: 7px;
-  height: 7px;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  border: 2px solid var(--paper);
+.topbar .barIconBtn[aria-expanded="true"] {
+  border-color: rgba(var(--line-rgb), 0.24);
+  color: var(--text-strong);
 }
 
+/* Something waits on staff. The paper ring cuts the dot out of the bell. */
+.bellDot {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--ring-paper);
+  animation: axDotIn var(--dur-base, 0.25s) var(--ease, ease);
+}
+@keyframes axDotIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bellDot {
+    animation: none;
+  }
+}
+
+/* Every shell control grows to the 44px target on a touch screen. */
+@media (pointer: coarse) {
+  .navItem,
+  .navHead {
+    min-height: var(--admin-touch-target);
+  }
+  .topbar .paletteTrigger,
+  .topbar .barIconBtn {
+    height: var(--admin-touch-target);
+    min-height: var(--admin-touch-target);
+  }
+  .topbar .barIconBtn,
+  .brandRow .collapseBtn,
+  .backToPlatform {
+    width: var(--admin-touch-target);
+    min-width: var(--admin-touch-target);
+    height: var(--admin-touch-target);
+    min-height: var(--admin-touch-target);
+  }
+}
+
+/* The landmark attributes are in the selector because base.css, nav-mode.css
+   and standalone.css zero a rail shell's `main` padding with selectors built
+   on them. Four parts outrank each of those, so the inset holds at every
+   width and in every nav mode. */
+.main > .content[data-page-main][data-shell] {
+  padding: var(--admin-content-pad-y) var(--admin-content-pad-x)
+    var(--section-y-64);
+}
 .content {
-  padding: 26px 30px var(--section-y-64);
   max-width: var(--maxw);
   width: 100%;
   min-width: 0;
@@ -973,6 +995,14 @@
 .contentFullBleed {
   max-width: none;
 }
+/* Folding the rail to icons is a request for table width, so the measure grows
+   by exactly the width the rail gave up. At 1440 the page then fills the
+   column edge to edge, with no dead band on the right. */
+.shellCollapsed .content:not(.contentFullBleed) {
+  max-width: calc(
+    var(--maxw) + var(--admin-sidebar-w) - var(--admin-sidebar-w-collapsed)
+  );
+}
 
 @media (--wide) {
   .shell {
@@ -981,7 +1011,7 @@
 
   /* The dock leaves `display: contents` and becomes a fixed slide-in panel off
      the left edge. It shares the modal tier with the scrim and comes after it
-     in the DOM, so it paints on top — the same arrangement the shared Modal
+     in the DOM, so it paints on top, the same arrangement the shared Modal
      uses for its own scrim and dialog. */
   .sidebarDock {
     display: block;
@@ -999,40 +1029,49 @@
      the left edge, where its shadow would show as a grey band on the page. */
   .sidebarDockOpen {
     transform: translateX(0);
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.32);
+    box-shadow: var(--shadow-e4);
   }
 
   /* Fill the fixed dock and clear the notch; the nav scrolls internally. */
   .sidebar {
     position: relative;
     height: 100%;
-    padding-block-start: max(18px, env(safe-area-inset-top));
-    padding-block-end: max(16px, env(safe-area-inset-bottom));
+    padding-block-start: env(safe-area-inset-top, 0px);
+  }
+  .railFoot {
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+  .backToPlatform {
+    width: var(--admin-touch-target);
+    height: var(--admin-touch-target);
   }
 
-  .menuBtn {
-    display: grid;
-    order: 0;
-  }
-  /* Comfortable ≥44px touch targets for the topbar icon buttons on mobile. */
-  .iconBtn {
-    width: 44px;
-    height: 44px;
-  }
-
+  /* One row on a phone: drawer toggle, the page title taking what is left,
+     then the search icon, theme and alerts. */
   .topbar {
-    padding: calc(12px + env(safe-area-inset-top, 0px)) 18px 12px;
-    flex-wrap: wrap;
+    display: flex;
+    gap: 4px;
+    padding-inline: var(--admin-gutter-mobile);
   }
   .crumb {
-    order: 1;
+    flex: 1;
+    margin-inline: 6px;
   }
   .topRight {
-    order: 2;
-    margin-left: auto;
+    flex: none;
+    gap: 4px;
   }
-  .content {
-    padding: 20px 18px var(--section-y-48);
+  .main > .content[data-page-main][data-shell] {
+    padding: var(--admin-content-pad-y) var(--admin-gutter-mobile)
+      var(--section-y-48);
+  }
+}
+
+/* A phone keeps the page title alone: the parent crumbs are one tap away in
+   the drawer. */
+@media (--md) {
+  .crumbCrumb {
+    display: none;
   }
 }
 
@@ -1047,40 +1086,81 @@
    assistive tech (`visuallyHidden`) and repeated visually by a tooltip beside
    the icon, so nothing is lost, only folded away. */
 .sidebarCollapsed {
-  padding: 18px 12px 16px;
+  padding: 0 var(--admin-rail-pad-x-collapsed);
+}
+.sidebarCollapsed .nav,
+.sidebarCollapsed .railFoot {
+  margin-inline: calc(-1 * var(--admin-rail-pad-x-collapsed));
+  padding-inline: var(--admin-rail-pad-x-collapsed);
+}
+
+/* Wordmark and collapse control stack: the dot, then the expand chevron. */
+.sidebarCollapsed .brandRow {
+  flex-direction: column;
+  gap: 6px;
+  height: auto;
+  margin-block: 10px 8px;
+}
+.sidebarCollapsed .brand {
+  flex: none;
+  justify-content: center;
+  width: var(--admin-touch-target);
+  height: var(--admin-rail-icon-btn);
+  padding: 0;
+}
+.sidebarCollapsed .brandRow .collapseBtn {
+  width: var(--admin-touch-target);
+  min-width: var(--admin-touch-target);
 }
 
 /* Identity chip and account trigger: monogram only, menus floated. */
 .switchBtnIcon {
   justify-content: center;
   gap: 0;
-  padding: 7px;
+  width: var(--admin-touch-target);
+  padding: 0;
 }
 .meIcon {
   justify-content: center;
   gap: 0;
-  padding: 7px;
+  width: var(--admin-touch-target);
+  padding: 0;
 }
-/* A menu the width of a 68px column would be unreadable, so it takes its own
-   width and overhangs the rail. Nothing between it and the page clips. */
+/* A menu the width of a 64px column would be unreadable, so it takes the wide
+   rail's width and overhangs the page. Nothing between it and the page clips. */
 .switchMenuFloat,
 .meMenuFloat {
   left: 0;
   right: auto;
-  width: 248px;
+  width: var(--admin-sidebar-w);
+}
+
+/* The foot stacks: account, then Back to platform. */
+.sidebarCollapsed .railFoot {
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding-block: var(--admin-rail-gap);
+}
+.sidebarCollapsed .meWrap {
+  flex: none;
+}
+.sidebarCollapsed .backToPlatform {
+  width: var(--admin-touch-target);
 }
 
 /* Section headings become their mark, with a hairline standing in for the
    grouping the uppercase label used to do. */
 .navSectionIcon {
-  margin-top: 10px;
+  margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.09);
 }
 .navHeadIcon {
   justify-content: center;
   gap: 0;
-  padding: 9px 0;
+  min-height: var(--admin-nav-row-h);
+  padding: 0;
 }
 .navHeadIconMark {
   width: 17px;
@@ -1090,13 +1170,12 @@
 
 /* `width: 100%` because the tooltip wrapper around each icon control is an
    inline-flex row: without it the control is only as wide as its glyph and
-   sits against the left edge of the rail instead of centred in it. */
-.navItemIcon,
-.backToPlatformIcon {
+   sits against the left edge of the rail. */
+.navItemIcon {
   width: 100%;
   justify-content: center;
   gap: 0;
-  padding: 10px 0;
+  padding: 0;
 }
 
 /* The pending pill has no room beside a centred icon, so it becomes a dot in
@@ -1107,8 +1186,8 @@
 }
 .navDot {
   position: absolute;
-  top: 5px;
-  right: 9px;
+  top: 4px;
+  right: 7px;
   width: 8px;
   height: 8px;
   border-radius: 50%;

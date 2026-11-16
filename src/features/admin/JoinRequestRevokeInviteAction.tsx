@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiSlash } from "react-icons/fi";
 import { Button, ConfirmDialog } from "../../shared/components/ui";
+import { adminRowActionClasses } from "./ui";
 import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -63,8 +64,9 @@ export function JoinRequestRevokeInviteAction({
   return (
     <>
       <Button
-        variant="danger"
-        size="md"
+        variant="ghost"
+        size="sm"
+        className={adminRowActionClasses.danger}
         disabled={revokeInvite.isPending}
         onClick={() => setIsConfirmOpen(true)}
       >

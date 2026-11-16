@@ -1,24 +1,16 @@
 /* The wall curation page's Fill order and Preview panels. */
 
-.panel {
+/* The body of an AdminPanel: the intro, then the panel's controls. */
+.panelBody {
   display: flex;
   flex-direction: column;
   gap: 12px;
   min-width: 0;
 }
 
-.heading {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-24);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
 .intro {
   max-width: 62ch;
-  margin: 8px 0 0;
+  margin: 0;
   font-size: var(--text-body-sm);
   line-height: 1.5;
   color: var(--ink-60);
@@ -127,15 +119,6 @@
   color: var(--ink-60);
   border: 1px dashed rgba(var(--line-rgb), 0.18);
   border-radius: var(--radius-12);
-}
-
-/* Preview: the head holds the heading and the device switch. */
-.previewHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 /* The wall draws on plum, as it does on the directory hero. The widths are

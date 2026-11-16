@@ -6,6 +6,7 @@ import {
 import { demoPersonaPublicState } from "../../subprofiles/personaWallDemoStore";
 import { leadLinkKey } from "./api/leadLinkKey";
 import {
+  isLeadAssignedToFilter,
   isLeadStage,
   isLeadType,
   LEAD_EMAIL_MAX,
@@ -17,6 +18,8 @@ import {
   LEAD_PHONE_MAX,
   LEAD_SEARCH_QUERY_MAX,
   type CreateLeadBody,
+  type LeadAssignedToFilter,
+  type LeadAssigneeRefusalReason,
   type LeadListFilters,
   type LeadPersonaPublicState,
   type LeadReasonCode,
@@ -47,7 +50,7 @@ export function leadRefusal(
     leadName: string;
     index: number;
     publicState: Exclude<LeadPersonaPublicState, "shown">;
-    reason: LeadRevertRefusalReason;
+    reason: LeadRevertRefusalReason | LeadAssigneeRefusalReason;
   }>,
 ): ApiError {
   return new ApiError(status, STATUS_TEXT[status], {
@@ -270,23 +273,34 @@ export function normalizeLinkedPersonaId(
 export const normalizeLeadSearchTerm = (value: string): string =>
   Array.from(cleanText(value)).slice(0, LEAD_SEARCH_QUERY_MAX).join("");
 
-/** The list's stage and type filters, trimmed first; blank is every one,
- *  an unknown value answers its invalid code (stage checked first). */
+/** The list's stage, type and In charge filters, trimmed first; blank is
+ *  every one, an unknown value answers its invalid code (stage checked
+ *  first, then type, then assignedTo). */
 export function normalizeLeadListFilters(filters: LeadListFilters): {
   stage: LeadStage | null;
   type: LeadType | null;
+  assignedTo: LeadAssignedToFilter | null;
 } {
   const stage = trimmedIfText(filters.stage);
   const type = trimmedIfText(filters.type);
+  const assignedTo = trimmedIfText(fieldOf(filters, "assignedTo") ?? null);
   if (stage !== null && stage !== "" && !isLeadStage(stage)) {
     throw leadRefusal("LEAD_STAGE_INVALID", 400);
   }
   if (type !== null && type !== "" && !isLeadType(type)) {
     throw leadRefusal("LEAD_TYPE_INVALID", 400);
   }
+  if (
+    assignedTo !== null &&
+    assignedTo !== "" &&
+    !isLeadAssignedToFilter(assignedTo)
+  ) {
+    throw leadRefusal("LEAD_ASSIGNED_TO_INVALID", 400);
+  }
   return {
     stage: isLeadStage(stage) ? stage : null,
     type: isLeadType(type) ? type : null,
+    assignedTo: isLeadAssignedToFilter(assignedTo) ? assignedTo : null,
   };
 }
 

@@ -1,28 +1,12 @@
-/* ── Stats card ───────────────────────────────────────────── */
+/* ── Stats panel (AdminPanel) ─────────────────────────────── */
 .statsCard {
+  margin: 0 0 var(--admin-section-gap);
+}
+
+.statsBody {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding: 22px 24px;
-  margin: 20px 0 24px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-}
-
-.statsTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.statsHint {
-  margin: -6px 0 0;
-  font-size: var(--text-13);
-  line-height: 1.5;
-  color: var(--ink-60);
 }
 
 .statsFields {
@@ -42,22 +26,25 @@
   justify-content: flex-end;
 }
 
-/* ── Rows ─────────────────────────────────────────────────── */
-.rows {
+/* ── Rows ─────────────────────────────────────────────────────
+   Layered on adminTableClasses.row inside a flush AdminPanel: the kit owns
+   the hairline, hover and row height. */
+.skeletons {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .row {
-  display: flex;
-  align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-row-pad);
 }
 
 .rowMain {
@@ -73,22 +60,19 @@
 }
 
 .rowName {
-  font-family: var(--serif);
-  font-size: var(--text-18);
+  font-size: var(--text-15);
   font-weight: 600;
-  color: var(--ink);
+  color: var(--text-strong);
 }
 
 .rowMeta {
-  margin-top: 5px;
-  font-size: var(--text-13);
+  margin-top: 4px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
+/* The kit's AdminRowActions lays the buttons out; the row keeps it whole. */
 .rowActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -133,7 +117,7 @@
   padding: 10px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-14);
-  background: var(--cream);
+  background: var(--paper);
   font-family: var(--sans);
   font-size: var(--text-14);
   color: var(--ink);
@@ -148,12 +132,14 @@
   color: var(--ink-40);
 }
 
+/* The text-field focus look: the border turns coral with a soft glow. */
 .textInput:focus-visible,
 .numberInput:focus-visible,
 .textarea:focus-visible,
 .select:focus-visible {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 1px;
+  outline: none;
+  border-color: var(--focus-field-border);
+  box-shadow: var(--focus-field-glow);
 }
 
 .textarea {
@@ -161,7 +147,7 @@
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-14);
-  background: var(--cream);
+  background: var(--paper);
   font-family: var(--sans);
   font-size: var(--text-14);
   line-height: 1.5;
@@ -175,7 +161,7 @@
   font-size: var(--text-14);
   color: var(--ink);
   padding: 10px 30px 10px 14px;
-  background: var(--cream);
+  background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-14);
   cursor: pointer;

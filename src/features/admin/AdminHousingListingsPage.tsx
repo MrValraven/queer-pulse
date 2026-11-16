@@ -9,7 +9,7 @@ import type {
   HousingReviewQueueStatus,
 } from "./api/adminHousingListings.api";
 import { AdminHousingListingsQueue } from "./AdminHousingListingsQueue";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminPageHeader, AdminTabs, AdminToolbar } from "./ui";
 import styles from "./AdminHousingListingsPage.module.css";
 
 const STATUS_TABS: HousingReviewQueueStatus[] = [
@@ -55,7 +55,7 @@ export function AdminHousingListingsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:housingListings.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:housingListings.header.title"
@@ -66,8 +66,8 @@ export function AdminHousingListingsPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={60}>
-        <div className={styles.controls}>
+      <div className={styles.body}>
+        <FadeIn delay={60} className={styles.body}>
           <AdminTabs
             tabs={STATUS_TABS.map((value) => ({
               id: value,
@@ -76,7 +76,7 @@ export function AdminHousingListingsPage() {
             active={status}
             onChange={(value) => setStatus(value as HousingReviewQueueStatus)}
           />
-          <div className={styles.sortField}>
+          <AdminToolbar label={t("shared:filterPage.filtersCta")}>
             <span className={styles.sortLabel} aria-hidden>
               {t("admin:housingListings.sort.label")}
             </span>
@@ -89,14 +89,14 @@ export function AdminHousingListingsPage() {
               value={sort}
               onChange={(value) => setSort(value as HousingReviewQueueSort)}
             />
-          </div>
-        </div>
-        <p className={styles.keyHint}>{t("admin:housingListings.keyHint")}</p>
-      </FadeIn>
+          </AdminToolbar>
+          <p className={styles.keyHint}>{t("admin:housingListings.keyHint")}</p>
+        </FadeIn>
 
-      <FadeIn delay={80}>
-        <AdminHousingListingsQueue status={status} sort={sort} />
-      </FadeIn>
+        <FadeIn delay={80}>
+          <AdminHousingListingsQueue status={status} sort={sort} />
+        </FadeIn>
+      </div>
     </AdminShell>
   );
 }

@@ -4,7 +4,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader } from "./ui";
 import {
   useAdminForumReview,
   useReviewForumThread,
@@ -26,7 +26,7 @@ function RowsSkeleton() {
         <SkeletonLine
           key={skeletonIndex}
           height={132}
-          style={{ borderRadius: "var(--radius-card)" }}
+          style={{ borderRadius: "var(--admin-panel-radius)" }}
         />
       ))}
     </div>
@@ -118,7 +118,7 @@ export function AdminForumReviewPage() {
       <FadeIn>
         <AdminPageHeader
           titleId={headingId}
-          eyebrow={t("admin:adminForumReview.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:adminForumReview.header.title"
@@ -133,13 +133,14 @@ export function AdminForumReviewPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : hasQueueFailed ? (
-          <p className={submissionStyles.emptyLine} role="alert">
+          <AdminNotice tone="error">
             {t("admin:adminForumReview.error")}
-          </p>
+          </AdminNotice>
         ) : threads.length === 0 ? (
-          <p className={submissionStyles.emptyLine}>
-            {t("admin:adminForumReview.empty")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            title={t("admin:adminForumReview.empty")}
+          />
         ) : (
           <>
             <div className={submissionStyles.rows}>
@@ -158,9 +159,9 @@ export function AdminForumReviewPage() {
                 className={`${submissionStyles.loadMore} ${styles.loadMore}`}
               >
                 {isFetchNextPageError && (
-                  <p className={submissionStyles.emptyLine} role="alert">
+                  <AdminNotice tone="error">
                     {t("admin:adminForumReview.error")}
-                  </p>
+                  </AdminNotice>
                 )}
                 <Button
                   variant="ghost"

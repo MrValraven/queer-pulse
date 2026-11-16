@@ -237,6 +237,9 @@ export const community: Catalog = {
     "Dá um nome a este perfil primeiro.",
   "changemakers.admin.editor.createdToast": "Perfil criado.",
   "changemakers.admin.editor.updatedToast": "Perfil atualizado.",
+  "changemakers.admin.header.title": "Diretório de <em>Agentes de Mudança</em>",
+  "changemakers.admin.header.sub":
+    "Perfis no diretório público de Agentes de Mudança. Escreve-os, publica-os e escolhe quem fica em destaque.",
 
   // ── Coming Out page (ComingOutPage.tsx) ───────────────────────────────────
   "comingOut.hero.eyebrow": "Apoio para Sair do Armário",

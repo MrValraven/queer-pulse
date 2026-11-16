@@ -41,37 +41,11 @@
   border-radius: var(--radius-12);
 }
 
-/* Summary strip: three readings in a row, stacked into label and value
-   lines on a small phone. */
-.summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0;
-}
-
-.summaryItem {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  padding: 12px 14px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-}
-
-.summaryLabel {
-  font-size: var(--text-12);
-  color: var(--ink-60);
-}
-
+/* Summary strip: three kit stat tiles. The figure sits a step under the
+   kit's headline size (the peak is a phrase), and wraps inside its tile. */
 .summaryValue {
-  margin: 0;
-  font-family: var(--serif);
+  display: block;
   font-size: var(--text-20);
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 
@@ -80,20 +54,8 @@
 }
 
 @media (--xs) {
-  .summary {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
-  }
-  .summaryItem {
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 10px 14px;
-  }
   .summaryValue {
     font-size: var(--text-17);
-    text-align: right;
   }
 }
 

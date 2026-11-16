@@ -1,3 +1,4 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAdminOverview } from "../../../features/admin/api/useAdminOverview";
@@ -7,17 +8,50 @@ import { usePartnerApplications } from "../../../features/marketing/api/usePartn
 import { useVerificationRequests } from "../../../features/admin/api/useAdminVerifications";
 import { useAdminJoinRequests } from "../../../features/admin/api/useAdminHousingCoops";
 import { useListingClaims } from "../../../features/admin/api/useListingClaims";
-import { useMusicEventAttention } from "../../../features/admin/musicEvents/api/useMusicEvents";
+import {
+  musicEventListQueryOptions,
+  useMusicEventAttention,
+} from "../../../features/admin/musicEvents/api/useMusicEvents";
 import { useLeadDueCount } from "../../../features/admin/leads/api/useLeadDueCount";
 import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
+import type { AdminNavBadgeUnavailable } from "./AdminAlertsPopover";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
 
 /**
+ * Whether a paged queue's count read failed. The count comes from the first
+ * page, so a failed "load more" on the queue's own page leaves it intact and
+ * the badge keeps its number.
+ */
+function isCountReadError(query: {
+  isError: boolean;
+  isFetchNextPageError: boolean;
+}): boolean {
+  return query.isError && !query.isFetchNextPageError;
+}
+
+/** The badge counts plus the queues whose read failed. */
+export interface AdminNavBadgeStatus {
+  counts: AdminNavBadgeCounts;
+  /** A queue listed here failed its last read, so its count is unknown: the
+   *  alerts popover says "Count unavailable" for it and never shows a 0. */
+  unavailable: AdminNavBadgeUnavailable;
+}
+
+/**
  * Live pending counts behind the admin rail's pills. Each query key matches the
- * one its own page uses, so react-query serves these from cache — no extra
- * network just to render the sidebar.
+ * one its own page uses, so react-query serves these from cache, and the
+ * sidebar renders with no extra network.
  */
 export function useAdminNavBadges(): AdminNavBadgeCounts {
+  return useAdminNavBadgeStatus().counts;
+}
+
+/**
+ * The same counts as `useAdminNavBadges`, plus which queues' reads failed. A
+ * disabled query (no access) never counts as failed: its badge reads 0 by
+ * design.
+ */
+export function useAdminNavBadgeStatus(): AdminNavBadgeStatus {
   // ENG-180: for an admin the moderation badge reads the count
   // `GET /admin/overview` already returns, through the same hook and the same
   // query key the admin dashboard uses. It used to mount `useModReports()` for
@@ -87,8 +121,8 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
     isEnabled: hasPartnerApplicationsAccess,
   });
   // OPS-06: the cross-co-op join-request queue on /admin/housing. Same query
-  // key the page itself uses, so this is served from cache rather than a
-  // second request. The hook asks the server for pending requests only and
+  // key the page itself uses, so this is served from cache with no second
+  // request. The hook asks the server for pending requests only and
   // hands back the queue `total`, so the badge is the real number waiting
   // (ENG-41): it used to count the pending rows inside whatever the newest 200
   // requests in every status happened to be, which under-counted a busy queue
@@ -116,9 +150,17 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   const musicEventAttention = useMusicEventAttention({
     isEnabled: hasMusicEventsAccess,
   });
+  // `useMusicEventAttention` hands back the attention block alone, so a second
+  // observer on the same query key reads its error state. React-query shares
+  // one cache entry and one request between the two.
+  const musicEventsRead = useInfiniteQuery({
+    ...musicEventListQueryOptions("upcoming", demoMode),
+    enabled: hasMusicEventsAccess,
+  });
 
-  // The leads pill counts open leads whose follow-up is due today or earlier.
-  // Off without leads access, so a moderator sends no request here.
+  // The leads pill counts open leads whose follow-up is due today or earlier
+  // and that are the viewer's or nobody's. Off without leads access, so a
+  // moderator sends no request here.
   const leadDueCount = useLeadDueCount({ isEnabled: hasLeadsAccess });
 
   // Phase 2's review queue is live, so the badge counts the actual review-queue
@@ -126,8 +168,8 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   // wait (freshly submitted, actively being reviewed, or back for a second look
   // after an appeal). The filter here matches AdminVerificationsPage's
   // review-queue default exactly so the query key hashes the same and
-  // react-query serves this from the page's own cache instead of firing a
-  // second request.
+  // react-query serves this from the page's own cache with no second
+  // request.
   const verificationRequestsQuery = useVerificationRequests(
     { status: "all", query: "", sort: "recent" },
     { isEnabled: hasModeratorQueueAccess },
@@ -145,7 +187,7 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
       (application) => application.status === "pending",
     ).length ?? 0;
 
-  return {
+  const counts: AdminNavBadgeCounts = {
     moderation: hasModeratorQueueAccess ? moderationCount : 0,
     members: hasModeratorQueueAccess ? (joinRequests.data?.length ?? 0) : 0,
     partnerships: hasPartnerApplicationsAccess ? pendingApplicationCount : 0,
@@ -157,4 +199,23 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
       : 0,
     leads: hasLeadsAccess ? (leadDueCount.data ?? 0) : 0,
   };
+
+  // A failed read keeps whatever `data` it last had (or none), so the count
+  // above can read 0 while the queue is really unknown. Each flag follows the
+  // same access gate as its count.
+  const moderationRead = hasAdminOverviewAccess ? overview : modReports;
+  const unavailable: AdminNavBadgeUnavailable = {
+    moderation: hasModeratorQueueAccess && moderationRead.isError,
+    members: hasModeratorQueueAccess && joinRequests.isError,
+    partnerships: hasPartnerApplicationsAccess && partnerApplications.isError,
+    verifications:
+      hasModeratorQueueAccess && isCountReadError(verificationRequestsQuery),
+    housingCoops:
+      hasAdminOverviewAccess && isCountReadError(housingCoopJoinRequests),
+    listingClaims: hasListingClaimsAccess && isCountReadError(listingClaims),
+    musicEvents: hasMusicEventsAccess && isCountReadError(musicEventsRead),
+    leads: hasLeadsAccess && leadDueCount.isError,
+  };
+
+  return { counts, unavailable };
 }

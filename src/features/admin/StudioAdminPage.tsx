@@ -83,7 +83,7 @@ export function StudioAdminPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:studioAdmin.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.editorial")}
           title={title}
           sub={t(
             hasStaffTier

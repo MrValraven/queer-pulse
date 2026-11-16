@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -41,8 +41,8 @@ function RowsSkeleton() {
  * colocated fixture; live mode calls `GET /admin/community-space-requests`
  * with pagination. Approving flips the community's "Allow spaces" setting
  * server-side; a stale queue's Approve on an already-decided request 409s
- * `SPACE_REQUEST_NOT_OPEN`, which the queue surfaces as its own toast rather
- * than the generic error and refreshes the row.
+ * `SPACE_REQUEST_NOT_OPEN`, which the queue surfaces as its own named toast,
+ * and refreshes the row.
  */
 export function AdminCommunitySpaceRequestsPage() {
   const { t } = useTranslation();
@@ -109,7 +109,7 @@ export function AdminCommunitySpaceRequestsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminCommunitySpaceRequests.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.communities")}
           title={
             <Translation
               i18nKey="admin:adminCommunitySpaceRequests.header.title"
@@ -137,13 +137,18 @@ export function AdminCommunitySpaceRequestsPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminCommunitySpaceRequests.error")}
-          </p>
+          <div className={styles.rows}>
+            <AdminNotice tone="error">
+              {t("admin:adminCommunitySpaceRequests.error")}
+            </AdminNotice>
+          </div>
         ) : requests.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminCommunitySpaceRequests.empty")}
-          </p>
+          <div className={styles.rows}>
+            <AdminEmptyState
+              size="inline"
+              title={t("admin:adminCommunitySpaceRequests.empty")}
+            />
+          </div>
         ) : (
           <>
             <div className={styles.rows}>

@@ -7,6 +7,7 @@ import {
   SkeletonLine,
 } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AdminPanel } from "../ui";
 import { AdminMusicEventFrame } from "./AdminMusicEventFrame";
 import styles from "./AdminMusicEvents.module.css";
 
@@ -82,14 +83,16 @@ export function AdminMusicEventManageSkeleton() {
 /** Row-shaped placeholders for the list. */
 export function AdminMusicEventsSkeleton() {
   return (
-    <div className={styles.skeletonRows} aria-hidden>
-      {LIST_SKELETON_ROWS.map((skeletonIndex) => (
-        <SkeletonLine
-          key={skeletonIndex}
-          height={104}
-          style={{ borderRadius: "var(--radius-card)" }}
-        />
-      ))}
-    </div>
+    <AdminPanel as="div" padding="flush">
+      <div className={styles.skeletonRows} aria-hidden>
+        {LIST_SKELETON_ROWS.map((skeletonIndex) => (
+          <SkeletonLine
+            key={skeletonIndex}
+            height={104}
+            style={{ borderRadius: 0 }}
+          />
+        ))}
+      </div>
+    </AdminPanel>
   );
 }

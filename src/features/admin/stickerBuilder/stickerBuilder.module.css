@@ -1,14 +1,14 @@
-/* Sticker pack builder, PAGE LAYOUT ONLY (AdminStickerPacksPage): a compact
-   title line, then the pack rail beside the pack workspace. Every component
+/* Sticker pack builder, PAGE LAYOUT ONLY (AdminStickerPacksPage): the shared
+   page header, then the pack rail beside the pack workspace. Every component
    under stickerBuilder/ owns its own module; nothing else imports this file.
    Tokens only. */
 
 .page {
-  /* Clears the admin shell's sticky top bar (38px buttons, 14px padding each
-     side and a hairline) with a little air. The one sticky offset for the
-     whole builder: the rail and the workspace (its sticky style column and
-     the tab row's scroll margin) both read it. */
-  --sticker-sticky-top: 84px;
+  /* Clears the admin shell's sticky top bar (`--admin-topbar-h`, 56px
+     `--admin-bar-h` before it is measured) with 16px of air. The one sticky
+     offset for the whole builder: the rail and the workspace (its sticky
+     style column and the tab row's scroll margin) both read it. */
+  --sticker-sticky-top: calc(var(--admin-topbar-h, var(--admin-bar-h)) + 16px);
 
   /* The rail's placement follows the space the page really has (a collapsed
      admin sidebar gives it more), the same way the workspace's own split
@@ -16,35 +16,8 @@
   container: sticker-page / inline-size;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* The page header carries the 20px gap to the builder. */
   min-width: 0;
-}
-
-/* The breadcrumb already names the page, so the title line stays small and
-   the pack name is the one large title in the workspace. */
-.head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 14px;
-  min-width: 0;
-}
-
-.title {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  color: var(--text-strong);
-}
-
-.sub {
-  margin: 0;
-  font-size: var(--text-14);
-  line-height: 1.45;
-  color: var(--ink-60);
 }
 
 /* Narrow first: the rail stacks above the workspace at full width. */

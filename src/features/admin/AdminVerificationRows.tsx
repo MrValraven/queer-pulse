@@ -2,7 +2,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberRefToPerson } from "../../shared/api/refs";
-import { AdminAvatar, AdminChip, type AvatarTone } from "./ui";
+import { AdminAvatar, AdminChip, AdminRowActions, type AvatarTone } from "./ui";
 import { VERIFICATION_STATUS_TONE } from "./verificationStatusTone";
 import type { AdminVerificationDTO } from "./api/adminVerifications.api";
 import styles from "./AdminSubmissionList.module.css";
@@ -72,10 +72,12 @@ function AdminVerificationRow({
         </div>
       </div>
       <div className={styles.rowActions}>
-        <Button variant="ghost" size="sm" onClick={() => onOpen(row.userId)}>
-          {t("admin:verifications.reviewCta")}
-          <FiChevronRight aria-hidden />
-        </Button>
+        <AdminRowActions>
+          <Button variant="ghost" size="sm" onClick={() => onOpen(row.userId)}>
+            {t("admin:verifications.reviewCta")}
+            <FiChevronRight aria-hidden />
+          </Button>
+        </AdminRowActions>
       </div>
     </div>
   );

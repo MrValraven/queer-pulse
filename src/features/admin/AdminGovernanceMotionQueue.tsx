@@ -1,7 +1,7 @@
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminPageHeader } from "./ui";
+import { AdminPanel } from "./ui";
 import { AdminGovernanceMotionRow } from "./AdminGovernanceMotionRow";
 import { useAdminGovernanceMotions } from "../governance/api/useGovernanceProposals";
 import styles from "./AdminGovernancePage.module.css";
@@ -17,20 +17,19 @@ export function AdminGovernanceMotionQueue() {
   const { motions, loading, error, retry } = useAdminGovernanceMotions();
 
   return (
-    <div>
-      <AdminPageHeader
-        eyebrow={t("admin:governance.motions.header.eyebrow")}
+    <div className={styles.tabBody}>
+      <AdminPanel
         title={
           <Translation
             i18nKey="admin:governance.motions.header.title"
             components={{ em: <em /> }}
           />
         }
-        sub={t("admin:governance.motions.header.sub")}
-      />
-      <div className={styles.proposalAdminList}>
+        description={t("admin:governance.motions.header.sub")}
+        padding="flush"
+      >
         {error ? (
-          <div role="alert">
+          <div role="alert" className={styles.govListNote}>
             <p className={styles.cardSub}>
               {t("admin:governance.motions.error")}
             </p>
@@ -39,11 +38,11 @@ export function AdminGovernanceMotionQueue() {
             </Button>
           </div>
         ) : loading ? (
-          <p className={styles.cardSub}>
+          <p className={styles.govListNote}>
             {t("admin:governance.motions.loading")}
           </p>
         ) : motions.length === 0 ? (
-          <p className={styles.cardSub}>
+          <p className={styles.govListNote}>
             {t("admin:governance.motions.empty")}
           </p>
         ) : (
@@ -51,7 +50,7 @@ export function AdminGovernanceMotionQueue() {
             <AdminGovernanceMotionRow key={motion.id} motion={motion} />
           ))
         )}
-      </div>
+      </AdminPanel>
     </div>
   );
 }

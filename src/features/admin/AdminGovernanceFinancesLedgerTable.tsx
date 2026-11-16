@@ -14,6 +14,7 @@ import {
 } from "./adminGovernanceFinancesEdit.utils";
 import type { AdminFinLine } from "./api/adminGovernanceFinances.api";
 import styles from "./AdminGovernanceFinancesEdit.module.css";
+import { formatEuro } from "./adminEuro";
 
 /** One ledger (income or spending) as a table: a row per line with its
  *  visibility switch, name, provenance, stored amount, new amount and note.
@@ -45,11 +46,7 @@ export function LedgerTable({
   // Whole euros read without decimals, the same as a line's breakdown sum.
   // Spending amounts are stored positive and read as negative figures.
   const formatEuros = (value: number): string =>
-    fmt.currency(
-      isSpending ? toSpendingFigure(value) : value,
-      "EUR",
-      Number.isInteger(value) ? { maximumFractionDigits: 0 } : undefined,
-    );
+    formatEuro(fmt, isSpending ? toSpendingFigure(value) : value);
   // Stored amounts are pre-formatted strings ("€1,840" from the seed, "23150"
   // from demo mode); show them in the reader's locale when they parse.
   const formatStored = (amount: string): string => {

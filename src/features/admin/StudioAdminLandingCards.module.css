@@ -1,39 +1,9 @@
 /* ── Studio page console: artist cards, photos, persona search ─────────── */
+/* The body of each section's AdminPanel. */
 .section {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-block: 8px;
-}
-
-.head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 16px;
-}
-
-.title {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-22);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.title:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-.sub {
-  max-width: 64ch;
-  margin: 0;
-  font-size: var(--text-14);
-  line-height: 1.55;
-  color: var(--ink-60);
 }
 
 .hint {
@@ -51,19 +21,14 @@
   list-style: none;
 }
 
-.cardItem {
-  padding-bottom: 8px;
-}
-
+/* Flat on the section's AdminPanel, split by hairlines. */
 .cardRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px 14px;
-  padding: 14px 16px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-  background: var(--paper);
+  padding: var(--admin-row-pad-flat);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .dragHandle {

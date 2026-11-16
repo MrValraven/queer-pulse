@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { FadeIn } from "../../shared/components/ui";
@@ -37,8 +38,13 @@ export function AdminPressKitPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:pressKit.header.eyebrow")}
-          title={t("shared:adminNav.items.pressKit")}
+          eyebrow={t("shared:adminNav.sections.site")}
+          title={
+            <Translation
+              i18nKey="admin:pressKit.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("admin:pressKit.header.sub")}
         />
       </FadeIn>
@@ -48,7 +54,6 @@ export function AdminPressKitPage() {
           tabs={TABS}
           active={tab}
           onChange={(id) => setTab(id as PressKitKind)}
-          className={styles.tabs}
         />
       </FadeIn>
 

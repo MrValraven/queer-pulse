@@ -1,11 +1,16 @@
 import { FiEdit2, FiEye, FiTrash2 } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
-import { IconButton } from "../../../shared/components/ui";
+import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { AdminChip, AdminToggle } from "../ui";
+import {
+  AdminChip,
+  AdminRowActions,
+  AdminToggle,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "../ui";
 import type { EmailTemplateAdminDTO } from "./emailTemplate.types";
-import styles from "./AdminEmailTemplates.module.css";
+import styles from "./AdminEmailTemplateList.module.css";
 
 interface AdminEmailTemplateRowsProps {
   templates: EmailTemplateAdminDTO[];
@@ -22,9 +27,12 @@ export function AdminEmailTemplateRows({
 }: AdminEmailTemplateRowsProps) {
   const { t } = useTranslation();
   return (
-    <ul className={styles.rows}>
+    <ul className={styles.rows} aria-label={t("admin:emailTemplates.eyebrow")}>
       {templates.map((template) => (
-        <li key={template.id} className={styles.row}>
+        <li
+          key={template.id}
+          className={`${adminTableClasses.row} ${styles.row}`}
+        >
           <div className={styles.rowMain}>
             <span className={styles.rowLabel}>{template.label}</span>
             <div className={styles.rowChips}>
@@ -40,7 +48,7 @@ export function AdminEmailTemplateRows({
               )}
             </div>
           </div>
-          <div className={styles.rowActions}>
+          <AdminRowActions>
             <AdminToggle
               checked={template.isActive}
               onChange={() => onToggleActive(template)}
@@ -48,29 +56,32 @@ export function AdminEmailTemplateRows({
                 label: template.label,
               })}
             />
-            <button
-              type="button"
-              className={styles.previewButton}
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => onPreview(template)}
             >
               <FiEye aria-hidden /> {t("admin:emailTemplates.list.previewCta")}
-            </button>
-            <Link
-              className={styles.editLink}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               to={`${routes.adminEmailTemplateEdit}/${template.id}`}
             >
               <FiEdit2 aria-hidden /> {t("admin:emailTemplates.list.editCta")}
-            </Link>
-            <IconButton
+            </Button>
+            <Button
+              variant="ghost"
               size="sm"
+              className={adminRowActionClasses.danger}
               onClick={() => onDelete(template)}
               aria-label={t("admin:emailTemplates.list.deleteLabel", {
                 label: template.label,
               })}
             >
               <FiTrash2 aria-hidden />
-            </IconButton>
-          </div>
+            </Button>
+          </AdminRowActions>
         </li>
       ))}
     </ul>

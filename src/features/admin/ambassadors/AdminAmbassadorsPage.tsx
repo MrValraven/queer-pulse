@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiAward } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  SkeletonLine,
-} from "../../../shared/components/ui";
+import { Button, FadeIn, SkeletonLine } from "../../../shared/components/ui";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { AdminPageHeader, AdminTabs } from "../ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminTabs,
+} from "../ui";
 import {
   ADMIN_AMBASSADOR_STATUSES,
   ambassadorErrorKey,
@@ -119,7 +119,7 @@ export function AdminAmbassadorsPage() {
       <FadeIn>
         <AdminPageHeader
           titleId={HEADING_ID}
-          eyebrow={t("admin:ambassadors.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.partners")}
           title={
             <Translation
               i18nKey="admin:ambassadors.header.title"
@@ -133,7 +133,6 @@ export function AdminAmbassadorsPage() {
       <div className={styles.layout}>
         <div className={styles.main}>
           <AdminTabs
-            className={styles.tabs}
             tabs={ADMIN_AMBASSADOR_STATUSES.map((value) => ({
               id: value,
               label: t(`admin:ambassadors.tabs.${value}`),
@@ -150,14 +149,14 @@ export function AdminAmbassadorsPage() {
               ))}
             </div>
           ) : isFirstPageError ? (
-            <p className={styles.emptyLine} role="alert">
+            <AdminNotice tone="error">
               {t("admin:ambassadors.loadError")}
-            </p>
+            </AdminNotice>
           ) : rows.length === 0 ? (
-            <EmptyState
-              icon={<FiAward aria-hidden />}
+            <AdminEmptyState
+              icon={FiAward}
               title={t(`admin:ambassadors.empty.${status}.title`)}
-              description={t(`admin:ambassadors.empty.${status}.description`)}
+              body={t(`admin:ambassadors.empty.${status}.description`)}
             />
           ) : (
             <div className={styles.rows}>
@@ -192,9 +191,9 @@ export function AdminAmbassadorsPage() {
           {hasNextPage && !isFirstPageError && (
             <div className={styles.loadMore}>
               {isFetchNextPageError && (
-                <p className={styles.emptyLine} role="alert">
+                <AdminNotice tone="error">
                   {t("admin:ambassadors.loadMoreError")}
-                </p>
+                </AdminNotice>
               )}
               <Button
                 variant="ghost"

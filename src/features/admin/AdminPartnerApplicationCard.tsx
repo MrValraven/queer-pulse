@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiMapPin, FiAward } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminAvatar, type AvatarTone } from "./ui";
+import { AdminAvatar, AdminRowActions, type AvatarTone } from "./ui";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import type { PartnerApplicationView } from "../marketing/api/usePartnerApplications";
 import {
@@ -117,32 +117,32 @@ export function AdminPartnerApplicationCard({
             onChange={(e) => setNote(e.target.value)}
             placeholder={t("admin:partners.card.notePlaceholder")}
           />
-          <div className={styles.actions}>
+          <AdminRowActions className={styles.actions}>
             <Button
               variant="ghost"
-              size="md"
+              size="sm"
               onClick={() => setDeclining(false)}
             >
               {t("admin:partners.card.backCta")}
             </Button>
             <Button
               variant="primary"
-              size="md"
+              size="sm"
               onClick={() => onReject(note.trim() || undefined)}
             >
               {t("admin:partners.card.setAsideCta")}
             </Button>
-          </div>
+          </AdminRowActions>
         </div>
       ) : (
-        <div className={styles.actions}>
-          <Button variant="ghost" size="md" onClick={() => setDeclining(true)}>
+        <AdminRowActions className={styles.actions}>
+          <Button variant="ghost" size="sm" onClick={() => setDeclining(true)}>
             {t("admin:partners.card.setAsideCta")}
           </Button>
-          <Button variant="jade" size="md" onClick={onApprove}>
+          <Button variant="jade" size="sm" onClick={onApprove}>
             {t("admin:partners.card.approveCta")}
           </Button>
-        </div>
+        </AdminRowActions>
       )}
     </div>
   );

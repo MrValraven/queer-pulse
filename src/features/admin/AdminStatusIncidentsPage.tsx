@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiPlus, FiRadio } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -8,7 +9,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { describeErrorToast } from "../../shared/api/errorMessage";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader } from "./ui";
 import { useAdminStatusIncidents } from "./api/useAdminStatusIncidents";
 import { useResolveStatusIncident } from "./api/useAdminStatusIncidentMutations";
 import { AdminStatusIncidentRows } from "./AdminStatusIncidentRows";
@@ -70,7 +71,7 @@ export function AdminStatusIncidentsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("system:statusAdmin.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="system:statusAdmin.title"
@@ -84,42 +85,46 @@ export function AdminStatusIncidentsPage() {
               size="md"
               onClick={() => setEditorMode({ kind: "create" })}
             >
+              <FiPlus aria-hidden />
               {t("system:statusAdmin.newCta")}
             </Button>
           }
         />
       </FadeIn>
 
-      {demoMode && (
-        <p className={styles.notice}>{t("system:statusAdmin.demoNotice")}</p>
-      )}
+      <div className={styles.stack}>
+        {demoMode && (
+          <AdminNotice tone="info">
+            {t("system:statusAdmin.demoNotice")}
+          </AdminNotice>
+        )}
 
-      {isLoading ? (
-        <div className={styles.rows}>
-          {[0, 1, 2].map((skeletonIndex) => (
-            <SkeletonLine
-              key={skeletonIndex}
-              height={78}
-              style={{ borderRadius: 14 }}
-            />
-          ))}
-        </div>
-      ) : isError ? (
-        <p className={styles.notice}>
-          {isForbidden
-            ? t("system:statusAdmin.forbidden")
-            : t("system:statusAdmin.loadError")}
-        </p>
-      ) : incidents.length === 0 ? (
-        <p className={styles.notice}>{t("system:statusAdmin.empty")}</p>
-      ) : (
-        <AdminStatusIncidentRows
-          incidents={incidents}
-          onEdit={(incident) => setEditorMode({ kind: "edit", incident })}
-          onResolve={handleResolve}
-          isResolving={resolveIncident.isPending}
-        />
-      )}
+        {isLoading ? (
+          <div className={styles.skeletons}>
+            {[0, 1, 2].map((skeletonIndex) => (
+              <SkeletonLine key={skeletonIndex} height={78} />
+            ))}
+          </div>
+        ) : isError ? (
+          <AdminNotice tone="error">
+            {isForbidden
+              ? t("system:statusAdmin.forbidden")
+              : t("system:statusAdmin.loadError")}
+          </AdminNotice>
+        ) : incidents.length === 0 ? (
+          <AdminEmptyState
+            icon={FiRadio}
+            title={t("system:statusAdmin.empty")}
+          />
+        ) : (
+          <AdminStatusIncidentRows
+            incidents={incidents}
+            onEdit={(incident) => setEditorMode({ kind: "edit", incident })}
+            onResolve={handleResolve}
+            isResolving={resolveIncident.isPending}
+          />
+        )}
+      </div>
 
       {editorMode && (
         <AdminStatusIncidentForm

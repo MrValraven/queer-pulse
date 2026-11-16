@@ -10,36 +10,8 @@ afterEach(() => {
   window.localStorage.clear();
 });
 
-function stubScreenWidth(isWide: boolean) {
-  // Every query in the tree reads this stub, and the media-query hook
-  // subscribes to changes, so the list carries no-op listener methods.
-  vi.spyOn(window, "matchMedia").mockImplementation(
-    (query: string) =>
-      ({
-        matches: isWide,
-        media: query,
-        onchange: null,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        addListener: () => {},
-        removeListener: () => {},
-        dispatchEvent: () => false,
-      }) as MediaQueryList,
-  );
-}
-
 describe("JoinRequestReviewGuide", () => {
-  it("opens on a first visit on a wide screen", async () => {
-    stubScreenWidth(true);
-    render(<JoinRequestReviewGuide />, { wrapper: TestProviders });
-    const toggle = await screen.findByRole("button", {
-      name: "How to review someone nobody here knows",
-    });
-    expect(toggle).toHaveAttribute("aria-expanded", "true");
-  });
-
-  it("starts closed on a first visit on a narrow screen", async () => {
-    stubScreenWidth(false);
+  it("starts closed on a first visit", async () => {
     render(<JoinRequestReviewGuide />, { wrapper: TestProviders });
     const toggle = await screen.findByRole("button", {
       name: "How to review someone nobody here knows",
@@ -47,18 +19,17 @@ describe("JoinRequestReviewGuide", () => {
     expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("remembers that the reviewer closed it", async () => {
-    stubScreenWidth(true);
+  it("remembers that the reviewer opened it", async () => {
     render(<JoinRequestReviewGuide />, { wrapper: TestProviders });
     const toggle = await screen.findByRole("button", {
       name: "How to review someone nobody here knows",
     });
     fireEvent.click(toggle);
-    expect(toggle).toHaveAttribute("aria-expanded", "false");
-    expect(window.localStorage.getItem(STORAGE_KEY)).toBe("false");
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(window.localStorage.getItem(STORAGE_KEY)).toBe("true");
   });
 
-  it("stays open when storage throws", async () => {
+  it("stays closed when storage throws", async () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
       throw new Error("blocked");
     });
@@ -69,6 +40,6 @@ describe("JoinRequestReviewGuide", () => {
     const toggle = await screen.findByRole("button", {
       name: "How to review someone nobody here knows",
     });
-    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 });

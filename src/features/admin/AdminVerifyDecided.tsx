@@ -5,6 +5,7 @@ import {
   SearchInput,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { AdminEmptyState, AdminToolbar, adminToolbarClasses } from "./ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -85,7 +86,7 @@ function DecidedFilterChips({
   });
   return (
     <FilterChips
-      className={styles.filters}
+      className={adminToolbarClasses.chips}
       label={t("admin:members.verify.decided.filter.groupLabel")}
       options={options}
       value={value}
@@ -172,45 +173,53 @@ export function AdminVerifyDecided({
     <div>
       <p className={styles.intro}>{t("admin:members.verify.decided.intro")}</p>
       {rows.length > 0 && (
-        <div className={styles.searchRow}>
+        <AdminToolbar
+          className={styles.toolbar}
+          label={t("admin:members.verify.tabs.decided")}
+        >
           <SearchInput
             value={query}
             onChange={setQuery}
             ariaLabel={t("admin:members.verify.decided.searchLabel")}
             placeholder={t("admin:members.verify.decided.searchPlaceholder")}
-            className={styles.search}
+            className={adminToolbarClasses.search}
           />
-          <p className={styles.scopeNote}>
-            {t("admin:members.verify.decided.searchScopeNote", {
-              count: rows.length,
-            })}
-          </p>
-        </div>
+          <DecidedFilterChips
+            value={filter}
+            counts={filterCounts}
+            onChange={setFilter}
+          />
+        </AdminToolbar>
       )}
       {rows.length > 0 && (
-        <DecidedFilterChips
-          value={filter}
-          counts={filterCounts}
-          onChange={setFilter}
-        />
-      )}
-
-      {rows.length === 0 && (
-        <p className={rowStyles.emptyLine}>
-          {t("admin:members.verify.decided.empty")}
-        </p>
-      )}
-      {isFilterEmpty && (
-        <p className={rowStyles.emptyLine}>
-          {t("admin:members.verify.decided.filterEmpty", {
-            filter: t(`admin:members.verify.decided.filter.${filter}`),
+        <p className={styles.scopeNote}>
+          {t("admin:members.verify.decided.searchScopeNote", {
+            count: rows.length,
           })}
         </p>
       )}
+
+      {rows.length === 0 && (
+        <AdminEmptyState
+          size="inline"
+          title={t("admin:members.verify.decided.empty")}
+        />
+      )}
+      {isFilterEmpty && (
+        <AdminEmptyState
+          size="inline"
+          title={t("admin:members.verify.decided.filterEmpty", {
+            filter: t(`admin:members.verify.decided.filter.${filter}`),
+          })}
+        />
+      )}
       {isSearchEmpty && (
-        <p className={rowStyles.emptyLine}>
-          {t("admin:members.verify.decided.noMatches", { query: query.trim() })}
-        </p>
+        <AdminEmptyState
+          size="inline"
+          title={t("admin:members.verify.decided.noMatches", {
+            query: query.trim(),
+          })}
+        />
       )}
 
       <div className={rowStyles.rows}>

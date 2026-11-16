@@ -3,7 +3,13 @@ import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { intlLocale } from "../../shared/i18n/locale";
 import { formatDate } from "../../shared/lib/date";
-import { AdminChip } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminPanel,
+  AdminRowActions,
+  adminTableClasses,
+} from "./ui";
 import { FLAG_REASON_LABEL_KEY } from "./adminSafeSpaceGovernance.data";
 import { AdminSafeSpaceFlagResolveModal } from "./AdminSafeSpaceFlagResolveModal";
 import type { AdminSafeSpaceFlagDTO } from "../safety/api/safeSpaceGovernance.api";
@@ -27,7 +33,10 @@ export function AdminSafeSpaceFlagRows({
 
   if (flags.length === 0) {
     return (
-      <p className={styles.emptyLine}>{t("safety:governance.flags.empty")}</p>
+      <AdminEmptyState
+        size="inline"
+        title={t("safety:governance.flags.empty")}
+      />
     );
   }
 
@@ -36,13 +45,17 @@ export function AdminSafeSpaceFlagRows({
       <p className={styles.privacyNote}>
         {t("safety:governance.flags.privacyNote")}
       </p>
-      <div className={styles.rows}>
+      <AdminPanel padding="flush" isOverflowVisible>
         {flags.map((flag, index) => (
-          <FadeIn key={flag.id} delay={Math.min(index, 8) * 50}>
+          <FadeIn
+            key={flag.id}
+            delay={Math.min(index, 8) * 50}
+            className={styles.item}
+          >
             <FlagRow flag={flag} onResolve={setResolvingFlag} />
           </FadeIn>
         ))}
-      </div>
+      </AdminPanel>
 
       {resolvingFlag && (
         <AdminSafeSpaceFlagResolveModal
@@ -65,7 +78,7 @@ function FlagRow({
   const locale = intlLocale(language);
 
   return (
-    <div className={styles.row}>
+    <div className={`${adminTableClasses.row} ${styles.row}`}>
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
           <span className={styles.rowName}>
@@ -94,11 +107,11 @@ function FlagRow({
       </div>
 
       {flag.state === "open" && (
-        <div className={styles.rowChips}>
-          <Button variant="ghost" size="md" onClick={() => onResolve(flag)}>
+        <AdminRowActions className={styles.rowChips}>
+          <Button variant="ghost" size="sm" onClick={() => onResolve(flag)}>
             {t("safety:governance.flags.reviewCta")}
           </Button>
-        </div>
+        </AdminRowActions>
       )}
     </div>
   );

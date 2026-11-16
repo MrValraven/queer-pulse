@@ -1,6 +1,7 @@
 import { useId, type Dispatch, type SetStateAction } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminCheckLine, AdminToggle } from "./ui";
+import { Button } from "../../shared/components/ui";
+import { AdminCheckLine, AdminPanel, AdminToggle } from "./ui";
 import type {
   PlatformSettingsDTO,
   UpdatePlatformSettingsInput,
@@ -47,14 +48,14 @@ function MessageField({
           {t("admin:settings.presets.label")}
         </span>
         {presets.map((p) => (
-          <button
+          <Button
             key={p.id}
-            type="button"
-            className={styles.presetBtn}
+            variant="ghost"
+            size="sm"
             onClick={() => onChange(t(p.bodyKey))}
           >
             {t(p.labelKey)}
-          </button>
+          </Button>
         ))}
       </div>
       <textarea
@@ -68,6 +69,40 @@ function MessageField({
       />
       <p className={styles.fieldHint}>{t("admin:settings.presets.hint")}</p>
     </div>
+  );
+}
+
+/**
+ * The optional change note. It explains the NEXT change the admin saves, so it
+ * sits below the switches and fields it annotates; the container attaches it to
+ * that save and clears it.
+ */
+function AdminSettingsNoteCard({
+  note,
+  setNote,
+}: {
+  note: string;
+  setNote: Dispatch<SetStateAction<string>>;
+}) {
+  const { t } = useTranslation();
+  const noteFieldId = useId();
+  return (
+    <AdminPanel bodyClassName={styles.cardBody}>
+      <div className={styles.field}>
+        <label className={styles.fieldLabel} htmlFor={noteFieldId}>
+          {t("admin:settings.note.label")}
+        </label>
+        <textarea
+          id={noteFieldId}
+          className={styles.textarea}
+          value={note}
+          placeholder={t("admin:settings.note.placeholder")}
+          onChange={(e) => setNote(e.target.value)}
+          rows={2}
+        />
+        <p className={styles.fieldHint}>{t("admin:settings.note.hint")}</p>
+      </div>
+    </AdminPanel>
   );
 }
 
@@ -109,27 +144,9 @@ export function AdminSettingsAccessCards({
   setConfirming: Dispatch<SetStateAction<"enable" | "disable" | null>>;
 }) {
   const { t } = useTranslation();
-  const noteFieldId = useId();
   return (
     <div className={styles.access}>
-      <section className={styles.card}>
-        <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor={noteFieldId}>
-            {t("admin:settings.note.label")}
-          </label>
-          <textarea
-            id={noteFieldId}
-            className={styles.textarea}
-            value={note}
-            placeholder={t("admin:settings.note.placeholder")}
-            onChange={(e) => setNote(e.target.value)}
-            rows={2}
-          />
-          <p className={styles.fieldHint}>{t("admin:settings.note.hint")}</p>
-        </div>
-      </section>
-
-      <section className={styles.card}>
+      <AdminPanel bodyClassName={styles.cardBody}>
         <div className={styles.switchRow}>
           <div className={styles.switchText}>
             <h2>{t("admin:settings.registration.title")}</h2>
@@ -166,9 +183,9 @@ export function AdminSettingsAccessCards({
             save({ registrationClosedMessage: closedMessage || null });
           }}
         />
-      </section>
+      </AdminPanel>
 
-      <section className={styles.card}>
+      <AdminPanel bodyClassName={styles.cardBody}>
         <div className={styles.switchRow}>
           <div className={styles.switchText}>
             <h2>{t("admin:settings.lockdown.title")}</h2>
@@ -199,7 +216,7 @@ export function AdminSettingsAccessCards({
             save({ lockdownMessage: lockdownMessage || null });
           }}
         />
-      </section>
+      </AdminPanel>
 
       <AdminAnnouncementCard
         settings={settings}
@@ -219,6 +236,8 @@ export function AdminSettingsAccessCards({
           save({ announcementExpiresAt: nextIso });
         }}
       />
+
+      <AdminSettingsNoteCard note={note} setNote={setNote} />
 
       {confirming && (
         <AdminSettingsConfirm

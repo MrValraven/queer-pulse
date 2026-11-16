@@ -1,0 +1,115 @@
+/* A row's action group. One line, 8px apart, end-aligned on desktop; on a
+   phone it wraps and starts at the row's leading edge. */
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+@media (max-width: 719.98px) {
+  .rowActions {
+    justify-content: flex-start;
+  }
+}
+
+/* Compact sizing for the shared Button (and links styled as one) inside the
+   group. The scope is the class plus the `data-admin-row-actions` attribute
+   AdminRowActions always sets, and reaches the group's children and
+   grandchildren (a Tooltip wraps its button in one element). Menu items are
+   left alone, so an open overflow menu inside the group keeps its own look.
+
+   Specificity, against Button.module.css, so no !important is needed:
+   - height: (0,3,1) beats `.button`, `.sm` (0,1,0) and `.icon.sm` (0,2,0);
+   - shadow at rest: (0,3,1) beats each variant's glow (0,1,0) and focus
+     glow (0,2,0);
+   - shadow on hover: (0,5,1) beats the hover glow (0,4,0);
+   - focus: see the last rule, which keeps the cream halo. */
+.rowActions[data-admin-row-actions] > :is(button, a):not([role^="menuitem"]),
+.rowActions[data-admin-row-actions]
+  > *
+  > :is(button, a):not([role^="menuitem"]) {
+  min-height: var(--admin-control-h);
+  box-shadow: none;
+}
+.rowActions[data-admin-row-actions]
+  > :is(button, a):not([role^="menuitem"]):hover:not(:disabled),
+.rowActions[data-admin-row-actions]
+  > *
+  > :is(button, a):not([role^="menuitem"]):hover:not(:disabled) {
+  box-shadow: none;
+}
+
+/* Text buttons take a tighter side padding. An icon-only button (named by
+   `aria-label`, its one child an svg) keeps its zero padding and becomes a
+   square at the row height. A text button that also carries an aria-label
+   and a lone icon keeps the Button's own padding, which is harmless. */
+.rowActions[data-admin-row-actions]
+  > :is(button, a):not([role^="menuitem"]):not(
+    [aria-label]:has(> svg:only-child)
+  ),
+.rowActions[data-admin-row-actions]
+  > *
+  > :is(button, a):not([role^="menuitem"]):not(
+    [aria-label]:has(> svg:only-child)
+  ) {
+  padding-inline: var(--admin-row-action-pad-x);
+}
+.rowActions[data-admin-row-actions]
+  > :is(button, a)[aria-label]:has(> svg:only-child),
+.rowActions[data-admin-row-actions]
+  > *
+  > :is(button, a)[aria-label]:has(> svg:only-child) {
+  width: auto;
+  min-width: var(--admin-control-h);
+}
+
+/* A coarse pointer goes back to the 44px touch target. */
+@media (pointer: coarse) {
+  .rowActions[data-admin-row-actions] > :is(button, a):not([role^="menuitem"]),
+  .rowActions[data-admin-row-actions]
+    > *
+    > :is(button, a):not([role^="menuitem"]) {
+    min-height: var(--tap-min);
+  }
+  .rowActions[data-admin-row-actions]
+    > :is(button, a)[aria-label]:has(> svg:only-child),
+  .rowActions[data-admin-row-actions]
+    > *
+    > :is(button, a)[aria-label]:has(> svg:only-child) {
+    min-width: var(--tap-min);
+  }
+}
+
+/* Destructive action in a row: an outline in the danger tone. Put it on a
+   `ghost` Button through `adminRowActionClasses.danger`. --danger lifts in
+   dark, so the label and border stay readable on both grounds. The hover
+   rule reads (0,6,1), above the dark ghost hover (0,5,0). */
+.rowActions[data-admin-row-actions] :is(button, a).danger {
+  color: var(--danger);
+  border-color: rgba(var(--danger-rgb), 0.55);
+}
+@media (hover: hover) {
+  .rowActions[data-admin-row-actions]
+    :is(button, a).danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    color: var(--danger);
+    border-color: var(--danger);
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+}
+
+/* Keyboard focus keeps the cream halo under the global outline: (0,4,1)
+   over the rest rule, and (0,6,1) over the hover rule when both apply. */
+.rowActions[data-admin-row-actions]
+  > :is(button, a):not([role^="menuitem"]):focus-visible,
+.rowActions[data-admin-row-actions]
+  > *
+  > :is(button, a):not([role^="menuitem"]):focus-visible,
+.rowActions[data-admin-row-actions]
+  > :is(button, a):not([role^="menuitem"]):focus-visible:hover:not(:disabled),
+.rowActions[data-admin-row-actions]
+  > *
+  > :is(button, a):not([role^="menuitem"]):focus-visible:hover:not(:disabled) {
+  box-shadow: var(--ring-cream);
+}

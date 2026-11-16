@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiAlertTriangle, FiClock } from "react-icons/fi";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminEmptyState } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { ReportCard, ClusterRow } from "./AdminModerationCards";
 import {
@@ -19,12 +20,14 @@ import type { QueueGroup } from "./moderationQueue.helpers";
 import type { ModActionCode } from "./api/moderation.api";
 import styles from "./AdminModerationPage.module.css";
 import type { BulkVerb, useModerationQueue } from "./useModerationQueue";
-import { ModerationStanceNote } from "../safety/ModerationStanceNote";
+import { ModerationQueueLayout } from "./AdminModerationQueueLayout";
+import { AppealFilters } from "./AdminModerationAppealFilters";
 
 type Queue = ReturnType<typeof useModerationQueue>;
 
 /** Branded, retryable error state (audit P1-14): a failed live fetch must read
- *  as an outage, not a false "all caught up". Demo mode never errors. */
+ *  as an outage, so a false "all caught up" can never show. Demo mode cannot
+ *  fail. */
 function QueueErrorPane({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
   return (
@@ -41,6 +44,35 @@ function QueueErrorPane({ onRetry }: { onRetry: () => void }) {
   );
 }
 
+/** The next page of a cursor-paginated queue. */
+function LoadMoreRow({
+  onLoadMore,
+  isLoading,
+  size = "md",
+}: {
+  onLoadMore: () => void;
+  isLoading: boolean;
+  size?: "sm" | "md";
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.loadMoreRow}>
+      <Button
+        variant="ghost"
+        size={size}
+        onClick={onLoadMore}
+        disabled={isLoading}
+      >
+        {t(
+          isLoading
+            ? "admin:moderation.loadingMore"
+            : "admin:moderation.loadMore",
+        )}
+      </Button>
+    </div>
+  );
+}
+
 export function OpenPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
   const {
@@ -53,7 +85,7 @@ export function OpenPane({ q }: { q: Queue }) {
     leaving,
     oldest,
   } = q;
-  // TS-06: which piles are open. Collapsed by default — the header already
+  // TS-06: which piles are open. Collapsed by default: the header already
   // carries the counts a moderator triages on, and thirty expanded rows is the
   // flat list this replaced.
   const [expandedClusters, setExpandedClusters] = useState<Set<string>>(
@@ -108,12 +140,12 @@ export function OpenPane({ q }: { q: Queue }) {
       renderReport(group.reports[0]!, groupIndex)
     );
 
-  // Live mode fetches asynchronously — don't flash "all caught up" while loading.
+  // Live mode fetches asynchronously, so hold "all caught up" back while loading.
   if (q.loading && open.length === 0) {
     return <div className={styles.pane} aria-busy="true" />;
   }
 
-  // An outage must not read as "all caught up" — show a retryable error instead.
+  // An outage must not read as "all caught up": show a retryable error.
   if (q.isError && open.length === 0) {
     return <QueueErrorPane onRetry={q.refetch} />;
   }
@@ -133,97 +165,89 @@ export function OpenPane({ q }: { q: Queue }) {
 
   return (
     <div className={styles.pane}>
-      <ModerationStanceNote />
-      {picked.size > 0 && (
-        <BulkBar
-          count={picked.size}
-          onDismiss={() => q.bulkAct("dismissed", "dismiss")}
-          onSpam={() =>
-            setConfirming({ verb: "removedAsSpam", action: "remove_content" })
-          }
-          onEscalate={() => q.bulkAct("escalated", "escalate")}
-          onWarn={() => setConfirming({ verb: "warned", action: "warn" })}
-          onSuspendClick={() =>
-            setConfirming({ verb: "suspended", action: "suspend" })
-          }
-          onBan={() => setConfirming({ verb: "banned", action: "ban" })}
-          onCancel={q.clearPicked}
-        />
-      )}
+      <ModerationQueueLayout>
+        {picked.size > 0 && (
+          <BulkBar
+            count={picked.size}
+            onDismiss={() => q.bulkAct("dismissed", "dismiss")}
+            onSpam={() =>
+              setConfirming({ verb: "removedAsSpam", action: "remove_content" })
+            }
+            onEscalate={() => q.bulkAct("escalated", "escalate")}
+            onWarn={() => setConfirming({ verb: "warned", action: "warn" })}
+            onSuspendClick={() =>
+              setConfirming({ verb: "suspended", action: "suspend" })
+            }
+            onBan={() => setConfirming({ verb: "banned", action: "ban" })}
+            onCancel={q.clearPicked}
+          />
+        )}
 
-      {confirming && (
-        <BulkActionModal
-          count={picked.size}
-          action={confirming.action}
-          onClose={() => setConfirming(null)}
-          onConfirm={(decision) => {
-            const pending = confirming;
-            setConfirming(null);
-            q.bulkAct(pending.verb, pending.action, decision);
-          }}
-        />
-      )}
+        {confirming && (
+          <BulkActionModal
+            count={picked.size}
+            action={confirming.action}
+            onClose={() => setConfirming(null)}
+            onConfirm={(decision) => {
+              const pending = confirming;
+              setConfirming(null);
+              q.bulkAct(pending.verb, pending.action, decision);
+            }}
+          />
+        )}
 
-      {emergencies.length > 0 && (
-        <FadeIn>
-          <EmergencyBand
-            count={emergencies.length}
-            sub={t("admin:moderation.emergency.sub")}
-          >
-            {emergencyGroups.map((group, groupIndex) =>
-              renderGroup(group, groupIndex),
+        {emergencies.length > 0 && (
+          <FadeIn>
+            <EmergencyBand
+              count={emergencies.length}
+              sub={t("admin:moderation.emergency.sub")}
+            >
+              {emergencyGroups.map((group, groupIndex) =>
+                renderGroup(group, groupIndex),
+              )}
+            </EmergencyBand>
+          </FadeIn>
+        )}
+
+        {otherGroups.length > 0 && (
+          <>
+            <SectionLabel>{t("admin:moderation.everythingElse")}</SectionLabel>
+            {oldest && (
+              <p className={styles.countNote}>
+                {/* `oldest` is a full localized relative-time phrase ("3
+                  hours ago" / "há 3 horas"), so it needs a sentence that
+                  leaves out its own "ago". The older `countNote` key carried
+                  one, for a bare "3h". */}
+                {t("admin:moderation.oldestNote", {
+                  count: visible.length,
+                  oldest,
+                })}
+              </p>
             )}
-          </EmergencyBand>
-        </FadeIn>
-      )}
+            <div className={styles.list}>
+              {otherGroups.map((group, groupIndex) =>
+                renderGroup(group, groupIndex),
+              )}
+            </div>
+          </>
+        )}
 
-      {otherGroups.length > 0 && (
-        <>
-          <SectionLabel>{t("admin:moderation.everythingElse")}</SectionLabel>
-          {oldest && (
-            <p className={styles.countNote}>
-              {/* `oldest` is now a full localized relative-time phrase ("3
-                  hours ago" / "há 3 horas") instead of a bare "3h", so it needs
-                  a sentence that doesn't supply its own "ago" — the older
-                  `countNote` key did. */}
-              {t("admin:moderation.oldestNote", {
-                count: visible.length,
-                oldest,
-              })}
-            </p>
-          )}
-          <div className={styles.list}>
-            {otherGroups.map((group, groupIndex) =>
-              renderGroup(group, groupIndex),
-            )}
-          </div>
-        </>
-      )}
+        {visible.length === 0 && (
+          <AdminEmptyState
+            size="inline"
+            title={t("admin:moderation.filterEmpty")}
+          />
+        )}
 
-      {visible.length === 0 && (
-        <p className={styles.filterEmpty}>
-          {t("admin:moderation.filterEmpty")}
-        </p>
-      )}
-
-      {/* The queue is cursor-paginated: without this, everything past the
+        {/* The queue is cursor-paginated: without this, everything past the
           backend's first page was unreachable while the header counted it. */}
-      {q.hasMoreOpen && (
-        <div className={styles.loadMoreRow}>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={q.loadMoreOpen}
-            disabled={q.isLoadingMoreOpen}
-          >
-            {t(
-              q.isLoadingMoreOpen
-                ? "admin:moderation.loadingMore"
-                : "admin:moderation.loadMore",
-            )}
-          </Button>
-        </div>
-      )}
+        {q.hasMoreOpen && (
+          <LoadMoreRow
+            onLoadMore={q.loadMoreOpen}
+            isLoading={q.isLoadingMoreOpen}
+          />
+        )}
+      </ModerationQueueLayout>
     </div>
   );
 }
@@ -238,13 +262,13 @@ export function OpenPane({ q }: { q: Queue }) {
  * first. Before this they were one list, newest first, with the decided ones
  * mixed in, which put the most urgent appeal at the BOTTOM.
  *
- * The overdue toggle is a server-side filter rather than a client-side one, for
- * the same reason the reports queue's is: it has to narrow the whole queue, not
- * whatever landed on the page.
+ * The overdue toggle is a server-side filter, for the same reason the reports
+ * queue's is: it has to narrow the whole queue, past whatever landed on the
+ * page.
  */
 export function AppealsPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
-  const { appeals, leaving, appealTab, appealCounts } = q;
+  const { appeals, leaving, appealTab } = q;
 
   if (q.isAppealsError && appeals.length === 0) {
     return <QueueErrorPane onRetry={q.refetchAppeals} />;
@@ -252,7 +276,6 @@ export function AppealsPane({ q }: { q: Queue }) {
 
   const header = (
     <>
-      <ModerationStanceNote />
       <p className={styles.appealsIntro}>
         <Translation
           i18nKey="admin:moderation.appealsIntro"
@@ -262,116 +285,66 @@ export function AppealsPane({ q }: { q: Queue }) {
       <p className={styles.appealsWindow}>
         <FiClock aria-hidden /> {t("admin:moderation.appeals.windowNote")}
       </p>
-      <div
-        className={styles.filters}
-        role="group"
-        aria-label={t("admin:moderation.appeals.tabsAriaLabel")}
-      >
-        <button
-          type="button"
-          aria-pressed={appealTab === "awaiting"}
-          className={[
-            styles.filter,
-            appealTab === "awaiting" && styles.filterOn,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => q.setAppealTab("awaiting")}
-        >
-          {t("admin:moderation.appeals.awaitingTab", {
-            count: appealCounts.awaiting,
-          })}
-        </button>
-        <button
-          type="button"
-          aria-pressed={appealTab === "decided"}
-          className={[styles.filter, appealTab === "decided" && styles.filterOn]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => q.setAppealTab("decided")}
-        >
-          {t("admin:moderation.appeals.decidedTab", {
-            count: appealCounts.decided,
-          })}
-        </button>
-        {appealTab === "awaiting" && (
-          <button
-            type="button"
-            aria-pressed={q.isAppealOverdueOnly}
-            className={[styles.filter, q.isAppealOverdueOnly && styles.filterOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => q.setIsAppealOverdueOnly(!q.isAppealOverdueOnly)}
-          >
-            {t("admin:moderation.appeals.overdueFilter", {
-              count: appealCounts.overdue,
-            })}
-          </button>
-        )}
-      </div>
+      <AppealFilters q={q} />
     </>
   );
 
   if (appeals.length === 0) {
     return (
       <div className={styles.pane}>
-        {header}
-        {/* An empty AWAITING tab genuinely is "caught up" and keeps the
+        <ModerationQueueLayout>
+          {header}
+          {/* An empty AWAITING tab genuinely is "caught up" and keeps the
             celebratory panel. An empty decided tab or an empty overdue filter
             is just an empty list, and saying "all caught up" there would be
             congratulating the team for a filter matching nothing. */}
-        {appealTab === "awaiting" && !q.isAppealOverdueOnly ? (
-          <FadeIn>
-            <CaughtUpPanel
-              onBack={() =>
-                q.showToast(t("admin:moderation.backToast"), "info")
-              }
-              onReplay={q.resetAppeals}
+          {appealTab === "awaiting" && !q.isAppealOverdueOnly ? (
+            <FadeIn>
+              <CaughtUpPanel
+                onBack={() =>
+                  q.showToast(t("admin:moderation.backToast"), "info")
+                }
+                onReplay={q.resetAppeals}
+              />
+            </FadeIn>
+          ) : (
+            <AdminEmptyState
+              size="inline"
+              title={t(
+                q.isAppealOverdueOnly
+                  ? "admin:moderation.appeals.noOverdue"
+                  : "admin:moderation.appeals.noDecided",
+              )}
             />
-          </FadeIn>
-        ) : (
-          <p className={styles.filterEmpty}>
-            {t(
-              q.isAppealOverdueOnly
-                ? "admin:moderation.appeals.noOverdue"
-                : "admin:moderation.appeals.noDecided",
-            )}
-          </p>
-        )}
+          )}
+        </ModerationQueueLayout>
       </div>
     );
   }
 
   return (
     <div className={styles.pane}>
-      {header}
-      <div className={styles.list}>
-        {appeals.map((appeal, index) => (
-          <FadeIn key={appeal.id} delay={Math.min(index, 6) * 55}>
-            <AppealCard
-              appeal={appeal}
-              leaving={leaving.has(appeal.id)}
-              onOpen={q.setAppeal}
-            />
-          </FadeIn>
-        ))}
-      </div>
-      {q.hasMoreAppeals && (
-        <div className={styles.loadMoreRow}>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={q.loadMoreAppeals}
-            disabled={q.isLoadingMoreAppeals}
-          >
-            {t(
-              q.isLoadingMoreAppeals
-                ? "admin:moderation.loadingMore"
-                : "admin:moderation.loadMore",
-            )}
-          </Button>
+      <ModerationQueueLayout>
+        {header}
+        <div className={styles.list}>
+          {appeals.map((appeal, index) => (
+            <FadeIn key={appeal.id} delay={Math.min(index, 6) * 55}>
+              <AppealCard
+                appeal={appeal}
+                leaving={leaving.has(appeal.id)}
+                onOpen={q.setAppeal}
+              />
+            </FadeIn>
+          ))}
         </div>
-      )}
+        {q.hasMoreAppeals && (
+          <LoadMoreRow
+            onLoadMore={q.loadMoreAppeals}
+            isLoading={q.isLoadingMoreAppeals}
+            size="sm"
+          />
+        )}
+      </ModerationQueueLayout>
     </div>
   );
 }
@@ -406,9 +379,10 @@ export function RatificationPane({ q }: { q: Queue }) {
       </p>
 
       {q.ratifications.length === 0 ? (
-        <p className={styles.filterEmpty}>
-          {t("admin:moderation.ratification.empty")}
-        </p>
+        <AdminEmptyState
+          size="inline"
+          title={t("admin:moderation.ratification.empty")}
+        />
       ) : (
         <div className={styles.list}>
           {q.ratifications.map((ratification, index) => (
@@ -472,8 +446,8 @@ export function ResolvedPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
   const { resolved } = q;
 
-  // Live mode fetches asynchronously — hold the pane blank while it loads
-  // rather than flashing an empty "nothing resolved" state.
+  // Live mode fetches asynchronously, so the pane stays blank while it loads
+  // and an empty "nothing resolved" state never flashes.
   if (q.loading && resolved.length === 0) {
     return <div className={styles.pane} aria-busy="true" />;
   }
@@ -486,9 +460,10 @@ export function ResolvedPane({ q }: { q: Queue }) {
     <div className={styles.pane}>
       <SectionLabel>{t("admin:moderation.resolvedSection")}</SectionLabel>
       {resolved.length === 0 ? (
-        <p className={styles.filterEmpty}>
-          {t("admin:moderation.resolvedEmpty")}
-        </p>
+        <AdminEmptyState
+          size="inline"
+          title={t("admin:moderation.resolvedEmpty")}
+        />
       ) : (
         <div className={styles.list}>
           {resolved.map((item, i) => (

@@ -12,17 +12,23 @@
   container-type: inline-size;
 }
 
+/* The notice, when a background read fails, and the body, one gap apart. */
+.stack {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
 .body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 40px;
-  margin-top: 24px;
+  gap: var(--admin-section-gap);
 }
 
 .main {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: var(--admin-section-gap);
   min-width: 0;
 }
 
@@ -34,23 +40,10 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 24px;
 }
 
 .skeletonRows > * {
   border-radius: var(--radius-14);
-}
-
-/* A background read failed while the wall stays on screen. */
-.refreshError {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  margin: 16px 0 0;
-  font-size: var(--text-body-sm);
-  line-height: 1.5;
-  color: var(--ink-60);
 }
 
 @container (min-width: 920px) {

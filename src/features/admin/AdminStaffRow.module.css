@@ -1,17 +1,12 @@
 /* ── One roster row ─────────────────────────────────────── */
-/* The group heading above names the tier, so a row carries three parts:
+/* The row's divider and hover tint come from the kit's row class on the list
+   item around it. The group heading above names the tier, so a row carries
+   three parts:
    who they are, what they hold, and the ways onward. Phone: stacked, with
    grants and actions indented under the name. Mid width: identity and
    actions share the first line, grants run underneath. Wide: three aligned
    columns, so every row's grants and Manage button sit on the same
    verticals. */
-.row,
-.rowSkeleton {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-badge);
-}
-
 .row {
   /* Avatar (40px) plus the gap beside it: where the name starts. */
   --row-name-indent: 52px;
@@ -22,15 +17,10 @@
     "grants"
     "actions";
   align-items: center;
+  flex: 1;
+  min-width: 0;
   gap: 10px 14px;
-  padding: 14px 16px;
-  transition: border-color var(--dur-base) var(--ease);
-}
-
-@media (hover: hover) {
-  .row:hover {
-    border-color: var(--line-2);
-  }
+  padding: var(--admin-row-pad);
 }
 
 .identity {
@@ -103,19 +93,10 @@
   color: var(--ink-40);
 }
 
-.actions {
+.row .actions {
   grid-area: actions;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  justify-content: flex-start;
   padding-inline-start: var(--row-name-indent);
-}
-
-/* A thumb gets the full tap floor on both ways onward. */
-@media (pointer: coarse) {
-  .actions .actionButton {
-    min-height: var(--tap-min);
-  }
 }
 
 /* Mid width: identity and actions on the first line, grants on a second
@@ -127,10 +108,9 @@
       "identity actions"
       "grants grants";
     gap: 4px 16px;
-    padding: 10px 16px;
   }
 
-  .actions {
+  .row .actions {
     justify-content: flex-end;
     padding-inline-start: 0;
   }
@@ -143,7 +123,6 @@
     grid-template-columns: minmax(15rem, 1.5fr) minmax(0, 2fr) auto;
     grid-template-areas: "identity grants actions";
     gap: 20px;
-    padding: 14px 18px;
   }
 
   .grants {
@@ -156,7 +135,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: var(--admin-row-pad);
 }
 
 .rowSkeletonText {

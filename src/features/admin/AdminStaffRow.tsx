@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { AdminAvatar, AdminChip } from "./ui";
+import { AdminAvatar, AdminChip, AdminRowActions } from "./ui";
 import { useDemoPortrait } from "./useDemoPortrait";
 import type { AdminStaffRosterRowDTO } from "./api/adminStaffRoster.api";
 import {
@@ -139,11 +139,10 @@ export function AdminStaffRow({
         )}
       </div>
 
-      <div className={styles.actions}>
+      <AdminRowActions className={styles.actions}>
         <Button
           variant="ghost"
           size="sm"
-          className={styles.actionButton}
           onClick={() => onManage(staffMember.id)}
           aria-label={t("admin:staff.row.manageAria", { name })}
         >
@@ -153,14 +152,13 @@ export function AdminStaffRow({
         <Button
           variant="icon"
           size="sm"
-          className={styles.actionButton}
           to={`${routes.members}/${staffMember.slug}`}
           aria-label={t("admin:staff.row.viewProfile", { name })}
           title={t("admin:staff.row.viewProfile", { name })}
         >
           <FiExternalLink aria-hidden />
         </Button>
-      </div>
+      </AdminRowActions>
     </article>
   );
 }

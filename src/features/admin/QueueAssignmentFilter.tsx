@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { QUEUE_ASSIGNMENT_SCOPES } from "./queueAssignmentScope";
 import type { QueueAssignmentScope } from "./queueAssignmentScope";
@@ -18,17 +19,27 @@ import styles from "./QueueAssignment.module.css";
 export function QueueAssignmentFilter({
   value,
   onChange,
+  isInline = false,
 }: {
   value: QueueAssignmentScope;
   onChange: (value: QueueAssignmentScope) => void;
+  /** True when the filter sits on an `AdminToolbar` that already spaces it;
+   *  it then drops its own block margin. */
+  isInline?: boolean;
 }) {
   const { t } = useTranslation();
+  const labelId = useId();
   return (
-    <div className={styles.filterRow}>
-      <span className={styles.filterLabel}>
+    <div
+      className={[styles.filterRow, !isInline && styles.filterRowSpaced]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <span id={labelId} className={styles.filterLabel}>
         {t("admin:queueAssignment.filterLabel")}
       </span>
       <AdminSeg
+        ariaLabelledby={labelId}
         options={QUEUE_ASSIGNMENT_SCOPES.map((scope) => ({
           value: scope,
           label: t(`admin:queueAssignment.filter.${scope}`),

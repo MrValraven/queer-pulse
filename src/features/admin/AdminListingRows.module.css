@@ -19,7 +19,7 @@
   flex-direction: column;
 }
 
-.columnHeader,
+.rows .columnHeader,
 .row {
   display: grid;
   grid-template-columns:
@@ -27,20 +27,21 @@
     minmax(276px, auto);
   column-gap: 16px;
   align-items: center;
-  padding: 0 18px;
+}
+.row {
+  padding: var(--admin-row-pad);
 }
 
-/* ── Column header ───────────────────────────────────────────────────────── */
-.columnHeader {
+/* ── Column header ───────────────────────────────────────────────────────────
+   The look (caps, tint, hairline, height, padding) comes from the kit's
+   `adminTableClasses.headRow`; this rule only lays the grid out. The
+   `.rows` prefix lets `display: grid` win over the kit's `display: flex`. */
+.rows .columnHeader {
   grid-template-areas: "check listing listing who status actions";
-  min-height: 40px;
-  background: rgba(var(--line-rgb), 0.025);
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
-  font-size: var(--text-12);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-40);
+  /* The panel body no longer clips, so the header's tint follows the panel's
+     rounded top corners itself. */
+  border-top-left-radius: var(--admin-panel-radius-inner);
+  border-top-right-radius: var(--admin-panel-radius-inner);
 }
 .columnListing {
   grid-area: listing;
@@ -72,8 +73,6 @@
   grid-template-areas: "check thumb main who status actions";
   position: relative;
   min-height: 76px;
-  padding-top: 14px;
-  padding-bottom: 14px;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
   transition: background 0.16s var(--ease);
 }
@@ -85,16 +84,15 @@
 /* The last row's wash follows the panel's rounded bottom corners. */
 .rows > .row:last-child,
 .rows > .rowFade:last-child > .row {
-  border-bottom-left-radius: var(--radius-card);
-  border-bottom-right-radius: var(--radius-card);
+  border-bottom-left-radius: var(--admin-panel-radius-inner);
+  border-bottom-right-radius: var(--admin-panel-radius-inner);
 }
+/* A selected row keeps the kit's tint and accent bar
+   (`adminTableClasses.isSelected`), so it skips the hover wash. */
 @media (hover: hover) {
-  .row:hover {
+  .row:not([data-selected]):hover {
     background: rgba(var(--line-rgb), 0.03);
   }
-}
-.row.rowSelected {
-  background: rgba(var(--jade-rgb), 0.06);
 }
 /* The name button is the row's open control; its keyboard focus rings the
    whole row, inset so the panel edge never clips it. */
@@ -326,7 +324,7 @@
 
 /* ── Empty and loading ─────────────────────────────────────────────────── */
 .emptyBody {
-  padding: 0 18px 20px;
+  padding: 0 var(--admin-panel-pad) var(--admin-panel-pad);
 }
 .skeletonRow {
   pointer-events: none;
@@ -346,12 +344,12 @@
    track to its own cluster; its cells are right-aligned, so their edges still
    line up row to row. */
 @container listingQueue (max-width: 1039px) {
-  .columnHeader,
+  .rows .columnHeader,
   .row {
     grid-template-columns: 20px 48px minmax(0, 1fr) auto;
     column-gap: 12px;
   }
-  .columnHeader {
+  .rows .columnHeader {
     grid-template-areas: "check listing listing status";
   }
   .columnWho {
@@ -406,7 +404,7 @@
    right, and when both cannot fit (Edit plus "Publish live" plus the kebab
    next to "In review" at 390px) the actions drop under the chip. */
 @container listingQueue (max-width: 639px) {
-  .columnHeader {
+  .rows .columnHeader {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: "check";
   }

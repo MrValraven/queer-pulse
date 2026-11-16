@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { routes } from "../../app/routeMap";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { FadeIn } from "../../shared/components/ui";
+import { FadeIn, SearchInput } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -10,7 +10,13 @@ import type {
 } from "./api/adminLandlords.api";
 import { AdminLandlordsDirectory } from "./AdminLandlordsDirectory";
 import { AdminLandlordsIntroRequests } from "./AdminLandlordsIntroRequests";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import {
+  AdminPageHeader,
+  AdminSeg,
+  AdminTabs,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import styles from "./AdminLandlordsPage.module.css";
 
 type Pane = "directory" | "introductions";
@@ -59,7 +65,7 @@ export function AdminLandlordsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:landlords.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:landlords.header.title"
@@ -70,74 +76,70 @@ export function AdminLandlordsPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={60}>
-        <AdminTabs
-          tabs={PANES.map((value) => ({
-            id: value,
-            label: t(`admin:landlords.pane.${value}`),
-          }))}
-          active={pane}
-          onChange={(value) => setPane(value as Pane)}
-        />
-      </FadeIn>
+      <div className={styles.body}>
+        <FadeIn delay={60}>
+          <AdminTabs
+            tabs={PANES.map((value) => ({
+              id: value,
+              label: t(`admin:landlords.pane.${value}`),
+            }))}
+            active={pane}
+            onChange={(value) => setPane(value as Pane)}
+          />
+        </FadeIn>
 
-      {pane === "directory" ? (
-        <>
-          <FadeIn delay={70}>
-            <div className={styles.controls}>
-              <AdminTabs
-                tabs={DIRECTORY_FILTERS.map((value) => ({
-                  id: value,
-                  label: t(`admin:landlords.filter.${value}`),
-                }))}
-                active={directoryFilter}
-                onChange={(value) =>
-                  setDirectoryFilter(value as LandlordStatusFilter)
-                }
-              />
-              <div className={styles.searchField}>
-                <label
-                  className={styles.searchLabel}
-                  htmlFor="admin-landlords-search"
-                >
-                  {t("admin:landlords.search.label")}
-                </label>
-                <input
-                  id="admin-landlords-search"
-                  className={styles.searchInput}
-                  type="search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder={t("admin:landlords.search.placeholder")}
+        {pane === "directory" ? (
+          <>
+            <FadeIn delay={70}>
+              <AdminToolbar label={t("shared:filterPage.filtersCta")}>
+                <AdminSeg
+                  options={DIRECTORY_FILTERS.map((value) => ({
+                    value,
+                    label: t(`admin:landlords.filter.${value}`),
+                  }))}
+                  value={directoryFilter}
+                  onChange={(value) =>
+                    setDirectoryFilter(value as LandlordStatusFilter)
+                  }
                 />
-              </div>
-            </div>
-          </FadeIn>
-          <FadeIn delay={80}>
-            <AdminLandlordsDirectory filter={directoryFilter} search={search} />
-          </FadeIn>
-        </>
-      ) : (
-        <>
-          <FadeIn delay={70}>
-            <div className={styles.controls}>
-              <AdminTabs
-                tabs={INTRO_FILTERS.map((value) => ({
-                  id: value,
-                  label: t(`admin:landlords.introFilter.${value}`),
-                }))}
-                active={introFilter}
-                onChange={(value) =>
-                  setIntroFilter(value as LandlordIntroFilter)
-                }
+                <SearchInput
+                  className={adminToolbarClasses.search}
+                  value={search}
+                  onChange={setSearch}
+                  placeholder={t("admin:landlords.search.placeholder")}
+                  ariaLabel={t("admin:landlords.search.label")}
+                />
+              </AdminToolbar>
+            </FadeIn>
+            <FadeIn delay={80} className={styles.body}>
+              <AdminLandlordsDirectory
+                filter={directoryFilter}
+                search={search}
               />
-            </div>
-          </FadeIn>
-          <FadeIn delay={80}>
-            <AdminLandlordsIntroRequests filter={introFilter} />
-          </FadeIn>
-        </>
-      )}
+            </FadeIn>
+          </>
+        ) : (
+          <>
+            <FadeIn delay={70}>
+              <AdminToolbar label={t("shared:filterPage.filtersCta")}>
+                <AdminSeg
+                  options={INTRO_FILTERS.map((value) => ({
+                    value,
+                    label: t(`admin:landlords.introFilter.${value}`),
+                  }))}
+                  value={introFilter}
+                  onChange={(value) =>
+                    setIntroFilter(value as LandlordIntroFilter)
+                  }
+                />
+              </AdminToolbar>
+            </FadeIn>
+            <FadeIn delay={80} className={styles.body}>
+              <AdminLandlordsIntroRequests filter={introFilter} />
+            </FadeIn>
+          </>
+        )}
+      </div>
     </AdminShell>
   );
 }

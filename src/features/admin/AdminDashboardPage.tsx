@@ -6,7 +6,8 @@ import { useAccountIdentity } from "../../shared/components/layout/useAccountIde
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { AdminDashboardHeader } from "./AdminDashboardHeader";
+import { AdminPageHeader } from "./ui";
+import { useOverviewHeader } from "./useOverviewHeader";
 import { AdminStatGrid } from "./AdminStatGrid";
 import { AdminTriageQueue } from "./AdminTriageQueue";
 import { ReportsByTypeChart, ResponseTimeChart } from "./AdminDashboardCharts";
@@ -19,25 +20,30 @@ import styles from "./AdminDashboardPage.module.css";
 
 export function AdminDashboardPage() {
   const { t } = useTranslation();
-  // DES-160: the greeting used to read `ADMIN_PROFILE.firstName`, which is
-  // built from the mock member registry, so every real admin on live chrome
-  // was greeted as the demo persona. `useAccountIdentity` resolves the
-  // signed-in member from `/auth/me` and only falls back to the fixture in
-  // demo mode, where that persona IS the signed-in member. While the profile
-  // is still loading (and for an account with no profile name yet) it hands
-  // back an empty string, so the title greets without a name rather than
-  // flashing the wrong one or an empty slot.
+  // DES-160: the greeting reads the signed-in member from `/auth/me` through
+  // `useAccountIdentity`, which falls back to the fixture only in demo mode,
+  // where that persona IS the signed-in member. While the profile loads (and
+  // for an account with no profile name yet) it hands back an empty string,
+  // so the title greets without a name and never flashes the wrong one.
   const { firstName } = useAccountIdentity();
-  // Fixtures in demo mode, the live `GET /admin/overview` DTO otherwise — the
-  // skeleton/count-up/draw animations below key off `isLoading`, same as the
-  // old simulated-load shimmer did.
+  // Fixtures in demo mode, the live `GET /admin/overview` DTO otherwise. The
+  // skeleton, count-up and draw animations below key off `isLoading`.
   const overviewQuery = useAdminOverview();
   const { data, isLoading, refetch } = overviewQuery;
-  // DES-424: with no overview at all, the tiles, triage card, charts and feed
+  // DES-424: with no overview at all, the tiles, triage panel, charts and feed
   // would draw empty plots and a "Not measured yet" that read as real zeros.
   // The header carries the error and its Retry alone until data arrives, and
   // keeps them through a retry so focus stays on the Retry button.
   const hasOverviewLoadError = hasFailedWithoutData(overviewQuery);
+  // The headline gets the triage rows only once they loaded, so a failed read
+  // (a 403, an expired grant) shows the error copy and a Retry. An empty array
+  // would read as "all caught up".
+  const header = useOverviewHeader({
+    triage: data?.triage,
+    isError: hasOverviewLoadError,
+    isRetrying: isRetryingFailedRead(overviewQuery),
+    onRetry: () => void refetch(),
+  });
 
   return (
     <AdminShell
@@ -57,43 +63,54 @@ export function AdminDashboardPage() {
       }
     >
       <FadeIn>
-        {/* DES-424: the headline gets the triage rows only once they loaded,
-            so a failed read (a 403, an expired grant) shows the error line and
-            a retry. An empty array would read as "all caught up". A retry in
-            flight keeps the error line and marks its Retry busy. */}
-        <AdminDashboardHeader
-          triage={data?.triage}
-          isError={hasOverviewLoadError}
-          isRetrying={isRetryingFailedRead(overviewQuery)}
-          onRetry={() => void refetch()}
+        <AdminPageHeader
+          size="hero"
+          isLive={!hasOverviewLoadError}
+          {...header}
         />
       </FadeIn>
 
       {!hasOverviewLoadError && (
-        <AdminStatGrid metrics={data?.metrics ?? []} loading={isLoading} />
+        <FadeIn delay={60}>
+          <AdminStatGrid
+            metrics={data?.metrics ?? []}
+            loading={isLoading}
+            label={t("admin:dashboard.statsLabel")}
+          />
+        </FadeIn>
       )}
 
       {!hasOverviewLoadError && (
         <FadeIn delay={120}>
           <div className={styles.dashGrid}>
-            <div className={styles.dashLeft}>
+            <div className={styles.dashMain}>
               <AdminTriageQueue queue={data?.triage ?? []} />
-              <ReportsByTypeChart
-                weeks={data?.reportWeeks ?? []}
-                series={data?.reportSeries ?? []}
-                loading={isLoading}
-              />
-              <div className={styles.chart2up}>
-                {/* Owns its range toggle and reads the range-aware growth
-                    series; the overview's fixed 10-week one goes unused here. */}
-                <AdminMemberGrowthCard />
-                <ResponseTimeChart
-                  buckets={data?.responseDist ?? null}
+              {/* The charts draw the shared ChartFrame; the slot gives it the
+                  panel's padding, corner and elevation. */}
+              <div className={styles.chartPanel}>
+                <ReportsByTypeChart
+                  weeks={data?.reportWeeks ?? []}
+                  series={data?.reportSeries ?? []}
                   loading={isLoading}
                 />
               </div>
-              <AdminLandingVisitsCard />
-              <Link to={routes.adminReports} className={styles.viewReportLink}>
+              <div className={styles.chartPair}>
+                {/* Owns its range toggle and reads the range-aware growth
+                    series; the overview's fixed 10-week one goes unused here. */}
+                <div className={styles.chartPanel}>
+                  <AdminMemberGrowthCard />
+                </div>
+                <div className={styles.chartPanel}>
+                  <ResponseTimeChart
+                    buckets={data?.responseDist ?? null}
+                    loading={isLoading}
+                  />
+                </div>
+              </div>
+              <div className={styles.chartPanel}>
+                <AdminLandingVisitsCard />
+              </div>
+              <Link to={routes.adminReports} className={styles.textLink}>
                 {t("admin:dashboard.viewFullReport")}{" "}
                 <FiArrowRight aria-hidden />
               </Link>

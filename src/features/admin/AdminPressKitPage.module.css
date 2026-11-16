@@ -3,10 +3,6 @@
    AdminPressFactsPanel so the list/editor/facts panel read as one system.
    Adapted from AdminLandingPage.module.css. */
 
-.tabs {
-  margin-top: 20px;
-}
-
 .layout {
   display: grid;
   gap: 20px;
@@ -38,20 +34,22 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding: 18px;
+  padding: var(--admin-panel-pad);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
 }
 
 .featureRow {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 16px 18px;
+  padding: var(--admin-row-pad);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
 }
 
 .featureRowMain {
@@ -180,32 +178,7 @@
   gap: 12px;
 }
 
-/* ── Facts (auto) preview panel ───────────────────────────────────────────── */
-.factsPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-}
-
-.factsTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.factsSub {
-  margin: 0 0 8px;
-  font-size: var(--text-12-5);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
+/* ── Facts (auto) preview panel (an AdminPanel) ───────────────────────────── */
 .factsList {
   display: flex;
   flex-direction: column;
@@ -233,17 +206,11 @@
 .factValue {
   margin: 0;
   flex: none;
+  font-variant-numeric: tabular-nums;
   font-family: var(--serif);
   font-size: var(--text-16);
   font-weight: 600;
   color: var(--ink);
-}
-
-.factsEmpty {
-  margin: 2px 0 0;
-  font-size: var(--text-13);
-  line-height: 1.5;
-  color: var(--ink-40);
 }
 
 @media (--md) {

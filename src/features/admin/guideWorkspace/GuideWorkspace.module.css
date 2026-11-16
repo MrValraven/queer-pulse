@@ -1,9 +1,13 @@
 /* Guide workspace chrome: header, where-it-appears links, banners and the
    live preview pane. Layout columns live in AdminGuideWorkspacePage.module.css. */
 
+/* Sticks flush under the admin shell's top bar (`--admin-topbar-h`, written on
+   the shell). `--sticky-top` is the member app's nav band and stays the
+   fallback outside the shell, so scrolled content never shows in a strip
+   above the header. */
 .header {
   position: sticky;
-  top: var(--sticky-top);
+  top: var(--admin-topbar-h, var(--sticky-top));
   z-index: var(--z-sticky);
   display: grid;
   gap: 8px;

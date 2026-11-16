@@ -24,7 +24,11 @@ export function AdminLeadsList({
   controls: LeadListControls;
   onAdd: () => void;
 }) {
-  const viewName = leadListViewName(list, controls.hasFilters);
+  const viewName = leadListViewName(
+    list,
+    controls.filters,
+    controls.hasFilters,
+  );
   // The filters the rows on screen answer; it moves on once the new filters'
   // rows arrive, so the view swaps exactly when its content does.
   const filterKey = JSON.stringify(controls.filters);
@@ -42,6 +46,7 @@ export function AdminLeadsList({
               list={list}
               onAdd={onAdd}
               onClearFilters={controls.clearFilters}
+              onShowEveryone={() => controls.setAssignedTo(null)}
             />
           </ViewFade>
         </AnimatePresence>

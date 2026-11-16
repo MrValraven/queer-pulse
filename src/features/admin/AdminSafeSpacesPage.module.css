@@ -1,25 +1,29 @@
+/* Page body: the tab strip and the active pane, one gap apart. */
+.body {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
 /* ── Safe space candidate rows ────────────────────────────── */
 .rows {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 20px;
 }
 
-.emptyLine {
-  font-size: var(--text-14);
-  color: var(--ink-60);
-  margin: 20px 0;
+/* Each row is wrapped in a FadeIn, so the divider lives on the wrapper and
+   the last one drops it. The row itself sits on the kit's table row. */
+.item {
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.item:last-child {
+  border-bottom: 0;
 }
 
 .row {
-  display: flex;
-  align-items: center;
   gap: 16px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-row-pad);
 }
 
 .rowMain {
@@ -52,26 +56,4 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-}
-
-/* ── Badges granted before the visit bar was enforced ──────────
-   A report, never an action. These badges predate enforcement and a low count
-   can also mean the visits were never written up, so this is amber (read this)
-   rather than danger (something is wrong here). */
-.underBarSummary {
-  margin: 20px 0 0;
-  padding: 12px 14px;
-  border: 1px solid rgba(var(--amber-rgb), 0.35);
-  border-radius: var(--radius-14);
-  background: rgba(var(--amber-rgb), 0.1);
-  font-size: var(--text-13-5);
-  line-height: 1.55;
-  color: var(--ink);
-}
-
-.underBarSummaryNote {
-  margin: 6px 0 0;
-  font-size: var(--text-13);
-  line-height: 1.55;
-  color: var(--ink-60);
 }

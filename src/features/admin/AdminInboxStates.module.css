@@ -1,0 +1,6 @@
+/* The failed-read notice on the editorial and partner inbox pages. The rows
+   below come from AdminSubmissionList.module.css; this keeps the notice at
+   the same distance from the tab strip or header as the first row. */
+.notice {
+  margin-top: var(--admin-header-gap);
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
+import { FiInbox } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -7,7 +7,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminPanel,
+} from "./ui";
 import { AdminLegalRequestFilterBar } from "./AdminLegalRequestFilterBar";
 import { AdminLegalRequestRow } from "./AdminLegalRequestRow";
 import { AdminLegalRequestDetail } from "./AdminLegalRequestDetail";
@@ -18,6 +23,7 @@ import {
   useAdminLegalRequests,
   type AdminLegalRequestFilters,
 } from "./api/useAdminLegalRequests";
+import type { AdminLegalRequestDTO } from "./api/adminLegalRequests.api";
 import styles from "./AdminLegalRequestsPage.module.css";
 
 /** Which pane is open over the register: none, the read-only detail of one
@@ -43,6 +49,89 @@ function LegalRequestEditor({
   return <AdminLegalRequestForm record={record} onClose={onClose} />;
 }
 
+/** The register itself: a skeleton, a failure, an empty result or the rows.
+ *  A failed read is an error notice that names the reason; it never falls
+ *  back to the empty line. */
+function LegalRequestRegister({
+  records,
+  isLoading,
+  isError,
+  isForbidden,
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMore,
+  onOpen,
+}: {
+  records: AdminLegalRequestDTO[];
+  isLoading: boolean;
+  isError: boolean;
+  isForbidden: boolean;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  onLoadMore: () => void;
+  onOpen: (recordId: string) => void;
+}) {
+  const { t } = useTranslation();
+
+  if (isLoading) {
+    return (
+      <div className={styles.skeletons}>
+        {[0, 1, 2, 3].map((skeletonIndex) => (
+          <SkeletonLine
+            key={skeletonIndex}
+            height={88}
+            style={{ borderRadius: 12 }}
+          />
+        ))}
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <AdminNotice tone="error">
+        {isForbidden
+          ? t("admin:legalRequests.forbidden")
+          : t("admin:legalRequests.loadError")}
+      </AdminNotice>
+    );
+  }
+  if (records.length === 0) {
+    return (
+      <AdminEmptyState icon={FiInbox} title={t("admin:legalRequests.empty")} />
+    );
+  }
+  return (
+    <AdminPanel padding="flush">
+      <ul className={styles.rows}>
+        {records.map((record, index) => (
+          <li key={record.id}>
+            <FadeIn delay={Math.min(index, 8) * 50}>
+              <AdminLegalRequestRow
+                record={record}
+                onOpen={() => onOpen(record.id)}
+              />
+            </FadeIn>
+          </li>
+        ))}
+      </ul>
+      {hasNextPage && (
+        <div className={styles.loadMore}>
+          <Button
+            variant="ghost"
+            size="md"
+            disabled={isFetchingNextPage}
+            onClick={onLoadMore}
+          >
+            {isFetchingNextPage
+              ? t("admin:legalRequests.loadingMore")
+              : t("admin:legalRequests.loadMore")}
+          </Button>
+        </div>
+      )}
+    </AdminPanel>
+  );
+}
+
 /**
  * `/admin/legal-requests`, the register of demands from courts, police forces,
  * ministries and any other arm of a state (PRD-32).
@@ -56,7 +145,7 @@ function LegalRequestEditor({
  *
  * What is written here is counted by the public Transparency Report, and no
  * field of it is published: the report says how many demands arrived and what
- * happened to them, never who was named or what was handed over.
+ * happened to them. Who was named and what was handed over stay private.
  *
  * A failed read is never an empty register. "Nothing matched these filters" and
  * "the register could not be read" are two different sentences, and only one of
@@ -97,7 +186,7 @@ export function AdminLegalRequestsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:legalRequests.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="admin:legalRequests.title"
@@ -117,73 +206,40 @@ export function AdminLegalRequestsPage() {
         />
       </FadeIn>
 
-      {demoMode && (
-        <p className={styles.notice}>{t("admin:legalRequests.demoNotice")}</p>
-      )}
-
-      <FadeIn delay={60}>
-        <AdminLegalRequestFilterBar
-          filters={filters}
-          onChange={(patch) =>
-            setFilters((current) => ({ ...current, ...patch }))
-          }
-        />
-      </FadeIn>
-
-      <FadeIn delay={80}>
-        {isLoading ? (
-          <div className={styles.rows}>
-            {[0, 1, 2, 3].map((skeletonIndex) => (
-              <SkeletonLine
-                key={skeletonIndex}
-                height={104}
-                style={{ borderRadius: 14 }}
-              />
-            ))}
-          </div>
-        ) : isError ? (
-          <p className={`${styles.notice} ${styles.errorNotice}`}>
-            <FiAlertTriangle aria-hidden className={styles.noticeIcon} />
-            {isForbidden
-              ? t("admin:legalRequests.forbidden")
-              : t("admin:legalRequests.loadError")}
-          </p>
-        ) : records.length === 0 ? (
-          <p className={styles.notice}>{t("admin:legalRequests.empty")}</p>
-        ) : (
-          <>
-            <p className={styles.rowMeta}>
-              {t("admin:legalRequests.countLine", { count: total })}
-            </p>
-            <div className={styles.rows}>
-              {records.map((record, index) => (
-                <FadeIn key={record.id} delay={Math.min(index, 8) * 50}>
-                  <AdminLegalRequestRow
-                    record={record}
-                    onOpen={() =>
-                      setOpenPane({ kind: "detail", recordId: record.id })
-                    }
-                  />
-                </FadeIn>
-              ))}
-            </div>
-            {hasNextPage && (
-              <div className={styles.loadMore}>
-                <Button
-                  variant="ghost"
-                  size="md"
-                  disabled={isFetchingNextPage}
-                  onClick={() => void fetchNextPage()}
-                >
-                  {isFetchingNextPage
-                    ? t("admin:legalRequests.loadingMore")
-                    : t("admin:legalRequests.loadMore")}
-                </Button>
-              </div>
-            )}
-          </>
+      <div className={styles.stack}>
+        {demoMode && (
+          <AdminNotice tone="info">
+            {t("admin:legalRequests.demoNotice")}
+          </AdminNotice>
         )}
-      </FadeIn>
+
+        <FadeIn delay={60}>
+          <AdminLegalRequestFilterBar
+            filters={filters}
+            onChange={(patch) =>
+              setFilters((current) => ({ ...current, ...patch }))
+            }
+            count={
+              !isLoading && !isError && records.length > 0
+                ? t("admin:legalRequests.countLine", { count: total })
+                : undefined
+            }
+          />
+        </FadeIn>
+
+        <FadeIn delay={80}>
+          <LegalRequestRegister
+            records={records}
+            isLoading={isLoading}
+            isError={isError}
+            isForbidden={isForbidden}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            onLoadMore={() => void fetchNextPage()}
+            onOpen={(recordId) => setOpenPane({ kind: "detail", recordId })}
+          />
+        </FadeIn>
+      </div>
 
       {openPane?.kind === "detail" && (
         <AdminLegalRequestDetail

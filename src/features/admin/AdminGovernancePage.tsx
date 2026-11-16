@@ -69,7 +69,7 @@ export function AdminGovernancePage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:governance.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="admin:governance.header.title"

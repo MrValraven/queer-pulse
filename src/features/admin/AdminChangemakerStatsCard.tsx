@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { AdminPanel } from "./ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -72,13 +73,12 @@ export function AdminChangemakerStatsCard() {
   }
 
   return (
-    <section className={styles.statsCard}>
-      <h2 className={styles.statsTitle}>
-        {t("community:changemakers.admin.statsTitle")}
-      </h2>
-      <p className={styles.statsHint}>
-        {t("community:changemakers.admin.statsHint")}
-      </p>
+    <AdminPanel
+      className={styles.statsCard}
+      bodyClassName={styles.statsBody}
+      title={t("community:changemakers.admin.statsTitle")}
+      description={t("community:changemakers.admin.statsHint")}
+    >
       <div className={styles.statsFields}>
         <label className={styles.statsField}>
           <span className={styles.fieldLabel}>
@@ -115,6 +115,6 @@ export function AdminChangemakerStatsCard() {
           {t("community:changemakers.admin.statsSaveCta")}
         </Button>
       </div>
-    </section>
+    </AdminPanel>
   );
 }

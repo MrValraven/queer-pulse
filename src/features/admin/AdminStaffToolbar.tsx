@@ -1,19 +1,21 @@
-import { useId, useRef } from "react";
-import { FiSearch, FiX } from "react-icons/fi";
+import { AnimatePresence, m } from "motion/react";
+import { FiX } from "react-icons/fi";
+import { Button, FilterChips, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminSeg, type AdminSegOption } from "./ui";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import {
   hasActiveStaffFilters,
   staffRoleMeta,
   type StaffRosterFilters,
   type StaffTierFilter,
 } from "./adminStaffRoster.utils";
-import styles from "./AdminStaffRows.module.css";
+import styles from "./AdminStaffToolbar.module.css";
 
 const TIER_FILTERS: StaffTierFilter[] = ["all", "admin", "moderator", "member"];
 
 /**
- * Search, tier control, the active grant filter as a removable chip, and a
+ * Search, the tier chips, the active grant filter as a removable chip, and a
  * live "Showing N of M" so a screen reader hears each narrowing.
  */
 export function AdminStaffToolbar({
@@ -34,95 +36,65 @@ export function AdminStaffToolbar({
   onClearFilters: () => void;
 }) {
   const { t } = useTranslation();
-  const searchId = useId();
-  const tierLabelId = useId();
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const hasSearchText = filters.search !== "";
-  const tierOptions: AdminSegOption[] = TIER_FILTERS.map((tier) => ({
-    value: tier,
-    label: t(`admin:staff.toolbar.tier.${tier}`),
-  }));
+  const { reducedMotion } = useMotionPrefs();
+  const chipMotion = {
+    initial: { opacity: 0, scale: 0.92 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.92 },
+    transition: { duration: reducedMotion ? 0 : 0.18 },
+  };
   const grantMeta = filters.grant ? staffRoleMeta(filters.grant) : undefined;
   const grantLabel = grantMeta ? t(grantMeta.labelKey) : filters.grant;
 
   return (
-    <div className={styles.toolbar}>
-      <div className={styles.toolbarMain}>
-        <div className={styles.search}>
-          <label htmlFor={searchId} className="visuallyHidden">
-            {t("admin:staff.toolbar.searchLabel")}
-          </label>
-          <FiSearch aria-hidden className={styles.searchIcon} />
-          <input
-            ref={searchInputRef}
-            id={searchId}
-            type="search"
-            className={styles.searchInput}
-            value={filters.search}
-            onChange={(event) => onSearchChange(event.target.value)}
-            placeholder={t("admin:staff.toolbar.searchPlaceholder")}
-            autoComplete="off"
-            spellCheck={false}
-          />
-          {/* Replaces WebKit's own blue clear control, hidden in the CSS. */}
-          {hasSearchText && (
+    <AdminToolbar
+      label={t("admin:staff.toolbar.ariaLabel")}
+      count={t("admin:staff.toolbar.showing", {
+        shown: shownCount,
+        total: totalCount,
+      })}
+    >
+      <SearchInput
+        className={adminToolbarClasses.search}
+        value={filters.search}
+        onChange={onSearchChange}
+        placeholder={t("admin:staff.toolbar.searchPlaceholder")}
+        ariaLabel={t("admin:staff.toolbar.searchLabel")}
+      />
+      <FilterChips
+        className={adminToolbarClasses.chips}
+        label={t("admin:staff.toolbar.tierLabel")}
+        options={TIER_FILTERS.map((tier) => ({
+          value: tier,
+          label: t(`admin:staff.toolbar.tier.${tier}`),
+        }))}
+        value={filters.tier}
+        onChange={(tier) => onTierChange(tier as StaffTierFilter)}
+      />
+      <AnimatePresence initial={false}>
+        {grantLabel && (
+          <m.span key="grant" className={styles.slot} {...chipMotion}>
             <button
               type="button"
-              className={styles.searchClear}
-              onClick={() => {
-                onSearchChange("");
-                searchInputRef.current?.focus();
-              }}
-              aria-label={t("admin:staff.toolbar.searchClear")}
+              className={styles.grantChip}
+              onClick={onClearGrant}
+              aria-label={t("admin:staff.toolbar.grantChipRemove", {
+                grant: grantLabel,
+              })}
             >
-              <FiX aria-hidden />
+              {grantLabel}
+              <FiX aria-hidden className={styles.grantChipIcon} />
             </button>
-          )}
-        </div>
-        <div className={styles.tierControl}>
-          <span id={tierLabelId} className={styles.tierLabel}>
-            {t("admin:staff.toolbar.tierLabel")}
-          </span>
-          <div className={styles.tierScroll}>
-            <AdminSeg
-              options={tierOptions}
-              value={filters.tier}
-              onChange={(value) => onTierChange(value as StaffTierFilter)}
-              ariaLabelledby={tierLabelId}
-            />
-          </div>
-        </div>
-      </div>
-      <div className={styles.toolbarMeta}>
-        <p className={styles.showing} role="status">
-          {t("admin:staff.toolbar.showing", {
-            shown: shownCount,
-            total: totalCount,
-          })}
-        </p>
-        {grantLabel && (
-          <button
-            type="button"
-            className={styles.grantChip}
-            onClick={onClearGrant}
-            aria-label={t("admin:staff.toolbar.grantChipRemove", {
-              grant: grantLabel,
-            })}
-          >
-            {grantLabel}
-            <FiX aria-hidden className={styles.grantChipIcon} />
-          </button>
+          </m.span>
         )}
         {hasActiveStaffFilters(filters) && (
-          <button
-            type="button"
-            className={styles.clearLink}
-            onClick={onClearFilters}
-          >
-            {t("admin:staff.toolbar.clear")}
-          </button>
+          <m.span key="clear" className={styles.slot} {...chipMotion}>
+            <Button variant="quiet" size="sm" onClick={onClearFilters}>
+              {t("admin:staff.toolbar.clear")}
+            </Button>
+          </m.span>
         )}
-      </div>
-    </div>
+      </AnimatePresence>
+    </AdminToolbar>
   );
 }

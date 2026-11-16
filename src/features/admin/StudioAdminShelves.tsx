@@ -1,10 +1,9 @@
-import { Button, SkeletonLine } from "../../shared/components/ui";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { SkeletonLine } from "../../shared/components/ui";
 import { useAdminStudioCuration } from "./api/StudioAdminCurationHooks";
 import { StudioAdminFeaturedShelf } from "./StudioAdminFeaturedShelf";
 import { StudioAdminShelf } from "./StudioAdminShelf";
-import { isStudioAdminForbidden, picksOnShelf } from "./studioAdmin.model";
-import pageCss from "./StudioAdminPage.module.css";
+import { picksOnShelf } from "./studioAdmin.model";
+import { StudioAdminReadNotice } from "./StudioAdminReadNotice";
 import css from "./StudioAdminShelves.module.css";
 
 /** The two list shelves, in the order Studio home shows them. */
@@ -50,26 +49,12 @@ function StudioAdminShelvesSkeleton() {
 /** The Shelves tab: the featured slot as its hero card, then Staff picks
  *  and New this week as grids of record sleeves. */
 export function StudioAdminShelves() {
-  const { t } = useTranslation();
   const { data, isLoading, error, refetch } = useAdminStudioCuration();
   if (isLoading) return <StudioAdminShelvesSkeleton />;
-  if (data === undefined) {
-    const isForbidden = isStudioAdminForbidden(error);
+  if (data === undefined)
     return (
-      <div className={pageCss.notice}>
-        <p className={pageCss.noticeText}>
-          {isForbidden
-            ? t("admin:studioAdmin.forbidden")
-            : t("admin:studioAdmin.loadError")}
-        </p>
-        {!isForbidden && (
-          <Button variant="ghost" size="sm" onClick={() => void refetch()}>
-            {t("admin:studioAdmin.retryCta")}
-          </Button>
-        )}
-      </div>
+      <StudioAdminReadNotice error={error} onRetry={() => void refetch()} />
     );
-  }
   return (
     <div className={css.shelves}>
       <StudioAdminFeaturedShelf

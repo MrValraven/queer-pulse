@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { SearchInput, Select } from "../../shared/components/ui";
 import { useDebouncedValue } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import type { VerificationSort } from "./api/adminVerifications.api";
 import styles from "./AdminVerificationsHeader.module.css";
 
@@ -55,34 +56,34 @@ export function AdminVerificationsHeader({
   }, [debouncedQueryInput]);
 
   return (
-    <div className={styles.header}>
+    <AdminToolbar
+      className={styles.toolbar}
+      label={t("admin:verifications.segment.directOverride")}
+    >
       <SearchInput
         value={queryInput}
         onChange={setQueryInput}
         placeholder={t("admin:verifications.search.placeholder")}
         ariaLabel={t("admin:verifications.search.ariaLabel")}
-        className={styles.search}
+        className={adminToolbarClasses.search}
       />
 
-      <label className={styles.sort}>
-        <span className={styles.sortLabel}>
-          {t("admin:verifications.sort.label")}
-        </span>
-        <Select
-          size="sm"
-          value={value.sort}
-          options={SORT_OPTIONS.map((option) => ({
-            value: option,
-            label: t(`admin:verifications.sort.${option}`),
-          }))}
-          onChange={(next) =>
-            onChange({
-              ...value,
-              sort: (next ?? value.sort) as VerificationSort,
-            })
-          }
-        />
-      </label>
-    </div>
+      <Select
+        size="sm"
+        className={adminToolbarClasses.select}
+        label={t("admin:verifications.sort.label")}
+        value={value.sort}
+        options={SORT_OPTIONS.map((option) => ({
+          value: option,
+          label: t(`admin:verifications.sort.${option}`),
+        }))}
+        onChange={(next) =>
+          onChange({
+            ...value,
+            sort: (next ?? value.sort) as VerificationSort,
+          })
+        }
+      />
+    </AdminToolbar>
   );
 }

@@ -19,6 +19,7 @@ import { StudioAdminLandingPreviewRemoveDialog } from "./StudioAdminLandingPrevi
 import { StudioAdminLandingTrackDialog } from "./StudioAdminLandingTrackDialog";
 import { focusNeighbourControl } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminLanding.module.css";
+import { AdminPanel } from "./ui";
 
 const isOpenPreview = (preview: AdminStudioLandingPreviewDTO) =>
   preview.status === "pending" || preview.status === "approved";
@@ -115,16 +116,13 @@ export function StudioAdminLandingPreviews({
   }
 
   return (
-    <section className={css.section} aria-labelledby={headingId}>
-      <div className={css.sectionHead}>
-        <h2
-          id={headingId}
-          ref={headingRef}
-          tabIndex={-1}
-          className={css.sectionTitle}
-        >
-          {t("admin:studioAdmin.landing.previews.heading")}
-        </h2>
+    <AdminPanel
+      title={t("admin:studioAdmin.landing.previews.heading")}
+      titleId={headingId}
+      titleRef={headingRef}
+      isTitleFocusable
+      description={t("admin:studioAdmin.landing.previews.sub")}
+      actions={
         <Button
           variant="primary"
           size="sm"
@@ -136,10 +134,9 @@ export function StudioAdminLandingPreviews({
         >
           {t("admin:studioAdmin.landing.previews.addCta")}
         </Button>
-      </div>
-      <p className={css.sectionSub}>
-        {t("admin:studioAdmin.landing.previews.sub")}
-      </p>
+      }
+      bodyClassName={css.section}
+    >
       <Collapse isOpen={isFull}>
         <p id={fullLineId} className={css.hint}>
           {t("admin:studioAdmin.landing.previews.full")}
@@ -189,6 +186,6 @@ export function StudioAdminLandingPreviews({
         onClose={() => setRemoveTarget(null)}
         onConfirm={confirmRemove}
       />
-    </section>
+    </AdminPanel>
   );
 }

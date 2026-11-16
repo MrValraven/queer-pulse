@@ -14,6 +14,7 @@ import {
 } from "../../subprofiles/SubprofileCreditsWallGrid";
 import { WALL_MIN_TILES } from "../../subprofiles/subprofileCreditsWall.data";
 import { wallLayoutFor } from "../../subprofiles/useSubprofileCreditsWall";
+import { AdminPanel } from "../ui";
 import styles from "./PersonaWallPanels.module.css";
 
 const DEVICE_FADE_S = 0.18;
@@ -45,14 +46,11 @@ export function PersonaWallPreview({
   const isTooFew = tiles.length < WALL_MIN_TILES;
 
   return (
-    <section className={styles.panel} aria-labelledby={headingId}>
-      <div className={styles.previewHead}>
-        <div>
-          <h2 id={headingId} className={styles.heading}>
-            {t("admin:personaWall.preview.heading")}
-          </h2>
-          <p className={styles.intro}>{t("admin:personaWall.preview.intro")}</p>
-        </div>
+    <AdminPanel
+      title={t("admin:personaWall.preview.heading")}
+      titleId={headingId}
+      bodyClassName={styles.panelBody}
+      actions={
         <Collapse isOpen={!isNarrowScreen}>
           <SegmentedControl
             label={t("admin:personaWall.preview.deviceLabel")}
@@ -74,7 +72,9 @@ export function PersonaWallPreview({
             ]}
           />
         </Collapse>
-      </div>
+      }
+    >
+      <p className={styles.intro}>{t("admin:personaWall.preview.intro")}</p>
       <Collapse isOpen={isTooFew}>
         <p className={styles.tooFew}>{t("admin:personaWall.preview.tooFew")}</p>
       </Collapse>
@@ -110,6 +110,6 @@ export function PersonaWallPreview({
           </AnimatePresence>
         </div>
       </Collapse>
-    </section>
+    </AdminPanel>
   );
 }

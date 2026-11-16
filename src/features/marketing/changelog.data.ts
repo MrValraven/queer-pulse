@@ -63,6 +63,24 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "admin-console-redesign",
+        category: "improvement",
+        date: "16 Nov 2026",
+        ...entryKeys("admin-console-redesign"),
+      },
+      {
+        id: "staff-leads-assignees",
+        category: "feature",
+        date: "16 Nov 2026",
+        ...entryKeys("staff-leads-assignees"),
+      },
+      {
+        id: "listing-draft-continue",
+        category: "improvement",
+        date: "16 Nov 2026",
+        ...entryKeys("listing-draft-continue"),
+      },
+      {
         id: "leads-list-and-add-lead-tidied",
         category: "improvement",
         date: "14 Nov 2026",

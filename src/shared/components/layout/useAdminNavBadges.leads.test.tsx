@@ -2,7 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
-import { resetDemoLeads } from "../../../features/admin/leads/leadsDemoStore";
+import {
+  demoUnassignLeadStaff,
+  resetDemoLeads,
+} from "../../../features/admin/leads/leadsDemoStore";
 import { useAdminNavBadges } from "./useAdminNavBadges";
 
 interface BadgeTestMocks {
@@ -78,7 +81,18 @@ describe("useAdminNavBadges leads", () => {
     const { wrapper } = setup();
     const { result } = renderHook(() => useAdminNavBadges(), { wrapper });
     // The seed has four open leads with a follow-up due today or earlier;
-    // its Not now and On board leads with a past follow-up stay out.
+    // its Not now and On board leads with a past follow-up stay out. Kai
+    // Duarte is Rafa's, so it stays out too: the pill counts the viewer's
+    // due leads and the ones nobody holds.
+    await waitFor(() => expect(result.current.leads).toBe(3));
+  });
+
+  it("counts a due lead again once nobody holds it", async () => {
+    mocks.isDemo = true;
+    mocks.staffRoles = ["music_manager_producer"];
+    demoUnassignLeadStaff("demo-lead-kai-duarte", "demo-staff-rafa");
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useAdminNavBadges(), { wrapper });
     await waitFor(() => expect(result.current.leads).toBe(4));
   });
 

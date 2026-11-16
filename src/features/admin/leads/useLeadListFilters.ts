@@ -3,8 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { useDebouncedValue } from "../../../shared/hooks/useDebouncedValue";
 import {
   LEAD_SEARCH_QUERY_MAX,
+  isLeadAssignedToFilter,
   isLeadStage,
   isLeadType,
+  type LeadAssignedToFilter,
   type LeadListFilters,
   type LeadStage,
   type LeadType,
@@ -23,6 +25,8 @@ export interface LeadListControls {
   setStage: (stage: LeadStage | null) => void;
   setType: (type: LeadType | null) => void;
   setIsDueOnly: (isDueOnly: boolean) => void;
+  /** Sets the In charge view; null is Everyone and removes the param. */
+  setAssignedTo: (next: LeadAssignedToFilter | null) => void;
   clearFilters: () => void;
   hasFilters: boolean;
 }
@@ -46,11 +50,11 @@ function withParam(
 }
 
 /**
- * The leads list filters, kept in the URL (`q`, `stage`, `type`, `due=1`) so
- * a link lands on the same view; every write replaces the history entry. The
- * search field keeps its own text and reaches the list and `q` after a 250ms
- * pause; a cleared field skips the pause. An unknown stage or type in the
- * URL reads as no filter.
+ * The leads list filters, kept in the URL (`q`, `stage`, `type`, `due=1`,
+ * `assignedTo`) so a link lands on the same view; every write replaces the
+ * history entry. The search field keeps its own text and reaches the list and
+ * `q` after a 250ms pause; a cleared field skips the pause. An unknown stage,
+ * type or In charge view in the URL reads as no filter.
  */
 export function useLeadListFilters(): LeadListControls {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -70,8 +74,12 @@ export function useLeadListFilters(): LeadListControls {
 
   const stageParam = searchParams.get(LEAD_LIST_PARAM.stage);
   const typeParam = searchParams.get(LEAD_LIST_PARAM.type);
+  const assignedToParam = searchParams.get(LEAD_LIST_PARAM.assignedTo);
   const stage = isLeadStage(stageParam) ? stageParam : null;
   const type = isLeadType(typeParam) ? typeParam : null;
+  const assignedTo = isLeadAssignedToFilter(assignedToParam)
+    ? assignedToParam
+    : null;
   const isDueOnly =
     searchParams.get(LEAD_LIST_PARAM.isDueOnly) === DUE_ONLY_PARAM_VALUE;
 
@@ -103,7 +111,7 @@ export function useLeadListFilters(): LeadListControls {
   };
 
   return {
-    filters: { q: query, stage, type, isDueOnly },
+    filters: { q: query, stage, type, isDueOnly, assignedTo },
     searchText,
     setSearchText,
     setStage: (nextStage) => setParam(LEAD_LIST_PARAM.stage, nextStage),
@@ -113,6 +121,8 @@ export function useLeadListFilters(): LeadListControls {
         LEAD_LIST_PARAM.isDueOnly,
         nextIsDueOnly ? DUE_ONLY_PARAM_VALUE : null,
       ),
+    setAssignedTo: (nextAssignedTo) =>
+      setParam(LEAD_LIST_PARAM.assignedTo, nextAssignedTo),
     clearFilters: () => {
       // The address takes the cleared search here, so the copy above has
       // nothing left to write.
@@ -129,6 +139,11 @@ export function useLeadListFilters(): LeadListControls {
         { replace: true },
       );
     },
-    hasFilters: query !== "" || stage !== null || type !== null || isDueOnly,
+    hasFilters:
+      query !== "" ||
+      stage !== null ||
+      type !== null ||
+      isDueOnly ||
+      assignedTo !== null,
   };
 }

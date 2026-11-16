@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { routes } from "../../app/routeMap";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { FadeIn } from "../../shared/components/ui";
+import { FadeIn, SearchInput } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GroupListingQueueFilter } from "./api/adminHousingGroupListings.api";
 import { AdminHousingGroupListingsQueue } from "./AdminHousingGroupListingsQueue";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import {
+  AdminPageHeader,
+  AdminTabs,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import styles from "./AdminHousingGroupListingsPage.module.css";
 
 const STATUS_TABS: GroupListingQueueFilter[] = [
@@ -50,7 +55,7 @@ export function AdminHousingGroupListingsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:groupListingQueue.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.communities")}
           title={
             <Translation
               i18nKey="admin:groupListingQueue.header.title"
@@ -62,32 +67,26 @@ export function AdminHousingGroupListingsPage() {
       </FadeIn>
 
       <FadeIn delay={60}>
-        <div className={styles.controls}>
-          <AdminTabs
-            tabs={STATUS_TABS.map((value) => ({
-              id: value,
-              label: t(`admin:groupListingQueue.tab.${value}`),
-            }))}
-            active={filter}
-            onChange={(value) => setFilter(value as GroupListingQueueFilter)}
+        <AdminTabs
+          tabs={STATUS_TABS.map((value) => ({
+            id: value,
+            label: t(`admin:groupListingQueue.tab.${value}`),
+          }))}
+          active={filter}
+          onChange={(value) => setFilter(value as GroupListingQueueFilter)}
+        />
+        <AdminToolbar
+          label={t("admin:groupListingQueue.groupFilter.placeholder")}
+          className={styles.toolbar}
+        >
+          <SearchInput
+            className={adminToolbarClasses.search}
+            value={groupSlug}
+            onChange={(value) => setGroupSlug(value.trim())}
+            placeholder={t("admin:groupListingQueue.groupFilter.placeholder")}
+            ariaLabel={t("admin:groupListingQueue.groupFilter.label")}
           />
-          <div className={styles.groupField}>
-            <label
-              className={styles.groupLabel}
-              htmlFor="group-listing-queue-group"
-            >
-              {t("admin:groupListingQueue.groupFilter.label")}
-            </label>
-            <input
-              id="group-listing-queue-group"
-              className={styles.groupInput}
-              type="search"
-              value={groupSlug}
-              onChange={(event) => setGroupSlug(event.target.value.trim())}
-              placeholder={t("admin:groupListingQueue.groupFilter.placeholder")}
-            />
-          </div>
-        </div>
+        </AdminToolbar>
         <p className={styles.keyHint}>{t("admin:groupListingQueue.keyHint")}</p>
       </FadeIn>
 

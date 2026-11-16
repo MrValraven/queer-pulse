@@ -16,4 +16,7 @@ export const leadKeys = {
   personaSearchRoot: ["admin", "leads", "personaSearch"] as const,
   personaSearch: (term: string, isDemoMode: boolean) =>
     ["admin", "leads", "personaSearch", term, { demo: isDemoMode }] as const,
+  staffSearchRoot: ["admin", "leads", "staffSearch"] as const,
+  staffSearch: (term: string, isDemoMode: boolean) =>
+    ["admin", "leads", "staffSearch", term, { demo: isDemoMode }] as const,
 };

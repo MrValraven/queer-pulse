@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import { AdminInquiryList } from "./AdminInquiryList";
 import {
   useAdminInquiries,
@@ -8,7 +9,7 @@ import {
   type AdminInquiryStatusFilter,
 } from "./api/useAdminInquiries";
 import { INQUIRY_KINDS, INQUIRY_STATUSES } from "./api/adminInquiries.api";
-import styles from "./AdminSubmissionList.module.css";
+import styles from "./AdminIntakes.module.css";
 
 /**
  * Every message `/about/contact` has collected, narrowed by kind (a plain
@@ -39,9 +40,16 @@ export function AdminInquiriesBrowse() {
 
   return (
     <>
-      <div className={styles.filterBar}>
+      <AdminToolbar
+        className={styles.toolbar}
+        label={t("admin:adminIntakes.tab.inquiries")}
+        count={t("admin:adminIntakes.inquiryWaitingNote", {
+          count: query.unhandledCount,
+        })}
+      >
         <Select
           size="sm"
+          className={adminToolbarClasses.select}
           label={t("admin:adminIntakes.filter.kindLabel")}
           options={kindOptions}
           value={kind}
@@ -51,6 +59,7 @@ export function AdminInquiriesBrowse() {
         />
         <Select
           size="sm"
+          className={adminToolbarClasses.select}
           label={t("admin:adminIntakes.filter.statusLabel")}
           options={statusOptions}
           value={status}
@@ -58,12 +67,7 @@ export function AdminInquiriesBrowse() {
             setStatus((value as AdminInquiryStatusFilter | null) ?? "all")
           }
         />
-        <p className={styles.filterNote}>
-          {t("admin:adminIntakes.inquiryWaitingNote", {
-            count: query.unhandledCount,
-          })}
-        </p>
-      </div>
+      </AdminToolbar>
       <AdminInquiryList query={query} />
     </>
   );

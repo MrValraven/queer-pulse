@@ -6,38 +6,25 @@
 
 .intro {
   max-width: 60ch;
-  margin: 0 0 16px;
+  margin: var(--admin-header-gap) 0 16px;
   font-family: var(--serif);
   font-size: var(--text-16);
   line-height: 1.5;
   color: var(--ink-60);
 }
 
-.searchRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 14px;
-}
-
-.search {
-  flex: 1 1 260px;
-  max-width: 360px;
+/* The decided tab's bar sits one gap under the intro paragraph. */
+.toolbar {
+  margin-top: var(--gap-sm);
 }
 
 /* Says out loud that the filter only reaches the rows already loaded, so a
    reviewer never reads an empty result as "this person never applied". */
 .scopeNote {
-  margin: 0;
-  font-size: var(--text-12-5);
+  margin: 8px 0 0;
+  font-size: var(--text-13);
   line-height: 1.45;
-  color: var(--ink-40);
-}
-
-/* Bucket chips under the search: who still has a link waiting on them, who
-   already came in, and who was declined. */
-.filters {
-  margin-top: 14px;
+  color: var(--ink-60);
 }
 
 .filterCount {
@@ -225,16 +212,14 @@
 /* The one action the link's state allows (reissue a lapsed link, revoke a live
    one), set apart from the copy tools above by a hairline so a destructive
    press never sits flush against a copy button. */
-.inviteActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 10px;
+.inviteActions[data-admin-row-actions] {
+  justify-content: flex-start;
   padding-top: 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 /* Same dark-mode hairline the shared row border switches to. */
-:global([data-theme="dark"]) .inviteActions {
+:global([data-theme="dark"]) .inviteActions[data-admin-row-actions] {
   border-top-color: rgba(var(--cream-rgb), 0.1);
 }
 

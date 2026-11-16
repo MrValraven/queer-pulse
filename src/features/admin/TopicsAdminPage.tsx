@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiHash, FiPlus } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -7,7 +8,13 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminModal, AdminPageHeader } from "./ui";
+import {
+  AdminEmptyState,
+  AdminModal,
+  AdminNotice,
+  AdminPageHeader,
+  AdminPanel,
+} from "./ui";
 import {
   useAdminTopics,
   useDeleteTopic,
@@ -97,7 +104,7 @@ export function TopicsAdminPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:topics.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:topics.title"
@@ -111,7 +118,7 @@ export function TopicsAdminPage() {
               size="md"
               onClick={() => setFormMode({ kind: "create" })}
             >
-              {t("admin:topics.newCta")}
+              <FiPlus aria-hidden /> {t("admin:topics.newCta")}
             </Button>
           }
         />
@@ -128,24 +135,22 @@ export function TopicsAdminPage() {
           ))}
         </div>
       ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
-            {isForbidden
-              ? t("admin:common.panelForbidden")
-              : t("admin:topics.loadError")}
-          </p>
-        </div>
+        <AdminNotice tone="error">
+          {isForbidden
+            ? t("admin:common.panelForbidden")
+            : t("admin:topics.loadError")}
+        </AdminNotice>
       ) : topics.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>{t("admin:topics.empty")}</p>
-        </div>
+        <AdminEmptyState icon={FiHash} title={t("admin:topics.empty")} />
       ) : (
-        <TopicsAdminRows
-          topics={topics}
-          onEdit={(topic) => setFormMode({ kind: "edit", topic })}
-          onSetArchived={setArchived}
-          onDelete={setDeleteTarget}
-        />
+        <AdminPanel padding="flush" isOverflowVisible>
+          <TopicsAdminRows
+            topics={topics}
+            onEdit={(topic) => setFormMode({ kind: "edit", topic })}
+            onSetArchived={setArchived}
+            onDelete={setDeleteTarget}
+          />
+        </AdminPanel>
       )}
 
       {formMode && (

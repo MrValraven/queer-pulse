@@ -1,7 +1,14 @@
+/* The picker sits in the page toolbar. Its root takes no box of its own, so the
+   search field is a toolbar item and the results list wraps onto the line
+   below it. */
 .picker {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: contents;
+}
+
+.results,
+.empty {
+  flex: 1 0 100%;
+  max-width: 420px;
 }
 
 .results {

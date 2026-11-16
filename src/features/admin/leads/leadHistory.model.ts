@@ -9,6 +9,44 @@ export interface LeadHistoryLine {
 }
 
 export const LEAD_UNKNOWN_AUTHOR_KEY = "admin:leads.history.unknownAuthor";
+export const LEAD_UNKNOWN_SUBJECT_KEY = "admin:leads.history.unknownSubject";
+
+/** The keys an assign or unassign line reads, by who it names. */
+const ASSIGNEE_LINE_KEYS = {
+  assignee_added: {
+    other: "admin:leads.history.assigneeAdded",
+    self: "admin:leads.history.assigneeAddedSelf",
+  },
+  assignee_removed: {
+    other: "admin:leads.history.assigneeRemoved",
+    self: "admin:leads.history.assigneeRemovedSelf",
+  },
+} as const;
+
+/** The subject's name, or "" when the account is gone or its name blank. */
+function subjectNameOf(entry: LeadEntryDTO): string {
+  return entry.subject?.displayName.trim() ?? "";
+}
+
+/** An assign or unassign line: the Self variant when the author put
+ *  themselves in or out of charge, else the line naming both people. */
+function assigneeChangeLineOf(
+  entry: LeadEntryDTO,
+  kind: keyof typeof ASSIGNEE_LINE_KEYS,
+  author: string,
+  translate: (key: string) => string,
+): LeadHistoryLine {
+  const keys = ASSIGNEE_LINE_KEYS[kind];
+  const isSelf =
+    entry.author !== null &&
+    entry.subject !== null &&
+    entry.author.id === entry.subject.id;
+  if (isSelf) return { key: keys.self, values: { author } };
+  const subjectName = subjectNameOf(entry);
+  const subject =
+    subjectName === "" ? translate(LEAD_UNKNOWN_SUBJECT_KEY) : subjectName;
+  return { key: keys.other, values: { author, subject } };
+}
 
 /**
  * The line a stage or persona entry reads. Notes return null: the note item
@@ -16,7 +54,9 @@ export const LEAD_UNKNOWN_AUTHOR_KEY = "admin:leads.history.unknownAuthor";
  * available" line with no persona name; an author whose account is gone, or
  * whose name is blank, reads the unknown author line. A stage line missing
  * the stage it names, and a kind this build does not know, also return null,
- * so a malformed entry never prints an empty label.
+ * so a malformed entry never prints an empty label. An assignee whose
+ * account is gone, or whose name is blank, reads the unknown subject line;
+ * the access-ended line names no author, since that change was automatic.
  */
 export function leadHistoryLineOf(
   entry: LeadEntryDTO,
@@ -62,6 +102,18 @@ export function leadHistoryLineOf(
             key: "admin:leads.history.personaUnlinked",
             values: { author, persona: entry.persona.displayName },
           };
+    case "assignee_added":
+    case "assignee_removed":
+      return assigneeChangeLineOf(entry, entry.kind, author, translate);
+    case "assignee_access_ended": {
+      const subjectName = subjectNameOf(entry);
+      return subjectName === ""
+        ? { key: "admin:leads.history.assigneeAccessEndedGone", values: {} }
+        : {
+            key: "admin:leads.history.assigneeAccessEnded",
+            values: { subject: subjectName },
+          };
+    }
     default:
       // A kind a newer server sends that this build does not know yet.
       return null;

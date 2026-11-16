@@ -6,7 +6,12 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { AdminStudioFoundingArtistDTO } from "./api/studioLandingAdmin.api";
-import { AdminAvatar, AdminChip } from "./ui";
+import {
+  AdminAvatar,
+  AdminChip,
+  AdminRowActions,
+  adminRowActionClasses,
+} from "./ui";
 import { useStudioAdminReorderRow } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminFounding.module.css";
 
@@ -112,7 +117,7 @@ export function StudioAdminFoundingRow({
           )}
         </div>
       </div>
-      <div className={css.actions}>
+      <AdminRowActions className={css.actions}>
         <Button
           ref={moveUpRef}
           variant="ghost"
@@ -121,7 +126,7 @@ export function StudioAdminFoundingRow({
           aria-disabled={isBusy || isFirst || undefined}
           onClick={moveUp}
         >
-          <FiArrowUp aria-hidden /> {t("admin:studioAdmin.moveUpCta")}
+          <FiArrowUp aria-hidden />
         </Button>
         <Button
           ref={moveDownRef}
@@ -133,9 +138,10 @@ export function StudioAdminFoundingRow({
           aria-disabled={isBusy || isLast || undefined}
           onClick={moveDown}
         >
-          <FiArrowDown aria-hidden /> {t("admin:studioAdmin.moveDownCta")}
+          <FiArrowDown aria-hidden />
         </Button>
         <Button
+          className={adminRowActionClasses.danger}
           variant="ghost"
           size="sm"
           aria-label={t("admin:studioAdmin.founding.removeLabel", {
@@ -149,7 +155,7 @@ export function StudioAdminFoundingRow({
         >
           <FiX aria-hidden /> {t("admin:studioAdmin.founding.removeCta")}
         </Button>
-      </div>
+      </AdminRowActions>
     </m.li>
   );
 }

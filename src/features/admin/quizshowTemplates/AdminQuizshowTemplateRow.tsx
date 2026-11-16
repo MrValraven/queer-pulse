@@ -4,7 +4,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { formatRelative } from "../../../shared/lib/date";
 import { templateCardTitleOf } from "../../quizshow/templates/quizshowTemplateResponse";
-import { AdminChip } from "../ui";
+import { AdminChip, adminTableClasses } from "../ui";
 import { AdminQuizshowTemplateRowActions } from "./AdminQuizshowTemplateRowActions";
 import {
   TEMPLATE_STATUS_LABEL_KEYS,
@@ -36,7 +36,7 @@ export function AdminQuizshowTemplateRow({
         });
 
   return (
-    <article className={styles.card}>
+    <article className={`${adminTableClasses.row} ${styles.card}`}>
       <div className={styles.cardTop}>
         <h2 id={titleId} className={styles.title}>
           {cardTitle === "" ? t("quizshow:templates.row.untitled") : cardTitle}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import { AdminIntakeList } from "./AdminIntakeList";
 import { intakeKindLabel } from "./adminIntakeLabels";
 import {
@@ -12,7 +13,7 @@ import {
   ADMIN_INTAKE_KINDS,
   ADMIN_INTAKE_STATUSES,
 } from "./api/adminIntakes.api";
-import styles from "./AdminSubmissionList.module.css";
+import styles from "./AdminIntakes.module.css";
 
 /**
  * The browse view: every intake row in the table, narrowed by kind and by triage
@@ -43,9 +44,13 @@ export function AdminIntakesBrowse() {
 
   return (
     <>
-      <div className={styles.filterBar}>
+      <AdminToolbar
+        className={styles.toolbar}
+        label={t("admin:adminIntakes.tab.intakes")}
+      >
         <Select
           size="sm"
+          className={adminToolbarClasses.select}
           label={t("admin:adminIntakes.filter.kindLabel")}
           options={kindOptions}
           value={kind}
@@ -55,6 +60,7 @@ export function AdminIntakesBrowse() {
         />
         <Select
           size="sm"
+          className={adminToolbarClasses.select}
           label={t("admin:adminIntakes.filter.statusLabel")}
           options={statusOptions}
           value={status}
@@ -62,7 +68,7 @@ export function AdminIntakesBrowse() {
             setStatus((value as AdminIntakeStatusFilter | null) ?? "all")
           }
         />
-      </div>
+      </AdminToolbar>
       <AdminIntakeList query={query} />
     </>
   );

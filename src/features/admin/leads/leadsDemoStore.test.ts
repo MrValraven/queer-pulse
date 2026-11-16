@@ -62,6 +62,7 @@ function seedWithStageChange(stage: LeadStage): DemoLeadsSeed {
         links: [],
         followUpOffsetDays: null,
         linkedPersonaId: null,
+        assignees: [],
         entries: [
           {
             kind: "created",
@@ -106,7 +107,7 @@ describe("leadsDemoStore list", () => {
   });
 
   it("keeps not-now and on-board leads out of the due count and the due sort", () => {
-    expect(demoLeadDueCount()).toEqual({ count: 4 });
+    expect(demoListLeads(EMPTY_LEAD_FILTERS).dueCount).toBe(4);
     const dueNames = namesOf({ isDueOnly: true });
     expect(dueNames).toHaveLength(4);
     expect(dueNames).not.toContain("Rita Sol Produções");
@@ -389,7 +390,7 @@ describe("leadsDemoStore notes and delete", () => {
       status: 404,
       data: { code: "LEAD_NOT_FOUND" },
     });
-    expect(demoLeadDueCount()).toEqual({ count: 3 });
+    expect(demoLeadDueCount()).toEqual({ count: 2 });
   });
 
   it("searches personas by handle and flags linked ones", () => {

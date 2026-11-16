@@ -14,6 +14,7 @@ import type {
 import { StudioAdminLandingPhotoDialog } from "./StudioAdminLandingPhotoDialog";
 import { studioAdminSaveErrorKeyOf } from "./studioAdmin.model";
 import css from "./StudioAdminLandingCards.module.css";
+import { AdminPanel } from "./ui";
 
 /** The catalog line naming each slot. */
 const SLOT_LABEL_KEY: Record<StudioLandingPhotoSlot, string> = {
@@ -146,11 +147,12 @@ export function StudioAdminLandingPhotos({
   }
 
   return (
-    <section className={css.section} aria-labelledby={headingId}>
-      <h2 id={headingId} className={css.title}>
-        {t("admin:studioAdmin.landing.photos.heading")}
-      </h2>
-      <p className={css.sub}>{t("admin:studioAdmin.landing.photos.sub")}</p>
+    <AdminPanel
+      title={t("admin:studioAdmin.landing.photos.heading")}
+      titleId={headingId}
+      description={t("admin:studioAdmin.landing.photos.sub")}
+      bodyClassName={css.section}
+    >
       <ul className={css.photoGrid}>
         {PHOTO_SLOTS.map((slot) => (
           <PhotoTile
@@ -185,6 +187,6 @@ export function StudioAdminLandingPhotos({
         description={t("admin:studioAdmin.landing.photos.removeConfirm.body")}
         confirmLabel={t("admin:studioAdmin.landing.photos.removeCta")}
       />
-    </section>
+    </AdminPanel>
   );
 }

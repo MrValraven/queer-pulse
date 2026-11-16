@@ -6,7 +6,14 @@ import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
-import { AdminChip } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminNotice,
+  AdminPanel,
+  AdminRowActions,
+  adminTableClasses,
+} from "./ui";
 import {
   useAdminGroupListings,
   useSetGroupListingHidden,
@@ -19,7 +26,7 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * Group-listings moderation table, rendered below the join-request queue on the
  * admin housing-groups page. A moderator can hide a listing that breaks the
  * norms (hidden price, broker post, hate speech) and un-hide it if it was a
- * mistake — wired to useSetGroupListingHidden. Hiding is instant in the UI via
+ * mistake, through useSetGroupListingHidden. Hiding is instant in the UI via
  * query invalidation; it's a no-op in demo mode (the demo table is empty).
  *
  * Hide goes through `HideGroupListingDialog` (PRD-463): the server requires a
@@ -74,72 +81,80 @@ export function AdminGroupListingsSection() {
   if (isLoading) return null;
 
   return (
-    <div className={styles.joinRequests}>
-      <h2 className={styles.sectionTitle}>
-        {t("admin:housingGroups.listings.title")}
-      </h2>
-      <p className={styles.emptyText}>
-        {t("admin:housingGroups.listings.reviewQueueNote")}{" "}
-        <Link to={routes.adminHousingGroupListings}>
-          {t("admin:housingGroups.listings.reviewQueueCta")}
-          <FiArrowRight aria-hidden />
-        </Link>
-      </p>
-      {isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
-            {t("admin:housingGroups.listings.loadError")}
-          </p>
-        </div>
-      ) : listings.length === 0 ? (
-        <p className={styles.emptyText}>
-          {t("admin:housingGroups.listings.empty")}
-        </p>
-      ) : (
-        <div className={styles.rows}>
-          {listings.map((listing, index) => (
-            <FadeIn key={listing.id} delay={Math.min(index, 8) * 50}>
-              <div className={styles.row}>
-                <div className={styles.rowMain}>
-                  <div className={styles.rowTop}>
-                    <span className={styles.rowName}>{listing.title}</span>
-                    {listing.hidden && (
-                      <AdminChip tone="danger" dot>
-                        {t("admin:housingGroups.listings.hiddenChip")}
-                      </AdminChip>
-                    )}
-                    <AdminChip tone="plum">
-                      {listing.groupSlug ??
-                        t("admin:housingGroups.listings.noGroup")}
+    <div className={styles.section}>
+      <AdminPanel
+        title={t("admin:housingGroups.listings.title")}
+        description={
+          <>
+            {t("admin:housingGroups.listings.reviewQueueNote")}{" "}
+            <Link
+              to={routes.adminHousingGroupListings}
+              className={styles.panelLink}
+            >
+              {t("admin:housingGroups.listings.reviewQueueCta")}
+              <FiArrowRight aria-hidden />
+            </Link>
+          </>
+        }
+        padding="flush"
+      >
+        {isError ? (
+          <div className={styles.panelInset}>
+            <AdminNotice tone="error">
+              {t("admin:housingGroups.listings.loadError")}
+            </AdminNotice>
+          </div>
+        ) : listings.length === 0 ? (
+          <div className={styles.panelInset}>
+            <AdminEmptyState
+              size="inline"
+              title={t("admin:housingGroups.listings.empty")}
+            />
+          </div>
+        ) : (
+          listings.map((listing, index) => (
+            <FadeIn
+              key={listing.id}
+              delay={Math.min(index, 8) * 50}
+              className={`${adminTableClasses.row} ${styles.row}`}
+            >
+              <div className={styles.rowMain}>
+                <div className={styles.rowTop}>
+                  <span className={styles.rowName}>{listing.title}</span>
+                  {listing.hidden && (
+                    <AdminChip tone="danger" dot>
+                      {t("admin:housingGroups.listings.hiddenChip")}
                     </AdminChip>
-                  </div>
-                  <div className={styles.rowMeta}>
-                    {listing.neighbourhood} ·{" "}
-                    {t("admin:housingGroups.listings.perMonth", {
-                      price: listing.priceEuros,
-                    })}
-                  </div>
+                  )}
+                  <AdminChip tone="plum">
+                    {listing.groupSlug ??
+                      t("admin:housingGroups.listings.noGroup")}
+                  </AdminChip>
                 </div>
-                <div className={styles.rowActions}>
-                  <Button
-                    variant={listing.hidden ? "jade" : "ghost"}
-                    size="md"
-                    onClick={() =>
-                      listing.hidden
-                        ? unhide(listing)
-                        : setListingToHide(listing)
-                    }
-                  >
-                    {listing.hidden
-                      ? t("admin:housingGroups.listings.unhideCta")
-                      : t("admin:housingGroups.listings.hideCta")}
-                  </Button>
+                <div className={styles.rowMeta}>
+                  {listing.neighbourhood} ·{" "}
+                  {t("admin:housingGroups.listings.perMonth", {
+                    price: listing.priceEuros,
+                  })}
                 </div>
               </div>
+              <AdminRowActions className={styles.rowActions}>
+                <Button
+                  variant={listing.hidden ? "jade" : "ghost"}
+                  size="sm"
+                  onClick={() =>
+                    listing.hidden ? unhide(listing) : setListingToHide(listing)
+                  }
+                >
+                  {listing.hidden
+                    ? t("admin:housingGroups.listings.unhideCta")
+                    : t("admin:housingGroups.listings.hideCta")}
+                </Button>
+              </AdminRowActions>
             </FadeIn>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </AdminPanel>
       {listingToHide && (
         <HideGroupListingDialog
           listingTitle={listingToHide.title}

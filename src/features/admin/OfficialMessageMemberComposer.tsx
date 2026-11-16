@@ -9,6 +9,7 @@ import {
   type OfficialRecipientDTO,
 } from "./api/adminOfficialMessages.api";
 import { useSendOfficialMessage } from "./api/useAdminOfficialMessages";
+import { AdminPanel } from "./ui";
 import { OfficialMessageBodyField } from "./OfficialMessageBodyField";
 import { OfficialRecipientPicker } from "./OfficialRecipientPicker";
 import styles from "./AdminOfficialMessagesPage.module.css";
@@ -58,16 +59,13 @@ export function OfficialMessageMemberComposer() {
   };
 
   return (
-    <section
-      className={styles.panel}
-      aria-labelledby="official-member-composer-title"
+    <AdminPanel
+      title={t("admin:officialMessages.member.title")}
+      description={t("admin:officialMessages.member.subtitle")}
+      titleId="official-member-composer-title"
+      className={styles.composer}
+      bodyClassName={styles.composerBody}
     >
-      <h2 id="official-member-composer-title" className={styles.panelTitle}>
-        {t("admin:officialMessages.member.title")}
-      </h2>
-      <p className={styles.panelSub}>
-        {t("admin:officialMessages.member.subtitle")}
-      </p>
       <OfficialRecipientPicker selected={recipient} onSelect={setRecipient} />
       <OfficialMessageBodyField
         label={t("admin:officialMessages.member.bodyLabel")}
@@ -83,6 +81,6 @@ export function OfficialMessageMemberComposer() {
             : t("admin:officialMessages.member.send")}
         </Button>
       </div>
-    </section>
+    </AdminPanel>
   );
 }

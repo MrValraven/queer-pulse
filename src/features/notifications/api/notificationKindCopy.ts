@@ -34,6 +34,8 @@ export type LifecycleNotificationKind =
   | "community_role_changed"
   | "community_ownership_transferred"
   | "community_owner_review_requested"
+  // Staff duty mail: a staff member was put in charge of a lead.
+  | "lead_assigned"
   | "community_tag_request_resolved"
   // A host's announcement to a gathering's guests.
   | "event_announcement"
@@ -165,6 +167,8 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   // Staff duty mail that deep-links into a console, the same tab as
   // community_report_filed.
   community_owner_review_requested: "platform",
+  // Staff duty mail, the same tab as community_owner_review_requested.
+  lead_assigned: "platform",
   community_tag_request_resolved: "community",
   event_announcement: "events",
   // A gathering listed at the member's venue is gathering news.

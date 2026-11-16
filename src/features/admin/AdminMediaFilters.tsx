@@ -1,6 +1,12 @@
 import { FiUser, FiX } from "react-icons/fi";
 import { useId } from "react";
-import { FadeIn, SegmentedControl, Select } from "../../shared/components/ui";
+import {
+  FadeIn,
+  FilterChips,
+  IconButton,
+  Select,
+} from "../../shared/components/ui";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import { AdminMediaUploaderPicker } from "./AdminMediaUploaderPicker";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -38,7 +44,7 @@ export function AdminMediaFilters({
 
   return (
     <FadeIn delay={60} className={styles.filtersFade}>
-      <div className={styles.filters}>
+      <AdminToolbar label={t("shared:filterPage.filtersCta")}>
         <div className={styles.kindFilter}>
           <span className={styles.kindFilterLabel} id={kindLabelId}>
             {t("admin:media.kindFilterLabel")}
@@ -46,7 +52,7 @@ export function AdminMediaFilters({
           <Select
             size="sm"
             labelledBy={kindLabelId}
-            className={styles.kindSelect}
+            className={adminToolbarClasses.select}
             value={kind}
             onChange={(next) => onKindChange((next ?? "all") as AdminMediaKind)}
             options={ADMIN_MEDIA_KINDS.map((kindValue) => ({
@@ -58,43 +64,39 @@ export function AdminMediaFilters({
             disabled={uploaderFilter !== null}
           />
         </div>
-        <div className={styles.usageFilter}>
-          <SegmentedControl
-            label={t("admin:media.usage.filterAriaLabel")}
-            value={usage}
-            onChange={(next) => onUsageChange(next as AdminMediaUsage)}
-            options={[
-              { value: "all", label: t("admin:media.usage.all") },
-              { value: "in-use", label: t("admin:media.usage.inUse") },
-              { value: "unused", label: t("admin:media.usage.unused") },
-            ]}
-          />
-        </div>
-        <div className={styles.uploaderRow}>
-          {uploaderFilter ? (
-            <div className={styles.activeFilter}>
-              <span className={styles.activeFilterLabel}>
-                <FiUser aria-hidden />
-                <Translation
-                  i18nKey="admin:media.filterByUploader.activePill"
-                  values={{ name: uploaderFilter.displayName }}
-                  components={{ strong: <strong /> }}
-                />
-              </span>
-              <button
-                type="button"
-                className={styles.activeFilterClear}
-                onClick={() => onUploaderFilterChange(null)}
-                aria-label={t("admin:media.filterByUploader.clearAria")}
-              >
-                <FiX aria-hidden />
-              </button>
-            </div>
-          ) : (
-            <AdminMediaUploaderPicker onPick={onUploaderFilterChange} />
-          )}
-        </div>
-      </div>
+        <FilterChips
+          className={adminToolbarClasses.chips}
+          label={t("admin:media.usage.filterAriaLabel")}
+          value={usage}
+          onChange={(next) => onUsageChange(next as AdminMediaUsage)}
+          options={[
+            { value: "all", label: t("admin:media.usage.all") },
+            { value: "in-use", label: t("admin:media.usage.inUse") },
+            { value: "unused", label: t("admin:media.usage.unused") },
+          ]}
+        />
+        {uploaderFilter ? (
+          <div className={styles.activeFilter}>
+            <span className={styles.activeFilterLabel}>
+              <FiUser aria-hidden />
+              <Translation
+                i18nKey="admin:media.filterByUploader.activePill"
+                values={{ name: uploaderFilter.displayName }}
+                components={{ strong: <strong /> }}
+              />
+            </span>
+            <IconButton
+              size="sm"
+              aria-label={t("admin:media.filterByUploader.clearAria")}
+              onClick={() => onUploaderFilterChange(null)}
+            >
+              <FiX aria-hidden />
+            </IconButton>
+          </div>
+        ) : (
+          <AdminMediaUploaderPicker onPick={onUploaderFilterChange} />
+        )}
+      </AdminToolbar>
     </FadeIn>
   );
 }

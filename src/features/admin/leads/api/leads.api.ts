@@ -10,6 +10,7 @@ import type {
   LeadListFilters,
   LeadListPageDTO,
   LeadPersonaSearchResultDTO,
+  LeadStaffSummaryDTO,
   UpdateLeadBody,
 } from "./leads.types";
 
@@ -39,6 +40,7 @@ export const getLeads = (
   if (filters.stage !== null) params.set("stage", filters.stage);
   if (filters.type !== null) params.set("type", filters.type);
   if (filters.isDueOnly) params.set("due", "true");
+  if (filters.assignedTo !== null) params.set("assignedTo", filters.assignedTo);
   if (cursor !== null) params.set("cursor", cursor);
   const queryString = params.toString();
   return apiGet<LeadListPageDTO>(
@@ -49,7 +51,8 @@ export const getLeads = (
   );
 };
 
-/** GET /admin/leads/due-count: open leads whose follow-up is today or past. */
+/** GET /admin/leads/due-count: open leads whose follow-up is today or past
+ *  that are the caller's or nobody's. */
 export const getLeadDueCount = (
   signal?: AbortSignal,
 ): Promise<{ count: number }> =>
@@ -128,3 +131,41 @@ export const searchLeadPersonas = async (
       signal,
     )
   ).items;
+
+/** `GET /admin/leads/staff` answers with a wrapped list. */
+interface LeadStaffSearchResponseDTO {
+  items: LeadStaffSummaryDTO[];
+}
+
+/** GET /admin/leads/staff?q=: staff who can hold a lead. A blank query sends
+ *  no `q` and answers the short preview list. */
+export const searchLeadStaff = async (
+  query: string,
+  signal?: AbortSignal,
+): Promise<LeadStaffSummaryDTO[]> => {
+  const staffPath = `${LEADS_PATH}/staff`;
+  const path =
+    query.trim() === ""
+      ? staffPath
+      : `${staffPath}?q=${encodeURIComponent(query)}`;
+  return (
+    await apiGet<LeadStaffSearchResponseDTO>(path, undefined, undefined, signal)
+  ).items;
+};
+
+/** POST /admin/leads/:id/assignees: puts a staff member in charge. */
+export const assignLeadStaff = (
+  leadId: string,
+  body: { userId: string },
+): Promise<LeadDTO> =>
+  apiPost<LeadDTO>(`${leadPathOf(leadId)}/assignees`, body);
+
+/** DELETE /admin/leads/:id/assignees/:userId: takes a staff member off the
+ *  lead. */
+export const unassignLeadStaff = (
+  leadId: string,
+  userId: string,
+): Promise<LeadDTO> =>
+  apiDelete<LeadDTO>(
+    `${leadPathOf(leadId)}/assignees/${encodeURIComponent(userId)}`,
+  );

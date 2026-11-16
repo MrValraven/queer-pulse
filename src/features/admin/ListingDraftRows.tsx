@@ -10,7 +10,7 @@ import {
   PILL_LABEL_KEYS,
   TOTAL_STEPS,
 } from "../marketing/listBusiness/listBusiness.data";
-import { AdminChip, AdminAvatar, type AvatarTone } from "./ui";
+import { AdminChip, AdminAvatar, AdminRowActions, type AvatarTone } from "./ui";
 import { ListingDraftMessageModal } from "./ListingDraftMessageModal";
 import { teamListingFromDraftPath } from "./listingDraftHandover";
 import {
@@ -112,17 +112,17 @@ function ListingDraftRow({
           </span>
         </div>
       </div>
-      <div className={styles.rowActions}>
+      <AdminRowActions className={styles.rowActions}>
         {owner && (
           <>
             <Button
               variant="ghost"
-              size="md"
+              size="sm"
               to={`${routes.members}/${owner.slug}`}
             >
               {t("admin:listingDrafts.profileCta")}
             </Button>
-            <Button variant="jade" size="md" onClick={() => onMessage(draft)}>
+            <Button variant="jade" size="sm" onClick={() => onMessage(draft)}>
               <FiMessageCircle aria-hidden />
               {t("admin:listingDrafts.messageCta", { name: owner.firstName })}
             </Button>
@@ -133,13 +133,13 @@ function ListingDraftRow({
             adds their own answers when they accept. */}
         <Button
           variant="ghost"
-          size="md"
+          size="sm"
           to={teamListingFromDraftPath(draft.id)}
         >
           <FiEdit3 aria-hidden />
           {t("admin:listingDrafts.finishCta")}
         </Button>
-      </div>
+      </AdminRowActions>
     </div>
   );
 }

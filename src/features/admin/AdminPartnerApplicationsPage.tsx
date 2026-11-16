@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiInbox } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { AdminPageHeader } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader } from "./ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
@@ -122,7 +123,7 @@ export function AdminPartnerApplicationsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:partners.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.partners")}
           title={
             <Translation
               i18nKey="admin:partners.header.title"
@@ -144,13 +145,11 @@ export function AdminPartnerApplicationsPage() {
           ))}
         </div>
       ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
-            {forbidden
-              ? t("admin:partners.forbidden")
-              : t("admin:partners.loadError")}
-          </p>
-        </div>
+        <AdminNotice tone="error">
+          {forbidden
+            ? t("admin:partners.forbidden")
+            : t("admin:partners.loadError")}
+        </AdminNotice>
       ) : (
         <>
           {/* Above the queue rather than inside it: "Assigned to me" can
@@ -232,21 +231,20 @@ function Queue({
   const { t } = useTranslation();
   if (views.length === 0) {
     return (
-      <div className={styles.empty}>
-        <p className={styles.emptyText}>
-          {t(
-            isFiltered
-              ? "admin:partners.emptyFiltered"
-              : "admin:partners.emptyText",
-          )}
-        </p>
-      </div>
+      <AdminEmptyState
+        size="inline"
+        icon={FiInbox}
+        title={t(
+          isFiltered
+            ? "admin:partners.emptyFiltered"
+            : "admin:partners.emptyText",
+        )}
+      />
     );
   }
   return (
     <>
-      <p className={styles.intro}>{t("admin:partners.intro")}</p>
-      <div className={styles.grid}>
+      <div className={`${styles.grid} ${styles.queueGrid}`}>
         {views.map((view, index) => (
           <FadeIn key={view.id} delay={index * 60}>
             <AdminPartnerApplicationCard

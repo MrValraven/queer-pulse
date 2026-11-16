@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { FiActivity, FiEdit3, FiFileText, FiPlus } from "react-icons/fi";
-import {
-  FadeIn,
-  Button,
-  SkeletonLine,
-  StatGrid,
-  StatTile,
-} from "../../shared/components/ui";
+import { FadeIn, Button } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
@@ -28,7 +22,10 @@ import type {
 } from "./api/adminGovernanceFinances.api";
 import { financeAmountOrZero } from "./adminFinanceAmount";
 import { parseQuarter } from "../governance/governanceQuarter";
+import { AdminEmptyState, AdminStat, AdminStatTiles, AdminToolbar } from "./ui";
 import styles from "./AdminGovernancePage.module.css";
+import { formatEuro } from "./adminEuro";
+import phone from "./adminPhoneActions.module.css";
 
 /**
  * One headline figure on the Finances tab. `value` is the figure the tile rolls
@@ -88,6 +85,14 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStatTile[] {
   ];
 }
 
+/** The four headline labels, in tile order, for the loading tiles. */
+const FINANCE_STAT_LABEL_KEYS = [
+  "governance.finances.stat.sustainerMrr",
+  "governance.finances.stat.totalIncome",
+  "governance.finances.stat.surplus",
+  "governance.finances.stat.solidarity",
+] as const;
+
 /** Which Finances dialog is open, if any. */
 type FinancesDialog = "figures" | "report" | "quarter" | null;
 
@@ -98,12 +103,16 @@ export function AdminGovernanceFinances() {
   const closeDialog = () => setDialog(null);
 
   if (loading) {
-    return <FinancesSkeleton />;
+    return (
+      <div className={styles.finStack}>
+        <FinancesSkeleton />
+      </div>
+    );
   }
 
   if (!latest) {
     return (
-      <>
+      <div className={styles.finStack}>
         <FinancesEmpty onOpenQuarter={() => setDialog("quarter")} />
         {dialog === "quarter" && (
           <AdminGovernanceFinancesOpenQuarter
@@ -111,14 +120,14 @@ export function AdminGovernanceFinances() {
             onClose={closeDialog}
           />
         )}
-      </>
+      </div>
     );
   }
 
   const stats = buildFinanceStats(latest);
 
   return (
-    <>
+    <div className={styles.finStack}>
       <FinancesToolbar
         latest={latest}
         onEdit={openFigures}
@@ -126,13 +135,17 @@ export function AdminGovernanceFinances() {
         onOpenQuarter={() => setDialog("quarter")}
       />
 
-      <StatGrid columns={4} className={styles.statGrid}>
-        {stats.map((stat, index) => (
-          <FadeIn key={stat.labelKey} delay={index * 70}>
-            <FinanceStatCard stat={stat} onEdit={openFigures} />
-          </FadeIn>
-        ))}
-      </StatGrid>
+      <FadeIn>
+        <AdminStatTiles columns={4}>
+          {stats.map((stat) => (
+            <FinanceStatCard
+              key={stat.labelKey}
+              stat={stat}
+              onEdit={openFigures}
+            />
+          ))}
+        </AdminStatTiles>
+      </FadeIn>
 
       <FadeIn delay={120}>
         <AdminGovernanceChart history={history} />
@@ -184,7 +197,7 @@ export function AdminGovernanceFinances() {
           onClose={closeDialog}
         />
       )}
-    </>
+    </div>
   );
 }
 
@@ -212,7 +225,40 @@ function FinancesToolbar({
     : latest.quarter;
 
   return (
-    <div className={styles.finToolbar}>
+    <AdminToolbar
+      label={t("admin:governance.tabs.finances")}
+      end={
+        <>
+          <Button variant="ghost" onClick={onEdit}>
+            <FiEdit3 aria-hidden />
+            {t("admin:governance.finances.edit.cta")}
+          </Button>
+          {/* On a phone these two fold to their icons beside Edit figures,
+              so the three share one line; their words stay for screen
+              readers. */}
+          <Button
+            variant="ghost"
+            className={phone.iconButton}
+            onClick={onEditReport}
+          >
+            <FiFileText aria-hidden />
+            <span className={phone.label}>
+              {t("admin:governance.finances.report.cta")}
+            </span>
+          </Button>
+          <Button
+            variant="ghost"
+            className={phone.iconButton}
+            onClick={onOpenQuarter}
+          >
+            <FiPlus aria-hidden />
+            <span className={phone.label}>
+              {t("admin:governance.finances.quarter.cta")}
+            </span>
+          </Button>
+        </>
+      }
+    >
       <div className={styles.finToolbarStatus}>
         <span className={styles.finToolbarMeta}>
           {editorName && latest.editedAt
@@ -231,52 +277,39 @@ function FinancesToolbar({
           )}
         </span>
       </div>
-      <div className={styles.finToolbarActions}>
-        <Button variant="ghost" onClick={onEdit}>
-          <FiEdit3 aria-hidden />
-          {t("admin:governance.finances.edit.cta")}
-        </Button>
-        <Button variant="ghost" onClick={onEditReport}>
-          <FiFileText aria-hidden />
-          {t("admin:governance.finances.report.cta")}
-        </Button>
-        <Button variant="ghost" onClick={onOpenQuarter}>
-          <FiPlus aria-hidden />
-          {t("admin:governance.finances.quarter.cta")}
-        </Button>
-      </div>
-    </div>
+    </AdminToolbar>
   );
 }
 
 function FinancesSkeleton() {
+  const { t } = useTranslation();
   return (
-    <div className={styles.statGrid}>
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className={styles.statCard}>
-          <SkeletonLine width="60%" />
-          <SkeletonLine width="80%" height={28} style={{ marginTop: 8 }} />
-          <SkeletonLine width="70%" style={{ marginTop: 8 }} />
-        </div>
+    <AdminStatTiles columns={4}>
+      {FINANCE_STAT_LABEL_KEYS.map((labelKey) => (
+        <AdminStat
+          key={labelKey}
+          label={t(`admin:${labelKey}`)}
+          value={null}
+          isLoading
+        />
       ))}
-    </div>
+    </AdminStatTiles>
   );
 }
 
 function FinancesEmpty({ onOpenQuarter }: { onOpenQuarter: () => void }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.statCard}>
-      <span className={styles.statFoot}>
-        {t("admin:governance.finances.empty")}
-      </span>
-      <div>
+    <AdminEmptyState
+      icon={FiFileText}
+      title={t("admin:governance.finances.empty")}
+      action={
         <Button variant="ghost" onClick={onOpenQuarter}>
           <FiPlus aria-hidden />
           {t("admin:governance.finances.quarter.cta")}
         </Button>
-      </div>
-    </div>
+      }
+    />
   );
 }
 
@@ -301,7 +334,7 @@ function FinanceStatCard({
   const showPlaceholder = !demoMode && !isVerified(stat.source);
 
   return (
-    <StatTile
+    <AdminStat
       label={
         <span className={styles.statLabel}>
           {t(`admin:${labelKey}`)}
@@ -326,11 +359,7 @@ function FinanceStatCard({
           </span>
         )
       }
-      hint={
-        <span className={styles.statFoot}>
-          {t(`admin:${footKey}`, footValues)}
-        </span>
-      }
+      hint={t(`admin:${footKey}`, footValues)}
     />
   );
 }
@@ -390,7 +419,7 @@ function LiveMrrPanel({
           <div key={`${index}-${line.label}`} className={styles.panelStat}>
             <FiActivity className={styles.panelStatIco} aria-hidden />
             <span className={styles.panelStatVal}>
-              {fmt.currency(financeAmountOrZero(line.amount), "EUR")}
+              {formatEuro(fmt, financeAmountOrZero(line.amount))}
             </span>
             <span className={styles.panelStatLbl}>{line.label}</span>
           </div>

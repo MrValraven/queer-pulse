@@ -1,11 +1,17 @@
 import { useState } from "react";
+import { FiLayers } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
-import { AdminPageHeader, AdminModal } from "./ui";
+import {
+  AdminEmptyState,
+  AdminModal,
+  AdminNotice,
+  AdminPageHeader,
+} from "./ui";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
 import { useAdminOrgTiers } from "./api/useAdminOrgTiers";
@@ -84,7 +90,7 @@ export function AdminOrgTiersPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:partners.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.partners")}
           title={
             <Translation
               i18nKey="admin:orgTier.title"
@@ -105,7 +111,7 @@ export function AdminOrgTiersPage() {
       </FadeIn>
 
       {isLoading ? (
-        <div className={styles.rows}>
+        <div className={styles.skeletons}>
           {[0, 1, 2].map((skeletonIndex) => (
             <SkeletonLine
               key={skeletonIndex}
@@ -115,17 +121,13 @@ export function AdminOrgTiersPage() {
           ))}
         </div>
       ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
-            {forbidden
-              ? t("admin:common.panelForbidden")
-              : t("admin:orgTier.loadError")}
-          </p>
-        </div>
+        <AdminNotice tone="error">
+          {forbidden
+            ? t("admin:common.panelForbidden")
+            : t("admin:orgTier.loadError")}
+        </AdminNotice>
       ) : tiers.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>{t("admin:orgTier.empty")}</p>
-        </div>
+        <AdminEmptyState icon={FiLayers} title={t("admin:orgTier.empty")} />
       ) : (
         <AdminOrgTierRows
           tiers={tiers}

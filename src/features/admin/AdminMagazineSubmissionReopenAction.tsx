@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AdminMagazineSubmissionDTO } from "./api/adminMagazineSubmissions.api";
 import { useReopenMagazineSubmission } from "./api/useReopenMagazineSubmission";
 import styles from "./AdminSubmissionList.module.css";
+import { AdminRowActions } from "./ui";
 
 /**
  * The one route back from a decline on a reader story.
@@ -64,7 +65,7 @@ export function AdminMagazineSubmissionReopenAction({
 
   return (
     <div className={styles.rowActions}>
-      <div className={styles.rowActionButtons}>
+      <AdminRowActions>
         <Button
           variant="ghost"
           size="sm"
@@ -74,7 +75,7 @@ export function AdminMagazineSubmissionReopenAction({
           <FiRotateCcw aria-hidden />{" "}
           {t("admin:adminMagazineSubmissions.reopen.cta")}
         </Button>
-      </div>
+      </AdminRowActions>
 
       <ConfirmDialog
         open={isConfirmOpen}

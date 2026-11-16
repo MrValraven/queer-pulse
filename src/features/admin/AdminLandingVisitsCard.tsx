@@ -7,7 +7,7 @@ import { describeError } from "../../shared/api/errorMessage";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { AdminSeg } from "./ui";
+import { AdminNotice, AdminSeg } from "./ui";
 import { AdminLandingVisitsChart } from "./AdminLandingVisitsChart";
 import { AdminLandingVisitsSources } from "./AdminLandingVisitsSources";
 import { useAdminLandingVisits } from "./api/useAdminLandingVisits";
@@ -107,28 +107,32 @@ export function AdminLandingVisitsCard() {
       empty={isEmpty ? t("admin:dashboard.landingVisits.empty") : false}
     >
       <Collapse isOpen={hasLoadError}>
-        {/* A status region, like the dashboard header's error panel: the
-            Retry label flipping back after a second failure is spoken
-            without moving focus. */}
-        <div role="status" className={styles.loadError}>
-          <p className={styles.loadErrorText}>
+        {/* The kit's error notice is an alert region: the Retry label
+            flipping back after a second failure is announced without moving
+            focus. */}
+        <div className={styles.loadError}>
+          <AdminNotice
+            tone="error"
+            action={
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-disabled={isRetrying || undefined}
+                onClick={isRetrying ? undefined : () => void refetch()}
+              >
+                <FiRefreshCw aria-hidden />{" "}
+                {isRetrying
+                  ? t("shared:loadError.retryingCta")
+                  : t("admin:dashboard.landingVisits.retry")}
+              </Button>
+            }
+          >
             {describeError(
               t("admin:dashboard.landingVisits.loadError"),
               error,
               t("shared:apiError.tryAgainTail"),
             )}
-          </p>
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-disabled={isRetrying || undefined}
-            onClick={isRetrying ? undefined : () => void refetch()}
-          >
-            <FiRefreshCw aria-hidden />{" "}
-            {isRetrying
-              ? t("shared:loadError.retryingCta")
-              : t("admin:dashboard.landingVisits.retry")}
-          </Button>
+          </AdminNotice>
         </div>
       </Collapse>
       <Collapse isOpen={hasContent} className={styles.content}>

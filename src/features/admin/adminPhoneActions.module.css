@@ -1,0 +1,55 @@
+/* Phone folding for a row of secondary actions (page headers, template rows,
+   quick links). Under 480px a long run of buttons stacks one per line and
+   pushes the content down a screen; these classes keep the primary action
+   whole and fold the rest into one compact line. */
+
+/* A secondary action's words. Under 480px they stay for screen readers only,
+   so the button shows its icon and keeps its accessible name. */
+@media (max-width: 479.98px) {
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  /* The button that holds a hidden label: no gap beside the lone icon, and
+     a square at the touch size. */
+  .iconButton.iconButton {
+    gap: 0;
+    min-width: var(--tap-min);
+    padding-inline: 0;
+  }
+}
+
+/* A row of links or chips that scrolls sideways on one line under 480px,
+   fading at the end so the cut reads as "more this way". The spacer after
+   the last item lets it scroll clear of the fade. */
+@media (max-width: 479.98px) {
+  .scrollRow {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    mask-image: linear-gradient(
+      to right,
+      black calc(100% - var(--admin-strip-fade)),
+      transparent
+    );
+  }
+  .scrollRow::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollRow::after {
+    content: "";
+    flex: 0 0 var(--admin-strip-fade);
+  }
+  .scrollRow > * {
+    flex: none;
+  }
+}

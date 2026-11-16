@@ -6,6 +6,7 @@ import {
 } from "../../subprofiles/data/subprofiles.data";
 import { demoPersonaPublicState } from "../../subprofiles/personaWallDemoStore";
 import {
+  LEAD_LIST_ASSIGNEES_SHOWN,
   LEAD_LIST_LINKS_SHOWN,
   LEAD_PERSONA_SEARCH_LIMIT,
   type LeadDTO,
@@ -17,11 +18,17 @@ import {
   type LeadPersonaDTO,
   type LeadPersonaSearchResultDTO,
   type LeadStage,
+  type LeadStaffSummaryDTO,
   type LeadType,
 } from "./api/leads.types";
 import { isLeadFollowUpDue, shiftLeadDay } from "./leadDates";
-import { DEMO_LEAD_AUTHORS, type DemoLeadRecord } from "./leadsDemo.data";
+import {
+  DEMO_LEAD_AUTHORS,
+  DEMO_LEAD_VIEWER_ID,
+  type DemoLeadRecord,
+} from "./leadsDemo.data";
 import type { LeadClashCandidate } from "./leadsDemoRules";
+import { demoStaffSummaryOf } from "./leadsDemoStaff";
 
 // The demo leads store's records and how they read on the wire: the seed
 // turned into stored records, and stored records turned into the contract's
@@ -34,6 +41,8 @@ export interface StoredEntry {
   fromStage: LeadStage | null;
   toStage: LeadStage | null;
   personaId: string | null;
+  /** The person an assignee line names; null on every other kind. */
+  subjectId: string | null;
   author: LeadEntryAuthorDTO | null;
   createdAt: string;
   editedAt: string | null;
@@ -47,6 +56,8 @@ export interface StoredLead extends LeadClashCandidate {
   followUpOn: string | null;
   createdAt: string;
   updatedAt: string;
+  /** Staff ids in charge, oldest assignment first. */
+  assignees: string[];
   entries: StoredEntry[];
 }
 
@@ -119,7 +130,7 @@ function seedAuthorOf(authorId: string | null): LeadEntryAuthorDTO | null {
 
 /** The demo viewer, an Admin, writes every new line. */
 export const viewerAuthor = (): LeadEntryAuthorDTO => ({
-  id: String(currentUser.id),
+  id: DEMO_LEAD_VIEWER_ID,
   displayName: `${currentUser.first} ${currentUser.last}`,
   avatarUrl: currentUser.photo ?? null,
   avatarCrop: null,
@@ -144,6 +155,7 @@ export function seededLead(
       fromStage: entry.fromStage ?? null,
       toStage: entry.toStage ?? null,
       personaId: entry.personaId ?? null,
+      subjectId: entry.subjectId ?? null,
       author: seedAuthorOf(entry.authorId),
       createdAt: stampOf(entry.daysAgo),
       editedAt: entry.isEdited ? stampOf(Math.max(entry.daysAgo - 1, 0)) : null,
@@ -152,6 +164,7 @@ export function seededLead(
   return {
     ...fields,
     links: [...fields.links],
+    assignees: [...fields.assignees],
     followUpOn:
       followUpOffsetDays === null
         ? null
@@ -187,7 +200,16 @@ function linkedPersonaOf(lead: StoredLead): LeadLinkedPersonaDTO | null {
 const isPersonaKind = (kind: LeadEntryKind) =>
   kind === "persona_linked" || kind === "persona_unlinked";
 
-const toEntryDTO = ({ personaId, ...entry }: StoredEntry): LeadEntryDTO => {
+const isAssigneeKind = (kind: LeadEntryKind) =>
+  kind === "assignee_added" ||
+  kind === "assignee_removed" ||
+  kind === "assignee_access_ended";
+
+const toEntryDTO = ({
+  personaId,
+  subjectId,
+  ...entry
+}: StoredEntry): LeadEntryDTO => {
   const persona = isPersonaKind(entry.kind)
     ? findPersona(personaId)
     : undefined;
@@ -195,8 +217,19 @@ const toEntryDTO = ({ personaId, ...entry }: StoredEntry): LeadEntryDTO => {
     ...entry,
     persona: persona ? toLeadPersona(persona) : null,
     canEdit: entry.kind === "note",
+    subject:
+      isAssigneeKind(entry.kind) && subjectId !== null
+        ? demoStaffSummaryOf(subjectId)
+        : null,
   };
 };
+
+/** Every assignee whose account still resolves, oldest assignment first. */
+const assigneeSummariesOf = (lead: StoredLead): LeadStaffSummaryDTO[] =>
+  lead.assignees.flatMap((userId) => {
+    const summary = demoStaffSummaryOf(userId);
+    return summary ? [summary] : [];
+  });
 
 /** History order: the newest stamp first, then the higher id. */
 export const newestFirst = (first: StoredEntry, second: StoredEntry): number =>
@@ -205,17 +238,24 @@ export const newestFirst = (first: StoredEntry, second: StoredEntry): number =>
 
 /** `LeadDTO`: every link and every line, newest first. */
 export function toLeadDTO(lead: StoredLead, today: string): LeadDTO {
-  const { linkedPersonaId: _personaId, entries, ...fields } = lead;
+  const {
+    linkedPersonaId: _personaId,
+    entries,
+    assignees: _assigneeIds,
+    ...fields
+  } = lead;
   return {
     ...fields,
     links: [...lead.links],
     isFollowUpDue: isDueLead(lead, today),
     linkedPersona: linkedPersonaOf(lead),
     entries: [...entries].sort(newestFirst).map(toEntryDTO),
+    assignees: assigneeSummariesOf(lead),
   };
 }
 
-/** `LeadListItemDTO`: the first three links and the full count. */
+/** `LeadListItemDTO`: the first three links and assignees, with the full
+ *  counts. */
 export function toListItem(lead: StoredLead, today: string): LeadListItemDTO {
   const newestEntry = [...lead.entries].sort(newestFirst)[0];
   return {
@@ -232,6 +272,8 @@ export function toListItem(lead: StoredLead, today: string): LeadListItemDTO {
     noteCount: lead.entries.filter((entry) => entry.kind === "note").length,
     lastEntryAt: newestEntry?.createdAt ?? lead.createdAt,
     updatedAt: lead.updatedAt,
+    assignees: assigneeSummariesOf(lead).slice(0, LEAD_LIST_ASSIGNEES_SHOWN),
+    assigneeCount: lead.assignees.length,
   };
 }
 

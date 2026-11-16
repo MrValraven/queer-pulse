@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
+import { FiInfo } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { communityPath } from "../../app/routeMap";
 import { AdminBanEvasionFlag } from "./AdminBanEvasionFlag";
-import { AdminChip } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminNotice,
+  AdminPanel,
+  AdminRowActions,
+} from "./ui";
 import { AdminBanEvasionEscalationOutcome } from "./AdminBanEvasionEscalationOutcome";
 import {
   hasRenderableAssessment,
@@ -48,44 +55,46 @@ export function AdminBanEvasionEscalationCard({
     : t("admin:banEvasionEscalations.moderatorErased");
   const isOpen = escalation.status === "open";
 
+  const subjectTitle =
+    escalation.subject && subjectName ? (
+      <Link
+        to={`/members/${escalation.subject.slug}`}
+        className={styles.subjectLink}
+      >
+        {subjectName}
+      </Link>
+    ) : (
+      t("admin:banEvasionEscalations.subjectErased")
+    );
+
   return (
-    <article className={styles.card}>
-      <div className={styles.cardHead}>
-        <div className={styles.cardHeadText}>
-          <h3 className={styles.subject}>
-            {escalation.subject && subjectName ? (
-              <Link
-                to={`/members/${escalation.subject.slug}`}
-                className={styles.subjectLink}
-              >
-                {subjectName}
-              </Link>
-            ) : (
-              t("admin:banEvasionEscalations.subjectErased")
-            )}
-          </h3>
-          <p className={styles.meta}>
+    <AdminPanel
+      title={subjectTitle}
+      description={
+        <>
+          <span className={styles.headLine}>
             {t("admin:banEvasionEscalations.raisedBy", {
               name: raisedByName,
               date: raisedOn,
             })}
-          </p>
-          <p className={styles.meta}>
+          </span>
+          <span className={styles.headLine}>
             <Link
               to={communityPath(escalation.communitySlug)}
               className={styles.subjectLink}
             >
               {escalation.communityName}
             </Link>
-          </p>
-        </div>
-        <div className={styles.chipRow}>
-          <AdminChip tone={isOpen ? "amber" : "jade"} dot>
-            {t(`admin:banEvasionEscalations.status.${escalation.status}`)}
-          </AdminChip>
-        </div>
-      </div>
-
+          </span>
+        </>
+      }
+      actions={
+        <AdminChip tone={isOpen ? "amber" : "jade"} dot>
+          {t(`admin:banEvasionEscalations.status.${escalation.status}`)}
+        </AdminChip>
+      }
+      bodyClassName={styles.cardBody}
+    >
       {escalation.note && (
         <div className={styles.section}>
           <p className={styles.sectionTerm}>
@@ -100,25 +109,31 @@ export function AdminBanEvasionEscalationCard({
           assessment={escalation.assessment ?? undefined}
           noteKey="admin:banEvasionEscalations.assessmentNote"
         />
-      ) : escalation.assessment === null ? (
-        <p className={`${styles.assessmentState} ${styles.assessmentUnknown}`}>
-          {t("admin:banEvasionEscalations.assessmentUnavailable")}
-        </p>
       ) : (
-        <p className={styles.assessmentState}>
-          {t("admin:banEvasionEscalations.assessmentClear")}
-        </p>
+        <div className={styles.assessmentState}>
+          {escalation.assessment === null ? (
+            <AdminEmptyState
+              size="inline"
+              icon={FiInfo}
+              title={t("admin:banEvasionEscalations.assessmentUnavailable")}
+            />
+          ) : (
+            <AdminNotice tone="success">
+              {t("admin:banEvasionEscalations.assessmentClear")}
+            </AdminNotice>
+          )}
+        </div>
       )}
 
       {isOpen ? (
-        <div className={styles.cardActions}>
+        <AdminRowActions className={styles.cardActions}>
           <Button variant="primary" size="sm" onClick={onResolve}>
             {t("admin:banEvasionEscalations.action.resolve")}
           </Button>
-        </div>
+        </AdminRowActions>
       ) : (
         <AdminBanEvasionEscalationOutcome escalation={escalation} />
       )}
-    </article>
+    </AdminPanel>
   );
 }

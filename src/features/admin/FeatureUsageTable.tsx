@@ -13,7 +13,12 @@ import type {
   AdminFeatureUsageDTO,
   ClassifiedFeature,
 } from "./api/adminFeatureUsage.api";
+import { AdminEmptyState, AdminTable, adminTableClasses } from "./ui";
 import styles from "./AdminFeatureUsagePage.module.css";
+
+/** Number columns: the kit's right-aligned tabular figures plus this page's
+ *  shrink-to-content width. */
+const NUMBER_CELL = `${adminTableClasses.numeric} ${styles.numberCell}`;
 
 /** The Reach column header: its label, an info button whose tooltip says
  *  what reach measures, and a quiet subline naming the earlier days every
@@ -100,20 +105,15 @@ export function FeatureUsageTable({
   };
 
   return (
+    // The stage is the size container the open detail panel measures
+    // (`100cqi`), and it dims and reports itself busy while a new range loads.
     <div
-      className={[styles.tableWrap, isStale && styles.tableWrapStale]
+      className={[styles.tableStage, isStale && styles.tableStageStale]
         .filter(Boolean)
         .join(" ")}
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the table scrolls horizontally, so the wrapper is deliberately focusable: without it a keyboard-only user cannot scroll to the reach and depth columns at all. Same justification as DeckViewer.tsx and MessageBubble.tsx.
-      tabIndex={0}
-      role="region"
-      aria-label={t("admin:featureUsage.table.caption")}
       aria-busy={isStale}
     >
-      <table className={styles.table}>
-        <caption className={styles.srOnly}>
-          {t("admin:featureUsage.table.caption")}
-        </caption>
+      <AdminTable label={t("admin:featureUsage.table.caption")} isBare>
         <thead>
           <tr>
             <th scope="col" className={styles.fitColumn}>
@@ -130,14 +130,18 @@ export function FeatureUsageTable({
             <th scope="col" className={styles.reachColumn}>
               <FeatureUsageReachHeader usageWindow={usageWindow} />
             </th>
-            <th scope="col" className={styles.numberCell}>
+            <th scope="col" className={NUMBER_CELL}>
               {t("admin:featureUsage.column.created")}
             </th>
-            <th scope="col" className={styles.numberCell}>
+            <th scope="col" className={NUMBER_CELL}>
               {t("admin:featureUsage.column.total")}
             </th>
-            <th scope="col" className={styles.srOnly}>
-              {t("admin:featureUsage.column.details")}
+            {/* The cell stays in the header band over the chevrons; only
+                its name is visually hidden. */}
+            <th scope="col" className={styles.expandCell}>
+              <span className={styles.srOnly}>
+                {t("admin:featureUsage.column.details")}
+              </span>
             </th>
           </tr>
         </thead>
@@ -145,7 +149,10 @@ export function FeatureUsageTable({
           {features.length === 0 ? (
             <tr>
               <td colSpan={6} className={styles.emptyCell}>
-                {t("admin:featureUsage.empty")}
+                <AdminEmptyState
+                  size="inline"
+                  title={t("admin:featureUsage.empty")}
+                />
               </td>
             </tr>
           ) : (
@@ -165,7 +172,7 @@ export function FeatureUsageTable({
             ))
           )}
         </tbody>
-      </table>
+      </AdminTable>
     </div>
   );
 }

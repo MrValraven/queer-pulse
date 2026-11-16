@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
+import { FiBook, FiPlus } from "react-icons/fi";
 import {
   Button,
   FadeIn,
   LoadErrorState,
+  SearchInput,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
@@ -10,7 +12,14 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminPanel,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import { useAdminGlossaryTerms } from "./api/useAdminResourceGuides";
 import { AdminGlossaryRows } from "./AdminGlossaryRows";
 import { AdminGlossaryDialogs } from "./AdminGlossaryDialogs";
@@ -74,7 +83,7 @@ export function AdminGlossaryPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminGlossary.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:adminGlossary.title"
@@ -83,84 +92,92 @@ export function AdminGlossaryPage() {
           }
           sub={t("admin:adminGlossary.header.sub")}
           actions={
-            <>
-              <input
-                type="search"
-                className={styles.searchInput}
-                aria-label={t("admin:adminGlossary.searchLabel")}
-                placeholder={t("admin:adminGlossary.searchPlaceholder")}
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-              />
-              <Button
-                variant="primary"
-                size="md"
-                onClick={() => dialogs.setEditorTarget("new")}
-              >
-                {t("admin:adminGlossary.newTermCta")}
-              </Button>
-            </>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => dialogs.setEditorTarget("new")}
+            >
+              <FiPlus aria-hidden /> {t("admin:adminGlossary.newTermCta")}
+            </Button>
           }
         />
       </FadeIn>
 
-      {!isLoading && !isError && untranslatedCount > 0 && (
-        <p className={styles.staleBanner}>
-          {t("admin:adminGlossary.untranslatedBanner", {
-            count: untranslatedCount,
-          })}
-        </p>
-      )}
+      <div className={styles.body}>
+        <AdminToolbar label={t("shared:filterPage.filtersCta")}>
+          <SearchInput
+            className={adminToolbarClasses.search}
+            value={query}
+            onChange={setQuery}
+            ariaLabel={t("admin:adminGlossary.searchLabel")}
+            placeholder={t("admin:adminGlossary.searchPlaceholder")}
+          />
+        </AdminToolbar>
 
-      {isLoading ? (
-        <div className={styles.rows}>
-          {[0, 1, 2, 3].map((skeletonIndex) => (
-            <SkeletonLine
-              key={skeletonIndex}
-              height={68}
-              style={{ borderRadius: 14 }}
-            />
-          ))}
-        </div>
-      ) : isForbidden ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
+        {!isLoading && !isError && untranslatedCount > 0 && (
+          <AdminNotice tone="warn">
+            {t("admin:adminGlossary.untranslatedBanner", {
+              count: untranslatedCount,
+            })}
+          </AdminNotice>
+        )}
+
+        {isLoading ? (
+          <div className={styles.rows}>
+            {[0, 1, 2, 3].map((skeletonIndex) => (
+              <SkeletonLine
+                key={skeletonIndex}
+                height={68}
+                style={{ borderRadius: 14 }}
+              />
+            ))}
+          </div>
+        ) : isForbidden ? (
+          <AdminNotice tone="error">
             {t("admin:common.panelForbidden")}
-          </p>
-        </div>
-      ) : isError ? (
-        <LoadErrorState
-          onRetry={() => void refetch()}
-          title={
-            <Translation
-              i18nKey="admin:adminGlossary.loadError.title"
-              components={{ em: <em /> }}
-            />
-          }
-          description={t("admin:adminGlossary.loadError.body")}
-        />
-      ) : visibleTerms.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>
-            {t(
+          </AdminNotice>
+        ) : isError ? (
+          <LoadErrorState
+            onRetry={() => void refetch()}
+            title={
+              <Translation
+                i18nKey="admin:adminGlossary.loadError.title"
+                components={{ em: <em /> }}
+              />
+            }
+            description={t("admin:adminGlossary.loadError.body")}
+          />
+        ) : visibleTerms.length === 0 ? (
+          <AdminEmptyState
+            icon={FiBook}
+            title={t(
               terms.length === 0
-                ? "admin:adminGlossary.empty"
+                ? "admin:adminGlossary.emptyTitle"
                 : "admin:adminGlossary.noMatches",
             )}
-          </p>
-          <Button to={routes.glossary} variant="ghost" size="sm">
-            {t("admin:adminGlossary.viewPublicGlossaryCta")}
-          </Button>
-        </div>
-      ) : (
-        <AdminGlossaryRows
-          terms={visibleTerms}
-          onPreview={dialogs.setPreviewTarget}
-          onEdit={dialogs.setEditorTarget}
-          onReview={dialogs.setReviewTarget}
-          onDelete={dialogs.setDeleteTarget}
-        />
-      )}
+            body={
+              terms.length === 0
+                ? t("admin:adminGlossary.emptyBody")
+                : undefined
+            }
+            action={
+              <Button to={routes.glossary} variant="ghost" size="sm">
+                {t("admin:adminGlossary.viewPublicGlossaryCta")}
+              </Button>
+            }
+          />
+        ) : (
+          <AdminPanel padding="flush" isOverflowVisible>
+            <AdminGlossaryRows
+              terms={visibleTerms}
+              onPreview={dialogs.setPreviewTarget}
+              onEdit={dialogs.setEditorTarget}
+              onReview={dialogs.setReviewTarget}
+              onDelete={dialogs.setDeleteTarget}
+            />
+          </AdminPanel>
+        )}
+      </div>
 
       <AdminGlossaryDialogs dialogs={dialogs} />
     </AdminShell>

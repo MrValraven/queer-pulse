@@ -6,7 +6,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { initialsFromName } from "../../shared/lib/initials";
-import { AdminAvatar, type AvatarTone } from "./ui";
+import { AdminAvatar, adminTableClasses, type AvatarTone } from "./ui";
 import { useDemoPortrait } from "./useDemoPortrait";
 import { useUpdateInviteQuota } from "./api/useAdminInvites";
 import type { AdminInviteQuotaMemberDTO } from "./api/adminInvites.api";
@@ -130,8 +130,13 @@ export function AdminInviteQuotaRow({
     <li
       ref={rowRef}
       data-member-slug={member.slug}
-      className={styles.row}
-      data-editing={isEditing || undefined}
+      className={[
+        adminTableClasses.row,
+        styles.row,
+        isEditing && adminTableClasses.isSelected,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       aria-busy={isSaving || undefined}
     >
       <div className={styles.memberCell}>

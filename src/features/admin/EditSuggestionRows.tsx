@@ -3,7 +3,13 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { memberRefToPerson } from "../../shared/api/refs";
-import { AdminChip, AdminAvatar, type AdminTone, type AvatarTone } from "./ui";
+import {
+  AdminChip,
+  AdminAvatar,
+  AdminRowActions,
+  type AdminTone,
+  type AvatarTone,
+} from "./ui";
 import { useResolveEditSuggestion } from "./api/useResolveEditSuggestion";
 import type {
   EditSuggestionDTO,
@@ -116,10 +122,10 @@ function EditSuggestionRow({
         </div>
       </div>
       {suggestion.status === "pending" && (
-        <div className={styles.rowActions}>
+        <AdminRowActions className={styles.rowActions}>
           <Button
             variant="jade"
-            size="md"
+            size="sm"
             onClick={() => decide("accepted")}
             disabled={resolve.isPending}
           >
@@ -127,13 +133,13 @@ function EditSuggestionRow({
           </Button>
           <Button
             variant="ghost"
-            size="md"
+            size="sm"
             onClick={() => decide("dismissed")}
             disabled={resolve.isPending}
           >
             {t("admin:editSuggestions.dismissCta")}
           </Button>
-        </div>
+        </AdminRowActions>
       )}
     </div>
   );

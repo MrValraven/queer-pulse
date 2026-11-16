@@ -5,6 +5,7 @@ import {
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { AdminNotice } from "./ui";
 import { AdminSafeSpaceRows } from "./AdminSafeSpaceRows";
 import { AdminSafeSpaceModal } from "./AdminSafeSpaceModal";
 import { useAdminSafeSpaces } from "./api/useAdminSafeSpaces";
@@ -66,14 +67,14 @@ export function AdminSafeSpaceListingsPanel() {
     <>
       {!isLoading && !isError && underBarVerifiedCount > 0 && (
         <FadeIn delay={40}>
-          <div className={styles.underBarSummary}>
-            {t("admin:adminSafeSpaces.underBar.summary", {
+          <AdminNotice
+            tone="warn"
+            title={t("admin:adminSafeSpaces.underBar.summary", {
               count: underBarVerifiedCount,
             })}
-            <p className={styles.underBarSummaryNote}>
-              {t("admin:adminSafeSpaces.underBar.summaryNote")}
-            </p>
-          </div>
+          >
+            {t("admin:adminSafeSpaces.underBar.summaryNote")}
+          </AdminNotice>
         </FadeIn>
       )}
 

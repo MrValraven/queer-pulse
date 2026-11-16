@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { FiChevronLeft, FiChevronRight, FiInbox } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -6,7 +6,13 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
-import { AdminChip, AdminAvatar } from "./ui";
+import {
+  AdminAvatar,
+  AdminChip,
+  AdminEmptyState,
+  AdminPanel,
+  adminTableClasses,
+} from "./ui";
 import { useDemoPortrait } from "./useDemoPortrait";
 import {
   DEFAULT_AUDIT_FILTERS,
@@ -20,6 +26,9 @@ import styles from "./AdminGovernancePage.module.css";
 
 const PAGE_SIZE = 8;
 
+/** A log row on the kit's row list, laid out on this table's column grid. */
+const AUDIT_ROW_CLASS = `${adminTableClasses.row} ${styles.auditRow}`;
+
 export function AdminGovernanceAudit() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -30,6 +39,7 @@ export function AdminGovernanceAudit() {
   );
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState<AuditRowView | null>(null);
+  const titleId = useId();
 
   const { items, total, moderators, pageCount, loading } = useAdminAudit(
     filters,
@@ -44,9 +54,10 @@ export function AdminGovernanceAudit() {
 
   const totalDisplay = fmt.number(total);
 
-  // Export the audit feed as CSV. Demo keeps the prototype's confirmation toast
-  // (no backend, no real file); live streams the CSV from `/mod/audit.csv`
-  // honouring the current filters, then confirms — or shows an honest error.
+  // Export the audit feed as CSV. Demo keeps the prototype's confirmation
+  // toast (the demo has no backend and writes no file); live streams the CSV
+  // from `/mod/audit.csv` honouring the current filters, then confirms or
+  // shows an honest error.
   const handleExport = async () => {
     if (demoMode) {
       showToast(
@@ -76,66 +87,83 @@ export function AdminGovernanceAudit() {
       : t("admin:governance.audit.metaMatch", { count: total });
 
   // `pageCount` can shrink (filters narrow the result set, or a live refetch
-  // returns fewer rows) after `page` was already advanced past it — clamp so
+  // returns fewer rows) after `page` was already advanced past it. Clamp so
   // the pager and the visible slice never point past the last real page.
   const safePage = Math.min(page, pageCount);
   const start = (safePage - 1) * PAGE_SIZE;
 
   return (
-    <FadeIn>
-      <div className={styles.auditHead}>
-        <h2 className={styles.cardTitle}>
+    <FadeIn className={styles.tabBody}>
+      {/* Overflow stays visible so the filter selects can open past the
+          panel's edge. */}
+      <AdminPanel
+        padding="flush"
+        isOverflowVisible
+        titleId={titleId}
+        title={
           <Translation
             i18nKey="admin:governance.audit.title"
             components={{ em: <em /> }}
           />
-        </h2>
-        <span className={styles.auditMeta}>{metaLabel}</span>
-      </div>
-
-      <AdminGovernanceAuditFilters
-        filters={filters}
-        onChange={changeFilters}
-        moderators={moderators}
-        // P3-8: live now streams a real CSV from `GET /mod/audit.csv` honouring
-        // the current filters; demo keeps the prototype's confirmation toast.
-        onExport={() => void handleExport()}
-      />
-
-      <div className={styles.auditCard}>
-        <div className={styles.auditTable} role="table">
-          <div className={styles.auditRowHead} role="row">
-            <span role="columnheader">
-              {t("admin:governance.audit.columns.moderator")}
-            </span>
-            <span role="columnheader">
-              {t("admin:governance.audit.columns.action")}
-            </span>
-            <span role="columnheader">
-              {t("admin:governance.audit.columns.subject")}
-            </span>
-            <span role="columnheader">
-              {t("admin:governance.audit.columns.reason")}
-            </span>
-            <span role="columnheader">
-              {t("admin:governance.audit.columns.when")}
-            </span>
-          </div>
-
-          {loading ? (
-            Array.from({ length: PAGE_SIZE }).map((_, index) => (
-              <SkeletonRow key={index} />
-            ))
-          ) : total === 0 ? (
-            <EmptyState />
-          ) : (
-            items.map((entry, index) => (
-              <FadeIn key={entry.id} delay={index * 45}>
-                <AuditRow entry={entry} onOpen={() => setOpen(entry)} />
-              </FadeIn>
-            ))
-          )}
+        }
+      >
+        <div className={styles.auditToolbar}>
+          <AdminGovernanceAuditFilters
+            filters={filters}
+            onChange={changeFilters}
+            moderators={moderators}
+            // P3-8: live now streams a real CSV from `GET /mod/audit.csv`
+            // honouring the current filters; demo keeps the prototype's
+            // confirmation toast.
+            onExport={() => void handleExport()}
+            count={metaLabel}
+          />
         </div>
+
+        {!loading && total === 0 ? (
+          <AdminEmptyState
+            icon={FiInbox}
+            title={t("admin:governance.audit.emptyTitle")}
+            body={t("admin:governance.audit.emptyText")}
+          />
+        ) : (
+          <div
+            className={styles.auditTable}
+            role="table"
+            aria-labelledby={titleId}
+          >
+            <div
+              className={`${adminTableClasses.headRow} ${styles.auditRowHead}`}
+              role="row"
+            >
+              <span role="columnheader">
+                {t("admin:governance.audit.columns.moderator")}
+              </span>
+              <span role="columnheader">
+                {t("admin:governance.audit.columns.action")}
+              </span>
+              <span role="columnheader">
+                {t("admin:governance.audit.columns.subject")}
+              </span>
+              <span role="columnheader">
+                {t("admin:governance.audit.columns.reason")}
+              </span>
+              <span role="columnheader">
+                {t("admin:governance.audit.columns.when")}
+              </span>
+            </div>
+
+            {loading
+              ? Array.from({ length: PAGE_SIZE }).map((_, index) => (
+                  <SkeletonRow key={index} />
+                ))
+              : items.map((entry, index) => (
+                  <FadeIn key={entry.id} delay={index * 45}>
+                    <AuditRow entry={entry} onOpen={() => setOpen(entry)} />
+                  </FadeIn>
+                ))}
+          </div>
+        )}
 
         {!loading && total > 0 && (
           <Pager
@@ -147,7 +175,7 @@ export function AdminGovernanceAudit() {
             onPage={setPage}
           />
         )}
-      </div>
+      </AdminPanel>
 
       {open && (
         <AdminGovernanceAuditModal entry={open} onClose={() => setOpen(null)} />
@@ -166,7 +194,7 @@ function AuditRow({
   const demoPortrait = useDemoPortrait();
   return (
     <div
-      className={styles.auditRow}
+      className={AUDIT_ROW_CLASS}
       role="row"
       tabIndex={0}
       onClick={onOpen}
@@ -270,26 +298,9 @@ function Pager({
   );
 }
 
-function EmptyState() {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.auditEmpty}>
-      <span className={styles.auditEmptyIco} aria-hidden>
-        <FiInbox />
-      </span>
-      <h3 className={styles.auditEmptyTitle}>
-        {t("admin:governance.audit.emptyTitle")}
-      </h3>
-      <p className={styles.auditEmptyText}>
-        {t("admin:governance.audit.emptyText")}
-      </p>
-    </div>
-  );
-}
-
 function SkeletonRow() {
   return (
-    <div className={styles.auditRow} aria-hidden>
+    <div className={AUDIT_ROW_CLASS} aria-hidden>
       <span className={styles.auditMod}>
         <SkeletonLine
           width={26}

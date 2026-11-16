@@ -17,6 +17,7 @@ import {
   AdminLandlordReasonModal,
   type LandlordReasonKind,
 } from "./AdminLandlordsReasonModal";
+import { AdminPanel } from "./ui";
 import styles from "./AdminLandlordsPage.module.css";
 
 /** A decision waiting on the words it sends back to the member who asked. */
@@ -132,17 +133,19 @@ export function AdminLandlordsIntroRequests({
       <p className={styles.count} role="status">
         {t("admin:landlords.intro.count", { count: total })}
       </p>
-      <ul className={styles.rows}>
-        {requests.map((request) => (
-          <AdminLandlordIntroRow
-            key={request.id}
-            request={request}
-            isPending={triage.isPending}
-            onAccept={() => setPending({ request, kind: "introAccept" })}
-            onDecline={() => setPending({ request, kind: "introDecline" })}
-          />
-        ))}
-      </ul>
+      <AdminPanel padding="flush" isOverflowVisible>
+        <ul className={styles.rows}>
+          {requests.map((request) => (
+            <AdminLandlordIntroRow
+              key={request.id}
+              request={request}
+              isPending={triage.isPending}
+              onAccept={() => setPending({ request, kind: "introAccept" })}
+              onDecline={() => setPending({ request, kind: "introDecline" })}
+            />
+          ))}
+        </ul>
+      </AdminPanel>
 
       {hasNextPage && (
         <div className={styles.loadMore}>

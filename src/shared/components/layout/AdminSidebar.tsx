@@ -1,14 +1,18 @@
 import { useRef, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowLeft, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiChevronsLeft,
+  FiChevronsRight,
+  FiX,
+} from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
-import { Tooltip } from "../ui";
+import { IconButton, Tooltip } from "../ui";
 import { AdminAccountMenu } from "./AdminAccountMenu";
 import { AdminRoleSwitcher } from "./AdminRoleSwitcher";
 import { AdminNavGroup, AdminNavLink } from "./AdminNavGroup";
-import { AdminNavSearch, AdminNavSearchResults } from "./AdminNavSearch";
 import { useAdminNavBadges } from "./useAdminNavBadges";
 import { useAdminNavSections } from "./useAdminNavSections";
 import { rememberNavScroll, useAdminNavScroll } from "./useAdminNavScroll";
@@ -19,29 +23,25 @@ import styles from "./AdminShell.module.css";
 export function AdminSidebar({
   isCollapsed = false,
   onToggleCollapse,
+  onClose,
   onNavigate,
 }: {
-  /** Icon-only rail. Desktop only — the mobile drawer is always full width, so
+  /** Icon-only rail. Desktop only: the mobile drawer is always full width, so
    * AdminShell never passes this while the sidebar is off-canvas. */
   isCollapsed?: boolean;
   /** Absent on mobile, where there is nothing to collapse to. */
   onToggleCollapse?: () => void;
-  /** Called when a navigation link is activated — the mobile off-canvas drawer
+  /** Mobile drawer only: closes the drawer from a visible control inside it,
+   * where the collapse control sits on desktop. */
+  onClose?: () => void;
+  /** Called when a navigation link is activated. The mobile off-canvas drawer
    * passes its close handler so tapping a link dismisses the drawer. Absent on
    * desktop, where the sidebar is a static rail and nothing needs closing. */
   onNavigate?: () => void;
 } = {}) {
   const { t } = useTranslation();
-  const {
-    sections,
-    isFullConsole,
-    searchQuery,
-    setSearchQuery,
-    isSearching,
-    searchGroups,
-    leaveSearch,
-    openFirstMatch,
-  } = useAdminSidebarNav({ isCollapsed, onNavigate });
+  // Page search lives in the top bar's Cmd/Ctrl+K palette; the rail lists.
+  const { sections, isFullConsole } = useAdminSidebarNav();
 
   const navRef = useRef<HTMLElement>(null);
   const badgeCounts = useAdminNavBadges();
@@ -87,33 +87,36 @@ export function AdminSidebar({
         </MaybeTooltip>
 
         {onToggleCollapse && (
-          <MaybeTooltip label={collapseLabel} isOn={isCollapsed}>
-            <button
-              type="button"
-              className={styles.collapseBtn}
-              onClick={onToggleCollapse}
-              aria-label={collapseLabel}
-              title={isCollapsed ? undefined : collapseLabel}
-            >
-              {isCollapsed ? (
-                <FiChevronsRight aria-hidden />
-              ) : (
-                <FiChevronsLeft aria-hidden />
-              )}
-            </button>
-          </MaybeTooltip>
+          // One tooltip placement in both widths, so the control is not
+          // remounted by its own click and keeps focus as the rail folds.
+          <IconButton
+            tone="dark"
+            className={styles.collapseBtn}
+            onClick={onToggleCollapse}
+            aria-label={collapseLabel}
+            tooltip
+            tooltipPlacement="right"
+          >
+            {isCollapsed ? (
+              <FiChevronsRight aria-hidden />
+            ) : (
+              <FiChevronsLeft aria-hidden />
+            )}
+          </IconButton>
+        )}
+        {onClose && (
+          <IconButton
+            tone="dark"
+            className={styles.collapseBtn}
+            onClick={onClose}
+            aria-label={t("nav:closeMenu")}
+          >
+            <FiX aria-hidden />
+          </IconButton>
         )}
       </div>
 
       <AdminRoleSwitcher isCollapsed={isCollapsed} />
-
-      <AdminNavSearch
-        value={searchQuery}
-        onChange={setSearchQuery}
-        onSubmit={openFirstMatch}
-        isCollapsed={isCollapsed}
-        onExpand={onToggleCollapse}
-      />
 
       <nav
         className={styles.nav}
@@ -121,60 +124,47 @@ export function AdminSidebar({
         ref={navRef}
         onScroll={(event) => rememberNavScroll(event.currentTarget.scrollTop)}
       >
-        {isSearching ? (
-          <AdminNavSearchResults
-            groups={searchGroups}
-            badgeCounts={badgeCounts}
-            onNavigate={leaveSearch}
+        {/* The overview is admin-only on the backend (`admin/overview`), so a
+            viewer who is here on a grant alone is not offered a link that
+            would bounce them straight back out. */}
+        {isFullConsole && (
+          <AdminNavLink
+            item={ADMIN_NAV_OVERVIEW}
+            count={0}
+            isCollapsed={isCollapsed}
+            onNavigate={onNavigate}
           />
-        ) : (
-          <>
-            {/* The overview is admin-only on the backend (`admin/overview`), so
-                a viewer who is here on a grant alone is not offered a link that
-                would bounce them straight back out. */}
-            {isFullConsole && (
-              <AdminNavLink
-                item={ADMIN_NAV_OVERVIEW}
-                count={0}
-                isCollapsed={isCollapsed}
-                onNavigate={onNavigate}
-              />
-            )}
-
-            {sections.map((section) => (
-              <AdminNavGroup
-                key={section.id}
-                section={section}
-                badgeCounts={badgeCounts}
-                isOpen={isSectionOpen(section.id, section.defaultOpen)}
-                isCollapsed={isCollapsed}
-                onToggle={() => toggleSection(section.id, section.defaultOpen)}
-                onNavigate={onNavigate}
-              />
-            ))}
-          </>
         )}
+
+        {sections.map((section) => (
+          <AdminNavGroup
+            key={section.id}
+            section={section}
+            badgeCounts={badgeCounts}
+            isOpen={isSectionOpen(section.id, section.defaultOpen)}
+            isCollapsed={isCollapsed}
+            onToggle={() => toggleSection(section.id, section.defaultOpen)}
+            onNavigate={onNavigate}
+          />
+        ))}
       </nav>
 
-      <MaybeTooltip label={backLabel} isOn={isCollapsed}>
-        <Link
-          to={routes.feed}
-          className={[
-            styles.backToPlatform,
-            isCollapsed && styles.backToPlatformIcon,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={onNavigate}
-        >
-          <FiArrowLeft aria-hidden />
-          <span className={isCollapsed ? "visuallyHidden" : undefined}>
-            {backLabel}
-          </span>
-        </Link>
-      </MaybeTooltip>
-
-      <AdminAccountMenu isCollapsed={isCollapsed} onNavigate={onNavigate} />
+      {/* One row: the account menu takes the width, and Back to platform
+          sits beside it as an icon named by its label and a tooltip. The icon
+          rail stacks the two. */}
+      <div className={styles.railFoot}>
+        <AdminAccountMenu isCollapsed={isCollapsed} onNavigate={onNavigate} />
+        <Tooltip label={backLabel} placement="right">
+          <Link
+            to={routes.feed}
+            className={styles.backToPlatform}
+            aria-label={backLabel}
+            onClick={onNavigate}
+          >
+            <FiArrowLeft aria-hidden />
+          </Link>
+        </Tooltip>
+      </div>
     </aside>
   );
 }

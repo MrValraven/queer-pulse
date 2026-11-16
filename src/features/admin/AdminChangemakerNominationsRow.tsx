@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
-import { AdminChip, type AdminTone } from "./ui";
+import { AdminChip, type AdminTone, AdminRowActions } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import type { AdminChangemakerNominationDTO } from "./api/adminChangemakerNominations.api";
@@ -125,13 +125,16 @@ export function AdminChangemakerNominationsRow({
             <input
               className={styles.rowNoteInput}
               type="text"
+              aria-label={t(
+                "admin:adminChangemakerNominations.row.reviewNotePlaceholder",
+              )}
               placeholder={t(
                 "admin:adminChangemakerNominations.row.reviewNotePlaceholder",
               )}
               value={reviewNote}
               onChange={(e) => setReviewNote(e.target.value)}
             />
-            <div className={styles.rowActionButtons}>
+            <AdminRowActions>
               <Button
                 variant="ghost"
                 size="sm"
@@ -160,7 +163,7 @@ export function AdminChangemakerNominationsRow({
               >
                 {t("admin:adminChangemakerNominations.row.approveCta")}
               </Button>
-            </div>
+            </AdminRowActions>
           </>
         )}
       </div>

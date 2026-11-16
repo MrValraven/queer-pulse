@@ -4,6 +4,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader } from "./ui";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { AdminListingFromDraft } from "./AdminListingFromDraft";
 import { AdminListingNewForm } from "./AdminListingNewForm";
@@ -86,8 +87,13 @@ export function AdminListingNewPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:listingNew.eyebrow")}
-          title={t("admin:listingNew.title")}
+          eyebrow={t("shared:adminNav.sections.directory")}
+          title={
+            <Translation
+              i18nKey="admin:listingNew.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("admin:listingNew.sub")}
           titleId={LISTING_NEW_HEADING_ID}
         />

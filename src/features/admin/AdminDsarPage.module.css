@@ -6,14 +6,13 @@
 .rows {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: var(--admin-header-gap);
 }
 
-.emptyLine {
-  font-size: var(--text-14);
-  color: var(--ink-60);
-  margin: 20px 0;
+/* The error and empty states sit the same distance under the tabs as the rows. */
+.state {
+  margin-top: var(--admin-header-gap);
 }
 
 .row {
@@ -21,12 +20,15 @@
   align-items: center;
   gap: 16px;
   width: 100%;
-  padding: 14px 18px 14px 14px;
+  min-height: var(--admin-row-h);
+  padding: var(--admin-row-pad);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-inline-start: 4px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
   cursor: pointer;
+  font-family: inherit;
   text-align: start;
   transition:
     border-color 0.16s var(--ease),
@@ -35,14 +37,16 @@
 
 @media (hover: hover) {
   .row:hover {
-    border-color: rgba(var(--line-rgb), 0.22);
+    border-block-color: rgba(var(--line-rgb), 0.22);
+    border-inline-end-color: rgba(var(--line-rgb), 0.22);
     box-shadow: var(--shadow-e2);
   }
 }
 
 .row:focus-visible {
-  outline: 2px solid var(--jade);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 /* The overdue treatment: a danger-toned edge on the whole row, paired with the
@@ -203,6 +207,9 @@
   gap: 8px;
 }
 
+/* Every edge but the clock rail, so the overdue and urgent tones keep their
+   colour in the dark theme. */
 :global([data-theme="dark"]) .row {
-  border-color: rgba(var(--cream-rgb), 0.1);
+  border-block-color: rgba(var(--cream-rgb), 0.1);
+  border-inline-end-color: rgba(var(--cream-rgb), 0.1);
 }

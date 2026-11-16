@@ -1,11 +1,17 @@
 import { useState } from "react";
+import { FiHome, FiPlus } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
-import { AdminPageHeader, AdminModal } from "./ui";
+import {
+  AdminEmptyState,
+  AdminModal,
+  AdminNotice,
+  AdminPageHeader,
+} from "./ui";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
 import { useAdminHousingCoops } from "./api/useAdminHousingCoops";
@@ -19,7 +25,7 @@ import styles from "./AdminHousingCoopsPage.module.css";
 type FormMode = { kind: "create" } | { kind: "edit"; coop: HousingCoopDTO };
 
 /**
- * Admin housing panel (`/admin/housing`) — every co-op on the platform,
+ * Admin housing panel (`/admin/housing`): every co-op on the platform,
  * published or still forming, with create/edit/delete and the cross-coop
  * join-request triage queue below. Sourced from useAdminHousingCoops (admin-
  * only, 403s for a non-admin); the demo-mode list and queue are both
@@ -81,7 +87,7 @@ export function AdminHousingCoopsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:housingCoop.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.communities")}
           title={
             <Translation
               i18nKey="admin:housingCoop.title"
@@ -95,44 +101,46 @@ export function AdminHousingCoopsPage() {
               size="md"
               onClick={() => setFormMode({ kind: "create" })}
             >
-              {t("admin:housingCoop.newCta")}
+              <FiPlus aria-hidden /> {t("admin:housingCoop.newCta")}
             </Button>
           }
         />
       </FadeIn>
 
-      {isLoading ? (
-        <div className={styles.rows}>
-          {[0, 1, 2].map((skeletonIndex) => (
-            <SkeletonLine
-              key={skeletonIndex}
-              height={64}
-              style={{ borderRadius: 14 }}
-            />
-          ))}
-        </div>
-      ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
+      <div className={styles.sections}>
+        {isLoading ? (
+          <div className={styles.skeletons} aria-hidden>
+            {[0, 1, 2].map((skeletonIndex) => (
+              <SkeletonLine
+                key={skeletonIndex}
+                height={64}
+                style={{ borderRadius: 14 }}
+              />
+            ))}
+          </div>
+        ) : isError ? (
+          <AdminNotice tone="error">
             {forbidden
               ? t("admin:common.panelForbidden")
               : t("admin:housingCoop.loadError")}
-          </p>
-        </div>
-      ) : coops.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>{t("admin:housingCoop.empty")}</p>
-        </div>
-      ) : (
-        <AdminHousingCoopRows
-          coops={coops}
-          onTogglePublished={togglePublished}
-          onEdit={(coop) => setFormMode({ kind: "edit", coop })}
-          onDelete={setDeleteTarget}
-        />
-      )}
+          </AdminNotice>
+        ) : coops.length === 0 ? (
+          <AdminEmptyState
+            icon={FiHome}
+            title={t("admin:housingCoop.emptyTitle")}
+            body={t("admin:housingCoop.emptyBody")}
+          />
+        ) : (
+          <AdminHousingCoopRows
+            coops={coops}
+            onTogglePublished={togglePublished}
+            onEdit={(coop) => setFormMode({ kind: "edit", coop })}
+            onDelete={setDeleteTarget}
+          />
+        )}
 
-      {!forbidden && <AdminHousingJoinRequests />}
+        {!forbidden && <AdminHousingJoinRequests />}
+      </div>
 
       {formMode && (
         <AdminHousingCoopForm

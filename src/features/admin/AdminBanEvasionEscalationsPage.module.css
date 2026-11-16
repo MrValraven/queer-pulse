@@ -1,27 +1,9 @@
 /* Ban-evasion escalations queue (PRD-31). Tokens only: no raw hex, no raw
    plum/line channels. */
 
-.notice {
-  margin: 0 0 16px;
-  padding: 14px 16px;
-  border-radius: var(--radius-14);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  color: var(--ink-60);
-  overflow-wrap: anywhere;
-}
-
-/* A queue that could not be read is never a clear queue. Louder than .notice so
-   a failed fetch cannot be skimmed as "nobody is waiting". */
-.errorNotice {
-  color: var(--accent-text);
-  background: rgba(var(--accent-rgb), 0.1);
-  border-color: rgba(var(--accent-rgb), 0.28);
-}
-
-.noticeIcon {
-  margin-right: 8px;
-  vertical-align: -2px;
+/* The demo-mode reading sits between the header and the tab strip. */
+.demoNotice {
+  margin-bottom: var(--gap-sm);
 }
 
 /* The queue body, whatever state it is in: skeletons, an error line, the empty
@@ -29,60 +11,37 @@
    across every console), so the space under the tabs is set here, once, and
    every state gets the same gap. */
 .queue {
-  margin-top: 20px;
+  margin-top: var(--admin-header-gap);
 }
 
 .cards {
   display: grid;
-  gap: 14px;
+  gap: var(--gap-sm);
 }
 
-.card {
-  padding: 18px;
-  border-radius: var(--radius-14);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-}
-
-.cardHead {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.cardHeadText {
-  flex: 1 1 280px;
-  min-width: 0;
-}
-
-.subject {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  color: var(--ink);
-  overflow-wrap: anywhere;
-}
-
+/* One escalation is one AdminPanel; its head carries the subject, who raised
+   it and the status chip. */
 .subjectLink {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.meta {
-  margin: 4px 0 0;
-  font-size: var(--text-13-5);
-  color: var(--ink-40);
+.headLine {
+  display: block;
   overflow-wrap: anywhere;
 }
 
-.chipRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+.meta {
+  margin: 4px 0 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* The first block in a panel body sits at the body's own top gap. */
+.cardBody > :first-child {
+  margin-top: 0;
 }
 
 .section {
@@ -105,29 +64,14 @@
   white-space: pre-wrap;
 }
 
-/* Stated results the assessment panel itself does not render: a cleared check,
-   and an applicant whose account is gone. Both are answers, not blanks. */
+/* The assessment panel renders nothing for a clear applicant, so the card
+   states the result in an AdminNotice; this spaces it from what is above. */
 .assessmentState {
-  margin: 14px 0 0;
-  padding: 12px 14px;
-  border-radius: var(--radius-12);
-  background: rgba(var(--jade-rgb), 0.1);
-  border: 1px solid rgba(var(--jade-rgb), 0.24);
-  color: var(--jade-ink);
-  font-size: var(--text-14);
+  margin-top: 14px;
 }
 
-.assessmentUnknown {
-  background: rgba(var(--line-rgb), 0.06);
-  border-color: rgba(var(--line-rgb), 0.14);
-  color: var(--ink-60);
-}
-
-.cardActions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+.cardActions[data-admin-row-actions] {
+  justify-content: flex-start;
   margin-top: 16px;
 }
 

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -7,7 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader, AdminTabs } from "./ui";
 import { AdminBanEvasionEscalationCard } from "./AdminBanEvasionEscalationCard";
 import { AdminBanEvasionEscalationResolveModal } from "./AdminBanEvasionEscalationResolveModal";
 import { useBanEvasionEscalations } from "./api/useAdminBanEvasionEscalations";
@@ -71,7 +70,7 @@ export function AdminBanEvasionEscalationsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:banEvasionEscalations.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:banEvasionEscalations.title"
@@ -83,9 +82,11 @@ export function AdminBanEvasionEscalationsPage() {
       </FadeIn>
 
       {demoMode && (
-        <p className={styles.notice}>
-          {t("admin:banEvasionEscalations.demoNotice")}
-        </p>
+        <div className={styles.demoNotice}>
+          <AdminNotice tone="info" liveRole="none">
+            {t("admin:banEvasionEscalations.demoNotice")}
+          </AdminNotice>
+        </div>
       )}
 
       <FadeIn delay={60}>
@@ -106,23 +107,25 @@ export function AdminBanEvasionEscalationsPage() {
               <SkeletonLine
                 key={skeletonIndex}
                 height={168}
-                style={{ borderRadius: 14 }}
+                style={{ borderRadius: "var(--admin-panel-radius)" }}
               />
             ))}
           </div>
         ) : isError ? (
-          <p className={`${styles.notice} ${styles.errorNotice}`}>
-            <FiAlertTriangle aria-hidden className={styles.noticeIcon} />
+          <AdminNotice tone="error">
             {isForbidden
               ? t("admin:banEvasionEscalations.forbidden")
               : t("admin:banEvasionEscalations.loadError")}
-          </p>
+          </AdminNotice>
         ) : (escalations ?? []).length === 0 ? (
-          <p className={styles.notice}>
-            {status === "open"
-              ? t("admin:banEvasionEscalations.emptyOpen")
-              : t("admin:banEvasionEscalations.emptyResolved")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            title={
+              status === "open"
+                ? t("admin:banEvasionEscalations.emptyOpen")
+                : t("admin:banEvasionEscalations.emptyResolved")
+            }
+          />
         ) : (
           <div className={styles.cards}>
             {(escalations ?? []).map((escalation, index) => (

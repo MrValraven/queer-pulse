@@ -1,22 +1,17 @@
 /* ── Listing queue panel ─────────────────────────────────────────────────
-   One surface holding the toolbar (`AdminListingsHeader`) and the queue body
-   (skeleton, error, empty state, or the column header and rows). No
-   `overflow: hidden`, so a row's overflow menu can hang past the panel edge;
-   the last row rounds its own bottom corners instead
-   (AdminListingRows.module.css). The panel is the `listingQueue` inline-size
-   container the row layout queries, so the admin sidebar never desyncs it. */
+   An `AdminPanel` with a flush body holding the queue (skeleton, error, empty
+   state, or the column header and rows). The panel is the `listingQueue`
+   inline-size container the row layout queries
+   (AdminListingRows.module.css), so the admin sidebar opening or closing
+   never desyncs it. The filter bar sits above it (`AdminListingsHeader`). */
 .queuePanel {
-  margin-top: 16px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
   container-type: inline-size;
   container-name: listingQueue;
+  margin-top: var(--gap-sm);
 }
-
 /* The error state gets room to breathe inside the panel body. */
 .panelMessage {
-  padding: 8px 18px 24px;
+  padding: var(--gap-xs) var(--admin-panel-pad) var(--admin-panel-pad);
 }
 
 /* While a selection exists the floating `.bulkBar` covers the bottom of the
@@ -30,80 +25,6 @@
     var(--bulk-bar-h, 140px) +
       max(20px, calc(env(safe-area-inset-bottom) + 14px)) + 24px
   );
-}
-
-/* A view segment's label and its pending-count badge (ListingViewLabel). The
-   slot animates its own width and opacity open from nothing, so it clips the
-   pill while it grows; the pill is the same shape and type as the admin rail's
-   count (`.navCount`, AdminShell.module.css) at the tab strip's size
-   (`.tabCount`, adminUi.module.css). */
-.viewLabel {
-  display: inline-flex;
-  align-items: center;
-}
-.viewCountSlot {
-  display: inline-flex;
-  overflow: hidden;
-}
-/* Amber means "waiting", the same tone as the rail's Listings pill. The fill
-   is light in both themes, so the figure on it stays plum in both: about 8:1
-   over amber, on the white selected segment and on the tray alike. */
-.viewCount {
-  display: inline-flex;
-  justify-content: center;
-  /* The gap a segment leaves between its parts (`.segBtn`, Controls.module.css),
-     inside the clipping slot so it opens and closes with the pill. */
-  margin-inline-start: 7px;
-  min-width: 20px;
-  padding: 1px 6px;
-  border-radius: var(--radius-pill);
-  background: var(--amber);
-  /* css-scale-allow: non-flipping-text */
-  color: var(--plum);
-  font-size: var(--text-11);
-  font-weight: 700;
-  line-height: 1.4;
-  font-variant-numeric: tabular-nums;
-}
-
-/* The view switcher (Submissions / Edit suggestions / Ownership claims) is
-   wider than a phone. Its FadeIn wrapper becomes a horizontal scroller with a
-   hidden scrollbar, padded so a segment's focus ring (3px outline at a 3px
-   offset) is never clipped, and pulled back by the same amount so the tray
-   stays aligned with the page column. The matching scroll padding makes a
-   segment that takes focus scroll in with its ring in view. */
-@media (--md) {
-  .viewSwitchScroller {
-    margin: -8px;
-    padding: 8px;
-    overflow-x: auto;
-    scroll-padding-inline: 8px;
-    scrollbar-width: none;
-  }
-  .viewSwitchScroller::-webkit-scrollbar {
-    display: none;
-  }
-  /* While segments hide past the end edge, the scroller fades out over its
-     last 28px as a scroll cue, the same cue as the queue's tab strip
-     (AdminListingsHeader.module.css). The page sets `data-fade-end` through
-     `useHasHiddenEndContent`. The mask reads only alpha, so the opaque stop
-     is any solid token. */
-  .viewSwitchScroller[data-fade-end] {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      var(--plum) calc(100% - 28px),
-      transparent
-    );
-    mask-image: linear-gradient(
-      to right,
-      var(--plum) calc(100% - 28px),
-      transparent
-    );
-  }
-  .viewSwitch > button {
-    flex: none;
-    white-space: nowrap;
-  }
 }
 
 .loadMore {

@@ -540,7 +540,6 @@ export const system: Catalog = {
   // mesma funcionalidade, e a metade pública já vive aqui.
   "statusAdmin.navLabel": "Incidentes de estado",
   "statusAdmin.breadcrumb": "Administração",
-  "statusAdmin.eyebrow": "Plataforma",
   "statusAdmin.title": "Incidentes de <em>estado</em>",
   "statusAdmin.headerSub":
     "O que os membros veem na página pública de estado. Tudo o que for publicado aqui é legível sem conta, incluindo por quem não consegue iniciar sessão.",

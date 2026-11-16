@@ -1,6 +1,8 @@
 import { useLayoutEffect, useMemo, useState, type ReactNode } from "react";
+import { AnimatePresence } from "motion/react";
 import { SearchInput } from "./SearchInput";
 import { MemberSelectRow } from "./MemberSelectRow";
+import { ViewFade } from "./ViewFade";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./MemberSelectList.module.css";
 
@@ -91,6 +93,11 @@ export interface MemberSelectListProps {
    * search. Unset, the results always show.
    */
   isListHidden?: boolean;
+  /** Opt-in: names the answer the rows show (a settled server search term,
+   *  say). The rows swap, with a fade, only when this key changes; a change
+   *  to `people` alone updates them in place. The search field stays
+   *  mounted. Unset, the results render exactly as before. */
+  resultsKey?: string;
 }
 
 /**
@@ -119,6 +126,7 @@ export function MemberSelectList({
   pinnedPeople,
   isCompact = false,
   isListHidden = false,
+  resultsKey,
 }: MemberSelectListProps) {
   const { t } = useTranslation();
   const [localQuery, setLocalQuery] = useState("");
@@ -248,7 +256,13 @@ export function MemberSelectList({
           className={styles.results}
           style={{ minHeight: resultsMinHeight }}
         >
-          {results}
+          {resultsKey === undefined || results === null ? (
+            results
+          ) : (
+            <AnimatePresence mode="wait" initial={false}>
+              <ViewFade key={resultsKey}>{results}</ViewFade>
+            </AnimatePresence>
+          )}
         </div>
       )}
     </div>

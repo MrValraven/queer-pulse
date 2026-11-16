@@ -1,283 +1,178 @@
-/* ── Shared card surface ─────────────────────────────────────────────────── */
-.card,
-.statCard,
-.queueCard,
-.feedCard,
-.transpCard {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-}
+/* Overview page. The header, stat tiles and panels come from the admin kit
+   (src/features/admin/ui); this file holds the page grid, the triage and feed
+   rows, the chart slots, and the chart marks the Reports and Feature usage
+   plots share. */
 
-/* ── Page header (ax-ph) ─────────────────────────────────────────────────── */
-.ph {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 26px;
+/* ── Hero header ─────────────────────────────────────────────────────────── */
+/* Shimmer lines standing in for the headline and sub while the overview
+   loads. Spans, so they sit validly inside the kit's h1 and p. */
+.skeleton {
+  display: block;
+  max-width: 100%;
+  border-radius: var(--radius-10);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--line-rgb), 0.06) 25%,
+    rgba(var(--line-rgb), 0.11) 50%,
+    rgba(var(--line-rgb), 0.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: dashShimmer 1.5s ease infinite;
 }
-.phText {
-  min-width: 0;
+.titleSkeleton {
+  width: 420px;
+  height: 1em;
+  margin-top: 4px;
 }
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--text-11);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-  margin-bottom: 14px;
+.subSkeleton {
+  width: 360px;
+  height: 15px;
+  margin-top: 6px;
 }
-.eyebrowDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--jade);
-  box-shadow: var(--ring-jade);
-  animation: dashPulse 2.2s var(--ease, ease) infinite;
-}
-.h1 {
-  font-family: var(--serif);
-  font-size: var(--text-title);
-  font-weight: 400;
-  line-height: 1.04;
-  letter-spacing: -0.015em;
-  color: var(--text-strong);
-  margin: 0;
-}
-[data-theme="dark"] .h1 {
-  color: var(--ink);
-}
-.h1 em {
-  color: var(--accent-ink);
-  font-style: italic;
-}
-.phSub {
-  margin: 14px 0 0;
-  max-width: 540px;
-  font-size: var(--text-15);
-  line-height: 1.55;
-  color: var(--ink-60);
-}
-.phRetry {
-  margin-top: 16px;
-}
-.phActions {
-  display: flex;
-  gap: 10px;
-  flex: none;
-}
-
-@keyframes dashPulse {
-  0%,
+@keyframes dashShimmer {
+  0% {
+    background-position: -200% 0;
+  }
   100% {
-    box-shadow: var(--ring-jade);
-  }
-  /* Expanded, fading companion frame for the pulse's outer edge: not a
-     resting ring, so it stays a literal value (same pattern as
-     adminUi.module.css's adminPulse and AdminGovernancePage's govPulse). */
-  50% {
-    box-shadow: 0 0 0 6px rgba(var(--jade-rgb), 0.04);
+    background-position: 200% 0;
   }
 }
-
-/* ── Hero stat grid ──────────────────────────────────────────────────────── */
-/* Column layout + gap come from the shared `StatGrid` (`columns={4}`), which
-   caps at 4 wide and wraps down responsively; this only adds the section gap. */
-.statGrid {
-  margin-bottom: 22px;
-}
-.statCard {
+.retrySlot {
   display: flex;
-  flex-direction: column;
-  gap: 7px;
-  padding: 18px 20px;
-  transition:
-    transform 0.18s var(--ease),
-    box-shadow 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .statCard:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift);
-  }
-}
-.statLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: var(--text-12-5);
-  color: var(--ink-60);
-}
-.statIcon {
-  width: 16px;
-  height: 16px;
-  color: var(--accent-ink);
-}
-/* Inline-block gives this span its own 30px line box, so the rolling figure
-   (top-aligned, one line tall) shares a baseline with the prefix and unit. */
-.statNum {
-  display: inline-block;
-  font-family: var(--serif);
-  font-size: var(--text-30);
-  font-weight: 500;
-  line-height: 1;
-  color: var(--ink);
-}
-.statNum small {
-  font-size: var(--text-16);
-  font-weight: 500;
-  color: var(--ink-60);
-  margin-left: 1px;
-}
-/* An un-backed metric (e.g. no sustainer payments/resolved reports yet) —
-   the "not measured yet" label stands in for the count-up value, so it
-   holds the same line but reads as muted chrome rather than a fabricated
-   number. */
-.statNumMuted {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: var(--text-19);
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--ink-60);
-}
-.statFoot {
-  font-size: var(--text-12);
-  color: var(--ink-60);
-}
-.trend {
-  font-weight: 700;
-}
-.trend_up {
-  color: var(--jade);
-}
-.trend_down {
-  color: var(--jade);
-}
-.trend_warn {
-  color: var(--accent-ink);
 }
 
-/* ── Dashboard grid ──────────────────────────────────────────────────────── */
+/* ── Page grid ───────────────────────────────────────────────────────────── */
 .dashGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 348px;
-  gap: 22px;
+  gap: var(--admin-section-gap);
   align-items: start;
 }
-.dashLeft {
+.dashMain {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: var(--admin-section-gap);
   min-width: 0;
 }
-.chart2up {
+.chartPair {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--admin-section-gap);
 }
-.viewReportLink {
+
+/* A chart slot: the shared ChartFrame takes the panel's padding, corner,
+   elevation and title size, so the charts sit in the same family as the
+   triage and feed panels. */
+.chartPanel {
+  display: flex;
+  min-width: 0;
+}
+.chartPanel > figure {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: var(--admin-panel-pad);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
+}
+.chartPanel figcaption {
+  font-size: var(--text-16);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.textLink {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   align-self: flex-start;
+  min-height: 32px;
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: var(--accent-ink);
+  color: var(--accent-text);
   text-decoration: none;
 }
-.viewReportLink:hover {
-  text-decoration: underline;
-}
-
-/* ── Triage queue ────────────────────────────────────────────────────────── */
-.queueCard {
-  padding: 8px 10px;
-}
-.secHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 14px 2px;
-}
-.secTitle {
-  font-family: var(--serif);
-  font-size: var(--text-22);
-  font-weight: 400;
-  color: var(--text-strong);
-  margin: 0;
-}
-[data-theme="dark"] .secTitle {
-  color: var(--ink);
-}
-.secTitle em {
-  color: var(--accent-ink);
-  font-style: italic;
-}
-.secLink {
-  border: none;
-  background: none;
-  font: inherit;
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  cursor: pointer;
-}
 @media (hover: hover) {
-  .secLink:hover {
-    color: var(--text-strong);
+  .textLink:hover {
+    text-decoration: underline;
   }
 }
-.queue {
+.textLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Row lists (triage, feed) ────────────────────────────────────────────── */
+/* Rows take the kit's row height, divider and hover tint from
+   adminTableClasses.row; these rules add the icon, text and inset. */
+.rowList {
   display: flex;
   flex-direction: column;
 }
-.qRow {
-  display: flex;
-  align-items: center;
+.qRow,
+.fItem {
   gap: 13px;
-  padding: 12px 14px;
-  border-radius: var(--radius-14);
+  padding: var(--admin-row-pad);
+  padding-inline: var(--admin-panel-pad);
   text-decoration: none;
   color: var(--ink);
-  transition: background 0.16s var(--ease);
 }
-@media (hover: hover) {
-  .qRow:hover {
-    background: rgba(var(--plum-rgb), 0.045);
-  }
+.qRow:focus-visible,
+.fItem:focus-visible {
+  outline: var(--focus-ring);
+  /* Inset: the flush panel body clips anything drawn outside a row. */
+  outline-offset: -3px;
+}
+
+/* Tinted icon wells, shared by the triage rows and the feed. */
+.qIco,
+.fIco {
+  display: grid;
+  place-items: center;
+  flex: none;
 }
 .qIco {
   width: 38px;
   height: 38px;
   border-radius: var(--radius-11);
-  display: grid;
-  place-items: center;
-  flex: none;
 }
 .qIco svg {
   width: 19px;
   height: 19px;
 }
-.qIco_danger {
+.fIco {
+  width: 30px;
+  height: 30px;
+  margin-top: 1px;
+  border-radius: var(--radius-9);
+}
+.fIco svg {
+  width: 16px;
+  height: 16px;
+}
+.tone_danger {
   background: rgba(var(--danger-rgb), 0.1);
   color: var(--danger);
 }
-.qIco_coral {
+.tone_coral {
   background: rgba(var(--accent-rgb), 0.13);
   color: var(--accent-ink);
 }
-.qIco_jade {
+.tone_jade {
   background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
+  color: var(--jade-ink);
 }
-.qIco_amber {
+.tone_amber {
   background: rgba(var(--amber-rgb), 0.2);
   color: var(--amber-ink);
 }
+.tone_violet {
+  background: rgba(var(--violet-rgb), 0.13);
+  color: var(--violet);
+}
+
+/* ── Triage queue ────────────────────────────────────────────────────────── */
 .qTx {
   display: flex;
   flex-direction: column;
@@ -291,27 +186,26 @@
   color: var(--ink);
 }
 .qSub {
-  font-size: var(--text-12-5);
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .qSub em {
   font-style: italic;
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .qCount {
+  flex: none;
   font-family: var(--serif);
   font-size: var(--text-22);
   font-weight: 500;
   color: var(--text-strong);
-  flex: none;
-}
-[data-theme="dark"] .qCount {
-  color: var(--ink);
 }
 .qArrow {
-  color: var(--ink-40);
   flex: none;
-  transition: transform 0.16s var(--ease);
+  color: var(--ink-40);
+  transition:
+    transform 0.16s var(--ease),
+    color 0.16s var(--ease);
 }
 @media (hover: hover) {
   .qRow:hover .qArrow {
@@ -320,7 +214,115 @@
   }
 }
 
-/* ── Charts ──────────────────────────────────────────────────────────────── */
+/* ── Live feed rail ──────────────────────────────────────────────────────── */
+/* Sticks under the admin top bar while the main column scrolls. */
+.feedRail {
+  position: sticky;
+  top: calc(var(--admin-bar-h) + var(--admin-content-pad-y));
+}
+/* The panel header gives its title a 240px basis, which pushes the live pill
+   onto its own line in the narrow feed column. Letting the title size to its
+   text keeps the pill beside it. */
+.feedPanel > header > :first-child {
+  flex-basis: auto;
+}
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--jade-ink);
+}
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+  box-shadow: var(--ring-jade);
+  animation: dashPulse 2.2s var(--ease, ease) infinite;
+}
+@keyframes dashPulse {
+  0%,
+  100% {
+    box-shadow: var(--ring-jade);
+  }
+  /* Expanded, fading companion frame for the pulse's outer edge: not a
+     resting ring, so it stays a literal value (same pattern as
+     adminUi.module.css's adminPulse and AdminGovernancePage's govPulse). */
+  50% {
+    box-shadow: 0 0 0 6px rgba(var(--jade-rgb), 0.04);
+  }
+}
+.fItem {
+  align-items: flex-start;
+}
+.fItem > :only-child {
+  flex: 1;
+}
+.fTx {
+  min-width: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.fTx b {
+  font-weight: 700;
+}
+.fTx em {
+  font-style: italic;
+  color: var(--accent-text);
+}
+.fTime {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+.feedAllRow {
+  display: flex;
+  align-items: center;
+  min-height: var(--admin-row-h-compact);
+  padding-inline: var(--admin-panel-pad);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+}
+/* The panel's footer: the transparency promise behind every row above. */
+.transparency {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: var(--admin-panel-pad);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  background: rgba(var(--plum-rgb), 0.025);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.transparency b {
+  color: var(--text-strong);
+}
+.transparency .textLink {
+  display: inline-flex;
+  min-height: 0;
+  font-size: inherit;
+}
+.transparencyIco {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--jade-ink);
+}
+:global([data-theme="dark"]) .transparency {
+  background: rgba(var(--cream-rgb), 0.04);
+}
+
+/* ── Chart marks ─────────────────────────────────────────────────────────── */
+/* Shared with the Reports and Feature usage plots, which import this module
+   for these classes. */
 .chAxisSerif {
   font-family: var(--serif);
   font-size: var(--text-12);
@@ -337,13 +339,6 @@
   font-weight: 700;
   fill: var(--text-strong);
 }
-.chSla {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: var(--text-11);
-  fill: var(--danger);
-}
-
 .barSeg {
   transform-box: fill-box;
   transform-origin: bottom;
@@ -370,218 +365,33 @@
   }
 }
 
-/* ── Live feed rail ──────────────────────────────────────────────────────── */
-.feedRail {
-  position: sticky;
-  top: 90px;
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-.feedCard {
-  padding: 8px 20px 16px;
-}
-.feedHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 0 6px;
-}
-.feedTitle {
-  font-family: var(--serif);
-  font-size: var(--text-19);
-  font-weight: 400;
-  color: var(--text-strong);
-}
-[data-theme="dark"] .feedTitle {
-  color: var(--ink);
-}
-.live {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--jade);
-}
-.liveDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--jade);
-  box-shadow: var(--ring-jade);
-  animation: dashPulse 2.2s var(--ease, ease) infinite;
-}
-.feed {
-  display: flex;
-  flex-direction: column;
-}
-.fItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  padding: 11px 6px;
-  border-radius: var(--radius-12);
-  text-decoration: none;
-  color: var(--ink);
-  transition: background 0.16s var(--ease);
-}
-@media (hover: hover) {
-  .fItem:hover {
-    background: rgba(var(--plum-rgb), 0.045);
-  }
-}
-.fIco {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-9);
-  display: grid;
-  place-items: center;
-  flex: none;
-  margin-top: 1px;
-}
-.fIco svg {
-  width: 16px;
-  height: 16px;
-}
-.fIco_jade {
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
-}
-.fIco_coral {
-  background: rgba(var(--accent-rgb), 0.13);
-  color: var(--accent-ink);
-}
-.fIco_danger {
-  background: rgba(var(--danger-rgb), 0.1);
-  color: var(--danger);
-}
-.fIco_violet {
-  background: rgba(var(--violet-rgb), 0.13);
-  color: var(--violet);
-}
-.fIco_amber {
-  background: rgba(var(--amber-rgb), 0.2);
-  color: var(--amber-ink);
-}
-.fTx {
-  font-size: var(--text-13);
-  line-height: 1.45;
-  color: var(--ink);
-}
-.fTx b {
-  font-weight: 700;
-}
-.fTx em {
-  font-style: italic;
-  color: var(--accent-ink);
-}
-.fTime {
-  display: block;
-  font-size: var(--text-12);
-  color: var(--ink-40);
-  margin-top: 3px;
-}
-
-.feedAll {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin: 6px 6px 0;
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--accent-text);
-  text-decoration: none;
-}
-
-@media (hover: hover) {
-  .feedAll:hover {
-    text-decoration: underline;
-  }
-}
-
-.feedAll:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-/* ── Transparency note ───────────────────────────────────────────────────── */
-.transpCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 20px 22px;
-  font-size: var(--text-13);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-.transpIco {
-  width: 20px;
-  height: 20px;
-  color: var(--jade);
-  flex: none;
-  margin-top: 1px;
-}
-.transpLink {
-  color: var(--accent-text);
-  font-weight: 600;
-  text-decoration: none;
-}
-@media (hover: hover) {
-  .transpLink:hover {
-    text-decoration: underline;
-  }
-}
-
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 1200px) {
   .dashGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .feedRail {
     position: static;
   }
 }
 @media (--lg) {
-  .chart2up {
-    grid-template-columns: 1fr;
-  }
-  .ph {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .phActions {
-    width: 100%;
+  .chartPair {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .statCard {
-    transition: none;
-  }
-  @media (hover: hover) {
-    .statCard:hover {
-      transform: none;
-    }
-  }
-  .eyebrowDot,
-  .liveDot {
-    animation: none;
-  }
+  .skeleton,
+  .liveDot,
   .barSeg,
   .lineDraw {
     animation: none;
   }
   .qArrow {
     transition: none;
-    transform: none;
   }
   @media (hover: hover) {
     .qRow:hover .qArrow {
-      transition: none;
       transform: none;
     }
   }

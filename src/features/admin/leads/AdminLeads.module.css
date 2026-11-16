@@ -1,53 +1,19 @@
 /* The leads directory (AdminLeadsPage): toolbar, table and rows, the Add
    lead dialog's form, and the lead page's persona panel. */
 
-/* ── Toolbar ── */
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--gap-xs) var(--gap-sm);
-  margin-block-start: var(--gap-sm);
-}
-
+/* ── Toolbar ── the layout and control heights come from AdminToolbar; the
+   search keeps a wrapper only to place its `/` key hint. */
 .searchWrap {
   position: relative;
-  flex: 1 1 18rem;
-  /* A search field reads best at about a name and an email long. */
-  max-width: 28rem;
+  flex: 1 1 220px;
+  max-width: 360px;
+  min-width: 0;
 }
 
-.search {
-  max-width: none;
-}
-
-/* The search and the type select read as one family: the same pill, the
-   same hairline on paper, the same height. On a fine pointer the field
-   trims to the small Select's 40px (the padding moves into the fixed
-   height) and keeps its 16px type, so iOS never zooms. */
-@media (pointer: fine) {
-  .search input {
-    height: 40px;
-    padding-block: 0;
-  }
-}
-
-.typeSelect > button:first-of-type {
-  border-radius: var(--radius-pill);
-  padding-inline: 16px 14px;
-}
-
-/* At rest the trigger takes the search field's paper and hairline; open
-   and focused it keeps the Select's own states. */
-.typeSelect > button:first-of-type:not([aria-expanded="true"], :focus-visible) {
-  background: var(--paper);
-  border-color: rgba(var(--line-rgb), 0.14);
-}
-
-/* On touch both controls reach the 44px target. */
-@media not (pointer: fine) {
-  .typeSelect > button:first-of-type {
-    min-height: var(--tap-min);
+@media (max-width: 719.98px) {
+  .searchWrap {
+    flex-basis: 100%;
+    max-width: none;
   }
 }
 
@@ -82,48 +48,14 @@
   }
 }
 
-.typeFilter {
-  /* Wide enough for the longest type label beside its clear button. */
-  flex: 0 1 13rem;
-  min-width: 12rem;
-}
-
-.toolbarEnd {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--gap-xs);
-  margin-inline-start: auto;
-}
-
-.summary {
-  margin: 0;
-  font-size: var(--text-14);
-  font-weight: 500;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-60);
-}
-
-@media (--md) {
-  .searchWrap {
-    max-width: none;
-    flex-basis: 100%;
-  }
-
-  .typeFilter {
-    flex: 1 1 12rem;
-  }
-
-  .toolbarEnd {
-    margin-inline-start: 0;
-  }
+/* The toolbar and the list sit one gap below what comes before them. */
+.block {
+  margin-block-start: var(--gap-sm);
 }
 
 /* ── The list ── */
 .panel {
   container: leads-list / inline-size;
-  margin-block-start: var(--gap-sm);
 }
 
 /* The positioned parent a leaving view is lifted out against while the
@@ -133,12 +65,20 @@
 }
 
 .table {
-  /* The columns of a wide list, shared by the head and every row. */
-  --lead-columns: minmax(0, 1.9fr) 9rem minmax(0, 1.1fr) 6.5rem
-    minmax(0, 1fr) minmax(0, 1.15fr);
+  /* The columns of a wide list, shared by the head and every row. The head
+     and each row are separate grids, so every track is fixed or fr. Last
+     activity keeps room for its time and note count; Follow-up keeps room
+     for its longest line ("Em atraso · 10 de nov." is 139px of text, plus
+     its icon and gap). At a 1280 window the row's content is about 924px:
+     the fixed tracks and the two floors take 620px plus six gaps, which
+     leaves name about 139px and location about 81px. */
+  --lead-columns: minmax(0, 1.9fr) 8rem minmax(0, 1.1fr) 5.75rem 6.25rem
+    minmax(8.25rem, 1fr) minmax(10.5rem, 1.15fr);
 }
 
-.tableHead {
+/* The column head is the kit's head row; it shows only on a wide list. The
+   two-class selector outranks the kit's display. */
+.table .tableHead {
   display: none;
 }
 
@@ -160,6 +100,15 @@
   margin-block-end: var(--gap-xs);
 }
 
+/* The load error's heading reads as the notice title it stands in for. */
+.noticeTitle {
+  margin: 0 0 2px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+
 .skeletonRows {
   display: grid;
   gap: var(--gap-xs);
@@ -170,7 +119,7 @@
    (below). The wrapper clips the shimmer to its corners. */
 .skeletonRow {
   overflow: clip;
-  border-radius: var(--radius-16);
+  border-radius: var(--admin-panel-radius);
 }
 
 .loadMore {
@@ -197,7 +146,7 @@
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-16);
+  border-radius: var(--admin-panel-radius);
   transition:
     background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease),
@@ -390,6 +339,26 @@
   display: none;
 }
 
+/* Someone in charge: the stack takes a third line of its own. A card with
+   nobody in charge hides the cell, so it never names an area the card
+   lacks (an unknown area would add implicit tracks). */
+.row[data-has-assignees] .rowDetails {
+  grid-template-areas:
+    "followUp activity"
+    "location links"
+    "assignees assignees";
+}
+
+.rowAssignees {
+  grid-area: assignees;
+  display: flex;
+  min-width: 0;
+}
+
+.row:not([data-has-assignees]) .rowAssignees {
+  display: none;
+}
+
 /* Last activity: the time, then the note count as a quiet icon and
    number. */
 .rowActivity {
@@ -469,30 +438,24 @@
   opacity: 0.6;
 }
 
-/* ── A wide list: one table, a line per lead ── */
-@container leads-list (min-width: 760px) {
+/* ── A wide list: one table, a line per lead ──
+   It starts once the name column keeps about 130px; a narrower list stays
+   as cards. */
+@container leads-list (min-width: 960px) {
   .table {
     overflow: clip;
     background: var(--paper);
     border: 1px solid rgba(var(--line-rgb), 0.09);
-    border-radius: var(--radius-card);
+    border-radius: var(--admin-panel-radius);
     box-shadow: var(--shadow-e1);
   }
 
-  .tableHead {
+  /* The kit's head row, laid on the rows' own columns. */
+  .table .tableHead {
     display: grid;
     grid-template-columns: var(--lead-columns);
-    align-items: center;
     gap: var(--gap-sm);
-    min-height: 40px;
-    padding: 0 20px;
-    font-size: var(--text-11-5);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-60);
-    background: rgba(var(--line-rgb), 0.025);
-    border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+    padding-inline: var(--admin-panel-pad);
   }
 
   .headName {
@@ -516,10 +479,10 @@
 
   .row {
     grid-template-columns: var(--lead-columns);
-    grid-template-areas: "name stage location links activity followUp";
+    grid-template-areas: "name stage location links assignees activity followUp";
     min-height: 64px;
     margin: 0;
-    padding: 10px 20px;
+    padding: var(--gap-xs) var(--admin-panel-pad);
     background: transparent;
     border: none;
     border-radius: 0;
@@ -566,7 +529,13 @@
     display: inline-flex;
   }
 
+  /* The table always has the In charge column, so an empty cell holds it. */
+  .row:not([data-has-assignees]) .rowAssignees {
+    display: flex;
+  }
+
   .rowLinks,
+  .rowAssignees,
   .rowActivity {
     justify-self: start;
   }

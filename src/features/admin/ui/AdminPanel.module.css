@@ -1,0 +1,112 @@
+.panel {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap-xs) var(--gap-sm);
+  padding: var(--admin-panel-pad) var(--admin-panel-pad) 0;
+}
+
+.headText {
+  min-width: 0;
+  flex: 1 1 240px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent-text);
+}
+
+.description {
+  margin: 4px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.body {
+  padding: var(--admin-panel-pad);
+  min-width: 0;
+}
+
+/* Directly under a header the body keeps a smaller top gap. */
+.header + .body {
+  padding-top: var(--gap-sm);
+}
+
+.flush,
+.header + .flush {
+  padding: 0;
+}
+
+/* A flush body clips itself to the panel corners; the panel itself stays
+   unclipped so action popovers and focus rings can extend past its edge. */
+.flush {
+  overflow: clip;
+  border-radius: var(--admin-panel-radius-inner);
+}
+
+.header + .flush {
+  margin-top: var(--gap-sm);
+  border-radius: 0 0 var(--admin-panel-radius-inner)
+    var(--admin-panel-radius-inner);
+}
+
+/* Overflow-visible flush body: no clip, so the first and last child carry the
+   panel's inner corners themselves. */
+.flush.flushVisible {
+  overflow: visible;
+}
+
+.flushVisible > :first-child {
+  border-top-left-radius: var(--admin-panel-radius-inner);
+  border-top-right-radius: var(--admin-panel-radius-inner);
+}
+
+.flushVisible > :last-child {
+  border-bottom-left-radius: var(--admin-panel-radius-inner);
+  border-bottom-right-radius: var(--admin-panel-radius-inner);
+}
+
+.header + .flushVisible > :first-child {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Phone: the panel pad and radius tokens shrink in admin.css; the header and
+   body follow them, so only the tighter header-to-body gap lives here. */
+@media (max-width: 480px) {
+  .header + .body {
+    padding-top: var(--gap-xs);
+  }
+
+  .header + .flush {
+    padding-top: 0;
+    margin-top: var(--gap-xs);
+  }
+}

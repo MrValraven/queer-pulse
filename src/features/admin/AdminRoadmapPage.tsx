@@ -1,3 +1,4 @@
+import { FiEye, FiFileText, FiList } from "react-icons/fi";
 import { useState } from "react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
@@ -32,6 +33,7 @@ import { NotBuildingView } from "./roadmap/views/NotBuildingView";
 import { PublicPreviewView } from "./roadmap/views/PublicPreviewView";
 import { ArchiveView } from "./roadmap/views/ArchiveView";
 import styles from "./AdminRoadmapPage.module.css";
+import phone from "./adminPhoneActions.module.css";
 
 /** One case per `RoadmapTabId` — exhaustive, so a 10th tab added to
  *  `ROADMAP_TABS` without a matching case here is a compile error. */
@@ -116,7 +118,7 @@ function AdminRoadmapPageContent() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:roadmap.page.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.site")}
           title={
             <Translation
               i18nKey="admin:roadmap.page.title"
@@ -129,17 +131,38 @@ function AdminRoadmapPageContent() {
               <Button variant="primary" onClick={() => itemDrawer.open("new")}>
                 {t("admin:roadmap.page.newItemCta")}
               </Button>
-              <Button variant="ghost" onClick={() => modals.open("digest")}>
-                {t("admin:roadmap.page.draftDigestCta")}
+              {/* On a phone the three secondary actions fold to their icons
+                  on one line beside New item; their words stay for screen
+                  readers. */}
+              <Button
+                variant="ghost"
+                className={phone.iconButton}
+                onClick={() => modals.open("digest")}
+              >
+                <FiFileText aria-hidden />
+                <span className={phone.label}>
+                  {t("admin:roadmap.page.draftDigestCta")}
+                </span>
               </Button>
               <Button
                 variant="ghost"
+                className={phone.iconButton}
                 onClick={() => setActiveTab("publicPreview")}
               >
-                {t("admin:roadmap.page.previewPublicCta")}
+                <FiEye aria-hidden />
+                <span className={phone.label}>
+                  {t("admin:roadmap.page.previewPublicCta")}
+                </span>
               </Button>
-              <Button variant="ghost" onClick={() => modals.open("audit")}>
-                {t("admin:roadmap.page.auditLogCta")}
+              <Button
+                variant="ghost"
+                className={phone.iconButton}
+                onClick={() => modals.open("audit")}
+              >
+                <FiList aria-hidden />
+                <span className={phone.label}>
+                  {t("admin:roadmap.page.auditLogCta")}
+                </span>
               </Button>
             </>
           }

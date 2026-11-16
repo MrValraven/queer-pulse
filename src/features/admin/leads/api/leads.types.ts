@@ -42,8 +42,39 @@ export const LEAD_ENTRY_KINDS = [
   "persona_linked",
   "persona_unlinked",
   "created",
+  "assignee_added",
+  "assignee_removed",
+  "assignee_access_ended",
 ] as const;
 export type LeadEntryKind = (typeof LEAD_ENTRY_KINDS)[number];
+
+/** Most staff in charge of one lead. */
+export const LEAD_MAX_ASSIGNEES = 10;
+/** Picker rows for a blank search: the caller first, then by name. */
+export const LEAD_STAFF_PREVIEW_LIMIT = 5;
+/** Picker rows for a non-blank search. */
+export const LEAD_STAFF_SEARCH_LIMIT = 20;
+/** Assignee summaries on a list row; `assigneeCount` holds the rest. */
+export const LEAD_LIST_ASSIGNEES_SHOWN = 3;
+
+/** The "In charge" views of the list, in segmented-control order after
+ *  Everyone (Everyone is the absent value). `me_or_unassigned` is the nav
+ *  badge's set. */
+export const LEAD_ASSIGNED_TO_FILTERS = [
+  "me",
+  "me_or_unassigned",
+  "unassigned",
+] as const;
+export type LeadAssignedToFilter = (typeof LEAD_ASSIGNED_TO_FILTERS)[number];
+
+/** Why LEAD_ASSIGNEE_NOT_STAFF refused, in check order. */
+export const LEAD_ASSIGNEE_REFUSAL_REASONS = [
+  "no_access",
+  "suspended",
+  "deactivated",
+] as const;
+export type LeadAssigneeRefusalReason =
+  (typeof LEAD_ASSIGNEE_REFUSAL_REASONS)[number];
 
 export const LEAD_NAME_MAX = 120;
 export const LEAD_LOCATION_MAX = 120;
@@ -95,6 +126,22 @@ export interface LeadLinkedPersonaDTO extends LeadPersonaDTO {
   publicState: LeadPersonaPublicState;
 }
 
+/** A staff member in charge of a lead, a picker row, or the subject of an
+ *  assignee history entry (contract 5.1). */
+export interface LeadStaffSummaryDTO {
+  /** The user id. */
+  id: string;
+  /** Empty when the profile row is missing. */
+  slug: string;
+  /** Empty when the profile row is missing. */
+  displayName: string;
+  /** Null when the member has no photo or hid it; the avatar shows
+   *  initials then. */
+  avatarUrl: string | null;
+  /** A crop rect, read with `personaWallCropOf`. */
+  avatarCrop: unknown | null;
+}
+
 export interface LeadListItemDTO {
   id: string;
   name: string;
@@ -114,6 +161,10 @@ export interface LeadListItemDTO {
   /** The newest entry's `createdAt`; the "created" entry always exists. */
   lastEntryAt: string;
   updatedAt: string;
+  /** The first three by assignment time. */
+  assignees: LeadStaffSummaryDTO[];
+  /** Every assignee of the lead. */
+  assigneeCount: number;
 }
 
 export interface LeadListPageDTO {
@@ -156,6 +207,9 @@ export interface LeadEntryDTO {
   editedAt: string | null;
   /** A note the caller wrote, or any note when the caller is an Admin. */
   canEdit: boolean;
+  /** Set on the three assignee kinds while the account exists; null on
+   *  every other kind. */
+  subject: LeadStaffSummaryDTO | null;
 }
 
 export interface LeadDTO {
@@ -175,6 +229,8 @@ export interface LeadDTO {
   updatedAt: string;
   /** Every entry, newest first. */
   entries: LeadEntryDTO[];
+  /** Every assignee, by assignment time. */
+  assignees: LeadStaffSummaryDTO[];
 }
 
 export interface LeadPersonaSearchResultDTO {
@@ -184,7 +240,8 @@ export interface LeadPersonaSearchResultDTO {
 }
 
 /** Every reason code a lead refusal carries (contract section 3, table
- *  order), then the two codes of the stage change revert route. */
+ *  order), then the two codes of the stage change revert route, then the
+ *  four assignee codes. */
 export const LEAD_REASON_CODES = [
   "LEAD_NOT_FOUND",
   "LEAD_NAME_REQUIRED",
@@ -211,6 +268,10 @@ export const LEAD_REASON_CODES = [
   "LEAD_CURSOR_INVALID",
   "LEAD_ENTRY_NOT_FOUND",
   "LEAD_ENTRY_NOT_REVERTIBLE",
+  "LEAD_ASSIGNED_TO_INVALID",
+  "LEAD_ASSIGNEE_NOT_FOUND",
+  "LEAD_ASSIGNEE_NOT_STAFF",
+  "LEAD_TOO_MANY_ASSIGNEES",
 ] as const;
 export type LeadReasonCode = (typeof LEAD_REASON_CODES)[number];
 
@@ -236,6 +297,8 @@ export interface LeadListFilters {
   stage: LeadStage | null;
   type: LeadType | null;
   isDueOnly: boolean;
+  /** Null is Everyone. */
+  assignedTo: LeadAssignedToFilter | null;
 }
 
 export const EMPTY_LEAD_FILTERS: LeadListFilters = {
@@ -243,6 +306,7 @@ export const EMPTY_LEAD_FILTERS: LeadListFilters = {
   stage: null,
   type: null,
   isDueOnly: false,
+  assignedTo: null,
 };
 
 export interface CreateLeadBody {
@@ -281,6 +345,16 @@ export interface LeadPersonaSearch {
   retry: () => void;
 }
 
+/** The lead page picker's search state (built by `useLeadStaffSearch`). */
+export interface LeadStaffSearch {
+  term: string;
+  results: LeadStaffSummaryDTO[];
+  isSearching: boolean;
+  isError: boolean;
+  error: unknown;
+  retry: () => void;
+}
+
 export function isLeadStage(value: unknown): value is LeadStage {
   return (
     typeof value === "string" &&
@@ -292,6 +366,15 @@ export function isLeadType(value: unknown): value is LeadType {
   return (
     typeof value === "string" &&
     (LEAD_TYPES as readonly string[]).includes(value)
+  );
+}
+
+export function isLeadAssignedToFilter(
+  value: unknown,
+): value is LeadAssignedToFilter {
+  return (
+    typeof value === "string" &&
+    (LEAD_ASSIGNED_TO_FILTERS as readonly string[]).includes(value)
   );
 }
 
@@ -322,6 +405,8 @@ export interface LeadRefusalDetail {
   publicState: Exclude<LeadPersonaPublicState, "shown"> | null;
   /** Why a stage change revert was refused. */
   revertReason: LeadRevertRefusalReason | null;
+  /** Why an assignment was refused; read from the same `reason` field. */
+  assigneeReason: LeadAssigneeRefusalReason | null;
 }
 
 /** Reads each extra field off a refusal body; a field that is missing or of
@@ -341,5 +426,7 @@ export function leadRefusalDetailOf(error: unknown): LeadRefusalDetail {
       HIDDEN_LEAD_PERSONA_STATES.find((state) => state === publicState) ?? null,
     revertReason:
       LEAD_REVERT_REFUSAL_REASONS.find((known) => known === reason) ?? null,
+    assigneeReason:
+      LEAD_ASSIGNEE_REFUSAL_REASONS.find((known) => known === reason) ?? null,
   };
 }

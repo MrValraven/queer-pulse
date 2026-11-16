@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Button } from "../../shared/components/ui";
 import { useModerationQueueHealth } from "./api/useModerationQueueHealth";
 import {
   MODERATION_HEALTH_HREF,
   severityPresentation,
 } from "./moderationQueueHealth";
+import { AdminNotice } from "./ui";
 import styles from "./ModerationQueueHealth.module.css";
 
 /**
@@ -16,42 +17,41 @@ import styles from "./ModerationQueueHealth.module.css";
  * all-clear notice on every page would be exactly the low-grade background
  * pressure this feature exists to remove.
  *
- * The level is carried by the word and the glyph as well as the tone, matching
- * `ModerationQueueSeverityChip`, and the whole thing deep-links into the full
- * panel rather than trying to be it.
+ * The level is carried by the word as well as the tone (amber for warning,
+ * red for critical), and the whole thing deep-links into the full panel.
+ *
+ * `isInStack` is for a page that already spaces its children (a grid with a
+ * gap); on its own the notice keeps a gap under it.
  */
-export function ModerationHealthIndicator() {
+export function ModerationHealthIndicator({
+  isInStack = false,
+}: { isInStack?: boolean } = {}) {
   const { t } = useTranslation();
   const { data } = useModerationQueueHealth();
   const severity = data?.overallSeverity;
   if (!data || (severity !== "warning" && severity !== "critical")) return null;
 
-  const { Glyph, labelKey } = severityPresentation(severity);
+  const { labelKey } = severityPresentation(severity);
   const breachedCount = data.queues.filter(
     (entry) => entry.severity !== "ok",
   ).length;
 
   return (
-    <div
-      className={[
-        styles.indicator,
-        severity === "warning" && styles.indicatorWarning,
-        severity === "critical" && styles.indicatorCritical,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      role="status"
-    >
-      <Glyph className={styles.indicatorIcon} aria-hidden />
-      <span>
+    <div className={isInStack ? undefined : styles.indicator}>
+      <AdminNotice
+        tone={severity === "critical" ? "error" : "warn"}
+        liveRole="status"
+        action={
+          <Button variant="quiet" size="sm" to={MODERATION_HEALTH_HREF}>
+            {t("admin:moderationHealth.indicator.cta")}
+          </Button>
+        }
+      >
         {t(`admin:moderationHealth.indicator.${severity}`, {
           count: breachedCount,
           level: t(labelKey),
         })}
-      </span>
-      <Link className={styles.indicatorLink} to={MODERATION_HEALTH_HREF}>
-        {t("admin:moderationHealth.indicator.cta")}
-      </Link>
+      </AdminNotice>
     </div>
   );
 }

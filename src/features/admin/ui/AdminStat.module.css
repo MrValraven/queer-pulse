@@ -1,0 +1,233 @@
+/* The container query below reads this wrapper's width, so the grid
+   collapses with the space the page gives it and not with the viewport. */
+.tiles {
+  container-type: inline-size;
+  min-width: 0;
+}
+
+.grid {
+  display: grid;
+  gap: var(--gap-sm);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid[data-columns="3"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@container (max-width: 900px) {
+  .grid,
+  .grid[data-columns="3"],
+  .grid[data-columns="4"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Two-up holds down to a narrow phone so six filter tiles take three rows;
+   one column only below this width. */
+@container (max-width: 340px) {
+  .grid,
+  .grid[data-columns="2"],
+  .grid[data-columns="3"],
+  .grid[data-columns="4"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.item {
+  display: flex;
+  min-width: 0;
+}
+
+.tile {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--admin-stat-gap);
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: var(--admin-stat-pad);
+  text-align: start;
+  font: inherit;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
+}
+
+.pressable {
+  cursor: pointer;
+  transition:
+    background-color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+
+.pressable:hover {
+  background: rgba(var(--line-rgb), 0.05);
+}
+
+.pressable[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.pressable:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Link tile: the label's anchor stretches over the whole tile through ::after,
+   so the value and delta stay in the list item for screen readers. */
+.linkTile {
+  position: relative;
+  transition:
+    background-color 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    transform 0.18s var(--ease),
+    box-shadow 0.18s var(--ease);
+}
+
+.linkTile:hover {
+  background: rgba(var(--line-rgb), 0.05);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-e2);
+}
+
+.linkTile:has(.stretchLink:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.stretchLink {
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.stretchLink:focus-visible {
+  outline: none;
+}
+
+.stretchLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.cue {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink-60);
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.labelText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.value {
+  display: block;
+  width: 100%;
+  min-height: 1.1em;
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  font-weight: 500;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+.tone_alert .value {
+  color: var(--danger);
+}
+
+.tone_warn .value {
+  color: var(--amber-ink);
+}
+
+.delta {
+  display: inline-flex;
+  align-items: flex-start;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  gap: 4px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.deltaIcon {
+  flex-shrink: 0;
+  margin-top: 0.15em;
+  width: 12px;
+  height: 12px;
+}
+
+/* --jade is 3.98:1 on cream, so small delta text takes its AA ink. */
+.delta_up {
+  color: var(--jade-ink);
+}
+
+.delta_down {
+  color: var(--accent-text);
+}
+
+.delta_warn {
+  color: var(--accent-text);
+}
+
+.delta_alert {
+  color: var(--danger);
+}
+
+.delta_flat {
+  color: var(--ink-60);
+}
+
+.hint {
+  font-size: var(--text-12);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressable,
+  .linkTile {
+    transition: none;
+  }
+
+  .linkTile:hover {
+    transform: none;
+  }
+}

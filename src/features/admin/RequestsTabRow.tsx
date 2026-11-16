@@ -4,6 +4,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { photoOf } from "../communities/communityPeople";
 import type { ModRequest } from "../communities/community.model";
+import {
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import styles from "./ModPanel.module.css";
 
 /**
@@ -36,7 +41,13 @@ export function RequestsTabRow({
   };
 
   return (
-    <div className={[styles.modRow, styles.modRowWithActions].join(" ")}>
+    <div
+      className={[
+        adminTableClasses.row,
+        styles.listRow,
+        styles.modRowWithActions,
+      ].join(" ")}
+    >
       <Avatar
         initials={request.person.initials}
         tint={request.person.tint}
@@ -51,7 +62,7 @@ export function RequestsTabRow({
           {t("admin:modPanel.requests.requestedAgo", { time: request.time })}
         </div>
       </div>
-      <div className={styles.modActions}>
+      <AdminRowActions className={styles.modActions}>
         {/* DES-425: each label names the person it acts on. */}
         <Button
           variant="jade"
@@ -65,6 +76,7 @@ export function RequestsTabRow({
         </Button>
         <Button
           variant="ghost"
+          className={adminRowActionClasses.danger}
           onClick={decline}
           aria-disabled={isBusy || undefined}
           aria-label={t("admin:modPanel.requests.declineAriaLabel", {
@@ -73,7 +85,7 @@ export function RequestsTabRow({
         >
           <FiX aria-hidden /> {t("admin:modPanel.requests.declineCta")}
         </Button>
-      </div>
+      </AdminRowActions>
     </div>
   );
 }

@@ -1,0 +1,6 @@
+/* The error and empty states of a submission queue sit the same distance below
+   the tab strip or toolbar as the row list does (`.rows` in
+   AdminSubmissionList.module.css opens with the same gap). */
+.state {
+  margin-top: var(--admin-header-gap);
+}

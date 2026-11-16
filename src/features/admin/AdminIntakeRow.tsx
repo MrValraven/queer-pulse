@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
-import { AdminChip } from "./ui";
+import { AdminChip, AdminRowActions } from "./ui";
 import { AdminWaitingChip } from "./AdminSubmissionQueue";
 import { ADMIN_SUBMISSION_STATUS_TONE } from "./adminSubmissionMeta";
 import { AdminIntakePayload } from "./AdminIntakePayload";
@@ -13,6 +13,7 @@ import {
   type AdminIntakeDTO,
 } from "./api/adminIntakes.api";
 import styles from "./AdminSubmissionList.module.css";
+import intakeStyles from "./AdminIntakes.module.css";
 
 /** Day-precision date, the same shape every other admin queue prints. */
 function shortDate(fmt: Formatters, iso: string): string {
@@ -122,10 +123,10 @@ export function AdminIntakeRow({
             {t("admin:adminIntakes.confidential.body")}
           </p>
         ) : (
-          <>
+          <div className={intakeStyles.measure}>
             <IntakeContact intake={intake} />
             <AdminIntakePayload kind={intake.kind} payload={intake.payload} />
-          </>
+          </div>
         )}
 
         <div className={styles.rowDates}>
@@ -137,7 +138,7 @@ export function AdminIntakeRow({
       </div>
 
       <div className={styles.rowActions}>
-        <div className={styles.rowActionButtons}>
+        <AdminRowActions>
           {isConfidential ? (
             <Link className={styles.rowCrossLink} to={routes.adminConcerns}>
               {t("admin:adminIntakes.confidential.openCta")}
@@ -152,7 +153,7 @@ export function AdminIntakeRow({
               {t("admin:adminIntakes.action.reviewed")}
             </Button>
           )}
-        </div>
+        </AdminRowActions>
       </div>
     </div>
   );

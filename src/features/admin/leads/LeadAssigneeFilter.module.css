@@ -1,0 +1,46 @@
+/* The In charge view beside the toolbar's search and type select. The
+   toolbar's wrapping flex row places it; this module lays out the label and
+   the control only. */
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.label {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* The kit's segmented control at the toolbar control height; the buttons
+   stretch to fill it. */
+.seg {
+  block-size: var(--admin-control-h);
+  flex-shrink: 0;
+}
+.seg button {
+  padding-block: 0;
+  white-space: nowrap;
+}
+/* The kit's buttons keep their tap floor, which sets the height. */
+@media (pointer: coarse) {
+  .seg {
+    block-size: auto;
+  }
+}
+
+/* --plum-rgb does not flip, so the track becomes a cream wash in dark. */
+:global([data-theme="dark"]) .seg {
+  background: rgba(var(--cream-rgb), 0.08);
+}
+
+/* The kit's thumb is paper, darker than that wash in dark, so the chosen
+   view lifts to a brighter wash with a hairline edge and reads as raised. */
+:global([data-theme="dark"]) .seg button[aria-pressed="true"] {
+  background: rgba(var(--cream-rgb), 0.16);
+  box-shadow: var(--ring-cream-hairline);
+}

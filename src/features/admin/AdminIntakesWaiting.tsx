@@ -1,8 +1,9 @@
 import { FiCheckCircle } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminEmptyState } from "./ui";
 import { AdminIntakeList, type AdminIntakesQuery } from "./AdminIntakeList";
 import { AdminInquiryList, type AdminInquiriesQuery } from "./AdminInquiryList";
-import styles from "./AdminSubmissionList.module.css";
+import styles from "./AdminIntakes.module.css";
 
 /**
  * The landing view, and the only question this console really has to answer:
@@ -33,17 +34,19 @@ export function AdminIntakesWaiting({
 
   if (isAllClear) {
     return (
-      <p className={styles.allClear}>
-        <FiCheckCircle className={styles.allClearIcon} aria-hidden />
-        {t("admin:adminIntakes.waiting.allClear")}
-      </p>
+      <div className={styles.sections}>
+        <AdminEmptyState
+          icon={FiCheckCircle}
+          title={t("admin:adminIntakes.waiting.allClear")}
+        />
+      </div>
     );
   }
 
   return (
-    <div className={styles.waitingSections}>
-      <section className={styles.waitingSection}>
-        <h2 className={styles.sectionHeading}>
+    <div className={styles.sections}>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>
           {t("admin:adminIntakes.waiting.inquiriesHeading", {
             count: inquiriesQuery.total,
           })}
@@ -57,8 +60,8 @@ export function AdminIntakesWaiting({
         />
       </section>
 
-      <section className={styles.waitingSection}>
-        <h2 className={styles.sectionHeading}>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>
           {t("admin:adminIntakes.waiting.intakesHeading", {
             count: intakesQuery.total,
           })}

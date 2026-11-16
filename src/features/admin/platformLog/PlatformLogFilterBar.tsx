@@ -8,6 +8,7 @@ import {
   type PlatformLogRange,
 } from "./api/platformLog.api";
 import type { PlatformLogFilters } from "./platformLogFilters";
+import { AdminToolbar, adminToolbarClasses } from "../ui";
 import styles from "./AdminPlatformLogPage.module.css";
 
 function isRange(value: string | null): value is PlatformLogRange {
@@ -27,7 +28,8 @@ export function PlatformLogFilterBar({
   memberName: string | null;
   /** Lets the page move focus onto the chip once a row's name is picked. */
   memberChipRef: RefObject<HTMLSpanElement | null>;
-  /** Lets the page park focus on the bar once every filter is cleared. */
+  /** Lets the page park focus on the toolbar group once every filter is
+   *  cleared. */
   filterBarRef: RefObject<HTMLDivElement | null>;
   onChange: (next: PlatformLogFilters) => void;
 }) {
@@ -67,37 +69,46 @@ export function PlatformLogFilterBar({
     onChange({ ...filters, memberId: null });
   };
 
+  const attachFilterGroup = (wrapper: HTMLDivElement | null) => {
+    const group = wrapper?.firstElementChild;
+    if (group instanceof HTMLDivElement) {
+      group.tabIndex = -1;
+      filterBarRef.current = group;
+    } else {
+      filterBarRef.current = null;
+    }
+  };
+
   return (
-    <div
-      ref={filterBarRef}
-      tabIndex={-1}
-      className={styles.filterBar}
-      role="group"
-      aria-label={t("admin:platformLog.filters.label")}
-    >
-      <div className={styles.filterGroup}>
-        <span id={categoryLabelId} className={styles.filterLabel}>
-          {t("admin:platformLog.filters.categories")}
-        </span>
-        <ChipSelect
-          id={categoryGroupId}
-          labelledBy={categoryLabelId}
-          options={categoryOptions}
-          selected={selectedCategories}
-          onToggle={toggleCategory}
-        />
-      </div>
-      <div className={styles.filterGroup}>
-        <span id={rangeLabelId} className={styles.filterLabel}>
-          {t("admin:platformLog.filters.range")}
-        </span>
-        <div className={styles.rangeSelect}>
+    // The page parks focus on the kit toolbar's own named group once every
+    // filter is cleared, so the ref is handed that group (made focusable,
+    // outside the tab order) once the wrapper mounts.
+    <div ref={attachFilterGroup} className={styles.filterFocus}>
+      <AdminToolbar label={t("admin:platformLog.filters.label")}>
+        <div className={styles.filterGroup}>
+          <span id={categoryLabelId} className={styles.filterLabel}>
+            {t("admin:platformLog.filters.categories")}
+          </span>
+          <ChipSelect
+            id={categoryGroupId}
+            labelledBy={categoryLabelId}
+            className={adminToolbarClasses.chips}
+            options={categoryOptions}
+            selected={selectedCategories}
+            onToggle={toggleCategory}
+          />
+        </div>
+        <div className={styles.filterGroup}>
+          <span id={rangeLabelId} className={styles.filterLabel}>
+            {t("admin:platformLog.filters.range")}
+          </span>
           {/* Named by the visible label plus the trigger's own text, so the
               chosen range is read with it. */}
           <Select
             size="sm"
             id={rangeTriggerId}
             labelledBy={`${rangeLabelId} ${rangeTriggerId}`}
+            className={`${adminToolbarClasses.select} ${styles.rangeSelect}`}
             value={filters.range}
             options={rangeOptions}
             onChange={(value) =>
@@ -105,24 +116,26 @@ export function PlatformLogFilterBar({
             }
           />
         </div>
-      </div>
-      {filters.memberId ? (
-        <span ref={memberChipRef} tabIndex={-1} className={styles.memberChip}>
-          <FiUser aria-hidden className={styles.memberIcon} />
-          <span>
-            {t("admin:platformLog.filters.memberPrefix")}{" "}
-            <b>{memberName ?? t("admin:platformLog.filters.memberUnknown")}</b>
+        {filters.memberId ? (
+          <span ref={memberChipRef} tabIndex={-1} className={styles.memberChip}>
+            <FiUser aria-hidden className={styles.memberIcon} />
+            <span>
+              {t("admin:platformLog.filters.memberPrefix")}{" "}
+              <b>
+                {memberName ?? t("admin:platformLog.filters.memberUnknown")}
+              </b>
+            </span>
+            <button
+              type="button"
+              className={styles.memberClear}
+              aria-label={t("admin:platformLog.filters.clearMember")}
+              onClick={clearMember}
+            >
+              <FiX aria-hidden />
+            </button>
           </span>
-          <button
-            type="button"
-            className={styles.memberClear}
-            aria-label={t("admin:platformLog.filters.clearMember")}
-            onClick={clearMember}
-          >
-            <FiX aria-hidden />
-          </button>
-        </span>
-      ) : null}
+        ) : null}
+      </AdminToolbar>
     </div>
   );
 }

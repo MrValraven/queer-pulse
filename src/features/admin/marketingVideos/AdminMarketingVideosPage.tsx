@@ -2,6 +2,7 @@ import { useState } from "react";
 import { routes } from "../../../app/routeMap";
 import { FadeIn } from "../../../shared/components/ui";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminPageHeader } from "../ui";
 import {
@@ -52,8 +53,13 @@ export function AdminMarketingVideosPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:marketingVideos.header.eyebrow")}
-          title={t("shared:adminNav.items.marketingVideos")}
+          eyebrow={t("shared:adminNav.sections.site")}
+          title={
+            <Translation
+              i18nKey="admin:marketingVideos.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("admin:marketingVideos.header.sub")}
         />
       </FadeIn>

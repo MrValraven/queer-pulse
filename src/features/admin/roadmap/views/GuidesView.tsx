@@ -12,6 +12,7 @@ import { intlLocale } from "../../../../shared/i18n/locale";
 import type { Language, TFunction } from "../../../../shared/i18n/types";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { AdminRoadmapItemDTO } from "../../api/roadmapAdmin.types";
+import { AdminChip } from "../../ui";
 import { useItemDrawer } from "../state/itemDrawerHook";
 import {
   GUIDE_STEPS,
@@ -24,8 +25,8 @@ import styles from "./GuidesView.module.css";
 
 // `category` is admin free text (see `roadmapChrome.data.ts`'s
 // `getUniqueCategories` doc), and only these 9 have a translated label, so an
-// unrecognized category falls back to the raw string rather than leaking a
-// literal "roadmap.categories.xxx" key through `t()`'s missing-key fallback.
+// unrecognized category shows its raw string, so `t()`'s missing-key fallback
+// never puts a literal "roadmap.categories.xxx" key on screen.
 const KNOWN_CATEGORIES = new Set([
   "resources",
   "gatherings",
@@ -80,8 +81,7 @@ function GuideRow({
   const danger = isReviewSoon(item, today);
   // `reVerifyDueDays` already guards an unparseable `reVerifyBy` (returns
   // `null`), so reuse that guard here too: a bad date never reaches
-  // `toLocaleDateString` and renders "Invalid Date" instead of the
-  // no-value label.
+  // `toLocaleDateString`, and the row shows the no-value label.
   const reVerifyLabel =
     guide.reVerifyBy && dueDays !== null
       ? new Date(guide.reVerifyBy).toLocaleDateString(intlLocale(language), {
@@ -206,19 +206,24 @@ function GuideRow({
               {t("admin:roadmap.drawer.guide.languagesLabel")}
             </p>
             <div className={styles.languages}>
-              {(["en", "pt", "br"] as const).map((lang) => (
-                <span
-                  key={lang}
-                  className={[
-                    styles.langPill,
-                    guide.languages[lang] && styles.langPillOn,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {lang.toUpperCase()}
-                </span>
-              ))}
+              {(["en", "pt", "br"] as const).map((lang) => {
+                const isCovered = guide.languages[lang];
+                const langLabel = lang.toUpperCase();
+                return (
+                  <AdminChip key={lang} tone={isCovered ? "jade" : "ghost"}>
+                    {isCovered && <FiCheck aria-hidden />}
+                    <span aria-hidden>{langLabel}</span>
+                    <span className="visuallyHidden">
+                      {t(
+                        isCovered
+                          ? "admin:roadmap.guidesView.languageCovered"
+                          : "admin:roadmap.guidesView.languageMissing",
+                        { lang: langLabel },
+                      )}
+                    </span>
+                  </AdminChip>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -234,7 +239,7 @@ function GuideRow({
  * language coverage. Health/legal content rots, so a guide whose
  * `reVerifyBy` is within 90 days (or already past) surfaces both on its own
  * row (danger tone) and in a page-level banner, the prototype's editorial
- * point that this list needs regular, not one-time, attention.
+ * point that this list needs attention on a regular cycle.
  */
 export function GuidesView({ items }: { items: AdminRoadmapItemDTO[] }) {
   const { t, language } = useTranslation();

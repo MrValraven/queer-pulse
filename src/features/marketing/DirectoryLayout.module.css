@@ -118,6 +118,19 @@
   text-decoration-color: rgba(var(--line-rgb), 0.3);
   text-underline-offset: 3px;
 }
+/* A long business name in "Continue <name>" ellipsizes on one line. The
+   desktop ghost button stays narrow so it reads quieter than the search; the
+   phone text link may run wider under the lead. */
+.headCtaLabel {
+  display: inline-block;
+  max-width: 30ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.headLink .headCtaLabel {
+  max-width: 70vw;
+}
 .headLink::after {
   content: "";
   position: absolute;

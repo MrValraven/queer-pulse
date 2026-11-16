@@ -1,0 +1,79 @@
+/* Tone sets four custom properties; everything else reads them. The tone shows
+   as a full hairline border around a light wash of the same colour. */
+.notice {
+  --notice-rgb: var(--accent-rgb);
+  --notice-ink: var(--accent-text);
+  --notice-wash: 0.08;
+  --notice-border: 0.28;
+  display: flex;
+  flex-wrap: wrap;
+  /* Icon, first text line and action label share one baseline. A wrapped
+     message keeps its icon beside the first line, and a one-line message
+     reads centred against the action button, whose label sits mid-pill. */
+  align-items: baseline;
+  gap: 10px 12px;
+  padding: 12px 16px;
+  background: rgba(var(--notice-rgb), var(--notice-wash));
+  border: 1px solid rgba(var(--notice-rgb), var(--notice-border));
+  border-radius: var(--radius-12);
+  color: var(--ink);
+}
+
+.error {
+  --notice-rgb: var(--danger-rgb);
+  --notice-ink: var(--danger);
+}
+.warn {
+  --notice-rgb: var(--amber-rgb);
+  --notice-ink: var(--amber-ink);
+}
+/* Info is a calm neutral. --line-rgb is plum in light and cream in dark, so the
+   wash and hairline stay visible in both themes without a dark override. */
+.info {
+  --notice-rgb: var(--line-rgb);
+  --notice-ink: var(--ink-60);
+  --notice-wash: 0.05;
+  --notice-border: 0.18;
+}
+.success {
+  --notice-rgb: var(--jade-rgb);
+  --notice-ink: var(--jade-text);
+}
+
+.icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  /* An svg has no text baseline, so its bottom edge sits on the line's
+     baseline. Dropping it 4px puts the glyph's centre on the middle of the
+     13.5px text it leads. */
+  margin-bottom: -4px;
+  color: var(--notice-ink);
+}
+.body {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.title {
+  margin: 0 0 2px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+.text {
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.action {
+  flex: none;
+  margin-inline-start: auto;
+}
+
+@media (max-width: 719.98px) {
+  .action {
+    margin-inline-start: 0;
+    width: 100%;
+  }
+}

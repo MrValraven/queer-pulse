@@ -11,6 +11,7 @@ import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import type { useAdminInviteQuotas } from "./api/useAdminInvites";
 import { hasFailedWithoutData, isRetryingFailedRead } from "./queryLoadFailure";
 import { describeInviteQuotaLoadError } from "./adminInviteQuotaErrors";
+import { adminTableClasses } from "./ui";
 import { AdminInviteQuotaRow } from "./AdminInviteQuotaRow";
 import { AdminInviteQuotaListFooter } from "./AdminInviteQuotaListFooter";
 import styles from "./AdminInviteQuotaModal.module.css";
@@ -74,7 +75,10 @@ function QuotaList({ quotas }: { quotas: AdminInviteQuotasQuery }) {
       data-stale={quotas.isSearching || undefined}
     >
       <div className={styles.table}>
-        <div className={styles.headerRow} aria-hidden>
+        <div
+          className={`${adminTableClasses.headRow} ${styles.headerRow}`}
+          aria-hidden
+        >
           <span>{t("admin:adminInvites.quota.column.member")}</span>
           <span>{t("admin:adminInvites.quota.column.thisMonth")}</span>
           <span>{t("admin:adminInvites.quota.column.monthlyLimit")}</span>

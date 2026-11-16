@@ -8,6 +8,7 @@ import {
   officialMessagesErrorCode,
 } from "./api/adminOfficialMessages.api";
 import { useCreateOfficialBroadcast } from "./api/useAdminOfficialMessages";
+import { AdminPanel } from "./ui";
 import { OfficialMessageBodyField } from "./OfficialMessageBodyField";
 import styles from "./AdminOfficialMessagesPage.module.css";
 
@@ -60,16 +61,13 @@ export function OfficialBroadcastComposer() {
   };
 
   return (
-    <section
-      className={styles.panel}
-      aria-labelledby="official-broadcast-composer-title"
+    <AdminPanel
+      title={t("admin:officialMessages.broadcast.title")}
+      description={t("admin:officialMessages.broadcast.subtitle")}
+      titleId="official-broadcast-composer-title"
+      className={styles.composer}
+      bodyClassName={styles.composerBody}
     >
-      <h2 id="official-broadcast-composer-title" className={styles.panelTitle}>
-        {t("admin:officialMessages.broadcast.title")}
-      </h2>
-      <p className={styles.panelSub}>
-        {t("admin:officialMessages.broadcast.subtitle")}
-      </p>
       <OfficialMessageBodyField
         label={t("admin:officialMessages.broadcast.bodyLabel")}
         placeholder={t("admin:officialMessages.broadcast.bodyPlaceholder")}
@@ -102,6 +100,6 @@ export function OfficialBroadcastComposer() {
           </blockquote>
         </ConfirmDialog>
       )}
-    </section>
+    </AdminPanel>
   );
 }

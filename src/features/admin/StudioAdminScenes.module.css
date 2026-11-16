@@ -10,15 +10,6 @@
   justify-content: flex-end;
 }
 
-.groupTitle {
-  margin: 0 0 8px;
-  font-size: var(--text-11);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
 .hint {
   margin: 8px 0 0;
   font-size: var(--text-13);
@@ -32,33 +23,22 @@
   gap: 12px;
 }
 
-.noticeText {
-  max-width: 60ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
 .sceneList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Flat on the group's AdminPanel, split by hairlines. */
 .sceneRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px 14px;
-  padding: 14px 16px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-  background: var(--paper);
+  padding: var(--admin-row-pad-flat);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .dragHandle {

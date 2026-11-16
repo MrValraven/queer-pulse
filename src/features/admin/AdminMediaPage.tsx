@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminDrawer, AdminPageHeader } from "./ui";
+import { AdminDrawer, AdminNotice, AdminPageHeader } from "./ui";
 import { AdminMediaDeleteConfirm } from "./AdminMediaDeleteConfirm";
 import { AdminMediaDrawerActions } from "./AdminMediaDrawerActions";
 import { AdminMediaDrawerMeta } from "./AdminMediaDrawerMeta";
@@ -96,7 +95,7 @@ export function AdminMediaPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:media.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="admin:media.header.title"
@@ -107,39 +106,40 @@ export function AdminMediaPage() {
         />
       </FadeIn>
 
-      <AdminMediaFilters
-        kind={kind}
-        onKindChange={setKind}
-        usage={usage}
-        onUsageChange={setUsage}
-        uploaderFilter={uploaderFilter}
-        onUploaderFilterChange={setUploaderFilter}
-      />
+      <div className={styles.page}>
+        <AdminMediaFilters
+          kind={kind}
+          onKindChange={setKind}
+          usage={usage}
+          onUsageChange={setUsage}
+          uploaderFilter={uploaderFilter}
+          onUploaderFilterChange={setUploaderFilter}
+        />
 
-      {!isDemo && degraded && (
-        <p className={styles.degradedBanner} role="status">
-          <FiAlertTriangle aria-hidden />
-          {t("admin:media.references.degradedBanner")}
-        </p>
-      )}
+        {!isDemo && degraded && (
+          <AdminNotice tone="warn">
+            {t("admin:media.references.degradedBanner")}
+          </AdminNotice>
+        )}
 
-      <AdminMediaGrid
-        isDemo={isDemo}
-        isLoading={isLoading}
-        isError={isError}
-        isScanningForMatches={isScanningForMatches}
-        isUsageScanIncomplete={isUsageScanIncomplete}
-        objects={objects}
-        visibleObjects={visibleObjects}
-        usage={usage}
-        uploaderFilter={uploaderFilter}
-        hasNextPage={hasNextPage ?? false}
-        isFetchingNextPage={isFetchingNextPage}
-        onRefetch={() => void refetch()}
-        onFetchNextPage={() => void fetchNextPage()}
-        onOpen={setOpenObject}
-        onFilterByUploader={setUploaderFilter}
-      />
+        <AdminMediaGrid
+          isDemo={isDemo}
+          isLoading={isLoading}
+          isError={isError}
+          isScanningForMatches={isScanningForMatches}
+          isUsageScanIncomplete={isUsageScanIncomplete}
+          objects={objects}
+          visibleObjects={visibleObjects}
+          usage={usage}
+          uploaderFilter={uploaderFilter}
+          hasNextPage={hasNextPage ?? false}
+          isFetchingNextPage={isFetchingNextPage}
+          onRefetch={() => void refetch()}
+          onFetchNextPage={() => void fetchNextPage()}
+          onOpen={setOpenObject}
+          onFilterByUploader={setUploaderFilter}
+        />
+      </div>
 
       {openObject && (
         <AdminMediaDrawer

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiMessageSquare } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -7,7 +8,12 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
-import { AdminModal, AdminPageHeader } from "./ui";
+import {
+  AdminEmptyState,
+  AdminModal,
+  AdminNotice,
+  AdminPageHeader,
+} from "./ui";
 import {
   useAdminModResponseTemplates,
   useDeleteModResponseTemplate,
@@ -109,7 +115,7 @@ export function AdminResponseTemplatesPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:moderation.templates.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:moderation.templates.title"
@@ -135,24 +141,21 @@ export function AdminResponseTemplatesPage() {
             <SkeletonLine
               key={skeletonIndex}
               height={72}
-              style={{ borderRadius: 14 }}
+              style={{ borderRadius: "var(--admin-panel-radius)" }}
             />
           ))}
         </div>
       ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
-            {isForbidden
-              ? t("admin:common.panelForbidden")
-              : t("admin:moderation.templates.loadError")}
-          </p>
-        </div>
+        <AdminNotice tone="error">
+          {isForbidden
+            ? t("admin:common.panelForbidden")
+            : t("admin:moderation.templates.loadError")}
+        </AdminNotice>
       ) : templates.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>
-            {t("admin:moderation.templates.empty")}
-          </p>
-        </div>
+        <AdminEmptyState
+          icon={FiMessageSquare}
+          title={t("admin:moderation.templates.empty")}
+        />
       ) : (
         <AdminResponseTemplateRows
           templates={templates}

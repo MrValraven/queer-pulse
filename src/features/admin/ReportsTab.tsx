@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiFlag, FiExternalLink } from "react-icons/fi";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
@@ -15,6 +15,12 @@ import {
   useDeleteCommunityPost,
   useDismissCommunityReport,
 } from "../communities/api/useCommunityMutations";
+import {
+  AdminEmptyState,
+  AdminPanel,
+  AdminRowActions,
+  adminRowActionClasses,
+} from "./ui";
 import styles from "./ModPanel.module.css";
 
 /**
@@ -43,9 +49,9 @@ export function ReportsTab({ slug }: { slug: string }) {
   const incoming = useCommunityReports(slug);
   const deletePost = useDeleteCommunityPost(slug);
   const dismissReport = useDismissCommunityReport(slug);
-  // Which rows this moderator has actioned in this session. Kept as ids rather
-  // than a snapshot of the list, so a live refetch (or a queue that arrives
-  // after first render) still flows through while resolved rows stay hidden.
+  // Which rows this moderator has actioned in this session, kept as ids so a
+  // live refetch (or a queue that arrives after first render) still flows
+  // through while resolved rows stay hidden.
   const [resolvedIds, setResolvedIds] = useState<string[]>([]);
 
   const reports = incoming.items.filter(
@@ -101,40 +107,42 @@ export function ReportsTab({ slug }: { slug: string }) {
   };
 
   return (
-    <div>
-      <div className={styles.secLbl}>
-        {t("admin:modPanel.reports.sectionLabel")}{" "}
-        {reports.length > 0 && (
+    <AdminPanel
+      title={t("admin:modPanel.reports.sectionLabel")}
+      description={
+        reports.length > 0 ? t("admin:modPanel.reports.escalationNote") : null
+      }
+      actions={
+        reports.length > 0 && (
           <span className={styles.tabCount}>{reports.length}</span>
-        )}
-      </div>
+        )
+      }
+      padding="flush"
+    >
       {reports.length === 0 ? (
-        <EmptyState
-          compact
-          title={t("admin:modPanel.reports.emptyTitle")}
-          description={t("admin:modPanel.reports.emptyDesc")}
-        />
+        <div className={styles.panelEmpty}>
+          <AdminEmptyState
+            size="inline"
+            title={t("admin:modPanel.reports.emptyTitle")}
+            body={t("admin:modPanel.reports.emptyDesc")}
+          />
+        </div>
       ) : (
-        <>
-          <p className={styles.modMeta}>
-            {t("admin:modPanel.reports.escalationNote")}
-          </p>
-          {reports.map((report) => (
-            <ReportCard
-              key={report.id}
-              report={report}
-              canRemove={
-                (report.subjectType == null || report.subjectType === "post") &&
-                (demoMode || Boolean(report.subjectId))
-              }
-              isPlatformModerator={isPlatformModerator}
-              onRemove={() => removeReportedPost(report)}
-              onDismiss={() => dismissRow(report)}
-            />
-          ))}
-        </>
+        reports.map((report) => (
+          <ReportCard
+            key={report.id}
+            report={report}
+            canRemove={
+              (report.subjectType == null || report.subjectType === "post") &&
+              (demoMode || Boolean(report.subjectId))
+            }
+            isPlatformModerator={isPlatformModerator}
+            onRemove={() => removeReportedPost(report)}
+            onDismiss={() => dismissRow(report)}
+          />
+        ))
       )}
-    </div>
+    </AdminPanel>
   );
 }
 
@@ -187,9 +195,15 @@ function ReportCard({
           {t("admin:modPanel.reports.replyNote")}
         </p>
       )}
-      <div className={styles.modActions} style={{ marginTop: 12 }}>
+      <AdminRowActions
+        className={`${styles.modActions} ${styles.reportActions}`}
+      >
         {canRemove && (
-          <Button variant="primary" onClick={onRemove}>
+          <Button
+            variant="ghost"
+            className={adminRowActionClasses.danger}
+            onClick={onRemove}
+          >
             {t("admin:modPanel.reports.removeCta")}
           </Button>
         )}
@@ -197,12 +211,12 @@ function ReportCard({
           {t("admin:modPanel.reports.dismissCta")}
         </Button>
         {isPlatformModerator && (
-          <Button variant="ghost" to={queueHref}>
+          <Button variant="quiet" to={queueHref}>
             <FiExternalLink aria-hidden />{" "}
             {t("admin:modPanel.reports.openInQueueCta")}
           </Button>
         )}
-      </div>
+      </AdminRowActions>
     </div>
   );
 }

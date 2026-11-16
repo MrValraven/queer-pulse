@@ -68,12 +68,11 @@ export function AdminLeadsPage() {
         <LeadPipeline
           controls={controls}
           stageCounts={list.stageCounts}
-          totalCount={list.totalCount}
           dueCount={list.dueCount}
         />
       </FadeIn>
 
-      <FadeIn delay={60}>
+      <FadeIn delay={60} className={styles.block}>
         <AdminLeadsToolbar
           controls={controls}
           searchRef={searchRef}
@@ -83,7 +82,7 @@ export function AdminLeadsPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={80}>
+      <FadeIn delay={80} className={styles.block}>
         <div className={styles.panel}>
           <LeadQuickActionsContext.Provider value={quickActions}>
             <AdminLeadsList

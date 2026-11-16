@@ -1,6 +1,12 @@
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminChip } from "./ui";
+import {
+  AdminChip,
+  AdminPanel,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import type { ChangemakerDTO } from "../community/api/changemakers.api";
 import styles from "./AdminChangemakersPage.module.css";
 
@@ -18,10 +24,15 @@ export function AdminChangemakerRows({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.rows}>
-      {profiles.map((profile, index) => (
-        <FadeIn key={profile.id} delay={Math.min(index, 8) * 50}>
-          <div className={styles.row}>
+    <AdminPanel padding="flush">
+      <ul className={styles.rows}>
+        {profiles.map((profile, index) => (
+          <FadeIn
+            key={profile.id}
+            as="li"
+            delay={Math.min(index, 8) * 50}
+            className={`${adminTableClasses.row} ${styles.row}`}
+          >
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowName}>{profile.name}</span>
@@ -41,13 +52,13 @@ export function AdminChangemakerRows({
               </div>
               <div className={styles.rowMeta}>{profile.cause}</div>
             </div>
-            <div className={styles.rowActions}>
-              <Button variant="ghost" size="md" onClick={() => onEdit(profile)}>
+            <AdminRowActions className={styles.rowActions}>
+              <Button variant="ghost" size="sm" onClick={() => onEdit(profile)}>
                 {t("community:changemakers.admin.editCta")}
               </Button>
               <Button
                 variant="ghost"
-                size="md"
+                size="sm"
                 onClick={() => onTogglePublish(profile)}
               >
                 {profile.status === "published"
@@ -55,16 +66,17 @@ export function AdminChangemakerRows({
                   : t("community:changemakers.admin.publishCta")}
               </Button>
               <Button
-                variant="danger"
-                size="md"
+                variant="ghost"
+                size="sm"
+                className={adminRowActionClasses.danger}
                 onClick={() => onDelete(profile)}
               >
                 {t("community:changemakers.admin.deleteCta")}
               </Button>
-            </div>
-          </div>
-        </FadeIn>
-      ))}
-    </div>
+            </AdminRowActions>
+          </FadeIn>
+        ))}
+      </ul>
+    </AdminPanel>
   );
 }

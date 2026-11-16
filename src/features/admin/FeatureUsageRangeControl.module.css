@@ -1,10 +1,9 @@
-/* Sits where the page's old range row did, so it keeps that row's margins. */
+/* Sits between the page header (which brings its own gap) and the tiles. */
 .control {
-  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin: 14px 0 20px;
+  margin: 0 0 var(--admin-section-gap);
 }
 
 .row {
@@ -59,23 +58,8 @@
   color: var(--ink-60);
 }
 
-/* Every range label stays on one line. On a phone the four options fold to
-   a two by two grid, so a long label (Portuguese "Personalizado") keeps its
-   whole word and the group never runs past the gutter. */
+/* Every range label stays on one line. On a phone the kit keeps the group
+   on one line that scrolls sideways. */
 .rangeSeg > button {
   white-space: nowrap;
-}
-
-@container (max-width: 480px) {
-  .rangeSeg {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: var(--radius-12);
-  }
-
-  .rangeSeg > button {
-    border-radius: var(--radius-8);
-  }
 }

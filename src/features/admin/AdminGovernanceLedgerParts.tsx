@@ -3,6 +3,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { FinanceSourceBadge } from "./FinanceSourceBadge";
 import type { LedgerComposition, LedgerShare } from "./adminGovernanceLedger";
 import styles from "./AdminGovernancePage.module.css";
+import { formatEuro } from "./adminEuro";
 
 /** In live mode, a still-seeded figure never renders as if it were real data.
  *  It shows this empty state with a direct path to correct it instead. Demo
@@ -78,9 +79,7 @@ export function LedgerRow({
           <span className={styles.ledgerPercent}>
             {fmt.number(Math.round(percent))}%
           </span>
-          <span className={styles.ledgerAmount}>
-            {fmt.currency(amount, "EUR")}
-          </span>
+          <span className={styles.ledgerAmount}>{formatEuro(fmt, amount)}</span>
         </>
       ) : (
         <span className={styles.ledgerPlaceholder}>
@@ -120,7 +119,7 @@ export function RemainderRow({
       <span
         className={[styles.ledgerAmount, styles.ledgerAmountMuted].join(" ")}
       >
-        {fmt.currency(composition.remainder, "EUR")}
+        {formatEuro(fmt, composition.remainder)}
       </span>
     </li>
   );

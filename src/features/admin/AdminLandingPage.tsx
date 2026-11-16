@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { FadeIn } from "../../shared/components/ui";
@@ -46,8 +47,13 @@ export function AdminLandingPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:landing.header.eyebrow")}
-          title={t("shared:adminNav.items.landing")}
+          eyebrow={t("shared:adminNav.sections.site")}
+          title={
+            <Translation
+              i18nKey="admin:landing.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("admin:landing.header.sub")}
         />
       </FadeIn>
@@ -61,7 +67,6 @@ export function AdminLandingPage() {
           tabs={TABS}
           active={tab}
           onChange={(id) => setTab(id as LandingSection)}
-          className={styles.tabs}
         />
       </FadeIn>
 

@@ -8,7 +8,6 @@
   flex-wrap: wrap;
   align-items: flex-start;
   gap: var(--gap-grid);
-  margin-top: var(--gap-grid);
 }
 
 .main {
@@ -34,10 +33,6 @@
   .aside {
     order: -1;
   }
-}
-
-.tabs {
-  align-self: flex-start;
 }
 
 .rows {
@@ -67,10 +62,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
-  padding: 18px 20px;
+  padding: var(--admin-panel-pad);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
 }
 
 .rowIdentity {
@@ -178,9 +174,6 @@
 /* History, then Revoke on an active row. Pushed to the end so a past row,
    which has no focus control, still keeps them on the right. */
 .rowButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
   margin-inline-start: auto;
 }
 
@@ -199,67 +192,29 @@
   color: var(--ink-60);
 }
 
+/* The shared Select fills the focus control's column. */
 .select {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 34px 10px 14px;
-  font: inherit;
-  /* >=16px so iOS Safari never zooms the viewport on focus, matching
-     FormField's control text size. */
-  font-size: var(--text-16);
-  color: var(--ink);
-  background-color: var(--cream);
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--ink-60) 50%),
-    linear-gradient(135deg, var(--ink-60) 50%, transparent 50%);
-  background-position:
-    calc(100% - 18px) center,
-    calc(100% - 13px) center;
-  background-size:
-    5px 5px,
-    5px 5px;
-  background-repeat: no-repeat;
-  /* A form control's boundary is a UI component under WCAG 1.4.11 and needs
-     3:1; 0.28 measured 1.8:1, 0.5 reaches ~3.1:1. These are the same values
-     FormField uses, so the page has one select look. */
-  border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: var(--radius-14);
-  cursor: pointer;
-  appearance: none;
 }
 
-.select:disabled {
-  cursor: progress;
-  opacity: 0.6;
-}
-
-.select:focus-visible,
 .pickedClear:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
 
-/* ── Side panels ─────────────────────────────────────────────────────── */
-.panel {
+/* ── Side panels (AdminPanel) ────────────────────────────────────────── */
+.panelBody {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 20px 22px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
 }
 
+/* The circle panel's title: its icon beside the words. */
 .panelTitle {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  font-weight: 600;
-  color: var(--ink);
 }
 
 .panelIcon {

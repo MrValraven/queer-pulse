@@ -6,7 +6,6 @@ import { AdminShell } from "../../../shared/components/layout/AdminShell";
 import {
   Button,
   CollapseListItem,
-  EmptyState,
   FadeIn,
   LoadErrorState,
   SkeletonLine,
@@ -20,7 +19,7 @@ import {
   type CreatorDraftKind,
 } from "../api/adminCreatorDrafts.api";
 import { useAdminCreatorDrafts } from "../api/useAdminCreatorDrafts";
-import { AdminPageHeader, AdminTabs } from "../ui";
+import { AdminEmptyState, AdminPageHeader, AdminPanel, AdminTabs } from "../ui";
 import { AdminCreatorDraftRow } from "./AdminCreatorDraftRow";
 import { CREATOR_DRAFT_KIND_LABEL_KEYS } from "./adminCreatorDraftLabels";
 import styles from "./AdminCreatorDrafts.module.css";
@@ -66,7 +65,7 @@ export function AdminCreatorDraftsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:creatorDrafts.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.communities")}
           title={
             <Translation
               i18nKey="admin:creatorDrafts.header.title"
@@ -153,13 +152,9 @@ function CreatorDraftsBody({ kind }: { kind: CreatorDraftKind | null }) {
           description={t("admin:creatorDrafts.loadError.body")}
         />
       ) : isEmpty ? (
-        <EmptyState
-          className={styles.empty}
-          compact
-          headingLevel={2}
-          icon={<FiEdit3 aria-hidden />}
-          title={emptyText}
-        />
+        <div className={styles.empty}>
+          <AdminEmptyState icon={FiEdit3} title={emptyText} />
+        </div>
       ) : (
         <CreatorDraftRows
           rows={rows}
@@ -187,15 +182,17 @@ function CreatorDraftRows({
   if (rows.length === 0) return null;
   return (
     <>
-      <ul className={styles.rows}>
-        <AnimatePresence initial={false}>
-          {rows.map((row) => (
-            <CollapseListItem key={`${row.kind}:${row.id}`}>
-              <AdminCreatorDraftRow row={row} />
-            </CollapseListItem>
-          ))}
-        </AnimatePresence>
-      </ul>
+      <AdminPanel as="div" padding="flush" className={styles.rowsPanel}>
+        <ul className={styles.rows}>
+          <AnimatePresence initial={false}>
+            {rows.map((row) => (
+              <CollapseListItem key={`${row.kind}:${row.id}`}>
+                <AdminCreatorDraftRow row={row} />
+              </CollapseListItem>
+            ))}
+          </AnimatePresence>
+        </ul>
+      </AdminPanel>
       {hasNextPage && (
         <div className={styles.loadMore}>
           <Button

@@ -7,6 +7,7 @@ import { AdminAvatar } from "../ui";
 import type { LeadListItemDTO } from "./api/leads.types";
 import { LEAD_TYPE_AVATAR_TONE, LEAD_TYPE_LABEL_KEY } from "./leadLabels.data";
 import { lisbonLeadDay } from "./leadDates";
+import { LeadAssigneeStack } from "./LeadAssigneeStack";
 import { LeadLinkIcons } from "./LeadLinkIcons";
 import {
   adminLeadPath,
@@ -94,7 +95,10 @@ function LeadRowActivity({ row }: { row: LeadListItemDTO }) {
  * named "Open <name>" and described by the rest of the row. A wide list
  * reads each row as one line of a table; a narrow one stacks it into a
  * card: name and type beside the stage, then the follow-up beside the last
- * activity, then the location beside the links.
+ * activity, then the location beside the links, then the In charge stack on
+ * its own line when anyone is in charge. The table gives the stack its own
+ * column after the links, and the link's description reads its In charge
+ * line ("In charge: You and Marta Lobo").
  */
 export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
   const { t } = useTranslation();
@@ -107,7 +111,10 @@ export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
   };
 
   return (
-    <div className={styles.row}>
+    <div
+      className={styles.row}
+      data-has-assignees={row.assigneeCount > 0 || undefined}
+    >
       <span className={styles.rowName}>
         <LeadRowAvatar row={row} />
         <span className={styles.rowNameText}>
@@ -140,6 +147,12 @@ export function AdminLeadRow({ row }: { row: LeadListItemDTO }) {
           )}
           <span className={styles.rowLinks}>
             <LeadLinkIcons links={row.links} linkCount={row.linkCount} />
+          </span>
+          <span className={styles.rowAssignees}>
+            <LeadAssigneeStack
+              assignees={row.assignees}
+              assigneeCount={row.assigneeCount}
+            />
           </span>
           <LeadRowActivity row={row} />
           {persona !== null ? (

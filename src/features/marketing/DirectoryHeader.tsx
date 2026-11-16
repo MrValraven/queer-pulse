@@ -1,10 +1,10 @@
-import { FiPlus } from "react-icons/fi";
+import { FiArrowRight, FiPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import styles from "./DirectoryLayout.module.css";
+import { useListingDraftCta } from "./useListingDraftCta";
 
 /** The directory's page header, in the members directory's shape: eyebrow,
  *  serif title with its italic accent, one lead line and the note on who
@@ -12,9 +12,11 @@ import styles from "./DirectoryLayout.module.css";
  *  list, so the header stays compact and the places start high on the page.
  *  "List your business" sits at its right on desktop as a ghost button. On
  *  phones it is a compact text link under the lead and the note steps
- *  aside, so the header stays about as tall as the members one. */
+ *  aside, so the header stays about as tall as the members one. With a saved
+ *  listing draft the same slot reads "Continue <name>" and links into it. */
 export function DirectoryHeader({ isMobile }: { isMobile: boolean }) {
   const { t } = useTranslation();
+  const listingCta = useListingDraftCta();
   return (
     <div className="wrap">
       <FadeIn as="header" className={styles.head}>
@@ -38,12 +40,16 @@ export function DirectoryHeader({ isMobile }: { isMobile: boolean }) {
             since most visitors come here to find a place. */}
         <div className={styles.headAction}>
           {isMobile ? (
-            <Link to={routes.listBusiness} className={styles.headLink}>
-              <FiPlus aria-hidden /> {t("marketing:directory.hero.cta")}
+            <Link to={listingCta.to} className={styles.headLink}>
+              {!listingCta.isContinuing && <FiPlus aria-hidden />}
+              <span className={styles.headCtaLabel}>{listingCta.label}</span>
+              {listingCta.isContinuing && <FiArrowRight aria-hidden />}
             </Link>
           ) : (
-            <Button variant="ghost" to={routes.listBusiness}>
-              <FiPlus aria-hidden /> {t("marketing:directory.hero.cta")}
+            <Button variant="ghost" to={listingCta.to}>
+              {!listingCta.isContinuing && <FiPlus aria-hidden />}
+              <span className={styles.headCtaLabel}>{listingCta.label}</span>
+              {listingCta.isContinuing && <FiArrowRight aria-hidden />}
             </Button>
           )}
         </div>

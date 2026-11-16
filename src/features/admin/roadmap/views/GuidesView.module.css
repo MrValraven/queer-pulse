@@ -237,23 +237,9 @@
   transition: width 0.5s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
 
-/* ── Language pills ───────────────────────────────────────────────────── */
+/* ── Language coverage (AdminChip per language) ────────────────────────── */
 .languages {
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
-}
-
-.langPill {
-  padding: 3px 7px;
-  border-radius: var(--radius-pill);
-  font-size: var(--text-10-5);
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  background: rgba(var(--line-rgb), 0.08);
-  color: var(--ink-40);
-}
-
-.langPillOn {
-  background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade-ink);
 }

@@ -2,11 +2,18 @@ import { useState } from "react";
 import {
   Button,
   FadeIn,
-  SegmentedControl,
+  FilterChips,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminTabs,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -41,7 +48,7 @@ const FORMAT_FILTERS: AdminReadingGroupFormatFilter[] = [
   "Either",
 ];
 
-// The status each decision resolves to — for the confirmation toast key.
+// The status each decision resolves to, for the confirmation toast key.
 const DECISION_STATUS: Record<
   ReadingGroupProposalDecision,
   ReadingGroupProposalStatus
@@ -145,7 +152,7 @@ export function AdminReadingGroupProposalsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminReadingGroupProposals.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.communities")}
           title={
             <Translation
               i18nKey="admin:adminReadingGroupProposals.header.title"
@@ -167,33 +174,43 @@ export function AdminReadingGroupProposalsPage() {
             setStatusFilter(value as AdminReadingGroupStatusFilter)
           }
         />
-        <SegmentedControl
+        <AdminToolbar
           label={t("admin:adminReadingGroupProposals.filter.formatLabel")}
-          options={FORMAT_FILTERS.map((value) => ({
-            value,
-            label:
-              value === "all"
-                ? t("admin:adminReadingGroupProposals.filter.all")
-                : t(`admin:adminReadingGroupProposals.format.${value}`),
-          }))}
-          value={formatFilter}
-          onChange={(value) =>
-            setFormatFilter(value as AdminReadingGroupFormatFilter)
-          }
-        />
+          className={styles.filterBar}
+        >
+          <FilterChips
+            className={adminToolbarClasses.chips}
+            options={FORMAT_FILTERS.map((value) => ({
+              value,
+              label:
+                value === "all"
+                  ? t("admin:adminReadingGroupProposals.filter.all")
+                  : t(`admin:adminReadingGroupProposals.format.${value}`),
+            }))}
+            value={formatFilter}
+            onChange={(value) =>
+              setFormatFilter(value as AdminReadingGroupFormatFilter)
+            }
+          />
+        </AdminToolbar>
       </FadeIn>
 
       <FadeIn delay={80}>
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminReadingGroupProposals.error")}
-          </p>
+          <div className={styles.rows}>
+            <AdminNotice tone="error">
+              {t("admin:adminReadingGroupProposals.error")}
+            </AdminNotice>
+          </div>
         ) : proposals.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminReadingGroupProposals.empty")}
-          </p>
+          <div className={styles.rows}>
+            <AdminEmptyState
+              size="inline"
+              title={t("admin:adminReadingGroupProposals.empty")}
+            />
+          </div>
         ) : (
           <>
             <div className={styles.rows}>

@@ -5,6 +5,7 @@ import {
   routes,
   subprofileEditPath,
 } from "../../../app/routeMap";
+import { adminLeadPath } from "../../admin/leads/leadPaths";
 import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
 import { gatheringPath } from "../../gatherings/data";
 import { listingCorrectionContactPath } from "../../marketing/contactPrefill";
@@ -98,6 +99,12 @@ export function lifecycleSourceHref(
     // Staff duty mail: the communities console, where an owner is reassigned.
     case "community_owner_review_requested":
       return { href: routes.adminCommunities };
+    // Staff duty mail: the lead the member was put in charge of, or the
+    // leads list when the payload carries no id.
+    case "lead_assigned": {
+      const leadId = slugOf(payload, "leadId");
+      return { href: leadId ? adminLeadPath(leadId) : routes.adminLeads };
+    }
     case "group_listing_decided": {
       const groupSlug = slugOf(payload, "groupSlug");
       return {

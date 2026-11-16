@@ -1,6 +1,5 @@
-import { useId, useRef, useState, type RefObject } from "react";
+import { useRef, useState, type RefObject } from "react";
 import { AnimatePresence } from "motion/react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { routes } from "../../../app/routeMap";
@@ -22,6 +21,12 @@ import {
   useRevokeEarlyAccessFromRoster,
 } from "../api/useAdminEarlyAccess";
 import type { EarlyAccessRosterRowDTO } from "../api/adminEarlyAccess.types";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPanel,
+  adminTableClasses,
+} from "../ui";
 import { earlyAccessFeatureLabel } from "./earlyAccessFeatureLabel";
 import { AdminEarlyAccessRosterRow } from "./AdminEarlyAccessRosterRow";
 import styles from "./AdminEarlyAccessPage.module.css";
@@ -32,7 +37,7 @@ const SKELETON_ROW_KEYS = ["first", "second", "third"];
  * A revoke takes its row out of the list, and with it the Revoke button the
  * dialog would hand focus back to. Two frames let React commit the dialog's
  * unmount (and its focus restore) and the row's removal, then focus lands on
- * the section heading, the nearest thing that stays put.
+ * the panel heading, the nearest thing that stays put.
  */
 function focusAfterRevoke(headingRef: RefObject<HTMLHeadingElement | null>) {
   requestAnimationFrame(() => {
@@ -43,9 +48,12 @@ function focusAfterRevoke(headingRef: RefObject<HTMLHeadingElement | null>) {
 /** The roster's outline while it loads. */
 export function AdminEarlyAccessRowsSkeleton() {
   return (
-    <div className={styles.rows} aria-hidden>
+    <div aria-hidden>
       {SKELETON_ROW_KEYS.map((rowKey) => (
-        <div key={rowKey} className={styles.rowSkeleton}>
+        <div
+          key={rowKey}
+          className={`${adminTableClasses.row} ${styles.rowSkeleton}`}
+        >
           <SkeletonAvatar size={40} />
           <div className={styles.rowSkeletonText}>
             <SkeletonLine width="40%" height={14} />
@@ -68,19 +76,23 @@ export function AdminEarlyAccessLoadFailed({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.loadFailed} role="alert">
-      <p className={styles.note}>{t("admin:earlyAccess.roster.loadFailed")}</p>
-      <Button
-        variant="ghost"
-        size="sm"
-        aria-disabled={isRetrying || undefined}
-        onClick={() => {
-          if (!isRetrying) onRetry();
-        }}
-      >
-        {t("admin:earlyAccess.roster.retry")}
-      </Button>
-    </div>
+    <AdminNotice
+      tone="error"
+      action={
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-disabled={isRetrying || undefined}
+          onClick={() => {
+            if (!isRetrying) onRetry();
+          }}
+        >
+          {t("admin:earlyAccess.roster.retry")}
+        </Button>
+      }
+    >
+      {t("admin:earlyAccess.roster.loadFailed")}
+    </AdminNotice>
   );
 }
 
@@ -93,16 +105,17 @@ function RosterEmptyNote({ featureName }: { featureName: string }) {
   const { demoMode } = useDemoMode();
   const canGrant = demoMode || role === "admin";
   return (
-    <div className={styles.emptyBlock}>
-      <p className={styles.note}>
-        {t("admin:earlyAccess.roster.empty", { feature: featureName })}
-      </p>
-      {canGrant && (
-        <Link to={routes.adminMembers} className={styles.emptyLink}>
-          {t("admin:earlyAccess.roster.emptyCta")}
-        </Link>
-      )}
-    </div>
+    <AdminEmptyState
+      size="inline"
+      title={t("admin:earlyAccess.roster.empty", { feature: featureName })}
+      action={
+        canGrant ? (
+          <Button variant="quiet" size="sm" to={routes.adminMembers}>
+            {t("admin:earlyAccess.roster.emptyCta")}
+          </Button>
+        ) : undefined
+      }
+    />
   );
 }
 
@@ -122,7 +135,6 @@ export function AdminEarlyAccessRosterSection({
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
-  const headingId = useId();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const roster = useEarlyAccessRoster(featureKey);
   const revoke = useRevokeEarlyAccessFromRoster();
@@ -148,69 +160,69 @@ export function AdminEarlyAccessRosterSection({
   }
 
   return (
-    <section className={styles.section} aria-labelledby={headingId}>
-      <div className={styles.sectionHead}>
-        <h2
-          id={headingId}
-          ref={headingRef}
-          tabIndex={-1}
-          className={styles.sectionTitle}
-        >
-          {feature.name}
-        </h2>
-        <span className={styles.count}>
-          <Translation
-            i18nKey="admin:earlyAccess.roster.count"
-            values={{ count: total }}
-            slots={{
-              count: (
-                <RollingNumber
-                  value={formatters.number(total)}
-                  numericValue={total}
-                />
-              ),
-            }}
-          />
-        </span>
-      </div>
-      {feature.description && (
-        <p className={styles.description}>{feature.description}</p>
-      )}
-
-      {hasLoadFailed ? (
-        <AdminEarlyAccessLoadFailed
-          isRetrying={isRetrying}
-          onRetry={() => void roster.refetch()}
-        />
-      ) : !isLoaded ? (
-        <AdminEarlyAccessRowsSkeleton />
-      ) : (
-        <FadeIn>
-          <ul className={styles.rows}>
-            <AnimatePresence initial={false}>
-              {rows.map((row) => (
-                <CollapseListItem key={row.member.userId}>
-                  <AdminEarlyAccessRosterRow
-                    row={row}
-                    onRevoke={() => setPendingRevoke(row)}
+    <>
+      <AdminPanel
+        titleRef={headingRef}
+        isTitleFocusable
+        title={feature.name}
+        description={feature.description}
+        padding="flush"
+        actions={
+          <span className={styles.count}>
+            <Translation
+              i18nKey="admin:earlyAccess.roster.count"
+              values={{ count: total }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={formatters.number(total)}
+                    numericValue={total}
                   />
-                </CollapseListItem>
-              ))}
-            </AnimatePresence>
-          </ul>
-          <Collapse isOpen={rows.length === 0}>
-            <RosterEmptyNote featureName={feature.name} />
-          </Collapse>
-          <Collapse isOpen={total > rows.length && rows.length > 0}>
-            <p className={styles.note}>
-              {t("admin:earlyAccess.roster.capped", {
-                limit: formatters.number(limit),
-                total: formatters.number(total),
-              })}
-            </p>
-          </Collapse>
-        </FadeIn>
-      )}
+                ),
+              }}
+            />
+          </span>
+        }
+      >
+        {hasLoadFailed ? (
+          <div className={styles.band}>
+            <AdminEarlyAccessLoadFailed
+              isRetrying={isRetrying}
+              onRetry={() => void roster.refetch()}
+            />
+          </div>
+        ) : !isLoaded ? (
+          <AdminEarlyAccessRowsSkeleton />
+        ) : (
+          <FadeIn>
+            <ul className={styles.rows}>
+              <AnimatePresence initial={false}>
+                {rows.map((row) => (
+                  <CollapseListItem key={row.member.userId}>
+                    <AdminEarlyAccessRosterRow
+                      row={row}
+                      onRevoke={() => setPendingRevoke(row)}
+                    />
+                  </CollapseListItem>
+                ))}
+              </AnimatePresence>
+            </ul>
+            <Collapse isOpen={rows.length === 0}>
+              <div className={styles.bandInline}>
+                <RosterEmptyNote featureName={feature.name} />
+              </div>
+            </Collapse>
+            <Collapse isOpen={total > rows.length && rows.length > 0}>
+              <p className={`${styles.note} ${styles.band}`}>
+                {t("admin:earlyAccess.roster.capped", {
+                  limit: formatters.number(limit),
+                  total: formatters.number(total),
+                })}
+              </p>
+            </Collapse>
+          </FadeIn>
+        )}
+      </AdminPanel>
 
       <ConfirmDialog
         open={pendingRevoke !== null}
@@ -224,6 +236,6 @@ export function AdminEarlyAccessRosterSection({
         })}
         confirmLabel={t("admin:earlyAccess.roster.revokeConfirm")}
       />
-    </section>
+    </>
   );
 }

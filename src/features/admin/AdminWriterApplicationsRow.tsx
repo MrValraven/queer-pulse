@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { safeHref } from "../../shared/lib/safeHref";
 import { Button } from "../../shared/components/ui";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  type AdminTone,
+  AdminRowActions,
+  adminRowActionClasses,
+} from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AdminWriterApplicationDTO } from "./api/adminWriterApplications.api";
 import { useTriageWriterApplication } from "./api/useTriageWriterApplication";
@@ -75,8 +80,9 @@ export function AdminWriterApplicationsRow({
               value={reviewNote}
               onChange={(event) => setReviewNote(event.target.value)}
             />
-            <div className={styles.rowActionButtons}>
+            <AdminRowActions>
               <Button
+                className={adminRowActionClasses.danger}
                 variant="ghost"
                 size="sm"
                 disabled={pending}
@@ -104,7 +110,7 @@ export function AdminWriterApplicationsRow({
               >
                 {t("admin:adminWriterApplications.row.approveCta")}
               </Button>
-            </div>
+            </AdminRowActions>
           </>
         )}
       </div>

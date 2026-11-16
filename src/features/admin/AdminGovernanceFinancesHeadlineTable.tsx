@@ -17,6 +17,7 @@ import {
 } from "./adminGovernanceFinancesEdit.utils";
 import type { AdminFinanceLatest } from "./api/adminGovernanceFinances.api";
 import styles from "./AdminGovernanceFinancesEdit.module.css";
+import { formatEuro } from "./adminEuro";
 
 /** The four editable headline figures, then the two computed ones: total
  *  spending (the sum of the switched-on spending lines, read as a negative
@@ -44,7 +45,7 @@ export function HeadlineTable({
     // A figure nobody entered yet has no current value to show.
     if (value === null) return "";
     const unit = SCALAR_UNIT[key];
-    if (unit === "currency") return fmt.currency(value, "EUR");
+    if (unit === "currency") return formatEuro(fmt, value);
     if (unit === "percent") return `${fmt.number(value)}%`;
     return fmt.number(value);
   };
@@ -124,12 +125,12 @@ export function HeadlineTable({
               >
                 {latest.expenseTotal === null
                   ? ""
-                  : fmt.currency(toSpendingFigure(latest.expenseTotal), "EUR")}
+                  : formatEuro(fmt, toSpendingFigure(latest.expenseTotal))}
               </td>
               <td data-label={columns.newValue}>
                 <output className={lossClass(styles.surplusPreview, true)}>
                   <RollingNumber
-                    value={fmt.currency(spendingFigure, "EUR")}
+                    value={formatEuro(fmt, spendingFigure)}
                     numericValue={spendingFigure}
                   />
                 </output>
@@ -151,7 +152,7 @@ export function HeadlineTable({
                 data-label={columns.current}
                 className={lossClass(styles.colNumber, latest.surplus < 0)}
               >
-                {fmt.currency(latest.surplus, "EUR")}
+                {formatEuro(fmt, latest.surplus)}
               </td>
               <td data-label={columns.newValue}>
                 <output
@@ -161,7 +162,7 @@ export function HeadlineTable({
                   )}
                 >
                   <RollingNumber
-                    value={fmt.currency(surplusPreview, "EUR")}
+                    value={formatEuro(fmt, surplusPreview)}
                     numericValue={surplusPreview}
                   />
                 </output>

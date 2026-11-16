@@ -46,26 +46,17 @@
 
 /* ── The overview card ─────────────────────────────────────────────────── */
 
-/* Built like the queue cards below: an unpadded shell that is its own size
-   container, and a padded body. Both step their padding at the same content
-   width, so the two read as one set at every size. */
-.card {
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  box-shadow: var(--shadow-e1);
-  container: queue-health-card / inline-size;
-}
-
-.cardBody {
+/* The overview is an AdminPanel; its body holds the headline, the strip,
+   the tiles and the footer one gap apart. */
+.overviewBody {
   display: grid;
-  gap: 24px;
-  padding: var(--card-pad);
+  gap: var(--admin-section-gap);
 }
 
 /* A quiet corner wash in the overall level's tone. It sits under the word and
-   the glyph, which carry the level on their own. */
-.washOk {
+   the glyph, which carry the level on their own. Two classes, so the wash
+   wins over the panel's own paper fill whatever order the modules load in. */
+.overview.washOk {
   background:
     radial-gradient(
       120% 140% at 0% 0%,
@@ -75,7 +66,7 @@
     var(--paper);
 }
 
-.washWarning {
+.overview.washWarning {
   background:
     radial-gradient(
       120% 140% at 0% 0%,
@@ -85,7 +76,7 @@
     var(--paper);
 }
 
-.washCritical {
+.overview.washCritical {
   background:
     radial-gradient(
       120% 140% at 0% 0%,
@@ -192,72 +183,16 @@
   color: var(--health-tone-ink);
 }
 
-/* ── The four totals ───────────────────────────────────────────────────── */
-
-.totals {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
-}
-
-.tile {
-  display: grid;
-  align-content: start;
-  gap: 4px;
-  min-width: 0;
-  padding: 14px 16px;
-  border-radius: var(--radius-16);
-  background: var(--cream);
-}
-
-.tileLabel {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: var(--text-12);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(var(--line-rgb), 0.7);
-}
-
-/* A step above the queue cards' figures, so the totals lead the page. */
-.tileFigure {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: var(--text-36);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
-  transition: color var(--dur-base) var(--ease);
-}
-
-/* The "does not apply" reading. Quieter than a number, because it is none,
-   on the number's line box so the four tiles stay level. */
-.tileFigureMuted {
-  font-size: var(--text-17);
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: calc(var(--text-36) * 1.05);
-  color: rgba(var(--line-rgb), 0.7);
-}
-
 .figureCalm {
   color: var(--jade-ink);
 }
 
-.figureLoud {
-  color: var(--danger-ink);
-}
-
-.tileNote {
-  margin: 0;
+/* The "does not apply" reading in a stat tile. Quieter than a number, because
+   it is none. */
+.statStatement {
   font-family: var(--sans);
-  font-size: var(--text-12-5);
-  line-height: 1.45;
-  color: rgba(var(--line-rgb), 0.7);
+  font-size: var(--text-17);
+  color: var(--ink-60);
 }
 
 /* ── Footer: when it was measured, and a way to measure again ──────────── */
@@ -288,28 +223,6 @@
   height: 14px;
 }
 
-/* A failed background refresh: the older figures stay, and this line says
-   how old they are. */
-.refreshFailed {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 6px;
-  min-width: 0;
-  margin: 0;
-  font-family: var(--sans);
-  font-size: var(--text-12-5);
-  line-height: 1.45;
-  color: var(--amber-ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.refreshFailedGlyph {
-  flex: none;
-  width: 14px;
-  height: 14px;
-  margin-top: 2px;
-}
-
 .refreshFailedReason {
   font-weight: 600;
 }
@@ -321,8 +234,7 @@
 /* While a reading is in flight the button keeps focus and stays legible
    (the shared aria-disabled look fades it to 0.4); the spinning glyph and
    aria-busy say why a press does nothing. */
-.card .busyButton[aria-disabled="true"],
-.errorCard .busyButton[aria-disabled="true"] {
+.busyButton.busyButton[aria-disabled="true"] {
   opacity: 0.75;
   cursor: progress;
 }
@@ -339,196 +251,16 @@
   }
 }
 
-/* ── Error state ───────────────────────────────────────────────────────── */
-
-.errorCard {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: 14px 16px;
-  padding: var(--card-pad);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  box-shadow: var(--shadow-e1);
-}
-
-/* The badge's named area belongs to the headline row; here it takes the first
-   column in plain flow. */
-.errorCard .badge {
-  grid-area: auto;
-}
-
-.errorBody {
-  display: grid;
-  justify-items: start;
-  gap: 14px;
-  min-width: 0;
-}
-
-.errorMessage {
-  display: grid;
-  gap: 4px;
-  padding-top: 10px;
-}
-
-.errorText {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: var(--text-14-5);
-  line-height: 1.55;
-  color: var(--ink);
-}
-
-/* The server's own reason, under the sentence that frames it. */
-.errorReason {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  line-height: 1.5;
-  color: rgba(var(--line-rgb), 0.7);
-}
-
 /* ── Loading skeleton: the same shapes the loaded panel settles into ───── */
 
-.skeletonHeadline {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.skeletonHeadlineText {
+.skeletonStack {
   display: grid;
-  flex: 1 1 auto;
   gap: 10px;
-  min-width: 0;
 }
 
-.skeletonBadge {
-  flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(var(--line-rgb), 0.07);
-}
+/* ── Width steps: a smaller headline at phone width. ──────────────────── */
 
-.skeletonFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.09);
-}
-
-/* A queue card's shape, built the same way: an unpadded shell that is its
-   own size container, so the body steps and folds at the loaded card's
-   widths. */
-.skeletonRow {
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  box-shadow: var(--shadow-e1);
-  container: queue-health-skeleton-card / inline-size;
-}
-
-.skeletonRowBody {
-  display: grid;
-  gap: 20px;
-  padding: var(--card-pad);
-}
-
-.skeletonRowHead {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.skeletonRowTitle {
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.skeletonPill {
-  flex: none;
-  width: 64px;
-  height: 22px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--line-rgb), 0.07);
-}
-
-.skeletonFigures {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px 28px;
-}
-
-.skeletonFigure {
-  display: grid;
-  align-content: start;
-  gap: 6px;
-  min-width: 0;
-}
-
-.skeletonMeter {
-  height: 6px;
-  margin: 4px 0;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--line-rgb), 0.07);
-}
-
-.skeletonFacts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 40px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.09);
-}
-
-.skeletonFact {
-  display: grid;
-  gap: 4px;
-}
-
-@container queue-health-skeleton-card (max-width: 560px) {
-  .skeletonRowBody {
-    padding: 18px;
-  }
-
-  .skeletonFigures {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
-  }
-}
-
-/* ── Width steps. Four tiles once each has room for its note; a tighter
-   card and a smaller headline at phone width. ─────────────────────────── */
-
-@container queue-health (min-width: 760px) {
-  .totals {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-/* The overview body steps on its own card, the same measure the queue cards
-   use. */
-@container queue-health-card (max-width: 560px) {
-  .cardBody {
-    padding: 18px;
-    gap: 20px;
-  }
-}
-
-/* Panel-width steps: the error card's padding (it stands alone), a smaller
-   headline and tighter tiles. */
 @container queue-health (max-width: 560px) {
-  .errorCard {
-    padding: 18px;
-  }
-
   .headlineRow {
     column-gap: 14px;
   }
@@ -536,25 +268,10 @@
   .headline {
     font-size: var(--text-22);
   }
-
-  .tile {
-    padding: 12px 14px;
-  }
-
-  .tileFigure {
-    font-size: var(--text-30);
-  }
-
-  /* Restated after the step above, which would otherwise size it too. */
-  .tileFigureMuted {
-    font-size: var(--text-17);
-    line-height: calc(var(--text-30) * 1.05);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .segment,
-  .tileFigure {
+  .segment {
     transition: none;
   }
 

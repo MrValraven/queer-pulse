@@ -26,6 +26,8 @@ import {
 } from "../../quizshow/templates/quizshowTemplateErrors";
 import { templateCardTitleOf } from "../../quizshow/templates/quizshowTemplateResponse";
 import { QUIZSHOW_TEMPLATES_HEADING_ID } from "./quizshowTemplateList.data";
+import { AdminRowActions, adminRowActionClasses } from "../ui";
+import phone from "../adminPhoneActions.module.css";
 import styles from "./AdminQuizshowTemplates.module.css";
 
 /** About a second and a half of frames to wait for the dialog's focus return to fail. */
@@ -149,7 +151,7 @@ export function AdminQuizshowTemplateRowActions({
 
   return (
     <>
-      <div className={styles.actions}>
+      <AdminRowActions className={styles.actions}>
         <Button
           variant="ghost"
           size="sm"
@@ -162,16 +164,20 @@ export function AdminQuizshowTemplateRowActions({
         <Button
           variant="ghost"
           size="sm"
+          className={phone.iconButton}
           aria-describedby={titleId}
           aria-disabled={isBusy || undefined}
           onClick={() => void duplicate()}
         >
           <FiCopy aria-hidden fill="none" />
-          {t("quizshow:templates.row.duplicate")}
+          <span className={phone.label}>
+            {t("quizshow:templates.row.duplicate")}
+          </span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
+          className={phone.iconButton}
           aria-describedby={titleId}
           aria-disabled={isBusy || undefined}
           onClick={() => void changeStatus()}
@@ -181,21 +187,26 @@ export function AdminQuizshowTemplateRowActions({
           ) : (
             <FiSend aria-hidden fill="none" />
           )}
-          {isPublished
-            ? t("quizshow:templates.unpublish")
-            : t("quizshow:templates.publish")}
+          <span className={phone.label}>
+            {isPublished
+              ? t("quizshow:templates.unpublish")
+              : t("quizshow:templates.publish")}
+          </span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
+          className={`${phone.iconButton} ${adminRowActionClasses.danger}`}
           aria-describedby={titleId}
           aria-disabled={isBusy || undefined}
           onClick={openDeleteConfirm}
         >
           <FiTrash2 aria-hidden fill="none" />
-          {t("quizshow:templates.row.delete")}
+          <span className={phone.label}>
+            {t("quizshow:templates.row.delete")}
+          </span>
         </Button>
-      </div>
+      </AdminRowActions>
       <Collapse isOpen={refusal.isShown}>
         <p className={styles.refusal} role="alert">
           <FiAlertCircle

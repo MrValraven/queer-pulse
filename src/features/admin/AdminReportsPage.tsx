@@ -13,8 +13,8 @@ import styles from "./AdminReportsPage.module.css";
  * ranges, ADM-19 CSV export): member growth + reports-by-type share one
  * weekly-range control, governance finance renders its own real quarterly
  * history, and community health renders a current, honestly-labelled
- * snapshot. `AdminDashboardPage`'s own small charts link in here rather than
- * growing their own range controls (see that page's "view full report" link).
+ * snapshot. `AdminDashboardPage`'s own small charts link in here and keep
+ * no range controls of their own (see that page's "view full report" link).
  */
 export function AdminReportsPage() {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ export function AdminReportsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:reports.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="admin:reports.header.title"

@@ -1,19 +1,20 @@
-import { useId } from "react";
-import { FiAlertTriangle, FiCheck, FiCheckCircle } from "react-icons/fi";
+import { FiKey, FiShield, FiUserCheck, FiUserMinus } from "react-icons/fi";
+import type { IconType } from "react-icons";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminStat, AdminStatTiles } from "./ui";
 import type {
   StaffRosterSummary,
   StaffTier,
   StaffTierFilter,
 } from "./adminStaffRoster.utils";
-import styles from "./AdminStaffPage.module.css";
 
 interface TierTile {
   tier: StaffTier;
   count: number;
   labelKey: string;
   hintKey: string;
+  icon: IconType;
 }
 
 /**
@@ -40,81 +41,63 @@ export function AdminStaffSummary({
       count: summary.adminCount,
       labelKey: "admin:staff.summary.admins",
       hintKey: "admin:staff.summary.adminsHint",
+      icon: FiShield,
     },
     {
       tier: "moderator",
       count: summary.moderatorCount,
       labelKey: "admin:staff.summary.moderators",
       hintKey: "admin:staff.summary.moderatorsHint",
+      icon: FiUserCheck,
     },
     {
       tier: "member",
       count: summary.grantHolderCount,
       labelKey: "admin:staff.summary.grantHolders",
       hintKey: "admin:staff.summary.grantHoldersHint",
+      icon: FiKey,
     },
   ];
   const hasUncovered = summary.uncoveredGrantCount > 0;
-  const headingId = useId();
 
   return (
-    <section className={styles.summary} aria-labelledby={headingId}>
-      <h2 id={headingId} className="visuallyHidden">
-        {t("admin:staff.summary.heading")}
-      </h2>
-      {tierTiles.map((tile) => {
-        const isPressed = activeTier === tile.tier;
-        return (
-          <button
-            key={tile.tier}
-            type="button"
-            className={styles.tile}
-            aria-pressed={isPressed}
-            onClick={() => onPickTier(tile.tier)}
-          >
-            <span className={styles.tileTop}>
-              <span className={styles.tileLabel}>{t(tile.labelKey)}</span>
-              {isPressed && (
-                <span className={styles.tileCheck} aria-hidden>
-                  <FiCheck />
-                </span>
-              )}
-            </span>
+    <AdminStatTiles label={t("admin:staff.summary.heading")}>
+      {tierTiles.map((tile) => (
+        <AdminStat
+          key={tile.tier}
+          icon={tile.icon}
+          label={t(tile.labelKey)}
+          value={
             <RollingNumber
-              className={styles.tileValue}
               value={String(tile.count)}
               numericValue={tile.count}
             />
-            <span className={styles.tileHint}>{t(tile.hintKey)}</span>
-          </button>
-        );
-      })}
-      <button
-        type="button"
-        className={`${styles.tile} ${hasUncovered ? styles.tileWarn : styles.tileCalm}`}
-        onClick={onShowUncovered}
-      >
-        <span className={styles.tileTop}>
-          <span className={styles.tileLabel}>
-            {t("admin:staff.summary.uncovered")}
-          </span>
-        </span>
-        <RollingNumber
-          className={styles.tileValue}
-          value={String(summary.uncoveredGrantCount)}
-          numericValue={summary.uncoveredGrantCount}
+          }
+          hint={t(tile.hintKey)}
+          isPressed={activeTier === tile.tier}
+          onClick={() => onPickTier(tile.tier)}
         />
-        <span className={styles.tileHint}>
-          {hasUncovered ? (
-            <FiAlertTriangle aria-hidden className={styles.tileHintIcon} />
-          ) : (
-            <FiCheckCircle aria-hidden className={styles.tileHintIcon} />
-          )}
-          {hasUncovered
-            ? t("admin:staff.summary.uncoveredHint")
-            : t("admin:staff.summary.uncoveredHintNone")}
-        </span>
-      </button>
-    </section>
+      ))}
+      <AdminStat
+        icon={FiUserMinus}
+        label={t("admin:staff.summary.uncovered")}
+        value={
+          <RollingNumber
+            value={String(summary.uncoveredGrantCount)}
+            numericValue={summary.uncoveredGrantCount}
+          />
+        }
+        tone={hasUncovered ? "warn" : "default"}
+        delta={
+          hasUncovered
+            ? { tone: "warn", text: t("admin:staff.summary.uncoveredHint") }
+            : undefined
+        }
+        hint={
+          hasUncovered ? undefined : t("admin:staff.summary.uncoveredHintNone")
+        }
+        onClick={onShowUncovered}
+      />
+    </AdminStatTiles>
   );
 }

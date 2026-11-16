@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiAlertCircle, FiClock, FiEyeOff } from "react-icons/fi";
-import { Button } from "../../../shared/components/ui";
+import { Button, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { routes } from "../../../app/routeMap";
@@ -10,7 +10,12 @@ import {
   isAmbassadorFocusArea,
   type AmbassadorFocusArea,
 } from "../../../shared/ambassadors/ambassadorFocusAreas.data";
-import { AdminAvatar, AdminChip } from "../ui";
+import {
+  AdminAvatar,
+  AdminChip,
+  AdminRowActions,
+  adminRowActionClasses,
+} from "../ui";
 import type { AdminAmbassadorDTO } from "./adminAmbassadors.api";
 import styles from "./AdminAmbassadorsPage.module.css";
 
@@ -127,25 +132,25 @@ export function AdminAmbassadorRow({
             <span className={styles.focusCaption} aria-hidden>
               {t("admin:ambassadors.row.changeFocus")}
             </span>
-            <select
+            <Select
               className={styles.select}
+              size="sm"
               value={row.focusArea}
               disabled={isFocusSaving}
-              aria-label={t("admin:ambassadors.row.changeFocusAria", { name })}
-              onChange={(event) => {
-                const nextFocus = event.target.value;
-                if (isAmbassadorFocusArea(nextFocus)) onChangeFocus(nextFocus);
+              label={t("admin:ambassadors.row.changeFocusAria", { name })}
+              onChange={(nextFocus) => {
+                if (nextFocus && isAmbassadorFocusArea(nextFocus)) {
+                  onChangeFocus(nextFocus);
+                }
               }}
-            >
-              {AMBASSADOR_FOCUS_AREAS.map((focusArea) => (
-                <option key={focusArea} value={focusArea}>
-                  {t(AMBASSADOR_FOCUS_LABEL_KEY[focusArea])}
-                </option>
-              ))}
-            </select>
+              options={AMBASSADOR_FOCUS_AREAS.map((focusArea) => ({
+                value: focusArea,
+                label: t(AMBASSADOR_FOCUS_LABEL_KEY[focusArea]),
+              }))}
+            />
           </div>
         )}
-        <div className={styles.rowButtons}>
+        <AdminRowActions className={styles.rowButtons}>
           <Button
             variant="ghost"
             size="sm"
@@ -156,7 +161,8 @@ export function AdminAmbassadorRow({
           </Button>
           {isActive && (
             <Button
-              variant="danger"
+              variant="ghost"
+              className={adminRowActionClasses.danger}
               size="sm"
               onClick={onRevoke}
               aria-label={t("admin:ambassadors.row.revokeAria", { name })}
@@ -164,7 +170,7 @@ export function AdminAmbassadorRow({
               {t("admin:ambassadors.row.revoke")}
             </Button>
           )}
-        </div>
+        </AdminRowActions>
       </div>
     </article>
   );

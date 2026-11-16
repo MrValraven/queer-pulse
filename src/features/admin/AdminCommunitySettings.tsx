@@ -2,7 +2,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModeratorsRow } from "./AdminCommunityModerators";
 import { AdminOverridesZone } from "./AdminCommunityOverrides";
-import { AdminChip, AdminToggle } from "./ui";
+import { AdminChip, AdminPanel } from "./ui";
+import { ToggleRow } from "./AdminCommunityToggleRow";
 import { visLabelKey, type Community } from "./adminCommunities.data";
 import { useUpdateAdminCommunity } from "./api/useUpdateAdminCommunity";
 import styles from "./AdminCommunitiesPage.module.css";
@@ -42,7 +43,12 @@ export function SettingsPane({ community }: { community: Community }) {
   };
 
   return (
-    <div className={styles.pane}>
+    <AdminPanel
+      as="div"
+      padding="flush"
+      isOverflowVisible
+      bodyClassName={styles.settingsRows}
+    >
       {hasJoinData && (
         <div className={styles.setRow}>
           <div className={styles.setTop}>
@@ -174,35 +180,6 @@ export function SettingsPane({ community }: { community: Community }) {
       )}
 
       <AdminOverridesZone community={community} />
-    </div>
-  );
-}
-
-function ToggleRow({
-  title,
-  sub,
-  checked,
-  onChange,
-  disabled,
-}: {
-  title: string;
-  sub: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  disabled?: boolean;
-}) {
-  return (
-    <div className={styles.toggleRow}>
-      <div className={styles.toggleText}>
-        <div className={styles.toggleTitle}>{title}</div>
-        <div className={styles.toggleSub}>{sub}</div>
-      </div>
-      <AdminToggle
-        checked={checked}
-        onChange={onChange}
-        label={title}
-        disabled={disabled}
-      />
-    </div>
+    </AdminPanel>
   );
 }

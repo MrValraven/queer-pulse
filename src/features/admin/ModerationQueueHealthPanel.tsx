@@ -1,4 +1,3 @@
-import { FiAlertTriangle } from "react-icons/fi";
 import { reasonFor } from "../../shared/api/errorMessage";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -6,6 +5,7 @@ import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useModerationQueueHealth } from "./api/useModerationQueueHealth";
 import { ModerationQueueHealthOverview } from "./ModerationQueueHealthOverview";
 import { ModerationQueueHealthRow } from "./ModerationQueueHealthRow";
+import { AdminNotice, AdminPanel, AdminStat, AdminStatTiles } from "./ui";
 import styles from "./ModerationQueueHealthOverview.module.css";
 
 /**
@@ -13,11 +13,11 @@ import styles from "./ModerationQueueHealthOverview.module.css";
  *
  * WHAT THIS IS FOR. A volunteer rota cannot see its own backlog building until
  * somebody is already drowning in it, and burnout on a platform this size is a
- * predictable failure rather than bad luck. This panel makes the state of the
- * work visible early enough to redistribute it.
+ * predictable failure, and bad luck has little to do with it. This panel
+ * makes the state of the work visible early enough to redistribute it.
  *
- * WHAT IT IS NOT. It measures QUEUES, never people. There is no throughput
- * figure, no per-moderator attribution and no ranking anywhere in it, and none
+ * WHAT IT IS NOT. It measures QUEUES and leaves people out. It holds no
+ * throughput figure, per-moderator attribution or ranking anywhere, and none
  * may be added: a surface built to prevent burnout that reads as a performance
  * board would cause the thing it exists to stop.
  *
@@ -86,86 +86,61 @@ export function ModerationQueueHealthPanel() {
   );
 }
 
-const SKELETON_TILES = [0, 1, 2, 3];
 const SKELETON_ROWS = [0, 1, 2, 3, 4];
-const SKELETON_FIGURES = [0, 1, 2];
+const SKELETON_TILE_LABELS = [
+  "admin:moderationHealth.stat.depth",
+  "admin:moderationHealth.stat.overdue",
+  "admin:moderationHealth.stat.unassigned",
+  "admin:moderationHealth.overview.total.rota",
+];
 
 /** The loaded layout's shapes, so nothing jumps when the reading lands: the
  *  overview card (headline, strip and legend, four tiles, footer) and five
  *  queue cards. */
 function QueueHealthSkeleton() {
+  const { t } = useTranslation();
   return (
     <>
-      <div className={styles.card} aria-hidden>
-        <div className={styles.cardBody}>
-          <div className={styles.skeletonHeadline}>
-            <span className={styles.skeletonBadge} />
-            <div className={styles.skeletonHeadlineText}>
+      <div aria-hidden>
+        <AdminPanel as="div">
+          <div className={styles.overviewBody}>
+            <div className={styles.skeletonStack}>
               <SkeletonLine width="55%" height={30} />
               <SkeletonLine width="80%" height={16} />
             </div>
+            <div className={styles.stripBlock}>
+              <SkeletonLine width="100%" height={8} />
+              <SkeletonLine width="40%" height={16} />
+            </div>
+            <AdminStatTiles columns={4}>
+              {SKELETON_TILE_LABELS.map((labelKey) => (
+                <AdminStat
+                  key={labelKey}
+                  label={t(labelKey)}
+                  value=""
+                  isLoading
+                />
+              ))}
+            </AdminStatTiles>
+            <div className={styles.footer}>
+              <SkeletonLine width="30%" height={14} />
+              <SkeletonLine width={96} height={36} />
+            </div>
           </div>
-          <div className={styles.stripBlock}>
-            <SkeletonLine width="100%" height={8} />
-            <SkeletonLine width="40%" height={16} />
-          </div>
-          <div className={styles.totals}>
-            {SKELETON_TILES.map((placeholder) => (
-              <div className={styles.tile} key={placeholder}>
-                <SkeletonLine width="50%" height={14} />
-                <SkeletonLine width="40%" height={38} />
-                <SkeletonLine width="75%" height={14} />
-              </div>
-            ))}
-          </div>
-          <div className={styles.skeletonFooter}>
-            <SkeletonLine width="30%" height={14} />
-            <SkeletonLine width={96} height={32} />
-          </div>
-        </div>
+        </AdminPanel>
       </div>
       <div className={styles.rows} aria-hidden>
         {SKELETON_ROWS.map((placeholder) => (
-          <QueueRowSkeleton key={placeholder} />
+          <AdminPanel as="div" key={placeholder}>
+            <div className={styles.skeletonStack}>
+              <SkeletonLine width={160} height={24} />
+              <SkeletonLine width="100%" height={64} />
+              <SkeletonLine width="60%" height={14} />
+            </div>
+          </AdminPanel>
         ))}
       </div>
     </>
-  );
-}
-
-/** One queue card's shape: the header (name and chip, the link on the right),
- *  the three figures with their meters, and the facts under a hairline. */
-function QueueRowSkeleton() {
-  return (
-    <div className={styles.skeletonRow}>
-      <div className={styles.skeletonRowBody}>
-        <div className={styles.skeletonRowHead}>
-          <div className={styles.skeletonRowTitle}>
-            <SkeletonLine width={160} height={24} />
-            <span className={styles.skeletonPill} />
-          </div>
-          <SkeletonLine width={88} height={18} />
-        </div>
-        <div className={styles.skeletonFigures}>
-          {SKELETON_FIGURES.map((placeholder) => (
-            <div className={styles.skeletonFigure} key={placeholder}>
-              <SkeletonLine width="45%" height={14} />
-              <SkeletonLine width="50%" height={32} />
-              <span className={styles.skeletonMeter} />
-              <SkeletonLine width="65%" height={14} />
-            </div>
-          ))}
-        </div>
-        <div className={styles.skeletonFacts}>
-          {SKELETON_FIGURES.map((placeholder) => (
-            <div className={styles.skeletonFact} key={placeholder}>
-              <SkeletonLine width={84} height={14} />
-              <SkeletonLine width={48} height={20} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -187,17 +162,10 @@ function QueueHealthLoadError({
     onRetry();
   };
   return (
-    <div className={styles.errorCard}>
-      <span className={`${styles.badge} ${styles.toneWarning}`} aria-hidden>
-        <FiAlertTriangle />
-      </span>
-      <div className={styles.errorBody}>
-        <div className={styles.errorMessage} role="status">
-          <p className={styles.errorText}>
-            {t("admin:moderationHealth.loadError")}
-          </p>
-          {reason && <p className={styles.errorReason}>{reason}</p>}
-        </div>
+    <AdminNotice
+      tone="error"
+      title={t("admin:moderationHealth.loadError")}
+      action={
         <Button
           variant="quiet"
           size="sm"
@@ -208,7 +176,9 @@ function QueueHealthLoadError({
         >
           {t("common:error.retry")}
         </Button>
-      </div>
-    </div>
+      }
+    >
+      {reason}
+    </AdminNotice>
   );
 }

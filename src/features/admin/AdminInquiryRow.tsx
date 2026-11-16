@@ -3,7 +3,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
-import { AdminChip, type AdminTone } from "./ui";
+import { AdminChip, AdminRowActions, type AdminTone } from "./ui";
 import { AdminWaitingChip } from "./AdminSubmissionQueue";
 import { ADMIN_SUBMISSION_STATUS_TONE } from "./adminSubmissionMeta";
 import { businessPath, routes } from "../../app/routeMap";
@@ -157,7 +157,7 @@ export function AdminInquiryRow({
       </div>
 
       <div className={styles.rowActions}>
-        <div className={styles.rowActionButtons}>
+        <AdminRowActions>
           <Button
             variant="ghost"
             size="sm"
@@ -168,7 +168,7 @@ export function AdminInquiryRow({
               ? t("admin:adminIntakes.action.markHandled")
               : t("admin:adminIntakes.action.reopen")}
           </Button>
-        </div>
+        </AdminRowActions>
       </div>
     </div>
   );

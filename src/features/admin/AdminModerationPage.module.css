@@ -1,89 +1,8 @@
-/* ── Subject deep-link filter (ADM-8 / COM-6) ───────────────────────────── */
-.subjectFilter {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  width: fit-content;
-  margin: 0 0 16px;
-  padding: 7px 8px 7px 14px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.06);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--text-strong);
-}
-[data-theme="dark"] .subjectFilter {
-  color: var(--ink);
-}
-.subjectFilter button {
+/* ── Page body: tabs, toolbar, notices and the pane, one gap apart ────── */
+.body {
   display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    background 0.16s var(--ease),
-    color 0.16s var(--ease);
-}
-@media (hover: hover) {
-  .subjectFilter button:hover {
-    background: rgba(var(--plum-rgb), 0.1);
-    color: var(--text-strong);
-  }
-}
-.subjectFilter button:focus-visible {
-  outline: 2px solid var(--line-strong);
-  outline-offset: 2px;
-}
-.subjectFilter button svg {
-  width: 13px;
-  height: 13px;
-}
-
-/* ── Toolbar (tabs + filter pills) ──────────────────────────────────────── */
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin: 4px 0 22px;
-}
-.filters {
-  display: inline-flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.filter {
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: var(--paper);
-  color: var(--ink-60);
-  font: inherit;
-  font-size: var(--text-13);
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    border-color 0.16s var(--ease),
-    color 0.16s var(--ease),
-    background 0.16s var(--ease);
-}
-@media (hover: hover) {
-  .filter:hover {
-    border-color: rgba(var(--line-rgb), 0.3);
-    color: var(--text-strong);
-  }
-}
-.filterOn {
-  border-color: var(--line-strong);
-  color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.06);
+  gap: var(--gap-sm);
+  min-width: 0;
 }
 
 .pane {
@@ -94,15 +13,44 @@
   flex-direction: column;
   gap: 14px;
 }
-.filterEmpty {
-  margin: 18px 2px;
-  color: var(--ink-60);
-  font-size: var(--text-14);
-}
 .loadMoreRow {
   display: flex;
   justify-content: center;
   margin-top: 24px;
+}
+
+/* ── Queue beside its stance note ──────────────────────────────────────
+   The pane is the size container, so the note moves into a side column once
+   the queue itself has room for it (about 1360px of viewport with the rail
+   open) and stacks above the queue below that, so a 1280 screen gives the
+   reports the full width. */
+.queueLayout {
+  container: moderation-queue / inline-size;
+}
+.queueGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.queueMain {
+  min-width: 0;
+}
+@container moderation-queue (min-width: 1080px) {
+  .queueGrid {
+    grid-template-columns: minmax(0, 1fr) clamp(260px, 28%, 320px);
+    grid-template-areas: "main guide";
+    align-items: start;
+    column-gap: var(--gap-grid);
+  }
+  .queueMain {
+    grid-area: main;
+  }
+  /* Sticky under the top bar, so the note stays beside the report being
+     read all the way down the queue. */
+  .queueGuide {
+    grid-area: guide;
+    position: sticky;
+    top: calc(var(--admin-bar-h) + var(--gap-sm));
+  }
 }
 
 /* ── Emergency band ─────────────────────────────────────────────────────── */
@@ -165,7 +113,26 @@
 .emergList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+}
+/* The band is the one container: its reports are flat rows split by a
+   hairline, so no card sits inside the tinted card. The severity stripe on
+   each row stays, since it encodes the report's severity beside its text. */
+.emergList .report {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+/* Each report rides in its own wrapper, so the divider keys off the wrapper. */
+.emergList > * + * .report {
+  border-top: 1px solid rgba(var(--danger-rgb), 0.18);
+}
+@media (hover: hover) {
+  .emergList .report:hover {
+    background: rgba(var(--danger-rgb), 0.06);
+    box-shadow: none;
+    transform: none;
+  }
 }
 
 /* ── Section label ──────────────────────────────────────────────────────── */
@@ -350,14 +317,12 @@ button.reportMain:focus-visible {
   width: 11px;
   height: 11px;
 }
-/* Carried by a real <button> now that the affordance is a sibling of the card
-   button rather than nested inside it, so it resets the UA button box back to
-   the .priorFlag pill. */
+/* Carried by a real <button> that sits beside the card button as its sibling,
+   so it resets the UA button box back to the .priorFlag pill. */
 .priorFlagLink {
   cursor: pointer;
   border: none;
-  font: inherit;
-  color: inherit;
+  font-family: inherit;
   -webkit-appearance: none;
   appearance: none;
 }
@@ -394,10 +359,10 @@ button.reportMain:focus-visible {
   width: 11px;
   height: 11px;
 }
-/* ADM-22: reporter credibility chip — mirrors .priorFlag/.assignedFlag's
-   pill shape, in a neutral violet tone (this is informational context for a
-   moderator to weigh, not itself a warning like .priorFlag or an
-   endorsement like .assignedFlag). */
+/* ADM-22: reporter credibility chip. Mirrors .priorFlag/.assignedFlag's
+   pill shape in a neutral violet tone: it is informational context for a
+   moderator to weigh, sitting between the warning of .priorFlag and the
+   endorsement of .assignedFlag. */
 .reporterFlag {
   display: inline-flex;
   align-items: center;
@@ -437,7 +402,7 @@ button.reportMain:focus-visible {
 }
 
 /* On a phone the triage rail drops under the card text as a wrapping row, so
-   the title keeps the full card width instead of squeezing to about 80px. */
+   the title keeps the full card width and never squeezes to about 80px. */
 @media (--sm) {
   .report {
     flex-wrap: wrap;
@@ -726,7 +691,7 @@ button.reportMain:focus-visible {
 }
 
 /* "The author named above may not have written the reported half." Shares
-   .dRedact's quiet footnote shape, in amber rather than jade: this is a
+   .dRedact's quiet footnote shape, in amber: this is a
    caution about who a sanction would land on, where .dRedact is a
    reassurance that something was already handled. */
 .dAmbiguous {
@@ -747,8 +712,8 @@ button.reportMain:focus-visible {
 }
 
 /* Listing-dispute context (dispute reason / ownership evidence). A calmer,
-   plum-tinted variant of .dExcerpt — this is claim/context, not the reported
-   content itself, so it reads as neutral rather than danger. */
+   plum-tinted variant of .dExcerpt: this is claim and context around the
+   reported content, so it reads as neutral. */
 .dClaim {
   margin: 0;
   padding: 14px 16px;
@@ -1290,19 +1255,16 @@ button.reportMain:focus-visible {
   height: 11px;
 }
 
-/* The queue's community filter sits in the same row as the severity filter
-   chips, so it is capped rather than stretching the toolbar when a community
-   slug runs long. */
+/* The queue's community filter sits in the same toolbar row as the severity
+   chips, so a long community slug is capped at this width. */
 .communityFilter {
-  min-width: 160px;
   max-width: 240px;
 }
 
 /* ── Clustered subject row (TS-06) ───────────────────────────────────────
    One pile-on, headed by its real counts. The card reads as a container for
-   the rows inside it rather than as another report, so it sits on the tinted
-   ground instead of paper and its severity stripe runs down the left edge the
-   same way a report's does. */
+   the report rows inside it, so it sits on the tinted ground and its
+   severity stripe runs down the left edge the same way a report's does. */
 .cluster {
   position: relative;
   border: 1px solid rgba(var(--line-rgb), 0.14);
@@ -1370,8 +1332,8 @@ button.reportMain:focus-visible {
   width: 11px;
   height: 11px;
 }
-/* A surge is a signal to read the pile as one event. Amber, never danger: it
-   says "slow down and look", it does not say anyone is in the wrong. */
+/* A surge is a signal to read the pile as one event. Amber: it says "slow
+   down and look", and it does not say anyone is in the wrong. */
 .clusterSurge {
   display: inline-flex;
   align-items: center;
@@ -1442,6 +1404,9 @@ button.reportMain:focus-visible {
   font-size: var(--text-12-5);
   line-height: 1.5;
 }
+.appealFilters {
+  margin-bottom: var(--gap-sm);
+}
 .appealsWindow svg {
   flex: none;
   width: 13px;
@@ -1496,7 +1461,7 @@ button.reportMain:focus-visible {
   color: var(--ink-60);
   font-size: var(--text-12-5);
 }
-/* The first moderator's own words, quoted rather than summarized. */
+/* The first moderator's own words, quoted in full. */
 .ratifyReason {
   margin: 4px 0;
   padding: 12px 14px;

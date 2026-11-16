@@ -1,7 +1,14 @@
 import { FiArrowDown, FiArrowUp } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminChip, AdminToggle } from "./ui";
+import {
+  AdminChip,
+  AdminPanel,
+  AdminRowActions,
+  AdminToggle,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import { AUDIT_ACTION_LABEL_KEY } from "./moderationActionLabels";
 import { REASON_LABEL_KEYS } from "../safety/reportReasons";
 import type { ModResponseTemplateAdminDTO } from "./api/adminModResponseTemplates.api";
@@ -34,7 +41,7 @@ export function AdminResponseTemplateRows({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.rows}>
+    <AdminPanel as="div" padding="flush">
       {templates.map((template, index) => {
         const reasonLabelKey = template.reasonCode
           ? REASON_LABEL_KEYS[template.reasonCode]
@@ -49,18 +56,22 @@ export function AdminResponseTemplateRows({
         return (
           <div
             key={template.id}
-            className={[styles.row, !template.isActive && styles.rowInactive]
+            className={[
+              adminTableClasses.row,
+              styles.row,
+              !template.isActive && styles.rowInactive,
+            ]
               .filter(Boolean)
               .join(" ")}
           >
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
                 <span className={styles.rowName}>{template.label}</span>
-                <span className={styles.keyTag}>
+                <AdminChip tone="coral">
                   {reasonLabelKey
                     ? t(reasonLabelKey)
                     : t("admin:moderation.templates.anyReason")}
-                </span>
+                </AdminChip>
                 <AdminChip tone="plum">
                   {actionLabelKey
                     ? t(actionLabelKey)
@@ -70,10 +81,9 @@ export function AdminResponseTemplateRows({
               <p className={styles.rowBody}>{preview}</p>
             </div>
 
-            <div className={styles.rowActions}>
-              <button
-                type="button"
-                className={styles.moveCta}
+            <AdminRowActions>
+              <IconButton
+                size="sm"
                 disabled={index === 0}
                 onClick={() => onMove(template, -1)}
                 aria-label={t("admin:moderation.templates.moveUpAriaLabel", {
@@ -81,10 +91,9 @@ export function AdminResponseTemplateRows({
                 })}
               >
                 <FiArrowUp aria-hidden />
-              </button>
-              <button
-                type="button"
-                className={styles.moveCta}
+              </IconButton>
+              <IconButton
+                size="sm"
                 disabled={index === templates.length - 1}
                 onClick={() => onMove(template, 1)}
                 aria-label={t("admin:moderation.templates.moveDownAriaLabel", {
@@ -92,7 +101,7 @@ export function AdminResponseTemplateRows({
                 })}
               >
                 <FiArrowDown aria-hidden />
-              </button>
+              </IconButton>
               <AdminToggle
                 checked={template.isActive}
                 onChange={() => onToggleActive(template)}
@@ -102,22 +111,23 @@ export function AdminResponseTemplateRows({
               />
               <Button
                 variant="ghost"
-                size="md"
+                size="sm"
                 onClick={() => onEdit(template)}
               >
                 {t("admin:common.edit")}
               </Button>
               <Button
                 variant="ghost"
-                size="md"
+                size="sm"
+                className={adminRowActionClasses.danger}
                 onClick={() => onDelete(template)}
               >
                 {t("admin:common.delete")}
               </Button>
-            </div>
+            </AdminRowActions>
           </div>
         );
       })}
-    </div>
+    </AdminPanel>
   );
 }

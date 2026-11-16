@@ -1,12 +1,13 @@
-import { FiSearch, FiDownload } from "react-icons/fi";
-import { Button, Select } from "../../shared/components/ui";
+import type { ReactNode } from "react";
+import { FiDownload } from "react-icons/fi";
+import { Button, SearchInput, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   AUDIT_ACTION_IDS,
   AUDIT_RANGE_IDS,
   type AuditFilterState,
 } from "./adminGovernance.data";
-import styles from "./AdminGovernancePage.module.css";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 
 export function AdminGovernanceAuditFilters({
   filters,
@@ -15,6 +16,7 @@ export function AdminGovernanceAuditFilters({
   exportDisabled,
   exportTitle,
   moderators,
+  count,
 }: {
   filters: AuditFilterState;
   onChange: (next: AuditFilterState) => void;
@@ -23,6 +25,8 @@ export function AdminGovernanceAuditFilters({
   exportDisabled?: boolean;
   exportTitle?: string;
   moderators: { id: string; name: string }[];
+  /** The matching-entries line, announced as the filters change. */
+  count?: ReactNode;
 }) {
   const { t } = useTranslation();
   const set = <K extends keyof AuditFilterState>(
@@ -55,21 +59,31 @@ export function AdminGovernanceAuditFilters({
   ];
 
   return (
-    <div className={styles.filterBar}>
-      <label className={styles.search}>
-        <FiSearch className={styles.searchIco} aria-hidden />
-        <input
-          type="search"
-          className={styles.searchInput}
-          placeholder={t("admin:governance.audit.searchPlaceholder")}
-          value={filters.query}
-          onChange={(e) => set("query", e.target.value)}
-          aria-label={t("admin:governance.audit.searchAriaLabel")}
-        />
-      </label>
+    <AdminToolbar
+      label={t("admin:governance.tabs.audit")}
+      count={count}
+      end={
+        <Button
+          variant="ghost"
+          onClick={onExport}
+          disabled={exportDisabled}
+          title={exportDisabled ? exportTitle : undefined}
+        >
+          <FiDownload aria-hidden /> {t("admin:governance.audit.exportCta")}
+        </Button>
+      }
+    >
+      <SearchInput
+        className={adminToolbarClasses.search}
+        value={filters.query}
+        onChange={(query) => set("query", query)}
+        placeholder={t("admin:governance.audit.searchPlaceholder")}
+        ariaLabel={t("admin:governance.audit.searchAriaLabel")}
+      />
 
       <Select
         size="sm"
+        className={adminToolbarClasses.select}
         label={t("admin:governance.audit.filterModerator")}
         value={filters.moderator}
         options={moderatorOptions}
@@ -77,6 +91,7 @@ export function AdminGovernanceAuditFilters({
       />
       <Select
         size="sm"
+        className={adminToolbarClasses.select}
         label={t("admin:governance.audit.filterAction")}
         value={filters.action}
         options={actionOptions}
@@ -86,6 +101,7 @@ export function AdminGovernanceAuditFilters({
       />
       <Select
         size="sm"
+        className={adminToolbarClasses.select}
         label={t("admin:governance.audit.filterRange")}
         value={filters.range}
         options={rangeOptions}
@@ -93,15 +109,6 @@ export function AdminGovernanceAuditFilters({
           set("range", (v ?? "all") as AuditFilterState["range"])
         }
       />
-
-      <Button
-        variant="ghost"
-        onClick={onExport}
-        disabled={exportDisabled}
-        title={exportDisabled ? exportTitle : undefined}
-      >
-        <FiDownload aria-hidden /> {t("admin:governance.audit.exportCta")}
-      </Button>
-    </div>
+    </AdminToolbar>
   );
 }

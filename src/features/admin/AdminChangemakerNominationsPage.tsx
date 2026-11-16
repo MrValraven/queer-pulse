@@ -1,12 +1,14 @@
+import { FiUserPlus } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useAdminChangemakerNominations } from "./api/useAdminChangemakerNominations";
 import { AdminChangemakerNominationsRow } from "./AdminChangemakerNominationsRow";
 import styles from "./AdminSubmissionList.module.css";
+import stateStyles from "./AdminInboxStates.module.css";
 
 function RowsSkeleton() {
   return (
@@ -53,7 +55,7 @@ export function AdminChangemakerNominationsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminChangemakerNominations.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.partners")}
           title={
             <Translation
               i18nKey="admin:adminChangemakerNominations.header.title"
@@ -68,13 +70,17 @@ export function AdminChangemakerNominationsPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminChangemakerNominations.error")}
-          </p>
+          <div className={stateStyles.notice}>
+            <AdminNotice tone="error">
+              {t("admin:adminChangemakerNominations.error")}
+            </AdminNotice>
+          </div>
         ) : nominations.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminChangemakerNominations.empty")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            icon={FiUserPlus}
+            title={t("admin:adminChangemakerNominations.empty")}
+          />
         ) : (
           <>
             <div className={styles.rows}>

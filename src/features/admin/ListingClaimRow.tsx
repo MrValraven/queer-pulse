@@ -9,7 +9,14 @@ import { memberRefToPerson } from "../../shared/api/refs";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { AdminChip, AdminAvatar, type AdminTone, type AvatarTone } from "./ui";
+import {
+  AdminChip,
+  AdminAvatar,
+  AdminRowActions,
+  adminRowActionClasses,
+  type AdminTone,
+  type AvatarTone,
+} from "./ui";
 import { QueueOverdueChip } from "./QueueAssignmentControls";
 import { useReviewListingClaim } from "./api/useReviewListingClaim";
 import { adminListingEditPath } from "./api/adminListingEdit.api";
@@ -112,10 +119,10 @@ export function ListingClaimRow({
         )}
       </div>
       {isPending && (
-        <div className={styles.rowActions}>
+        <AdminRowActions className={styles.rowActions}>
           <Button
             variant="jade"
-            size="md"
+            size="sm"
             onClick={() => setIsApproveConfirmOpen(true)}
             disabled={review.isPending}
             aria-label={t("admin:listingClaims.row.approveAria", {
@@ -126,7 +133,8 @@ export function ListingClaimRow({
           </Button>
           <Button
             variant="ghost"
-            size="md"
+            size="sm"
+            className={adminRowActionClasses.danger}
             onClick={() => decide("declined")}
             disabled={review.isPending}
             aria-label={t("admin:listingClaims.row.declineAria", {
@@ -135,7 +143,7 @@ export function ListingClaimRow({
           >
             {t("admin:listingClaims.row.declineCta")}
           </Button>
-        </div>
+        </AdminRowActions>
       )}
       <ConfirmDialog
         open={isApproveConfirmOpen}

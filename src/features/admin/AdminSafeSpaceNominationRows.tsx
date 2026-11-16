@@ -2,7 +2,13 @@ import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { durationLabel } from "../../shared/i18n/duration";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminPanel,
+  adminTableClasses,
+  type AdminTone,
+} from "./ui";
 import { NOMINATION_STATUS_LABEL_KEY } from "./adminSafeSpaceGovernance.data";
 import type {
   AdminSafeSpaceNominationDTO,
@@ -34,17 +40,23 @@ export function AdminSafeSpaceNominationRows({
   const { t } = useTranslation();
 
   if (nominations.length === 0) {
-    return <p className={styles.emptyLine}>{t("safety:governance.empty")}</p>;
+    return (
+      <AdminEmptyState size="inline" title={t("safety:governance.empty")} />
+    );
   }
 
   return (
-    <div className={styles.rows}>
+    <AdminPanel padding="flush" isOverflowVisible>
       {nominations.map((nomination, index) => (
-        <FadeIn key={nomination.id} delay={Math.min(index, 8) * 50}>
+        <FadeIn
+          key={nomination.id}
+          delay={Math.min(index, 8) * 50}
+          className={styles.item}
+        >
           <NominationRow nomination={nomination} onOpen={onOpen} />
         </FadeIn>
       ))}
-    </div>
+    </AdminPanel>
   );
 }
 
@@ -63,6 +75,7 @@ function NominationRow({
     <button
       type="button"
       className={[
+        adminTableClasses.row,
         styles.row,
         nomination.hasBreachedAcknowledgement && styles.rowBreaching,
       ]

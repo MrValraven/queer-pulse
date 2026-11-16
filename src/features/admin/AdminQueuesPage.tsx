@@ -3,19 +3,28 @@ import {
   FiAlertTriangle,
   FiCheckCircle,
   FiClock,
+  FiHelpCircle,
   FiInbox,
+  FiLayers,
   FiRefreshCw,
 } from "react-icons/fi";
 import {
   Button,
-  EmptyState,
   FadeIn,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminStat,
+  AdminStatTiles,
+  AdminTable,
+  adminTableClasses,
+} from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -80,78 +89,33 @@ function useWaitLabel(): (hours: number) => string {
 /**
  * The headline: whether anything is overdue at all.
  *
- * The overdue figure is the one hero number on this screen, because it is the
- * only one that means somebody has to move now. When nothing has breached, the
- * sentence itself is the headline and no number is enlarged, so a calm desk
- * never has a big red digit on it.
+ * The overdue figure is the one number on this screen that means somebody has
+ * to move now, so it leads the error notice's title. When nothing has
+ * breached, a calm success notice says so and no number is enlarged.
  */
 function QueuesVerdict({ totals }: { totals: AdminQueuesDTO["totals"] }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const hasOverdue = totals.overdueCount > 0;
-  return (
-    <section
-      className={[styles.verdict, hasOverdue && styles.verdictOverdue]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <span
-        className={[
-          styles.verdictIcon,
-          hasOverdue ? styles.toneOverdue : styles.toneClear,
-        ].join(" ")}
-        aria-hidden
+  if (totals.overdueCount > 0) {
+    return (
+      <AdminNotice
+        tone="error"
+        title={`${fmt.number(totals.overdueCount)} ${t(
+          "admin:adminQueues.verdict.heroLabel",
+          { count: totals.overdueCount },
+        )}`}
       >
-        {hasOverdue ? <FiAlertTriangle /> : <FiCheckCircle />}
-      </span>
-      <div className={styles.verdictText}>
-        <h2 className={styles.verdictTitle}>
-          {hasOverdue
-            ? t("admin:adminQueues.verdict.overdueTitle")
-            : t("admin:adminQueues.verdict.clearTitle")}
-        </h2>
-        <p className={styles.verdictBody}>
-          {hasOverdue
-            ? t("admin:adminQueues.verdict.overdueBody")
-            : t("admin:adminQueues.verdict.clearBody")}
-        </p>
-      </div>
-      {hasOverdue && (
-        <p className={styles.hero}>
-          <span className={styles.heroValue}>
-            {fmt.number(totals.overdueCount)}
-          </span>
-          <span className={styles.heroLabel}>
-            {t("admin:adminQueues.verdict.heroLabel", {
-              count: totals.overdueCount,
-            })}
-          </span>
-        </p>
-      )}
-    </section>
-  );
-}
-
-function StatTile({
-  label,
-  value,
-  numericValue,
-  note,
-}: {
-  label: string;
-  value: string;
-  /** The raw count behind `value`; the poll rolls the figure toward it. */
-  numericValue: number;
-  note?: string;
-}) {
+        {t("admin:adminQueues.verdict.overdueBody")}
+      </AdminNotice>
+    );
+  }
   return (
-    <div className={styles.tile}>
-      <span className={styles.tileLabel}>{label}</span>
-      <span className={styles.tileValue}>
-        <RollingNumber value={value} numericValue={numericValue} />
-      </span>
-      {note && <span className={styles.tileNote}>{note}</span>}
-    </div>
+    <AdminNotice
+      tone="success"
+      title={t("admin:adminQueues.verdict.clearTitle")}
+    >
+      {t("admin:adminQueues.verdict.clearBody")}
+    </AdminNotice>
   );
 }
 
@@ -164,30 +128,47 @@ function QueuesTotals({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const hasUntracked = totals.uncountableQueueCount > 0;
   return (
-    <div className={styles.tiles}>
-      <StatTile
+    <AdminStatTiles columns={hasUntracked ? 3 : 2}>
+      <AdminStat
+        icon={FiInbox}
         label={t("admin:adminQueues.stat.waiting")}
-        value={fmt.number(totals.waitingCount)}
-        numericValue={totals.waitingCount}
+        value={
+          <RollingNumber
+            value={fmt.number(totals.waitingCount)}
+            numericValue={totals.waitingCount}
+          />
+        }
       />
-      <StatTile
+      <AdminStat
+        icon={FiLayers}
         label={t("admin:adminQueues.stat.queuesWithWork")}
-        value={fmt.number(totals.queuesWithWorkCount)}
-        numericValue={totals.queuesWithWorkCount}
-        note={t("admin:adminQueues.stat.queuesWithWorkNote", {
+        value={
+          <RollingNumber
+            value={fmt.number(totals.queuesWithWorkCount)}
+            numericValue={totals.queuesWithWorkCount}
+          />
+        }
+        hint={t("admin:adminQueues.stat.queuesWithWorkNote", {
           total: fmt.number(queueCount),
         })}
       />
-      {totals.uncountableQueueCount > 0 && (
-        <StatTile
+      {hasUntracked && (
+        <AdminStat
+          icon={FiHelpCircle}
+          tone="warn"
           label={t("admin:adminQueues.stat.untracked")}
-          value={fmt.number(totals.uncountableQueueCount)}
-          numericValue={totals.uncountableQueueCount}
-          note={t("admin:adminQueues.stat.untrackedNote")}
+          value={
+            <RollingNumber
+              value={fmt.number(totals.uncountableQueueCount)}
+              numericValue={totals.uncountableQueueCount}
+            />
+          }
+          hint={t("admin:adminQueues.stat.untrackedNote")}
         />
       )}
-    </div>
+    </AdminStatTiles>
   );
 }
 
@@ -230,7 +211,10 @@ function QueueTableRow({ row }: { row: AdminQueueSummaryDTO }) {
           {queueName(row.queue)}
         </Link>
       </th>
-      <td className={styles.cellNumber}>
+      <td
+        className={adminTableClasses.numeric}
+        data-label={t("admin:adminQueues.table.waiting")}
+      >
         {row.waitingCount === null ? (
           <span className={styles.muted}>
             {t("admin:adminQueues.cell.notTracked")}
@@ -239,7 +223,10 @@ function QueueTableRow({ row }: { row: AdminQueueSummaryDTO }) {
           fmt.number(row.waitingCount)
         )}
       </td>
-      <td className={styles.cellAge}>
+      <td
+        className={styles.noWrap}
+        data-label={t("admin:adminQueues.table.oldest")}
+      >
         {row.oldestWaitingHours === null || tone === null ? (
           <span className={styles.muted}>
             {t("admin:adminQueues.cell.notTracked")}
@@ -253,7 +240,10 @@ function QueueTableRow({ row }: { row: AdminQueueSummaryDTO }) {
           </span>
         )}
       </td>
-      <td className={styles.cellDeadline}>
+      <td
+        className={styles.noWrap}
+        data-label={t("admin:adminQueues.table.deadline")}
+      >
         <DeadlineCell overdueCount={row.overdueCount} />
       </td>
     </tr>
@@ -263,15 +253,12 @@ function QueueTableRow({ row }: { row: AdminQueueSummaryDTO }) {
 function WaitingTable({ rows }: { rows: AdminQueueSummaryDTO[] }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.tableScroll}>
-      <table className={styles.table}>
-        <caption className="visuallyHidden">
-          {t("admin:adminQueues.table.caption")}
-        </caption>
+    <div className={styles.tableScope}>
+      <AdminTable label={t("admin:adminQueues.table.caption")}>
         <thead>
           <tr>
             <th scope="col">{t("admin:adminQueues.table.queue")}</th>
-            <th scope="col" className={styles.cellNumber}>
+            <th scope="col" className={adminTableClasses.numeric}>
               {t("admin:adminQueues.table.waiting")}
             </th>
             <th scope="col">{t("admin:adminQueues.table.oldest")}</th>
@@ -283,7 +270,7 @@ function WaitingTable({ rows }: { rows: AdminQueueSummaryDTO[] }) {
             <QueueTableRow key={row.queue} row={row} />
           ))}
         </tbody>
-      </table>
+      </AdminTable>
     </div>
   );
 }
@@ -316,10 +303,10 @@ function QueuesBody({ data }: { data: AdminQueuesDTO }) {
   const { t } = useTranslation();
   if (data.queues.length === 0) {
     return (
-      <EmptyState
-        icon={<FiInbox />}
+      <AdminEmptyState
+        icon={FiInbox}
         title={t("admin:adminQueues.noQueues.title")}
-        description={t("admin:adminQueues.noQueues.body")}
+        body={t("admin:adminQueues.noQueues.body")}
       />
     );
   }
@@ -338,21 +325,21 @@ function QueuesBody({ data }: { data: AdminQueuesDTO }) {
   // queues stay one click away underneath, so "clear" is still checkable.
   if (waitingRows.length === 0) {
     return (
-      <>
-        <EmptyState
-          icon={<FiCheckCircle />}
+      <div className={styles.stack}>
+        <AdminEmptyState
+          icon={FiCheckCircle}
           title={t("admin:adminQueues.deskClear.title")}
-          description={t("admin:adminQueues.deskClear.body", {
+          body={t("admin:adminQueues.deskClear.body", {
             count: data.queues.length,
           })}
         />
         <ClearQueues rows={clearRows} />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className={styles.stack}>
       <FadeIn delay={60}>
         <QueuesVerdict totals={data.totals} />
       </FadeIn>
@@ -365,7 +352,7 @@ function QueuesBody({ data }: { data: AdminQueuesDTO }) {
       <FadeIn delay={120}>
         <ClearQueues rows={clearRows} />
       </FadeIn>
-    </>
+    </div>
   );
 }
 
@@ -418,7 +405,7 @@ export function AdminQueuesPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminQueues.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:adminQueues.header.title"
@@ -426,27 +413,25 @@ export function AdminQueuesPage() {
             />
           }
           sub={t("admin:adminQueues.header.sub")}
+          meta={
+            data
+              ? t("admin:adminQueues.asOf", {
+                  time: fmt.time(new Date(data.generatedAt)),
+                })
+              : undefined
+          }
           actions={
-            <div className={styles.headerActions}>
-              {data && (
-                <span className={styles.asOf}>
-                  {t("admin:adminQueues.asOf", {
-                    time: fmt.time(new Date(data.generatedAt)),
-                  })}
-                </span>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                disabled={isFetching}
-                onClick={() => void refetch()}
-              >
-                <FiRefreshCw aria-hidden />
-                {isFetching
-                  ? t("admin:adminQueues.refreshing")
-                  : t("admin:adminQueues.refresh")}
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isFetching}
+              onClick={() => void refetch()}
+            >
+              <FiRefreshCw aria-hidden />
+              {isFetching
+                ? t("admin:adminQueues.refreshing")
+                : t("admin:adminQueues.refresh")}
+            </Button>
           }
         />
       </FadeIn>

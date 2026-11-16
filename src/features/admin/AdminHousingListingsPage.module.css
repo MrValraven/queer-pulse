@@ -3,18 +3,11 @@
  * risk reasoning, the photos and the listing text side by side, and a table
  * row cannot hold that without becoming unreadable. */
 
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px 20px;
-  margin-block-end: 10px;
-}
-.sortField {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* The tabs, the sort control, the key hint and the queue, one gap apart. */
+.body {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
 }
 .sortLabel {
   font-size: var(--text-12-5);
@@ -24,7 +17,7 @@
   color: var(--ink-60);
 }
 .keyHint {
-  margin: 0 0 18px;
+  margin: 0;
   font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
@@ -106,6 +99,20 @@
   margin: 0 0 16px;
   font-size: var(--text-13-5);
   color: var(--ink-60);
+}
+
+/* One fact with its icon. The middle dot trails each fact but the last. */
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.fact > svg {
+  flex: none;
+}
+.fact:not(:last-child)::after {
+  content: "\00B7";
 }
 
 /* ── Risk ────────────────────────────────────────────────────────────── */
@@ -445,10 +452,6 @@
 }
 
 @media (--xs) {
-  .controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
   .card {
     padding: 16px 15px;
   }

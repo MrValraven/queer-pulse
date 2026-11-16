@@ -1,4 +1,10 @@
-import { useMemo, useState, type MouseEvent } from "react";
+import {
+  useId,
+  useMemo,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { localPoint } from "@visx/event";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -11,11 +17,17 @@ import {
   bandScale,
 } from "../../shared/components/charts";
 import { ChartTooltip } from "./AdminDashboardChartParts";
-import { AdminSeg, type AdminSegOption } from "./ui";
+import {
+  AdminEmptyState,
+  AdminPanel,
+  AdminSeg,
+  type AdminSegOption,
+} from "./ui";
 import { QUARTER_RANGE_IDS, type QuarterRangeId } from "./adminGovernance.data";
 import type { AdminFinanceHistoryPoint } from "./api/adminGovernanceFinances.api";
 import styles from "./AdminGovernancePage.module.css";
 import chartStyles from "../../shared/components/charts/charts.module.css";
+import { formatEuro } from "./adminEuro";
 
 const PAD_L = 36;
 const PAD_R = 12;
@@ -59,7 +71,7 @@ function toChartPoints(
 }
 
 /** Smallest multiple-of-5 €k axis top that fits every bar, so the chart
- *  scales to whatever range of figures the backend publishes rather than a
+ *  scales to whatever range of figures the backend publishes, with no
  *  fixed historical max. */
 function computeAxisMax(data: ChartQuarterPoint[]): number {
   const values = data.flatMap((point) => [point.incomeK, point.spendK]);
@@ -67,13 +79,28 @@ function computeAxisMax(data: ChartQuarterPoint[]): number {
   return Math.ceil(rawMax / 5) * 5 || 5;
 }
 
+/**
+ * The quarterly income and spending chart as an admin panel. The Finances tab
+ * shows it with its own title; the Reports page passes its section title,
+ * description and a summary line, so the one panel is the whole section.
+ */
 export function AdminGovernanceChart({
   history,
+  title,
+  description,
+  lead,
 }: {
   history: AdminFinanceHistoryPoint[];
+  /** Replaces the chart's own title. */
+  title?: ReactNode;
+  /** Replaces the chart's own description. */
+  description?: ReactNode;
+  /** A line above the legend, e.g. the latest quarter's totals. */
+  lead?: ReactNode;
 }) {
   const { t } = useTranslation();
   const [range, setRange] = useState<QuarterRangeId>("6q");
+  const titleId = useId();
   const rangeOptions: AdminSegOption[] = QUARTER_RANGE_IDS.map((id) => ({
     value: id,
     label: t(`admin:governance.chart.range.${id}`),
@@ -86,24 +113,27 @@ export function AdminGovernanceChart({
   );
 
   return (
-    <div className={styles.chartCard}>
-      <div className={styles.chartHead}>
-        <div>
-          <h2 className={styles.cardTitle}>
-            <Translation
-              i18nKey="admin:governance.chart.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.cardSub}>{t("admin:governance.chart.sub")}</p>
-        </div>
+    <AdminPanel
+      titleId={titleId}
+      title={
+        title ?? (
+          <Translation
+            i18nKey="admin:governance.chart.title"
+            components={{ em: <em /> }}
+          />
+        )
+      }
+      description={description ?? t("admin:governance.chart.sub")}
+      actions={
         <AdminSeg
           options={rangeOptions}
           value={range}
           onChange={(v) => setRange(v as QuarterRangeId)}
+          ariaLabelledby={titleId}
         />
-      </div>
-
+      }
+    >
+      {lead}
       <div className={styles.chartLegend}>
         <Legend
           swatch={styles.legIncome!}
@@ -121,11 +151,14 @@ export function AdminGovernanceChart({
       </div>
 
       {data.length === 0 ? (
-        <p className={styles.cardSub}>{t("admin:governance.finances.empty")}</p>
+        <AdminEmptyState
+          size="inline"
+          title={t("admin:governance.finances.empty")}
+        />
       ) : (
         <GovernanceChartPlot data={data} />
       )}
-    </div>
+    </AdminPanel>
   );
 }
 
@@ -226,7 +259,7 @@ function GovernanceChartPlot({ data }: { data: ChartQuarterPoint[] }) {
                       onMouseMove={show}
                       onMouseLeave={tip.hideTooltip}
                       {...markFocusProps(tip, {
-                        label: `${quarter.label} · ${t("admin:governance.chart.legend.income")}: ${fmt.currency(quarter.incomeTotal)}`,
+                        label: `${quarter.label} · ${t("admin:governance.chart.legend.income")}: ${formatEuro(fmt, quarter.incomeTotal)}`,
                         x: incomeX + barW / 2,
                         y: incomeY + (plotBottom - incomeY) / 2,
                         datum,
@@ -257,7 +290,7 @@ function GovernanceChartPlot({ data }: { data: ChartQuarterPoint[] }) {
                       onMouseMove={show}
                       onMouseLeave={tip.hideTooltip}
                       {...markFocusProps(tip, {
-                        label: `${quarter.label} · ${t("admin:governance.chart.legend.spending")}: ${fmt.currency(quarter.spendTotal)}`,
+                        label: `${quarter.label} · ${t("admin:governance.chart.legend.spending")}: ${formatEuro(fmt, quarter.spendTotal)}`,
                         x: spendX + barW / 2,
                         y: spendY + (plotBottom - spendY) / 2,
                         datum,
@@ -284,13 +317,13 @@ function GovernanceChartPlot({ data }: { data: ChartQuarterPoint[] }) {
           <>
             <div className={chartStyles.tipStrong}>{active.label}</div>
             {t("admin:governance.chart.legend.income")}:{" "}
-            {fmt.currency(active.income)}
+            {formatEuro(fmt, active.income)}
             <br />
             {t("admin:governance.chart.legend.spending")}:{" "}
-            {fmt.currency(active.spend)}
+            {formatEuro(fmt, active.spend)}
             <br />
             {t("admin:governance.chart.legend.surplus")}:{" "}
-            {fmt.currency(active.surplus)}
+            {formatEuro(fmt, active.surplus)}
           </>
         )}
       </ChartTooltip>

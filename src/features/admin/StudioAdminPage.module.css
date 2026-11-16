@@ -1,22 +1,6 @@
 /* ── Studio discovery console (/admin/studio) ───────────────────────────── */
 
+/* The tab panel under the kit's tab strip. */
 .panel {
-  margin-top: 20px;
-}
-
-.notice {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.noticeText {
-  max-width: 60ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  line-height: 1.5;
-  color: var(--ink-60);
+  margin-top: var(--admin-header-gap);
 }

@@ -13,10 +13,12 @@
   scroll-margin-top: calc(var(--admin-topbar-h) + var(--gap-sm));
   padding: var(--gap-sm) var(--card-pad);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-14);
+  border-radius: var(--admin-panel-radius);
   background: var(--paper);
+  box-shadow: var(--shadow-e1);
   transition:
     padding var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease),
     background-color var(--dur-base) var(--ease);
 }
@@ -36,6 +38,7 @@
   padding: 0;
   border-color: transparent;
   background-color: transparent;
+  box-shadow: none;
 }
 
 .quietLine {

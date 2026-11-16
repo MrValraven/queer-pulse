@@ -12,7 +12,12 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { AdminStudioLandingArtistCardDTO } from "./api/studioLandingAdmin.api";
-import { AdminAvatar, AdminChip } from "./ui";
+import {
+  AdminAvatar,
+  AdminChip,
+  AdminRowActions,
+  adminRowActionClasses,
+} from "./ui";
 import { useStudioAdminReorderRow } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminLandingCards.module.css";
 
@@ -70,7 +75,6 @@ export function StudioAdminLandingCardRow({
   return (
     <m.li
       layout="position"
-      className={css.cardItem}
       inert={!isPresent}
       initial={{ opacity: 0, height: 0, overflow: "hidden" }}
       animate={{
@@ -118,7 +122,7 @@ export function StudioAdminLandingCardRow({
             )}
           </div>
         </div>
-        <div className={css.actions}>
+        <AdminRowActions className={css.actions}>
           <Button
             ref={moveUpRef}
             variant="ghost"
@@ -127,7 +131,7 @@ export function StudioAdminLandingCardRow({
             aria-disabled={isBusy || isFirst || undefined}
             onClick={moveUp}
           >
-            <FiArrowUp aria-hidden /> {t("admin:studioAdmin.moveUpCta")}
+            <FiArrowUp aria-hidden />
           </Button>
           <Button
             ref={moveDownRef}
@@ -137,7 +141,7 @@ export function StudioAdminLandingCardRow({
             aria-disabled={isBusy || isLast || undefined}
             onClick={moveDown}
           >
-            <FiArrowDown aria-hidden /> {t("admin:studioAdmin.moveDownCta")}
+            <FiArrowDown aria-hidden />
           </Button>
           <Button
             variant="ghost"
@@ -151,6 +155,7 @@ export function StudioAdminLandingCardRow({
             {t("admin:studioAdmin.landing.cards.editCta")}
           </Button>
           <Button
+            className={adminRowActionClasses.danger}
             variant="ghost"
             size="sm"
             aria-label={t("admin:studioAdmin.landing.cards.removeLabel", {
@@ -165,7 +170,7 @@ export function StudioAdminLandingCardRow({
             <FiTrash2 aria-hidden />{" "}
             {t("admin:studioAdmin.landing.cards.removeCta")}
           </Button>
-        </div>
+        </AdminRowActions>
       </div>
     </m.li>
   );

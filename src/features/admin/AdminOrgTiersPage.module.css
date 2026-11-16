@@ -1,19 +1,22 @@
-/* ── Rows (tier list) ─────────────────────────────────────────── */
-.rows {
+/* ── Rows (tier list) ─────────────────────────────────────────
+   Layered on adminTableClasses.row inside a flush AdminPanel: the kit owns
+   the hairline, hover and row height. */
+.skeletons {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .row {
-  display: flex;
-  align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-row-pad);
 }
 
 .rowMain {
@@ -29,47 +32,20 @@
 }
 
 .rowName {
-  font-family: var(--serif);
-  font-size: var(--text-18);
+  font-size: var(--text-15);
   font-weight: 600;
-  color: var(--ink);
+  color: var(--text-strong);
 }
 
 .rowMeta {
-  margin-top: 5px;
-  font-size: var(--text-13);
+  margin-top: 4px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
+/* The kit's AdminRowActions lays the buttons out; the row keeps it whole. */
 .rowActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
   flex-shrink: 0;
-}
-
-.featuredTag {
-  padding: 3px 10px;
-  font-size: var(--text-12);
-  color: var(--accent-text);
-  background: rgba(var(--accent-rgb), 0.1);
-  border-radius: var(--radius-pill);
-}
-
-/* ── Empty / error notices ───────────────────────────────────── */
-.empty,
-.notice {
-  padding: 8px 0;
-}
-
-.emptyText,
-.noticeText {
-  max-width: 60ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  line-height: 1.5;
-  color: var(--ink-60);
 }
 
 /* ── Create/edit form ─────────────────────────────────────────── */

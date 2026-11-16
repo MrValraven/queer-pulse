@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { FiAlertTriangle } from "react-icons/fi";
 import {
   Button,
@@ -7,7 +13,12 @@ import {
   Select,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { AdminTabs } from "./ui";
+import {
+  AdminEmptyState,
+  AdminTabs,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDebouncedValue } from "../../shared/hooks";
 import { VerificationRequestRows } from "./VerificationRequestRows";
@@ -68,14 +79,12 @@ export function ReviewQueueStatusTabs({
 }
 
 /**
- * A small search+sort variant for the request queue (Task 9's alternative to
- * reusing `AdminVerificationsHeader` — that component's sort options include
- * "Highest level", which doesn't make sense for a request queue sorted by
- * submission date, not a member's level). Visually mirrors it exactly by
- * reusing its own CSS module rather than forking the styles. Same debounced-
- * search idiom as `AdminVerificationsHeader`: the search field keeps its own
- * local state so typing feels instant, and only pushes `query` upward once
- * the moderator pauses for 300ms; `sort` is otherwise fully controlled.
+ * The request queue's controls bar: a debounced name search and a recent or
+ * oldest sort on an `AdminToolbar`, with an optional `end` slot for the
+ * assignment filter. It has its own sort options because "Highest level" has
+ * no meaning for requests ordered by submission date. The search field keeps
+ * its own local state so typing feels instant, and only pushes `query` upward
+ * once the moderator pauses for 300ms; `sort` is fully controlled.
  */
 export function RequestQueueHeader({
   query,
@@ -83,6 +92,7 @@ export function RequestQueueHeader({
   onQueryChange,
   onSortChange,
   searchInputWrapperRef,
+  end,
 }: {
   query: string;
   sort: VerificationRequestSort;
@@ -92,6 +102,8 @@ export function RequestQueueHeader({
    *  keyboard shortcut can find and focus its `<input>` without also
    *  matching the sort `<Select>`'s own internals. */
   searchInputWrapperRef?: RefObject<HTMLDivElement | null>;
+  /** Right-hand controls on the same bar, e.g. the assignment filter. */
+  end?: ReactNode;
 }) {
   const { t } = useTranslation();
   const [queryInput, setQueryInput] = useState(query);
@@ -115,8 +127,12 @@ export function RequestQueueHeader({
   }, [debouncedQueryInput]);
 
   return (
-    <div className={headerStyles.header}>
-      <div ref={searchInputWrapperRef} className={headerStyles.search}>
+    <AdminToolbar
+      className={headerStyles.toolbar}
+      label={t("admin:verifications.segment.reviewQueue")}
+      end={end}
+    >
+      <div ref={searchInputWrapperRef} className={adminToolbarClasses.search}>
         <SearchInput
           value={queryInput}
           onChange={setQueryInput}
@@ -125,23 +141,20 @@ export function RequestQueueHeader({
         />
       </div>
 
-      <label className={headerStyles.sort}>
-        <span className={headerStyles.sortLabel}>
-          {t("admin:verifications.sort.label")}
-        </span>
-        <Select
-          size="sm"
-          value={sort}
-          options={REQUEST_SORT_OPTIONS.map((option) => ({
-            value: option,
-            label: t(`admin:verifications.requests.sort.${option}`),
-          }))}
-          onChange={(value) =>
-            onSortChange((value ?? sort) as VerificationRequestSort)
-          }
-        />
-      </label>
-    </div>
+      <Select
+        size="sm"
+        className={adminToolbarClasses.select}
+        label={t("admin:verifications.sort.label")}
+        value={sort}
+        options={REQUEST_SORT_OPTIONS.map((option) => ({
+          value: option,
+          label: t(`admin:verifications.requests.sort.${option}`),
+        }))}
+        onChange={(value) =>
+          onSortChange((value ?? sort) as VerificationRequestSort)
+        }
+      />
+    </AdminToolbar>
   );
 }
 
@@ -200,9 +213,10 @@ export function ReviewQueueResults({
   }
   if (rows.length === 0) {
     return (
-      <p className={submissionStyles.emptyLine}>
-        {t("admin:verifications.requests.empty")}
-      </p>
+      <AdminEmptyState
+        size="inline"
+        title={t("admin:verifications.requests.empty")}
+      />
     );
   }
 
@@ -268,7 +282,7 @@ export function RowsSkeleton() {
         <SkeletonLine
           key={skeletonIndex}
           height={92}
-          style={{ borderRadius: 22 }}
+          style={{ borderRadius: "var(--admin-panel-radius)" }}
         />
       ))}
     </div>

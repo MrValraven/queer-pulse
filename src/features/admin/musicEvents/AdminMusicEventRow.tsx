@@ -9,7 +9,7 @@ import { formatLabel } from "../../gatherings/gatheringCatalog";
 import { sizedCover } from "../../gatherings/hub/coverUrl";
 import { EventCoverFallback } from "../../gatherings/hub/EventCoverFallback";
 import type { MusicEventRowView } from "./api/musicEvents.adapters";
-import { AdminChip } from "../ui";
+import { AdminChip, AdminRowActions, adminTableClasses } from "../ui";
 import styles from "./AdminMusicEvents.module.css";
 
 /** The cover thumb's rendered width, so a remote cover is fetched near it. */
@@ -51,74 +51,79 @@ export function AdminMusicEventRow({ row }: { row: MusicEventRowView }) {
   const requestCount = row.pendingInviteRequestCount;
   const declinedCount = row.lineup.declined;
   return (
-    <article className={styles.row}>
-      <div className={styles.cover}>
-        {coverSource ? (
-          <img
-            className={styles.coverImage}
-            src={coverSource}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            width={COVER_THUMB_WIDTH}
-            height={COVER_THUMB_WIDTH}
-          />
-        ) : (
-          <EventCoverFallback event={coverFallbackEvent(row)} size="card" />
-        )}
-      </div>
-      <div className={styles.rowBody}>
-        <div className={styles.rowTop}>
-          <h2 className={styles.rowTitle}>{row.title}</h2>
-          {/* Static for the row's life: a cancelled event leaves the other
-              buckets, so the chip never appears on a mounted row. */}
-          {row.isCancelled && (
-            <AdminChip tone="danger">
-              {t("admin:musicEvents.row.cancelled")}
-            </AdminChip>
+    <article className={adminTableClasses.row}>
+      <div className={styles.row}>
+        <div className={styles.cover}>
+          {coverSource ? (
+            <img
+              className={styles.coverImage}
+              src={coverSource}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width={COVER_THUMB_WIDTH}
+              height={COVER_THUMB_WIDTH}
+            />
+          ) : (
+            <EventCoverFallback event={coverFallbackEvent(row)} size="card" />
           )}
-          <RequestCountPill count={requestCount} />
         </div>
-        <p className={styles.rowMeta}>
-          <span>
-            {format.date(row.startAt, ROW_DATE_OPTIONS)},{" "}
-            {format.time(row.startAt)}
-          </span>
-          {row.venueLabel && <span>{row.venueLabel}</span>}
-          <span>{formatLabel(t, row.formatKey)}</span>
-        </p>
-        <p className={styles.rowLineup}>
-          <span className={styles.lineupLabel}>
-            {t("admin:musicEvents.row.lineupLabel")}
-          </span>
-          <span>
-            {t("admin:musicEvents.row.lineupConfirmed", {
-              count: row.lineup.accepted,
+        <div className={styles.rowBody}>
+          <div className={styles.rowTop}>
+            <h2 className={styles.rowTitle}>{row.title}</h2>
+            {/* Static for the row's life: a cancelled event leaves the other
+              buckets, so the chip never appears on a mounted row. */}
+            {row.isCancelled && (
+              <AdminChip tone="danger">
+                {t("admin:musicEvents.row.cancelled")}
+              </AdminChip>
+            )}
+            <RequestCountPill count={requestCount} />
+          </div>
+          <p className={styles.rowMeta}>
+            <span>
+              {format.date(row.startAt, ROW_DATE_OPTIONS)},{" "}
+              {format.time(row.startAt)}
+            </span>
+            {row.venueLabel && <span>{row.venueLabel}</span>}
+            <span>{formatLabel(t, row.formatKey)}</span>
+          </p>
+          <p className={styles.rowLineup}>
+            <span className={styles.lineupLabel}>
+              {t("admin:musicEvents.row.lineupLabel")}
+            </span>
+            <span>
+              {t("admin:musicEvents.row.lineupConfirmed", {
+                count: row.lineup.accepted,
+              })}
+            </span>
+            <span>
+              {t("admin:musicEvents.row.lineupInvited", {
+                count: row.lineup.pending,
+              })}
+            </span>
+            <span
+              className={declinedCount > 0 ? styles.lineupDeclined : undefined}
+            >
+              {t("admin:musicEvents.row.lineupDeclined", {
+                count: declinedCount,
+              })}
+            </span>
+          </p>
+        </div>
+        <AdminRowActions className={styles.rowAction}>
+          <Button
+            variant="ghost"
+            size="sm"
+            to={row.managePath}
+            aria-label={t("admin:musicEvents.row.manageAria", {
+              title: row.title,
             })}
-          </span>
-          <span>
-            {t("admin:musicEvents.row.lineupInvited", {
-              count: row.lineup.pending,
-            })}
-          </span>
-          <span
-            className={declinedCount > 0 ? styles.lineupDeclined : undefined}
           >
-            {t("admin:musicEvents.row.lineupDeclined", {
-              count: declinedCount,
-            })}
-          </span>
-        </p>
+            {t("admin:musicEvents.row.manageCta")}
+          </Button>
+        </AdminRowActions>
       </div>
-      <Button
-        className={styles.rowAction}
-        variant="ghost"
-        size="sm"
-        to={row.managePath}
-        aria-label={t("admin:musicEvents.row.manageAria", { title: row.title })}
-      >
-        {t("admin:musicEvents.row.manageCta")}
-      </Button>
     </article>
   );
 }

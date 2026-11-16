@@ -12,6 +12,7 @@ import type { AdminStudioLandingPreviewDTO } from "./api/studioLandingAdmin.api"
 import { StudioAdminLandingPreviewInfo } from "./StudioAdminLandingPreviewInfo";
 import type { StudioAdminReorderRow } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminLanding.module.css";
+import { AdminRowActions, adminRowActionClasses } from "./ui";
 
 /** One preview request: cover, text and actions. An open row carries
  *  `reorder` (drag handle, Move up, Move down); an answered row passes
@@ -91,7 +92,7 @@ export function StudioAdminLandingPreviewRow({
           />
         </span>
         <StudioAdminLandingPreviewInfo preview={preview} />
-        <div className={css.actions}>
+        <AdminRowActions className={css.actions}>
           {reorder && (
             <>
               <Button
@@ -104,7 +105,7 @@ export function StudioAdminLandingPreviewRow({
                 aria-disabled={isBusy || isFirst || undefined}
                 onClick={moveUp}
               >
-                <FiArrowUp aria-hidden /> {t("admin:studioAdmin.moveUpCta")}
+                <FiArrowUp aria-hidden />
               </Button>
               <Button
                 ref={moveDownRef}
@@ -116,11 +117,12 @@ export function StudioAdminLandingPreviewRow({
                 aria-disabled={isBusy || isLast || undefined}
                 onClick={moveDown}
               >
-                <FiArrowDown aria-hidden /> {t("admin:studioAdmin.moveDownCta")}
+                <FiArrowDown aria-hidden />
               </Button>
             </>
           )}
           <Button
+            className={adminRowActionClasses.danger}
             variant="ghost"
             size="sm"
             aria-label={t("admin:studioAdmin.landing.previews.removeLabel", {
@@ -133,7 +135,7 @@ export function StudioAdminLandingPreviewRow({
             <FiX aria-hidden />{" "}
             {t("admin:studioAdmin.landing.previews.removeCta")}
           </Button>
-        </div>
+        </AdminRowActions>
       </div>
     </m.li>
   );

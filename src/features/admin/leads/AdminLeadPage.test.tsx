@@ -71,7 +71,13 @@ describe("AdminLeadPage (demo)", () => {
     expect(
       await screen.findByRole("heading", { level: 1, name: "Cave 23" }),
     ).toBeInTheDocument();
-    for (const heading of ["Details", "Persona", "History", "Delete lead"]) {
+    for (const heading of [
+      "Details",
+      "In charge",
+      "Persona",
+      "History",
+      "Delete lead",
+    ]) {
       expect(
         screen.getByRole("heading", { level: 2, name: heading }),
       ).toBeInTheDocument();
@@ -88,6 +94,16 @@ describe("AdminLeadPage (demo)", () => {
     expect(
       within(detailsRegion()).queryByRole("link", { name: "Email Cave 23" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("reads the access-ended line in the history", async () => {
+    renderLeadPage();
+    await screen.findByRole("heading", { level: 1, name: "Cave 23" });
+    expect(
+      await screen.findByText(
+        "Teo Ramos was unassigned when their Leads access ended",
+      ),
+    ).toBeInTheDocument();
   });
 
   it("saves a stage change at once and logs it", async () => {

@@ -1,10 +1,9 @@
 import { useId, useState } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
-import { AdminModal } from "./ui";
+import { AdminModal, AdminNotice } from "./ui";
 import { useVoidLegalRequest } from "./api/useAdminLegalRequests";
 import {
   MAX_LEGAL_REQUEST_TEXT_LENGTH,
@@ -19,8 +18,8 @@ import styles from "./AdminLegalRequestsPage.module.css";
  * This is the register's only removal and its one irreversible move, so the
  * modal says both things plainly: the row stays and stays readable, the reason
  * is stored beside it, the count of voided records is itself published, and
- * nothing here can be undone. A record entered in error is struck rather than
- * deleted precisely so its absence never reads as a zero.
+ * nothing here can be undone. A record entered in error is struck and kept,
+ * precisely so its absence never reads as a zero.
  *
  * The reason is required. Voiding with no reason is refused by the backend with
  * a 400, and a register that cannot say why a record left the figures is worth
@@ -88,10 +87,11 @@ export function AdminLegalRequestVoidModal({
         </>
       }
     >
-      <p className={styles.voidWarning}>
-        <FiAlertTriangle aria-hidden className={styles.noticeIcon} />
-        {t("admin:legalRequests.void.warning")}
-      </p>
+      <div className={styles.noticeGap}>
+        <AdminNotice tone="warn">
+          {t("admin:legalRequests.void.warning")}
+        </AdminNotice>
+      </div>
       <p className={styles.fieldHint}>
         {t("admin:legalRequests.void.body", {
           body: record.requestingBody,

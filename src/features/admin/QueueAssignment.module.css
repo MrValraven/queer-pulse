@@ -53,6 +53,10 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+}
+
+/* A filter that stands alone above a queue keeps its own block spacing. */
+.filterRowSpaced {
   margin: 12px 0 16px;
 }
 

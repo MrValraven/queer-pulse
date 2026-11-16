@@ -781,7 +781,6 @@ export const quizshow: Catalog = {
   "templates.unpublished":
     "Template unpublished. Hosts' copies stay as they are",
   "templates.list.title": "Quiz <em>templates</em>",
-  "templates.list.eyebrow": "Pulse Live",
   "templates.list.sub":
     "Hosts start event quizzes and games from the templates you publish here. Drafts stay with our team until you publish them",
   "templates.list.breadcrumb": "Quiz templates",

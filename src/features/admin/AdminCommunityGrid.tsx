@@ -2,7 +2,7 @@ import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { spellNumber } from "../../shared/i18n/numberWords";
-import { AdminPageHeader, AdminAvatar } from "./ui";
+import { AdminPageHeader, AdminAvatar, AdminNotice } from "./ui";
 import { useAdminCommunities } from "./api/useAdminCommunities";
 import { AdminCommunitiesEmpty } from "./AdminCommunitiesEmpty";
 import { healthColor, type Community } from "./adminCommunities.data";
@@ -25,7 +25,7 @@ export function AdminCommunityGrid({
   const header = (
     <FadeIn>
       <AdminPageHeader
-        eyebrow={t("admin:communities.grid.eyebrow")}
+        eyebrow={t("shared:adminNav.sections.communities")}
         title={
           <>
             {countKnown
@@ -33,8 +33,7 @@ export function AdminCommunityGrid({
                   count: communityCount,
                   spelled: spellNumber(communityCount, language),
                 })
-              : t("admin:communities.grid.titleLine1Unknown")}
-            <br />
+              : t("admin:communities.grid.titleLine1Unknown")}{" "}
             <Translation
               i18nKey="admin:communities.grid.titleLine2"
               components={{ em: <em /> }}
@@ -67,9 +66,9 @@ export function AdminCommunityGrid({
     return (
       <>
         {header}
-        <p className={styles.loadError}>
+        <AdminNotice tone="error">
           {t("admin:communities.grid.loadError")}
-        </p>
+        </AdminNotice>
       </>
     );
   }
@@ -87,9 +86,11 @@ export function AdminCommunityGrid({
     <>
       {header}
       {data?.truncated && (
-        <p className={styles.truncatedNotice}>
-          {t("admin:communities.grid.truncatedNotice")}
-        </p>
+        <div className={styles.gridNotice}>
+          <AdminNotice tone="info">
+            {t("admin:communities.grid.truncatedNotice")}
+          </AdminNotice>
+        </div>
       )}
       <div className={styles.grid}>
         {communityList.map((community, communityIndex) => (
@@ -120,8 +121,8 @@ function HealthCard({
 
   return (
     <div className={styles.card}>
-      {/* The card's own action, as an overlay covering the card rather than a
-          wrapper around it. The health score below is a second control, and a
+      {/* The card's own action, as an overlay covering the card. The health
+          score below is a second control, and a
           focusable element inside a `<button>` has no defined activation
           behaviour and gets its text swallowed into the outer button's
           accessible name. Overlaying also stops the whole card (name, tag,
@@ -152,9 +153,9 @@ function HealthCard({
             )}
           </div>
         </div>
-        {/* A sibling of the card's action, not a descendant of it, so it needs
-            no `stopPropagation`: there is no ancestor handler left to stop,
-            and a real `<button>` answers Enter and Space on its own. */}
+        {/* A sibling of the card's action, so it needs no `stopPropagation`:
+            there is no ancestor handler left to stop, and a real `<button>`
+            answers Enter and Space on its own. */}
         <button
           type="button"
           className={styles.scoreBtn}

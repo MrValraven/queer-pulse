@@ -1,0 +1,50 @@
+/* The "Read the full piece" fold on a magazine submission row. */
+.disclosure {
+  margin-top: 7px;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--admin-control-h);
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+}
+[data-theme="dark"] .toggle {
+  color: var(--ink);
+}
+.toggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-8);
+}
+
+.chevron {
+  flex: none;
+  transition: transform var(--dur-base) var(--ease);
+}
+.chevron[data-open] {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}
+
+.body {
+  margin: 6px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}

@@ -1,6 +1,6 @@
-/* One lead's page: the header, then details and persona beside the history
-   once the page body is wide enough, and the Delete lead zone across the
-   foot. Below that width every panel stacks in reading order. */
+/* One lead's page: the header, then details beside In charge, persona and
+   the history once the page body is wide enough, and the Delete lead zone
+   across the foot. Below that width every panel stacks in reading order. */
 
 /* ── Frame ──────────────────────────────────────────────────────────────── */
 .crumbLink {
@@ -127,6 +127,7 @@
 }
 
 .detailsArea,
+.assigneesArea,
 .personaArea,
 .historyArea,
 .footerRow {
@@ -134,15 +135,17 @@
 }
 
 /* Two columns once each holds a comfortable form width (about 400px) with
-   the gap between them. Details runs down the left; persona sits above the
-   history on the right, so both columns start above the fold and end near
-   each other. The last row before Delete lead takes any spare height, so a
-   tall details column never pushes the history away from the persona. */
+   the gap between them. Details runs down the left; In charge opens the
+   right column, then persona, then the history, so both columns start above
+   the fold and end near each other. The last row before Delete lead takes
+   any spare height, so a tall details column never pushes the history away
+   from the persona. */
 @container (min-width: 880px) {
   .body {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto;
     grid-template-areas:
+      "details assignees"
       "details persona"
       "details history"
       "delete delete";
@@ -152,6 +155,10 @@
 
   .detailsArea {
     grid-area: details;
+  }
+
+  .assigneesArea {
+    grid-area: assignees;
   }
 
   .personaArea {

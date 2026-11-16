@@ -25,7 +25,7 @@ export function UtilitiesHubPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:utilities.hub.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.platform")}
           title={
             <Translation
               i18nKey="admin:utilities.hub.header.title"

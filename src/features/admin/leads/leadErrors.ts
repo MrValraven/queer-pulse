@@ -6,12 +6,14 @@ import {
   LEAD_LINK_MAX,
   LEAD_LINKS_MAX,
   LEAD_LOCATION_MAX,
+  LEAD_MAX_ASSIGNEES,
   LEAD_NAME_MAX,
   LEAD_NOTE_MAX,
   LEAD_PHONE_MAX,
   leadReasonOf,
   leadRefusalDetailOf,
   type HiddenLeadPersonaState,
+  type LeadAssigneeRefusalReason,
   type LeadReasonCode,
   type LeadRevertRefusalReason,
 } from "./api/leads.types";
@@ -21,7 +23,10 @@ import {
  *  {@link LEAD_NOT_LISTED_KEY} first; this line names all four causes for a
  *  body that carries none. A not-revertible refusal that names its reason
  *  reads {@link LEAD_NOT_REVERTIBLE_KEY} first; this line says the change
- *  can no longer be undone for a body that carries none. */
+ *  can no longer be undone for a body that carries none. A not-staff
+ *  refusal that names its reason reads {@link LEAD_ASSIGNEE_NOT_STAFF_KEY}
+ *  first; this line says the account or its Leads access changed for a
+ *  body that carries none. */
 export const LEAD_REASON_KEY: Record<LeadReasonCode, string> = {
   LEAD_NOT_FOUND: "admin:leads.error.notFound",
   LEAD_NAME_REQUIRED: "admin:leads.error.nameRequired",
@@ -49,6 +54,10 @@ export const LEAD_REASON_KEY: Record<LeadReasonCode, string> = {
   LEAD_ENTRY_NOT_FOUND: "admin:leads.error.entryNotFound",
   LEAD_ENTRY_NOT_REVERTIBLE:
     "admin:leads.error.entryNotRevertible.unknownReason",
+  LEAD_ASSIGNED_TO_INVALID: "admin:leads.error.assignedToInvalid",
+  LEAD_ASSIGNEE_NOT_FOUND: "admin:leads.error.assigneeNotFound",
+  LEAD_ASSIGNEE_NOT_STAFF: "admin:leads.error.assigneeNotStaff.unknownReason",
+  LEAD_TOO_MANY_ASSIGNEES: "admin:leads.error.tooManyAssignees",
 };
 
 /** The link refusal's line for each state a not-listed body can name. */
@@ -68,6 +77,16 @@ export const LEAD_NOT_REVERTIBLE_KEY: Record<LeadRevertRefusalReason, string> =
     not_yours: "admin:leads.error.entryNotRevertible.not_yours",
     too_old: "admin:leads.error.entryNotRevertible.too_old",
   };
+
+/** The assign refusal's line for each reason a not-staff body can name. */
+export const LEAD_ASSIGNEE_NOT_STAFF_KEY: Record<
+  LeadAssigneeRefusalReason,
+  string
+> = {
+  no_access: "admin:leads.error.assigneeNotStaff.no_access",
+  suspended: "admin:leads.error.assigneeNotStaff.suspended",
+  deactivated: "admin:leads.error.assigneeNotStaff.deactivated",
+};
 
 /** The line for a failure that carries no lead reason: the connection, the
  *  server, or the account's access. */
@@ -91,12 +110,14 @@ export const LEAD_ERROR_MAX: Partial<Record<LeadReasonCode, number>> = {
   LEAD_LINK_TOO_LONG: LEAD_LINK_MAX,
   LEAD_TOO_MANY_LINKS: LEAD_LINKS_MAX,
   LEAD_NOTE_TOO_LONG: LEAD_NOTE_MAX,
+  LEAD_TOO_MANY_ASSIGNEES: LEAD_MAX_ASSIGNEES,
 };
 
 /**
  * The catalog key that names why a lead read or write failed. A not-listed
  * refusal with a known `publicState` names that state, and a not-revertible
- * refusal with a known `reason` names that reason; any other known code
+ * or not-staff refusal with a known `reason` names that reason, each read
+ * against its own code's reason list; any other known code
  * reads its own line; a failure with no lead code names the connection,
  * server or access cause.
  */
@@ -109,6 +130,11 @@ export function leadErrorKeyOf(cause: unknown): string {
   if (reasonCode === "LEAD_ENTRY_NOT_REVERTIBLE") {
     const { revertReason } = leadRefusalDetailOf(cause);
     if (revertReason !== null) return LEAD_NOT_REVERTIBLE_KEY[revertReason];
+  }
+  if (reasonCode === "LEAD_ASSIGNEE_NOT_STAFF") {
+    const { assigneeReason } = leadRefusalDetailOf(cause);
+    if (assigneeReason !== null)
+      return LEAD_ASSIGNEE_NOT_STAFF_KEY[assigneeReason];
   }
   if (reasonCode !== null) return LEAD_REASON_KEY[reasonCode];
   return LEAD_FAILURE_KEY[studioReasonOf(cause)];

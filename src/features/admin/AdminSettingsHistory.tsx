@@ -1,3 +1,11 @@
+import { FiClock } from "react-icons/fi";
+import { SkeletonLine } from "../../shared/components/ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPanel,
+  adminTableClasses,
+} from "./ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
@@ -39,7 +47,7 @@ function HistoryRow({ change }: { change: PlatformSettingChangeDTO }) {
   const created = new Date(change.createdAt);
 
   return (
-    <li className={styles.historyRow}>
+    <li className={[adminTableClasses.row, styles.historyRow].join(" ")}>
       <div className={styles.historyMain}>
         <strong>
           {t("admin:settings.history.changed", { setting, from, to })}
@@ -79,31 +87,40 @@ export function AdminSettingsHistory() {
   const total = data?.total ?? changes.length;
   const isTruncated = total > changes.length;
 
-  if (isLoading) return <div className={styles.loading} aria-busy="true" />;
+  if (isLoading) return <SkeletonLine height={220} />;
   if (isError)
-    return <p className={styles.error}>{t("admin:settings.history.error")}</p>;
+    return (
+      <AdminNotice tone="error">
+        {t("admin:settings.history.error")}
+      </AdminNotice>
+    );
 
   if (changes.length === 0) {
     return (
-      <p className={styles.historyEmpty}>{t("admin:settings.history.empty")}</p>
+      <AdminEmptyState
+        icon={FiClock}
+        title={t("admin:settings.history.empty")}
+      />
     );
   }
 
   return (
-    <>
+    <div className={styles.historyStack}>
       {isTruncated && (
-        <p className={styles.historyTruncated}>
+        <AdminNotice tone="info">
           {t("admin:settings.history.truncatedNotice", {
             shown: String(changes.length),
             total: String(total),
           })}
-        </p>
+        </AdminNotice>
       )}
-      <ul className={styles.historyList}>
-        {changes.map((change) => (
-          <HistoryRow key={change.id} change={change} />
-        ))}
-      </ul>
-    </>
+      <AdminPanel padding="flush">
+        <ul className={styles.historyList}>
+          {changes.map((change) => (
+            <HistoryRow key={change.id} change={change} />
+          ))}
+        </ul>
+      </AdminPanel>
+    </div>
   );
 }

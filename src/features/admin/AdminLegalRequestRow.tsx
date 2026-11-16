@@ -1,6 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
-import { AdminChip, type AdminTone } from "./ui";
+import { AdminChip, adminTableClasses, type AdminTone } from "./ui";
 import type {
   AdminLegalRequestDTO,
   LegalRequestOutcome,
@@ -25,7 +25,7 @@ const OUTCOME_TONE: Record<LegalRequestOutcome, AdminTone> = {
 /**
  * One recorded demand in the register. The whole row is the control that opens
  * the detail pane, so it is a real `<button>` named after the body that made
- * the demand, never a clickable `<div>`.
+ * the demand.
  */
 export function AdminLegalRequestRow({
   record,
@@ -44,7 +44,11 @@ export function AdminLegalRequestRow({
   return (
     <button
       type="button"
-      className={[styles.row, record.isVoided && styles.rowVoided]
+      className={[
+        adminTableClasses.row,
+        styles.row,
+        record.isVoided && styles.rowVoided,
+      ]
         .filter(Boolean)
         .join(" ")}
       onClick={onOpen}
@@ -73,6 +77,7 @@ export function AdminLegalRequestRow({
         </p>
         <p className={styles.rowMeta}>
           {t("admin:legalRequests.row.accounts", {
+            count: record.accountsAffected,
             affected: record.accountsAffected,
             notified: record.accountsNotified,
           })}

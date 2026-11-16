@@ -2,7 +2,6 @@ import { AnimatePresence } from "motion/react";
 import { FiMusic } from "react-icons/fi";
 import { reasonFor } from "../../../shared/api/errorMessage";
 import {
-  EmptyState,
   LoadErrorState,
   LoadMoreButton,
   LoadMoreStatus,
@@ -11,6 +10,7 @@ import { FadeListItem } from "../../../shared/components/ui/ViewFade";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { MusicEventListResult } from "./api/useMusicEvents";
 import type { MusicEventBucket } from "./api/musicEvents.types";
+import { AdminEmptyState, AdminPanel } from "../ui";
 import { AdminMusicEventRow } from "./AdminMusicEventRow";
 import { AdminMusicEventsSkeleton } from "./AdminMusicEventStates";
 import { EMPTY_COPY_KEYS } from "./musicEventList.data";
@@ -51,28 +51,29 @@ export function AdminMusicEventsListView({
   }
   if (viewName === "empty") {
     return (
-      <EmptyState
-        className={styles.listState}
-        compact
-        headingLevel={2}
-        icon={<FiMusic aria-hidden />}
-        title={t(emptyCopy.title)}
-        description={t(emptyCopy.body)}
-      />
+      <div className={styles.listState}>
+        <AdminEmptyState
+          icon={FiMusic}
+          title={t(emptyCopy.title)}
+          body={t(emptyCopy.body)}
+        />
+      </div>
     );
   }
   if (viewName === "none") return null;
   return (
     <>
-      <ul className={styles.rows}>
-        <AnimatePresence initial={false}>
-          {list.rows.map((row) => (
-            <FadeListItem key={row.slug}>
-              <AdminMusicEventRow row={row} />
-            </FadeListItem>
-          ))}
-        </AnimatePresence>
-      </ul>
+      <AdminPanel as="div" padding="flush">
+        <ul className={styles.rows}>
+          <AnimatePresence initial={false}>
+            {list.rows.map((row) => (
+              <FadeListItem key={row.slug}>
+                <AdminMusicEventRow row={row} />
+              </FadeListItem>
+            ))}
+          </AnimatePresence>
+        </ul>
+      </AdminPanel>
       <LoadMoreStatus
         isFetchingNextPage={list.isFetchingMore}
         isFetchNextPageError={list.isLoadMoreError}

@@ -12,7 +12,12 @@ import {
   LANDLORD_DETAIL_PATH,
   LANDLORD_STALE_DAYS,
 } from "./adminLandlords.data";
-import { AdminAvatar } from "./ui";
+import {
+  AdminAvatar,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import styles from "./AdminLandlordsPage.module.css";
 
 const STATUS_TONE = {
@@ -44,7 +49,7 @@ export function AdminLandlordIntroRow({
     request.status === "pending" && waitingDays >= LANDLORD_STALE_DAYS;
 
   return (
-    <li className={styles.row}>
+    <li className={`${adminTableClasses.row} ${styles.row}`}>
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
           <h3 className={styles.rowName}>
@@ -115,12 +120,13 @@ export function AdminLandlordIntroRow({
         )}
       </div>
 
-      <div className={styles.rowActions}>
+      <AdminRowActions className={styles.rowActions}>
         {request.status === "pending" ? (
           <>
             <Button
               variant="ghost"
-              size="md"
+              size="sm"
+              className={adminRowActionClasses.danger}
               disabled={isPending}
               onClick={onDecline}
             >
@@ -129,7 +135,7 @@ export function AdminLandlordIntroRow({
             </Button>
             <Button
               variant="jade"
-              size="md"
+              size="sm"
               disabled={isPending}
               onClick={onAccept}
             >
@@ -142,7 +148,7 @@ export function AdminLandlordIntroRow({
             {t("admin:landlords.intro.answered")}
           </p>
         )}
-      </div>
+      </AdminRowActions>
     </li>
   );
 }

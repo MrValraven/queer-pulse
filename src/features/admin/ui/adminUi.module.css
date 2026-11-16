@@ -1,13 +1,38 @@
 /* ── Page header (ax-ph) ─────────────────────────────────────────────────── */
+/* Compact by default. A two-column grid: eyebrow, title and sub stack in the
+   first column, and the actions and meta start in the second on the title's
+   row, top-aligned to it and spanning the sub's row, so they hold still
+   however long the sub runs and a tall group never pushes the sub down.
+   `.phText` steps out of the layout (`display: contents`) so its children
+   take the grid areas. An absent eyebrow leaves an empty, zero-height row.
+   `.phHero` restores the large editorial header for the Overview. */
 .ph {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "eyebrow ."
+    "title side"
+    "sub side";
+  align-items: start;
+  column-gap: var(--admin-header-inner-gap);
+  margin-bottom: var(--admin-header-gap);
 }
 .phText {
+  display: contents;
+}
+.ph .eyebrow {
+  grid-area: eyebrow;
+  justify-self: start;
+}
+.ph .h1 {
+  grid-area: title;
   min-width: 0;
+}
+.ph .phSub {
+  grid-area: sub;
+}
+.ph .phSide {
+  grid-area: side;
 }
 .eyebrow {
   display: inline-flex;
@@ -18,7 +43,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-60);
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 .eyebrowDot {
   width: 7px;
@@ -30,9 +55,9 @@
 }
 .h1 {
   font-family: var(--serif);
-  font-size: var(--text-title);
+  font-size: var(--admin-title-size);
   font-weight: 400;
-  line-height: 1.05;
+  line-height: 1.1;
   letter-spacing: -0.015em;
   color: var(--text-strong);
   margin: 0;
@@ -45,26 +70,98 @@
   font-style: italic;
 }
 .phSub {
-  margin: 13px 0 0;
-  max-width: 560px;
-  font-size: var(--text-15);
-  line-height: 1.55;
+  margin: 8px 0 0;
+  max-width: var(--admin-sub-max-w);
+  font-size: var(--text-14);
+  line-height: 1.5;
   color: var(--ink-60);
+}
+/* Meta text ("Counted at 10:13") and the actions share one right-hand group
+   on the title row. */
+.phSide {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.phMeta {
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
 }
 .phActions {
   display: flex;
+  align-items: center;
   gap: 10px;
   flex: none;
   flex-wrap: wrap;
 }
-/* On a phone the actions drop below the title. Side by side, `.phActions`
-   keeps its full width (`flex: none`) and squeezes the title and sub into a
-   column a letter or two wide. */
+
+/* Buttons and links in the actions and meta slots sit on the 36px control
+   rhythm of the toolbars and tabs. The shared Button pins 44px (md) or 40px
+   (sm) through single-class rules, and `.icon.sm` through two; this selector
+   reads (0,2,1), so it wins over all of them without !important. Horizontal
+   padding is left to the Button, so the pill keeps its proportions. A coarse
+   pointer goes back to the touch target. */
+.phSide :is(.phActions, .phMeta) :is(button, a) {
+  min-height: var(--admin-control-h);
+}
+@media (pointer: coarse) {
+  .phSide :is(.phActions, .phMeta) :is(button, a) {
+    min-height: var(--tap-min);
+  }
+}
+
+/* Hero header: the Overview keeps the large fluid title, with its actions
+   at the foot of the whole text block. */
+.phHero {
+  margin-bottom: var(--admin-header-hero-gap);
+}
+.phHero .phSide {
+  grid-row: 1 / -1;
+  grid-column: 2;
+  align-self: end;
+}
+.phHero .eyebrow {
+  margin-bottom: 14px;
+}
+.phHero .h1 {
+  font-size: var(--text-title);
+  line-height: 1.05;
+}
+.phHero .phSub {
+  margin-top: 13px;
+  max-width: 560px;
+  font-size: var(--text-15);
+  line-height: 1.55;
+}
+.phHero .phActions {
+  align-items: stretch;
+}
+
+/* On a phone the grid folds to one column and the actions drop below the
+   sub, so the title and sub keep the full width. */
 @media (max-width: 719.98px) {
   .ph {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "eyebrow"
+      "title"
+      "sub"
+      "side";
+  }
+  .ph .phSide {
+    grid-area: side;
+    margin-top: 16px;
+  }
+  .phSide,
+  .phActions {
+    flex: 0 1 auto;
+    max-width: 100%;
+    justify-content: flex-start;
   }
 }
 
@@ -80,93 +177,160 @@
     box-shadow: 0 0 0 6px rgba(var(--jade-rgb), 0.04);
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .eyebrowDot {
+    animation: none;
+  }
+}
 
 /* ── Tabs (ax-tabs) ──────────────────────────────────────────────────────── */
+/* An underline strip. The hairline under the strip is a background so the
+   strip can scroll sideways on a long PT label set without clipping the
+   active tab's underline. */
 .tabs {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background-image: linear-gradient(
+    rgba(var(--line-rgb), 0.09),
+    rgba(var(--line-rgb), 0.09)
+  );
+  background-size: 100% 1px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Edge fade for a strip that scrolls sideways (tabs here, the segmented
+   control on a phone). useStripEdgeFade sets data-fade-start / data-fade-end
+   only on a side that hides items, so a strip that fits shows no fade. The
+   mask works on alpha, so it reads the same in both themes. */
+@property --admin-strip-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --admin-strip-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+.tabs,
+.seg {
+  --admin-strip-fade-start: 0px;
+  --admin-strip-fade-end: 0px;
+}
+/* The tab strip always carries the mask (at 0px it shows everything, and the
+   strip already clips its overflow), so a fade can ease out as well as in.
+   The segmented control only scrolls on a phone, where it takes the same
+   mask in the block below. */
+.tabs {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--admin-strip-fade-start),
+    black calc(100% - var(--admin-strip-fade-end)),
+    transparent
+  );
+}
+.tabs[data-fade-start],
+.seg[data-fade-start] {
+  --admin-strip-fade-start: var(--admin-strip-fade);
+}
+.tabs[data-fade-end],
+.seg[data-fade-end] {
+  --admin-strip-fade-end: var(--admin-strip-fade);
+}
+/* Keyboard focus clears the fades, so a focused tab is never half hidden. */
+.tabs:has(:focus-visible),
+.seg:has(:focus-visible) {
+  --admin-strip-fade-start: 0px;
+  --admin-strip-fade-end: 0px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tabs,
+  .seg {
+    transition-property: --admin-strip-fade-start, --admin-strip-fade-end;
+    transition-duration: var(--dur-base);
+    transition-timing-function: var(--ease-out);
+  }
 }
 .tab {
   display: inline-flex;
   align-items: center;
+  flex: none;
   gap: 8px;
-  padding: 8px 15px;
-  border-radius: var(--radius-pill);
-  border: 1px solid transparent;
+  height: var(--admin-tab-h);
+  padding: 0 var(--admin-tab-pad-x);
+  border: 0;
+  border-bottom: var(--admin-tab-underline) solid transparent;
+  border-radius: 0;
   background: transparent;
   color: var(--ink-60);
   font: inherit;
   font-size: var(--text-13-5);
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
   transition:
-    background 0.16s var(--ease),
     color 0.16s var(--ease),
     border-color 0.16s var(--ease);
 }
 @media (hover: hover) {
   .tab:hover {
     color: var(--text-strong);
-    background: rgba(var(--plum-rgb), 0.05);
   }
 }
-.tabOn {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
+.tab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-1 * var(--focus-ring-offset));
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-6);
 }
-@media (hover: hover) {
-  .tabOn:hover {
-    background: var(--plum);
-    color: rgba(var(--cream-rgb), 1);
+.tabOn {
+  color: var(--text-strong);
+  border-bottom-color: var(--accent);
+}
+@media (pointer: coarse) {
+  .tab {
+    height: var(--admin-tab-h-touch);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
   }
 }
 .tabCount {
   min-width: 20px;
-  padding: 1px 6px;
+  padding: var(--admin-pill-pad);
   border-radius: var(--radius-pill);
   font-size: var(--text-11);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   text-align: center;
-  background: rgba(var(--plum-rgb), 0.1);
-  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--ink);
 }
-.tabOn .tabCount {
-  background: rgba(var(--cream-rgb), 0.2);
-  color: rgba(var(--cream-rgb), 1);
+[data-theme="dark"] .tabCount {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+/* A tab holding overdue work: the pill reads in the danger tone. AdminTabs
+   sets data-tone="alert" on the pill. */
+.tabCount[data-tone="alert"],
+[data-theme="dark"] .tabCount[data-tone="alert"] {
+  background: rgba(var(--danger-rgb), 0.12);
+  color: var(--danger);
 }
 /* A failed count read: the alert icon sits centred in the count's pill. */
 .tabCountUnavailable {
   display: inline-grid;
   place-items: center;
-}
-
-/* ── Filter pills (secondary toggles in toolbars) ───────────────────────── */
-.filter {
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: var(--paper);
-  color: var(--ink-60);
-  font: inherit;
-  font-size: var(--text-13);
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    border-color 0.16s var(--ease),
-    color 0.16s var(--ease);
-}
-@media (hover: hover) {
-  .filter:hover {
-    border-color: rgba(var(--line-rgb), 0.3);
-    color: var(--text-strong);
-  }
-}
-.filterOn {
-  border-color: var(--line-strong);
-  color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.05);
 }
 
 /* ── Chips (ax-chip) ─────────────────────────────────────────────────────── */
@@ -647,6 +811,8 @@
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .segBtn {
+  flex: none;
+  white-space: nowrap;
   padding: 6px 14px;
   border: none;
   border-radius: var(--radius-pill);
@@ -669,6 +835,29 @@
 @media (pointer: coarse) {
   .segBtn {
     min-height: var(--tap-min);
+  }
+}
+/* A phone keeps the control on one line: every label stays whole and the
+   group scrolls sideways inside the gutter, with the edge fade above on the
+   side that hides options. */
+@media (max-width: 480px) {
+  .seg {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .seg::-webkit-scrollbar {
+    display: none;
+  }
+  .seg {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black var(--admin-strip-fade-start),
+      black calc(100% - var(--admin-strip-fade-end)),
+      transparent
+    );
   }
 }
 .segOn {
@@ -730,6 +919,31 @@
   .toggleKnob {
     transition: none;
   }
+}
+
+/* A switch with its visible label (`inlineLabel`). The label names the switch
+   and toggles it on click, so the whole line is the hit area. */
+.toggleLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--admin-control-h);
+}
+@media (pointer: coarse) {
+  .toggleLine {
+    min-height: var(--tap-min);
+  }
+}
+.toggleLabel {
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+  cursor: pointer;
+}
+.toggleLineDisabled .toggleLabel {
+  color: var(--ink-60);
+  cursor: not-allowed;
 }
 
 /* ── Check-line (ax-check-line) ──────────────────────────────────────────── */
@@ -794,19 +1008,4 @@
   font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.45;
-}
-
-/* ── Shared section label + card surface helpers ─────────────────────────── */
-.secLabel {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin: 24px 2px 12px;
-}
-.card {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
 }

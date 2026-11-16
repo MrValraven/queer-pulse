@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import {
+  FiArrowLeft,
   FiChevronUp,
   FiLogOut,
   FiSettings,
@@ -22,13 +23,13 @@ import styles from "./AdminShell.module.css";
  *
  * It deliberately does NOT restate identity: `AdminRoleSwitcher` at the top of
  * the rail already shows role and scope. This one answers "which account am I
- * signed in as, and how do I leave" — the questions admin has no answer for
+ * signed in as, and how do I leave", the questions admin has no answer for
  * otherwise, since "Back to platform" keeps the session alive and the only real
  * sign-out lives three navigations away in the member account menu. On a shared
  * machine that gap is the reason this exists.
  *
  * Identity comes from `useAccountIdentity`, the demo-safe resolver: the mock
- * persona is only ever a demo fallback, never a stand-in for a live session.
+ * persona is only ever a demo fallback, and a live session shows its own.
  */
 export function AdminAccountMenu({
   isCollapsed = false,
@@ -48,8 +49,7 @@ export function AdminAccountMenu({
     useSidebarMenu();
 
   const isAdmin = role === "admin";
-  // The tier labels are the role switcher's own, reused rather than restated:
-  // two keys for one concept is how the rail's top and bottom start disagreeing.
+  // The tier labels are the role switcher's own, reused as they are: two keys for one concept is how the rail's top and bottom start disagreeing.
   const tierLabel = isAdmin
     ? t("shared:adminRoleSwitcher.roleStaffAdmin")
     : role === "moderator"
@@ -58,7 +58,7 @@ export function AdminAccountMenu({
   // An admin holds every staff grant by definition (`useMyStaffRoles` mirrors
   // the backend's superset rule), so listing them would print the whole
   // catalogue back. Say so in one phrase instead. Everyone else gets the real
-  // additive grants — the ones that decide which sidebar sections work, and
+  // additive grants, the ones that decide which sidebar sections work, and
   // which the role chip at the top of the rail never shows.
   const grantLabels = isAdmin
     ? [t("shared:adminSidebar.account.allAreas")]
@@ -93,8 +93,8 @@ export function AdminAccountMenu({
       <Avatar initials={initials} src={photo} tint="coral" size={32} />
       <span className={isCollapsed ? "visuallyHidden" : styles.meTx}>
         <span className={styles.meName}>{name}</span>
-        {/* The account address, not the role: the role chip at the top of the
-            rail already carries that, and "which of my accounts is this?" is
+        {/* The account address: the role chip at the top of the rail already
+            carries the role, and "which of my accounts is this?" is
             the question a privileged console should answer at a glance. */}
         <span className={styles.meRole}>{user?.email}</span>
       </span>
@@ -127,6 +127,20 @@ export function AdminAccountMenu({
             </span>
             <span className={styles.meMenuAccessValue}>{accessLine}</span>
           </div>
+
+          {/* Named here in full: the rail foot shows it as an icon alone. */}
+          <Link
+            to={routes.feed}
+            role="menuitem"
+            tabIndex={-1}
+            className={styles.meMenuItem}
+            onClick={closeAfterNavigate}
+          >
+            <FiArrowLeft aria-hidden />
+            <span>{t("shared:adminSidebar.backToPlatform")}</span>
+          </Link>
+
+          <div className={styles.meMenuRule} />
 
           <Link
             to={routes.accountProfile}
@@ -161,8 +175,8 @@ export function AdminAccountMenu({
 
           <div className={styles.meMenuRule} />
 
-          {/* A Link, not a button: signing out has to leave the admin console,
-              which is gated — staying put would bounce through the auth gate. */}
+          {/* A Link: signing out has to leave the admin console, which is
+              gated, and staying put would bounce through the auth gate. */}
           <Link
             to={routes.homepage}
             role="menuitem"

@@ -1,7 +1,13 @@
-import { FiChevronRight } from "react-icons/fi";
+import { FiChevronRight, FiLayers } from "react-icons/fi";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminPanel,
+  adminTableClasses,
+  type AdminTone,
+} from "./ui";
 import type { AdminCommunityAccessTier } from "./api/adminCommunities.api";
 import type { Community } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
@@ -40,37 +46,45 @@ export function AdminCommunitySpaces({
   const fmt = useFormat();
   const spaces = community.subcommunities ?? [];
 
+  // A community without spaces keeps the same titled panel with one quiet
+  // line inside, so the overview reads the same whether or not it has spaces.
+  if (spaces.length === 0) {
+    return (
+      <AdminPanel title={t("admin:communities.detail.spaces.title")}>
+        <AdminEmptyState
+          size="inline"
+          icon={FiLayers}
+          title={t("admin:communities.detail.spaces.empty")}
+        />
+      </AdminPanel>
+    );
+  }
+
   return (
-    <div className={styles.pane}>
-      <div className={styles.setLabel}>
-        {t("admin:communities.detail.spaces.title")}
-      </div>
-      {spaces.length === 0 ? (
-        <p className={styles.setDetail}>
-          {t("admin:communities.detail.spaces.empty")}
-        </p>
-      ) : (
-        spaces.map((space) => (
-          <button
-            key={space.slug}
-            type="button"
-            className={`${styles.memberRow} ${styles.spaceRowBtn}`}
-            onClick={() => onOpen(space.slug)}
-          >
-            <div className={styles.memberMeta}>
-              <div className={styles.memberName}>{space.name}</div>
-              <div className={styles.memberDetail}>
-                {t("admin:communities.detail.stat.members")}:{" "}
-                {fmt.number(space.memberCount)}
-              </div>
+    <AdminPanel
+      title={t("admin:communities.detail.spaces.title")}
+      padding="flush"
+    >
+      {spaces.map((space) => (
+        <button
+          key={space.slug}
+          type="button"
+          className={`${adminTableClasses.row} ${styles.panelRow} ${styles.spaceRowBtn}`}
+          onClick={() => onOpen(space.slug)}
+        >
+          <div className={styles.memberMeta}>
+            <div className={styles.memberName}>{space.name}</div>
+            <div className={styles.memberDetail}>
+              {t("admin:communities.detail.stat.members")}:{" "}
+              {fmt.number(space.memberCount)}
             </div>
-            <AdminChip tone={TIER_CHIP_TONE[space.accessTier]}>
-              {t(TIER_LABEL_KEY[space.accessTier])}
-            </AdminChip>
-            <FiChevronRight aria-hidden className={styles.spaceRowChevron} />
-          </button>
-        ))
-      )}
-    </div>
+          </div>
+          <AdminChip tone={TIER_CHIP_TONE[space.accessTier]}>
+            {t(TIER_LABEL_KEY[space.accessTier])}
+          </AdminChip>
+          <FiChevronRight aria-hidden className={styles.spaceRowChevron} />
+        </button>
+      ))}
+    </AdminPanel>
   );
 }

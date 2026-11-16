@@ -18,7 +18,12 @@ import {
   LANDLORD_DETAIL_PATH,
   LANDLORD_STALE_DAYS,
 } from "./adminLandlords.data";
-import { AdminAvatar } from "./ui";
+import {
+  AdminAvatar,
+  AdminRowActions,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import styles from "./AdminLandlordsPage.module.css";
 
 /** The audit trail, when there is one: who decided, when, and what they said. */
@@ -73,7 +78,7 @@ export function AdminLandlordRow({
     landlord.status === "review" && waitingDays >= LANDLORD_STALE_DAYS;
 
   return (
-    <li className={styles.row}>
+    <li className={`${adminTableClasses.row} ${styles.row}`}>
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
           <h3 className={styles.rowName}>
@@ -129,11 +134,11 @@ export function AdminLandlordRow({
         <PriorDecision landlord={landlord} />
       </div>
 
-      <div className={styles.rowActions}>
+      <AdminRowActions className={styles.rowActions}>
         {landlord.status === "review" ? (
           <Button
             variant="jade"
-            size="md"
+            size="sm"
             disabled={isPending}
             onClick={onPublish}
           >
@@ -143,7 +148,7 @@ export function AdminLandlordRow({
         ) : (
           <Button
             variant="ghost"
-            size="md"
+            size="sm"
             disabled={isPending}
             onClick={onHoldBack}
           >
@@ -152,15 +157,16 @@ export function AdminLandlordRow({
           </Button>
         )}
         <Button
-          variant="danger"
-          size="md"
+          variant="ghost"
+          size="sm"
+          className={adminRowActionClasses.danger}
           disabled={isPending}
           onClick={onRemove}
         >
           <FiTrash2 aria-hidden />
           {t("admin:landlords.action.remove")}
         </Button>
-      </div>
+      </AdminRowActions>
     </li>
   );
 }

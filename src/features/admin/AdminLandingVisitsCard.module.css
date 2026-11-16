@@ -109,19 +109,9 @@
   color: var(--ink-60);
 }
 
+/* Room between the frame head and the error notice. */
 .loadError {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 0 4px;
-}
-.loadErrorText {
-  flex: 1 1 260px;
-  margin: 0;
-  font-size: var(--text-14);
-  line-height: 1.5;
-  color: var(--ink-60);
+  padding-top: var(--gap-xs);
 }
 
 @media (prefers-reduced-motion: reduce) {

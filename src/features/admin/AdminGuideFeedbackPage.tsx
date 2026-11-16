@@ -1,15 +1,22 @@
+import { FiThumbsUp } from "react-icons/fi";
 import {
   FadeIn,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminPageHeader,
+  type AdminTone,
+} from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useAdminGuideFeedback } from "./api/useAdminGuideFeedback";
 import type { AdminGuideRatingDTO } from "./api/adminGuideFeedback.api";
+import { guideTitleKeyFor } from "./adminGuideFeedbackTitles";
 import styles from "./AdminSubmissionList.module.css";
 
 function ratioTone(ratio: number): AdminTone {
@@ -20,11 +27,14 @@ function ratioTone(ratio: number): AdminTone {
 
 function GuideFeedbackRow({ row }: { row: AdminGuideRatingDTO }) {
   const { t } = useTranslation();
+  const titleKey = guideTitleKeyFor(row.contentKey);
   return (
     <div className={styles.row}>
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
-          <span className={styles.rowName}>{row.contentKey}</span>
+          <span className={styles.rowName}>
+            {titleKey ? t(titleKey) : row.contentKey}
+          </span>
           <AdminChip tone={ratioTone(row.ratio)} dot>
             {Math.round(row.ratio * 100)}%
           </AdminChip>
@@ -35,6 +45,7 @@ function GuideFeedbackRow({ row }: { row: AdminGuideRatingDTO }) {
             notHelpful: row.notHelpfulCount,
           })}
         </div>
+        {titleKey && <div className={styles.rowDates}>{row.contentKey}</div>}
       </div>
     </div>
   );
@@ -80,7 +91,7 @@ export function AdminGuideFeedbackPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminGuideFeedback.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.editorial")}
           title={
             <Translation
               i18nKey="admin:adminGuideFeedback.header.title"
@@ -104,9 +115,11 @@ export function AdminGuideFeedbackPage() {
             description={t("admin:adminGuideFeedback.loadError.body")}
           />
         ) : rows.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminGuideFeedback.empty")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            icon={FiThumbsUp}
+            title={t("admin:adminGuideFeedback.empty")}
+          />
         ) : (
           <div className={styles.rows}>
             {rows.map((row, index) => (

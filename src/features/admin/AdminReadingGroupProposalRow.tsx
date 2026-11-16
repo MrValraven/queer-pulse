@@ -4,7 +4,12 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { communityPath } from "../../app/routeMap";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminRowActions,
+  adminRowActionClasses,
+  type AdminTone,
+} from "./ui";
 import { isDecisionAvailable } from "./readingGroupProposalDecisions";
 import type {
   AdminReadingGroupProposalDTO,
@@ -132,19 +137,24 @@ export function AdminReadingGroupProposalRow({
         <AdminChip tone={STATUS_TONE[proposal.status]} dot>
           {t(`admin:adminReadingGroupProposals.status.${proposal.status}`)}
         </AdminChip>
-        <div className={styles.rowActionButtons}>
+        <AdminRowActions className={styles.rowActionButtons}>
           {ACTIONS.map(({ decision }) => (
             <Button
               key={decision}
-              variant="ghost"
+              variant={decision === "approve" ? "jade" : "ghost"}
               size="sm"
+              className={
+                decision === "decline"
+                  ? adminRowActionClasses.danger
+                  : undefined
+              }
               disabled={pending || !isDecisionAvailable(proposal, decision)}
               onClick={() => onDecide(decision)}
             >
               {t(`admin:adminReadingGroupProposals.action.${decision}`)}
             </Button>
           ))}
-        </div>
+        </AdminRowActions>
       </div>
     </div>
   );

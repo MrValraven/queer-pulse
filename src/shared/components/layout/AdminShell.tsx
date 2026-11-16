@@ -1,12 +1,9 @@
 import { useCallback, useRef, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { FiMoon, FiSun, FiBell, FiMenu } from "react-icons/fi";
-import { useTheme } from "../../../app/providers/themeContext";
-import { useToast } from "../feedback/useToast";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useLocalStorage, useMediaQuery, useScrollLock } from "../../hooks";
 import { mediaMax } from "../../theme/breakpoints";
 import { AdminSidebar } from "./AdminSidebar";
+import { AdminTopbar, type AdminCrumb } from "./AdminTopbar";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 import { useAdminTopbarHeight } from "./useAdminTopbarHeight";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
@@ -28,11 +25,6 @@ function isBoolean(value: unknown): value is boolean {
   return typeof value === "boolean";
 }
 
-interface Crumb {
-  label: string;
-  to?: string;
-}
-
 export function AdminShell({
   children,
   title,
@@ -41,14 +33,12 @@ export function AdminShell({
 }: {
   children: ReactNode;
   title: ReactNode;
-  breadcrumb?: Crumb[];
+  breadcrumb?: AdminCrumb[];
   /** Drop the console's 1240px reading measure for this surface. Reserved for
    * screens that genuinely need the width (a side-by-side editor); everything
    * else keeps the measure. */
   isFullBleed?: boolean;
 }) {
-  const { theme, toggleTheme } = useTheme();
-  const { showToast } = useToast();
   const { t } = useTranslation();
 
   // Below the mobile breakpoint the sidebar is a slide-in off-canvas panel; on
@@ -70,9 +60,9 @@ export function AdminShell({
   // Sticky page chrome reads `--admin-topbar-h` to stop under the bar.
   const { shellRef, topbarRef } = useAdminTopbarHeight();
 
-  // Growing past the breakpoint reveals the static rail, so drop any open state
-  // rather than leave a stale off-canvas panel behind the desktop layout.
-  // Enforced during render (rather than in an effect): the invariant "the
+  // Growing past the breakpoint reveals the static rail, so any open state is
+  // dropped, and no stale off-canvas panel is left behind the desktop layout.
+  // Enforced during render, outside any effect: the invariant "the
   // drawer can only be open on mobile" is derived purely from render-available
   // state, and correcting it here avoids painting the stale open state for one
   // frame first. `isDrawerOpen` is false on the next render, so this
@@ -93,7 +83,7 @@ export function AdminShell({
   });
 
   // Dialog semantics belong to the panel only when it is acting as the mobile
-  // off-canvas drawer — never on the static desktop rail.
+  // off-canvas drawer. The static desktop rail carries none.
   const drawerDialogProps = isMobile
     ? {
         role: "dialog" as const,
@@ -137,75 +127,30 @@ export function AdminShell({
               ? undefined
               : () => setIsRailCollapsed((collapsed) => !collapsed)
           }
+          onClose={isMobile ? closeDrawer : undefined}
           onNavigate={closeDrawer}
         />
       </div>
 
       <div className={styles.main}>
-        <header ref={topbarRef} className={styles.topbar}>
-          <button
-            type="button"
-            className={styles.menuBtn}
-            aria-label={isDrawerOpen ? t("nav:closeMenu") : t("nav:openMenu")}
-            aria-expanded={isDrawerOpen}
-            aria-controls={SIDEBAR_DRAWER_ID}
-            onClick={() => setIsDrawerOpen((open) => !open)}
-          >
-            <FiMenu aria-hidden />
-          </button>
-
-          <div className={styles.crumb}>
-            {breadcrumb.map((c) => (
-              <span key={c.to ?? c.label} className={styles.crumbCrumb}>
-                {c.to ? (
-                  <Link to={c.to} className={styles.crumbLink}>
-                    {c.label}
-                  </Link>
-                ) : (
-                  <span>{c.label}</span>
-                )}
-              </span>
-            ))}
-            <span className={styles.crumbTitle}>{title}</span>
-          </div>
-
-          <div className={styles.topRight}>
-            <button
-              type="button"
-              className={styles.iconBtn}
-              onClick={toggleTheme}
-              title={t("shared:adminShell.toggleTheme")}
-              aria-label={t("shared:adminShell.toggleTheme")}
-            >
-              {theme === "dark" ? (
-                <FiSun aria-hidden />
-              ) : (
-                <FiMoon aria-hidden />
-              )}
-            </button>
-            <button
-              type="button"
-              className={styles.iconBtn}
-              onClick={() =>
-                showToast(t("shared:adminShell.toastNoAlerts"), "info")
-              }
-              title={t("shared:adminShell.alerts")}
-              aria-label={t("shared:adminShell.alerts")}
-            >
-              <span className={styles.iconDot} aria-hidden />
-              <FiBell aria-hidden />
-            </button>
-          </div>
-        </header>
+        <AdminTopbar
+          barRef={topbarRef}
+          title={title}
+          breadcrumb={breadcrumb}
+          isMobile={isMobile}
+          drawerId={SIDEBAR_DRAWER_ID}
+          isDrawerOpen={isDrawerOpen}
+          onToggleDrawer={() => setIsDrawerOpen((open) => !open)}
+        />
 
         {/* Same landmark contract as every member shell: the shared
             MAIN_CONTENT_ID that <SkipToContentLink> targets, `tabIndex={-1}`
             so that fragment jump (and RouteAnnouncer's post-navigation focus
             move) actually lands focus here, and `data-page-main` so the app's
-            one page landmark is findable — which is also what the drawer's
+            one page landmark is findable, which is also what the drawer's
             focus-restore fallback in useNavDrawerFocus looks for. Like
-            MagazineDeskShell, this shell renders its own left rail instead of
-            the floating Navbar, so `data-shell="rail"` opts out of the chrome
+            MagazineDeskShell, this shell renders its own left rail in the
+            floating Navbar's stead, so `data-shell="rail"` opts out of the chrome
             offsets `data-page-main` otherwise carries (base.css's `--nav-band`
             padding, nav-mode.css's rail indent, standalone.css's mobile
             app-bar margin and tab-bar padding). */}

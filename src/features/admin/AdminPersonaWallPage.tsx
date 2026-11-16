@@ -11,6 +11,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { PERSONA_WALL_MAX_PICKS } from "../subprofiles/api/personaWall.api";
 import { useAdminPersonaWall } from "./api/useAdminPersonaWall";
 import { PERSONA_WALL_SKELETON_ROW_KEYS } from "./personaWall/personaWallAdmin.data";
@@ -22,7 +23,7 @@ import { PersonaWallAddDialog } from "./personaWall/PersonaWallAddDialog";
 import { PersonaWallFillOrder } from "./personaWall/PersonaWallFillOrder";
 import { PersonaWallPicksSection } from "./personaWall/PersonaWallPicksSection";
 import { PersonaWallPreview } from "./personaWall/PersonaWallPreview";
-import { AdminPageHeader } from "./ui";
+import { AdminNotice, AdminPageHeader, AdminPanel } from "./ui";
 import css from "./AdminPersonaWallPage.module.css";
 
 const SKELETON_ROW_HEIGHT = 72;
@@ -57,32 +58,44 @@ export function AdminPersonaWallPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:common.adminBreadcrumb")}
-          title={t("admin:personaWall.title")}
+          eyebrow={t("shared:adminNav.sections.directory")}
+          title={
+            <Translation
+              i18nKey="admin:personaWall.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("admin:personaWall.intro")}
         />
       </FadeIn>
 
       {wall ? (
-        <FadeIn key="body" delay={80}>
+        <FadeIn key="body" delay={80} className={css.stack}>
           <Collapse isOpen={isError}>
-            <p className={css.refreshError} role="alert">
-              <FiAlertTriangle aria-hidden />
-              <span>
-                {t(personaWallErrorKeyOf(error), PERSONA_WALL_ERROR_VALUES)}
-              </span>
-              <Button variant="ghost" size="sm" onClick={() => void refetch()}>
-                {t("admin:personaWall.loadError.retryCta")}
-              </Button>
-            </p>
+            <AdminNotice
+              tone="error"
+              action={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => void refetch()}
+                >
+                  {t("admin:personaWall.loadError.retryCta")}
+                </Button>
+              }
+            >
+              {t(personaWallErrorKeyOf(error), PERSONA_WALL_ERROR_VALUES)}
+            </AdminNotice>
           </Collapse>
           <div className={css.bodyFrame}>
             <div className={css.body}>
               <div className={css.main}>
-                <PersonaWallPicksSection
-                  wall={wall}
-                  onAdd={() => setIsAdding(true)}
-                />
+                <AdminPanel as="div">
+                  <PersonaWallPicksSection
+                    wall={wall}
+                    onAdd={() => setIsAdding(true)}
+                  />
+                </AdminPanel>
                 <PersonaWallFillOrder fillOrder={wall.fillOrder} />
               </div>
               <div className={css.aside}>

@@ -3,6 +3,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
+import { AdminPageHeader } from "./ui";
 import { useAdminStickerPacks } from "../stickers/api/useAdminStickerPacks";
 import { StickerPackRail } from "./stickerBuilder/StickerPackRail";
 import {
@@ -69,10 +70,16 @@ export function AdminStickerPacksPage() {
       isFullBleed
     >
       <div className={styles.page}>
-        <header className={styles.head}>
-          <h1 className={styles.title}>{t("admin:stickerPacks.page.title")}</h1>
-          <p className={styles.sub}>{t("admin:stickerPacks.sub")}</p>
-        </header>
+        <AdminPageHeader
+          eyebrow={t("shared:adminNav.sections.platform")}
+          title={
+            <Translation
+              i18nKey="admin:stickerPacks.title"
+              components={{ em: <em /> }}
+            />
+          }
+          sub={t("admin:stickerPacks.sub")}
+        />
 
         <div className={styles.layout}>
           <div className={styles.railColumn}>

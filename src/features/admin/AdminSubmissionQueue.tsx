@@ -2,13 +2,15 @@ import type { ReactNode } from "react";
 import { FiClock } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminEmptyState, AdminNotice } from "./ui";
 import { adminWaitingTone, daysWaitingSince } from "./adminSubmissionMeta";
 import styles from "./AdminSubmissionList.module.css";
+import queueStyles from "./AdminSubmissionQueue.module.css";
 
 /**
  * The list machinery every member-submission queue in the console shares:
- * loading skeleton, error line, empty line, staggered rows, and the load-more
- * button. `AdminConcernsPage` and the intake console both render through it, so
+ * loading skeleton, error notice, inline empty state, staggered rows, and the
+ * load-more button. `AdminConcernsPage` and the intake console both render through it, so
  * the two cannot drift into two different-looking inboxes — each supplies only
  * its own row.
  */
@@ -36,7 +38,11 @@ export function AdminQueueSkeleton({ rows = 4 }: { rows?: number }) {
   return (
     <div className={styles.rows}>
       {Array.from({ length: rows }, (_unused, rowIndex) => (
-        <SkeletonLine key={rowIndex} height={92} style={{ borderRadius: 22 }} />
+        <SkeletonLine
+          key={rowIndex}
+          height={92}
+          style={{ borderRadius: "var(--admin-panel-radius)" }}
+        />
       ))}
     </div>
   );
@@ -72,9 +78,20 @@ export function AdminSubmissionQueue<Item>({
   loadingMoreLabel,
 }: AdminSubmissionQueueProps<Item>) {
   if (isLoading) return <AdminQueueSkeleton />;
-  if (isError) return <p className={styles.emptyLine}>{errorText}</p>;
-  if (items.length === 0)
-    return <p className={styles.emptyLine}>{emptyText}</p>;
+  if (isError) {
+    return (
+      <div className={queueStyles.state}>
+        <AdminNotice tone="error">{errorText}</AdminNotice>
+      </div>
+    );
+  }
+  if (items.length === 0) {
+    return (
+      <div className={queueStyles.state}>
+        <AdminEmptyState size="inline" title={emptyText} />
+      </div>
+    );
+  }
 
   return (
     <>

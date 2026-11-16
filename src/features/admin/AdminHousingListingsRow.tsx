@@ -85,28 +85,34 @@ export function AdminHousingListingRow({
       <h3 className={styles.cardTitle} id={`housing-row-${listing.ref}`}>
         {listing.title}
       </h3>
+      {/* Each fact keeps its icon with its words, so a wrap never leaves an
+          icon alone at the end of a line. */}
       <p className={styles.cardFacts}>
-        <FiHome aria-hidden />
-        {t(`economy:listSpace.type.${listing.type}`)}
-        {" · "}
-        <FiMapPin aria-hidden />
-        {listing.area || listing.city}
-        {" · "}
-        {t("admin:housingListings.row.rent", { amount: rent })}
+        <span className={styles.fact}>
+          <FiHome aria-hidden />
+          {t(`economy:listSpace.type.${listing.type}`)}
+        </span>
+        <span className={styles.fact}>
+          <FiMapPin aria-hidden />
+          {listing.area || listing.city}
+        </span>
+        <span className={styles.fact}>
+          {t("admin:housingListings.row.rent", { amount: rent })}
+        </span>
         {listing.bedrooms !== null && (
-          <>
-            {" · "}
+          <span className={styles.fact}>
             {t("admin:housingListings.row.bedrooms", {
               count: listing.bedrooms,
             })}
-          </>
+          </span>
         )}
-        {" · "}
-        {t(
-          listing.billsIncluded
-            ? "admin:housingListings.row.billsIncluded"
-            : "admin:housingListings.row.billsExcluded",
-        )}
+        <span className={styles.fact}>
+          {t(
+            listing.billsIncluded
+              ? "admin:housingListings.row.billsIncluded"
+              : "admin:housingListings.row.billsExcluded",
+          )}
+        </span>
       </p>
 
       <AdminHousingListingLister listing={listing} />

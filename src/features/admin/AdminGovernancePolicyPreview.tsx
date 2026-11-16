@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useId, useLayoutEffect, useRef, useState } from "react";
 import { FiChevronsLeft, FiChevronsRight, FiEye } from "react-icons/fi";
 import { Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -7,6 +7,7 @@ import type {
   PolicySectionId,
 } from "./adminGovernancePolicyDraft";
 import { AdminGovernancePolicyPreviewPage } from "./AdminGovernancePolicyPreviewPage";
+import { AdminSeg } from "./ui";
 import styles from "./AdminGovernancePolicy.module.css";
 
 /** The width the public Governance page is drawn at before it is scaled down. */
@@ -19,9 +20,9 @@ type PreviewZoom = "fit" | "full";
  * inside it, scaled to whatever width the panel has.
  *
  * The scale is a CSS `transform`, so the page inside keeps its real 900px
- * layout and its real type scale rather than being re-laid-out at column width.
- * A preview that reflowed would answer a question nobody asked (what does this
- * look like at 420px) instead of the one they did (what will members read).
+ * layout and its real type scale at any column width. A preview that reflowed
+ * would answer a question nobody asked (what does this look like at 420px);
+ * the scaled page answers the one they did (what will members read).
  *
  * The `transform` also means the scaled element no longer contributes its
  * shrunken height to the scroll box, so the holder around it is given that
@@ -38,10 +39,10 @@ export function AdminGovernancePolicyPreview({
 }: {
   draft: PolicyDraft;
   activeSectionId: PolicySectionId;
-  /** Inside the drawer the frame scrolls with the drawer, not with itself. */
+  /** Inside the drawer the frame scrolls with the drawer itself. */
   isInDrawer?: boolean;
   /** Folded to a hairline tab, so the editors get the 420px back. The panel is
-   * unmounted rather than hidden: a scaled 900px page nobody can see is a
+   * unmounted while folded: a scaled 900px page nobody can see is a
    * ResizeObserver and a re-measure on every keystroke for nothing. */
   isCollapsed?: boolean;
   /** Absent in the drawer, where the drawer's own close is the way out. */
@@ -49,6 +50,7 @@ export function AdminGovernancePolicyPreview({
 }) {
   const { t, language } = useTranslation();
   const [zoom, setZoom] = useState<PreviewZoom>("fit");
+  const zoomLabelId = useId();
   const scrollRef = useRef<HTMLDivElement>(null);
   const holderRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
@@ -72,7 +74,7 @@ export function AdminGovernancePolicyPreview({
   }, [zoom]);
 
   // Re-measure on zoom, on any draft edit (the page gets taller or shorter),
-  // and whenever the panel itself is resized — including the window resize a
+  // and whenever the panel itself is resized, including the window resize a
   // ResizeObserver on the scroll box already covers.
   useLayoutEffect(() => {
     rescale();
@@ -118,38 +120,25 @@ export function AdminGovernancePolicyPreview({
       <div className={styles.previewHead}>
         <span className={styles.previewDot} aria-hidden />
         <span className={styles.previewHeadLabel}>{panelLabel}</span>
-        <div
+        <span id={zoomLabelId} className="visuallyHidden">
+          {t("admin:governance.policy.preview.zoomLabel")}
+        </span>
+        <AdminSeg
           className={styles.previewZoom}
-          role="group"
-          aria-label={t("admin:governance.policy.preview.zoomLabel")}
-        >
-          <button
-            type="button"
-            className={[
-              styles.previewZoomBtn,
-              zoom === "fit" && styles.previewZoomBtnOn,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            aria-pressed={zoom === "fit"}
-            onClick={() => setZoom("fit")}
-          >
-            {t("admin:governance.policy.preview.zoomFit")}
-          </button>
-          <button
-            type="button"
-            className={[
-              styles.previewZoomBtn,
-              zoom === "full" && styles.previewZoomBtnOn,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            aria-pressed={zoom === "full"}
-            onClick={() => setZoom("full")}
-          >
-            {t("admin:governance.policy.preview.zoomFull")}
-          </button>
-        </div>
+          ariaLabelledby={zoomLabelId}
+          options={[
+            {
+              value: "fit",
+              label: t("admin:governance.policy.preview.zoomFit"),
+            },
+            {
+              value: "full",
+              label: t("admin:governance.policy.preview.zoomFull"),
+            },
+          ]}
+          value={zoom}
+          onChange={(value) => setZoom(value === "full" ? "full" : "fit")}
+        />
         {onToggleCollapse && (
           <button
             type="button"
@@ -169,9 +158,8 @@ export function AdminGovernancePolicyPreview({
             {t("admin:governance.policy.preview.url")}
           </span>
           {/* The preview shares this console's i18n instance, so it can only
-              render the language the console is in. Stated as a fact rather
-              than offered as a switch that would show English under a PT
-              label. */}
+              render the language the console is in. It is stated as a fact:
+              a switch would show English under a PT label. */}
           <span
             className={styles.previewLang}
             title={t("admin:governance.policy.preview.languageHint")}

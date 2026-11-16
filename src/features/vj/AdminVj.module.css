@@ -3,10 +3,6 @@
    above it. `AdminVjPage.tsx` swaps the rail for the picker at the same
    width (VJ_WIDE_FRAME_MIN_PX). */
 
-.page {
-  margin-top: var(--gap-lg);
-}
-
 /* The section switch (Clips, Scenes and set lists) above the open panel. */
 .tabs {
   margin-bottom: var(--gap-lg);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Avatar, SearchInput, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
+import { adminToolbarClasses } from "./ui";
 import { useAdminMediaUploaders } from "./api/useAdminMedia";
 import type { AdminMediaUploaderResult } from "./api/adminMedia.api";
 import styles from "./AdminMediaUploaderPicker.module.css";
@@ -46,6 +47,7 @@ export function AdminMediaUploaderPicker({
       <SearchInput
         value={searchInput}
         onChange={setSearchInput}
+        className={adminToolbarClasses.search}
         placeholder={t("admin:media.filterByUploader.searchPlaceholder")}
         ariaLabel={t("admin:media.filterByUploader.searchAriaLabel")}
       />

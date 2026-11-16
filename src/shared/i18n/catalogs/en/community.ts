@@ -233,6 +233,9 @@ export const community: Catalog = {
     "Give this profile a name first.",
   "changemakers.admin.editor.createdToast": "Profile created.",
   "changemakers.admin.editor.updatedToast": "Profile updated.",
+  "changemakers.admin.header.title": "Change Makers <em>directory</em>",
+  "changemakers.admin.header.sub":
+    "Profiles in the public Change Makers directory. Write them, publish them and choose who is featured.",
 
   // ── Coming Out page (ComingOutPage.tsx) ───────────────────────────────────
   "comingOut.hero.eyebrow": "Coming-Out Support",

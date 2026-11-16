@@ -4,8 +4,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminFlaggedRows } from "./AdminMemberRows";
 import { MemberRowsSkeleton } from "./AdminMembersRoster";
 import type { useAdminFlagged } from "./api/useAdminMembers";
+import { AdminEmptyState } from "./ui";
 import { hasFailedWithoutData, isRetryingFailedRead } from "./queryLoadFailure";
-import styles from "./AdminMembersPage.module.css";
 
 /**
  * The "Flagged" tab body: skeleton, error, empty line or rows, mirroring
@@ -47,7 +47,7 @@ export function AdminFlaggedTab({
   if (flaggedMembers === undefined) return <MemberRowsSkeleton />;
   if (flaggedMembers.length === 0) {
     return (
-      <p className={styles.emptyLine}>{t("admin:members.flagged.empty")}</p>
+      <AdminEmptyState size="inline" title={t("admin:members.flagged.empty")} />
     );
   }
 

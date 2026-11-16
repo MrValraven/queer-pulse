@@ -14,19 +14,6 @@
   display: grid;
 }
 
-.emptyLine {
-  font-size: var(--text-14);
-  color: var(--ink-60);
-  margin: 20px 0;
-}
-
-.filterBar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 16px;
-}
-
 .filterLabel {
   font-size: var(--text-12);
   font-weight: 600;
@@ -36,54 +23,11 @@
   white-space: nowrap;
 }
 
-.filterGroup {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.filterBar .filterSelect {
-  min-width: 220px;
-}
-
-/* Right-aligned: "Refresh all N expired" on the Expired tab, then Select. */
-.filterBarActions {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-}
-
-/* The width-animated slot around "Refresh all N expired". The gap to Select
-   lives inside it, so a folded slot leaves no gap behind. */
+/* The width-animated slot around "Refresh all N expired" and the Select
+   toggle. The toolbar's own gap sits between the slots. */
 .filterBarAction {
   display: inline-flex;
   white-space: nowrap;
-}
-
-.filterBarActionInner {
-  display: inline-flex;
-  padding-inline-end: 8px;
-}
-
-@media (--sm) {
-  .filterBar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filterGroup {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filterBar .filterSelect {
-    min-width: 0;
-  }
-
-  .filterBarActions {
-    margin-left: 0;
-    justify-content: flex-end;
-  }
 }
 
 /* No flex gap: the select-mode checkbox slot carries its own spacing, so
@@ -93,7 +37,7 @@
 .row {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   height: 100%;
   padding: 16px 18px;
   background: var(--paper);
@@ -632,6 +576,10 @@
    the panel swaps its listbox for a "No matches" status, which would drop
    the lift. Mirrors `.rowFade:has([role="menu"])` in the communities
    modules. */
+.filterFade {
+  margin-top: var(--gap-sm);
+}
+
 .filterFade:has([aria-haspopup="listbox"][aria-expanded="true"]) {
   position: relative;
   z-index: var(--z-raised);

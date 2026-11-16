@@ -1,0 +1,45 @@
+/* The intake console's own layout: the standing note under the page header and
+   the two section heads of the Waiting view. Rows, chips and states come from
+   the shared kit and AdminSubmissionList.module.css. */
+
+.note {
+  margin-bottom: var(--admin-header-gap);
+}
+
+.toolbar {
+  margin-top: var(--admin-header-gap);
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-section-gap);
+  margin-top: var(--admin-header-gap);
+}
+
+.section {
+  min-width: 0;
+}
+
+/* Same voice as an AdminPanel title, so the two sections read as panel heads. */
+.sectionTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+
+.sectionNote {
+  margin: 4px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* An intake row's contact and payload lines stay at a readable measure of
+   about 70 characters. */
+.measure {
+  max-width: 70ch;
+}

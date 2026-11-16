@@ -1,4 +1,7 @@
 import type { LeadEntryKind, LeadStage, LeadType } from "./api/leads.types";
+import { DEMO_LEAD_VIEWER_ID } from "./leadsDemoViewer";
+
+export { DEMO_LEAD_VIEWER_ID } from "./leadsDemoViewer";
 
 // The demo leads: invented artists, venues and promoters the music team is
 // talking to. Every name, address and handle here is made up; links point at
@@ -17,6 +20,9 @@ export interface DemoLeadEntrySeed {
   /** A `DEMO_SUBPROFILES` id; null for a persona that no longer exists. */
   personaId?: string | null;
   isEdited?: boolean;
+  /** On the assignee kinds: a staff, former staff or viewer id; null for an
+   *  account that is gone. */
+  subjectId?: string | null;
 }
 
 export interface DemoLeadRecord {
@@ -31,6 +37,9 @@ export interface DemoLeadRecord {
   /** Days from today; negative is in the past. */
   followUpOffsetDays: number | null;
   linkedPersonaId: string | null;
+  /** Staff ids in charge, oldest assignment first; `DEMO_LEAD_VIEWER_ID`
+   *  for the viewer. */
+  assignees: string[];
   /** Oldest first; the first one is always the `created` line. */
   entries: DemoLeadEntrySeed[];
 }
@@ -39,17 +48,83 @@ export interface DemoLeadsSeed {
   leads: DemoLeadRecord[];
 }
 
-/** The staff members who wrote the seeded history. */
+export interface DemoLeadStaffSeed {
+  id: string;
+  slug: string;
+  displayName: string;
+  avatarUrl: string | null;
+}
+
+/** Eligible staff besides the viewer. Every name is made up. */
+export const DEMO_LEAD_STAFF: DemoLeadStaffSeed[] = [
+  {
+    id: "demo-staff-marta",
+    slug: "marta-lobo-demo",
+    displayName: "Marta Lobo",
+    avatarUrl: null,
+  },
+  {
+    id: "demo-staff-rafa",
+    slug: "rafa-quintas-demo",
+    displayName: "Rafa Quintas",
+    avatarUrl: null,
+  },
+  {
+    id: "demo-staff-ines",
+    slug: "ines-barros-demo",
+    displayName: "Inês Barros",
+    avatarUrl: null,
+  },
+  {
+    id: "demo-staff-joana",
+    slug: "joana-vidal-demo",
+    displayName: "Joana Vidal",
+    avatarUrl: null,
+  },
+  {
+    id: "demo-staff-bea",
+    slug: "bea-moniz-demo",
+    displayName: "Bea Moniz",
+    avatarUrl: null,
+  },
+  {
+    id: "demo-staff-duda",
+    slug: "duda-fontes-demo",
+    displayName: "Duda Fontes",
+    avatarUrl: null,
+  },
+];
+
+/** People history can name who no longer have Leads access. Never in the
+ *  picker; assigning one answers LEAD_ASSIGNEE_NOT_STAFF `no_access`. */
+export const DEMO_LEAD_FORMER_STAFF: DemoLeadStaffSeed[] = [
+  {
+    id: "demo-staff-teo",
+    slug: "teo-ramos-demo",
+    displayName: "Teo Ramos",
+    avatarUrl: null,
+  },
+];
+
+/** The staff members who wrote the seeded history, keyed by id, with the
+ *  same name and photo their staff seed carries. */
 export const DEMO_LEAD_AUTHORS: Record<
   string,
   { displayName: string; avatarUrl: string | null }
-> = {
-  "demo-staff-marta": { displayName: "Marta Lobo", avatarUrl: null },
-  "demo-staff-rafa": { displayName: "Rafa Quintas", avatarUrl: null },
-};
+> = Object.fromEntries(
+  [...DEMO_LEAD_STAFF, ...DEMO_LEAD_FORMER_STAFF].map((person) => [
+    person.id,
+    { displayName: person.displayName, avatarUrl: person.avatarUrl },
+  ]),
+);
 
 const MARTA = "demo-staff-marta";
 const RAFA = "demo-staff-rafa";
+const JOANA = "demo-staff-joana";
+const BEA = "demo-staff-bea";
+const INES = "demo-staff-ines";
+const TEO = "demo-staff-teo";
+const VIEWER = DEMO_LEAD_VIEWER_ID;
 
 export const DEMO_LEADS_SEED: DemoLeadsSeed = {
   leads: [
@@ -67,6 +142,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       ],
       followUpOffsetDays: -2,
       linkedPersonaId: null,
+      assignees: [VIEWER, MARTA],
       entries: [
         {
           kind: "created",
@@ -81,11 +157,23 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
           body: "Saw her live set at a friend's party, soft synths and spoken word",
         },
         {
+          kind: "assignee_added",
+          daysAgo: 28,
+          authorId: MARTA,
+          subjectId: VIEWER,
+        },
+        {
           kind: "stage_changed",
           daysAgo: 25,
           authorId: MARTA,
           fromStage: "to_contact",
           toStage: "contacted",
+        },
+        {
+          kind: "assignee_added",
+          daysAgo: 20,
+          authorId: MARTA,
+          subjectId: MARTA,
         },
         {
           kind: "stage_changed",
@@ -119,6 +207,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       ],
       followUpOffsetDays: 0,
       linkedPersonaId: null,
+      assignees: [RAFA],
       entries: [
         { kind: "created", daysAgo: 20, authorId: RAFA, toStage: "to_contact" },
         {
@@ -150,8 +239,27 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       ],
       followUpOffsetDays: 5,
       linkedPersonaId: null,
+      assignees: [MARTA],
       entries: [
         { kind: "created", daysAgo: 6, authorId: MARTA, toStage: "to_contact" },
+        {
+          kind: "assignee_added",
+          daysAgo: 6,
+          authorId: MARTA,
+          subjectId: RAFA,
+        },
+        {
+          kind: "assignee_removed",
+          daysAgo: 6,
+          authorId: MARTA,
+          subjectId: RAFA,
+        },
+        {
+          kind: "assignee_added",
+          daysAgo: 6,
+          authorId: MARTA,
+          subjectId: MARTA,
+        },
         {
           kind: "note",
           daysAgo: 6,
@@ -171,14 +279,27 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       links: ["https://cave23.example", "https://instagram.com/cave23.demo"],
       followUpOffsetDays: -6,
       linkedPersonaId: null,
+      assignees: [],
       entries: [
         { kind: "created", daysAgo: 40, authorId: RAFA, toStage: "to_contact" },
+        {
+          kind: "assignee_added",
+          daysAgo: 38,
+          authorId: RAFA,
+          subjectId: TEO,
+        },
         {
           kind: "stage_changed",
           daysAgo: 35,
           authorId: RAFA,
           fromStage: "to_contact",
           toStage: "contacted",
+        },
+        {
+          kind: "assignee_access_ended",
+          daysAgo: 30,
+          authorId: null,
+          subjectId: TEO,
         },
         {
           kind: "stage_changed",
@@ -212,6 +333,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       links: ["https://facebook.com/ritasolproducoes.demo"],
       followUpOffsetDays: -10,
       linkedPersonaId: null,
+      assignees: [JOANA],
       entries: [
         {
           kind: "created",
@@ -255,6 +377,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       ],
       followUpOffsetDays: -3,
       linkedPersonaId: "sp-ines-fonseca-vanda-diesel",
+      assignees: [BEA],
       entries: [
         { kind: "created", daysAgo: 50, authorId: RAFA, toStage: "to_contact" },
         {
@@ -296,6 +419,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       links: ["https://soundcloud.com/afterhours-demo"],
       followUpOffsetDays: null,
       linkedPersonaId: "sp-jordan-afterhours",
+      assignees: [MARTA, RAFA, JOANA, BEA, VIEWER],
       entries: [
         { kind: "created", daysAgo: 90, authorId: null, toStage: "to_contact" },
         {
@@ -318,6 +442,36 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
           body: "Closing set confirmed for every second Saturday",
         },
         {
+          kind: "assignee_added",
+          daysAgo: 50,
+          authorId: MARTA,
+          subjectId: MARTA,
+        },
+        {
+          kind: "assignee_added",
+          daysAgo: 40,
+          authorId: RAFA,
+          subjectId: RAFA,
+        },
+        {
+          kind: "assignee_added",
+          daysAgo: 35,
+          authorId: MARTA,
+          subjectId: JOANA,
+        },
+        {
+          kind: "assignee_added",
+          daysAgo: 30,
+          authorId: RAFA,
+          subjectId: BEA,
+        },
+        {
+          kind: "assignee_added",
+          daysAgo: 25,
+          authorId: MARTA,
+          subjectId: VIEWER,
+        },
+        {
           kind: "persona_linked",
           daysAgo: 15,
           authorId: RAFA,
@@ -336,6 +490,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       links: ["https://livrariapo.example"],
       followUpOffsetDays: 12,
       linkedPersonaId: null,
+      assignees: [VIEWER],
       entries: [
         {
           kind: "created",
@@ -369,6 +524,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       links: ["https://instagram.com/zinetinta.demo"],
       followUpOffsetDays: null,
       linkedPersonaId: null,
+      assignees: [],
       entries: [
         { kind: "created", daysAgo: 4, authorId: RAFA, toStage: "to_contact" },
         {
@@ -390,6 +546,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       links: ["https://x.com/coletivomare_demo"],
       followUpOffsetDays: -1,
       linkedPersonaId: null,
+      assignees: [VIEWER],
       entries: [
         {
           kind: "created",
@@ -426,6 +583,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       ],
       followUpOffsetDays: null,
       linkedPersonaId: null,
+      assignees: [],
       entries: [
         { kind: "created", daysAgo: 70, authorId: RAFA, toStage: "to_contact" },
         {
@@ -454,6 +612,7 @@ export const DEMO_LEADS_SEED: DemoLeadsSeed = {
       links: ["https://salaambar.example"],
       followUpOffsetDays: 2,
       linkedPersonaId: null,
+      assignees: [INES],
       entries: [
         { kind: "created", daysAgo: 3, authorId: MARTA, toStage: "to_contact" },
         {

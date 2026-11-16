@@ -1,7 +1,13 @@
-import { useRef, useState } from "react";
-import { Button, FadeIn, SegmentedControl } from "../../shared/components/ui";
+import { useId, useRef, useState } from "react";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminSeg,
+  AdminTabs,
+} from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -68,6 +74,7 @@ const VIEWS: PageView[] = ["reviewQueue", "directOverride"];
 export function AdminVerificationsPage() {
   const { t } = useTranslation();
   const [view, setView] = useState<PageView>("reviewQueue");
+  const viewLabelId = useId();
 
   return (
     <AdminShell
@@ -83,7 +90,7 @@ export function AdminVerificationsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:verifications.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:verifications.title"
@@ -91,18 +98,22 @@ export function AdminVerificationsPage() {
             />
           }
           sub={t("admin:verifications.sub")}
-        />
-      </FadeIn>
-
-      <FadeIn delay={50}>
-        <SegmentedControl
-          label={t("admin:verifications.segment.ariaLabel")}
-          options={VIEWS.map((viewOption) => ({
-            value: viewOption,
-            label: t(`admin:verifications.segment.${viewOption}`),
-          }))}
-          value={view}
-          onChange={(nextView) => setView(nextView as PageView)}
+          actions={
+            <>
+              <span id={viewLabelId} className="visuallyHidden">
+                {t("admin:verifications.segment.ariaLabel")}
+              </span>
+              <AdminSeg
+                ariaLabelledby={viewLabelId}
+                options={VIEWS.map((viewOption) => ({
+                  value: viewOption,
+                  label: t(`admin:verifications.segment.${viewOption}`),
+                }))}
+                value={view}
+                onChange={(nextView) => setView(nextView as PageView)}
+              />
+            </>
+          }
         />
       </FadeIn>
 
@@ -275,16 +286,15 @@ function ReviewQueueSegment() {
           onQueryChange={handleQueryChange}
           onSortChange={handleSortChange}
           searchInputWrapperRef={searchWrapperRef}
+          end={
+            <QueueAssignmentFilter
+              isInline
+              value={assignmentFilter}
+              onChange={handleAssignmentFilterChange}
+            />
+          }
         />
       </FadeIn>
-
-      {/* Above the rows rather than among them: "Assigned to me" can
-          legitimately match nothing, and a control that vanished with the rows
-          would leave a reviewer no way back to "everything". */}
-      <QueueAssignmentFilter
-        value={assignmentFilter}
-        onChange={handleAssignmentFilterChange}
-      />
 
       <p className={styles.keyboardHint}>
         {t("admin:verifications.requests.keyboard.hint")}
@@ -376,7 +386,11 @@ function DirectOverrideSegment() {
 
   return (
     <>
-      <p className={styles.honesty}>{t("admin:verifications.honesty")}</p>
+      <div className={styles.honesty}>
+        <AdminNotice tone="info" liveRole="none">
+          {t("admin:verifications.honesty")}
+        </AdminNotice>
+      </div>
 
       <FadeIn delay={60}>
         <AdminTabs
@@ -408,9 +422,10 @@ function DirectOverrideSegment() {
         ) : isError && rows.length === 0 ? (
           <VerificationsErrorState onRetry={() => void refetch()} />
         ) : rows.length === 0 ? (
-          <p className={submissionStyles.emptyLine}>
-            {t("admin:verifications.empty")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            title={t("admin:verifications.empty")}
+          />
         ) : (
           <>
             <AdminVerificationRows rows={rows} onOpen={setSelectedUserId} />

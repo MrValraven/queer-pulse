@@ -1,7 +1,15 @@
 import { useState } from "react";
+import { FiFeather } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
+import {
+  AdminEmptyState,
+  AdminNotice,
+  AdminPageHeader,
+  AdminTabs,
+  AdminChip,
+  type AdminTone,
+} from "./ui";
 import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -16,6 +24,7 @@ import type {
   CommissionCategory,
 } from "./api/adminCommissionInterests.api";
 import styles from "./AdminSubmissionList.module.css";
+import stateStyles from "./AdminInboxStates.module.css";
 
 const FILTERS: AdminCommissionCategoryFilter[] = [
   "all",
@@ -127,7 +136,7 @@ export function AdminCommissionInterestsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminCommissionInterests.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.editorial")}
           title={
             <Translation
               i18nKey="admin:adminCommissionInterests.header.title"
@@ -158,13 +167,17 @@ export function AdminCommissionInterestsPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminCommissionInterests.error")}
-          </p>
+          <div className={stateStyles.notice}>
+            <AdminNotice tone="error">
+              {t("admin:adminCommissionInterests.error")}
+            </AdminNotice>
+          </div>
         ) : interests.length === 0 ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminCommissionInterests.empty")}
-          </p>
+          <AdminEmptyState
+            size="inline"
+            icon={FiFeather}
+            title={t("admin:adminCommissionInterests.empty")}
+          />
         ) : (
           <>
             <div className={styles.rows}>

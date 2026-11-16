@@ -4,8 +4,8 @@
    all track the same active section, so "which part of what members read am I
    changing" is answered in three places at once. */
 
-/* Both side columns fold, so the widths are tokens the collapse classes swap
-   rather than three hand-written grid templates per breakpoint. */
+/* Both side columns fold, so the widths are tokens the collapse classes swap,
+   which saves three hand-written grid templates per breakpoint. */
 .wrap {
   --policy-rail-w: 184px;
   --policy-preview-w: 420px;
@@ -42,8 +42,8 @@
   }
 }
 
-/* The preview's own toggle, for the widths where it lives in a drawer rather
-   than in the third column. */
+/* The preview's own toggle, for the widths where it lives in a drawer and the
+   third column is gone. */
 .previewToggleRow {
   display: none;
 }
@@ -100,7 +100,7 @@
   padding-bottom: 6px;
 }
 /* With the heading spoken-only there is nothing to sit beside, so the control
-   centres over the icon column instead of hugging its right edge. */
+   centres over the icon column. */
 .railCollapsed .railToggle {
   margin: 0 auto;
 }
@@ -377,8 +377,7 @@
 .langField + .langField {
   margin-top: 7px;
 }
-/* Every input in a row is the same 36px so the grid reads as a table, not as a
-   form. */
+/* Every input in a row is the same 36px so the grid reads as a table. */
 .cell input,
 .cell textarea {
   width: 100%;
@@ -416,7 +415,7 @@
   font-variant-numeric: tabular-nums;
 }
 /* A figure the backend recomputes on every read and every save. Shown, dashed
-   and locked, rather than hidden, so the row still carries the live count. */
+   and locked, so the row still carries the live count. */
 .readOnly {
   display: inline-flex;
   align-items: center;
@@ -444,12 +443,14 @@
   min-height: 36px;
   min-width: 0;
 }
+/* Wraps onto a second line in a narrow cell, so the whole phrase stays
+   readable. */
 .directionText {
+  min-width: 0;
   font-size: var(--text-12-5);
+  line-height: 1.35;
   color: var(--ink-60);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 .selectRow {
   display: flex;
@@ -557,7 +558,7 @@
   border-radius: var(--radius-16);
   background: var(--plum);
   /* Locked-dark fill: --plum does not flip, so its type is written on the
-     cream channels rather than on --cream, which does. */
+     cream channels; --cream itself flips. */
   color: rgba(var(--cream-rgb), 1);
   box-shadow: var(--shadow-e3);
   transition:
@@ -598,7 +599,7 @@
   align-items: center;
   gap: 8px;
 }
-/* A blocked save says why in the bar rather than only on the attempt. */
+/* A blocked save says why in the bar, ahead of the attempt. */
 .barBlocked {
   flex-basis: 100%;
   margin: 0;
@@ -725,29 +726,10 @@
   box-shadow: var(--ring-jade);
   flex-shrink: 0;
 }
+/* The zoom switch is the kit's segmented control; this only pushes it to
+   the end of the head row. */
 .previewZoom {
   margin-left: auto;
-  display: flex;
-  gap: 2px;
-  background: rgba(var(--line-rgb), 0.06);
-  border-radius: var(--radius-9);
-  padding: 3px;
-}
-.previewZoomBtn {
-  font-family: var(--sans);
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  color: var(--ink-60);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-7);
-  padding: 4px 9px;
-  cursor: pointer;
-}
-.previewZoomBtnOn {
-  background: var(--paper);
-  color: var(--text-strong);
-  box-shadow: var(--shadow-e1);
 }
 .previewFrame {
   border: 1px solid rgba(var(--line-rgb), 0.14);
@@ -775,8 +757,8 @@
   text-overflow: ellipsis;
 }
 /* The preview renders through the SAME i18n instance as the console around it,
-   so it can only ever show the language the console is in. Stated, rather than
-   offered as a switch that would silently show English under a PT label. */
+   so it can only ever show the language the console is in. It is stated as a
+   fact; a switch would silently show English under a PT label. */
 .previewLang {
   font-size: var(--text-11);
   font-weight: 700;
@@ -813,8 +795,8 @@
   color: var(--accent-ink);
   font-weight: 600;
 }
-/* Inside the drawer the frame owns the drawer's height instead of the
-   viewport's, and the sticky wrapper has nothing to stick to. */
+/* Inside the drawer the frame owns the drawer's height, and the sticky
+   wrapper has nothing to stick to. */
 .previewInDrawer {
   position: static;
   display: block;
@@ -1158,7 +1140,7 @@
 }
 
 /* ── Folded preview ───────────────────────────────────────────────────────── */
-/* The panel itself is unmounted while folded — all that stays is the tab that
+/* The panel itself is unmounted while folded; all that stays is the tab that
    brings it back, sticky beside the editors like the panel it replaces. */
 .previewCollapseBtn {
   display: grid;

@@ -1,200 +1,85 @@
 /* The staff triage console (/admin/queues, PRD-282).
    One screen that answers "is anything overdue right now?" before it answers
-   anything else. Tokens only: no raw hex, no raw channel triples, no literal
-   type size, radius or shadow. */
-
-.headerActions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.asOf {
-  font-size: var(--text-caption);
-  color: var(--ink-40);
-  font-variant-numeric: tabular-nums;
-}
+   anything else. The header, notice, stat tiles, table and empty states come
+   from the admin kit; this file holds only what is specific to the queues.
+   Every colour, type size, radius and shadow comes from a token. */
 
 .skeleton {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 20px;
 }
 
-/* ── The verdict: is anything overdue at all ────────────────────────────── */
-
-.verdict {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  padding: 18px 20px;
-  border-radius: var(--radius-panel);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-}
-
-/* A breached deadline is the reason this screen exists, so the panel itself
-   carries the danger edge. The words and the icon say it too: colour is never
-   the only signal here. */
-.verdictOverdue {
-  border-color: rgba(var(--danger-rgb), 0.28);
-  background: rgba(var(--danger-rgb), 0.05);
-}
-
-.verdictIcon {
-  display: inline-flex;
-  font-size: var(--text-24);
-  flex: none;
-}
-
-.verdictText {
-  flex: 1 1 240px;
-  min-width: 0;
-}
-
-.verdictTitle {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-22);
-  line-height: 1.2;
-  color: var(--text-strong);
-}
-
-.verdictBody {
-  margin: 4px 0 0;
-  font-size: var(--text-body-sm);
-  color: var(--ink-60);
-  line-height: 1.5;
-}
-
-/* The one hero figure on the screen. Sans (inherited), proportional figures:
-   tabular widths make a standalone number at display size read loose. It only
-   renders when something has actually breached, so a calm desk never carries a
-   large red digit. */
-.hero {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin: 0;
-  flex: 0 0 auto;
-}
-
-.heroValue {
-  font-size: var(--text-48);
-  font-weight: 700;
-  line-height: 1;
-  color: var(--danger);
-}
-
-.heroLabel {
-  font-size: var(--text-caption);
-  font-weight: 600;
-  color: var(--danger);
-  max-width: 12ch;
-  line-height: 1.3;
-}
-
-/* ── The supporting counts ──────────────────────────────────────────────── */
-
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.tile {
+/* The verdict notice, the tiles, the table and the folded clear queues. */
+.stack {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 14px 16px;
-  border-radius: var(--radius-badge);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-}
-
-.tileLabel {
-  font-size: var(--text-label);
-  font-weight: 600;
-  color: var(--ink-60);
-}
-
-.tileValue {
-  font-size: var(--text-28);
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--text-strong);
-}
-
-.tileNote {
-  font-size: var(--text-caption);
-  color: var(--ink-40);
-  line-height: 1.4;
+  gap: var(--admin-section-gap);
 }
 
 /* ── The queue table ────────────────────────────────────────────────────── */
 
-/* Wide content scrolls inside its own box; the page body never scrolls
-   sideways on a phone. */
-.tableScroll {
-  margin-top: 18px;
-  overflow-x: auto;
-  border-radius: var(--radius-panel);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  background: var(--paper);
+/* Under 480px the four columns do not fit, and the Deadline column used to be
+   the one that scrolled out of sight. Each row becomes a small card: the
+   queue name on its own line and the three figures side by side beneath it,
+   each with its column label (carried on the cell as `data-label`). */
+@media (max-width: 479.98px) {
+  .tableScope table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .tableScope table tbody tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px 12px;
+    padding: 12px;
+    border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+  }
+  .tableScope table tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .tableScope table tbody th[scope="row"] {
+    grid-column: 1 / -1;
+    height: auto;
+    min-width: 0;
+    padding: 0 0 0 10px;
+    border-bottom: 0;
+  }
+  .tableScope table tbody td {
+    height: auto;
+    padding: 0;
+    border-bottom: 0;
+    text-align: start;
+    white-space: normal;
+  }
+  .tableScope table tbody td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-size: var(--text-11);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-60);
+  }
 }
 
-.table {
-  width: 100%;
-  min-width: 520px;
-  border-collapse: collapse;
-  font-size: var(--text-body-sm);
-}
-
-.table thead th {
-  padding: 10px 14px;
-  text-align: start;
-  font-size: var(--text-label);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  background: var(--paper);
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
-  white-space: nowrap;
-}
-
-.table tbody td,
-.table tbody th {
-  padding: 12px 14px;
-  text-align: start;
-  font-weight: 400;
-  vertical-align: middle;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
-}
-
-.table tbody tr:last-child td,
-.table tbody tr:last-child th {
-  border-bottom: 0;
+/* The queue name is a row header; the kit already styles it as a body cell. */
+.cellQueue {
+  min-width: 180px;
 }
 
 /* The overdue rail. Paired with the row's own "N overdue" words and triangle,
-   so the tint is a second signal rather than the only one. */
+   so the tint is a second signal beside the colour. */
 .rowOverdue {
   background: rgba(var(--danger-rgb), 0.05);
 }
 
-.rowOverdue .cellQueue {
-  border-inline-start: 3px solid var(--danger);
-  padding-inline-start: 11px;
-}
-
-.cellQueue {
-  min-width: 180px;
+tbody tr.rowOverdue th.cellQueue {
+  box-shadow: inset 3px 0 0 var(--danger);
 }
 
 .queueLink {
@@ -215,14 +100,7 @@
   border-radius: var(--radius-4);
 }
 
-/* A column of numbers is the one place tabular figures belong: they line up. */
-.cellNumber {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.cellAge,
-.cellDeadline {
+.noWrap {
   white-space: nowrap;
 }
 
@@ -257,7 +135,6 @@
 /* ── The queues with nothing in them ────────────────────────────────────── */
 
 .clear {
-  margin-top: 16px;
   padding: 12px 16px;
   border-radius: var(--radius-badge);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -301,9 +178,6 @@
   border-radius: var(--radius-4);
 }
 
-:global([data-theme="dark"]) .verdict,
-:global([data-theme="dark"]) .tile,
-:global([data-theme="dark"]) .tableScroll,
 :global([data-theme="dark"]) .clear {
   border-color: rgba(var(--cream-rgb), 0.1);
 }

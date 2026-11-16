@@ -792,7 +792,6 @@ export const quizshow: Catalog = {
   "templates.unpublished":
     "Modelo despublicado. As cópias de quem organiza ficam como estão",
   "templates.list.title": "Modelos de <em>quiz</em>",
-  "templates.list.eyebrow": "Pulse Live",
   "templates.list.sub":
     "Quem organiza começa quizzes de eventos e jogos a partir dos modelos que publicas aqui. Os rascunhos ficam com a nossa equipa até os publicares",
   "templates.list.breadcrumb": "Modelos de quiz",

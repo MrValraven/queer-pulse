@@ -31,6 +31,7 @@ function leadWith(overrides: Partial<LeadDTO> = {}): LeadDTO {
     createdAt: "2026-10-01T10:00:00.000Z",
     updatedAt: "2026-10-20T10:00:00.000Z",
     entries: [],
+    assignees: [],
     ...overrides,
   };
 }

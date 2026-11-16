@@ -1,21 +1,23 @@
-/* Platform log. The row styles follow the dashboard's "Live activity" feed
-   (AdminDashboardPage.module.css, .fItem/.fIco/.fTx) so the two read as one
-   family: the dashboard shows the latest few, this page the full record. */
+/* Platform log: the full record behind the Overview's "Live activity" panel.
+   The toolbar, panel, day header and row list come from the admin kit (the
+   same row list as the Overview's feed); this file holds the toolbar's
+   labelled groups, the member chip and what sits inside a row. */
 
 /* ── Filter bar ──────────────────────────────────────────────────────────── */
-.filterBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px 24px;
-  margin-bottom: 22px;
+.filterFocus {
+  margin-bottom: var(--admin-section-gap);
+}
+
+/* The page parks focus on the toolbar group once every filter is cleared. */
+.filterFocus > [role="group"] {
+  border-radius: var(--radius-12);
 }
 
 .filterGroup {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -27,7 +29,7 @@
   color: var(--ink-60);
 }
 
-.rangeSelect {
+.filterGroup .rangeSelect {
   min-width: 180px;
 }
 
@@ -74,7 +76,7 @@
   }
 }
 
-.filterBar:focus-visible,
+.filterFocus > [role="group"]:focus-visible,
 .memberChip:focus-visible,
 .memberClear:focus-visible,
 .partyButton:focus-visible,
@@ -85,25 +87,15 @@
   box-shadow: var(--ring-cream);
 }
 
-/* ── Log card ────────────────────────────────────────────────────────────── */
-.card {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  padding: 8px 20px 16px;
-}
-
-.day + .day {
-  margin-top: 10px;
-}
-
+/* ── Log panel ───────────────────────────────────────────────────────────── */
+/* Each day opens on the kit's header band. */
 .dayHeading {
-  margin: 18px 6px 4px;
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-60);
+  margin: 0;
+  padding-inline: var(--admin-panel-pad);
+}
+
+.day + .day .dayHeading {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .list {
@@ -112,15 +104,13 @@
   list-style: none;
 }
 
-.row {
-  display: flex;
+/* The kit row brings the hairline and the hover tint; an entry reads from
+   its top line, so its icon and text align to the top. */
+.list > .row {
   align-items: flex-start;
   gap: 11px;
-  padding: 11px 6px;
-}
-
-.row + .row {
-  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+  padding: var(--admin-row-pad);
+  padding-inline: var(--admin-panel-pad);
 }
 
 .icon {
@@ -269,20 +259,18 @@ a.subject {
 }
 
 .skeletonRow {
-  padding: 11px 6px;
+  padding: var(--admin-row-pad);
+  padding-inline: var(--admin-panel-pad);
 }
 
 .loadMore {
-  margin-top: 12px;
+  padding: var(--admin-band-pad);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 
 @media (max-width: 640px) {
-  .card {
-    padding: 4px 12px 12px;
-  }
-
   .filterGroup,
-  .rangeSelect {
+  .filterGroup .rangeSelect {
     flex: 1 1 100%;
   }
 }

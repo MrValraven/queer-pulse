@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { AdminAvatar, AdminChip } from "./ui";
+import { AdminAvatar, AdminChip, AdminEmptyState } from "./ui";
 import { AdminMemberRow } from "./AdminMemberRow";
 import type { AdminMember, FlaggedMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
@@ -19,7 +19,7 @@ export function AdminMemberRows({
 }) {
   const { t } = useTranslation();
   if (members.length === 0) {
-    return <p className={styles.emptyLine}>{t("admin:members.empty")}</p>;
+    return <AdminEmptyState size="inline" title={t("admin:members.empty")} />;
   }
   return (
     <div className={styles.rows}>
@@ -60,7 +60,7 @@ export function AdminFlaggedRows({
 
 /**
  * One flagged row carries two destinations, so it is a plain container
- * holding two SIBLING controls rather than one control nested in the other:
+ * holding two SIBLING controls (HTML forbids nesting one control in another):
  * the identity half is a button that opens the member drawer, and "Open
  * reports" is a link into the moderation queue narrowed to this member's
  * reports. The queue matches a report's `subjectId` against the member's

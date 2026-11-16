@@ -7,11 +7,13 @@ import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
 import { useDemoAwareMutation } from "../../api/demoAwareMutation";
 import {
   addLeadNote,
+  assignLeadStaff,
   createLead,
   deleteLead,
   deleteLeadNote,
   editLeadNote,
   revertLeadStageChange,
+  unassignLeadStaff,
   updateLead,
 } from "./leads.api";
 import { leadKeys } from "./leadKeys";
@@ -35,6 +37,13 @@ const STALE_LEAD_REASONS: ReadonlySet<LeadReasonCode> = new Set([
   "LEAD_NOTE_NOT_FOUND",
   "LEAD_ENTRY_NOT_FOUND",
   "LEAD_ENTRY_NOT_REVERTIBLE",
+]);
+
+/** Refusals that mean the staff search showed someone who can no longer
+ *  hold a lead. */
+const STALE_STAFF_REASONS: ReadonlySet<LeadReasonCode> = new Set([
+  "LEAD_ASSIGNEE_NOT_STAFF",
+  "LEAD_ASSIGNEE_NOT_FOUND",
 ]);
 
 /** Each control shows its own reason line, so the global toast stays quiet.
@@ -99,6 +108,19 @@ function useLeadCache() {
     invalidate(leadKeys.listRoot);
     invalidate(leadKeys.dueCountRoot);
   };
+  // An assignee refusal means the picker or the lead was stale: the person
+  // left staff or is gone, so the staff search reads again; the lead filled
+  // up in another tab, so the lead reads again.
+  const refreshAfterAssigneeRefusal = (cause: unknown, leadId: string) => {
+    refetchIfGone(cause, leadId);
+    const reason = leadReasonOf(cause);
+    if (reason !== null && STALE_STAFF_REASONS.has(reason)) {
+      invalidate(leadKeys.staffSearchRoot);
+    }
+    if (reason === "LEAD_TOO_MANY_ASSIGNEES") {
+      invalidate([...leadKeys.detailRoot, leadId]);
+    }
+  };
   return {
     demoMode,
     saveLead,
@@ -106,6 +128,7 @@ function useLeadCache() {
     refreshPersonaSearch,
     dropLead,
     refetchIfGone,
+    refreshAfterAssigneeRefusal,
   };
 }
 
@@ -312,6 +335,43 @@ export function useDeleteLeadNote(
       (await loadDemoStore()).demoDeleteLeadNote(leadId, entryId),
     live: ({ entryId }) => deleteLeadNote(leadId, entryId),
     onError: (cause) => refetchIfGone(cause, leadId),
+    onSuccess: (lead) => saveLead(lead),
+  });
+}
+
+/** POST /admin/leads/:id/assignees. The staff search stays as it is after
+ *  a success, since an assignment changes no picker row. */
+export function useAssignLeadStaff(
+  leadId: string,
+): UseMutationResult<LeadDTO, Error, { userId: string }> {
+  const { demoMode, saveLead, refreshAfterAssigneeRefusal } = useLeadCache();
+  return useDemoAwareMutation<LeadDTO, Error, { userId: string }>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: SILENT_META,
+    mutationKey: LEAD_WRITE_KEY,
+    demoResult: async ({ userId }) =>
+      (await loadDemoStore()).demoAssignLeadStaff(leadId, { userId }),
+    live: ({ userId }) => assignLeadStaff(leadId, { userId }),
+    onError: (cause) => refreshAfterAssigneeRefusal(cause, leadId),
+    onSuccess: (lead) => saveLead(lead),
+  });
+}
+
+/** DELETE /admin/leads/:id/assignees/:userId. */
+export function useUnassignLeadStaff(
+  leadId: string,
+): UseMutationResult<LeadDTO, Error, { userId: string }> {
+  const { demoMode, saveLead, refreshAfterAssigneeRefusal } = useLeadCache();
+  return useDemoAwareMutation<LeadDTO, Error, { userId: string }>({
+    demoMode,
+    demoLatencyMs: 0,
+    meta: SILENT_META,
+    mutationKey: LEAD_WRITE_KEY,
+    demoResult: async ({ userId }) =>
+      (await loadDemoStore()).demoUnassignLeadStaff(leadId, userId),
+    live: ({ userId }) => unassignLeadStaff(leadId, userId),
+    onError: (cause) => refreshAfterAssigneeRefusal(cause, leadId),
     onSuccess: (lead) => saveLead(lead),
   });
 }

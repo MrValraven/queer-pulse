@@ -1,14 +1,10 @@
 import { FiZap } from "react-icons/fi";
-import {
-  EmptyState,
-  FadeIn,
-  SkeletonLine,
-} from "../../../shared/components/ui";
+import { FadeIn, SkeletonLine } from "../../../shared/components/ui";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { AdminPageHeader } from "../ui";
+import { AdminEmptyState, AdminPageHeader, AdminPanel } from "../ui";
 import { useEarlyAccessFeatures } from "../api/useAdminEarlyAccess";
 import {
   AdminEarlyAccessLoadFailed,
@@ -17,14 +13,16 @@ import {
 } from "./AdminEarlyAccessRosterSection";
 import styles from "./AdminEarlyAccessPage.module.css";
 
-/** One section in outline: the heading line, then the rows. */
+/** One panel in outline: the heading line, then the rows. */
 function PageSkeleton() {
   return (
-    <div className={styles.section} aria-hidden>
-      <SkeletonLine width={200} height={22} />
-      <SkeletonLine width="50%" height={12} />
+    <AdminPanel as="div" padding="flush">
+      <div className={styles.skeletonHead} aria-hidden>
+        <SkeletonLine width={200} height={22} />
+        <SkeletonLine width="50%" height={12} />
+      </div>
       <AdminEarlyAccessRowsSkeleton />
-    </div>
+    </AdminPanel>
   );
 }
 
@@ -77,10 +75,8 @@ export function AdminEarlyAccessPage() {
       ) : features.data === undefined ? (
         <PageSkeleton />
       ) : featureList.length === 0 ? (
-        <EmptyState
-          compact
-          headingLevel={2}
-          icon={<FiZap aria-hidden />}
+        <AdminEmptyState
+          icon={FiZap}
           title={t("admin:earlyAccess.page.empty")}
         />
       ) : (

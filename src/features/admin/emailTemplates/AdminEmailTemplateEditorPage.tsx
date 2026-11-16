@@ -56,7 +56,7 @@ export function AdminEmailTemplateEditorPage() {
         label={t("admin:emailTemplates.editor.allTemplates")}
       />
       <AdminPageHeader
-        eyebrow={t("admin:emailTemplates.eyebrow")}
+        eyebrow={t("shared:adminNav.sections.people")}
         title={title}
       />
       {templateId === null ? (

@@ -47,6 +47,9 @@ export function CommandPalette() {
   // Global open triggers: ⌘K / Ctrl+K and the custom event.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // The admin console binds Cmd/Ctrl+K to its own palette of console
+      // pages, so under /admin the shortcut belongs to that one alone.
+      if (window.location.pathname.startsWith("/admin")) return;
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setOpen((isOpen) => !isOpen);

@@ -1,32 +1,33 @@
-/* Status-incident desk (ID-16). Tokens only — no raw hex, no raw channels. */
+/* Status-incident desk (ID-16). Tokens only. */
 
-.notice {
-  margin: 0 0 16px;
-  padding: 14px 16px;
-  border-radius: var(--radius-14);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  color: var(--ink-60);
+/* The kit owns the header, notices, empty state, panel and row look. This file
+   holds the incident row layout and the editor drawer form. */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-section-gap);
 }
 
+.skeletons {
+  display: grid;
+  gap: var(--gap-xs);
+}
+
+/* An incident row is taller than a table row: title, two meta lines and the
+   actions, so it grows and wraps and takes no fixed height. */
 .rows {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 10px;
 }
 
 .row {
-  display: flex;
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 14px;
-  padding: 16px 18px;
-  border-radius: var(--radius-14);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
+  gap: var(--gap-sm);
+  padding: var(--admin-row-pad);
 }
 
 .rowMain {
@@ -38,7 +39,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--gap-xs);
   margin-bottom: 6px;
 }
 
@@ -51,44 +52,13 @@
 .rowMeta {
   margin: 0;
   font-size: var(--text-13-5);
-  color: var(--ink-40);
+  color: var(--ink-60);
   overflow-wrap: anywhere;
 }
 
+/* The kit's AdminRowActions lays the buttons out. */
 .rowActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* State pill: icon + words. Colour never carries the meaning on its own. */
-
-.statePill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 11px;
-  border-radius: var(--radius-pill);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  white-space: nowrap;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-}
-
-.stateOpen {
-  color: var(--accent-text);
-  background: rgba(var(--accent-rgb), 0.14);
-}
-
-.stateMonitoring {
-  color: var(--amber-ink);
-  background: rgba(var(--amber-rgb), 0.16);
-}
-
-.stateResolved {
-  color: var(--jade-ink);
-  background: rgba(var(--jade-rgb), 0.12);
+  flex-shrink: 0;
 }
 
 /* ── Editor drawer ──────────────────────────────────────────────────────── */

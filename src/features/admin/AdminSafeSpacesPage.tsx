@@ -10,6 +10,7 @@ import { AdminPageHeader, AdminTabs } from "./ui";
 import { AdminSafeSpaceListingsPanel } from "./AdminSafeSpaceListingsPanel";
 import { AdminSafeSpaceNominationsPanel } from "./AdminSafeSpaceNominationsPanel";
 import { AdminSafeSpaceFlagsPanel } from "./AdminSafeSpaceFlagsPanel";
+import styles from "./AdminSafeSpacesPage.module.css";
 
 type PaneId = "nominations" | "flags" | "listings";
 
@@ -54,7 +55,7 @@ export function AdminSafeSpacesPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminSafeSpaces.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:adminSafeSpaces.header.title"
@@ -65,26 +66,28 @@ export function AdminSafeSpacesPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={50}>
-        <AdminTabs
-          active={activePane}
-          onChange={(id) => setPane(id as PaneId)}
-          tabs={[
-            {
-              id: "nominations",
-              label: t("safety:governance.tab.nominations"),
-            },
-            ...(canReadFlags
-              ? [{ id: "flags", label: t("safety:governance.tab.flags") }]
-              : []),
-            { id: "listings", label: t("safety:governance.tab.listings") },
-          ]}
-        />
-      </FadeIn>
+      <div className={styles.body}>
+        <FadeIn delay={50}>
+          <AdminTabs
+            active={activePane}
+            onChange={(id) => setPane(id as PaneId)}
+            tabs={[
+              {
+                id: "nominations",
+                label: t("safety:governance.tab.nominations"),
+              },
+              ...(canReadFlags
+                ? [{ id: "flags", label: t("safety:governance.tab.flags") }]
+                : []),
+              { id: "listings", label: t("safety:governance.tab.listings") },
+            ]}
+          />
+        </FadeIn>
 
-      {activePane === "nominations" && <AdminSafeSpaceNominationsPanel />}
-      {activePane === "flags" && <AdminSafeSpaceFlagsPanel />}
-      {activePane === "listings" && <AdminSafeSpaceListingsPanel />}
+        {activePane === "nominations" && <AdminSafeSpaceNominationsPanel />}
+        {activePane === "flags" && <AdminSafeSpaceFlagsPanel />}
+        {activePane === "listings" && <AdminSafeSpaceListingsPanel />}
+      </div>
     </AdminShell>
   );
 }

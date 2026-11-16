@@ -1,0 +1,6 @@
+/* The wrapper gives the tab strip its gap to the view below. The strip itself
+   (AdminTabs) scrolls sideways when a long PT label set outgrows the column. */
+.viewTabs {
+  margin-bottom: var(--admin-header-gap);
+  min-width: 0;
+}

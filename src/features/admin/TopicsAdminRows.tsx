@@ -1,6 +1,8 @@
 import { Button } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminChip } from "./ui";
+import { AdminChip, AdminRowActions, adminTableClasses } from "./ui";
+import { ListingOverflowMenu } from "./ListingOverflowMenu";
 import type { AdminTopicDTO } from "./api/topicsAdmin.api";
 import styles from "./TopicsAdminPage.module.css";
 
@@ -10,7 +12,8 @@ const DESCRIPTION_PREVIEW_LENGTH = 160;
 
 /**
  * One row per topic: the tag, its label and description, what it has drawn so
- * far, and the four things staff can do to it.
+ * far, and the things staff can do to it: Edit in the row, Archive (or
+ * Restore) and Delete in its menu.
  *
  * Archive is offered before delete, and delete is the only destructive one.
  * Archiving keeps the posts and the followers, so a topic that stopped earning
@@ -28,8 +31,9 @@ export function TopicsAdminRows({
   onDelete: (topic: AdminTopicDTO) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
-    <div className={styles.rows}>
+    <div>
       {topics.map((topic) => {
         const preview =
           topic.description.length > DESCRIPTION_PREVIEW_LENGTH
@@ -38,7 +42,11 @@ export function TopicsAdminRows({
         return (
           <div
             key={topic.id}
-            className={[styles.row, topic.isArchived && styles.rowArchived]
+            className={[
+              adminTableClasses.row,
+              styles.row,
+              topic.isArchived && styles.rowArchived,
+            ]
               .filter(Boolean)
               .join(" ")}
           >
@@ -59,33 +67,46 @@ export function TopicsAdminRows({
               </div>
               <p className={styles.rowBody}>{preview}</p>
               <p className={styles.rowStats}>
-                {t("admin:topics.postsCount", { count: topic.totalPosts })}
+                {t("admin:topics.postsCount", {
+                  count: topic.totalPosts,
+                  countLabel: fmt.number(topic.totalPosts),
+                })}
                 {" · "}
                 {t("admin:topics.followersCount", {
                   count: topic.followerCount,
+                  countLabel: fmt.number(topic.followerCount),
                 })}
               </p>
             </div>
 
-            <div className={styles.rowActions}>
-              <Button variant="ghost" size="md" onClick={() => onEdit(topic)}>
+            <AdminRowActions className={styles.rowActions}>
+              <Button variant="ghost" size="sm" onClick={() => onEdit(topic)}>
                 {t("admin:common.edit")}
               </Button>
-              <Button
-                variant="ghost"
-                size="md"
-                onClick={() => onSetArchived(topic, !topic.isArchived)}
-              >
-                {t(
-                  topic.isArchived
-                    ? "admin:topics.restoreCta"
-                    : "admin:topics.archiveCta",
-                )}
-              </Button>
-              <Button variant="ghost" size="md" onClick={() => onDelete(topic)}>
-                {t("admin:common.delete")}
-              </Button>
-            </div>
+              <ListingOverflowMenu
+                ariaLabel={t("admin:adminListings.actions.moreAriaLabel", {
+                  name: `#${topic.tag}`,
+                })}
+                disabled={false}
+                items={[
+                  {
+                    key: "archive",
+                    label: t(
+                      topic.isArchived
+                        ? "admin:topics.restoreCta"
+                        : "admin:topics.archiveCta",
+                    ),
+                    onSelect: () => onSetArchived(topic, !topic.isArchived),
+                  },
+                  {
+                    key: "delete",
+                    label: t("admin:common.delete"),
+                    tone: "danger",
+                    onSelect: () => onDelete(topic),
+                  },
+                ]}
+              />
+            </AdminRowActions>
           </div>
         );
       })}

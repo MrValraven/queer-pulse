@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiChevronUp, FiChevronDown, FiTrash2 } from "react-icons/fi";
+import { FiChevronUp, FiChevronDown, FiHome, FiTrash2 } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import {
   Avatar,
   Button,
   ConfirmDialog,
-  EmptyState,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName, leadingInitials } from "../../shared/lib/initials";
-import { AdminChip, AdminToggle } from "./ui";
+import { AdminChip, AdminEmptyState, AdminToggle } from "./ui";
 import { AdminLandingFeatureEditor } from "./AdminLandingFeatureEditor";
 import { isPersonSection } from "./adminLandingCopyFields.utils";
 import {
@@ -83,9 +82,10 @@ export function AdminLandingFeatureList({
 
   if (features.length === 0) {
     return (
-      <EmptyState
+      <AdminEmptyState
+        icon={FiHome}
         title={t(`admin:landing.list.empty.${section}.title`)}
-        description={t(`admin:landing.list.empty.${section}.body`)}
+        body={t(`admin:landing.list.empty.${section}.body`)}
       />
     );
   }

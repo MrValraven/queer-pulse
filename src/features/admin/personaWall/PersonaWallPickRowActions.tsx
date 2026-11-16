@@ -2,6 +2,7 @@ import type { Ref } from "react";
 import { FiArrowDown, FiArrowUp, FiX } from "react-icons/fi";
 import { IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AdminRowActions } from "../ui";
 import css from "./PersonaWallPicks.module.css";
 
 /** A pick row's three icon actions: Move up, Move down and Remove from
@@ -30,7 +31,7 @@ export function PersonaWallPickRowActions({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={css.actions}>
+    <AdminRowActions className={css.actions}>
       <IconButton
         ref={moveUpRef}
         size="sm"
@@ -62,6 +63,6 @@ export function PersonaWallPickRowActions({
       >
         <FiX aria-hidden />
       </IconButton>
-    </div>
+    </AdminRowActions>
   );
 }

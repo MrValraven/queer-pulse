@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { FiList, FiPlus } from "react-icons/fi";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeErrorToast } from "../../shared/api/errorMessage";
-import { AdminPageHeader, AdminModal } from "./ui";
+import {
+  AdminEmptyState,
+  AdminModal,
+  AdminNotice,
+  AdminPageHeader,
+  AdminPanel,
+} from "./ui";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
 import { useAdminResourceListings } from "./api/useAdminResourceListings";
@@ -71,7 +78,7 @@ export function AdminResourceListingsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminResourceListings.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.directory")}
           title={
             <Translation
               i18nKey="admin:adminResourceListings.title"
@@ -85,7 +92,7 @@ export function AdminResourceListingsPage() {
               size="md"
               onClick={() => setFormMode({ kind: "create" })}
             >
-              {t("admin:adminResourceListings.newCta")}
+              <FiPlus aria-hidden /> {t("admin:adminResourceListings.newCta")}
             </Button>
           }
         />
@@ -102,25 +109,25 @@ export function AdminResourceListingsPage() {
           ))}
         </div>
       ) : isError ? (
-        <div className={styles.notice}>
-          <p className={styles.noticeText}>
-            {forbidden
-              ? t("admin:common.panelForbidden")
-              : t("admin:adminResourceListings.loadError")}
-          </p>
-        </div>
+        <AdminNotice tone="error">
+          {forbidden
+            ? t("admin:common.panelForbidden")
+            : t("admin:adminResourceListings.loadError")}
+        </AdminNotice>
       ) : listings.length === 0 ? (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>
-            {t("admin:adminResourceListings.empty")}
-          </p>
-        </div>
-      ) : (
-        <AdminResourceListingRows
-          listings={listings}
-          onEdit={(listing) => setFormMode({ kind: "edit", listing })}
-          onDelete={setDeleteTarget}
+        <AdminEmptyState
+          icon={FiList}
+          title={t("admin:adminResourceListings.emptyTitle")}
+          body={t("admin:adminResourceListings.emptyBody")}
         />
+      ) : (
+        <AdminPanel padding="flush" isOverflowVisible>
+          <AdminResourceListingRows
+            listings={listings}
+            onEdit={(listing) => setFormMode({ kind: "edit", listing })}
+            onDelete={setDeleteTarget}
+          />
+        </AdminPanel>
       )}
 
       {formMode && (

@@ -139,7 +139,7 @@ export function AdminMembersPage() {
       </FadeIn>
 
       <FadeIn delay={80}>
-        <div className={styles.toolbar}>
+        <div className={styles.controls}>
           <AdminTabs
             tabs={TABS}
             active={tab}

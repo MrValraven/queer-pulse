@@ -7,25 +7,14 @@ import styles from "./JoinRequestReviewGuide.module.css";
 const STORAGE_KEY = "qp.admin.joinRequestGuide.open";
 const STEP_NUMBERS = [1, 2, 3, 4, 5] as const;
 
-const WIDE_SCREEN_QUERY = "(min-width: 600px)";
-
-/** A remembered choice wins. With none stored, open on screens at least 600px
- *  wide and start closed on narrower ones. A missing matchMedia reads as wide
- *  (the test setup stubs it as narrow instead), and blocked storage (private
- *  window, cleared site data) reads as open. */
+/** A remembered choice wins. With none stored the guide starts closed, so the
+ *  requests themselves are the first thing a reviewer sees. Blocked storage
+ *  (private window, cleared site data) reads as closed. */
 function readIsOpen(): boolean {
   try {
-    const storedValue = window.localStorage.getItem(STORAGE_KEY);
-    if (storedValue === "true") return true;
-    if (storedValue === "false") return false;
+    return window.localStorage.getItem(STORAGE_KEY) === "true";
   } catch {
-    return true;
-  }
-  try {
-    if (typeof window.matchMedia !== "function") return true;
-    return window.matchMedia(WIDE_SCREEN_QUERY).matches;
-  } catch {
-    return true;
+    return false;
   }
 }
 
@@ -33,7 +22,7 @@ function writeIsOpen(isOpen: boolean) {
   try {
     window.localStorage.setItem(STORAGE_KEY, String(isOpen));
   } catch {
-    // Blocked storage: the panel simply opens again next visit.
+    // Blocked storage: the panel starts closed again next visit.
   }
 }
 
@@ -42,8 +31,8 @@ function writeIsOpen(isOpen: boolean) {
  * never-a-reason list from the review rubric (v1.1), above the pending queue.
  * A disclosure button over a `Collapse`, so opening and closing glide in
  * height (a native <details> hides its content the instant it closes, so it
- * cannot animate shut). Open by default on screens at least 600px wide, and
- * the reviewer's choice is remembered per device.
+ * cannot animate shut). Closed by default, and the reviewer's choice is
+ * remembered per device.
  */
 export function JoinRequestReviewGuide() {
   const { t } = useTranslation();

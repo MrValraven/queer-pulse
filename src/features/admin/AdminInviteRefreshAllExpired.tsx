@@ -118,17 +118,15 @@ export function AdminInviteRefreshAllExpired({
               overflow: { duration: 0, delay: duration },
             }}
           >
-            <span className={styles.filterBarActionInner}>
-              <Button
-                variant="ghost"
-                size="sm"
-                disabled={refreshAll.isPending}
-                onClick={() => setIsConfirmOpen(true)}
-              >
-                <FiRefreshCw aria-hidden />{" "}
-                {t("admin:adminInvites.refreshAll.cta", { count })}
-              </Button>
-            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={refreshAll.isPending}
+              onClick={() => setIsConfirmOpen(true)}
+            >
+              <FiRefreshCw aria-hidden />{" "}
+              {t("admin:adminInvites.refreshAll.cta", { count })}
+            </Button>
           </m.span>
         )}
       </AnimatePresence>

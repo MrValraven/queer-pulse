@@ -1,7 +1,6 @@
 .note {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-inline-start: 3px solid var(--accent);
   border-radius: var(--radius-12);
   padding: 16px 18px;
   margin-bottom: 16px;

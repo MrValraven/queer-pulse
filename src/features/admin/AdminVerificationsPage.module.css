@@ -1,8 +1,6 @@
+/* The standing reading above the level tabs sits one gap off them. */
 .honesty {
-  font-size: var(--text-14-5);
-  color: var(--ink-60);
-  max-width: 68ch;
-  margin-block: 0 1.25rem;
+  margin-bottom: var(--gap-sm);
 }
 
 /* ── Keyboard-shortcuts hint (Review-queue segment, Task 4) ──────────────
@@ -11,7 +9,7 @@
    power-user stumbles into. Touch-only reviewers can simply ignore it. */
 .keyboardHint {
   margin: 10px 0 4px;
-  font-size: var(--text-12);
+  font-size: var(--text-13-5);
   color: var(--ink-40);
 }
 

@@ -5,15 +5,12 @@
   gap: 10px;
 }
 
+/* Sits on the kit's table row (hover, divider, minimum height); this adds the
+   wrapping and the padding a multi-line topic needs. */
 .row {
-  display: flex;
-  align-items: flex-start;
   flex-wrap: wrap;
   gap: 16px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-row-pad);
 }
 
 /* Retired topics stay readable and stay recoverable, dimmed so the working
@@ -74,22 +71,6 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-}
-
-/* ── Empty / error notices ──────────────────────────────────────────────── */
-.empty,
-.notice {
-  padding: 8px 0;
-}
-
-.emptyText,
-.noticeText {
-  max-width: 60ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  line-height: 1.5;
-  color: var(--ink-60);
 }
 
 /* ── Create/edit form ───────────────────────────────────────────────────── */

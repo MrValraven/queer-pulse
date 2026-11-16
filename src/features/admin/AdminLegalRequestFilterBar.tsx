@@ -1,4 +1,5 @@
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   LEGAL_REQUEST_OUTCOMES,
@@ -9,11 +10,47 @@ import {
   type LegalRequestType,
 } from "./api/adminLegalRequests.api";
 import type { AdminLegalRequestFilters } from "./api/useAdminLegalRequests";
+import { AdminToolbar, adminToolbarClasses } from "./ui";
 import styles from "./AdminLegalRequestsPage.module.css";
 
+/** One toolbar select with its visible label beside it. The trigger is named
+ *  by that label plus its own text, so the chosen value is read with it. */
+function LabelledSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: ReactNode;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+}) {
+  const labelId = useId();
+  const triggerId = useId();
+  return (
+    <div className={styles.filterField}>
+      <span id={labelId} className={styles.filterLabel}>
+        {label}
+      </span>
+      <Select
+        size="sm"
+        id={triggerId}
+        labelledBy={`${labelId} ${triggerId}`}
+        className={adminToolbarClasses.select}
+        value={value}
+        options={options}
+        onChange={(next) => {
+          if (next) onChange(next);
+        }}
+      />
+    </div>
+  );
+}
+
 /**
- * The register's three filters, each a labelled `<select>` so the control is
- * named by its own visible label rather than by a placeholder.
+ * The register's three filters on the admin toolbar, each select named by its
+ * own visible label, and the count of matching records at the end.
  *
  * `state` defaults to `all`, matching the backend. A voided record is still
  * part of the register's history, and a queue that hid struck rows by default
@@ -23,84 +60,59 @@ import styles from "./AdminLegalRequestsPage.module.css";
 export function AdminLegalRequestFilterBar({
   filters,
   onChange,
+  count,
 }: {
   filters: AdminLegalRequestFilters;
   onChange: (patch: Partial<AdminLegalRequestFilters>) => void;
+  /** The matching-records line, once the register has loaded. */
+  count?: ReactNode;
 }) {
   const { t } = useTranslation();
-  const fieldId = useId();
 
   return (
-    <div className={styles.filters}>
-      <div className={styles.filterField}>
-        <label className={styles.filterLabel} htmlFor={`${fieldId}-state`}>
-          {t("admin:legalRequests.filter.stateLabel")}
-        </label>
-        <select
-          id={`${fieldId}-state`}
-          className={styles.select}
-          value={filters.state}
-          onChange={(event) =>
-            onChange({
-              state: event.target.value as LegalRequestRegisterState,
-            })
-          }
-        >
-          {LEGAL_REQUEST_REGISTER_STATES.map((state) => (
-            <option key={state} value={state}>
-              {t(`admin:legalRequests.filter.state.${state}`)}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className={styles.filterField}>
-        <label className={styles.filterLabel} htmlFor={`${fieldId}-type`}>
-          {t("admin:legalRequests.filter.typeLabel")}
-        </label>
-        <select
-          id={`${fieldId}-type`}
-          className={styles.select}
-          value={filters.requestType}
-          onChange={(event) =>
-            onChange({
-              requestType: event.target.value as LegalRequestType | "all",
-            })
-          }
-        >
-          <option value="all">{t("admin:legalRequests.filter.anyType")}</option>
-          {LEGAL_REQUEST_TYPES.map((requestType) => (
-            <option key={requestType} value={requestType}>
-              {t(`admin:legalRequests.type.${requestType}`)}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className={styles.filterField}>
-        <label className={styles.filterLabel} htmlFor={`${fieldId}-outcome`}>
-          {t("admin:legalRequests.filter.outcomeLabel")}
-        </label>
-        <select
-          id={`${fieldId}-outcome`}
-          className={styles.select}
-          value={filters.outcome}
-          onChange={(event) =>
-            onChange({
-              outcome: event.target.value as LegalRequestOutcome | "all",
-            })
-          }
-        >
-          <option value="all">
-            {t("admin:legalRequests.filter.anyOutcome")}
-          </option>
-          {LEGAL_REQUEST_OUTCOMES.map((outcome) => (
-            <option key={outcome} value={outcome}>
-              {t(`admin:legalRequests.outcome.${outcome}`)}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+    <AdminToolbar
+      label={t("admin:legalRequests.filter.toolbarLabel")}
+      count={count}
+    >
+      <LabelledSelect
+        label={t("admin:legalRequests.filter.stateLabel")}
+        value={filters.state}
+        options={LEGAL_REQUEST_REGISTER_STATES.map((state) => ({
+          value: state,
+          label: t(`admin:legalRequests.filter.state.${state}`),
+        }))}
+        onChange={(state) =>
+          onChange({ state: state as LegalRequestRegisterState })
+        }
+      />
+      <LabelledSelect
+        label={t("admin:legalRequests.filter.typeLabel")}
+        value={filters.requestType}
+        options={[
+          { value: "all", label: t("admin:legalRequests.filter.anyType") },
+          ...LEGAL_REQUEST_TYPES.map((requestType) => ({
+            value: requestType,
+            label: t(`admin:legalRequests.type.${requestType}`),
+          })),
+        ]}
+        onChange={(requestType) =>
+          onChange({ requestType: requestType as LegalRequestType | "all" })
+        }
+      />
+      <LabelledSelect
+        label={t("admin:legalRequests.filter.outcomeLabel")}
+        value={filters.outcome}
+        options={[
+          { value: "all", label: t("admin:legalRequests.filter.anyOutcome") },
+          ...LEGAL_REQUEST_OUTCOMES.map((outcome) => ({
+            value: outcome,
+            label: t(`admin:legalRequests.outcome.${outcome}`),
+          })),
+        ]}
+        onChange={(outcome) =>
+          onChange({ outcome: outcome as LegalRequestOutcome | "all" })
+        }
+      />
+    </AdminToolbar>
   );
 }

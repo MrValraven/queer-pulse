@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
-import { AdminChip, AdminDrawer } from "./ui";
+import { AdminChip, AdminDrawer, AdminNotice } from "./ui";
 import { AdminLegalRequestAmendments } from "./AdminLegalRequestAmendments";
 import { AdminLegalRequestDetailFacts } from "./AdminLegalRequestDetailFacts";
 import { AdminLegalRequestVoidModal } from "./AdminLegalRequestVoidModal";
@@ -13,9 +12,9 @@ import styles from "./AdminLegalRequestsPage.module.css";
 /**
  * One recorded demand in full.
  *
- * The record is fetched fresh when the pane opens rather than read off the
- * cached list page, so an amendment a colleague made since the list loaded is
- * on screen before anybody strikes the row.
+ * The record is fetched fresh when the pane opens, from the record endpoint,
+ * so an amendment a colleague made since the list loaded is on screen before
+ * anybody strikes the row.
  *
  * LOADING, EMPTY AND FAILED ARE THREE DIFFERENT THINGS HERE. A pane that fell
  * back to a blank record on a failed read would tell an admin that a demand
@@ -74,7 +73,7 @@ export function AdminLegalRequestDetail({
         }
       >
         {isLoading ? (
-          <div className={styles.rows}>
+          <div className={styles.skeletons}>
             {[0, 1, 2, 3].map((skeletonIndex) => (
               <SkeletonLine
                 key={skeletonIndex}
@@ -84,27 +83,28 @@ export function AdminLegalRequestDetail({
             ))}
           </div>
         ) : isError || !record ? (
-          <p className={`${styles.notice} ${styles.errorNotice}`}>
-            <FiAlertTriangle aria-hidden className={styles.noticeIcon} />
+          <AdminNotice tone="error">
             {t("admin:legalRequests.detail.loadError")}
-          </p>
+          </AdminNotice>
         ) : (
           <>
             {record.isVoided && (
-              <div className={styles.voidBanner}>
-                <p className={styles.detailValue}>
-                  {t("admin:legalRequests.detail.voidedOn", {
-                    date: formatDate(record.voidedAt ?? "", language, {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    }),
-                  })}
-                </p>
-                <p className={styles.detailValue}>
-                  {record.voidReason ??
-                    t("admin:legalRequests.detail.noVoidReason")}
-                </p>
+              <div className={styles.noticeGap}>
+                <AdminNotice tone="warn" liveRole="status">
+                  <p className={styles.detailValue}>
+                    {t("admin:legalRequests.detail.voidedOn", {
+                      date: formatDate(record.voidedAt ?? "", language, {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      }),
+                    })}
+                  </p>
+                  <p className={styles.detailValue}>
+                    {record.voidReason ??
+                      t("admin:legalRequests.detail.noVoidReason")}
+                  </p>
+                </AdminNotice>
               </div>
             )}
             {record.isUnderGagOrder && (

@@ -1,74 +1,5 @@
-/* Email template library and editor pages. */
-.rows {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 16px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-14);
-}
-
-.rowMain {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-.rowLabel {
-  font-size: var(--text-15);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.rowChips,
-.rowActions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-.editLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-height: var(--tap-min);
-  padding: 0 12px;
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--accent-text);
-  text-decoration: none;
-  border-radius: var(--radius-pill);
-}
-
-/* The Preview button wears the Edit link's look; this resets the button. */
-.previewButton {
-  composes: editLink;
-  font-family: inherit;
-  cursor: pointer;
-  background: none;
-  border: 0;
-}
-
-.editLink:focus-visible,
-.previewButton:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
-
+/* Email template editor pages and the library's delete dialog. The list
+   has its own module. */
 .notice,
 .ptMissing {
   display: flex;
@@ -250,8 +181,9 @@
 }
 
 /* The preview modal's pane and frame take whatever height the full-size modal
-   body has. The 480px floor lets the body scroll on very short windows instead
-   of crushing the mail client, so the pane keeps its automatic min-height. */
+   body has. The 480px floor keeps the mail client at a readable height on
+   very short windows, where the body scrolls, so the pane keeps its automatic
+   min-height. */
 .previewModalPane {
   flex: 1;
 }
@@ -274,9 +206,11 @@
 /* The editor keeps a working column (340 to 440px) and the preview takes the
    rest, so the mock mail client gets the bulk of the full-bleed page. */
 .workspace {
-  /* Clears the admin shell's sticky top bar (38px buttons, 14px padding each
-     side and a hairline) with a little air. */
-  --email-preview-sticky-top: 84px;
+  /* Clears the admin shell's sticky top bar (`--admin-topbar-h`, 56px
+     `--admin-bar-h` before it is measured) with 16px of air. */
+  --email-preview-sticky-top: calc(
+    var(--admin-topbar-h, var(--admin-bar-h)) + 16px
+  );
 
   display: grid;
   grid-template-columns: minmax(340px, min(36%, 440px)) minmax(0, 1fr);

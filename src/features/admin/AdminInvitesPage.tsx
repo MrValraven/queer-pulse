@@ -17,7 +17,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminEmptyState, AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -226,11 +226,14 @@ function AdminInviteResults({
     // Fades in once the last card's exit has finished.
     return (
       <FadeIn>
-        <p className={styles.emptyLine}>
-          {inviterSlug
-            ? t("admin:adminInvites.emptyForInviter")
-            : t("admin:adminInvites.empty")}
-        </p>
+        <AdminEmptyState
+          size="inline"
+          title={
+            inviterSlug
+              ? t("admin:adminInvites.emptyForInviter")
+              : t("admin:adminInvites.empty")
+          }
+        />
       </FadeIn>
     );
   }
@@ -388,7 +391,7 @@ export function AdminInvitesPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminInvites.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.people")}
           title={
             <Translation
               i18nKey="admin:adminInvites.header.title"

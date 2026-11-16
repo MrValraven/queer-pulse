@@ -11,6 +11,7 @@ import {
   FiInbox,
   FiRepeat,
   FiShield,
+  FiUserCheck,
   FiUserX,
   FiUsers,
 } from "react-icons/fi";
@@ -208,6 +209,21 @@ function banEvasionEscalationIconFor(
 }
 
 /**
+ * The icon a `lead_assigned` row renders with, or `undefined` for every other
+ * kind. Staff duty mail on the ordinary platform ground. The row resolves the
+ * assigner as its actor and draws the avatar while the assigner exists, so this
+ * glyph shows on a row whose assigner is gone.
+ */
+function leadAssignedIconFor(
+  kind: NotificationKind | null,
+): { Glyph: IconType; background: string } | undefined {
+  if (kind === "lead_assigned") {
+    return { Glyph: FiUserCheck, background: KIND_ICON_BACKGROUND.platform };
+  }
+  return undefined;
+}
+
+/**
  * Map a backend notification to the prototype's rich Notification view-model,
  * defaulting the prototype-only fields (avatars, action buttons) gracefully.
  *
@@ -222,6 +238,8 @@ function banEvasionEscalationIconFor(
  * its generic copy rather than a missing i18n key.
  */
 const PERSONALIZED_KINDS = new Set<NotificationKind>([
+  // The assigner resolves as the actor; without one the row reads `.text`.
+  "lead_assigned",
   "connection_request",
   "connection_accepted",
   "vouch_received",
@@ -597,6 +615,13 @@ export function notificationDtoToView(
   // member who closed it), so this has to be the last word on its glyph.
   const banEvasionIcon = banEvasionEscalationIconFor(kind);
   if (banEvasionIcon) view.icon = banEvasionIcon;
+
+  // Same placement, same reason as the overrides above: a lead
+  // assignment is duty mail whose glyph has to be the last word. The row draws
+  // the avatar whenever one is set, so the glyph shows on a row whose assigner
+  // is gone.
+  const leadAssignedIcon = leadAssignedIconFor(kind);
+  if (leadAssignedIcon) view.icon = leadAssignedIcon;
 
   // PRD-15. "Someone wants to connect" carries the two answers themselves,
   // through the exact mechanism `subprofile_credit` below proved out: a

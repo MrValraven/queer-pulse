@@ -5,57 +5,14 @@
   gap: 20px;
 }
 
+/* The body of the previews section's AdminPanel. */
 .section {
-  padding: 18px 20px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-  background: var(--paper);
-}
-
-.sectionHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 14px;
-}
-
-.sectionTitle {
-  flex: 1 1 auto;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.sectionSub {
-  max-width: 64ch;
-  margin: 8px 0 0;
-  font-size: var(--text-13);
-  line-height: 1.5;
-  color: var(--ink-60);
+  min-width: 0;
 }
 
 .hint {
   margin: 10px 0 0;
   font-size: var(--text-13);
-  color: var(--ink-60);
-}
-
-.notice {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.noticeText {
-  max-width: 60ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  line-height: 1.5;
   color: var(--ink-60);
 }
 
@@ -82,7 +39,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 10px 14px;
-  padding: 12px 0;
+  padding: var(--admin-row-pad-flat);
 }
 
 .dragHandle {

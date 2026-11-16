@@ -1,0 +1,40 @@
+/* The In charge stack on a leads list row (LeadAssigneeStack): small staff
+   avatars that overlap, each punched out of the row's paper, then "+N". */
+.stack {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.avatars {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  /* Each avatar after the first overlaps the one before it by a quarter,
+     so the initials under it stay whole; the padding gives back the first
+     one's pull. */
+  padding-inline-start: 8px;
+}
+
+/* The avatar tones are washes, so each slot lays opaque paper under its
+   avatar, in the kit's small avatar shape. The next avatar then covers the
+   one before it fully, and the paper ring reads as a gap in light and
+   dark. */
+.avatarSlot {
+  display: inline-flex;
+  flex: none;
+  margin-inline-start: -8px;
+  background: var(--paper);
+  border-radius: var(--radius-9);
+  box-shadow: var(--ring-paper);
+}
+
+.more {
+  display: inline-block;
+  margin-inline-start: 4px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  white-space: nowrap;
+}

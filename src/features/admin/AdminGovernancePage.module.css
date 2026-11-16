@@ -1,36 +1,22 @@
-/* ── Shared card surface ─────────────────────────────────────────────────── */
-.card,
-.statCard,
-.ledgerCard,
-.transpCard,
-.auditCard {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+/* Governance console tabs. The header, tabs, toolbars, stat tiles, panels,
+   row lists and empty states come from the admin kit; this file holds the
+   finance figures, ledgers, chart marks, the plum MRR panel, the audit
+   table's column grid and pager, and the proposal and motion cards. */
+
+/* Space between the tab strip and a tab's content. */
+.tabBody {
+  margin-top: var(--admin-section-gap);
 }
 
-/* ── Finance stat grid ───────────────────────────────────────────────────── */
-.statGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin: 22px 0;
-}
-.statCard {
+/* ── Finances tab ────────────────────────────────────────────────────────── */
+.finStack {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 18px 20px;
-  transition:
-    transform 0.18s var(--ease),
-    box-shadow 0.18s var(--ease);
+  gap: var(--admin-section-gap);
+  margin-top: var(--admin-section-gap);
 }
-@media (hover: hover) {
-  .statCard:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift);
-  }
-}
+
+/* The provenance badge sits beside the tile label and wraps under it. */
 .statLabel {
   display: inline-flex;
   align-items: center;
@@ -39,15 +25,11 @@
   font-size: var(--text-12-5);
   color: var(--ink-60);
 }
-/* Inline-block gives this span its own 30px line box, so the rolling figure
-   (top-aligned, one line tall) shares a baseline with the prefix and unit. */
+/* Inline-block gives the figure its own line box, so the rolling number
+   (top-aligned, one line tall) shares a baseline with the % unit. The kit
+   tile sets the face and size. */
 .statNum {
   display: inline-block;
-  font-family: var(--serif);
-  font-size: var(--text-30);
-  font-weight: 500;
-  line-height: 1;
-  color: var(--ink);
 }
 .statNumJade {
   color: var(--jade);
@@ -58,26 +40,24 @@
   color: var(--ink-60);
   margin-left: 1px;
 }
-.statFoot {
-  font-size: var(--text-12);
-  color: var(--ink-60);
-}
-
-/* ── Two-column governance grid ──────────────────────────────────────────── */
-.govGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 22px;
-  align-items: start;
-}
 
 /* ── Dual ledger grid (comes from / goes) ────────────────────────────────── */
 .ledgerGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-  margin-top: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--admin-section-gap);
   align-items: stretch;
+}
+/* Each ledger is a kit panel stretched to the row height; its body grows so
+   the note can sit at the foot. */
+.ledgerCard {
+  display: flex;
+  flex-direction: column;
+}
+.ledgerBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 /* The note sits at the foot of the card, so both cards in the grid end on
    the same line whatever their row count. The wrapper keeps a minimum gap
@@ -90,7 +70,7 @@
   margin: 0;
   padding-top: 18px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
-  font-size: var(--text-13);
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -102,10 +82,7 @@
   color: var(--ink);
 }
 
-/* ── Card heads ──────────────────────────────────────────────────────────── */
-.cardHead {
-  margin-bottom: 4px;
-}
+/* ── Proposal and motion card heads ─────────────────────────────────────── */
 .cardTitle {
   font-family: var(--serif);
   font-size: var(--text-22);
@@ -129,11 +106,6 @@
 }
 
 /* ── Ledger card (composition bar + rows) ────────────────────────────────── */
-.ledgerCard {
-  display: flex;
-  flex-direction: column;
-  padding: 24px 26px;
-}
 /* The track reads on both themes because --line-rgb flips to cream in dark. */
 .ledgerBar {
   height: 10px;
@@ -251,22 +223,7 @@
   grid-column: 3 / -1;
   justify-self: end;
 }
-.ledgerEmpty {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 20px;
-  padding: 16px 18px;
-  border: 1px dashed rgba(var(--line-rgb), 0.22);
-  border-radius: var(--radius-14);
-}
-.ledgerEmptyLine {
-  margin: 0;
-  font-size: var(--text-13);
-  color: var(--ink-60);
-}
+
 .notVerified {
   display: inline-flex;
   align-items: center;
@@ -318,15 +275,16 @@
 }
 
 /* ── Plum live-MRR panel ─────────────────────────────────────────────────── */
+/* The page's one emphasis surface: a plum panel on the kit's corner and
+   padding. */
 .panel {
   background: var(--plum);
-  border-radius: var(--radius-card, 22px);
-  padding: 26px 26px 28px;
+  border-radius: var(--admin-panel-radius);
+  padding: var(--admin-panel-pad);
   color: rgba(var(--cream-rgb), 1);
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-top: 22px;
 }
 .panelLive {
   display: inline-flex;
@@ -338,9 +296,9 @@
   text-transform: uppercase;
   color: var(--jade);
 }
-/* Static, not pulsing (COM-4): these figures are admin-reported each period,
-   not computed live, so the dot no longer animates like a real-time
-   indicator — see `governance.mrrPanel.live`'s copy in admin.ts. */
+/* Static (COM-4): these figures are admin-reported each period and computed
+   by nobody in real time, so the dot holds still. See
+   `governance.mrrPanel.live`'s copy in admin.ts. */
 .panelLiveDot {
   width: 7px;
   height: 7px;
@@ -415,121 +373,45 @@
   opacity: 0.6;
 }
 
-@keyframes govPulse {
-  0%,
-  100% {
-    box-shadow: var(--ring-jade);
-  }
-  /* Expanded, fading companion frame for the pulse's outer edge: not a
-     resting ring, so it stays a literal value (same pattern as
-     adminUi.module.css's adminPulse and AdminDashboardPage's dashPulse). */
-  50% {
-    box-shadow: 0 0 0 6px rgba(var(--jade-rgb), 0.05);
-  }
+/* ── Proposals and Motions tabs (COM-1, GOV-01) ──────────────────────────── */
+/* Each tab is one panel; its proposals or motions are hairline-split rows in
+   the flush body. */
+.govListRow {
+  padding: var(--admin-panel-pad);
 }
-
-/* ── Policy: version timeline ────────────────────────────────────────────── */
-.timeline {
-  list-style: none;
-  margin: 22px 0 0;
-  padding: 0 0 0 10px;
-  position: relative;
+.govListRow + .govListRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 5px;
-  top: 8px;
-  bottom: 8px;
-  width: 2px;
-  background: rgba(var(--plum-rgb), 0.12);
-}
-.tlItem {
-  position: relative;
-  padding: 0 0 24px 28px;
-}
-.tlItem:last-child {
-  padding-bottom: 4px;
-}
-.tlDot {
-  position: absolute;
-  left: -2px;
-  top: 5px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--paper);
-  border: 2px solid rgba(var(--line-rgb), 0.3);
-}
-.tlDotOn {
-  background: var(--jade);
-  border-color: var(--jade);
-  box-shadow: var(--ring-jade);
-}
-.tlItemOn .tlNote {
-  color: var(--ink);
-}
-.tlHead {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-.tlVersion {
+.govListRowTitle {
+  margin: 0;
   font-family: var(--serif);
-  font-size: var(--text-19);
+  font-size: var(--text-18);
   font-weight: 500;
+  line-height: 1.3;
   color: var(--text-strong);
 }
-[data-theme="dark"] .tlVersion {
+[data-theme="dark"] .govListRowTitle {
   color: var(--ink);
 }
-.tlDate {
-  font-size: var(--text-12);
-  color: var(--ink-40);
-  margin-left: auto;
-}
-.tlNote {
-  font-size: var(--text-13-5);
-  line-height: 1.55;
-  color: var(--ink-60);
+/* Loading, empty and error lines inside the flush body. */
+.govListNote {
   margin: 0;
+  padding: var(--admin-panel-pad);
+  font-size: var(--text-13);
+  color: var(--ink-60);
 }
 
-/* ── Proposals tab (COM-1) ───────────────────────────────────────────────── */
-.proposalAdminList {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 22px;
-}
-.proposalAdminCard {
-  padding: 20px 22px;
-}
 .proposalAdminHead {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px 12px;
 }
-.proposalStatusPassed,
-.proposalStatusFailed {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: var(--text-12);
-  font-weight: 700;
+.proposalStatus {
   flex: none;
 }
-.proposalStatusPassed {
-  color: var(--jade);
-}
-.proposalStatusFailed {
-  color: var(--ink-40);
-}
 
-/* ── Motion screening queue (GOV-01) ─────────────────────────────────────── */
 .motionCosignCount {
   display: inline-flex;
   align-items: center;
@@ -543,125 +425,41 @@
   border-radius: var(--radius-pill);
 }
 .motionActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
   margin-top: 14px;
 }
 
-/* ── Policy rail ─────────────────────────────────────────────────────────── */
-.policyRail {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-.card {
-  padding: 22px 24px;
-}
-.principles {
-  list-style: none;
-  margin: 16px 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.principle {
-  display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  font-size: var(--text-14);
-  line-height: 1.5;
-  color: var(--ink);
-}
-.principleIco {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  flex: none;
-  display: grid;
-  place-items: center;
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
-  margin-top: 1px;
-}
-.principleIco svg {
-  width: 14px;
-  height: 14px;
-}
-
-.transpCard {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 20px 22px;
-}
-.transpIco {
-  width: 20px;
-  height: 20px;
-  color: var(--jade);
-  flex: none;
-  margin-top: 1px;
-}
-.transpText {
-  font-size: var(--text-13);
-  line-height: 1.55;
-  color: var(--ink-60);
-  margin: 0;
-}
-
 /* ── Audit log ───────────────────────────────────────────────────────────── */
-.auditHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 24px 0 16px;
-  flex-wrap: wrap;
-}
-.auditMeta {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-}
-.auditCard {
-  padding: 8px 10px;
-  overflow: hidden;
+/* The filters sit in the panel's padding above the table. */
+.auditToolbar {
+  padding: 0 var(--admin-panel-pad) var(--admin-panel-pad);
 }
 .auditTable {
   display: flex;
   flex-direction: column;
 }
-.auditRowHead,
-.auditRow {
+/* The kit header band and rows, laid on one column grid. Qualified with the
+   table so the grid outranks the kit's flex row. */
+.auditTable .auditRowHead,
+.auditTable .auditRow {
   display: grid;
   grid-template-columns: 1.2fr 1fr 1.1fr 1.6fr 0.8fr;
   align-items: center;
   gap: 14px;
-  padding: 12px 14px;
+  padding-inline: var(--admin-panel-pad);
 }
-.auditRowHead {
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-}
-.auditRow {
-  border-radius: var(--radius-12);
+/* Each loaded row sits alone in its fade wrapper, where the kit would read it
+   as a last child and drop its hairline; every row keeps it here, and the
+   pager below draws none of its own. */
+.auditTable div.auditRow {
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: var(--text-13-5);
   color: var(--ink);
   cursor: pointer;
-  transition: background 0.16s var(--ease);
-}
-@media (hover: hover) {
-  .auditRow:hover {
-    background: rgba(var(--plum-rgb), 0.04);
-  }
 }
 .auditRow:focus-visible {
-  outline: 2px solid var(--accent-ink);
-  outline-offset: -2px;
+  outline: var(--focus-ring);
+  /* Inset: the row runs to the panel edge. */
+  outline-offset: -3px;
 }
 .auditMod {
   display: inline-flex;
@@ -684,30 +482,16 @@
 }
 .auditWhen {
   font-size: var(--text-12-5);
-  color: var(--ink-40);
+  color: var(--ink-60);
   white-space: nowrap;
 }
 
-/* ── Income vs spending chart ────────────────────────────────────────────── */
-.chartCard {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
-  padding: 24px 26px 18px;
-  margin-top: 22px;
-}
-.chartHead {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
+/* ── Income vs spending chart (a kit panel) ─────────────────────────────── */
 .chartLegend {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin: 14px 0 6px;
+  margin: 0 0 6px;
 }
 .legItem {
   display: inline-flex;
@@ -788,74 +572,6 @@
   }
 }
 
-/* ── Audit filter bar ────────────────────────────────────────────────────── */
-.filterBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.search {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  flex: 1 1 220px;
-  min-width: 180px;
-}
-.searchIco {
-  position: absolute;
-  left: 13px;
-  width: 16px;
-  height: 16px;
-  color: var(--ink-40);
-  pointer-events: none;
-}
-.searchInput {
-  width: 100%;
-  font: inherit;
-  font-size: var(--text-13-5);
-  color: var(--ink);
-  padding: 9px 12px 9px 36px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill, 999px);
-  transition: border-color 0.16s var(--ease);
-}
-.searchInput::placeholder {
-  color: var(--ink-40);
-}
-.searchInput:focus-visible {
-  outline: none;
-  border-color: var(--focus-field-border);
-  box-shadow: var(--focus-field-glow);
-}
-.select {
-  font: inherit;
-  font-size: var(--text-13);
-  color: var(--ink);
-  padding: 9px 30px 9px 14px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill, 999px);
-  cursor: pointer;
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--ink-40) 50%),
-    linear-gradient(135deg, var(--ink-40) 50%, transparent 50%);
-  background-position:
-    calc(100% - 16px) center,
-    calc(100% - 11px) center;
-  background-size:
-    5px 5px,
-    5px 5px;
-  background-repeat: no-repeat;
-}
-.select:focus-visible {
-  outline: none;
-  border-color: var(--accent-ink);
-}
-
 /* ── Pager ───────────────────────────────────────────────────────────────── */
 .pager {
   display: flex;
@@ -863,9 +579,7 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  padding: 14px 14px 8px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.08);
-  margin-top: 6px;
+  padding: var(--admin-band-pad);
 }
 .pagerMeta {
   font-size: var(--text-12-5);
@@ -915,47 +629,6 @@
     background: var(--plum);
     color: rgba(var(--cream-rgb), 1);
   }
-}
-
-/* ── Audit empty state ───────────────────────────────────────────────────── */
-.auditEmpty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-  padding: var(--section-y-48) 24px var(--section-y-56);
-}
-.auditEmptyIco {
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: rgba(var(--plum-rgb), 0.06);
-  color: var(--ink-40);
-  margin-bottom: 4px;
-}
-.auditEmptyIco svg {
-  width: 24px;
-  height: 24px;
-}
-.auditEmptyTitle {
-  font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 400;
-  color: var(--text-strong);
-  margin: 0;
-}
-[data-theme="dark"] .auditEmptyTitle {
-  color: var(--ink);
-}
-.auditEmptyText {
-  font-size: var(--text-13-5);
-  line-height: 1.55;
-  color: var(--ink-60);
-  max-width: 380px;
-  margin: 0;
 }
 
 /* ── Audit entry modal ───────────────────────────────────────────────────── */
@@ -1037,140 +710,34 @@
   margin-top: 1px;
 }
 
-/* ── Policy diff ─────────────────────────────────────────────────────────── */
-.tlDiffLink {
-  margin-top: 8px;
-  border: none;
-  background: none;
-  padding: 0;
-  font: inherit;
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--accent-ink);
-  cursor: pointer;
-}
-@media (hover: hover) {
-  .tlDiffLink:hover {
-    text-decoration: underline;
-  }
-}
-.diffIntro {
-  margin: 0 0 16px;
-  font-size: var(--text-13-5);
-  line-height: 1.55;
-  color: var(--ink-60);
-}
-.diffIntro strong {
-  color: var(--text-strong);
-  font-weight: 700;
-}
-[data-theme="dark"] .diffIntro strong {
-  color: var(--ink);
-}
-.diff {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-family: var(--sans);
-}
-.diffLine {
-  display: flex;
-  gap: 12px;
-  padding: 11px 14px;
-  border-radius: var(--radius-10);
-  font-size: var(--text-14);
-  line-height: 1.5;
-}
-.diffSign {
-  flex: none;
-  width: 14px;
-  text-align: center;
-  font-weight: 700;
-}
-.diff_ctx {
-  background: rgba(var(--plum-rgb), 0.04);
-  color: var(--ink-60);
-}
-.diff_ctx .diffSign {
-  color: var(--ink-40);
-}
-.diff_removed {
-  background: rgba(var(--danger-rgb), 0.08);
-  color: var(--ink);
-}
-.diff_removed .diffText {
-  text-decoration: line-through;
-  opacity: 0.85;
-}
-.diff_removed .diffSign {
-  color: var(--danger);
-}
-.diff_added {
-  background: rgba(var(--jade-rgb), 0.1);
-  color: var(--ink);
-}
-.diff_added .diffSign {
-  color: var(--jade);
-}
-.diffNote {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin: 18px 0 4px;
-  padding: 14px 16px;
-  background: rgba(var(--plum-rgb), 0.04);
-  border-radius: var(--radius-12);
-  font-size: var(--text-12-5);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-.diffNoteIco {
-  width: 18px;
-  height: 18px;
-  color: var(--violet);
-  flex: none;
-  margin-top: 1px;
-}
-
 /* ── Responsive ──────────────────────────────────────────────────────────── */
-@media (max-width: 1100px) {
-  .govGrid {
-    grid-template-columns: 1fr;
-  }
-}
+
 @media (max-width: 980px) {
-  .statGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .ledgerGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 820px) {
   /* Five MRR-breakdown tiles are cramped at ~110px each once the panel
-     narrows — step down to three across the 541–820px band. */
+     narrows, so they step down to three across the 541 to 820px band. */
   .panelBreakdown {
     grid-template-columns: repeat(3, 1fr);
   }
-  .auditRowHead {
+  /* Each entry stacks its five cells; the column heads have no column
+     left to sit over. */
+  .auditTable .auditRowHead {
     display: none;
   }
-  .auditRow {
-    grid-template-columns: 1fr;
+  .auditTable .auditRow {
+    grid-template-columns: minmax(0, 1fr);
     gap: 6px;
-    padding: 14px;
-    border: 1px solid rgba(var(--line-rgb), 0.08);
-    border-radius: var(--radius-14);
-    margin-bottom: 8px;
+    padding: var(--admin-row-pad);
   }
   .auditWhen {
     white-space: normal;
   }
 }
 @media (max-width: 540px) {
-  .statGrid {
-    grid-template-columns: 1fr;
-  }
   .panelBreakdown {
     grid-template-columns: repeat(2, 1fr);
     row-gap: 14px;
@@ -1178,14 +745,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .statCard {
-    transition: none;
-  }
-  @media (hover: hover) {
-    .statCard:hover {
-      transform: none;
-    }
-  }
   .ledgerBarFill {
     animation: none;
   }
@@ -1194,9 +753,6 @@
   }
   .panelLiveDot {
     animation: none;
-  }
-  .auditRow {
-    transition: none;
   }
 }
 
@@ -1211,14 +767,7 @@
   margin-inline-end: 4px;
 }
 
-.finToolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-block-end: 16px;
-}
+/* Who last edited the figures and whether the quarter is public. */
 .finToolbarMeta {
   font-size: var(--text-12-5);
   color: var(--ink-60);
@@ -1229,344 +778,10 @@
   gap: 4px;
   min-width: 0;
 }
-.finToolbarActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
 
 /* Edit dialog */
 .editGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
   gap: 14px;
-}
-.editLineLabel {
-  font-size: var(--text-13);
-  font-weight: 500;
-  color: var(--ink);
-}
-.ovSection {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.ovSectionHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.ovList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.ovRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: var(--radius-12);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  background: var(--paper);
-  position: relative;
-}
-.ovRowDragging {
-  box-shadow: var(--shadow-e2);
-  z-index: 1;
-}
-.ovGrip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  color: rgba(var(--ink-rgb), 0.5);
-  cursor: grab;
-  touch-action: none;
-}
-.ovRowBody {
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  min-width: 0;
-}
-.ovField {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 120px;
-}
-/* Same eyebrow as FormField's label, so the overview editors' own labels and
-   the FormField-wrapped ones in the health rows read as one set. */
-.ovFieldLabel {
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-/* Explains a read-only computed field (e.g. the live active-members count,
-   COM-4) sitting inline with otherwise-editable health-stat fields. */
-.ovFieldHint {
-  font-size: var(--text-11);
-  color: var(--ink-40);
-  margin: 2px 0 0;
-  line-height: 1.4;
-}
-/* The row's action cluster: move up / move down / remove, held together at the
-   end of the row so the two reorder buttons read as one control pair. */
-.ovRowActions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-}
-/* Keyboard and assistive-tech reorder path, alongside the pointer grip (ID-11).
-   Same 28px round target as the remove button beside it, but plum rather than
-   accent on hover: moving a row is not destructive. */
-.ovMoveBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  /* --ink-rgb, not --plum-rgb: plum channels do not flip, so the resting
-     state was invisible on the dark page while the hover state was not. */
-  color: rgba(var(--ink-rgb), 0.5);
-  transition: color var(--dur-base) var(--ease);
-}
-.ovMoveBtn:hover:not(:disabled) {
-  color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.08);
-}
-.ovMoveBtn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-.ovRemoveBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  color: rgba(var(--ink-rgb), 0.5);
-}
-.ovRemoveBtn:hover {
-  color: var(--accent);
-  background: rgba(var(--accent-rgb), 0.1);
-}
-.ovAddBtn {
-  align-self: flex-start;
-}
-/* PRD-265. Holds the two ways of growing a section side by side: "Add a
-   decision" (a new entry the editor writes) and, only while one is missing,
-   "Restore a bundle entry". Wraps rather than shrinking, so on a narrow admin
-   window the second button drops below instead of truncating. */
-.ovAddRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-.ovFooter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-}
-.ovNote {
-  flex: 1;
-  min-width: 200px;
-  max-width: 480px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-/* The section footer's reason input was a bare browser control beside a
-   styled primary button. Dressed like a FormField input (same border, radius,
-   height, focus ring) so every overview editor's footer matches its rows. */
-.ovNote input {
-  width: 100%;
-  font-family: var(--sans);
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: var(--radius-12);
-  padding: 11px 15px;
-  outline: none;
-  transition:
-    border-color 0.16s var(--ease),
-    box-shadow 0.16s var(--ease),
-    background 0.16s var(--ease);
-}
-.ovNote input:focus {
-  border-color: var(--focus-field-border);
-  box-shadow: var(--focus-field-glow);
-  background: var(--paper);
-}
-.ovNote input:focus-visible {
-  outline: none;
-}
-
-/* ── Community health rows ──────────────────────────────────────────────── */
-/* Preview of the public stat card on the left, the row's four controls in a
-   fixed grid on the right, so figure / trend / number / direction line up
-   down all six rows instead of drifting with each stat label's width. */
-.healthBody {
-  flex: 1;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: minmax(176px, 212px) minmax(0, 1fr);
-  gap: 14px 18px;
-  align-items: start;
-}
-/* Mirrors `.statCard` on the public Governance page (surface, hairline,
-   serif figure, 12px trend), scaled to sit inside an editor row. Decorative
-   duplicate of the fields beside it, hence aria-hidden on the element. */
-.healthPreview {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  height: 100%;
-  padding: 14px 16px;
-  border-radius: var(--radius-12);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  background: rgba(var(--line-rgb), 0.04);
-}
-.healthPreviewEyebrow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px 8px;
-  font-size: var(--text-10-5);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-.healthPreviewFigure {
-  margin-top: 4px;
-  min-height: 1em;
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-28);
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--text-strong);
-  overflow-wrap: anywhere;
-}
-.healthPreviewLabel {
-  font-size: var(--text-12);
-  line-height: 1.4;
-  color: var(--ink-60);
-}
-.healthPreviewTrend {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--ink-40);
-}
-.healthPreviewTrend svg {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
-}
-.healthPreviewTrendUp {
-  color: var(--jade);
-}
-.healthFields {
-  display: grid;
-  /* The switch column is fixed, not `auto`: its caption changes width with
-     the switch state, and an auto track would nudge the three fr columns a
-     few pixels row to row. */
-  grid-template-columns:
-    minmax(0, 0.8fr) minmax(0, 1.7fr) minmax(0, 0.8fr)
-    188px;
-  gap: 12px 14px;
-  align-items: start;
-}
-/* FormField carries a 16px bottom margin for stacked forms; the grid gap owns
-   that rhythm here. Two classes so this beats FormField's own `.field`. */
-.healthFields .healthField {
-  margin-bottom: 0;
-}
-/* Non-FormField cells (the Select, the unused-number note, the switch) wear
-   FormField's label so the four column heads read as one set. */
-.healthSlot {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  min-width: 0;
-}
-.healthSlotLabel {
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-/* Holds the trend-number column's height (48px, a FormField input) for the
-   three trend lines whose public wording takes no number. */
-.healthSlotNote {
-  display: flex;
-  align-items: center;
-  min-height: 48px;
-  margin: 0;
-  font-size: var(--text-13);
-  line-height: 1.4;
-  color: var(--ink-40);
-}
-.healthSwitch {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 48px;
-}
-.healthSwitchText {
-  font-size: var(--text-13);
-  color: var(--ink);
-  white-space: nowrap;
-}
-@media (max-width: 1100px) {
-  .healthBody {
-    grid-template-columns: 1fr;
-  }
-  /* Preview becomes a one-line strip above the fields: figure, label and
-     trend on a baseline, the eyebrow above them. */
-  .healthPreview {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 12px;
-    height: auto;
-    padding: 12px 14px;
-  }
-  .healthPreviewEyebrow {
-    flex-basis: 100%;
-  }
-  .healthPreviewFigure {
-    margin-top: 0;
-  }
-  .healthFields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 560px) {
-  .healthFields {
-    grid-template-columns: 1fr;
-  }
 }

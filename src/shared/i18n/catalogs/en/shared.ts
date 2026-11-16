@@ -260,7 +260,18 @@ export const shared: Catalog = {
   // AdminShell
   "adminShell.toggleTheme": "Toggle theme",
   "adminShell.alerts": "Alerts",
-  "adminShell.toastNoAlerts": "No new alerts",
+  "adminShell.alertsWaiting": "Alerts, {count} waiting",
+  // Admin command palette (Cmd/Ctrl+K inside the console)
+  "adminShell.palette.trigger": "Jump to a page",
+  "adminShell.palette.placeholder": "Search admin pages",
+  "adminShell.palette.empty": "No admin page matches {query}",
+  "adminShell.palette.hintMac": "⌘K",
+  "adminShell.palette.hintOther": "Ctrl K",
+  // Alerts popover under the top bar's bell
+  "adminShell.alerts.title": "Waiting on staff",
+  "adminShell.alerts.empty": "Nothing is waiting on you",
+  "adminShell.alerts.unavailable": "Count unavailable",
+  "adminShell.alerts.open": "Open {label}",
 
   // AdminSidebar
   "adminSidebar.badge": "Admin",
@@ -271,9 +282,6 @@ export const shared: Catalog = {
   "adminSidebar.homeAria": "QueerPulse admin home",
   "adminSidebar.collapseRail": "Collapse menu",
   "adminSidebar.expandRail": "Expand menu",
-  "adminSidebar.search.label": "Search admin pages",
-  "adminSidebar.search.placeholder": "Search pages",
-  "adminSidebar.search.empty": "No admin page matches that.",
   "adminSidebar.search.results_one": "{count} page",
   "adminSidebar.search.results_other": "{count} pages",
 

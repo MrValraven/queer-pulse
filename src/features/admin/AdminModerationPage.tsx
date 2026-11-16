@@ -1,9 +1,20 @@
 import { FiX } from "react-icons/fi";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { FadeIn, Select } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  FilterChips,
+  Select,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import {
+  AdminNotice,
+  AdminPageHeader,
+  AdminTabs,
+  AdminToolbar,
+  adminToolbarClasses,
+} from "./ui";
 import { AdminReportDrawer } from "./AdminReportDrawer";
 import { AdminAppealDrawer } from "./AdminAppealDrawer";
 import {
@@ -20,6 +31,7 @@ import {
   type FilterId,
 } from "./useModerationQueue";
 import { ALL_COMMUNITIES } from "./moderationQueue.types";
+import { MODERATION_FILTERS } from "./AdminModerationPage.data";
 import styles from "./AdminModerationPage.module.css";
 
 export function AdminModerationPage() {
@@ -35,16 +47,6 @@ export function AdminModerationPage() {
     ...q.communityOptions.map((slug) => ({ value: slug, label: slug })),
   ];
 
-  // TS-06 adds the last two: the reports whose response window has already
-  // closed, and the subjects several different people are reporting at once.
-  const FILTERS: { id: FilterId; labelKey: string }[] = [
-    { id: "all", labelKey: "admin:moderation.filters.all" },
-    { id: "emergencies", labelKey: "admin:moderation.filters.emergencies" },
-    { id: "mine", labelKey: "admin:moderation.filters.mine" },
-    { id: "overdue", labelKey: "admin:moderation.filters.overdue" },
-    { id: "surge", labelKey: "admin:moderation.filters.surge" },
-  ];
-
   return (
     <AdminShell
       title={
@@ -56,7 +58,7 @@ export function AdminModerationPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:moderation.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             q.counts.open === 0 ? (
               <Translation
@@ -75,24 +77,23 @@ export function AdminModerationPage() {
         />
       </FadeIn>
 
-      {q.subjectId && (
-        <div className={styles.subjectFilter}>
-          <span>
+      <div className={styles.body}>
+        {q.subjectId && (
+          <AdminNotice
+            tone="info"
+            action={
+              <Button variant="quiet" size="sm" onClick={q.clearSubjectFilter}>
+                <FiX aria-hidden />
+                {t("admin:moderation.subjectFilter.clearAriaLabel")}
+              </Button>
+            }
+          >
             {t("admin:moderation.subjectFilter.label", {
               subjectId: q.subjectId,
             })}
-          </span>
-          <button
-            type="button"
-            onClick={q.clearSubjectFilter}
-            aria-label={t("admin:moderation.subjectFilter.clearAriaLabel")}
-          >
-            <FiX aria-hidden />
-          </button>
-        </div>
-      )}
+          </AdminNotice>
+        )}
 
-      <div className={styles.toolbar}>
         <AdminTabs
           tabs={[
             {
@@ -110,66 +111,58 @@ export function AdminModerationPage() {
               label: t("admin:moderation.tabs.resolved"),
               count: q.counts.resolved,
             },
-            // TS-12. Its own tab rather than a banner on the open queue:
-            // nothing on it is a report, and a hold nobody can find is a hold
-            // nobody ratifies, which would quietly turn every permanent ban
-            // into a 72-hour suspension.
+            // TS-12. Its own tab: nothing on it is a report, and a hold
+            // nobody can find is a hold nobody ratifies, which would quietly
+            // turn every permanent ban into a 72-hour suspension.
             {
               id: "ratification",
               label: t("admin:moderation.tabs.ratification"),
               count: q.counts.ratification,
             },
-            // TS-04. No count: this tab is not a pile of items to work
-            // through, it is the reading on the four piles that are.
+            // TS-04. No count: this tab is the reading on the four piles
+            // above it, and holds no items of its own to work through.
             { id: "health", label: t("admin:moderation.tabs.health") },
           ]}
           active={tab}
           onChange={(id) => q.setTab(id as TabId)}
         />
+
         {tab === "open" && (
-          <div
-            className={styles.filters}
-            role="group"
-            aria-label={t("admin:moderation.filterAriaLabel")}
-          >
-            {FILTERS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                aria-pressed={filter === f.id}
-                className={[styles.filter, filter === f.id && styles.filterOn]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => q.setFilter(f.id)}
-              >
-                {t(f.labelKey)}
-              </button>
-            ))}
+          <AdminToolbar label={t("admin:moderation.filterAriaLabel")}>
+            <FilterChips
+              className={adminToolbarClasses.chips}
+              options={MODERATION_FILTERS.map((option) => ({
+                value: option.id,
+                label: t(option.labelKey),
+              }))}
+              value={filter}
+              onChange={(value) => q.setFilter(value as FilterId)}
+            />
             {q.communityOptions.length > 0 && (
               <Select
                 size="sm"
-                className={styles.communityFilter}
+                className={`${adminToolbarClasses.select} ${styles.communityFilter}`}
                 label={t("admin:moderation.community.filterLabel")}
                 options={communityOptions}
                 value={q.community}
                 onChange={(value) => q.setCommunity(value ?? ALL_COMMUNITIES)}
               />
             )}
-          </div>
+          </AdminToolbar>
         )}
+
+        {/* TS-04. Above the queue a moderator came here to work, and silent
+            unless a queue is at warning or critical, so it reads as news
+            and never as standing pressure. Suppressed on the health tab
+            itself, which is the thing it links to. */}
+        {tab !== "health" && <ModerationHealthIndicator isInStack />}
+
+        {tab === "open" && <OpenPane q={q} />}
+        {tab === "appeals" && <AppealsPane q={q} />}
+        {tab === "resolved" && <ResolvedPane q={q} />}
+        {tab === "ratification" && <RatificationPane q={q} />}
+        {tab === "health" && <ModerationQueueHealthPanel />}
       </div>
-
-      {/* TS-04. Above the queue a moderator came here to work, and silent
-          unless a queue is at warning or critical, so it reads as news rather
-          than as standing pressure. Suppressed on the health tab itself, which
-          is the thing it links to. */}
-      {tab !== "health" && <ModerationHealthIndicator />}
-
-      {tab === "open" && <OpenPane q={q} />}
-      {tab === "appeals" && <AppealsPane q={q} />}
-      {tab === "resolved" && <ResolvedPane q={q} />}
-      {tab === "ratification" && <RatificationPane q={q} />}
-      {tab === "health" && <ModerationQueueHealthPanel />}
 
       {q.selected && (
         <AdminReportDrawer

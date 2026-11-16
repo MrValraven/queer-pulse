@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { PointerEvent, ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import { useFormat } from "../../i18n/format";
@@ -10,8 +10,8 @@ import { pendingCount } from "./adminNavMatching";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
 import styles from "./AdminShell.module.css";
 
-/** In the collapsed rail the name is gone from the surface, so it is carried by
- * a tooltip instead — every icon-only control in the rail goes through here. */
+/** In the collapsed rail the name is gone from the surface, so a tooltip
+ * carries it. Every icon-only control in the rail goes through here. */
 function RailLabel({
   label,
   isCollapsed,
@@ -27,6 +27,23 @@ function RailLabel({
       {children}
     </Tooltip>
   );
+}
+
+/** A wide-rail label that runs past the row ends in an ellipsis; on hover the
+ * row then carries the full name as its title. A label that fits gets no
+ * title, so most rows show no hover text at all. */
+function titleWhenTruncated(
+  event: PointerEvent<HTMLElement>,
+  label: string,
+  isCollapsed: boolean,
+) {
+  const row = event.currentTarget;
+  const text = row.querySelector<HTMLElement>("[data-nav-label]");
+  // The icon rail names every control with its tooltip already.
+  const isTruncated =
+    !isCollapsed && !!text && text.scrollWidth > text.clientWidth;
+  if (isTruncated) row.title = label;
+  else row.removeAttribute("title");
 }
 
 /** A pending count, as a pill while the rail is wide and as a corner dot once it
@@ -95,6 +112,9 @@ export function AdminNavLink({
         to={to}
         end={end}
         onClick={onNavigate}
+        onPointerEnter={(event) =>
+          titleWhenTruncated(event, label, isCollapsed)
+        }
         className={({ isActive }) =>
           [
             styles.navItem,
@@ -106,7 +126,10 @@ export function AdminNavLink({
         }
       >
         <Icon aria-hidden />
-        <span className={isCollapsed ? "visuallyHidden" : styles.navLabel}>
+        <span
+          className={isCollapsed ? "visuallyHidden" : styles.navLabel}
+          data-nav-label
+        >
           {label}
         </span>
         {count > 0 && (
@@ -161,44 +184,52 @@ export function AdminNavGroup({
         .filter(Boolean)
         .join(" ")}
     >
-      <RailLabel label={sectionLabel} isCollapsed={isCollapsed}>
-        <button
-          type="button"
-          className={[styles.navHead, isCollapsed && styles.navHeadIcon]
-            .filter(Boolean)
-            .join(" ")}
-          aria-expanded={isOpen}
-          aria-controls={panelId}
-          onClick={onToggle}
-        >
-          {isCollapsed ? (
-            <SectionIcon className={styles.navHeadIconMark} aria-hidden />
-          ) : (
-            <FiChevronDown
-              className={[
-                styles.navHeadChevron,
-                isOpen && styles.navHeadChevronOpen,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              aria-hidden
-            />
-          )}
-          <span
-            className={isCollapsed ? "visuallyHidden" : styles.navHeadLabel}
+      {/* Sticky inside the nav scroller: the head stays pinned while its own
+          links scroll under it, and the next section's head pushes it away. */}
+      <div className={styles.navHeadRow}>
+        <RailLabel label={sectionLabel} isCollapsed={isCollapsed}>
+          <button
+            type="button"
+            className={[styles.navHead, isCollapsed && styles.navHeadIcon]
+              .filter(Boolean)
+              .join(" ")}
+            aria-expanded={isOpen}
+            aria-controls={panelId}
+            onClick={onToggle}
+            onPointerEnter={(event) =>
+              titleWhenTruncated(event, sectionLabel, isCollapsed)
+            }
           >
-            {sectionLabel}
-          </span>
-          {!isOpen && rolledUpCount > 0 && (
-            <NavCount
-              count={rolledUpCount}
-              isAlert={hasAlert}
-              isCollapsed={isCollapsed}
-              suffix={t("shared:adminNav.pendingSuffix")}
-            />
-          )}
-        </button>
-      </RailLabel>
+            {isCollapsed ? (
+              <SectionIcon className={styles.navHeadIconMark} aria-hidden />
+            ) : (
+              <FiChevronDown
+                className={[
+                  styles.navHeadChevron,
+                  isOpen && styles.navHeadChevronOpen,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-hidden
+              />
+            )}
+            <span
+              className={isCollapsed ? "visuallyHidden" : styles.navHeadLabel}
+              data-nav-label
+            >
+              {sectionLabel}
+            </span>
+            {!isOpen && rolledUpCount > 0 && (
+              <NavCount
+                count={rolledUpCount}
+                isAlert={hasAlert}
+                isCollapsed={isCollapsed}
+                suffix={t("shared:adminNav.pendingSuffix")}
+              />
+            )}
+          </button>
+        </RailLabel>
+      </div>
 
       {/* The panel stays mounted so it can animate; the closed class handles
           both the collapse and taking its links out of reach. */}

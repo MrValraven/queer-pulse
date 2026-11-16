@@ -1,6 +1,7 @@
 import { routes } from "../../../app/routeMap";
 import { FadeIn } from "../../../shared/components/ui";
 import { AdminShell } from "../../../shared/components/layout/AdminShell";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminPageHeader } from "../ui";
 import { CurrentMarkReference } from "./CurrentMarkReference";
@@ -41,8 +42,13 @@ export function AdminLogoConceptsPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:logoConcepts.header.eyebrow")}
-          title={t("shared:adminNav.items.logoConcepts")}
+          eyebrow={t("shared:adminNav.sections.site")}
+          title={
+            <Translation
+              i18nKey="admin:logoConcepts.header.title"
+              components={{ em: <em /> }}
+            />
+          }
           sub={t("admin:logoConcepts.header.sub")}
         />
       </FadeIn>

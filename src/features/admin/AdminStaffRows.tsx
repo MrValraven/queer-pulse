@@ -5,6 +5,7 @@ import {
   groupStaffRows,
   type StaffRosterGroup,
 } from "./adminStaffRoster.utils";
+import { adminTableClasses } from "./ui";
 import { AdminStaffRow } from "./AdminStaffRow";
 import styles from "./AdminStaffRows.module.css";
 
@@ -43,13 +44,19 @@ function StaffGroup({
   const headingId = useId();
   return (
     <section className={styles.group} aria-labelledby={headingId}>
-      <h3 id={headingId} className={styles.groupTitle}>
+      <h3
+        id={headingId}
+        className={`${adminTableClasses.headRow} ${styles.groupTitle}`}
+      >
         {t(GROUP_HEADING_KEY[group.tier])}
         <span className={styles.groupCount}>{group.rows.length}</span>
       </h3>
       <ul className={styles.rows}>
         {group.rows.map((staffMember) => (
-          <li key={staffMember.id} className={styles.rowItem}>
+          <li
+            key={staffMember.id}
+            className={`${adminTableClasses.row} ${styles.rowItem}`}
+          >
             <AdminStaffRow staffMember={staffMember} onManage={onManage} />
           </li>
         ))}

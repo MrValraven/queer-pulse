@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -14,6 +15,7 @@ import {
   ArchiveConfirmModal,
   TransferOwnershipModal,
 } from "./ModPanelDangerModals";
+import { AdminPanel, AdminSeg } from "./ui";
 import styles from "./ModPanel.module.css";
 
 const modeToTier = (mode: "open" | "request" | "invite"): AccessTier =>
@@ -76,116 +78,111 @@ export function SettingsTab({
   };
 
   return (
-    <div>
-      <div className={styles.settingsField}>
-        <label className={styles.settingsLabel} htmlFor="mod-name">
-          {t("admin:modPanel.settings.nameLabel")}
-        </label>
-        <input
-          id="mod-name"
-          className={styles.settingsInput}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className={styles.settingsField}>
-        <label className={styles.settingsLabel} htmlFor="mod-desc">
-          {t("admin:modPanel.settings.descLabel")}
-        </label>
-        <input
-          id="mod-desc"
-          className={styles.settingsInput}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder={t("admin:modPanel.settings.descPlaceholder")}
-        />
-      </div>
-      <div className={styles.settingsField}>
-        <label className={styles.settingsLabel}>
-          {t("admin:modPanel.settings.modeLabel")}
-        </label>
-        <div className={styles.modeRow}>
-          {MODE_KEYS.map(([val, labelKey]) => (
-            <button
-              key={val}
-              type="button"
-              className={[
-                styles.modeChip,
-                mode === val && styles.modeChipActive,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setMode(val)}
-            >
-              {t(`admin:${labelKey}`)}
-            </button>
-          ))}
+    <div className={styles.tabStack}>
+      <AdminPanel>
+        <div className={styles.settingsField}>
+          <label className={styles.settingsLabel} htmlFor="mod-name">
+            {t("admin:modPanel.settings.nameLabel")}
+          </label>
+          <input
+            id="mod-name"
+            className={styles.settingsInput}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
-      </div>
-      <div className={styles.settingsField}>
-        <label className={styles.settingsLabel} htmlFor="mod-rules">
-          {t("admin:modPanel.settings.rulesLabel")}
-        </label>
-        <textarea
-          id="mod-rules"
-          className={styles.rulesArea}
-          value={rules}
-          onChange={(e) => setRules(e.target.value)}
-          placeholder={t("admin:modPanel.settings.rulesPlaceholder")}
-        />
-      </div>
-      <div className={styles.saveRow}>
-        <Button
-          variant="primary"
-          onClick={save}
-          disabled={updateCommunity.isPending}
-        >
-          {t("admin:modPanel.settings.saveCta")}
-        </Button>
-      </div>
+        <div className={styles.settingsField}>
+          <label className={styles.settingsLabel} htmlFor="mod-desc">
+            {t("admin:modPanel.settings.descLabel")}
+          </label>
+          <input
+            id="mod-desc"
+            className={styles.settingsInput}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={t("admin:modPanel.settings.descPlaceholder")}
+          />
+        </div>
+        <div className={styles.settingsField}>
+          <span className={styles.settingsLabel} id="mod-mode-label">
+            {t("admin:modPanel.settings.modeLabel")}
+          </span>
+          <AdminSeg
+            ariaLabelledby="mod-mode-label"
+            options={MODE_KEYS.map(([value, labelKey]) => ({
+              value,
+              label: t(`admin:${labelKey}`),
+            }))}
+            value={mode}
+            onChange={(value) => setMode(value as typeof mode)}
+          />
+        </div>
+        <div className={styles.settingsField}>
+          <label className={styles.settingsLabel} htmlFor="mod-rules">
+            {t("admin:modPanel.settings.rulesLabel")}
+          </label>
+          <textarea
+            id="mod-rules"
+            className={styles.rulesArea}
+            value={rules}
+            onChange={(e) => setRules(e.target.value)}
+            placeholder={t("admin:modPanel.settings.rulesPlaceholder")}
+          />
+        </div>
+        <div className={styles.saveRow}>
+          <Button
+            variant="primary"
+            onClick={save}
+            disabled={updateCommunity.isPending}
+          >
+            {t("admin:modPanel.settings.saveCta")}
+          </Button>
+        </div>
+      </AdminPanel>
 
       {/* Archiving and transferring the whole community are owner-only on the
           server, so live mode shows the danger zone to the owner alone (a mod
-          would just hit a 403). Demo keeps it always visible — it's the mock
+          would just hit a 403). Demo keeps it always visible: it's the mock
           showcase, and the seeded moderator persona never actually owns a
           flagship. */}
       {(demoMode || isOwner) && (
-        <>
-          <div className={styles.secLbl}>
-            {t("admin:modPanel.settings.dangerZone")}
-          </div>
-          <div className={styles.dangerZone}>
-            <div className={styles.danger}>
-              {t("admin:modPanel.settings.irreversible")}
-            </div>
-            <div className={styles.dangerRow}>
-              <div className={styles.dangerInfo}>
-                <div className={styles.dangerTitle}>
-                  {t("admin:modPanel.settings.archive.title")}
-                </div>
-                <div className={styles.dangerDesc}>
-                  {t("admin:modPanel.settings.archive.desc")}
-                </div>
+        <AdminPanel
+          title={
+            <>
+              <FiAlertTriangle aria-hidden className={styles.dangerIcon} />{" "}
+              {t("admin:modPanel.settings.dangerZone")}
+            </>
+          }
+          description={t("admin:modPanel.settings.irreversible")}
+          className={styles.dangerZone}
+        >
+          <div className={styles.dangerRow}>
+            <div className={styles.dangerInfo}>
+              <div className={styles.dangerTitle}>
+                {t("admin:modPanel.settings.archive.title")}
               </div>
-              <Button variant="ghost" onClick={() => setArchiveOpen(true)}>
-                {t("admin:modPanel.settings.archive.cta")}
-              </Button>
-            </div>
-            <div className={styles.dangerRow}>
-              <div className={styles.dangerInfo}>
-                <div className={styles.dangerTitle}>
-                  {t("admin:modPanel.settings.transfer.title")}
-                </div>
-                <div className={styles.dangerDesc}>
-                  {t("admin:modPanel.settings.transfer.desc")}
-                </div>
+              <div className={styles.dangerDesc}>
+                {t("admin:modPanel.settings.archive.desc")}
               </div>
-              <Button variant="ghost" onClick={() => setTransferOpen(true)}>
-                {t("admin:modPanel.settings.transfer.cta")}
-              </Button>
             </div>
+            <Button variant="ghost" onClick={() => setArchiveOpen(true)}>
+              {t("admin:modPanel.settings.archive.cta")}
+            </Button>
           </div>
-        </>
+          <div className={styles.dangerRow}>
+            <div className={styles.dangerInfo}>
+              <div className={styles.dangerTitle}>
+                {t("admin:modPanel.settings.transfer.title")}
+              </div>
+              <div className={styles.dangerDesc}>
+                {t("admin:modPanel.settings.transfer.desc")}
+              </div>
+            </div>
+            <Button variant="ghost" onClick={() => setTransferOpen(true)}>
+              {t("admin:modPanel.settings.transfer.cta")}
+            </Button>
+          </div>
+        </AdminPanel>
       )}
 
       {archiveOpen && (

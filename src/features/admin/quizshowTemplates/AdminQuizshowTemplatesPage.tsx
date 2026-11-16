@@ -23,7 +23,7 @@ import {
 } from "../../quizshow/api/useQuizshowTemplates";
 import { QuizshowPickerFade } from "../../quizshow/builder/QuizshowTemplatePicker";
 import { quizshowTemplateErrorKeyOf } from "../../quizshow/templates/quizshowTemplateErrors";
-import { AdminPageHeader } from "../ui";
+import { AdminPageHeader, AdminPanel } from "../ui";
 import { AdminQuizshowTemplateRow } from "./AdminQuizshowTemplateRow";
 import {
   QUIZSHOW_TEMPLATES_HEADING_ID,
@@ -84,7 +84,7 @@ export function AdminQuizshowTemplatesPage() {
       <FadeIn>
         <AdminPageHeader
           titleId={QUIZSHOW_TEMPLATES_HEADING_ID}
-          eyebrow={t("quizshow:templates.list.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.editorial")}
           title={
             <Translation
               i18nKey="quizshow:templates.list.title"
@@ -231,15 +231,17 @@ function TemplatesBody({
 
 function TemplateRows({ rows }: { rows: QuizshowTemplateRow[] }) {
   return (
-    <ul className={styles.rows}>
-      <AnimatePresence initial={false}>
-        {rows.map((row) => (
-          <CollapseListItem key={row.id}>
-            <AdminQuizshowTemplateRow row={row} />
-          </CollapseListItem>
-        ))}
-      </AnimatePresence>
-    </ul>
+    <AdminPanel as="div" padding="flush" className={styles.rowsPanel}>
+      <ul className={styles.rows}>
+        <AnimatePresence initial={false}>
+          {rows.map((row) => (
+            <CollapseListItem key={row.id}>
+              <AdminQuizshowTemplateRow row={row} />
+            </CollapseListItem>
+          ))}
+        </AnimatePresence>
+      </ul>
+    </AdminPanel>
   );
 }
 

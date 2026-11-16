@@ -4,7 +4,14 @@ import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { AdminChip, AdminCat, AdminAvatar } from "./ui";
+import {
+  AdminAvatar,
+  AdminCat,
+  AdminChip,
+  AdminNotice,
+  AdminPanel,
+  adminTableClasses,
+} from "./ui";
 import { portrait } from "./adminPeople.data";
 import { type Community, type QueueItem } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
@@ -44,13 +51,15 @@ export function ScopedQueuePane({ community }: { community: Community }) {
   return (
     <div className={styles.pane}>
       {community.truncated && (
-        <p className={styles.truncatedNotice}>
+        <AdminNotice tone="info">
           {t("admin:communities.queue.truncatedNotice")}
-        </p>
+        </AdminNotice>
       )}
-      {shown.map((r) => (
-        <ReportRow key={r.title} item={r} />
-      ))}
+      <AdminPanel padding="flush">
+        {shown.map((r) => (
+          <ReportRow key={r.title} item={r} />
+        ))}
+      </AdminPanel>
       {extra > 0 && (
         <div className={styles.queueMore}>
           {t("admin:communities.queue.moreHandled", { count: extra })}
@@ -69,7 +78,7 @@ function ReportRow({ item }: { item: QueueItem }) {
         ? "jade"
         : "coral";
   return (
-    <div className={styles.reportRow}>
+    <div className={`${adminTableClasses.row} ${styles.reportRow}`}>
       <span
         className={`${styles.severity} ${styles[`sev_${item.severity}`]}`}
         aria-hidden
@@ -97,35 +106,42 @@ export function MembersPane({ community }: { community: Community }) {
   const { demoMode } = useDemoMode();
   return (
     <div className={styles.pane}>
-      {community.moderators.map((m) => (
-        <div key={m.name} className={styles.memberRow}>
-          <AdminAvatar
-            initials={m.initials}
-            tone={m.tone}
-            size="md"
-            // `portrait()` looks up the mock adminPeople fixture and
-            // `verified` asserts a check the platform doesn't compute — both
-            // are demo-only chrome. On the live path a real moderator who
-            // happens to share a fixture name must not get a stranger's
-            // stock photo, and we must not claim a verification we don't have.
-            // Live avatars come from the moderator's own uploaded photo
-            // (`avatarUrl`); `AdminAvatar` falls back to initials when unset.
-            verified={demoMode}
-            src={demoMode ? portrait(m.name) : (m.avatarUrl ?? undefined)}
-            alt={m.name}
-          />
-          <div className={styles.memberMeta}>
-            <div className={styles.memberName}>
-              {m.name}{" "}
-              <span className={styles.memberPronouns}>{m.pronouns}</span>
+      {community.moderators.length > 0 && (
+        <AdminPanel padding="flush">
+          {community.moderators.map((m) => (
+            <div
+              key={m.name}
+              className={`${adminTableClasses.row} ${styles.panelRow}`}
+            >
+              <AdminAvatar
+                initials={m.initials}
+                tone={m.tone}
+                size="md"
+                // `portrait()` looks up the mock adminPeople fixture and
+                // `verified` asserts a check the platform doesn't compute; both
+                // are demo-only chrome. On the live path a real moderator who
+                // happens to share a fixture name must not get a stranger's
+                // stock photo, and we must not claim a verification we don't have.
+                // Live avatars come from the moderator's own uploaded photo
+                // (`avatarUrl`); `AdminAvatar` falls back to initials when unset.
+                verified={demoMode}
+                src={demoMode ? portrait(m.name) : (m.avatarUrl ?? undefined)}
+                alt={m.name}
+              />
+              <div className={styles.memberMeta}>
+                <div className={styles.memberName}>
+                  {m.name}{" "}
+                  <span className={styles.memberPronouns}>{m.pronouns}</span>
+                </div>
+                <div className={styles.memberDetail}>{m.role}</div>
+              </div>
+              <AdminChip tone="jade">
+                {t("admin:communities.members.moderatorChip")}
+              </AdminChip>
             </div>
-            <div className={styles.memberDetail}>{m.role}</div>
-          </div>
-          <AdminChip tone="jade">
-            {t("admin:communities.members.moderatorChip")}
-          </AdminChip>
-        </div>
-      ))}
+          ))}
+        </AdminPanel>
+      )}
 
       <Button variant="ghost" to={routes.adminMembers}>
         {t("admin:communities.members.seeAllCta", {

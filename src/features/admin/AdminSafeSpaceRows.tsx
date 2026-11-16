@@ -1,8 +1,16 @@
+import { FiExternalLink } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { businessPath } from "../../app/routeMap";
-import { AdminChip, type AdminTone } from "./ui";
+import {
+  AdminChip,
+  AdminEmptyState,
+  AdminPanel,
+  AdminRowActions,
+  adminTableClasses,
+  type AdminTone,
+} from "./ui";
 import { useSetSafeSpace } from "./api/useSetSafeSpace";
 import { classifyVisitBarRefusal } from "./api/safeSpaceVisitBarError";
 import type {
@@ -31,14 +39,18 @@ export function AdminSafeSpaceRows({
 
   if (candidates.length === 0) {
     return (
-      <p className={styles.emptyLine}>{t("admin:adminSafeSpaces.empty")}</p>
+      <AdminEmptyState size="inline" title={t("admin:adminSafeSpaces.empty")} />
     );
   }
 
   return (
-    <div className={styles.rows}>
+    <AdminPanel padding="flush" isOverflowVisible>
       {candidates.map((candidate, index) => (
-        <FadeIn key={candidate.ref} delay={Math.min(index, 8) * 50}>
+        <FadeIn
+          key={candidate.ref}
+          delay={Math.min(index, 8) * 50}
+          className={styles.item}
+        >
           <AdminSafeSpaceRow
             candidate={candidate}
             onStatusChanged={onStatusChanged}
@@ -46,7 +58,7 @@ export function AdminSafeSpaceRows({
           />
         </FadeIn>
       ))}
-    </div>
+    </AdminPanel>
   );
 }
 
@@ -111,7 +123,7 @@ function AdminSafeSpaceRow({
   }
 
   return (
-    <div className={styles.row}>
+    <div className={`${adminTableClasses.row} ${styles.row}`}>
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
           <span className={styles.rowName}>{candidate.name}</span>
@@ -134,10 +146,10 @@ function AdminSafeSpaceRow({
         </div>
         <div className={styles.rowMeta}>{candidate.hood}</div>
       </div>
-      <div className={styles.rowActions}>
+      <AdminRowActions className={styles.rowActions}>
         <Button
           variant={isVerified ? "ghost" : "jade"}
-          size="md"
+          size="sm"
           onClick={toggleStatus}
           disabled={setSafeSpace.isPending}
         >
@@ -147,19 +159,22 @@ function AdminSafeSpaceRow({
               ? t("admin:adminSafeSpaces.markWithReasonCta")
               : t("admin:adminSafeSpaces.markCta")}
         </Button>
+        <Button variant="ghost" size="sm" onClick={() => onEdit(candidate)}>
+          {t("admin:adminSafeSpaces.editCta")}
+        </Button>
+        {/* Opens the public page in a new tab: a quiet link beside the two
+            outline actions. */}
         <Button
-          variant="ghost"
-          size="md"
+          variant="quiet"
+          size="sm"
           to={businessPath(candidate.slug)}
           target="_blank"
           rel="noopener noreferrer"
         >
           {t("admin:adminSafeSpaces.viewCta")}
+          <FiExternalLink aria-hidden />
         </Button>
-        <Button variant="ghost" size="md" onClick={() => onEdit(candidate)}>
-          {t("admin:adminSafeSpaces.editCta")}
-        </Button>
-      </div>
+      </AdminRowActions>
     </div>
   );
 }

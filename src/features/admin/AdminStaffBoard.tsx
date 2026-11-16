@@ -30,6 +30,8 @@ export function AdminStaffBoard({
 }) {
   const [filters, setFilters] =
     useState<StaffRosterFilters>(EMPTY_STAFF_FILTERS);
+  // Collapsed by default: twelve grant tiles would push the roster far down.
+  const [isCoverageOpen, setIsCoverageOpen] = useState(false);
   const coverageHeadingRef = useRef<HTMLHeadingElement>(null);
   const rosterHeadingRef = useRef<HTMLHeadingElement>(null);
 
@@ -82,8 +84,10 @@ export function AdminStaffBoard({
   };
 
   // The uncovered tile has no roster filter to apply: the answer lives in the
-  // coverage panel, so it brings that panel into view and hands it focus.
+  // coverage panel, so it opens that panel, brings it into view and hands it
+  // focus.
   const focusCoverage = () => {
+    setIsCoverageOpen(true);
     const heading = coverageHeadingRef.current;
     if (!heading) return;
     scrollToHeading(heading);
@@ -103,6 +107,9 @@ export function AdminStaffBoard({
         activeGrant={filters.grant}
         onToggleGrant={toggleGrant}
         headingRef={coverageHeadingRef}
+        isOpen={isCoverageOpen}
+        onToggleOpen={() => setIsCoverageOpen((isOpen) => !isOpen)}
+        uncoveredCount={summary.uncoveredGrantCount}
       />
       <AdminStaffRosterSection
         visibleRows={visibleRows}

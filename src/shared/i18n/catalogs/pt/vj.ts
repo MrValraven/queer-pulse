@@ -18,6 +18,7 @@ export const vj: Catalog = {
     "Os teus clips ainda estão a carregar. Se saíres agora, os carregamentos param e vais ter de adicionar esses ficheiros outra vez",
   "page.leaveWhileMakingPreviews.body":
     "Ainda estamos a criar pré-visualizações. Se saíres desta página, param",
+  "page.header.title": "Biblioteca <em>VJ</em>",
   "library.sub": "Todos os clips que carregaste, os mais recentes primeiro",
   "pack.sub": "O comando mostra os clips deste pack por esta ordem",
 

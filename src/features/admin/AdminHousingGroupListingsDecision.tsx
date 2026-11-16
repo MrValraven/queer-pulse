@@ -7,7 +7,7 @@ import {
   DECISION_META,
   DECISION_VARIANT,
 } from "./adminHousingGroupListingsStatus";
-import { AdminModal } from "./ui";
+import { AdminModal, AdminRowActions, adminRowActionClasses } from "./ui";
 import styles from "./AdminHousingGroupListingsPage.module.css";
 
 /**
@@ -113,22 +113,29 @@ export function GroupListingDecisionBar({
         title: listingTitle,
       })}
     >
-      {decisions.map((next) => {
-        const meta = DECISION_META[next];
-        const DecisionIcon = meta.icon;
-        return (
-          <Button
-            key={next}
-            size="md"
-            variant={DECISION_VARIANT[next]}
-            disabled={isPending}
-            onClick={() => onDecide(next)}
-          >
-            <DecisionIcon aria-hidden />
-            {t(meta.labelKey)}
-          </Button>
-        );
-      })}
+      <AdminRowActions>
+        {decisions.map((next) => {
+          const meta = DECISION_META[next];
+          const DecisionIcon = meta.icon;
+          // A refusal in a row is an outline in the danger tone.
+          const isDestructive = DECISION_VARIANT[next] === "danger";
+          return (
+            <Button
+              key={next}
+              size="sm"
+              variant={isDestructive ? "ghost" : DECISION_VARIANT[next]}
+              className={
+                isDestructive ? adminRowActionClasses.danger : undefined
+              }
+              disabled={isPending}
+              onClick={() => onDecide(next)}
+            >
+              <DecisionIcon aria-hidden />
+              {t(meta.labelKey)}
+            </Button>
+          );
+        })}
+      </AdminRowActions>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { FiAlertTriangle, FiClock, FiRefreshCw } from "react-icons/fi";
+import { FiClock, FiRefreshCw } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
@@ -8,6 +8,7 @@ import type {
   ModerationQueueSeverity,
 } from "./api/moderationHealth.api";
 import { severityPresentation } from "./moderationQueueHealth";
+import { AdminNotice, AdminPanel, AdminStat, AdminStatTiles } from "./ui";
 import {
   SEVERITY_ORDER,
   overdueEmphasis,
@@ -33,9 +34,11 @@ const SEVERITY_TONE: Record<ModerationQueueSeverity, string | undefined> = {
   critical: styles.toneCritical,
 };
 
+/** "Past its window" reads calm (jade) at zero and loud (the alert tile) only
+ *  while the overall reading is already past ok. */
 const OVERDUE_FIGURE: Record<OverdueEmphasis, string | undefined> = {
   calm: styles.figureCalm,
-  loud: styles.figureLoud,
+  loud: undefined,
   plain: undefined,
 };
 
@@ -73,8 +76,8 @@ export function ModerationQueueHealthOverview({
   const headline = overviewHeadline(health);
 
   return (
-    <section className={`${styles.card} ${CARD_WASH[severity] ?? ""}`}>
-      <div className={styles.cardBody}>
+    <AdminPanel className={`${styles.overview} ${CARD_WASH[severity] ?? ""}`}>
+      <div className={styles.overviewBody}>
         <div
           className={styles.headlineRow}
           role="status"
@@ -105,7 +108,7 @@ export function ModerationQueueHealthOverview({
           refreshFailure={refreshFailure}
         />
       </div>
-    </section>
+    </AdminPanel>
   );
 }
 
@@ -127,49 +130,52 @@ function OverviewFooter({
     onRefresh();
   };
 
+  const refreshButton = (
+    <Button
+      variant="quiet"
+      size="sm"
+      className={`${styles.refreshButton} ${styles.busyButton}`}
+      aria-disabled={isFetching}
+      aria-busy={isFetching}
+      onClick={refresh}
+    >
+      <FiRefreshCw
+        aria-hidden
+        className={isFetching ? styles.refreshIconSpinning : undefined}
+      />
+      {t("admin:moderationHealth.refresh")}
+    </Button>
+  );
+
+  if (refreshFailure) {
+    return (
+      <AdminNotice tone="warn" action={refreshButton}>
+        {measuredAt
+          ? t("admin:moderationHealth.overview.refreshFailed", {
+              time: measuredAt,
+            })
+          : t("admin:moderationHealth.overview.refreshFailedUndated")}
+        {refreshFailure.reason && " "}
+        {refreshFailure.reason && (
+          <span className={styles.refreshFailedReason}>
+            {t("admin:moderationHealth.overview.refreshFailedReason", {
+              reason: refreshFailure.reason,
+            })}
+          </span>
+        )}
+      </AdminNotice>
+    );
+  }
+
   return (
     <div className={styles.footer}>
-      {refreshFailure ? (
-        <p className={styles.refreshFailed} role="status">
-          <FiAlertTriangle aria-hidden className={styles.refreshFailedGlyph} />
-          <span>
-            {measuredAt
-              ? t("admin:moderationHealth.overview.refreshFailed", {
-                  time: measuredAt,
-                })
-              : t("admin:moderationHealth.overview.refreshFailedUndated")}
-            {refreshFailure.reason && " "}
-            {refreshFailure.reason && (
-              <span className={styles.refreshFailedReason}>
-                {t("admin:moderationHealth.overview.refreshFailedReason", {
-                  reason: refreshFailure.reason,
-                })}
-              </span>
-            )}
-          </span>
-        </p>
-      ) : (
-        measuredAt && (
-          <span className={styles.measuredAt}>
-            <FiClock aria-hidden />
-            {t("admin:moderationHealth.measuredAt", { time: measuredAt })}
-          </span>
-        )
+      {measuredAt && (
+        <span className={styles.measuredAt}>
+          <FiClock aria-hidden />
+          {t("admin:moderationHealth.measuredAt", { time: measuredAt })}
+        </span>
       )}
-      <Button
-        variant="quiet"
-        size="sm"
-        className={`${styles.refreshButton} ${styles.busyButton}`}
-        aria-disabled={isFetching}
-        aria-busy={isFetching}
-        onClick={refresh}
-      >
-        <FiRefreshCw
-          aria-hidden
-          className={isFetching ? styles.refreshIconSpinning : undefined}
-        />
-        {t("admin:moderationHealth.refresh")}
-      </Button>
+      {refreshButton}
     </div>
   );
 }
@@ -231,77 +237,66 @@ function OverviewTotals({ health }: { health: ModerationQueueHealthDTO }) {
   const overdue = overdueEmphasis(totals.overdue, health.overallSeverity);
 
   return (
-    <dl className={styles.totals}>
-      <TotalTile
+    <AdminStatTiles columns={4}>
+      <AdminStat
         label={t("admin:moderationHealth.stat.depth")}
-        figure={totals.waiting}
-        formatted={format.number(totals.waiting)}
-        note={t("admin:moderationHealth.overview.total.waitingNote", {
+        value={
+          <RollingNumber
+            value={format.number(totals.waiting)}
+            numericValue={totals.waiting}
+          />
+        }
+        hint={t("admin:moderationHealth.overview.total.waitingNote", {
           count: totals.queueCount,
         })}
       />
-      <TotalTile
+      <AdminStat
         label={t("admin:moderationHealth.stat.overdue")}
-        figure={totals.overdue}
-        formatted={format.number(totals.overdue)}
-        figureClassName={OVERDUE_FIGURE[overdue]}
-        note={t("admin:moderationHealth.overview.total.overdueNote")}
+        tone={overdue === "loud" ? "alert" : "default"}
+        value={
+          <span className={OVERDUE_FIGURE[overdue]}>
+            <RollingNumber
+              value={format.number(totals.overdue)}
+              numericValue={totals.overdue}
+            />
+          </span>
+        }
+        hint={t("admin:moderationHealth.overview.total.overdueNote")}
       />
-      {totals.unclaimed === null ? (
-        <div className={styles.tile}>
-          <dt className={styles.tileLabel}>
-            {t("admin:moderationHealth.stat.unassigned")}
-          </dt>
-          <dd className={`${styles.tileFigure} ${styles.tileFigureMuted}`}>
-            {t("admin:moderationHealth.overview.total.unclaimedNotApplicable")}
-          </dd>
-          <dd className={styles.tileNote}>
-            {t("admin:moderationHealth.overview.total.unclaimedNoClaimingNote")}
-          </dd>
-        </div>
-      ) : (
-        <TotalTile
-          label={t("admin:moderationHealth.stat.unassigned")}
-          figure={totals.unclaimed}
-          formatted={format.number(totals.unclaimed)}
-          note={t("admin:moderationHealth.overview.total.unclaimedNote")}
-        />
-      )}
-      <TotalTile
+      {/* A null means no queue here has a claiming step. It is a statement,
+          so it reads quieter than a number on the number's line. */}
+      <AdminStat
+        label={t("admin:moderationHealth.stat.unassigned")}
+        value={
+          totals.unclaimed === null ? (
+            <span className={styles.statStatement}>
+              {t(
+                "admin:moderationHealth.overview.total.unclaimedNotApplicable",
+              )}
+            </span>
+          ) : (
+            <RollingNumber
+              value={format.number(totals.unclaimed)}
+              numericValue={totals.unclaimed}
+            />
+          )
+        }
+        hint={t(
+          totals.unclaimed === null
+            ? "admin:moderationHealth.overview.total.unclaimedNoClaimingNote"
+            : "admin:moderationHealth.overview.total.unclaimedNote",
+        )}
+      />
+      <AdminStat
         label={t("admin:moderationHealth.overview.total.rota")}
-        figure={rota}
-        formatted={format.number(rota)}
-        figureClassName={rota === 0 ? styles.figureLoud : undefined}
-        note={t("admin:moderationHealth.overview.total.rotaNote", {
+        tone={rota === 0 ? "alert" : "default"}
+        value={
+          <RollingNumber value={format.number(rota)} numericValue={rota} />
+        }
+        hint={t("admin:moderationHealth.overview.total.rotaNote", {
           count: rota,
         })}
       />
-    </dl>
-  );
-}
-
-interface TotalTileProps {
-  label: string;
-  figure: number;
-  formatted: string;
-  note: string;
-  figureClassName?: string;
-}
-
-function TotalTile({
-  label,
-  figure,
-  formatted,
-  note,
-  figureClassName,
-}: TotalTileProps) {
-  return (
-    <div className={styles.tile}>
-      <dt className={styles.tileLabel}>{label}</dt>
-      <dd className={`${styles.tileFigure} ${figureClassName ?? ""}`}>
-        <RollingNumber value={formatted} numericValue={figure} />
-      </dd>
-      <dd className={styles.tileNote}>{note}</dd>
-    </div>
+    </AdminStatTiles>
   );
 }

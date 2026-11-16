@@ -1,10 +1,12 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
+import { Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
   PlatformLogPartyView,
   PlatformLogRowView,
 } from "./api/platformLog.adapters";
+import { adminTableClasses } from "../ui";
 import styles from "./AdminPlatformLogPage.module.css";
 
 function PartyName({
@@ -52,7 +54,7 @@ export function PlatformLogRow({
     : styles.subject;
 
   return (
-    <li className={styles.row}>
+    <li className={`${adminTableClasses.row} ${styles.row}`}>
       <span className={`${styles.icon} ${styles[`icon_${row.tone}`]}`}>
         <Icon aria-hidden />
       </span>
@@ -103,9 +105,13 @@ export function PlatformLogRow({
           ) : null}
         </p>
         {row.note ? (
-          <p id={noteId} className={styles.note} hidden={!isNoteOpen}>
-            {row.note}
-          </p>
+          // The id sits on a wrapper that stays mounted, so the toggle's
+          // aria-controls always resolves while the note folds in and out.
+          <div id={noteId}>
+            <Collapse isOpen={isNoteOpen}>
+              <p className={styles.note}>{row.note}</p>
+            </Collapse>
+          </div>
         ) : null}
       </div>
     </li>

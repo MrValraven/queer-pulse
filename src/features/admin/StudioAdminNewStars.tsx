@@ -15,6 +15,7 @@ import { StudioAdminSpotlightPicker } from "./StudioAdminSpotlightPicker";
 import { useStudioAdminNewStarsActions } from "./useStudioAdminNewStarsActions";
 import { focusNeighbourControl } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminSpotlight.module.css";
+import { AdminPanel } from "./ui";
 
 /** New stars: up to 12 artists in order, each with a drag handle, Move up,
  *  Move down, Edit note and Remove artist. Add artist sits by the count, or
@@ -58,16 +59,12 @@ export function StudioAdminNewStars({
   }
 
   return (
-    <section className={css.section} aria-labelledby={headingId}>
-      <div className={css.head}>
-        <h2
-          id={headingId}
-          ref={headingRef}
-          tabIndex={-1}
-          className={css.heading}
-        >
-          {t("admin:studioAdmin.spotlight.newStarsTitle")}
-        </h2>
+    <AdminPanel
+      title={t("admin:studioAdmin.spotlight.newStarsTitle")}
+      titleId={headingId}
+      titleRef={headingRef}
+      isTitleFocusable
+      actions={
         <div className={css.headEnd}>
           <p className={css.count}>
             {t("admin:studioAdmin.spotlight.count", { count: stars.length })}
@@ -87,7 +84,9 @@ export function StudioAdminNewStars({
             </Button>
           </Collapse>
         </div>
-      </div>
+      }
+      bodyClassName={css.section}
+    >
       <Collapse isOpen={isFull}>
         <p id={fullHintId} className={css.fullHint}>
           {t("studio:errors.spotlightSlotFull")}
@@ -146,6 +145,6 @@ export function StudioAdminNewStars({
           />
         )}
       </AnimatePresence>
-    </section>
+    </AdminPanel>
   );
 }

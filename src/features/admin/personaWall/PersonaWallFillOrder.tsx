@@ -2,6 +2,7 @@ import { useEffect, useId } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Collapse, RadioCardGroup } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AdminPanel } from "../ui";
 import type { PersonaWallFillOrder as FillOrder } from "../../subprofiles/api/personaWall.api";
 import {
   usePersonaWallIsWriting,
@@ -47,15 +48,14 @@ export function PersonaWallFillOrder({ fillOrder }: { fillOrder: FillOrder }) {
   };
 
   return (
-    <section className={styles.panel} aria-labelledby={headingId}>
-      <div>
-        <h2 id={headingId} className={styles.heading}>
-          {t("admin:personaWall.fill.heading")}
-        </h2>
-        <p id={introId} className={styles.intro}>
-          {t("admin:personaWall.fill.intro")}
-        </p>
-      </div>
+    <AdminPanel
+      title={t("admin:personaWall.fill.heading")}
+      titleId={headingId}
+      bodyClassName={styles.panelBody}
+    >
+      <p id={introId} className={styles.intro}>
+        {t("admin:personaWall.fill.intro")}
+      </p>
       <RadioCardGroup
         value={fillOrder}
         onChange={chooseFillOrder}
@@ -96,6 +96,6 @@ export function PersonaWallFillOrder({ fillOrder }: { fillOrder: FillOrder }) {
           )}
         </p>
       </Collapse>
-    </section>
+    </AdminPanel>
   );
 }

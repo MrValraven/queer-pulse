@@ -1,6 +1,12 @@
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminToggle } from "./ui";
+import {
+  AdminPanel,
+  AdminRowActions,
+  AdminToggle,
+  adminRowActionClasses,
+  adminTableClasses,
+} from "./ui";
 import type { HousingCoopDTO } from "../economy/api/housingCoop.api";
 import styles from "./AdminHousingCoopsPage.module.css";
 
@@ -29,9 +35,9 @@ export function AdminHousingCoopRows({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.rows}>
+    <AdminPanel padding="flush">
       {coops.map((coop) => (
-        <div className={styles.row} key={coop.id}>
+        <div className={`${adminTableClasses.row} ${styles.row}`} key={coop.id}>
           <div className={styles.rowMain}>
             <div className={styles.rowTop}>
               <span className={styles.rowName}>{coop.name}</span>
@@ -51,16 +57,21 @@ export function AdminHousingCoopRows({
             onChange={() => onTogglePublished(coop)}
             label={t("admin:common.publishedToggleLabel", { name: coop.name })}
           />
-          <div className={styles.rowActions}>
-            <Button variant="ghost" size="md" onClick={() => onEdit(coop)}>
+          <AdminRowActions className={styles.rowActions}>
+            <Button variant="ghost" size="sm" onClick={() => onEdit(coop)}>
               {t("admin:common.edit")}
             </Button>
-            <Button variant="ghost" size="md" onClick={() => onDelete(coop)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={adminRowActionClasses.danger}
+              onClick={() => onDelete(coop)}
+            >
               {t("admin:common.delete")}
             </Button>
-          </div>
+          </AdminRowActions>
         </div>
       ))}
-    </div>
+    </AdminPanel>
   );
 }

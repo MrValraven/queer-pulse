@@ -6,7 +6,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminSeg, AdminToggle } from "./ui";
+import { AdminSeg, AdminToggle, AdminToolbar, adminToolbarClasses } from "./ui";
 import { NOMINATION_SCOPE_OPTIONS } from "./adminSafeSpaceGovernance.data";
 import { AdminSafeSpaceNominationRows } from "./AdminSafeSpaceNominationRows";
 import { AdminSafeSpaceNominationDrawer } from "./AdminSafeSpaceNominationDrawer";
@@ -64,8 +64,8 @@ export function AdminSafeSpaceNominationsPanel() {
     <>
       <p className={styles.summary}>{t("safety:governance.nominations.sub")}</p>
 
-      <FadeIn delay={60}>
-        <div className={styles.toolbar}>
+      <FadeIn delay={60} className={styles.stack}>
+        <AdminToolbar label={t("shared:filterPage.filtersCta")}>
           <AdminSeg
             options={NOMINATION_SCOPE_OPTIONS.map((option) => ({
               value: option.value,
@@ -85,17 +85,16 @@ export function AdminSafeSpaceNominationsPanel() {
           <AdminToggle
             checked={isBreachedOnly}
             onChange={setIsBreachedOnly}
-            label={t("safety:governance.filter.breachedOnly")}
+            inlineLabel={t("safety:governance.filter.breachedOnly")}
           />
-          <div className={styles.toolbarSearch}>
-            <SearchInput
-              value={search}
-              onChange={setSearch}
-              placeholder={t("safety:governance.filter.searchPlaceholder")}
-              ariaLabel={t("safety:governance.filter.searchPlaceholder")}
-            />
-          </div>
-        </div>
+          <SearchInput
+            className={adminToolbarClasses.search}
+            value={search}
+            onChange={setSearch}
+            placeholder={t("safety:governance.filter.searchPlaceholder")}
+            ariaLabel={t("safety:governance.filter.searchPlaceholder")}
+          />
+        </AdminToolbar>
 
         <p className={styles.summary} role="status">
           {t("safety:governance.summary.inQueue", { count: total })}
@@ -113,7 +112,7 @@ export function AdminSafeSpaceNominationsPanel() {
         </p>
       </FadeIn>
 
-      <FadeIn delay={110}>
+      <FadeIn delay={110} className={styles.stack}>
         {/* An outage must not read as "no nominations waiting": a place
             promised acknowledgement within 48 hours is still waiting whether
             or not the queue reached the browser (DES-22). */}

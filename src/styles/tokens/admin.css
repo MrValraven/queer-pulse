@@ -1,0 +1,74 @@
+/* Admin console roles. One place for the numbers every admin page shares, so
+   the kit (src/features/admin/ui) and the pages read the same sizes and the
+   css-scale ratchet stays green. Values that live in another scale point at
+   it; the rest are the console's own layout measurements. */
+:root {
+  /* Controls and rows */
+  --admin-control-h: 36px; /* search, chips, selects, toolbar buttons */
+  --admin-row-h: 52px; /* table and list row, comfortable */
+  --admin-row-h-compact: 44px; /* table and list row, compact */
+  --admin-tab-h: 40px; /* page-level tab strip */
+  --admin-tab-underline: 2px; /* active tab underline */
+  --admin-tab-h-touch: 44px; /* tab strip height on a coarse pointer */
+  --admin-tab-pad-x: 12px; /* tab horizontal padding */
+  --admin-pill-pad: 1px 6px; /* count pill inside a tab */
+  --admin-row-pad: 14px 16px; /* list row padding */
+  --admin-row-pad-flat: 12px 0; /* hairline-split row inside a padded panel */
+  --admin-band-pad: 16px var(--admin-panel-pad); /* quiet empty band */
+  --admin-check-row-pad: 0 4px; /* select-all row above a list */
+  --admin-strip-fade: 32px; /* edge fade on a tab strip or segmented control that scrolls */
+  --admin-row-action-pad-x: 14px; /* side padding of a compact button in a row's actions */
+  --admin-field-pad-x: 12px; /* side padding of a text field on the control rhythm */
+
+  /* Panels and rhythm */
+  --admin-panel-radius: var(--radius-16);
+  --admin-panel-radius-inner: calc(
+    var(--admin-panel-radius) - 1px
+  ); /* a flush body inside the panel border */
+  --admin-panel-pad: 20px;
+  --admin-section-gap: 24px;
+  --admin-stat-pad: 16px; /* stat tile padding */
+  --admin-stat-gap: 6px; /* between a stat's label, value and delta */
+  --admin-header-gap: 20px; /* page header to its content */
+  --admin-header-inner-gap: 24px; /* title block to its actions */
+  --admin-header-hero-gap: 24px; /* hero header to its content */
+
+  /* Page header */
+  --admin-title-size: var(--text-30);
+  --admin-sub-max-w: 720px; /* two lines at most; longer copy gets trimmed */
+
+  /* Shell */
+  --admin-sidebar-w: 248px;
+  --admin-sidebar-w-collapsed: 64px;
+  --admin-nav-row-h: 34px;
+  --admin-bar-h: 56px;
+  --admin-content-pad-x: 32px;
+  --admin-content-pad-y: 24px;
+  --admin-gutter-mobile: 16px;
+  --admin-touch-target: 44px; /* any shell control on a coarse pointer */
+  --admin-rail-pad-x: 12px; /* wide rail side inset */
+  --admin-rail-pad-x-collapsed: 10px; /* icon rail side inset: 44px controls */
+  --admin-brand-row-h: 48px; /* wordmark and collapse control */
+  --admin-switch-row-h: 44px; /* role switcher row */
+  --admin-foot-row-h: 56px; /* account menu and Back to platform */
+  --admin-nav-row-pad-x: 10px; /* rail row and section head inset */
+  --admin-nav-head-h: 32px; /* sticky section head */
+  --admin-rail-icon-btn: 32px; /* collapse and Back to platform controls */
+  --admin-bar-gap: 12px; /* between top bar groups */
+  --admin-trigger-w: 288px; /* palette trigger at rest */
+  --admin-trigger-pad: 0 8px 0 12px; /* palette trigger: icon side, hint side */
+  --admin-kbd-pad: 2px 6px; /* key hint inside the palette trigger */
+  --admin-rail-gap: 8px; /* vertical rhythm between rail groups */
+  --admin-switch-pad-x: 7px; /* role switcher and account rows: 30px avatar */
+  --admin-nav-row-pad: 6px var(--admin-nav-row-pad-x); /* a row that wraps grows */
+  --admin-palette-offset-top: 12svh; /* command palette drop from the top edge */
+}
+
+/* Phone: panels tighten to the 16px gutter and a smaller corner. The kit reads
+   these same roles, so this block is the one owner of the phone values. */
+@media (max-width: 480px) {
+  :root {
+    --admin-panel-radius: var(--radius-12);
+    --admin-panel-pad: var(--admin-gutter-mobile);
+  }
+}

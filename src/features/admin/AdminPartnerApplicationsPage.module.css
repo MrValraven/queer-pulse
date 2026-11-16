@@ -1,17 +1,13 @@
 /* ── Partner-applications triage queue ───────────────────── */
-.intro {
-  max-width: 62ch;
-  margin: 0 0 22px;
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  line-height: 1.5;
-  color: var(--ink);
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
+}
+/* The queue sits under the assignment filter; the header sub already says
+   what the queue is. */
+.queueGrid {
+  margin-top: var(--gap-sm);
 }
 
 .card {
@@ -21,7 +17,8 @@
   padding: 20px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--admin-panel-radius);
+  box-shadow: var(--shadow-e1);
   transition:
     opacity 0.3s var(--ease, ease),
     transform 0.3s var(--ease, ease);
@@ -94,9 +91,9 @@
   border-radius: var(--radius-pill);
 }
 
+/* The kit's AdminRowActions lays the buttons out; the card pins it to its
+   foot. */
 .actions {
-  display: flex;
-  gap: 10px;
   margin-top: auto;
 }
 
@@ -135,50 +132,28 @@
   box-shadow: var(--focus-field-glow);
 }
 
-/* ── Empty / error notices ───────────────────────────────── */
-.empty,
-.notice {
-  padding: 8px 0;
-}
-
-.emptyText,
-.noticeText {
-  max-width: 60ch;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-17);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
-/* ── Approved-partners editor section ────────────────────── */
+/* ── Approved-partners editor panel ───────────────────────── */
 .featuredSection {
-  margin-top: 40px;
+  margin-top: var(--admin-section-gap);
 }
 
-.sectionTitle {
-  margin: 0 0 16px;
-  font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.rows {
+.skeletons {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Layered on adminTableClasses.row, which owns the hairline, hover and height. */
 .row {
-  display: flex;
-  align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  padding: 16px 18px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card, 22px);
+  padding: var(--admin-row-pad);
 }
 
 .rowMain {
@@ -194,15 +169,14 @@
 }
 
 .rowName {
-  font-family: var(--serif);
-  font-size: var(--text-18);
+  font-size: var(--text-15);
   font-weight: 600;
-  color: var(--ink);
+  color: var(--text-strong);
 }
 
 .rowMeta {
-  margin-top: 5px;
-  font-size: var(--text-13);
+  margin-top: 4px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -211,14 +185,6 @@
   flex-wrap: wrap;
   gap: 8px;
   flex-shrink: 0;
-}
-
-.featuredTag {
-  padding: 3px 10px;
-  font-size: var(--text-12);
-  color: var(--accent-text);
-  background: rgba(var(--accent-rgb), 0.1);
-  border-radius: var(--radius-pill);
 }
 
 /* ── Testimonial editor form ──────────────────────────────── */
@@ -282,8 +248,8 @@
    still live (the intake console). A quiet footnote under the page, not a
    panel: it is history, and it stops mattering once the backlog is worked. */
 .legacyInquiries {
-  margin-top: 40px;
-  font-size: var(--text-13);
+  margin-top: var(--admin-section-gap);
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .legacyInquiries a {

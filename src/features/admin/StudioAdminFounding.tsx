@@ -22,6 +22,7 @@ import { movedIds, studioAdminSaveErrorKeyOf } from "./studioAdmin.model";
 import { focusNeighbourControl } from "./useStudioAdminReorderRow";
 import { studioLoadStateOf } from "../studio/api/studioLoadState";
 import css from "./StudioAdminFounding.module.css";
+import { AdminPanel } from "./ui";
 
 /** The Founding artists tab: the launch shelf switch, the founding list in
  *  order (drag handle, Move up, Move down, Remove founding artist) and the
@@ -100,18 +101,14 @@ export function StudioAdminFounding() {
   }
 
   return (
-    <section className={css.section} aria-labelledby={headingId}>
-      <div className={css.head}>
-        <h2
-          id={headingId}
-          ref={headingRef}
-          tabIndex={-1}
-          className={css.heading}
-        >
-          {t("admin:studioAdmin.founding.heading")}
-        </h2>
-        <p className={css.sub}>{t("admin:studioAdmin.founding.sub")}</p>
-      </div>
+    <AdminPanel
+      title={t("admin:studioAdmin.founding.heading")}
+      titleId={headingId}
+      titleRef={headingRef}
+      isTitleFocusable
+      description={t("admin:studioAdmin.founding.sub")}
+      bodyClassName={css.section}
+    >
       <Collapse isOpen={loadState.isLoading}>
         <SkeletonLine height={160} style={{ borderRadius: 14 }} />
       </Collapse>
@@ -183,6 +180,6 @@ export function StudioAdminFounding() {
         description={t("admin:studioAdmin.founding.removeConfirm.body")}
         confirmLabel={t("admin:studioAdmin.founding.removeCta")}
       />
-    </section>
+    </AdminPanel>
   );
 }

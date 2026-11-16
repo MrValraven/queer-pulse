@@ -1,4 +1,5 @@
 import { Button } from "../../shared/components/ui";
+import { AdminRowActions, adminRowActionClasses } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AdminMembersPage.module.css";
 
@@ -32,11 +33,11 @@ export function JoinRequestDecisionActions({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.queueActions}>
+    <AdminRowActions className={styles.queueActions}>
       <Button
         variant="ghost"
-        size="md"
-        className={styles.queueActionSecondary}
+        size="sm"
+        className={`${styles.queueActionSecondary} ${adminRowActionClasses.danger}`}
         disabled={isBusy}
         onClick={onDecline}
       >
@@ -45,7 +46,7 @@ export function JoinRequestDecisionActions({
       {stage === "pending" && onWaitlist && (
         <Button
           variant="ghost"
-          size="md"
+          size="sm"
           className={styles.queueActionSecondary}
           disabled={isBusy}
           onClick={onWaitlist}
@@ -55,13 +56,13 @@ export function JoinRequestDecisionActions({
       )}
       <Button
         variant="jade"
-        size="md"
+        size="sm"
         className={styles.queueActionPrimary}
         disabled={isBusy}
         onClick={onApprove}
       >
         {t("admin:members.verify.approveCta")}
       </Button>
-    </div>
+    </AdminRowActions>
   );
 }

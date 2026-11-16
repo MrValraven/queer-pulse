@@ -1414,10 +1414,6 @@ export const marketing: Catalog = {
   "listBusiness.wizard.stepGoToAria": "Go to step {number}: {label}",
   "listBusiness.wizard.stepOf": "Step {number} of {total}: {label}",
   "listBusiness.wizard.draftSaved": "Draft saved",
-  "listBusiness.draftBanner.text":
-    "<b>You have a saved draft.</b> Pick up where you left off?",
-  "listBusiness.draftBanner.startFresh": "Start fresh",
-  "listBusiness.draftBanner.resume": "Resume draft",
   "listBusiness.paneActions.back": "Back",
   "listBusiness.paneActions.cancel": "Cancel",
   "listBusiness.paneActions.neededLabel": "A few things left",
@@ -1454,14 +1450,28 @@ export const marketing: Catalog = {
   "listBusiness.saveLater.cause.superseded":
     "This draft was already sent or discarded while we were saving, so there was nothing left to keep.",
   "listBusiness.drafts.title": "Pick up where you left off",
-  "listBusiness.drafts.count": "{count} in progress",
   "listBusiness.drafts.teamNote":
-    "Our team can see your draft's business details and how far you've got, never your answers about yourself. If you get stuck, we may offer a hand, or finish the listing for you to accept.",
+    "Our team can see your draft's business details and how far you've got. Your answers about yourself stay private. If you get stuck, we may offer a hand, or finish the listing for you to accept.",
   "listBusiness.drafts.untitled": "Untitled listing",
-  "listBusiness.drafts.updated": "Last edited {when}",
-  "listBusiness.drafts.resume": "Resume",
   "listBusiness.drafts.resuming": "Opening…",
   "listBusiness.drafts.delete": "Delete draft",
+  "listBusiness.drafts.continue": "Continue",
+  "listBusiness.drafts.saved": "Saved {when}",
+  "listBusiness.drafts.savedJustNow": "just now",
+  "listBusiness.drafts.savedUnknown": "a while ago",
+  "listBusiness.drafts.startAnother": "List another business",
+  "listBusiness.drafts.deleteAndStartOver": "Delete and start over",
+  "listBusiness.drafts.deleted": "Draft deleted",
+  "listBusiness.drafts.deleteConfirm.title": "Delete {name}?",
+  "listBusiness.drafts.deleteConfirm.body":
+    "The draft and everything you filled in will be gone. This can't be undone.",
+  "listBusiness.drafts.deleteConfirm.cancel": "Keep it",
+  "listBusiness.drafts.gone": "This draft was already sent or deleted.",
+  "listBusiness.drafts.openError": "We couldn't open this draft.",
+  "listBusiness.drafts.deleteError": "We couldn't delete this draft.",
+  "listBusiness.drafts.startOverConfirm.title": "Delete {name} and start over?",
+  "listBusiness.drafts.startOverConfirm.body":
+    "The draft and everything you filled in will be gone, and a fresh listing opens. This can't be undone.",
   "listBusiness.drafts.loadError":
     "We couldn't load your saved drafts just now.",
   "listBusiness.resume.invalidTitle": "This draft link is no longer valid",
@@ -3437,6 +3447,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-16.headline":
+    "Leads get staff in charge, drafts wait on a Continue card, and admin gets a redesign.",
   "changelog.releases.2026-11-14.headline":
     "Leads gets a cleaner list, a sectioned Add lead form and a lead page that opens to read.",
   "changelog.releases.2026-11-13.headline":
@@ -3807,6 +3819,18 @@ export const marketing: Catalog = {
     "Richer partner cards in the directory",
   "changelog.entries.partner-cards-redesign.body":
     "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.admin-console-redesign.title":
+    "Every admin page now shares one calm, compact design",
+  "changelog.entries.admin-console-redesign.body":
+    "A new sidebar, a Cmd+K page search, a real alerts list and one set of tabs, tables and notices.",
+  "changelog.entries.staff-leads-assignees.title":
+    "Staff can put teammates in charge of a lead",
+  "changelog.entries.staff-leads-assignees.body":
+    "Each lead shows who follows it up, the list filters to yours, and the Leads badge counts yours or nobody's.",
+  "changelog.entries.listing-draft-continue.title":
+    "Unfinished listings wait for you to continue",
+  "changelog.entries.listing-draft-continue.body":
+    "Leaving the business form on your phone keeps every edit, and coming back opens a Continue card at your step.",
   "changelog.entries.leads-list-and-add-lead-tidied.title":
     "A cleaner leads list and Add lead form",
   "changelog.entries.leads-list-and-add-lead-tidied.body":
@@ -10691,6 +10715,8 @@ export const marketing: Catalog = {
   "directory.hero.note":
     "Community-verified · kept up by members and the businesses themselves",
   "directory.hero.cta": "List your business",
+  "directory.hero.continueNamed": "Continue {name}",
+  "directory.hero.continueListing": "Continue your listing",
   "directory.search.placeholder": "Search by name, neighbourhood, or type…",
   "directory.cat.all": "All",
   "directory.cat.food": "Food & drink",

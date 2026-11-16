@@ -1,7 +1,9 @@
+/* The hub is a grid of link cards. They take the admin panel surface (radius,
+   padding, hairline, resting shadow) so they sit beside every other page. */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  gap: var(--gap-sm);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -17,10 +19,10 @@
   flex: 1;
   flex-direction: column;
   gap: 8px;
-  padding: 20px 22px;
+  padding: var(--admin-panel-pad);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
+  border-radius: var(--admin-panel-radius);
   box-shadow: var(--shadow-e1);
   color: var(--ink);
   text-decoration: none;
@@ -55,15 +57,15 @@
 .cardName {
   margin: 8px 0 0;
   font-family: var(--serif);
-  font-size: var(--text-20);
-  font-weight: 600;
+  font-size: var(--text-16);
+  font-weight: 500;
 }
 
 .cardDescription {
   margin: 0;
-  font-size: var(--text-14);
+  font-size: var(--text-13-5);
   line-height: 1.5;
-  color: rgba(var(--ink-rgb), 0.72);
+  color: var(--ink-60);
 }
 
 .arrow {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useLocalStorage } from "../../hooks";
 import { ADMIN_NAV_SECTIONS } from "./adminNav.data";
@@ -17,9 +17,18 @@ function isOpenSections(value: unknown): value is OpenSections {
   );
 }
 
-/** True when `pathname` is this destination or something nested beneath it. */
-function matchesPath(pathname: string, to: string): boolean {
-  return pathname === to || pathname.startsWith(`${to}/`);
+/** The path part of a nav item's `to`: the text before any `?`. */
+export function navItemPathOf(to: string): string {
+  const queryStart = to.indexOf("?");
+  return queryStart === -1 ? to : to.slice(0, queryStart);
+}
+
+/** True when `pathname` is this destination or something nested beneath it.
+ *  Only the path part of `to` counts, so an item that opens a filtered view
+ *  still claims every page under its path. */
+export function matchesPath(pathname: string, to: string): boolean {
+  const itemPath = navItemPathOf(to);
+  return pathname === itemPath || pathname.startsWith(`${itemPath}/`);
 }
 
 /**
@@ -45,9 +54,10 @@ export function useAdminNavSections() {
     let bestLength = 0;
     for (const section of ADMIN_NAV_SECTIONS) {
       for (const item of section.items) {
-        if (matchesPath(pathname, item.to) && item.to.length > bestLength) {
+        const itemPathLength = navItemPathOf(item.to).length;
+        if (matchesPath(pathname, item.to) && itemPathLength > bestLength) {
           bestId = section.id;
-          bestLength = item.to.length;
+          bestLength = itemPathLength;
         }
       }
     }
@@ -56,8 +66,8 @@ export function useAdminNavSections() {
 
   // Landing on a page inside a closed section opens it, so deep-linking never
   // leaves the admin looking at a link they cannot see. This writes a real
-  // override rather than forcing the section open on every render, so it can be
-  // collapsed again straight afterwards.
+  // override once per landing, so the section can be collapsed again straight
+  // afterwards.
   useEffect(() => {
     if (!activeSectionId) return;
     setOpenSections((current) =>
@@ -67,9 +77,16 @@ export function useAdminNavSections() {
     );
   }, [activeSectionId, setOpenSections]);
 
+  // Until the admin toggles a section on this page, the one holding the page
+  // renders open from the first paint, before the override above lands, so
+  // the active link is there at once with no slide-open after it.
+  const [toggledOnPath, setToggledOnPath] = useState<string>();
+  const forcedOpenId = toggledOnPath === pathname ? undefined : activeSectionId;
+
   const isSectionOpen = useCallback(
-    (id: string, defaultOpen?: boolean) => openSections[id] ?? !!defaultOpen,
-    [openSections],
+    (id: string, defaultOpen?: boolean) =>
+      id === forcedOpenId || (openSections[id] ?? !!defaultOpen),
+    [openSections, forcedOpenId],
   );
 
   // Whether the section holding the current page is showing its links. The nav's
@@ -83,12 +100,14 @@ export function useAdminNavSections() {
     : false;
 
   const toggleSection = useCallback(
-    (id: string, defaultOpen?: boolean) =>
+    (id: string, defaultOpen?: boolean) => {
+      setToggledOnPath(pathname);
       setOpenSections((current) => ({
         ...current,
         [id]: !(current[id] ?? !!defaultOpen),
-      })),
-    [setOpenSections],
+      }));
+    },
+    [setOpenSections, pathname],
   );
 
   return { isSectionOpen, toggleSection, isActiveSectionOpen, pathname };

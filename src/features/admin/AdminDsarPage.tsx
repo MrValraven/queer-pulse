@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminEmptyState, AdminNotice, AdminPageHeader, AdminTabs } from "./ui";
 import { AdminDsarDrawer } from "./AdminDsarDrawer";
 import { AdminDsarRow } from "./AdminDsarRow";
 import { Translation } from "../../shared/i18n/Translation";
@@ -26,7 +26,7 @@ function RowsSkeleton() {
         <SkeletonLine
           key={skeletonIndex}
           height={112}
-          style={{ borderRadius: 22 }}
+          style={{ borderRadius: "var(--admin-panel-radius)" }}
         />
       ))}
     </div>
@@ -78,7 +78,7 @@ export function AdminDsarPage() {
     >
       <FadeIn>
         <AdminPageHeader
-          eyebrow={t("admin:adminDsar.header.eyebrow")}
+          eyebrow={t("shared:adminNav.sections.trust")}
           title={
             <Translation
               i18nKey="admin:adminDsar.header.title"
@@ -108,9 +108,13 @@ export function AdminDsarPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>{t("admin:adminDsar.error")}</p>
+          <div className={styles.state}>
+            <AdminNotice tone="error">{t("admin:adminDsar.error")}</AdminNotice>
+          </div>
         ) : requests.length === 0 ? (
-          <p className={styles.emptyLine}>{t("admin:adminDsar.empty")}</p>
+          <div className={styles.state}>
+            <AdminEmptyState size="inline" title={t("admin:adminDsar.empty")} />
+          </div>
         ) : (
           <>
             <div className={styles.rows}>

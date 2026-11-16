@@ -11,6 +11,7 @@ import {
 } from "./StudioAdminSpotlightParts";
 import { useStudioAdminReorderRow } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminSpotlight.module.css";
+import { AdminRowActions, adminRowActionClasses } from "./ui";
 
 /** The id a dragged New stars row carries, kept apart from anything else
  *  dropped. */
@@ -95,7 +96,7 @@ export function StudioAdminNewStarRow({
           <StudioAdminSpotlightHiddenLine />
         </Collapse>
       </div>
-      <div className={css.actions}>
+      <AdminRowActions className={css.actions}>
         <Button
           ref={moveUpRef}
           variant="ghost"
@@ -104,7 +105,7 @@ export function StudioAdminNewStarRow({
           aria-disabled={isBusy || isFirst || undefined}
           onClick={moveUp}
         >
-          <FiArrowUp aria-hidden /> {t("admin:studioAdmin.moveUpCta")}
+          <FiArrowUp aria-hidden />
         </Button>
         <Button
           ref={moveDownRef}
@@ -116,7 +117,7 @@ export function StudioAdminNewStarRow({
           aria-disabled={isBusy || isLast || undefined}
           onClick={moveDown}
         >
-          <FiArrowDown aria-hidden /> {t("admin:studioAdmin.moveDownCta")}
+          <FiArrowDown aria-hidden />
         </Button>
         <Button
           variant="ghost"
@@ -129,6 +130,7 @@ export function StudioAdminNewStarRow({
           <FiEdit2 aria-hidden /> {t("admin:studioAdmin.spotlight.editNote")}
         </Button>
         <Button
+          className={adminRowActionClasses.danger}
           variant="ghost"
           size="sm"
           aria-label={t("admin:studioAdmin.spotlight.removeAria", {
@@ -142,7 +144,7 @@ export function StudioAdminNewStarRow({
         >
           <FiX aria-hidden /> {t("admin:studioAdmin.spotlight.removeArtist")}
         </Button>
-      </div>
+      </AdminRowActions>
     </m.li>
   );
 }

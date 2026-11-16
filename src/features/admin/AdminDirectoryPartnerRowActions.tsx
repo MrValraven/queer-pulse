@@ -2,6 +2,7 @@ import type { Ref } from "react";
 import { FiArrowDown, FiArrowUp, FiEdit3, FiX } from "react-icons/fi";
 import { IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminRowActions } from "./ui";
 import css from "./AdminDirectoryPartners.module.css";
 
 /** A partner row's four icon actions: Move up, Move down, Edit note and
@@ -33,7 +34,7 @@ export function AdminDirectoryPartnerRowActions({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={css.actions}>
+    <AdminRowActions className={css.actions}>
       <IconButton
         ref={moveUpRef}
         size="sm"
@@ -73,6 +74,6 @@ export function AdminDirectoryPartnerRowActions({
       >
         <FiX aria-hidden />
       </IconButton>
-    </div>
+    </AdminRowActions>
   );
 }

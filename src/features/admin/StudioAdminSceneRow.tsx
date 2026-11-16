@@ -15,6 +15,7 @@ import { tintForId } from "../studio/api/studio.adapters";
 import type { AdminStudioSceneDTO } from "./api/studioDiscoveryAdmin.api";
 import { useStudioAdminReorderRow } from "./useStudioAdminReorderRow";
 import css from "./StudioAdminScenes.module.css";
+import { AdminRowActions } from "./ui";
 
 /** The id a dragged scene carries, kept apart from anything else dropped. */
 const SCENE_DRAG_TYPE = "application/x-studio-admin-scene";
@@ -110,7 +111,7 @@ export function StudioAdminSceneRow({
           })}
         </span>
       </div>
-      <div className={css.sceneActions}>
+      <AdminRowActions className={css.sceneActions}>
         {isActive && (
           <>
             <Button
@@ -123,7 +124,7 @@ export function StudioAdminSceneRow({
               aria-disabled={isBusy || isFirst || undefined}
               onClick={moveUp}
             >
-              <FiArrowUp aria-hidden /> {t("admin:studioAdmin.moveUpCta")}
+              <FiArrowUp aria-hidden />
             </Button>
             <Button
               ref={moveDownRef}
@@ -135,7 +136,7 @@ export function StudioAdminSceneRow({
               aria-disabled={isBusy || isLast || undefined}
               onClick={moveDown}
             >
-              <FiArrowDown aria-hidden /> {t("admin:studioAdmin.moveDownCta")}
+              <FiArrowDown aria-hidden />
             </Button>
           </>
         )}
@@ -181,7 +182,7 @@ export function StudioAdminSceneRow({
               : "admin:studioAdmin.scenes.restoreCta",
           )}
         </Button>
-      </div>
+      </AdminRowActions>
     </m.li>
   );
 }

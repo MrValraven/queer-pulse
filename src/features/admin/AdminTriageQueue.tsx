@@ -4,6 +4,7 @@ import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdminPanel, adminTableClasses } from "./ui";
 import type { QueueRow } from "./adminDashboard.data";
 import styles from "./AdminDashboardPage.module.css";
 
@@ -11,25 +12,27 @@ export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
   const { t } = useTranslation();
   const fmt = useFormat();
 
-  // The rows are already ordered by triage urgency (safety → reports →
-  // verifications → appeals). The old "Sorted by urgency" control was inert — it
-  // only toasted its own label — so it's removed rather than faking a re-sort.
+  // The rows are already ordered by triage urgency (safety, then reports,
+  // verifications, appeals), so the list carries no sort control.
   return (
-    <section className={styles.queueCard}>
-      <div className={styles.secHead}>
-        <h2 className={styles.secTitle}>
-          <Translation
-            i18nKey="admin:dashboard.triage.title"
-            components={{ em: <em /> }}
-          />
-        </h2>
-      </div>
-
-      <div className={styles.queue}>
+    <AdminPanel
+      title={
+        <Translation
+          i18nKey="admin:dashboard.triage.title"
+          components={{ em: <em /> }}
+        />
+      }
+      padding="flush"
+    >
+      <div className={styles.rowList}>
         {queue.map(
           ({ titleKey, subKey, subEmKey, count, tone, icon: Icon, to }) => (
-            <Link key={titleKey} to={to} className={styles.qRow}>
-              <span className={[styles.qIco, styles[`qIco_${tone}`]].join(" ")}>
+            <Link
+              key={titleKey}
+              to={to}
+              className={`${adminTableClasses.row} ${styles.qRow}`}
+            >
+              <span className={[styles.qIco, styles[`tone_${tone}`]].join(" ")}>
                 <Icon aria-hidden />
               </span>
               <span className={styles.qTx}>
@@ -38,7 +41,7 @@ export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
                   {t(subKey)} {subEmKey && <em>{t(subEmKey)}</em>}
                 </span>
               </span>
-              <span className={styles.qCount}>
+              <span className={`${adminTableClasses.numeric} ${styles.qCount}`}>
                 <RollingNumber value={fmt.number(count)} numericValue={count} />
               </span>
               <FiArrowRight className={styles.qArrow} aria-hidden />
@@ -46,6 +49,6 @@ export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
           ),
         )}
       </div>
-    </section>
+    </AdminPanel>
   );
 }
