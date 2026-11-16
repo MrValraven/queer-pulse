@@ -2,25 +2,15 @@ import { useState } from "react";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { AdminCommunityGrid } from "./AdminCommunityGrid";
-import { AdminCommunityDetail } from "./AdminCommunityDetail";
 import { AdminHealthModal } from "./AdminHealthModal";
 import { AdminSupportModal } from "./AdminSupportModal";
 import type { Community } from "./adminCommunities.data";
 
+/** `/admin/communities`: the health grid. Each card links to its community's
+ *  own detail route (`AdminCommunityDetailPage`). */
 export function AdminCommunitiesPage() {
-  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [healthFor, setHealthFor] = useState<Community | null>(null);
   const [supportFor, setSupportFor] = useState<Community | null>(null);
-
-  function openDetail(slug: string) {
-    setSelectedSlug(slug);
-    window.scrollTo(0, 0);
-  }
-
-  function backToGrid() {
-    setSelectedSlug(null);
-    window.scrollTo(0, 0);
-  }
 
   return (
     <AdminShell
@@ -31,11 +21,7 @@ export function AdminCommunitiesPage() {
         />
       }
     >
-      {selectedSlug !== null ? (
-        <AdminCommunityDetail slug={selectedSlug} onBack={backToGrid} />
-      ) : (
-        <AdminCommunityGrid onOpen={openDetail} onHealth={setHealthFor} />
-      )}
+      <AdminCommunityGrid onHealth={setHealthFor} />
 
       {healthFor && (
         <AdminHealthModal

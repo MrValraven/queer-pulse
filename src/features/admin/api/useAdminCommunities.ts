@@ -8,6 +8,7 @@ import {
   cardDtoToCommunity,
   detailDtoToCommunity,
 } from "./adminCommunities.adapters";
+import { ApiError } from "../../../shared/api/client";
 import { getAdminCommunities, getAdminCommunity } from "./adminCommunities.api";
 import { loadModerationTranslate } from "./moderationTranslate";
 
@@ -98,33 +99,44 @@ export function useAdminCommunities() {
   });
 }
 
+/** The demo fixture entry for `slug`, or `null` when none matches. */
+function findDemoCommunity(slug: string | null): Community | null {
+  return COMMUNITIES.find((community) => community.slug === slug) ?? null;
+}
+
 /**
  * One community, with its moderators and scoped queue. `slug` is nullable
- * because the grid view renders with no community selected; `enabled` keeps
- * the query from firing until a card is opened.
+ * so a caller with no community selected can hold the hook idle; `enabled`
+ * keeps the query from firing until there is a slug.
+ *
+ * A slug that matches no community resolves to `null`, in demo (no fixture
+ * entry) and live (a 404) alike, so the detail can say the community was not
+ * found. react-query treats an `undefined` result as a failed query, which
+ * would show the load-error copy for a mistyped link.
  */
 export function useAdminCommunity(slug: string | null) {
   const { demoMode } = useDemoMode();
   const { language } = useTranslation();
   const fmt = useFormat();
-  return useQuery<Community | undefined>({
+  return useQuery<Community | null>({
     queryKey: [ADMIN_COMMUNITIES_KEY, "detail", slug, demoMode, language],
     enabled: slug !== null,
-    initialData: demoMode
-      ? COMMUNITIES.find((community) => community.slug === slug)
-      : undefined,
+    initialData: demoMode ? findDemoCommunity(slug) : undefined,
     queryFn: async () => {
-      if (demoMode) {
-        return COMMUNITIES.find((community) => community.slug === slug);
+      if (demoMode) return findDemoCommunity(slug);
+      if (slug === null) return null;
+      try {
+        // Catalog-bound translator (see useAdminCommunities) — deterministic
+        // regardless of lazy-namespace timing.
+        const [detailDto, translate] = await Promise.all([
+          getAdminCommunity(slug),
+          loadAdminTranslate(language),
+        ]);
+        return detailDtoToCommunity(detailDto, translate, fmt);
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) return null;
+        throw error;
       }
-      if (slug === null) return undefined;
-      // Catalog-bound translator (see useAdminCommunities) — deterministic
-      // regardless of lazy-namespace timing.
-      const [detailDto, translate] = await Promise.all([
-        getAdminCommunity(slug),
-        loadAdminTranslate(language),
-      ]);
-      return detailDtoToCommunity(detailDto, translate, fmt);
     },
   });
 }

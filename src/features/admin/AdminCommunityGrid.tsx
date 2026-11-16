@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { spellNumber } from "../../shared/i18n/numberWords";
+import { adminCommunityDetail } from "../../app/routeMap";
 import { AdminPageHeader, AdminAvatar, AdminNotice } from "./ui";
 import { useAdminCommunities } from "./api/useAdminCommunities";
 import { AdminCommunitiesEmpty } from "./AdminCommunitiesEmpty";
@@ -9,10 +11,8 @@ import { healthColor, type Community } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
 export function AdminCommunityGrid({
-  onOpen,
   onHealth,
 }: {
-  onOpen: (slug: string) => void;
   onHealth: (community: Community) => void;
 }) {
   const { data, isLoading, isError } = useAdminCommunities();
@@ -97,7 +97,6 @@ export function AdminCommunityGrid({
           <FadeIn key={community.slug} delay={Math.min(communityIndex, 8) * 60}>
             <HealthCard
               community={community}
-              onOpen={() => onOpen(community.slug)}
               onHealth={() => onHealth(community)}
             />
           </FadeIn>
@@ -109,11 +108,9 @@ export function AdminCommunityGrid({
 
 function HealthCard({
   community,
-  onOpen,
   onHealth,
 }: {
   community: Community;
-  onOpen: () => void;
   onHealth: () => void;
 }) {
   const { t } = useTranslation();
@@ -121,16 +118,15 @@ function HealthCard({
 
   return (
     <div className={styles.card}>
-      {/* The card's own action, as an overlay covering the card. The health
-          score below is a second control, and a
-          focusable element inside a `<button>` has no defined activation
-          behaviour and gets its text swallowed into the outer button's
-          accessible name. Overlaying also stops the whole card (name, tag,
-          score, three stats) being read out as one enormous button label. */}
-      <button
-        type="button"
+      {/* The card's own action, as a link overlay covering the card that
+          opens the community's detail route. The health score below is a
+          second control, and a focusable element inside a link has no
+          defined activation behaviour and gets its text swallowed into the
+          link's accessible name. Overlaying also stops the whole card (name,
+          tag, score, three stats) being read out as one enormous link label. */}
+      <Link
+        to={adminCommunityDetail(community.slug)}
         className={styles.cardOpen}
-        onClick={onOpen}
         aria-label={t("admin:communities.grid.openAriaLabel", {
           name: community.name,
         })}

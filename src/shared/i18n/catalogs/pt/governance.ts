@@ -182,7 +182,7 @@ export const governance: Catalog = {
   "sections.proposals.type.member_motion": "Moção da comunidade",
   "sections.proposals.status.passed": "Aprovada",
   "sections.proposals.status.failed": "Não aprovada",
-  "sections.proposals.status.gathering": "A reunir apoio",
+  "sections.proposals.status.gathering": "A recolher assinaturas",
   "sections.proposals.status.screening": "Em análise",
   "sections.proposals.status.rejected": "Não foi a votos",
   "sections.proposals.status.lapsed": "Sem assinaturas suficientes",

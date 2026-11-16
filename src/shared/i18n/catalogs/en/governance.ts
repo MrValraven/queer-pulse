@@ -176,7 +176,7 @@ export const governance: Catalog = {
   "sections.proposals.type.member_motion": "Member motion",
   "sections.proposals.status.passed": "Passed",
   "sections.proposals.status.failed": "Did not pass",
-  "sections.proposals.status.gathering": "Gathering support",
+  "sections.proposals.status.gathering": "Collecting co-signatures",
   "sections.proposals.status.screening": "In review",
   "sections.proposals.status.rejected": "Not opened for voting",
   "sections.proposals.status.lapsed": "Short of co-signatures",
@@ -200,7 +200,7 @@ export const governance: Catalog = {
   // as a vote that went badly.
   "sections.proposals.raisedBy": "Raised by {name}",
   "sections.proposals.tallyLabel": "Votes cast",
-  "sections.proposals.gatheringHeading": "Gathering co-signatures",
+  "sections.proposals.gatheringHeading": "Collecting co-signatures",
   "sections.proposals.votingHeading": "Open for voting",
 
   // Filing a motion. The hint and the sub-line both say what happens next,
@@ -224,7 +224,7 @@ export const governance: Catalog = {
   "sections.proposals.compose.submit": "File motion",
   "sections.proposals.compose.submitting": "Filing…",
   "sections.proposals.compose.successToast":
-    "Motion filed. It is now gathering co-signatures.",
+    "Motion filed. It is now collecting co-signatures.",
   "sections.proposals.compose.errorToast":
     "Could not file that motion. Please try again.",
 
@@ -317,13 +317,13 @@ export const governance: Catalog = {
   "error.proposalGone":
     "This proposal isn't here any more. Refresh to see the current ones.",
   "error.notGathering":
-    "This motion is no longer gathering co-signatures. Refresh to see where it stands.",
+    "This motion is no longer collecting co-signatures. Refresh to see where it stands.",
   "error.windowClosed":
     "The co-signature window for this motion has closed. Refresh to see where it stands.",
   "error.founderSignature":
     "You filed this motion, so your founding signature stays on it.",
   "error.motionCap":
-    "You already have 3 motions gathering co-signatures. Wait for one to be screened, rejected or to lapse before filing another.",
+    "You already have 3 motions collecting co-signatures. Wait for one to be screened, rejected or to lapse before filing another.",
   // Shown in place of a section's figures when its live fetch fails, so an API
   // error surfaces as a retry prompt rather than a silently-empty grid.
   "error.body": "We couldn't load this section just now.",

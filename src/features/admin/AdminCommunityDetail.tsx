@@ -1,69 +1,33 @@
 import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
-import { AdminNotice, AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
+import { adminCommunityDetail } from "../../app/routeMap";
+import { AdminNotice, AdminTabs, type AdminTab } from "./ui";
 import { ScopedQueuePane, MembersPane } from "./AdminCommunityDetailTabs";
 import { SettingsPane } from "./AdminCommunitySettings";
-import { AdminCommunitySpaces } from "./AdminCommunitySpaces";
 import { GovernanceLogPane } from "./AdminCommunityGovernanceLog";
 import { AdminHealthModal } from "./AdminHealthModal";
 import { AdminSupportModal } from "./AdminSupportModal";
 import {
-  BackToGridButton,
   CommunityDetailHeader,
   CommunityDetailStats,
   SupportNotice,
 } from "./AdminCommunityDetailHeader";
+import {
+  PlaceholderHeader,
+  SpacesOverview,
+} from "./AdminCommunityDetailOverview";
 import { useAdminCommunity } from "./api/useAdminCommunities";
-import type { Community } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
 const ID_PREFIX = "admin-community";
+const DEFAULT_TAB = "queue";
+const TAB_IDS = ["queue", "members", "settings", "governance"] as const;
 
-/** The header shown while the community loads or after it fails: the
- *  section's own title and the way back, so a stalled fetch never strands the
- *  admin on a dead screen. */
-function PlaceholderHeader({ onBack }: { onBack: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <AdminPageHeader
-      eyebrow={t("shared:adminNav.sections.communities")}
-      title={
-        <Translation
-          i18nKey="admin:communities.title"
-          components={{ em: <em /> }}
-        />
-      }
-      actions={<BackToGridButton onBack={onBack} />}
-    />
-  );
-}
-
-/** The overview area's parent/spaces line: a space names the community it
- *  lives inside; a top-level community lists the spaces it hosts. `onOpen`
- *  drills `AdminCommunityDetail` into whichever community is clicked. */
-function SpacesOverview({
-  community,
-  onOpen,
-}: {
-  community: Community;
-  onOpen: (slug: string) => void;
-}) {
-  const { t } = useTranslation();
-  if (community.parent) {
-    const parent = community.parent;
-    return (
-      <button
-        type="button"
-        className={styles.linkBtn}
-        onClick={() => onOpen(parent.slug)}
-      >
-        {t("admin:communities.detail.parent", { name: parent.name })}
-      </button>
-    );
-  }
-  return <AdminCommunitySpaces community={community} onOpen={onOpen} />;
+/** The `?tab=` value when it names one of the four tabs, else the queue. */
+function tabFromSearch(tabParam: string | null): string {
+  return TAB_IDS.find((tabId) => tabId === tabParam) ?? DEFAULT_TAB;
 }
 
 /**
@@ -74,51 +38,41 @@ function SpacesOverview({
  * useful. The header always carries the way back, so a stalled or failed
  * fetch never strands the admin on a dead screen.
  *
- * `currentSlug` tracks the community actually shown, separate from the `slug`
- * prop: a space's parent line and a top-level community's spaces list both
- * drill into another community's admin detail without leaving this screen or
- * involving `AdminCommunitiesPage` (which only knows how to open a top-level
- * community from the grid). `onBack` always returns to that grid, even from a
- * drilled-into space, mirroring the single-level back stack the grid itself
- * already has.
+ * The URL is the single source of truth: `slug` comes from the route and the
+ * active tab from `?tab=`. Drilling into a space or its parent pushes that
+ * community's own detail route, so browser Back returns to the community the
+ * admin came from. A tab switch replaces the entry, keeping history one step
+ * per community; the queue drops the param so the default URL stays clean.
  */
-export function AdminCommunityDetail({
-  slug,
-  onBack,
-}: {
-  slug: string;
-  onBack: () => void;
-}) {
+export function AdminCommunityDetail({ slug }: { slug: string }) {
   const { t } = useTranslation();
-  const [currentSlug, setCurrentSlug] = useState(slug);
-  // Resets `currentSlug` when `slug` itself changes (a fresh community opened
-  // from the grid). The adjustment happens during render, following React's
-  // own recommended pattern for "state that resets when a prop changes"
-  // (https://react.dev/reference/react/useState#storing-information-from-previous-renders).
-  const [previousSlugProp, setPreviousSlugProp] = useState(slug);
-  if (slug !== previousSlugProp) {
-    setPreviousSlugProp(slug);
-    setCurrentSlug(slug);
-  }
-  const [active, setActive] = useState("queue");
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const active = tabFromSearch(searchParams.get("tab"));
   const [health, setHealth] = useState(false);
   const [support, setSupport] = useState(false);
-  const {
-    data: community,
-    isLoading,
-    isError,
-  } = useAdminCommunity(currentSlug);
+  const { data: community, isLoading, isError } = useAdminCommunity(slug);
 
   function openCommunity(nextSlug: string) {
-    setCurrentSlug(nextSlug);
-    setActive("queue");
-    window.scrollTo(0, 0);
+    void navigate(adminCommunityDetail(nextSlug));
+  }
+
+  function changeTab(nextTab: string) {
+    setSearchParams(
+      (currentParams) => {
+        const nextParams = new URLSearchParams(currentParams);
+        if (nextTab === DEFAULT_TAB) nextParams.delete("tab");
+        else nextParams.set("tab", nextTab);
+        return nextParams;
+      },
+      { replace: true },
+    );
   }
 
   if (isLoading) {
     return (
       <FadeIn>
-        <PlaceholderHeader onBack={onBack} />
+        <PlaceholderHeader />
         <div className={styles.detailStack} aria-hidden>
           <SkeletonLine width="70%" />
           <SkeletonLine width="100%" height={96} />
@@ -130,9 +84,13 @@ export function AdminCommunityDetail({
   if (isError || !community) {
     return (
       <FadeIn>
-        <PlaceholderHeader onBack={onBack} />
+        <PlaceholderHeader />
         <AdminNotice tone="error">
-          {t("admin:communities.grid.loadError")}
+          {t(
+            isError
+              ? "admin:communities.grid.loadError"
+              : "admin:communities.detail.notFound",
+          )}
         </AdminNotice>
       </FadeIn>
     );
@@ -156,7 +114,6 @@ export function AdminCommunityDetail({
     <FadeIn>
       <CommunityDetailHeader
         community={community}
-        onBack={onBack}
         onHealth={() => setHealth(true)}
       />
 
@@ -176,7 +133,7 @@ export function AdminCommunityDetail({
         label={community.name}
         tabs={tabs}
         active={active}
-        onChange={setActive}
+        onChange={changeTab}
         className={styles.detailTabs}
       />
 

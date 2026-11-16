@@ -8,16 +8,16 @@ import {
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { adminCommunityMod } from "../../app/routeMap";
+import { adminCommunityMod, routes } from "../../app/routeMap";
 import { AdminNotice, AdminPageHeader, AdminStat, AdminStatTiles } from "./ui";
 import { firstName, type Community } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
-/** The detail's way back to the grid, as a header action. */
-export function BackToGridButton({ onBack }: { onBack: () => void }) {
+/** The detail's way back to the grid, as a header action linking to it. */
+export function BackToGridButton() {
   const { t } = useTranslation();
   return (
-    <Button variant="ghost" size="md" onClick={onBack}>
+    <Button variant="ghost" size="md" to={routes.adminCommunities}>
       <FiArrowLeft aria-hidden /> {t("admin:communities.detail.backCta")}
     </Button>
   );
@@ -30,11 +30,9 @@ export function BackToGridButton({ onBack }: { onBack: () => void }) {
  */
 export function CommunityDetailHeader({
   community,
-  onBack,
   onHealth,
 }: {
   community: Community;
-  onBack: () => void;
   onHealth: () => void;
 }) {
   const { t } = useTranslation();
@@ -82,7 +80,7 @@ export function CommunityDetailHeader({
       }
       actions={
         <>
-          <BackToGridButton onBack={onBack} />
+          <BackToGridButton />
           <Button
             variant="ghost"
             size="md"

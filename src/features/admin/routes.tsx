@@ -182,6 +182,10 @@ const AdminCommunitiesPage = lazyNamed(
   () => import("./AdminCommunitiesPage"),
   "AdminCommunitiesPage",
 );
+const AdminCommunityDetailPage = lazyNamed(
+  () => import("./AdminCommunityDetailPage"),
+  "AdminCommunityDetailPage",
+);
 const AdminCommunityTagRequestsPage = lazyNamed(
   () => import("./AdminCommunityTagRequestsPage"),
   "AdminCommunityTagRequestsPage",
@@ -477,6 +481,25 @@ function adminOnlyToolRoutes() {
   );
 }
 
+/** The communities health grid and one community's detail. The detail's
+ *  `/:slug` sits beside the `/:slug/mod` route further down, which
+ *  react-router ranks higher for its static `mod` segment. Grouped so
+ *  `adminRoutes()` stays under the 200-line cap. */
+function communityRoutes() {
+  return (
+    <>
+      <Route
+        path={routes.adminCommunities}
+        element={<AdminCommunitiesPage />}
+      />
+      <Route
+        path={`${routes.adminCommunities}/:slug`}
+        element={<AdminCommunityDetailPage />}
+      />
+    </>
+  );
+}
+
 /** The admin & moderation panels (role-gated in authGate.ts). */
 export function adminRoutes() {
   return (
@@ -581,10 +604,7 @@ export function adminRoutes() {
         path={routes.adminWriterApplications}
         element={<AdminWriterApplicationsPage />}
       />
-      <Route
-        path={routes.adminCommunities}
-        element={<AdminCommunitiesPage />}
-      />
+      {communityRoutes()}
       {/* SOC-01: the topic directory has real rows now (seeded by migration),
           so staff need somewhere to curate them. */}
       <Route path={routes.adminTopics} element={<TopicsAdminPage />} />

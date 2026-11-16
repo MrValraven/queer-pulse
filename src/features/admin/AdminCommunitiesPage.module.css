@@ -22,9 +22,9 @@
 
 /* ── Health card ─────────────────────────────────────────────────────────── */
 .card {
-  /* Anchors .cardOpen, the overlay that carries the card's own action. The
-     card is a <div> because the health score inside it is a second control
-     and must not be a focusable descendant of a <button>. */
+  /* Anchors .cardOpen, the link overlay that carries the card's own action.
+     The card is a <div> because the health score inside it is a second
+     control and must stay outside that link. */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -57,6 +57,7 @@
 .cardOpen {
   position: absolute;
   inset: 0;
+  display: block;
   z-index: 1;
   padding: 0;
   border: 0;
@@ -66,8 +67,7 @@
   -webkit-appearance: none;
   appearance: none;
 }
-/* Traces the card's own edge, so the ring reads as "this card" exactly as it
-   did when the card itself was the button. */
+/* Traces the card's own edge, so the ring reads as "this card". */
 .cardOpen:focus-visible {
   outline: 2px solid var(--accent-ink);
   outline-offset: 2px;

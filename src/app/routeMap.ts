@@ -629,6 +629,9 @@ export type RouteKey = keyof typeof routes;
 /** Staff drill-in to a community's mod panel. */
 export const adminCommunityMod = (slug: string) =>
   `/admin/communities/${slug}/mod`;
+/** One community's admin detail, optionally opened on one of its tabs. */
+export const adminCommunityDetail = (slug: string, tab?: string) =>
+  tab ? `/admin/communities/${slug}?tab=${tab}` : `/admin/communities/${slug}`;
 /** One creator draft's staff preview page. */
 export const adminCreatorDraftPath = (kind: string, id: string) =>
   `/admin/creator-drafts/${kind}/${encodeURIComponent(id)}`;

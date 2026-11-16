@@ -29,7 +29,7 @@ beforeEach(() => {
 function renderGrid() {
   return render(
     <TestProviders>
-      <AdminCommunityGrid onOpen={vi.fn()} onHealth={vi.fn()} />
+      <AdminCommunityGrid onHealth={vi.fn()} />
     </TestProviders>,
   );
 }

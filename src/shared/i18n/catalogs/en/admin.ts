@@ -2961,6 +2961,8 @@ export const admin: Catalog = {
   "communities.detail.spaces.title": "Spaces",
   "communities.detail.spaces.empty": "No spaces",
   "communities.detail.parent": "Space inside {name}",
+  "communities.detail.notFound":
+    "We couldn't find that community. It may have been archived, or the link has a typo.",
   "communities.detail.health.thriving": "thriving",
   "communities.detail.health.steady": "steady",
   "communities.detail.health.needsHand": "needs a hand",
