@@ -14,6 +14,7 @@ import {
   VjCompositorLayers,
   VjSourceRegistry,
   isVjLiveFrameShown,
+  type VjCompositorLayersHooks,
   type VjHeldSource,
   type VjLayerDrawState,
 } from "./vjCompositorLayers";
@@ -100,7 +101,10 @@ function clipOf(
 
 const FADE = { mode: "fade", durationMs: 400 } as const;
 
-function setUp() {
+function setUp(
+  transitionProgramOf: VjCompositorLayersHooks["transitionProgramOf"] = () =>
+    "transition.fade",
+) {
   const created: FakeLayerSource[] = [];
   const released: string[] = [];
   const onClipFailed = vi.fn();
@@ -116,7 +120,7 @@ function setUp() {
   });
   layers = new VjCompositorLayers({
     sources: registry,
-    transitionProgramOf: () => "transition.fade",
+    transitionProgramOf,
     onClipFailed,
     onChange: () => registry.markChanged(),
   });
@@ -159,6 +163,26 @@ function showLive(
 }
 
 describe("VjCompositorLayers", () => {
+  it("cuts to the incoming source on its first frame when the transition has no program", () => {
+    const harness = setUp(() => null);
+    showLive(harness, clipOf("clip-a"));
+    const outgoing = harness.sourceFor("clip-a");
+
+    harness.layers.target(clipOf("clip-b"), {
+      mode: "glitch",
+      durationMs: 1000,
+    });
+    harness.sourceFor("clip-b").emitFirstFrame();
+    harness.frame();
+
+    expect(harness.layers.draw.transition).toBeNull();
+    expect(harness.layers.draw.outgoing).toBeNull();
+    expect(harness.layers.draw.live?.source).toBe(harness.sourceFor("clip-b"));
+    expect(harness.layers.state.incoming).toBeNull();
+    harness.frame();
+    expect(outgoing.isDisposed).toBe(true);
+  });
+
   it("never adopts a second URL for a source it already holds", () => {
     const harness = setUp();
     showLive(harness, clipOf("clip-a", "blob:first"));

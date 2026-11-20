@@ -28,12 +28,15 @@ export function vjTargetKeyOf(
   return target ? `${target.clipId}|${target.sourceUrl}` : null;
 }
 
-/** The simple renderer's transition: a cut stays a cut, every other id crossfades over its resolved length. */
+/**
+ * The simple renderer's transition: a fade crossfades over its resolved
+ * length, and every other id (a cut, or one it cannot draw) cuts in at once.
+ */
 export function vjSimpleTransitionOf(
   transition: VjResolvedTransition,
 ): VjResolvedTransition {
-  if (transition.mode === "cut") return transition;
-  return { mode: "fade", durationMs: transition.durationMs };
+  if (transition.mode === "fade") return transition;
+  return { mode: "cut", durationMs: 0 };
 }
 
 /** The simple renderer draws no generator: it keeps the last clip it showed, or black with none. */

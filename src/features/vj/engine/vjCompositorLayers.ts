@@ -11,7 +11,9 @@
  *   frames.
  * - `fadeEnded` fires on the frame the transition's progress (elapsed frame
  *   time over `durationMs`) reaches 1; a catch-up eases the incoming layer to
- *   full over VJ_CATCH_UP_MS from wherever its transition stood.
+ *   full over VJ_CATCH_UP_MS from wherever its transition stood. A transition
+ *   with no program (a denied flash, a failed compile) cuts: it ends on the
+ *   frame it starts, so the incoming source is drawn alone at once.
  * - A source no slot draws any more is retired: the registry disposes it at
  *   the end of the next frame (the first frame that stopped drawing it) and
  *   reports each object URL nothing holds any more, once.
@@ -272,8 +274,8 @@ export function isVjLiveFrameShown(
 
 export interface VjCompositorLayersHooks {
   sources: VjSourceHost;
-  /** The program a starting transition draws with, after the flash governor and failed programs. */
-  transitionProgramOf(mode: VjTransitionId, nowMs: number): VjProgramKey;
+  /** The program a starting transition draws with, after the flash governor and failed programs; null cuts. */
+  transitionProgramOf(mode: VjTransitionId, nowMs: number): VjProgramKey | null;
   onClipFailed(clipId: string, failure: VjPreloadFailure): void;
   /** A slot or the pending target changed: held URLs may have changed. */
   onChange(): void;
@@ -313,6 +315,8 @@ export class VjCompositorLayers implements VjSourceListener {
   private fadeClipId: string | null = null;
   private fadeStartMs = 0;
   private fadeProgress = 0;
+  /** True while the running transition has no program: it cuts on the frame it starts. */
+  private isFadeCut = false;
   private catchUpStartMs: number | null = null;
   private catchUpFromProgress = 0;
   private transitionCount = 0;
@@ -478,6 +482,7 @@ export class VjCompositorLayers implements VjSourceListener {
     this.fadeLayer = null;
     this.fadeClipId = null;
     this.fadeProgress = 0;
+    this.isFadeCut = false;
     this.catchUpStartMs = null;
   }
 
@@ -499,15 +504,14 @@ export class VjCompositorLayers implements VjSourceListener {
       this.fadeClipId = clipId;
       this.fadeStartMs = nowMs;
       this.transitionCount += 1;
-      this.transitionDraw.programKey = this.hooks.transitionProgramOf(
-        incoming.mode,
-        nowMs,
-      );
+      const programKey = this.hooks.transitionProgramOf(incoming.mode, nowMs);
+      this.isFadeCut = programKey === null;
+      if (programKey !== null) this.transitionDraw.programKey = programKey;
       this.transitionDraw.seed = transitionSeedOf(this.transitionCount);
     }
     if (slot.phase === "fadingIn") {
       this.fadeProgress =
-        incoming.durationMs > 0
+        incoming.durationMs > 0 && !this.isFadeCut
           ? Math.min(1, (nowMs - this.fadeStartMs) / incoming.durationMs)
           : 1;
       if (this.fadeProgress >= 1) {
@@ -519,7 +523,9 @@ export class VjCompositorLayers implements VjSourceListener {
       this.catchUpStartMs = nowMs;
       this.catchUpFromProgress = this.fadeProgress;
     }
-    const catchUp = Math.min(1, (nowMs - this.catchUpStartMs) / VJ_CATCH_UP_MS);
+    const catchUp = this.isFadeCut
+      ? 1
+      : Math.min(1, (nowMs - this.catchUpStartMs) / VJ_CATCH_UP_MS);
     this.fadeProgress =
       this.catchUpFromProgress +
       (1 - this.catchUpFromProgress) * easeOutCubic(catchUp);

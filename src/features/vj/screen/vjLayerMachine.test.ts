@@ -128,6 +128,47 @@ describe("reduceVjLayers switching clips", () => {
     });
   });
 
+  it("cuts the incoming clip in at its first frame when the renderer asks for a cut", () => {
+    const shown = showingClipOne();
+    const outgoingLayer = shown.front;
+    if (!outgoingLayer) throw new Error("expected a front layer");
+    const loading = reduceVjLayers(shown, {
+      type: "target",
+      clip: clipNamed("two"),
+      transition: { mode: "zoomBlur", durationMs: 1000 },
+    });
+    const incomingLayer = layerHolding(loading, "two");
+
+    const cut = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: incomingLayer,
+      clipId: "two",
+      shouldCut: true,
+    });
+    expect(cut.front).toBe(incomingLayer);
+    expect(cut.incoming).toBeNull();
+    expect(cut.slots[incomingLayer].phase).toBe("shown");
+    expect(cut.slots[outgoingLayer].phase).not.toBe("shown");
+  });
+
+  it("keeps the curtain fade when a cut is asked for while the curtain lifts", () => {
+    const loading = applyAll([
+      {
+        type: "target",
+        clip: clipNamed("one"),
+        transition: { mode: "zoomBlur", durationMs: 1000 },
+      },
+    ]);
+    const lifted = reduceVjLayers(loading, {
+      type: "firstFrame",
+      layer: layerHolding(loading, "one"),
+      clipId: "one",
+      shouldCut: true,
+    });
+    expect(lifted.isBlackRequested).toBe(false);
+    expect(lifted.curtainFadeMs).toBe(1000);
+  });
+
   it("keeps the outgoing layer at full opacity until the fade ends", () => {
     const shown = showingClipOne();
     const outgoingLayer = shown.front;

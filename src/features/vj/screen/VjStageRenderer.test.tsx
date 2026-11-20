@@ -1014,7 +1014,7 @@ describe("VjStageRenderer v2 transitions and freeze", () => {
     vi.restoreAllMocks();
   });
 
-  it("renders a dipWhite as a fade when the strobe holds the budget", async () => {
+  it("cuts a dipWhite in when the strobe holds the budget", async () => {
     const dipWhite: VjResolvedTransition = {
       mode: "dipWhite",
       durationMs: 1000,
@@ -1044,11 +1044,11 @@ describe("VjStageRenderer v2 transitions and freeze", () => {
     await bringToFirstFrame(mainVideoOf(layerOf(strobing.container, "one")));
     strobing.rerenderStage({ target: videoClip("two") });
     await bringToFirstFrame(mainVideoOf(layerOf(strobing.container, "two")));
-    const fadingLayer = layerOf(strobing.container, "two");
-    expect(fadingLayer).toHaveAttribute("data-vj-layer-phase", "fadingIn");
-    expect(fadingLayer).toHaveAttribute("data-vj-transition", "fade");
-    expect(fadingLayer).toHaveClass(stageClassOf("clipLayerFading"));
-    expect(fadingLayer).not.toHaveClass(stageClassOf("clipLayerDip"));
+    const cutLayer = layerOf(strobing.container, "two");
+    expect(cutLayer).toHaveAttribute("data-vj-layer-phase", "shown");
+    expect(cutLayer).not.toHaveAttribute("data-vj-fading");
+    expect(cutLayer).not.toHaveClass(stageClassOf("clipLayerFading"));
+    expect(cutLayer).not.toHaveClass(stageClassOf("clipLayerDip"));
   });
 
   it("wipes the incoming layer in from the right edge for wipeLeft and ends on its animation", async () => {
@@ -1080,7 +1080,7 @@ describe("VjStageRenderer v2 transitions and freeze", () => {
     );
   });
 
-  it("draws a DOM-incapable transition as the fade", async () => {
+  it("cuts a DOM-incapable transition in at once", async () => {
     const { container, rerenderStage } = renderStage({
       target: videoClip("one"),
       transition: { mode: "zoomBlur", durationMs: 1000 },
@@ -1088,10 +1088,10 @@ describe("VjStageRenderer v2 transitions and freeze", () => {
     await bringToFirstFrame(mainVideoOf(layerOf(container, "one")));
     rerenderStage({ target: videoClip("two") });
     await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
-    expect(layerOf(container, "two")).toHaveAttribute(
-      "data-vj-transition",
-      "fade",
-    );
+    const cutLayer = layerOf(container, "two");
+    expect(cutLayer).toHaveAttribute("data-vj-layer-phase", "shown");
+    expect(cutLayer).not.toHaveAttribute("data-vj-fading");
+    expect(cutLayer).not.toHaveClass(stageClassOf("clipLayerFading"));
   });
 
   it("pauses the shown clip while freeze is on", async () => {

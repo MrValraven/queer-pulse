@@ -63,6 +63,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "vj-fallback-transitions-cut",
+        category: "improvement",
+        date: "20 Nov 2026",
+        ...entryKeys("vj-fallback-transitions-cut"),
+      },
+      {
         id: "admin-console-redesign",
         category: "improvement",
         date: "16 Nov 2026",

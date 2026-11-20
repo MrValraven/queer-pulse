@@ -3447,6 +3447,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-20.headline":
+    "VJ screens cut straight to the next clip when a transition can't play.",
   "changelog.releases.2026-11-16.headline":
     "Leads get staff in charge, drafts wait on a Continue card, and admin gets a redesign.",
   "changelog.releases.2026-11-14.headline":
@@ -3819,6 +3821,10 @@ export const marketing: Catalog = {
     "Richer partner cards in the directory",
   "changelog.entries.partner-cards-redesign.body":
     "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.vj-fallback-transitions-cut.title":
+    "VJ screens cut straight to the next clip when a transition can't play",
+  "changelog.entries.vj-fallback-transitions-cut.body":
+    "Zoom blur, glitch and luma fade on the backup renderer, or a flash the screen holds back, now hard cut.",
   "changelog.entries.admin-console-redesign.title":
     "Every admin page now shares one calm, compact design",
   "changelog.entries.admin-console-redesign.body":

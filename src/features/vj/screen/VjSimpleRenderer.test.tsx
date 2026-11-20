@@ -189,7 +189,7 @@ describe("VjSimpleRenderer", () => {
     expect(onShown).toHaveBeenCalledTimes(1);
   });
 
-  it("fades a wipe and cuts a cut", async () => {
+  it("fades a fade and cuts a wipe and a cut", async () => {
     const { container, rerenderStage } = renderSimpleStage({
       target: videoClip("one"),
     });
@@ -197,21 +197,30 @@ describe("VjSimpleRenderer", () => {
 
     rerenderStage({
       target: videoClip("two"),
-      transition: { mode: "wipeLeft", durationMs: 600 },
+      transition: { mode: "fade", durationMs: 600 },
     });
     await bringToFirstFrame(mainVideoOf(layerOf(container, "two")));
     const fadingLayer = layerOf(container, "two");
     expect(fadingLayer).toHaveAttribute("data-vj-layer-phase", "fadingIn");
     expect(fadingLayer).toHaveAttribute("data-vj-transition", "fade");
     expect(fadingLayer).toHaveAttribute("data-vj-fade-ms", "600");
-    expect(fadingLayer).not.toHaveClass(stageClassOf("clipLayerClip"));
 
     rerenderStage({
       target: videoClip("three"),
-      transition: { mode: "cut", durationMs: 0 },
+      transition: { mode: "wipeLeft", durationMs: 600 },
     });
     await bringToFirstFrame(mainVideoOf(layerOf(container, "three")));
-    const cutLayer = layerOf(container, "three");
+    const wipeLayer = layerOf(container, "three");
+    expect(wipeLayer).toHaveAttribute("data-vj-layer-phase", "shown");
+    expect(wipeLayer).not.toHaveAttribute("data-vj-fading");
+    expect(wipeLayer).not.toHaveClass(stageClassOf("clipLayerClip"));
+
+    rerenderStage({
+      target: videoClip("four"),
+      transition: { mode: "cut", durationMs: 0 },
+    });
+    await bringToFirstFrame(mainVideoOf(layerOf(container, "four")));
+    const cutLayer = layerOf(container, "four");
     expect(cutLayer).toHaveAttribute("data-vj-layer-phase", "shown");
     expect(cutLayer).not.toHaveAttribute("data-vj-fading");
   });

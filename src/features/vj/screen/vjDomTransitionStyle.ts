@@ -1,7 +1,7 @@
 /**
  * How the DOM fallback draws a transition and the mix layer (contract 3.3,
  * engine plan decision 11). Every DOM-capable transition maps to CSS; any
- * other id draws as the fade. The wipes run the same way as the WebGL shaders:
+ * other id cuts. The wipes run the same way as the WebGL shaders:
  * `wipeLeft` moves the edge from the right side to the left, `wipeRight` from
  * the left side to the right, `iris` opens a circle from the centre and
  * `wipeRadial` sweeps clockwise from the top.
@@ -33,6 +33,13 @@ const FADE: VjDomTransition = {
   clipTo: null,
 };
 
+const CUT: VjDomTransition = {
+  kind: "cut",
+  dipColor: null,
+  clipFrom: null,
+  clipTo: null,
+};
+
 /** The clip-path of a fully uncovered layer. */
 const CLIP_OPEN = "inset(0 0 0 0)";
 /** 71% of the circle() reference radius reaches the corners of any box. */
@@ -42,7 +49,7 @@ const VJ_DOM_TRANSITIONS: Readonly<
   Partial<Record<VjTransitionId, VjDomTransition>>
 > = {
   fade: FADE,
-  cut: { kind: "cut", dipColor: null, clipFrom: null, clipTo: null },
+  cut: CUT,
   dipBlack: { kind: "dip", dipColor: "black", clipFrom: null, clipTo: null },
   dipWhite: { kind: "dip", dipColor: "white", clipFrom: null, clipTo: null },
   wipeLeft: {
@@ -66,10 +73,22 @@ const VJ_DOM_TRANSITIONS: Readonly<
   wipeRadial: { kind: "sweep", dipColor: null, clipFrom: null, clipTo: null },
 };
 
-/** The CSS the incoming layer animates for a DOM-capable transition; any other id answers the fade. */
+/** True when the DOM draws this transition itself: the catalog marks it DOM-capable and it has a CSS look. */
+export function isVjDomDrawableTransition(mode: VjTransitionId): boolean {
+  return (
+    VJ_TRANSITION_CATALOG[mode].isDomCapable &&
+    VJ_DOM_TRANSITIONS[mode] !== undefined
+  );
+}
+
+/**
+ * The CSS the incoming layer animates for a DOM-capable transition; any other
+ * id answers the cut look. The look alone draws no cut: the renderer also
+ * starts that layer with no fade (the layer machine's `shouldCut`).
+ */
 export function vjDomTransitionOf(mode: VjTransitionId): VjDomTransition {
-  if (!VJ_TRANSITION_CATALOG[mode].isDomCapable) return FADE;
-  return VJ_DOM_TRANSITIONS[mode] ?? FADE;
+  if (!isVjDomDrawableTransition(mode)) return CUT;
+  return VJ_DOM_TRANSITIONS[mode] ?? CUT;
 }
 
 const VJ_DOM_BLEND_MODES: Readonly<Record<VjBlendMode, string>> = {

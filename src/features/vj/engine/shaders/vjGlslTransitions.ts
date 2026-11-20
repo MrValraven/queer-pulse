@@ -7,8 +7,8 @@
  * blocks differ each time.
  *
  * `dipWhite` and `glitch` are flash-capable; when the flash governor denies
- * them, the engine draws `transition.fade` instead, so neither program checks
- * the governor itself.
+ * them, the engine cuts to the incoming source and draws no pass, so neither
+ * program checks the governor itself.
  */
 
 import type { VjTransitionId } from "../../../../shared/contracts/vj";
@@ -131,7 +131,7 @@ void main() {
  * Blocks flip from the outgoing to the incoming source in hashed order, rows
  * slide sideways (strongest at the halfway point) with a small channel split,
  * and a brief brightness spike lands at 0.5. The spike is the flash the
- * governor budgets; a denied glitch draws `transition.fade`.
+ * governor budgets; a denied glitch cuts with no pass.
  */
 const GLITCH_BODY = `
 const vec2 VJ_GLITCH_BLOCKS = vec2(16.0, 9.0);

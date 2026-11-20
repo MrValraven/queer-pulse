@@ -174,7 +174,10 @@ interface VjRuntimeParts {
   ringBudget: VjRingBudget;
   gifBudget: VjRingBudget;
   triangle: { draw(): void };
-  transitionProgramOf: (mode: VjTransitionId, nowMs: number) => VjProgramKey;
+  transitionProgramOf: (
+    mode: VjTransitionId,
+    nowMs: number,
+  ) => VjProgramKey | null;
 }
 
 function createVjSourceParts(
@@ -516,17 +519,21 @@ export class VjCompositor {
     this.applyLayers(scheduled.layers);
   }
 
-  /** The program a starting transition draws: governed (dipWhite, glitch), and `fade` for a failed program. */
+  /**
+   * The program a starting transition draws: governed (dipWhite, glitch).
+   * Null is a cut, for a denied flash or a program that failed to compile:
+   * the layers promote the incoming source at once.
+   */
   private transitionProgramOf(
     mode: VjTransitionId,
     nowMs: number,
-  ): VjProgramKey {
+  ): VjProgramKey | null {
     const flashKind = vjTransitionFlashKind(mode);
     const isGranted =
       flashKind === null || this.runtime.flashes.request(flashKind, nowMs);
     const programKey = vjTransitionProgramKey(mode, isGranted);
     if (programKey === null || this.runtime.programs.get(programKey) === null) {
-      return "transition.fade";
+      return null;
     }
     return programKey;
   }

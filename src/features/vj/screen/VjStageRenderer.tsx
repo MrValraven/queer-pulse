@@ -30,6 +30,7 @@ import { VjClipLayer } from "./VjClipLayer";
 import { VjDomMixLayer } from "./VjDomMixLayer";
 import { vjDomSettingOf } from "./vjDomEffectsStyle";
 import {
+  isVjDomDrawableTransition,
   vjDomMixOpacities,
   vjDomTransitionOf,
   type VjDomTransition,
@@ -109,35 +110,37 @@ interface VjFlashDecision {
 }
 
 /**
+ * A transition the DOM cannot draw (zoomBlur, glitch, lumaFade) cuts in.
  * The flash-capable transitions the DOM draws (dipWhite) ask the governor
  * once, when the incoming source's first frame starts its transition. The
  * renderer's budget is the one VjEffectsFrame spends beat flashes from, so a
  * dip and the beat flashes share 3 flashes per rolling second; while the
- * strobe runs the budget is the strobe's and the dip draws as a fade.
+ * strobe runs the budget is the strobe's and the dip cuts in.
  */
 function useVjTransitionFlashGrant(isStrobing: boolean) {
   const flashBudgetRef = useRef<VjFlashBudget>(EMPTY_VJ_FLASH_BUDGET);
   const [decision, setDecision] = useState<VjFlashDecision | null>(null);
 
+  /** True when the incoming source must cut in: the DOM cannot draw its transition, or the governor denied its flash. */
   const decideOnFirstFrame = (
     layers: VjLayerMachineState,
     layer: VjLayerName,
     clipId: string,
-  ): void => {
+  ): boolean => {
     const incoming = layers.incoming;
     const slot = layers.slots[layer];
     // Only an armed source whose first frame starts a visible transition over a shown front.
-    if (incoming?.layer !== layer || !incoming.isArmed) return;
+    if (incoming?.layer !== layer || !incoming.isArmed) return false;
     const isStartingTransition =
       slot.phase === "loading" &&
       slot.clip?.clipId === clipId &&
       layers.front !== null &&
       !layers.isBlackRequested &&
       incoming.durationMs > 0;
-    if (!isStartingTransition) return;
+    if (!isStartingTransition) return false;
+    if (!isVjDomDrawableTransition(incoming.mode)) return true;
     const flashKind = vjTransitionFlashKind(incoming.mode);
-    if (flashKind === null || vjDomTransitionOf(incoming.mode).kind === "fade")
-      return;
+    if (flashKind === null) return false;
     flashBudgetRef.current = setVjStrobeRunning(
       flashBudgetRef.current,
       isStrobing,
@@ -149,21 +152,22 @@ function useVjTransitionFlashGrant(isStrobing: boolean) {
     );
     flashBudgetRef.current = answer.budget;
     setDecision({ key: `${layer}|${clipId}`, isGranted: answer.isGranted });
+    return !answer.isGranted;
   };
 
-  /** The DOM look of the incoming layer's transition: a denied flash draws as the fade. */
+  /** The DOM look of the incoming layer's transition: a denied flash answers the cut look. */
   const domTransitionOf = (
     layers: VjLayerMachineState,
     layer: VjLayerName,
   ): VjDomTransition => {
     const incoming = layers.incoming;
-    if (incoming?.layer !== layer) return vjDomTransitionOf("fade");
+    if (incoming?.layer !== layer) return vjDomTransitionOf("cut");
     if (!VJ_TRANSITION_CATALOG[incoming.mode].isFlashCapable) {
       return vjDomTransitionOf(incoming.mode);
     }
     const key = `${layer}|${layers.slots[layer].clip?.clipId ?? ""}`;
     const isGranted = decision?.key === key && decision.isGranted;
-    return vjDomTransitionOf(isGranted ? incoming.mode : "fade");
+    return vjDomTransitionOf(isGranted ? incoming.mode : "cut");
   };
 
   return { flashBudgetRef, decideOnFirstFrame, domTransitionOf };
@@ -238,8 +242,8 @@ export function VjStageRenderer({
   };
 
   const handleFirstFrame = (layer: VjLayerName, clipId: string): void => {
-    flashGrant.decideOnFirstFrame(layers, layer, clipId);
-    dispatch({ type: "firstFrame", layer, clipId });
+    const shouldCut = flashGrant.decideOnFirstFrame(layers, layer, clipId);
+    dispatch({ type: "firstFrame", layer, clipId, shouldCut });
   };
 
   const renderLayer = (layer: VjLayerName): JSX.Element => {

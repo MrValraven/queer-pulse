@@ -102,7 +102,10 @@ export interface VjLayerMachineState {
 /**
  * "prepare" with a null source cancels the pre-roll: an unarmed prepared
  * source is dropped. A generator's "firstFrame" comes from the renderer right
- * after it binds the generator.
+ * after it binds the generator. "firstFrame" with `shouldCut` comes from a
+ * renderer that cannot draw the armed transition (a DOM renderer for a
+ * WebGL-only id, or a flash the governor denied): over a shown front the
+ * source cuts in the way a "cut" does, while a lifting curtain keeps its fade.
  */
 export type VjLayerEvent =
   | {
@@ -111,7 +114,12 @@ export type VjLayerEvent =
       transition: VjResolvedTransition;
     }
   | { type: "prepare"; source: VjRenderableSource | null }
-  | { type: "firstFrame"; layer: VjLayerName; clipId: string }
+  | {
+      type: "firstFrame";
+      layer: VjLayerName;
+      clipId: string;
+      shouldCut?: boolean;
+    }
   | { type: "failed"; layer: VjLayerName; clipId: string }
   | { type: "fadeEnded"; layer: VjLayerName; clipId: string }
   | { type: "catchUpEnded"; layer: VjLayerName; clipId: string };
@@ -288,9 +296,13 @@ function loadIncoming(
   };
 }
 
-/** The armed incoming has a frame: lift the curtain, cut, or start its fade. */
+/**
+ * The armed incoming has a frame: lift the curtain, cut, or start its fade.
+ * `shouldCut` promotes it over a shown front at once, as a "cut" does.
+ */
 function startIncomingTransition(
   state: VjLayerMachineState,
+  shouldCut = false,
 ): VjLayerMachineState {
   const incoming = state.incoming;
   if (!incoming) return state;
@@ -302,7 +314,9 @@ function startIncomingTransition(
       curtainFadeMs: fadeMs,
     };
   }
-  if (state.front === null || fadeMs === 0) return promoteIncoming(state);
+  if (state.front === null || fadeMs === 0 || shouldCut) {
+    return promoteIncoming(state);
+  }
   const slot = state.slots[incoming.layer];
   return withSlot(state, incoming.layer, {
     clip: slot.clip,
@@ -417,12 +431,13 @@ function reduceFirstFrame(
   state: VjLayerMachineState,
   layer: VjLayerName,
   clipId: string,
+  shouldCut: boolean,
 ): VjLayerMachineState {
   const incoming = state.incoming;
   if (!incoming || !isIncomingEvent(state, layer, clipId, "loading")) {
     return state;
   }
-  if (incoming.isArmed) return startIncomingTransition(state);
+  if (incoming.isArmed) return startIncomingTransition(state, shouldCut);
   const slot = state.slots[layer];
   return withSlot(state, layer, { clip: slot.clip, phase: "primed" });
 }
@@ -450,7 +465,12 @@ export function reduceVjLayers(
     case "prepare":
       return reducePrepare(state, event.source);
     case "firstFrame":
-      return reduceFirstFrame(state, event.layer, event.clipId);
+      return reduceFirstFrame(
+        state,
+        event.layer,
+        event.clipId,
+        event.shouldCut === true,
+      );
     case "fadeEnded":
       return isIncomingEvent(state, event.layer, event.clipId, "fadingIn")
         ? promoteIncoming(state)

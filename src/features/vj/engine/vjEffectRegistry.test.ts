@@ -147,9 +147,10 @@ describe("VJ_EFFECT_REGISTRY", () => {
       [...VJ_GENERATOR_IDS].sort(),
     );
     expect(VJ_TRANSITION_REGISTRY.cut.programKey).toBeNull();
-    expect(VJ_TRANSITION_REGISTRY.dipWhite.whenDenied).toBe("fade");
-    expect(VJ_TRANSITION_REGISTRY.glitch.whenDenied).toBe("fade");
-    expect(vjTransitionProgramKey("dipWhite", false)).toBe("transition.fade");
+    expect(VJ_TRANSITION_REGISTRY.dipWhite.whenDenied).toBe("cut");
+    expect(VJ_TRANSITION_REGISTRY.glitch.whenDenied).toBe("cut");
+    expect(vjTransitionProgramKey("dipWhite", false)).toBeNull();
+    expect(vjTransitionProgramKey("glitch", false)).toBeNull();
     expect(vjTransitionProgramKey("dipWhite", true)).toBe(
       "transition.dipWhite",
     );

@@ -7,6 +7,7 @@ import {
 import {
   vjDomBlendOf,
   vjDomMixOpacities,
+  isVjDomDrawableTransition,
   vjDomTransitionOf,
 } from "./vjDomTransitionStyle";
 
@@ -44,13 +45,14 @@ describe("vjDomTransitionOf", () => {
     });
   });
 
-  it("answers the fade for every id the catalog marks DOM-incapable", () => {
+  it("answers the cut for every id the catalog marks DOM-incapable", () => {
     const domIncapable = VJ_TRANSITION_IDS.filter(
       (mode) => !VJ_TRANSITION_CATALOG[mode].isDomCapable,
     );
     expect(domIncapable.length).toBeGreaterThan(0);
     for (const mode of domIncapable) {
-      expect(vjDomTransitionOf(mode)).toEqual(vjDomTransitionOf("fade"));
+      expect(vjDomTransitionOf(mode)).toEqual(vjDomTransitionOf("cut"));
+      expect(isVjDomDrawableTransition(mode)).toBe(false);
     }
     expect(vjDomTransitionOf("fade").kind).toBe("fade");
     expect(vjDomTransitionOf("cut").kind).toBe("cut");

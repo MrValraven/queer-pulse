@@ -44,13 +44,23 @@ const GENERATOR: VjRenderableGenerator = {
 };
 
 describe("vjSimpleTransitionOf", () => {
-  it("turns every transition but a cut into a fade of the same length", () => {
+  it("turns every transition but a fade into a cut", () => {
     expect(vjSimpleTransitionOf({ mode: "wipeLeft", durationMs: 600 })).toEqual(
-      { mode: "fade", durationMs: 600 },
+      { mode: "cut", durationMs: 0 },
     );
     expect(
       vjSimpleTransitionOf({ mode: "dipWhite", durationMs: 1200 }),
-    ).toEqual({ mode: "fade", durationMs: 1200 });
+    ).toEqual({ mode: "cut", durationMs: 0 });
+    expect(
+      vjSimpleTransitionOf({ mode: "zoomBlur", durationMs: 1000 }),
+    ).toEqual({ mode: "cut", durationMs: 0 });
+  });
+
+  it("keeps a fade a fade of the same length", () => {
+    expect(vjSimpleTransitionOf({ mode: "fade", durationMs: 800 })).toEqual({
+      mode: "fade",
+      durationMs: 800,
+    });
   });
 
   it("keeps a cut a cut", () => {

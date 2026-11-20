@@ -1,8 +1,8 @@
 /**
  * Where each catalog transition renders (engine plan, Transition registry).
  * `cut` has no program: the incoming source is promoted at once. The two
- * flash-capable transitions render as `fade` when the flash governor denies
- * them (design 5).
+ * flash-capable transitions cut when the flash governor denies them
+ * (design 5), and so does any transition whose program failed to compile.
  */
 import {
   vjTransitionLengthMs,
@@ -26,13 +26,13 @@ export const VJ_TRANSITION_REGISTRY: Readonly<
   fade: { programKey: "transition.fade", whenDenied: null },
   cut: { programKey: null, whenDenied: null },
   dipBlack: { programKey: "transition.dipBlack", whenDenied: null },
-  dipWhite: { programKey: "transition.dipWhite", whenDenied: "fade" },
+  dipWhite: { programKey: "transition.dipWhite", whenDenied: "cut" },
   wipeLeft: { programKey: "transition.wipeLeft", whenDenied: null },
   wipeRight: { programKey: "transition.wipeRight", whenDenied: null },
   wipeRadial: { programKey: "transition.wipeRadial", whenDenied: null },
   iris: { programKey: "transition.iris", whenDenied: null },
   zoomBlur: { programKey: "transition.zoomBlur", whenDenied: null },
-  glitch: { programKey: "transition.glitch", whenDenied: "fade" },
+  glitch: { programKey: "transition.glitch", whenDenied: "cut" },
   lumaFade: { programKey: "transition.lumaFade", whenDenied: null },
 };
 
@@ -50,6 +50,7 @@ export function resolveVjTransition(
 /**
  * The program a running transition draws with: its own when the governor
  * granted it (or it never asks), else the program of its `whenDenied` mode.
+ * Null is a cut: the incoming source is promoted at once.
  */
 export function vjTransitionProgramKey(
   mode: VjTransitionId,

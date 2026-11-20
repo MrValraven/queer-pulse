@@ -412,7 +412,7 @@ describe("VjCompositor layers and scheduling", () => {
 });
 
 describe("VjCompositor flashes", () => {
-  it("renders dipWhite as a fade while the strobe holds the budget", () => {
+  it("cuts dipWhite in while the strobe holds the budget", () => {
     const harness = setUp();
     const compositor = compositorOf(harness);
     const dipWhite: VjResolvedTransition = {
@@ -424,6 +424,7 @@ describe("VjCompositor flashes", () => {
       lookOf({ revision: 1, transition: dipWhite, isStrobing: true }),
       "clip-a",
     );
+    const outgoing = harness.sourceFor("clip-a");
     compositor.setLayers({ live: clipOf("clip-b"), mix: null });
     harness.sourceFor("clip-b").emitFirstFrame();
     const strobeKeys = new Set<string>();
@@ -431,8 +432,10 @@ describe("VjCompositor flashes", () => {
       harness.step();
       for (const key of usedProgramKeys(harness.fake)) strobeKeys.add(key);
     }
-    expect(strobeKeys).toContain("transition.fade");
+    expect(strobeKeys).not.toContain("transition.fade");
     expect(strobeKeys).not.toContain("transition.dipWhite");
+    // A cut retires the outgoing source at once; a 400 ms fade would still draw it after 20 frames.
+    expect(outgoing.isDisposed).toBe(true);
 
     // With the strobe off and the budget free, the same transition draws as itself.
     compositor.setLook(lookOf({ revision: 2, transition: dipWhite }));

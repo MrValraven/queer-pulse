@@ -57,7 +57,7 @@ export interface VjSimpleRendererProps {
    * clip comes back. Ignored once this renderer has shown a clip itself.
    */
   fallbackClip?: VjRenderableClip | null;
-  /** look.transition: cut stays a cut, every other id fades over its resolved length. */
+  /** look.transition: a fade crossfades over its resolved length, and every other id cuts in at once. */
   transition: VjResolvedTransition;
   /** state.effects.speed */
   speed: VjSpeed;
@@ -118,9 +118,10 @@ function useVjSimplePreRoll(
 
 /**
  * The simple renderer the remote picks (spec 4.2): the two clip layers with an
- * opacity crossfade, the black curtain for "nothing live" and the blackout,
- * in that order from the bottom. It draws no effects, mix clip, generator or
- * strobe, so a screen on a weak machine only decodes video and moves opacity.
+ * opacity crossfade for a fade and a cut for any other transition, the black
+ * curtain for "nothing live" and the blackout, in that order from the bottom.
+ * It draws no effects, mix clip, generator or strobe, so a screen on a weak
+ * machine only decodes video and moves opacity.
  * The queue head's clip pre-rolls in the free layer, so a quantized change
  * lands on the beat with no frame loop of its own.
  * The overlay, countdown, logo and event card are the page's, drawn above.
@@ -193,7 +194,7 @@ export function VjSimpleRenderer({
         opacity={vjLayerOpacity(layers, layer)}
         zIndex={vjLayerZ(layers, layer)}
         fadeMs={isIncoming ? (layers.incoming?.durationMs ?? 0) : 0}
-        transitionStyle={vjDomTransitionOf(layers.incoming?.mode ?? "fade")}
+        transitionStyle={vjDomTransitionOf(layers.incoming?.mode ?? "cut")}
         speed={speed}
         viewport={viewport}
         isPaused={layers.front === layer && isFrontPaused}
