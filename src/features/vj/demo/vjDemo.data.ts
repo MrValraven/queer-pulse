@@ -11,7 +11,7 @@ import type {
   VjLoopMode,
   VjMix,
   VjSceneLook,
-  VjSpeed,
+  VjSpeedPreset,
   VjStepDuration,
 } from "../../../shared/contracts/vj";
 import { VJ_DEMO_EVENT_IDS } from "./vjDemoEvents.data";
@@ -23,7 +23,7 @@ export interface VjDemoClipSeed {
   fitMode: VjFitMode;
   creator: "marta" | "rafa";
   isFavorite: boolean;
-  defaultSpeed: VjSpeed;
+  defaultSpeed: VjSpeedPreset;
   /** Every seed clip is a GIF, so none carries loop points. */
   loopMode: VjLoopMode;
 }

@@ -27,9 +27,28 @@ export type VjFitMode = (typeof VJ_FIT_MODES)[number];
 /** The fit mode a clip created with none starts with (v1 C 2). */
 export const DEFAULT_VJ_FIT_MODE: VjFitMode = "fill";
 
-/** Playback rates a remote may pick; GIFs ignore them (C 3.1). */
+/** The preset playback rates: the remote's speed buttons, and the only values
+ *  a clip's default speed may take; GIFs ignore them (C 3.1). */
 export const VJ_SPEEDS = [0.25, 0.5, 1, 1.5, 2, 4] as const;
-export type VjSpeed = (typeof VJ_SPEEDS)[number];
+export type VjSpeedPreset = (typeof VJ_SPEEDS)[number];
+
+/** Bounds and precision of a live or scene speed (C 3.1). */
+export const VJ_SPEED_MIN = 0.25;
+export const VJ_SPEED_MAX = 4;
+export const VJ_SPEED_DECIMALS = 2;
+
+/** A live or scene playback rate: any value from 0.25 to 4 with at most two
+ *  decimals (`isVjSpeed`). */
+export type VjSpeed = number;
+
+/** Whether a value counts as a live or scene speed: a finite number from
+ *  VJ_SPEED_MIN to VJ_SPEED_MAX with at most VJ_SPEED_DECIMALS decimals. */
+export function isVjSpeed(value: unknown): value is VjSpeed {
+  if (typeof value !== "number" || !Number.isFinite(value)) return false;
+  if (value < VJ_SPEED_MIN || value > VJ_SPEED_MAX) return false;
+  const scaledValue = value * 10 ** VJ_SPEED_DECIMALS;
+  return Math.abs(scaledValue - Math.round(scaledValue)) < 1e-9;
+}
 
 /** How the screens move from one source to the next (C 3.1). */
 export const VJ_TRANSITION_IDS = [

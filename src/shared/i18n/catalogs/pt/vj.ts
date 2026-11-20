@@ -801,6 +801,12 @@ export const vj: Catalog = {
   // ── Effects sheet ──
   "effects.speed": "Velocidade",
   "effects.speedValue": "{speed}x",
+  "effects.customSpeedLabel": "Velocidade personalizada",
+  "effects.customSpeedSubmit": "Definir velocidade",
+  "effects.customSpeedEmpty": "Escreve uma velocidade, como 0,85",
+  "effects.customSpeedTooSlow": "A velocidade mais lenta é 0,25x",
+  "effects.customSpeedTooFast": "A velocidade mais rápida é 4x",
+  "effects.customSpeedTooPrecise": "Usa no máximo 2 casas decimais, como 0,85",
   "effects.gifSpeedNote":
     "O clip no ar é um GIF, por isso toca à sua própria velocidade",
   "effects.strobe": "Estroboscópio",

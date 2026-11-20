@@ -4,7 +4,7 @@ import {
   VJ_SPEEDS,
   type VjClipDTO,
   type VjLoopMode,
-  type VjSpeed,
+  type VjSpeedPreset,
 } from "../../../shared/contracts/vj";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -25,7 +25,7 @@ export interface VjPreviewPlayback {
 }
 
 export interface VjClipPlaybackDraft {
-  speed: VjSpeed;
+  speed: VjSpeedPreset;
   loopMode: VjLoopMode;
   /** The handles' positions (the draft); null for a GIF. */
   span: VjLoopSpan | null;
@@ -45,7 +45,7 @@ export interface VjClipPlaybackDraft {
   previewPlayback: VjPreviewPlayback;
 }
 
-function vjSpeedOf(value: string): VjSpeed | null {
+function vjSpeedOf(value: string): VjSpeedPreset | null {
   const speed = Number(value);
   return VJ_SPEEDS.find((candidate) => candidate === speed) ?? null;
 }
@@ -76,7 +76,7 @@ export function useVjClipPlaybackDraft(clip: VjClipDTO): VjClipPlaybackDraft {
   const updateLoopMode = useUpdateVjClip();
   const updateLoop = useUpdateVjClip();
 
-  const [chosenSpeed, setChosenSpeed] = useState<VjSpeed | null>(null);
+  const [chosenSpeed, setChosenSpeed] = useState<VjSpeedPreset | null>(null);
   if (chosenSpeed !== null && chosenSpeed === clip.defaultSpeed) {
     setChosenSpeed(null);
   }

@@ -3542,7 +3542,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-20.headline":
-    "Os ecrãs VJ cortam direto para o próximo clip quando uma transição não pode correr.",
+    "A velocidade VJ aceita qualquer valor escrito e os ecrãs cortam direto se uma transição falhar.",
   "changelog.releases.2026-11-16.headline":
     "Os contactos ganham responsáveis, os rascunhos esperam num cartão Continuar e a administração renova-se.",
   "changelog.releases.2026-11-14.headline":
@@ -3916,6 +3916,10 @@ export const marketing: Catalog = {
     "Cartões de parceiros mais ricos no diretório",
   "changelog.entries.partner-cards-redesign.body":
     "Os negócios parceiros têm um cartão largo com a foto, uma etiqueta de parceria e a nota da nossa equipa.",
+  "changelog.entries.vj-custom-speed.title":
+    "Escreve qualquer velocidade VJ, como 0,85x ou 1,15x",
+  "changelog.entries.vj-custom-speed.body":
+    "Debaixo das velocidades predefinidas do comando, um campo numérico põe o clip ao vivo entre 0,25x e 4x.",
   "changelog.entries.vj-fallback-transitions-cut.title":
     "Os ecrãs VJ cortam direto para o próximo clip quando uma transição não pode correr",
   "changelog.entries.vj-fallback-transitions-cut.body":

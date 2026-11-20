@@ -13,7 +13,7 @@ import type {
   VjMediaKind,
   VjRenderer,
   VjSetlistItemKind,
-  VjSpeed,
+  VjSpeedPreset,
 } from "./vj.lists";
 import type { VjSceneLook, VjStepDuration } from "./vj.state";
 
@@ -84,7 +84,7 @@ export interface VjClipDTO {
   createdAt: string;
   updatedAt: string;
   isFavorite: boolean;
-  defaultSpeed: VjSpeed;
+  defaultSpeed: VjSpeedPreset;
   loopInMs: number | null;
   loopOutMs: number | null;
   loopMode: VjLoopMode;
@@ -257,7 +257,7 @@ export interface UpdateVjClipBody {
   title?: string;
   fitMode?: VjFitMode;
   isFavorite?: boolean;
-  defaultSpeed?: VjSpeed;
+  defaultSpeed?: VjSpeedPreset;
   loopInMs?: number | null;
   loopOutMs?: number | null;
   loopMode?: VjLoopMode;

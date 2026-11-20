@@ -124,7 +124,7 @@ describe("demo scene create", () => {
         demoCreateVjScene({ name: "Glow", packId: "pack", look: "bad" }),
       ),
     ).toBe("VJ_PACK_NOT_FOUND");
-    const badSpeed = { ...look, effects: { ...look.effects, speed: 3 } };
+    const badSpeed = { ...look, effects: { ...look.effects, speed: 4.5 } };
     expect(
       bodyOf(() =>
         demoCreateVjScene({

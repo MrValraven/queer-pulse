@@ -25,11 +25,11 @@ import {
   VJ_QUANTIZE_MODES,
   VJ_SHUFFLE_INTERVAL_KINDS,
   VJ_SHUFFLE_SOURCES,
-  VJ_SPEEDS,
   VJ_TEMPO_SOURCES,
   VJ_TRANSITION_IDS,
   canonicalVjStageState,
   createVjStageState,
+  isVjSpeed,
   restoredVjSetlistPlayback,
   roundVjAmount,
   upgradeVjStageFieldsV1,
@@ -361,7 +361,7 @@ function restoredEventCardOf(
 function restoredEffectsOf(value: unknown, defaults: VjEffects): VjEffects {
   const source = readVjRecord(value);
   return {
-    speed: restoredListValue(VJ_SPEEDS, source.speed, defaults.speed),
+    speed: isVjSpeed(source.speed) ? source.speed : defaults.speed,
     settings: readStoredVjEffectSettings(source.settings),
     isStrobing: false,
     isBlackout: restoredFlag(source.isBlackout, defaults.isBlackout),

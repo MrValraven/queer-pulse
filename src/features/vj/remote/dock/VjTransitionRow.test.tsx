@@ -282,7 +282,8 @@ describe("VjTransitionRow", () => {
       screen.getByRole("button", { name: "Clip speed, 1x. Change it" }),
     );
     const speedOptions = disabledControlsIn(screen.getByRole("dialog"));
-    expect(speedOptions).toHaveLength(6);
+    // The six presets, the typed speed field and its Set speed button.
+    expect(speedOptions).toHaveLength(8);
     for (const option of speedOptions) {
       expect(describedByIdsOf(option)).toEqual(["status-line"]);
     }

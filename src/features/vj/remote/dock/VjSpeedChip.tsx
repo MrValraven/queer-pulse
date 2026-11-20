@@ -13,6 +13,7 @@ import {
   type VjSendRefusal,
 } from "../hooks/useVjOptimisticValue";
 import { VjDockPopover } from "../kit/VjDockPopover";
+import { VjCustomSpeedField } from "./VjCustomSpeedField";
 import styles from "./VjDockRows.module.css";
 
 const VJ_SPEED_KEY = "speed";
@@ -33,9 +34,11 @@ export interface VjSpeedChipProps {
 
 /**
  * The clip speed chip at the end of the transition row, a "Speed" caption
- * over the speed (the pads strip folds the caption). It opens the six
- * speeds; a pick shows at once and rolls back with its named reason on a
- * refusal. While a GIF plays live the note says GIFs keep their own speed.
+ * over the speed (the pads strip folds the caption). It opens the preset
+ * speeds and a typed speed field (0.25x to 4x, two decimals at most); a pick
+ * shows at once and rolls back with its named reason on a refusal. A typed
+ * speed between the presets presses no preset and shows on the chip as
+ * typed. While a GIF plays live the note says GIFs keep their own speed.
  */
 export function VjSpeedChip({
   speed,
@@ -124,6 +127,12 @@ export function VjSpeedChip({
               </button>
             ))}
           </div>
+          <VjCustomSpeedField
+            speed={shownSpeed}
+            isBlocked={isBlocked}
+            describedBy={describedBy}
+            onSubmitSpeed={pickSpeed}
+          />
           <Collapse isOpen={liveMediaKind === "gif"}>
             <p className={styles.note}>{t("vj:effects.gifSpeedNote")}</p>
           </Collapse>

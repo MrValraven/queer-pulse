@@ -10,7 +10,7 @@ import {
   VJ_SPEEDS,
   type VjLoopMode,
   type VjMediaKind,
-  type VjSpeed,
+  type VjSpeedPreset,
 } from "../../../shared/contracts/vj";
 import { vjRefusal } from "./vjDemoRefusals";
 
@@ -18,7 +18,7 @@ import { vjRefusal } from "./vjDemoRefusals";
  *  An absent property is left out; a null loop point clears it. */
 export interface VjClipDefaultsPatch {
   isFavorite?: boolean;
-  defaultSpeed?: VjSpeed;
+  defaultSpeed?: VjSpeedPreset;
   loopMode?: VjLoopMode;
   loopInMs?: number | null;
   loopOutMs?: number | null;

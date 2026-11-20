@@ -19,6 +19,7 @@ import type {
 } from "../../../live/vjStageCommands";
 import type { useVjDockPads } from "../../hooks/useVjDockPads";
 import type { VjActionDispatch } from "../../input/vjRemoteAction";
+import { VjCustomSpeedField } from "../../dock/VjCustomSpeedField";
 import { VjSheetFrame } from "../../kit/VjSheetFrame";
 import { VJ_DOCK_PADS_MAX } from "../../rules/vjDockPads";
 import { VjSheetAlert } from "../../VjSheetAlert";
@@ -32,7 +33,8 @@ const DOCK_CHIP_TRANSITION = {
   ease: [0.22, 0.68, 0.16, 1],
 } as const;
 
-/** The six speeds as chips, with the GIF note while the live clip is a GIF. */
+/** The preset speeds as chips and a typed speed under them, with the GIF
+ *  note while the live clip is a GIF. */
 function VjEffectSpeedChips({
   speed,
   isBlocked,
@@ -67,6 +69,14 @@ function VjEffectSpeedChips({
           </button>
         ))}
       </div>
+      <VjCustomSpeedField
+        speed={speed}
+        isBlocked={isBlocked}
+        submitClassName={styles.chip}
+        onSubmitSpeed={(typedSpeed) => {
+          if (!isBlocked && speed !== typedSpeed) onSpeed(typedSpeed);
+        }}
+      />
       <Collapse isOpen={isLiveGif}>
         <p className={styles.hint}>{t("vj:effects.gifSpeedNote")}</p>
       </Collapse>

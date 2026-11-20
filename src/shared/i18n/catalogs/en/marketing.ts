@@ -3448,7 +3448,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-20.headline":
-    "VJ screens cut straight to the next clip when a transition can't play.",
+    "VJ speed takes any typed value, and screens cut straight on when a transition can't play.",
   "changelog.releases.2026-11-16.headline":
     "Leads get staff in charge, drafts wait on a Continue card, and admin gets a redesign.",
   "changelog.releases.2026-11-14.headline":
@@ -3821,6 +3821,10 @@ export const marketing: Catalog = {
     "Richer partner cards in the directory",
   "changelog.entries.partner-cards-redesign.body":
     "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.vj-custom-speed.title":
+    "Type any VJ speed, like 0.85x or 1.15x",
+  "changelog.entries.vj-custom-speed.body":
+    "Under the speed presets on the remote, a number field sets the live clip anywhere from 0.25x to 4x.",
   "changelog.entries.vj-fallback-transitions-cut.title":
     "VJ screens cut straight to the next clip when a transition can't play",
   "changelog.entries.vj-fallback-transitions-cut.body":

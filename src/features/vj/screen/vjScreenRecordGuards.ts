@@ -24,6 +24,7 @@ import {
   VJ_TEMPO_SOURCES,
   VJ_TRANSITION_BEAT_COUNTS,
   VJ_TRANSITION_IDS,
+  isVjSpeed,
   type VjClipDTO,
   type VjEffectId,
   type VjEventCardDTO,
@@ -173,7 +174,7 @@ function isScreenFurniture(state: Record<string, unknown>): boolean {
 function isEffects(value: unknown): boolean {
   return (
     isVjPlainObject(value) &&
-    isOneOf(VJ_SPEEDS, value.speed) &&
+    isVjSpeed(value.speed) &&
     isEffectSettings(value.settings) &&
     typeof value.isStrobing === "boolean" &&
     typeof value.isBlackout === "boolean" &&

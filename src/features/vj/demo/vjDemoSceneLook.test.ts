@@ -113,7 +113,7 @@ describe("checkVjSceneLook", () => {
       ),
     ).toEqual(invalidAt("effects.settings.glitch.variant"));
     expect(
-      checkVjSceneLook(lookWith("effects", { speed: 3, settings: {} })),
+      checkVjSceneLook(lookWith("effects", { speed: 4.5, settings: {} })),
     ).toEqual(invalidAt("effects.speed"));
     expect(
       checkVjSceneLook(

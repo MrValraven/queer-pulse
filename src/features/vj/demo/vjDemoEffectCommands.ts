@@ -5,14 +5,12 @@
 // dispatcher (vjDemoStageCommands.ts); neither rule reads the library.
 
 import {
-  VJ_SPEEDS,
+  isVjSpeed,
   type VjEffects,
-  type VjSpeed,
   type VjStageState,
 } from "../../../shared/contracts/vj";
 import { vjDemoChange, type VjDemoCommandOutcome } from "./vjDemoCommandKit";
 import { applyVjEffectSettingsPatch } from "./vjDemoEffectRules";
-import { isOneOf } from "./vjDemoStageInput";
 
 /** The `stage:setEffects` fields that make a patch; isImmediate alone is empty. */
 const VJ_SET_EFFECTS_PATCH_FIELDS = [
@@ -35,7 +33,7 @@ export function applySetEffects(
   if (!hasPatchField) return { error: "vj_patch_empty" };
   const effects: VjEffects = { ...state.effects };
   if (record.speed !== undefined) {
-    if (!isOneOf<VjSpeed>(VJ_SPEEDS, record.speed)) {
+    if (!isVjSpeed(record.speed)) {
       return { error: "vj_speed_invalid" };
     }
     effects.speed = record.speed;

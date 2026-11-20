@@ -11,9 +11,9 @@ import {
   VJ_OVERLAY_POSITIONS,
   VJ_OVERLAY_SIZES,
   VJ_OVERLAY_STYLES,
-  VJ_SPEEDS,
   VJ_TRANSITION_IDS,
   createVjStageState,
+  isVjSpeed,
   roundVjAmount,
   vjSceneLookOf,
   type VjMix,
@@ -21,7 +21,6 @@ import {
   type VjSceneLook,
   type VjSceneSource,
   type VjSocketErrorCode,
-  type VjSpeed,
   type VjTransition,
 } from "../../../shared/contracts/vj";
 import {
@@ -138,7 +137,7 @@ function checkEffects(value: unknown): VjLookPart<VjSceneLook["effects"]> {
   if (!isVjRecord(value) || !hasExactlyVjKeys(value, EFFECTS_KEYS)) {
     return refusePart("effects");
   }
-  if (!isOneOf<VjSpeed>(VJ_SPEEDS, value.speed)) {
+  if (!isVjSpeed(value.speed)) {
     return refusePart("effects.speed");
   }
   const patchCheck = checkVjEffectSettingsPatch(value.settings, {
@@ -324,7 +323,7 @@ export function normalizeStoredVjSceneLook(value: unknown): VjSceneLook {
   return {
     source: readStoredSource(value.source),
     effects: {
-      speed: isOneOf<VjSpeed>(VJ_SPEEDS, storedEffects.speed)
+      speed: isVjSpeed(storedEffects.speed)
         ? storedEffects.speed
         : defaults.effects.speed,
       settings: readStoredVjEffectSettings(storedEffects.settings),

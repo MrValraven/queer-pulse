@@ -87,7 +87,7 @@ describe("applySetEffects check order (C 7.6)", () => {
 
   it("answers vj_speed_invalid before the blackout rule", () => {
     expect(
-      errorOf(applySetEffects(freshState(), { speed: 3, isBlackout: "yes" })),
+      errorOf(applySetEffects(freshState(), { speed: 4.5, isBlackout: "yes" })),
     ).toBe("vj_speed_invalid");
     expect(errorOf(applySetEffects(freshState(), { speed: "1" }))).toBe(
       "vj_speed_invalid",

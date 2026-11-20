@@ -774,6 +774,30 @@
   border-color: var(--qs-low);
 }
 
+.field[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* The typed speed under the speed presets (the dock popover and the Effects
+   sheet): the field and "Set speed" on one line, the reason under them. */
+.customSpeed {
+  display: grid;
+  gap: var(--gap-xs);
+}
+
+/* The steppers would crowd a four-character value; the keypad and the
+   presets cover stepping. */
+.customSpeed .field {
+  appearance: textfield;
+}
+
+.customSpeed .field::-webkit-inner-spin-button,
+.customSpeed .field::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
 .note {
   display: flex;
   align-items: flex-start;
