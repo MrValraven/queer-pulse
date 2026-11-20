@@ -1688,6 +1688,17 @@ export const notifications: Catalog = {
   "type.lead_assigned.textNamed":
     "<profile>{name}</profile> put you in charge of a lead.",
   "type.lead_assigned.meta": "Leads",
+  "type.cultural_task_assigned.text": "You were assigned a task: {taskTitle}.",
+  "type.cultural_task_assigned.textNamed":
+    "<profile>{name}</profile> assigned you a task: {taskTitle}.",
+  "type.cultural_task_assigned.meta": "Cultural Production",
+  "type.cultural_task_assigned.taskTitleFallback": "open it to see the title",
+  "type.cultural_task_batch_assigned.text":
+    "You were assigned the tasks from the {guideTitle} guide.",
+  "type.cultural_task_batch_assigned.textNamed":
+    "<profile>{name}</profile> assigned you the tasks from the {guideTitle} guide.",
+  "type.cultural_task_batch_assigned.meta": "Cultural Production",
+  "type.cultural_task_batch_assigned.guideTitleFallback": "event",
   "actions.reviewTeamInvite": "Review invite",
   "actions.reviewTeamRequest": "Review request",
 };

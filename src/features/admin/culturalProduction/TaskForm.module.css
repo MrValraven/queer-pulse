@@ -1,0 +1,190 @@
+/* The task fields (the Add a task dialog and the task drawer share them),
+   the Assigned to block with its pills, and the drawer's head, foot and
+   loading lines. The link grid sizes its columns from its own width, so a
+   phone stacks the selects and the dialog sets them side by side. */
+
+.form,
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* A field and the refusal line under it. The FormField's own bottom
+   margin gives way to the gap, so the refusal sits right under it. */
+.fieldBlock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fieldBlock .field {
+  margin-bottom: 0;
+}
+
+.notes {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.clearDue {
+  align-self: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.linkGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+/* ── Assigned to ────────────────────────────────────────────────────── */
+.assignees {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+  padding-top: var(--gap-sm);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.assigneesHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.assigneesHeading {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.assigneesNone {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chipItem {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.chipList .chip {
+  gap: 8px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 3px;
+  font-size: var(--text-13);
+  white-space: normal;
+}
+
+.chipName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A round remove button inside the pill; the hit area reaches past the
+   pill to a 44px target. */
+.chipList .chip .chipRemove {
+  position: relative;
+  flex: none;
+  width: 30px;
+  min-height: 30px;
+  padding: 0;
+  border-radius: var(--radius-pill);
+  color: var(--ink-60);
+}
+
+.chipList .chip .chipRemove::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+}
+
+.chipList .chip .chipRemove:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chipList .chip .chipRemove[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.55;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chipList .chip .chipRemove:hover:not([aria-disabled="true"]) {
+    color: var(--text-strong);
+  }
+}
+
+/* ── Drawer ─────────────────────────────────────────────────────────── */
+.drawerHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.drawerTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+.byline {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+/* The leaving view drops out of the flow while it fades. */
+.drawerViews {
+  position: relative;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.drawerFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 12px;
+}
+
+.deleteButton {
+  gap: 6px;
+  margin-right: auto;
+  color: var(--danger);
+}

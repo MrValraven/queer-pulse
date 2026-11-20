@@ -3821,6 +3821,10 @@ export const marketing: Catalog = {
     "Richer partner cards in the directory",
   "changelog.entries.partner-cards-redesign.body":
     "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.cultural-production.title":
+    "Cultural Production for the team that runs QueerPulse events",
+  "changelog.entries.cultural-production.body":
+    "Event ideas, a shared task list with assignees and due dates, and guides that become an event's tasks.",
   "changelog.entries.vj-custom-speed.title":
     "Type any VJ speed, like 0.85x or 1.15x",
   "changelog.entries.vj-custom-speed.body":

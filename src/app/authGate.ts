@@ -474,6 +474,12 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // CAPABILITY_ELEVATED_PATTERNS.
   routes.adminStudio,
   `${routes.adminStudio}/*`,
+  // Cultural Production. `AdminCulturalProductionController` is
+  // `@Roles(Moderator, Admin)`, so moderators keep the ideas, tasks and guides
+  // through this list. The `cultural_producer` and `music_manager_producer`
+  // grants open the same paths through CAPABILITY_ELEVATED_PATTERNS.
+  routes.adminCulturalProduction,
+  `${routes.adminCulturalProduction}/*`,
   // Pulse Live quiz templates. `AdminQuizshowTemplatesController` is
   // `@Roles(Moderator, Admin)` plus `@Feature('quizshow')`, so moderators keep
   // the templates with admins. No grant opens it, so it stays out of
@@ -714,6 +720,18 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     // so a moderator gets a 403 from every leads endpoint.
     patterns: [routes.adminLeads, `${routes.adminLeads}/*`],
     capabilities: ["music_manager_producer"],
+  },
+  {
+    // `AdminCulturalProductionController` (`RolesOrStaffGuard`,
+    // `@Roles(Moderator, Admin)`, `@StaffRoles('cultural_producer',
+    // 'music_manager_producer')`). Either grant opens the page and its guide
+    // pages on its own; moderators come in through
+    // MOD_ACCESSIBLE_ADMIN_PATTERNS.
+    patterns: [
+      routes.adminCulturalProduction,
+      `${routes.adminCulturalProduction}/*`,
+    ],
+    capabilities: ["cultural_producer", "music_manager_producer"],
   },
   {
     // Studio discovery. `AdminStudioCurationController`,

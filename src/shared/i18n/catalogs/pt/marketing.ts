@@ -3916,6 +3916,10 @@ export const marketing: Catalog = {
     "Cartões de parceiros mais ricos no diretório",
   "changelog.entries.partner-cards-redesign.body":
     "Os negócios parceiros têm um cartão largo com a foto, uma etiqueta de parceria e a nota da nossa equipa.",
+  "changelog.entries.cultural-production.title":
+    "Produção cultural para a equipa que organiza os eventos do QueerPulse",
+  "changelog.entries.cultural-production.body":
+    "Ideias de eventos, uma lista de tarefas partilhada com responsáveis e prazos, e guias que se tornam as tarefas de um evento.",
   "changelog.entries.vj-custom-speed.title":
     "Escreve qualquer velocidade VJ, como 0,85x ou 1,15x",
   "changelog.entries.vj-custom-speed.body":

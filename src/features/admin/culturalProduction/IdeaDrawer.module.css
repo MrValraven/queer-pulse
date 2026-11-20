@@ -1,0 +1,248 @@
+/* The idea drawer: a head with the title, event type, status and byline;
+   then the description, who's in, the linked tasks and the thread. */
+
+/* ── Head ───────────────────────────────────────────────────────────────── */
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.headControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.statusField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusLabel {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.byline {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+/* ── Body ───────────────────────────────────────────────────────────────── */
+/* Positioned, so a leaving view pops out of the flow while it fades. */
+.views {
+  position: relative;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.description {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--ink);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.stateText {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.count,
+.empty {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── People ─────────────────────────────────────────────────────────────── */
+.backerList,
+.taskList,
+.commentList {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.backerList {
+  gap: 6px;
+}
+
+.taskList {
+  gap: 8px;
+}
+
+.commentList {
+  gap: 10px;
+}
+
+.backer {
+  padding: 2px 0;
+}
+
+.identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.identityAvatar {
+  flex: none;
+  display: inline-flex;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.identityName {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.identityDetail {
+  font-size: var(--text-caption);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+
+/* ── Comments ───────────────────────────────────────────────────────────── */
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+}
+
+.commentHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.commentBody {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.55;
+  color: var(--ink);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  padding-top: 4px;
+}
+
+/* The box grows with the comment, up to about a third of the screen. */
+.composer textarea {
+  field-sizing: content;
+  min-height: 72px;
+  max-height: 34svh;
+}
+
+.composerActions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+/* ── Foot ───────────────────────────────────────────────────────────────── */
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 12px;
+}
+
+/* The task drawer's quiet delete: danger ink, held at the start. */
+.deleteButton {
+  gap: 6px;
+  margin-right: auto;
+  color: var(--danger);
+}
+
+@media (max-width: 640px) {
+  .phoneTarget,
+  .statusSelect > button {
+    min-height: 44px;
+  }
+}

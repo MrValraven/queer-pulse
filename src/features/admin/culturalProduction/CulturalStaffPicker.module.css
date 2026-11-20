@@ -1,0 +1,78 @@
+/* The Assign staff picker (CulturalStaffPicker), the button that opens it
+   and the floating panel it opens in on wider screens
+   (CulturalStaffPickerButton). The panel wears the leads picker's surface. */
+
+.picker {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.picker[aria-busy="true"] {
+  cursor: progress;
+}
+
+/* While a change saves, the rows dim, so a press that waits reads as held. */
+.picker [role="listbox"] {
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.picker[aria-busy="true"] [role="listbox"] {
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .picker [role="listbox"] {
+    transition: none;
+  }
+}
+
+.hint {
+  margin: 0;
+  padding-inline: 2px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.retry {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  padding-block: 2px;
+}
+
+.trigger {
+  flex: none;
+}
+
+/* Portalled to the body, so it clears a host dialog or drawer the button
+   sits in (the DatePicker calendar's tier). */
+.popover {
+  z-index: var(--z-popover-portal);
+  inline-size: min(22.5rem, calc(100vw - 24px));
+  padding: 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e3);
+  visibility: hidden;
+}
+
+.popover[data-placed] {
+  visibility: visible;
+}
+
+/* The picker sheet on a phone: the list grows into the sheet's height,
+   which is 92svh less the head, search, hint and footer around the list,
+   so every preview row shows before the list scrolls. */
+.sheetBody [role="listbox"] {
+  max-height: max(140px, calc(92svh - var(--keyboard-inset, 0px) - 300px));
+}
+
+@media (--md) {
+  /* The small button keeps a 44px target on a phone. */
+  .trigger {
+    min-height: 44px;
+  }
+}

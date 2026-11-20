@@ -72,6 +72,12 @@ export const routes = {
   /** Leads directory (`AdminLeadsPage`): the people staff reach out to.
    *  Admin and the `music_manager_producer` grant. */
   adminLeads: "/admin/leads",
+  /** Cultural Production (`AdminCulturalProductionPage`): event ideas, tasks
+   *  and guides. Moderator, Admin, and the `cultural_producer` and
+   *  `music_manager_producer` grants. */
+  adminCulturalProduction: "/admin/cultural-production",
+  /** One guide's page (`culturalGuidePath`). */
+  adminCulturalGuide: "/admin/cultural-production/guides/:guideId",
   /** Pulse Live quiz templates: the staff list. Moderator and Admin. */
   adminQuizshowTemplates: "/admin/quizshow/templates",
   /** One template in the full-screen studio (`adminQuizshowTemplatePath`). */

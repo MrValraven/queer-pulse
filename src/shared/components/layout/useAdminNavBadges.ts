@@ -13,6 +13,7 @@ import {
   useMusicEventAttention,
 } from "../../../features/admin/musicEvents/api/useMusicEvents";
 import { useLeadDueCount } from "../../../features/admin/leads/api/useLeadDueCount";
+import { useCulturalTaskDueCount } from "../../../features/admin/culturalProduction/api/useCulturalTaskDueCount";
 import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import type { AdminNavBadgeUnavailable } from "./AdminAlertsPopover";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
@@ -107,6 +108,12 @@ export function useAdminNavBadgeStatus(): AdminNavBadgeStatus {
   // `AdminLeadsController` admits the same two: an admin or the
   // `music_manager_producer` grant.
   const hasLeadsAccess = staffRoles.includes("music_manager_producer");
+  // `AdminCulturalProductionController` admits a moderator, an admin and
+  // either grant; demo and an admin hold every grant already.
+  const hasCulturalProductionAccess =
+    hasModeratorQueueAccess ||
+    staffRoles.includes("cultural_producer") ||
+    staffRoles.includes("music_manager_producer");
   const overview = useAdminOverview({ isEnabled: hasAdminOverviewAccess });
   const modReports = useModReports(
     undefined,
@@ -163,6 +170,12 @@ export function useAdminNavBadgeStatus(): AdminNavBadgeStatus {
   // moderator sends no request here.
   const leadDueCount = useLeadDueCount({ isEnabled: hasLeadsAccess });
 
+  // The cultural production pill counts the viewer's open tasks due today or
+  // earlier. Off without access, so a plain member sends no request here.
+  const culturalTaskDueCount = useCulturalTaskDueCount({
+    isEnabled: hasCulturalProductionAccess,
+  });
+
   // Phase 2's review queue is live, so the badge counts the actual review-queue
   // backlog: every request still waiting on a moderator, at any stage of that
   // wait (freshly submitted, actively being reviewed, or back for a second look
@@ -198,6 +211,9 @@ export function useAdminNavBadgeStatus(): AdminNavBadgeStatus {
       ? musicEventAttention.pendingInviteRequestCount
       : 0,
     leads: hasLeadsAccess ? (leadDueCount.data ?? 0) : 0,
+    culturalProduction: hasCulturalProductionAccess
+      ? (culturalTaskDueCount.data ?? 0)
+      : 0,
   };
 
   // A failed read keeps whatever `data` it last had (or none), so the count
@@ -215,6 +231,8 @@ export function useAdminNavBadgeStatus(): AdminNavBadgeStatus {
     listingClaims: hasListingClaimsAccess && isCountReadError(listingClaims),
     musicEvents: hasMusicEventsAccess && isCountReadError(musicEventsRead),
     leads: hasLeadsAccess && leadDueCount.isError,
+    culturalProduction:
+      hasCulturalProductionAccess && culturalTaskDueCount.isError,
   };
 
   return { counts, unavailable };

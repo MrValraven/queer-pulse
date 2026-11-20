@@ -1,0 +1,316 @@
+/* The Tasks tab: the filter bar, then the list as cards on a narrow screen
+   and as one table on a wide one (the leads list's frame). */
+
+.tab {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
+/* ── The filter bar ── */
+.filter {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.filterLabel {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* ── The list ── */
+.panel {
+  container: tasks-list / inline-size;
+}
+
+/* The positioned parent a leaving view is lifted out against while the
+   next view fades in (ViewFade, AnimatePresence mode="popLayout"). */
+.viewStage {
+  position: relative;
+}
+
+.table {
+  /* The columns of a wide list, shared by the head and every row: the task
+     with its meta line, the status select, the assignee stack. */
+  --task-columns: minmax(0, 1fr) 9.5rem 9rem;
+}
+
+/* The column head shows only on a wide list; the two-class selector
+   outranks the kit's display. */
+.table .tableHead {
+  display: none;
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A row carries its own block-end gap, so a row that leaves takes its gap
+   with it. */
+.rowItem {
+  position: relative;
+}
+
+.listState {
+  margin-block-end: var(--gap-xs);
+}
+
+.skeletonRow {
+  overflow: clip;
+  margin-block-end: var(--gap-xs);
+  border-radius: var(--admin-panel-radius);
+}
+
+.truncated {
+  margin: 0;
+  padding-block: var(--gap-xs);
+  font-size: var(--text-caption);
+  text-align: center;
+  color: var(--ink-60);
+}
+
+/* ── One row: a card on a narrow list and in an idea's drawer ──
+   The title and its meta line, then the status beside the assignees. */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "main main"
+    "status assignees";
+  align-items: center;
+  gap: 10px var(--gap-sm);
+  min-height: var(--tap-min);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-sm);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--admin-panel-radius);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    border-color: rgba(var(--line-rgb), 0.18);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+.rowMain {
+  grid-area: main;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* The status select and the assignees sit above the title's stretched
+   hit area, so each takes its own presses. */
+.rowStatus {
+  position: relative;
+  z-index: 2;
+  grid-area: status;
+  justify-self: start;
+  min-width: 0;
+}
+
+.rowAssignees {
+  grid-area: assignees;
+  justify-self: end;
+  display: flex;
+  min-width: 0;
+}
+
+.statusSelect {
+  min-inline-size: 8.5rem;
+}
+
+/* The title is the row's open button; its hit area stretches over the
+   whole row, under the status select. */
+.rowOpen {
+  justify-self: start;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: start;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.rowOpen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.rowOpen:focus-visible {
+  outline: none;
+}
+
+.rowOpen:focus-visible::after {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .rowOpen {
+    color: var(--accent-text);
+  }
+}
+
+/* A done task reads as history: muted, its title struck through. */
+.row[data-done] .rowOpen {
+  font-weight: 500;
+  color: var(--ink-60);
+  text-decoration: line-through;
+  text-decoration-color: rgba(var(--line-rgb), 0.4);
+}
+
+.row[data-done] .meta {
+  color: var(--ink-40);
+}
+
+/* ── The meta line ── */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--gap-sm);
+  min-width: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.metaItem,
+.due {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+}
+
+.metaIcon {
+  flex: none;
+  inline-size: 15px;
+  block-size: 15px;
+}
+
+.metaText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.due {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Overdue and due today share the leads list's follow-up ink; the icon
+   tells them apart. */
+.due[data-state="overdue"],
+.due[data-state="today"] {
+  font-weight: 600;
+  color: var(--amber-ink);
+}
+
+.due[data-state="none"] {
+  color: var(--ink-40);
+}
+
+/* ── Phone ── the small selects keep a 44px target whatever the pointer
+   reports (the attribute outranks the kit's small trigger). */
+@media (max-width: 640px) {
+  .phoneTarget > button[aria-haspopup] {
+    min-height: 44px;
+  }
+}
+
+/* Add task stays pinned to the end of the filter bar where the kit lets
+   its end actions follow the controls. */
+@media (max-width: 719.98px) {
+  .toolbar > :last-child {
+    margin-inline-start: auto;
+  }
+}
+
+/* ── A wide list: one table, a line per task ── */
+@container tasks-list (min-width: 720px) {
+  .table {
+    overflow: clip;
+    background: var(--paper);
+    border: 1px solid rgba(var(--line-rgb), 0.09);
+    border-radius: var(--admin-panel-radius);
+    box-shadow: var(--shadow-e1);
+  }
+
+  .table .tableHead {
+    display: grid;
+    grid-template-columns: var(--task-columns);
+    gap: var(--gap-sm);
+    padding-inline: var(--admin-panel-pad);
+  }
+
+  .skeletonRow {
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .skeletonRow + .skeletonRow {
+    border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
+  }
+
+  .row:not([data-compact]) {
+    grid-template-columns: var(--task-columns);
+    grid-template-areas: "main status assignees";
+    min-height: 64px;
+    margin: 0;
+    padding: var(--gap-xs) var(--admin-panel-pad);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .rows > li + li .row {
+    border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .row:not([data-compact]):hover {
+      background: rgba(var(--line-rgb), 0.03);
+      box-shadow: none;
+    }
+  }
+
+  .row:not([data-compact]) .rowOpen:focus-visible::after {
+    outline-offset: -3px;
+    box-shadow: none;
+  }
+
+  .row:not([data-compact]) .rowAssignees {
+    justify-self: start;
+  }
+
+  .truncated {
+    padding-block: var(--gap-sm) 0;
+  }
+}

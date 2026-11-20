@@ -1,0 +1,210 @@
+/* The Ideas tab (IdeasTab): the card grid, one idea card, and the Add and
+   Edit idea dialog's form. The toolbar layout comes from AdminToolbar. */
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+/* The views swap in place: the leaving one drops out of the flow. */
+.viewStage {
+  position: relative;
+}
+
+/* Add idea stays pinned right, on phones too, where the kit lets the end
+   actions follow the controls. The end slot is the toolbar's last child. */
+.toolbar > :last-child {
+  margin-inline-start: auto;
+}
+
+/* ── The grid ── one column on a phone, two from 720px, three from 1100px. */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.gridItem {
+  display: flex;
+  min-width: 0;
+}
+
+/* ── One card ── the title's button stretches over the whole card, so the
+   card reads as one control and takes its hover and focus from it. */
+.card {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transform: none;
+  }
+}
+
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-body-lg);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.cardOpen {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.cardOpen::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: inherit;
+}
+
+.cardOpen:focus-visible {
+  outline: none;
+}
+
+.cardOpen:focus-visible::after {
+  border-radius: var(--radius-card);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.cardDescription {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.cardByline {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+/* Backers above the counts on every card, so the divider sits at the same
+   height across a grid row whatever the names and counts measure. */
+.cardFoot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin-top: auto;
+  padding-top: var(--gap-xs);
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.cardBackers,
+.cardCounts,
+.cardCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardCounts {
+  gap: var(--gap-sm);
+}
+
+.truncated {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+  text-align: center;
+}
+
+/* ── The Add and Edit idea form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.formPair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-sm);
+}
+
+@media (min-width: 560px) {
+  .formPair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.form .description {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.countOver {
+  color: var(--accent-text);
+}

@@ -1,0 +1,352 @@
+/* One guide's page: a calm document. Fraunces for the headings, DM Sans at
+   a reading size and measure for the text, a contents list beside the
+   sections on a wide screen. */
+
+.backLink:focus-visible,
+.contentsLink:focus-visible,
+.bodyLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A 32px row on desktop and the 44px touch target on a phone. */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 32px;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+  transition: color 0.16s var(--ease);
+}
+
+.backLink svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (max-width: 640px) {
+  .backLink {
+    min-height: 44px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .backLink:hover {
+    color: var(--text-strong);
+  }
+}
+
+/* ── States ────────────────────────────────────────────────────────────── */
+
+.statePage {
+  display: grid;
+  gap: var(--gap-sm);
+  /* A reading column; no spacing token is this wide. */
+  max-width: 720px;
+  margin-inline: auto;
+  padding-block: var(--gap-lg);
+}
+
+.skeletonPage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.headerSub {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 68ch;
+}
+
+.headerSummary {
+  color: var(--ink-60);
+}
+
+.headerEditLine {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+/* On a phone, Create tasks for an event takes the first row on its own,
+   and Edit guide with the overflow share the second. */
+@media (max-width: 640px) {
+  .headerActions .createTasksAction {
+    flex-basis: 100%;
+    order: -1;
+  }
+}
+
+/* ViewFade's leaving view drops out of the flow against this box. */
+.viewStage {
+  position: relative;
+  min-width: 0;
+}
+
+/* ── Read view ─────────────────────────────────────────────────────────── */
+
+.readView {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-lg);
+  align-items: start;
+}
+
+/* The contents list shows from a tablet width up; a phone scrolls the
+   sections themselves. */
+.contentsColumn {
+  display: none;
+  min-width: 0;
+}
+
+@media (min-width: 720px) {
+  .contentsColumn {
+    display: block;
+  }
+}
+
+@media (min-width: 1100px) {
+  .readView {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  /* The column runs the full height of the sections, so the sticky list
+     has room to stay in view. */
+  .contentsColumn {
+    align-self: stretch;
+  }
+
+  .contents {
+    position: sticky;
+    top: calc(var(--admin-topbar-h, 0px) + var(--gap-sm));
+  }
+}
+
+.contentsLabel {
+  margin: 0 0 8px;
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.contentsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 1100px) {
+  .contentsList {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 2px;
+    border-left: 1px solid rgba(var(--line-rgb), 0.09);
+  }
+}
+
+.contentsLink {
+  display: inline-block;
+  padding: 4px 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.4;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+  transition: color 0.16s var(--ease);
+}
+
+@media (min-width: 1100px) {
+  .contentsLink {
+    display: block;
+    padding: 5px 0 5px 14px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contentsLink:hover {
+    color: var(--text-strong);
+  }
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* The section heading reads as a document heading: larger than a panel
+   title, and clear of the sticky topbar when the contents list jumps to it. */
+.section header h2 {
+  font-size: var(--text-22);
+  font-weight: 450;
+  line-height: 1.2;
+  scroll-margin-top: calc(var(--admin-topbar-h, 0px) + var(--gap-sm));
+}
+
+.section header h2:focus {
+  outline: none;
+}
+
+.section header h2:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  max-width: 68ch;
+}
+
+.bodyText {
+  font-size: var(--text-body-lg);
+  line-height: 1.7;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.bodyText > :where(p, ul) {
+  margin: 0;
+}
+
+.bodyText > * + * {
+  margin-top: 0.85em;
+}
+
+.bodyText ul {
+  padding-left: 1.25em;
+}
+
+.bodyText li + li {
+  margin-top: 0.3em;
+}
+
+.bodyText li::marker {
+  color: var(--accent);
+}
+
+.bodyLink {
+  color: var(--accent-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: var(--radius-tag);
+}
+
+/* ── Checklist ─────────────────────────────────────────────────────────── */
+
+.checklist {
+  padding-top: var(--gap-sm);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.checklistHeading {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: baseline;
+}
+
+.stepNumber {
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  color: var(--ink-40);
+  text-align: right;
+}
+
+.stepText {
+  font-size: var(--text-body);
+  line-height: 1.55;
+  color: var(--text-strong);
+}
+
+.stepWhen {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 2px 9px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: rgba(var(--line-rgb), 0.06);
+  border-radius: var(--radius-pill);
+}
+
+.stepWhen svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (min-width: 720px) {
+  .step {
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+  }
+
+  .stepWhen {
+    grid-column: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink,
+  .contentsLink {
+    transition: none;
+  }
+}

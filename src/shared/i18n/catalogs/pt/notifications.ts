@@ -1660,6 +1660,18 @@ export const notifications: Catalog = {
   "type.lead_assigned.textNamed":
     "<profile>{name}</profile> pôs-te como responsável por um contacto.",
   "type.lead_assigned.meta": "Contactos",
+  "type.cultural_task_assigned.text":
+    "Foi-te atribuída uma tarefa: {taskTitle}.",
+  "type.cultural_task_assigned.textNamed":
+    "<profile>{name}</profile> atribuiu-te uma tarefa: {taskTitle}.",
+  "type.cultural_task_assigned.meta": "Produção cultural",
+  "type.cultural_task_assigned.taskTitleFallback": "abre-a para veres o título",
+  "type.cultural_task_batch_assigned.text":
+    "Foram-te atribuídas as tarefas do guia {guideTitle}.",
+  "type.cultural_task_batch_assigned.textNamed":
+    "<profile>{name}</profile> atribuiu-te as tarefas do guia {guideTitle}.",
+  "type.cultural_task_batch_assigned.meta": "Produção cultural",
+  "type.cultural_task_batch_assigned.guideTitleFallback": "do evento",
   "actions.reviewTeamInvite": "Ver convite",
   "actions.reviewTeamRequest": "Ver pedido",
 };

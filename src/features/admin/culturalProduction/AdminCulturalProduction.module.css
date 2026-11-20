@@ -1,0 +1,23 @@
+/* The Cultural Production page shell (AdminCulturalProductionPage and
+   CulturalProductionTabs): the tab strip and the panel the sections swap in. */
+
+.block {
+  margin-block-start: var(--gap-sm);
+}
+
+/* The positioned parent a leaving section is lifted out against while the
+   next one fades in (ViewFade, AnimatePresence mode="popLayout"). */
+.panel {
+  position: relative;
+  margin-block-start: var(--gap-sm);
+  min-inline-size: 0;
+  border-radius: var(--radius-tag);
+}
+
+/* The panel takes focus (tabIndex 0, the APG tabs pattern) so a keyboard
+   reaches a section whose first content is not focusable. */
+.panel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

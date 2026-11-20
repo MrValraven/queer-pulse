@@ -6,6 +6,7 @@ import {
   FiBookOpen,
   FiClock,
   FiCheckSquare,
+  FiClipboard,
   FiCpu,
   FiDisc,
   FiEdit3,
@@ -62,7 +63,8 @@ export type AdminNavBadge =
   | "housingCoops"
   | "listingClaims"
   | "musicEvents"
-  | "leads";
+  | "leads"
+  | "culturalProduction";
 
 /** An unlaunched feature whose console pages only some staff can see yet. */
 export type AdminNavFeature = "quizshow";
@@ -135,6 +137,9 @@ export const ADMIN_NAV_OVERVIEW: AdminNavItem = {
   icon: FiGrid,
   end: true,
 };
+
+/** The Cultural Production item's destination: the viewer's own tasks. */
+export const CULTURAL_PRODUCTION_NAV_TO = `${routes.adminCulturalProduction}?tab=tasks&assignedTo=me`;
 
 export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
@@ -395,6 +400,19 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiUsers,
         capabilities: ["music_manager_producer"],
         badge: "leads",
+        tone: "warn",
+      },
+      {
+        // `AdminCulturalProductionController`: Moderator or Admin, or the
+        // `cultural_producer` or `music_manager_producer` grant, mirrored in
+        // authGate. The pill counts the viewer's open tasks due today or
+        // earlier, and the link opens that view. The literal query mirrors
+        // `CULTURAL_PRODUCTION_PARAM`; shared layout does not import the feature.
+        labelKey: "shared:adminNav.items.culturalProduction",
+        to: CULTURAL_PRODUCTION_NAV_TO,
+        icon: FiClipboard,
+        capabilities: ["cultural_producer", "music_manager_producer"],
+        badge: "culturalProduction",
         tone: "warn",
       },
     ],
@@ -775,6 +793,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
  *   housing groups, housing-group listings, housing listings:
  *     `HousingModerationGuard` (Moderator, Admin or `housing_moderator`).
  *   studio discovery: `@Roles(Moderator, Admin)` + `music_manager_producer` on curation, scenes and spotlight; the path is in `MOD_ACCESSIBLE_ADMIN_PATTERNS`.
+ *   cultural production: @Roles(Moderator, Admin) + cultural_producer or music_manager_producer; the path is in MOD_ACCESSIBLE_ADMIN_PATTERNS.
  *
  * Held out for now. Each backend admits moderators, but authGate bounces a
  * moderator without the grant. Widening authGate is the user's decision:
@@ -795,6 +814,7 @@ const MODERATOR_ADMITTED_CAPABILITY_PATHS: ReadonlySet<string> = new Set([
   routes.adminHousingGroupListings,
   routes.adminHousingListings,
   routes.adminStudio,
+  CULTURAL_PRODUCTION_NAV_TO,
 ]);
 
 /** True when one of the viewer's grants opens this item. */

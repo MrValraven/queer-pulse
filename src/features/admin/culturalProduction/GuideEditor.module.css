@@ -1,0 +1,182 @@
+/* The guide editor: the guide's details, then one panel per section, then
+   a foot with Save guide and Cancel that sticks to the bottom of the screen
+   for as long as the editor runs past it. Every row folds in and out through
+   CollapseListItem, so the lists carry no bullets or padding of their own. */
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* ── Fields ─────────────────────────────────────────────────────────────── */
+/* A field and its refusal line: the FormField's own bottom margin gives way
+   to the column gap, so the line sits right under its field. */
+.fieldBlock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fieldBlock .field {
+  margin-bottom: 0;
+}
+
+.metaBody,
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Event type and language share a row while there is room for both. */
+.metaPair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sectionsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+
+.sectionsTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+
+.sectionList,
+.stepList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The gap rides on the row's child, so it folds away with the row. */
+.sectionList > li + li > * {
+  margin-top: 12px;
+}
+
+.rowActions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Checklist ──────────────────────────────────────────────────────────── */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.checklistHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+
+/* A step: the text takes the room, the days field stays narrow, and the
+   three row controls sit at the end. On a phone the controls wrap under
+   the fields. */
+.step {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.stepList > li + li > .step {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.stepFields {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) 11rem;
+  gap: 12px;
+  min-width: 0;
+}
+
+.daysInput {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Foot ───────────────────────────────────────────────────────────────── */
+/* The bottom padding clears the home indicator where the screen has one. */
+.foot {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px max(16px, var(--bottom-inset));
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  box-shadow: var(--shadow-e2);
+}
+
+.footReload {
+  padding-bottom: 4px;
+}
+
+.footActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ── Phone ──────────────────────────────────────────────────────────────── */
+@media (--md) {
+  .step {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stepFields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rowActions {
+    justify-content: flex-end;
+  }
+
+  .foot {
+    padding-inline: 16px;
+  }
+}

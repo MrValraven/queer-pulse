@@ -1,0 +1,192 @@
+/* Create tasks for an event: the intro, the event date, the people every
+   task goes to, then the preview of the tasks a batch would create. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.intro,
+.noSteps {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* The people block: its label row with Assign staff, the hint, the pills. */
+.assignees {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.assigneesHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+/* Both labels read as the FormField eyebrow above them ("Event date"). */
+.assigneesLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chipItem {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font-size: var(--text-caption);
+  color: var(--text-strong);
+}
+
+/* The person a refusal names reads in the danger tone. */
+.chip.isRefused {
+  border-color: var(--danger);
+  box-shadow: var(--ring-danger);
+}
+
+.chipAvatar {
+  display: inline-flex;
+  flex: none;
+}
+
+.chipName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.removeButton {
+  flex: none;
+  min-height: 30px;
+  padding: 0 10px;
+  color: var(--ink-60);
+}
+
+.removeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.removeIcon {
+  width: 13px;
+  height: 13px;
+}
+
+/* The preview: a heading, the past warning, one row per step. */
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.previewHeading {
+  margin: 0;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.pastNotice {
+  padding-bottom: 2px;
+}
+
+.previewList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+
+.previewRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 10px 14px;
+  font-size: var(--text-body-sm);
+  color: var(--text-strong);
+}
+
+.previewRow + .previewRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.previewText {
+  flex: 1 1 220px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.previewDue {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.isPast .previewDue {
+  color: var(--amber-ink);
+}
+
+.dueIcon {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+@media (--md) {
+  /* The small remove button keeps a 44px target on a phone. */
+  .removeButton {
+    min-height: 44px;
+  }
+
+  .previewRow {
+    padding: 10px 12px;
+  }
+}

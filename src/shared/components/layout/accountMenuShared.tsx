@@ -8,6 +8,7 @@ import {
   FiPlayCircle,
   FiGlobe,
   FiMonitor,
+  FiClipboard,
 } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { LANGUAGES } from "../../i18n/types";
@@ -16,6 +17,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../../../features/communities/api/useMyCommunities";
 import { useHasStaffRole } from "../../../features/auth/api/useMyStaffRoles";
 import { routes, modPanel } from "../../../app/routeMap";
+import { CULTURAL_PRODUCTION_NAV_TO } from "./adminNav.data";
 import {
   DEMO_MOD_SLUG,
   type TeamRole,
@@ -43,6 +45,11 @@ import styles from "./AccountMenu.module.css";
  * lands its holder straight on the library (`routes.adminVj`). An admin
  * reaches VJ from the Admin link and its rail, so the admin branch leaves
  * it out.
+ *
+ * The Cultural Production link shows to every moderator and to a member
+ * holding `cultural_producer` or `music_manager_producer`, after the VJ link,
+ * and opens the viewer's own tasks (`CULTURAL_PRODUCTION_NAV_TO`). The admin
+ * branch leaves it out for the same reason it leaves out VJ.
  */
 export function RoleLinks({
   role,
@@ -57,6 +64,10 @@ export function RoleLinks({
   const canEditMagazine = useHasStaffRole("magazine_editor");
   const canWriteForMagazine = useHasStaffRole("magazine_writer");
   const canOperateVj = useHasStaffRole("vj_operator");
+  // Both hooks run on every render; an `||` between the calls would skip one.
+  const isCulturalProducer = useHasStaffRole("cultural_producer");
+  const isMusicManagerProducer = useHasStaffRole("music_manager_producer");
+  const canProduceCulture = isCulturalProducer || isMusicManagerProducer;
   // The community the "Mod tools" link opens. Demo deep-links into the mock
   // flagship; live resolves the moderator's OWN first owned/moderated community
   // from their real memberships (previously hardcoded to the demo slug, which
@@ -99,6 +110,19 @@ export function RoleLinks({
       </span>
     </Link>
   ) : null;
+  const culturalProductionLink =
+    role === "moderator" || canProduceCulture ? (
+      <Link
+        to={CULTURAL_PRODUCTION_NAV_TO}
+        className={styles.item}
+        onClick={onNavigate}
+      >
+        <FiClipboard aria-hidden className={styles.itemIcon} />
+        <span className={styles.itemLabel}>
+          {t("shared:accountMenu.staff.culturalProduction")}
+        </span>
+      </Link>
+    ) : null;
   if (role === "admin") {
     return (
       <>
@@ -123,6 +147,7 @@ export function RoleLinks({
           {magazineEditorLink}
           {magazineWriterLink}
           {vjLink}
+          {culturalProductionLink}
         </>
       );
     }
@@ -131,6 +156,7 @@ export function RoleLinks({
         {magazineEditorLink}
         {magazineWriterLink}
         {vjLink}
+        {culturalProductionLink}
         <Link
           to={modPanel(modSlug)}
           className={styles.item}
@@ -149,6 +175,7 @@ export function RoleLinks({
       {magazineEditorLink}
       {magazineWriterLink}
       {vjLink}
+      {culturalProductionLink}
     </>
   );
 }

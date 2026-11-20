@@ -5,6 +5,10 @@ import {
   routes,
   subprofileEditPath,
 } from "../../../app/routeMap";
+import {
+  CULTURAL_MY_TASKS_HREF,
+  culturalTaskHref,
+} from "../../admin/culturalProduction/culturalProductionPaths";
 import { adminLeadPath } from "../../admin/leads/leadPaths";
 import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
 import { gatheringPath } from "../../gatherings/data";
@@ -105,6 +109,17 @@ export function lifecycleSourceHref(
       const leadId = slugOf(payload, "leadId");
       return { href: leadId ? adminLeadPath(leadId) : routes.adminLeads };
     }
+    // Staff duty mail: the task's drawer, or the viewer's own tasks when the
+    // payload carries no id.
+    case "cultural_task_assigned": {
+      const taskId = slugOf(payload, "taskId");
+      return {
+        href: taskId ? culturalTaskHref(taskId) : CULTURAL_MY_TASKS_HREF,
+      };
+    }
+    // Staff duty mail: the viewer's own tasks, where the guide's batch landed.
+    case "cultural_task_batch_assigned":
+      return { href: CULTURAL_MY_TASKS_HREF };
     case "group_listing_decided": {
       const groupSlug = slugOf(payload, "groupSlug");
       return {

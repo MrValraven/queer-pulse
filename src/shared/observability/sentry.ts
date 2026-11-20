@@ -217,6 +217,9 @@ const PRIVATE_BREADCRUMB_PATHS = [
   // those URLs and requests, so the API calls and the pages alike stay out
   // of every breadcrumb.
   "/admin/leads",
+  // Cultural Production: idea, task, comment and guide text ride in those
+  // requests and pages.
+  "/admin/cultural-production",
   // VJ: clip titles, pack names, overlay text and signed media URLs ride in
   // the API calls, pages and bucket URLs.
   "/admin/vj",
@@ -246,6 +249,7 @@ const PRIVATE_BREADCRUMB_PATHS = [
  * breadcrumb (qpdf writes to stdout and stderr) is dropped there.
  * The same two kinds are dropped on the leads list and on every lead's page:
  * the buttons and labels there carry lead names ("Open <name>").
+ * The same two kinds are dropped on every Cultural Production page: buttons and inputs there carry idea, task and guide text.
  * The same two kinds are dropped on every VJ page: buttons and inputs there carry clip titles, pack names and overlay text.
  * A missing hint, a missing event or a target that is no Element (a text
  * node, the window, the document) leaves the breadcrumb to the rules above.
@@ -267,7 +271,10 @@ export function dropStudioPlayBreadcrumb(
   if (
     (breadcrumb.category?.startsWith("ui.") ||
       breadcrumb.category === "console") &&
-    (isOnStaffUtilitiesPage() || isOnLeadsPage() || isOnVjPage())
+    (isOnStaffUtilitiesPage() ||
+      isOnLeadsPage() ||
+      isOnCulturalProductionPage() ||
+      isOnVjPage())
   ) {
     return null;
   }
@@ -306,6 +313,19 @@ function isOnLeadsPage(): boolean {
   const pathname =
     typeof window === "undefined" ? "" : (window.location?.pathname ?? "");
   return pathname === "/admin/leads" || pathname.startsWith("/admin/leads/");
+}
+
+/** True while the page's path is the Cultural Production page or under it
+ *  (outside a browser, false). The literal mirrors
+ *  `routes.adminCulturalProduction`; routeMap is not imported here to avoid an
+ *  import cycle. */
+function isOnCulturalProductionPage(): boolean {
+  const pathname =
+    typeof window === "undefined" ? "" : (window.location?.pathname ?? "");
+  return (
+    pathname === "/admin/cultural-production" ||
+    pathname.startsWith("/admin/cultural-production/")
+  );
 }
 
 /** True while the page's path is the VJ library, screen or remote (outside a

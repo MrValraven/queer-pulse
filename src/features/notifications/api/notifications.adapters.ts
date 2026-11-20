@@ -7,6 +7,7 @@ import {
   FiBell,
   FiCalendar,
   FiCheckCircle,
+  FiClipboard,
   FiFlag,
   FiInbox,
   FiRepeat,
@@ -224,6 +225,25 @@ function leadAssignedIconFor(
 }
 
 /**
+ * The icon a `cultural_task_assigned` or `cultural_task_batch_assigned` row
+ * renders with, or `undefined` for every other kind. Staff duty mail on the
+ * ordinary platform ground. The row resolves the assigner as its actor and
+ * draws the avatar while the assigner exists, so this glyph shows on a row
+ * whose assigner is gone.
+ */
+function culturalTaskIconFor(
+  kind: NotificationKind | null,
+): { Glyph: IconType; background: string } | undefined {
+  if (
+    kind === "cultural_task_assigned" ||
+    kind === "cultural_task_batch_assigned"
+  ) {
+    return { Glyph: FiClipboard, background: KIND_ICON_BACKGROUND.platform };
+  }
+  return undefined;
+}
+
+/**
  * Map a backend notification to the prototype's rich Notification view-model,
  * defaulting the prototype-only fields (avatars, action buttons) gracefully.
  *
@@ -240,6 +260,8 @@ function leadAssignedIconFor(
 const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // The assigner resolves as the actor; without one the row reads `.text`.
   "lead_assigned",
+  "cultural_task_assigned",
+  "cultural_task_batch_assigned",
   "connection_request",
   "connection_accepted",
   "vouch_received",
@@ -622,6 +644,11 @@ export function notificationDtoToView(
   // is gone.
   const leadAssignedIcon = leadAssignedIconFor(kind);
   if (leadAssignedIcon) view.icon = leadAssignedIcon;
+
+  // Same placement, same reason as the lead overrides above: a task
+  // assignment is duty mail whose glyph has to be the last word.
+  const culturalTaskIcon = culturalTaskIconFor(kind);
+  if (culturalTaskIcon) view.icon = culturalTaskIcon;
 
   // PRD-15. "Someone wants to connect" carries the two answers themselves,
   // through the exact mechanism `subprofile_credit` below proved out: a

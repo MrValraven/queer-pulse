@@ -1394,10 +1394,10 @@ export const admin: Catalog = {
     "Gere o roteiro, incluindo as ideias enviadas por membros, e lê a utilização de funcionalidades. Os relatórios da plataforma e a moderação continuam com a administração e a moderação.",
   "staffRoles.culturalProducer.label": "Produção cultural",
   "staffRoles.culturalProducer.desc":
-    "Mantém a página inicial, o kit de imprensa e os vídeos de marketing atualizados. As histórias submetidas e as candidaturas a redator continuam com a equipa Editorial.",
+    "Mantém a página inicial, o kit de imprensa e os vídeos de marketing atualizados. As histórias submetidas e as candidaturas a redator continuam com a equipa Editorial. Também planeia os eventos do QueerPulse na produção cultural: ideias, tarefas e guias de eventos.",
   "staffRoles.musicManagerProducer.label": "Gestão e produção musical",
   "staffRoles.musicManagerProducer.desc":
-    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas. Também mantém o diretório de contactos: adiciona, edita e apaga contactos, os links, as notas e os seguimentos, liga um contacto a uma persona e põe pessoas da equipa como responsáveis por um contacto.",
+    "Cria e gere os eventos de música que o QueerPulse organiza, do lineup à entrada, e faz a curadoria da página inicial do Studio: o destaque, as prateleiras, as cenas e as secções Artista do mês e Novas estrelas. Também mantém o diretório de contactos: adiciona, edita e apaga contactos, os links, as notas e os seguimentos, liga um contacto a uma persona e põe pessoas da equipa como responsáveis por um contacto. Também planeia os eventos do QueerPulse na produção cultural: ideias, tarefas e guias de eventos.",
   "staffRoles.vjOperator.label": "Operação VJ",
   "staffRoles.vjOperator.desc":
     "Gere o VJ: a biblioteca de clips, o ecrã do projetor e o comando no telemóvel. O resto da consola de administração fica fechado a esta função.",
@@ -10544,4 +10544,435 @@ export const admin: Catalog = {
     "Esta pessoa não pode ficar responsável porque a conta ou o acesso aos contactos mudou",
   "leads.error.tooManyAssignees":
     "Um contacto pode ter até {max} responsáveis. Remove alguém primeiro",
+
+  // Cultural Production (contract 2026-11-20)
+  "culturalProduction.title": "Produção cultural",
+  "culturalProduction.intro":
+    "Planeia os eventos do QueerPulse com a equipa: partilha ideias, divide o trabalho em tarefas e mantém um guia para cada tipo de evento.",
+  "culturalProduction.tabs.label": "Secções da produção cultural",
+  "culturalProduction.tabs.ideas": "Ideias",
+  "culturalProduction.tabs.tasks": "Tarefas",
+  "culturalProduction.tabs.guides": "Guias",
+  "culturalProduction.tabs.tasksDueAria_one":
+    "{count} tarefa tua termina hoje ou está em atraso",
+  "culturalProduction.tabs.tasksDueAria_other":
+    "{count} tarefas tuas terminam hoje ou estão em atraso",
+  "culturalProduction.eventType.board_game_night":
+    "Noite de jogos de tabuleiro",
+  "culturalProduction.eventType.quiz_night": "Noite de quiz",
+  "culturalProduction.eventType.music_night": "Noite de música",
+  "culturalProduction.eventType.film_night": "Noite de cinema",
+  "culturalProduction.eventType.workshop": "Oficina",
+  "culturalProduction.eventType.talk": "Conversa",
+  "culturalProduction.eventType.party": "Festa",
+  "culturalProduction.eventType.other": "Outro",
+  "culturalProduction.ideaStatus.new": "Nova",
+  "culturalProduction.ideaStatus.exploring": "A explorar",
+  "culturalProduction.ideaStatus.planned": "Planeada",
+  "culturalProduction.ideaStatus.parked": "Em pausa",
+  "culturalProduction.taskStatus.todo": "Por fazer",
+  "culturalProduction.taskStatus.doing": "Em curso",
+  "culturalProduction.taskStatus.done": "Feita",
+  "culturalProduction.guides.locale.en": "Inglês",
+  "culturalProduction.guides.locale.pt": "Português",
+  "culturalProduction.common.cancel": "Cancelar",
+  "culturalProduction.common.saving": "A guardar",
+  "culturalProduction.common.close": "Fechar",
+  "culturalProduction.common.formerTeamMember":
+    "Alguém que já não está na equipa",
+  "culturalProduction.ideas.addCta": "Adicionar ideia",
+  "culturalProduction.ideas.toolbarLabel": "Filtrar ideias",
+  "culturalProduction.ideas.filter.statusLabel": "Estado",
+  "culturalProduction.ideas.filter.allStatuses": "Todas",
+  "culturalProduction.ideas.filter.eventTypeLabel": "Tipo de evento",
+  "culturalProduction.ideas.filter.allEventTypes": "Todos os tipos de evento",
+  "culturalProduction.ideas.count_one": "{count} ideia",
+  "culturalProduction.ideas.count_other": "{count} ideias",
+  "culturalProduction.ideas.empty.title": "Ainda não há ideias",
+  "culturalProduction.ideas.empty.body":
+    "Adiciona a primeira, grande ou pequena, e a equipa pode apoiá-la",
+  "culturalProduction.ideas.emptyFiltered.title":
+    "Nenhuma ideia corresponde a estes filtros",
+  "culturalProduction.ideas.clearFilters": "Limpar filtros",
+  "culturalProduction.ideas.truncated": "A mostrar as 500 ideias mais recentes",
+  "culturalProduction.ideas.loadError.title":
+    "Não conseguimos carregar as ideias",
+  "culturalProduction.ideas.loadError.retryCta": "Carregar as ideias outra vez",
+  "culturalProduction.ideas.card.openAria": "Abrir a ideia {title}",
+  "culturalProduction.ideas.card.backers_one": "{count} pessoa alinha",
+  "culturalProduction.ideas.card.backers_other": "{count} pessoas alinham",
+  "culturalProduction.ideas.card.comments_one": "{count} comentário",
+  "culturalProduction.ideas.card.comments_other": "{count} comentários",
+  "culturalProduction.ideas.card.tasks_one": "{count} tarefa",
+  "culturalProduction.ideas.card.tasks_other": "{count} tarefas",
+  "culturalProduction.ideas.byline": "Adicionada por {name} a {date}",
+  "culturalProduction.ideas.bylineUnknown":
+    "Adicionada a {date} por alguém que já não está na equipa",
+  "culturalProduction.ideas.form.addTitle": "Adicionar uma ideia",
+  "culturalProduction.ideas.form.editTitle": "Editar ideia",
+  "culturalProduction.ideas.form.titleLabel": "Título",
+  "culturalProduction.ideas.form.titlePlaceholder":
+    "Bingo drag num bar nos Anjos",
+  "culturalProduction.ideas.form.descriptionLabel": "Descrição",
+  "culturalProduction.ideas.form.descriptionHint":
+    "O que é, para quem é e o que já sabes",
+  "culturalProduction.ideas.form.eventTypeLabel": "Tipo de evento",
+  "culturalProduction.ideas.form.statusLabel": "Estado",
+  "culturalProduction.ideas.form.characterCount": "{count} de {max} caracteres",
+  "culturalProduction.ideas.form.saveAddCta": "Adicionar ideia",
+  "culturalProduction.ideas.form.saveEditCta": "Guardar ideia",
+  "culturalProduction.ideas.form.addedToast": "Ideia adicionada",
+  "culturalProduction.ideas.form.savedToast": "Ideia guardada",
+  "culturalProduction.ideas.drawer.label": "Ideia",
+  "culturalProduction.ideas.drawer.statusLabel": "Estado",
+  "culturalProduction.ideas.drawer.editCta": "Editar ideia",
+  "culturalProduction.ideas.drawer.deleteCta": "Apagar ideia",
+  "culturalProduction.ideas.drawer.deleteConfirmTitle": "Apagar esta ideia?",
+  "culturalProduction.ideas.drawer.deleteConfirmBody":
+    "Os comentários vão com ela. As tarefas ligadas a ela ficam na lista de tarefas.",
+  "culturalProduction.ideas.drawer.deletedToast": "Ideia apagada",
+  "culturalProduction.ideas.drawer.backersHeading": "Quem alinha",
+  "culturalProduction.ideas.drawer.backCta": "Alinho",
+  "culturalProduction.ideas.drawer.backersNone":
+    "Ainda ninguém alinhou. Sê a primeira pessoa",
+  "culturalProduction.ideas.drawer.linkedTasksHeading": "Tarefas desta ideia",
+  "culturalProduction.ideas.drawer.linkedTasksNone":
+    "Ainda não há tarefas. Adiciona uma para pôr isto a andar",
+  "culturalProduction.ideas.drawer.addTaskCta": "Adicionar tarefa",
+  "culturalProduction.ideas.drawer.commentsHeading": "Comentários",
+  "culturalProduction.ideas.drawer.commentsNone": "Ainda não há comentários",
+  "culturalProduction.ideas.drawer.commentLabel": "Adicionar um comentário",
+  "culturalProduction.ideas.drawer.commentPlaceholder":
+    "Partilha uma ideia, um contacto ou uma pergunta",
+  "culturalProduction.ideas.drawer.commentCta": "Publicar comentário",
+  "culturalProduction.ideas.drawer.commentDeleteCta": "Apagar comentário",
+  "culturalProduction.ideas.drawer.commentDeleteAria":
+    "Apagar o comentário de {date}",
+  "culturalProduction.ideas.drawer.commentDeleteConfirmTitle":
+    "Apagar este comentário?",
+  "culturalProduction.ideas.drawer.commentDeletedToast": "Comentário apagado",
+  "culturalProduction.ideas.drawer.notFound": "Esta ideia já não está aqui",
+  "culturalProduction.ideas.drawer.loadError.title":
+    "Não conseguimos carregar esta ideia",
+  "culturalProduction.ideas.drawer.loadError.retryCta":
+    "Carregar a ideia outra vez",
+  "culturalProduction.tasks.addCta": "Adicionar tarefa",
+  "culturalProduction.tasks.toolbarLabel": "Filtrar tarefas",
+  "culturalProduction.tasks.assigneeFilterLabel": "Atribuídas a",
+  "culturalProduction.tasks.assignee.everyone": "Toda a gente",
+  "culturalProduction.tasks.assignee.me": "Atribuídas a mim",
+  "culturalProduction.tasks.assignee.unassigned": "Sem responsável",
+  "culturalProduction.tasks.statusFilterLabel": "Estado",
+  "culturalProduction.tasks.statusView.open": "Abertas",
+  "culturalProduction.tasks.statusView.all": "Todas",
+  "culturalProduction.tasks.statusView.withCount": "{status} ({count})",
+  "culturalProduction.tasks.count_one": "{count} tarefa",
+  "culturalProduction.tasks.count_other": "{count} tarefas",
+  "culturalProduction.tasks.truncated": "A mostrar as primeiras 500 tarefas",
+  "culturalProduction.tasks.loadError.title":
+    "Não conseguimos carregar as tarefas",
+  "culturalProduction.tasks.loadError.retryCta":
+    "Carregar as tarefas outra vez",
+  "culturalProduction.tasks.empty.title": "Ainda não há tarefas",
+  "culturalProduction.tasks.empty.body":
+    "Adiciona uma tarefa ou cria as tarefas de um evento a partir de um guia",
+  "culturalProduction.tasks.empty.guidesCta": "Abrir os guias",
+  "culturalProduction.tasks.empty.mine.title": "Não tens nada atribuído",
+  "culturalProduction.tasks.empty.mine.body":
+    "As tarefas que te atribuírem aparecem aqui",
+  "culturalProduction.tasks.empty.unassigned.title":
+    "Todas as tarefas têm responsável",
+  "culturalProduction.tasks.empty.filtered.title":
+    "Nenhuma tarefa corresponde a estes filtros",
+  "culturalProduction.tasks.empty.showEveryone": "Mostrar toda a gente",
+  "culturalProduction.tasks.empty.clearFilters": "Limpar filtros",
+  "culturalProduction.tasks.row.openAria": "Abrir a tarefa {title}",
+  "culturalProduction.tasks.row.statusLabel": "Estado de {title}",
+  "culturalProduction.tasks.row.due": "Prazo: {date}",
+  "culturalProduction.tasks.row.dueToday": "Termina hoje",
+  "culturalProduction.tasks.row.overdue": "Em atraso desde {date}",
+  "culturalProduction.tasks.row.noDue": "Sem prazo",
+  "culturalProduction.tasks.row.done": "Feita a {date}",
+  "culturalProduction.tasks.row.forEvent": "Para o evento de {date}",
+  "culturalProduction.tasks.row.fromGuide": "Guia: {title}",
+  "culturalProduction.tasks.row.fromIdea": "Ideia: {title}",
+  "culturalProduction.tasks.row.hasNotes": "Tem notas",
+  "culturalProduction.tasks.row.unassigned": "Sem responsável",
+  "culturalProduction.tasks.row.assigneesAria": "Atribuída a {names}",
+  "culturalProduction.tasks.row.assigneesMore": "+{count}",
+  "culturalProduction.tasks.statusToast": "Passou para {status}",
+  "culturalProduction.tasks.form.addTitle": "Adicionar uma tarefa",
+  "culturalProduction.tasks.form.titleLabel": "Título",
+  "culturalProduction.tasks.form.titlePlaceholder":
+    "Reservar o espaço para a noite de quiz",
+  "culturalProduction.tasks.form.notesLabel": "Notas",
+  "culturalProduction.tasks.form.notesHint":
+    "Links, contactos, tudo o que a próxima pessoa precisa",
+  "culturalProduction.tasks.form.dueLabel": "Prazo",
+  "culturalProduction.tasks.form.dueClearCta": "Limpar prazo",
+  "culturalProduction.tasks.form.statusLabel": "Estado",
+  "culturalProduction.tasks.form.assigneesLabel": "Atribuída a",
+  "culturalProduction.tasks.form.assignCta": "Atribuir equipa",
+  "culturalProduction.tasks.form.ideaLabel": "Ideia",
+  "culturalProduction.tasks.form.ideaNone": "Sem ideia ligada",
+  "culturalProduction.tasks.form.guideLabel": "Guia",
+  "culturalProduction.tasks.form.guideNone": "Sem guia ligado",
+  "culturalProduction.tasks.form.saveAddCta": "Adicionar tarefa",
+  "culturalProduction.tasks.form.saveEditCta": "Guardar tarefa",
+  "culturalProduction.tasks.form.addedToast": "Tarefa adicionada",
+  "culturalProduction.tasks.form.savedToast": "Tarefa guardada",
+  "culturalProduction.tasks.drawer.label": "Tarefa",
+  "culturalProduction.tasks.drawer.byline": "Adicionada por {name} a {date}",
+  "culturalProduction.tasks.drawer.bylineUnknown":
+    "Adicionada a {date} por alguém que já não está na equipa",
+  "culturalProduction.tasks.drawer.deleteCta": "Apagar tarefa",
+  "culturalProduction.tasks.drawer.deleteConfirmTitle": "Apagar esta tarefa?",
+  "culturalProduction.tasks.drawer.deleteConfirmBody":
+    "As notas e as atribuições vão com ela.",
+  "culturalProduction.tasks.drawer.deletedToast": "Tarefa apagada",
+  "culturalProduction.tasks.drawer.discardTitle":
+    "Descartar as alterações a esta tarefa?",
+  "culturalProduction.tasks.drawer.discardCta": "Descartar alterações",
+  "culturalProduction.tasks.drawer.keepEditingCta": "Continuar a editar",
+  "culturalProduction.tasks.drawer.notFound": "Esta tarefa já não está aqui",
+  "culturalProduction.tasks.drawer.loadError.title":
+    "Não conseguimos carregar esta tarefa",
+  "culturalProduction.tasks.drawer.loadError.retryCta":
+    "Carregar a tarefa outra vez",
+  "culturalProduction.staff.pickerListLabel":
+    "Pessoas com acesso à produção cultural",
+  "culturalProduction.staff.searchLabel": "Procurar na equipa",
+  "culturalProduction.staff.searchPlaceholder": "Procura pelo nome",
+  "culturalProduction.staff.previewHint":
+    "Procura para encontrares mais pessoas da equipa",
+  "culturalProduction.staff.searchEmpty":
+    "Ninguém com acesso à produção cultural corresponde a {query}",
+  "culturalProduction.staff.capReached":
+    "Uma tarefa pode ter até {max} pessoas. Remove alguém para adicionares outra",
+  "culturalProduction.staff.loadError":
+    "Não conseguimos carregar a lista da equipa",
+  "culturalProduction.staff.retry": "Carregar a lista da equipa outra vez",
+  "culturalProduction.staff.you": "Tu",
+  "culturalProduction.staff.youInSentence": "ti",
+  "culturalProduction.staff.unassignAria": "Remover {name}",
+  "culturalProduction.staff.unassignSelfAria": "Remover-te",
+  "culturalProduction.staff.assignedToast": "{name} ficou com esta tarefa",
+  "culturalProduction.staff.assignedSelfToast": "Ficaste com esta tarefa",
+  "culturalProduction.staff.unassignedToast": "{name} saiu desta tarefa",
+  "culturalProduction.staff.unassignedSelfToast": "Saíste desta tarefa",
+  "culturalProduction.guides.addCta": "Adicionar guia",
+  "culturalProduction.guides.toolbarLabel": "Guias",
+  "culturalProduction.guides.empty.title": "Ainda não há guias",
+  "culturalProduction.guides.empty.body":
+    "Escreve como se organiza um tipo de evento, para que a próxima pessoa da produção o organize também",
+  "culturalProduction.guides.loadError.title":
+    "Não conseguimos carregar os guias",
+  "culturalProduction.guides.loadError.retryCta": "Carregar os guias outra vez",
+  "culturalProduction.guides.card.openAria": "Abrir o guia {title}",
+  "culturalProduction.guides.card.sections_one": "{count} secção",
+  "culturalProduction.guides.card.sections_other": "{count} secções",
+  "culturalProduction.guides.card.steps_one": "{count} passo na lista",
+  "culturalProduction.guides.card.steps_other": "{count} passos na lista",
+  "culturalProduction.guides.card.updated": "Editado por {name} a {date}",
+  "culturalProduction.guides.card.updatedUnknown": "Editado a {date}",
+  "culturalProduction.guides.card.starter": "Guia inicial da equipa QueerPulse",
+  "culturalProduction.guides.form.addTitle": "Adicionar um guia",
+  "culturalProduction.guides.form.titleLabel": "Título",
+  "culturalProduction.guides.form.titlePlaceholder": "Noite de cinema",
+  "culturalProduction.guides.form.eventTypeLabel": "Tipo de evento",
+  "culturalProduction.guides.form.localeLabel": "Língua",
+  "culturalProduction.guides.form.summaryLabel": "Resumo",
+  "culturalProduction.guides.form.summaryHint":
+    "Uma ou duas frases sobre o que este guia cobre",
+  "culturalProduction.guides.form.saveAddCta": "Adicionar guia",
+  "culturalProduction.guides.form.addedToast":
+    "Guia adicionado. A seguir, adiciona as secções",
+  "culturalProduction.guides.page.backCta": "Voltar aos guias",
+  "culturalProduction.guides.page.editCta": "Editar guia",
+  "culturalProduction.guides.page.createTasksCta":
+    "Criar tarefas para um evento",
+  "culturalProduction.guides.page.moreActionsLabel": "Mais ações do guia",
+  "culturalProduction.guides.page.deleteCta": "Apagar guia",
+  "culturalProduction.guides.page.deleteConfirmTitle": "Apagar este guia?",
+  "culturalProduction.guides.page.deleteConfirmBody":
+    "As tarefas criadas a partir dele ficam na lista de tarefas.",
+  "culturalProduction.guides.page.deletedToast": "Guia apagado",
+  "culturalProduction.guides.page.notFound.title": "Este guia já não está aqui",
+  "culturalProduction.guides.page.notFound.body":
+    "Alguém o apagou ou o link tem um erro",
+  "culturalProduction.guides.page.loadError.title":
+    "Não conseguimos carregar este guia",
+  "culturalProduction.guides.page.loadError.retryCta":
+    "Carregar o guia outra vez",
+  "culturalProduction.guides.page.contentsLabel": "Secções",
+  "culturalProduction.guides.page.noSections":
+    "Este guia ainda não tem secções. Edita-o para adicionares a primeira",
+  "culturalProduction.guides.page.checklistHeading": "Lista de passos",
+  "culturalProduction.guides.stepWhen.before_one":
+    "{count} dia antes do evento",
+  "culturalProduction.guides.stepWhen.before_other":
+    "{count} dias antes do evento",
+  "culturalProduction.guides.stepWhen.dayOf": "No dia do evento",
+  "culturalProduction.guides.stepWhen.after_one":
+    "{count} dia depois do evento",
+  "culturalProduction.guides.stepWhen.after_other":
+    "{count} dias depois do evento",
+  "culturalProduction.guides.stepWhen.anyTime": "Sem dia marcado",
+  "culturalProduction.guides.editor.heading": "Editar guia",
+  "culturalProduction.guides.editor.sectionsHeading": "Secções",
+  "culturalProduction.guides.editor.addSectionCta": "Adicionar secção",
+  "culturalProduction.guides.editor.sectionLabel": "Secção {number}",
+  "culturalProduction.guides.editor.headingLabel": "Título da secção",
+  "culturalProduction.guides.editor.bodyLabel": "Texto",
+  "culturalProduction.guides.editor.bodyHint":
+    "Deixa uma linha em branco entre parágrafos. Começa uma linha com - para um item de lista. Escreve [texto](/admin/caminho) para um link dentro do QueerPulse.",
+  "culturalProduction.guides.editor.stepsHeading": "Lista de passos",
+  "culturalProduction.guides.editor.addStepCta": "Adicionar passo",
+  "culturalProduction.guides.editor.stepTextLabel": "Passo {number}",
+  "culturalProduction.guides.editor.stepDaysLabel": "Dias antes do evento",
+  "culturalProduction.guides.editor.stepDaysHint":
+    "0 é o dia do evento. Usa um número negativo para depois: -1 é o dia seguinte. Deixa em branco para qualquer dia",
+  "culturalProduction.guides.editor.moveSectionUpCta": "Subir secção",
+  "culturalProduction.guides.editor.moveSectionDownCta": "Descer secção",
+  "culturalProduction.guides.editor.removeSectionCta": "Remover secção",
+  "culturalProduction.guides.editor.moveStepUpCta": "Subir passo",
+  "culturalProduction.guides.editor.moveStepDownCta": "Descer passo",
+  "culturalProduction.guides.editor.removeStepCta": "Remover passo",
+  "culturalProduction.guides.editor.stepsTotal":
+    "{count} de {max} passos neste guia",
+  "culturalProduction.guides.editor.saveCta": "Guardar guia",
+  "culturalProduction.guides.editor.savedToast": "Guia guardado",
+  "culturalProduction.guides.editor.discardTitle":
+    "Descartar as alterações a este guia?",
+  "culturalProduction.guides.editor.discardBody":
+    "O guia fica como estava da última vez que foi guardado.",
+  "culturalProduction.guides.editor.discardCta": "Descartar alterações",
+  "culturalProduction.guides.editor.keepEditingCta": "Continuar a editar",
+  "culturalProduction.guides.editor.reloadLatestCta":
+    "Carregar a versão mais recente",
+  "culturalProduction.batch.title": "Criar tarefas para um evento",
+  "culturalProduction.batch.intro":
+    "Uma tarefa por cada passo da lista, cada uma com o prazo contado a partir da data do evento.",
+  "culturalProduction.batch.eventDateLabel": "Data do evento",
+  "culturalProduction.batch.assigneesLabel": "Atribuir todas as tarefas a",
+  "culturalProduction.batch.assigneesHint":
+    "Opcional. Podes mudar quem faz o quê depois",
+  "culturalProduction.batch.previewHeading": "Tarefas a criar",
+  "culturalProduction.batch.previewDue": "Prazo: {date}",
+  "culturalProduction.batch.previewNoDue": "Sem prazo",
+  "culturalProduction.batch.previewPast_one":
+    "{count} tarefa já passou do prazo",
+  "culturalProduction.batch.previewPast_other":
+    "{count} tarefas já passaram do prazo",
+  "culturalProduction.batch.submitCta_one": "Criar {count} tarefa",
+  "culturalProduction.batch.submitCta_other": "Criar {count} tarefas",
+  "culturalProduction.batch.creatingCta": "A criar tarefas",
+  "culturalProduction.batch.createdToast_one": "{count} tarefa criada",
+  "culturalProduction.batch.createdToast_other": "{count} tarefas criadas",
+  "culturalProduction.batch.openTasksCta": "Abrir as tarefas",
+  "culturalProduction.batch.noSteps":
+    "Este guia ainda não tem passos na lista. Edita-o para adicionares alguns primeiro",
+  "culturalProduction.error.ideaNotFound":
+    "Esta ideia já não está aqui. Alguém pode tê-la apagado",
+  "culturalProduction.error.taskNotFound":
+    "Esta tarefa já não está aqui. Alguém pode tê-la apagado",
+  "culturalProduction.error.guideNotFound":
+    "Este guia já não está aqui. Alguém pode tê-lo apagado",
+  "culturalProduction.error.commentNotFound":
+    "Este comentário já não está aqui. Alguém pode tê-lo apagado",
+  "culturalProduction.error.titleRequired": "Dá-lhe um título",
+  "culturalProduction.error.titleTooLong":
+    "Mantém o título até {max} caracteres",
+  "culturalProduction.error.descriptionTooLong":
+    "Mantém a descrição até {max} caracteres",
+  "culturalProduction.error.notesTooLong":
+    "Mantém as notas até {max} caracteres",
+  "culturalProduction.error.eventTypeInvalid":
+    "Escolhe um tipo de evento da lista",
+  "culturalProduction.error.ideaStatusInvalid":
+    "Escolhe um estado da lista: Nova, A explorar, Planeada ou Em pausa",
+  "culturalProduction.error.taskStatusInvalid":
+    "Escolhe um estado da lista: Por fazer, Em curso ou Feita",
+  "culturalProduction.error.assignedToInvalid":
+    "Esta vista não existe. Escolhe Toda a gente, Atribuídas a mim ou Sem responsável",
+  "culturalProduction.error.dueDateInvalid":
+    "Escolhe um prazo real entre 2000 e 2100",
+  "culturalProduction.error.eventDateInvalid":
+    "Escolhe uma data real para o evento entre 2000 e 2100",
+  "culturalProduction.error.linkedIdeaNotFound":
+    "A ideia ligada foi apagada. Escolhe outra ou deixa em branco",
+  "culturalProduction.error.linkedGuideNotFound":
+    "O guia ligado foi apagado. Escolhe outro ou deixa em branco",
+  "culturalProduction.error.commentEmpty":
+    "Escreve alguma coisa antes de publicar",
+  "culturalProduction.error.commentTooLong":
+    "Mantém o comentário até {max} caracteres",
+  "culturalProduction.error.commentNotYours":
+    "Só quem escreveu este comentário, a moderação ou um admin o pode apagar",
+  "culturalProduction.error.ideaNotYours":
+    "Só quem adicionou esta ideia, a moderação ou um admin a pode apagar",
+  "culturalProduction.error.taskNotYours":
+    "Só quem adicionou esta tarefa, a moderação ou um admin a pode apagar",
+  "culturalProduction.error.guideNotYours":
+    "Só quem escreveu este guia, a moderação ou um admin o pode apagar",
+  "culturalProduction.error.assigneeNotFound":
+    "Esta conta já não existe, por isso não pode ficar com tarefas",
+  "culturalProduction.error.assigneeNotStaff.no_access":
+    "Esta pessoa não tem acesso à produção cultural, por isso não pode ficar com tarefas",
+  "culturalProduction.error.assigneeNotStaff.suspended":
+    "Esta conta está suspensa, por isso não pode ficar com tarefas",
+  "culturalProduction.error.assigneeNotStaff.deactivated":
+    "Esta conta está desativada, por isso não pode ficar com tarefas",
+  "culturalProduction.error.assigneeNotStaff.unknownReason":
+    "Esta pessoa não pode ficar com tarefas porque a conta ou o acesso mudou",
+  "culturalProduction.error.tooManyAssignees":
+    "Uma tarefa pode ter até {max} pessoas atribuídas",
+  "culturalProduction.error.guideLocaleInvalid":
+    "Escolhe a língua do guia: inglês ou português",
+  "culturalProduction.error.guideSummaryTooLong":
+    "Mantém o resumo até {max} caracteres",
+  "culturalProduction.error.guideSectionsInvalid":
+    "As secções deste guia chegaram ao QueerPulse num formato que não consegue ler. Recarrega o guia e tenta de novo",
+  "culturalProduction.error.guideTooManySections":
+    "Um guia pode ter até {max} secções",
+  "culturalProduction.error.guideHeadingRequired":
+    "A secção {section} precisa de um título",
+  "culturalProduction.error.guideHeadingTooLong":
+    "Mantém o título da secção {section} até {max} caracteres",
+  "culturalProduction.error.guideBodyTooLong":
+    "Mantém o texto da secção {section} até {max} caracteres",
+  "culturalProduction.error.guideTooManySteps.section":
+    "A secção {section} pode ter até {max} passos",
+  "culturalProduction.error.guideTooManySteps.total":
+    "Um guia pode ter até {max} passos no total",
+  "culturalProduction.error.guideStepTextRequired":
+    "O passo {step} da secção {section} precisa de texto",
+  "culturalProduction.error.guideStepTextTooLong":
+    "Mantém o passo {step} da secção {section} até {max} caracteres",
+  "culturalProduction.error.guideStepDaysInvalid":
+    "O passo {step} da secção {section} precisa de um número inteiro de dias entre {min} e {max}",
+  "culturalProduction.error.guideRevisionInvalid":
+    "Esta gravação chegou ao QueerPulse sem a versão do guia. Recarrega o guia e tenta de novo",
+  "culturalProduction.error.guideEditConflict":
+    "Alguém guardou este guia enquanto o editavas. Carrega a versão mais recente e volta a fazer as tuas alterações",
+  "culturalProduction.error.guideHasNoSteps":
+    "Este guia ainda não tem passos na lista, por isso não há tarefas para criar",
+  "culturalProduction.failure.offline":
+    "Estás offline, por isso isto não chegou ao QueerPulse. Verifica a ligação e tenta de novo",
+  "culturalProduction.failure.timeout":
+    "O QueerPulse demorou demasiado a responder. Tenta de novo",
+  "culturalProduction.failure.rateLimited":
+    "Fizeste muitas alterações em pouco tempo. Espera um minuto e tenta de novo",
+  "culturalProduction.failure.server":
+    "O nosso servidor teve um problema. A falha é nossa, tenta de novo daqui a pouco",
+  "culturalProduction.failure.unreachable":
+    "Não conseguimos chegar ao QueerPulse. Verifica a ligação ou tenta de novo daqui a pouco",
+  "culturalProduction.failure.forbidden":
+    "A produção cultural está aberta à moderação, a admins e às funções Produção cultural e Gestão e produção musical, e esta conta não tem nenhuma",
+  "culturalProduction.failure.notFound":
+    "Este servidor ainda não tem a produção cultural. Recarrega a página e avisa a equipa técnica se continuar",
+  "culturalProduction.failure.restricted":
+    "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
+  "culturalProduction.failure.unknown":
+    "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
 };

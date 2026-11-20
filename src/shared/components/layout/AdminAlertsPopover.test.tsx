@@ -16,6 +16,7 @@ const ZERO_COUNTS: AdminNavBadgeCounts = {
   listingClaims: 0,
   musicEvents: 0,
   leads: 0,
+  culturalProduction: 0,
 };
 
 const badgeCounts = vi.hoisted(() => {

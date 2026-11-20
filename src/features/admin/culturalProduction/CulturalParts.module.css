@@ -1,0 +1,86 @@
+/* Small pieces every Cultural Production surface shares: the refusal line
+   under a field (CulturalRefusalLine) and the staff avatar stack on a row or
+   a card (CulturalAssigneeStack). */
+
+/* ── Refusal line ───────────────────────────────────────────────────────── */
+/* Colour, an icon and the words together, so the state never rests on
+   colour alone. The top padding sits inside the fold, so the gap opens and
+   closes with it. */
+.refusal {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding-top: 8px;
+  color: var(--accent-text);
+}
+
+.refusalIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 1px;
+}
+
+.refusalText {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* ── Assignee stack ─────────────────────────────────────────────────────── */
+.stack {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.avatars {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  /* Each avatar after the first overlaps the one before it by a quarter,
+     so the initials under it stay whole; the padding gives back the first
+     one's pull. */
+  padding-inline-start: 8px;
+}
+
+.avatarsMd {
+  padding-inline-start: 10px;
+}
+
+/* The avatar tones are washes, so each slot lays opaque paper under its
+   avatar, in the kit's avatar shape. The next avatar then covers the one
+   before it fully, and the paper ring reads as a gap in light and dark. */
+.avatarSlot {
+  display: inline-flex;
+  flex: none;
+  margin-inline-start: -8px;
+  background: var(--paper);
+  border-radius: var(--radius-9);
+  box-shadow: var(--ring-paper);
+}
+
+.avatarsMd .avatarSlot {
+  margin-inline-start: -10px;
+  border-radius: var(--radius-12);
+}
+
+.more {
+  display: inline-block;
+  margin-inline-start: 4px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+.unassigned {
+  display: inline-block;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  white-space: nowrap;
+}

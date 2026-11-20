@@ -36,6 +36,10 @@ export type LifecycleNotificationKind =
   | "community_owner_review_requested"
   // Staff duty mail: a staff member was put in charge of a lead.
   | "lead_assigned"
+  // Staff duty mail: a Cultural Production task, or a guide's batch of tasks,
+  // was assigned to a staff member.
+  | "cultural_task_assigned"
+  | "cultural_task_batch_assigned"
   | "community_tag_request_resolved"
   // A host's announcement to a gathering's guests.
   | "event_announcement"
@@ -169,6 +173,9 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   community_owner_review_requested: "platform",
   // Staff duty mail, the same tab as community_owner_review_requested.
   lead_assigned: "platform",
+  // Staff duty mail, the same tab as lead_assigned.
+  cultural_task_assigned: "platform",
+  cultural_task_batch_assigned: "platform",
   community_tag_request_resolved: "community",
   event_announcement: "events",
   // A gathering listed at the member's venue is gathering news.
@@ -423,6 +430,10 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   community_role_changed: ["communityName"],
   community_ownership_transferred: ["communityName"],
   community_owner_review_requested: ["communityName"],
+  // The task or guide title sits at the end of the row; a payload without
+  // it reads the kind's fallback phrase.
+  cultural_task_assigned: ["taskTitle"],
+  cultural_task_batch_assigned: ["guideTitle"],
   // The gathering's title sits mid-sentence in both `.text` and
   // `.textNamed`, so a row stored before the backend forwarded the title
   // reads "one of your gatherings" there.

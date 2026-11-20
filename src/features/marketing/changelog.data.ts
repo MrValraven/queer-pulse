@@ -63,6 +63,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "cultural-production",
+        category: "feature",
+        date: "20 Nov 2026",
+        ...entryKeys("cultural-production"),
+      },
+      {
         id: "vj-custom-speed",
         category: "feature",
         date: "20 Nov 2026",

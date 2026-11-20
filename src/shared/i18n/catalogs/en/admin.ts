@@ -1361,10 +1361,10 @@ export const admin: Catalog = {
     "Runs the roadmap board, including member-submitted ideas, and reads feature usage. Platform reports and moderation stay with admins and moderators.",
   "staffRoles.culturalProducer.label": "Cultural Producer",
   "staffRoles.culturalProducer.desc":
-    "Keeps the landing page, press kit and marketing videos current. Story submissions and writer applications stay with Editorial.",
+    "Keeps the landing page, press kit and marketing videos current. Story submissions and writer applications stay with Editorial. Plans QueerPulse events in Cultural Production too: ideas, tasks and event guides.",
   "staffRoles.musicManagerProducer.label": "Music manager & producer",
   "staffRoles.musicManagerProducer.desc":
-    "Creates and runs the music events QueerPulse hosts, from the lineup to the door, and curates Studio home: the featured release, shelves, scenes, Artist of the month and New stars. Keeps the leads directory too: adds, edits and deletes leads, their links, notes and follow-ups, links a lead to a persona and puts staff in charge of a lead.",
+    "Creates and runs the music events QueerPulse hosts, from the lineup to the door, and curates Studio home: the featured release, shelves, scenes, Artist of the month and New stars. Keeps the leads directory too: adds, edits and deletes leads, their links, notes and follow-ups, links a lead to a persona and puts staff in charge of a lead. Plans QueerPulse events in Cultural Production too: ideas, tasks and event guides.",
   "staffRoles.vjOperator.label": "VJ operator",
   "staffRoles.vjOperator.desc":
     "Runs VJ: the clip library, the projector screen and the phone remote. Every other part of the admin console stays closed to this role.",
@@ -10383,4 +10383,420 @@ export const admin: Catalog = {
     "This person can't be put in charge because their account or Leads access changed",
   "leads.error.tooManyAssignees":
     "A lead can have up to {max} people in charge. Unassign someone first",
+
+  // Cultural Production (contract 2026-11-20)
+  "culturalProduction.title": "Cultural Production",
+  "culturalProduction.intro":
+    "Plan QueerPulse events with the team: share ideas, split the work into tasks and keep a guide for each kind of event.",
+  "culturalProduction.tabs.label": "Cultural Production sections",
+  "culturalProduction.tabs.ideas": "Ideas",
+  "culturalProduction.tabs.tasks": "Tasks",
+  "culturalProduction.tabs.guides": "Guides",
+  "culturalProduction.tabs.tasksDueAria_one":
+    "{count} of your tasks is due today or overdue",
+  "culturalProduction.tabs.tasksDueAria_other":
+    "{count} of your tasks are due today or overdue",
+  "culturalProduction.eventType.board_game_night": "Board game night",
+  "culturalProduction.eventType.quiz_night": "Quiz night",
+  "culturalProduction.eventType.music_night": "Music night",
+  "culturalProduction.eventType.film_night": "Film night",
+  "culturalProduction.eventType.workshop": "Workshop",
+  "culturalProduction.eventType.talk": "Talk",
+  "culturalProduction.eventType.party": "Party",
+  "culturalProduction.eventType.other": "Other",
+  "culturalProduction.ideaStatus.new": "New",
+  "culturalProduction.ideaStatus.exploring": "Exploring",
+  "culturalProduction.ideaStatus.planned": "Planned",
+  "culturalProduction.ideaStatus.parked": "Parked",
+  "culturalProduction.taskStatus.todo": "To do",
+  "culturalProduction.taskStatus.doing": "Doing",
+  "culturalProduction.taskStatus.done": "Done",
+  "culturalProduction.guides.locale.en": "English",
+  "culturalProduction.guides.locale.pt": "Portuguese",
+  "culturalProduction.common.cancel": "Cancel",
+  "culturalProduction.common.saving": "Saving",
+  "culturalProduction.common.close": "Close",
+  "culturalProduction.common.formerTeamMember": "A former team member",
+  "culturalProduction.ideas.addCta": "Add idea",
+  "culturalProduction.ideas.toolbarLabel": "Filter ideas",
+  "culturalProduction.ideas.filter.statusLabel": "Status",
+  "culturalProduction.ideas.filter.allStatuses": "All",
+  "culturalProduction.ideas.filter.eventTypeLabel": "Event type",
+  "culturalProduction.ideas.filter.allEventTypes": "All event types",
+  "culturalProduction.ideas.count_one": "{count} idea",
+  "culturalProduction.ideas.count_other": "{count} ideas",
+  "culturalProduction.ideas.empty.title": "No ideas yet",
+  "culturalProduction.ideas.empty.body":
+    "Add the first one, big or small, and the team can back it",
+  "culturalProduction.ideas.emptyFiltered.title":
+    "No ideas match these filters",
+  "culturalProduction.ideas.clearFilters": "Clear filters",
+  "culturalProduction.ideas.truncated": "Showing the newest 500 ideas",
+  "culturalProduction.ideas.loadError.title": "We couldn't load the ideas",
+  "culturalProduction.ideas.loadError.retryCta": "Load the ideas again",
+  "culturalProduction.ideas.card.openAria": "Open the idea {title}",
+  "culturalProduction.ideas.card.backers_one": "{count} person is in",
+  "culturalProduction.ideas.card.backers_other": "{count} people are in",
+  "culturalProduction.ideas.card.comments_one": "{count} comment",
+  "culturalProduction.ideas.card.comments_other": "{count} comments",
+  "culturalProduction.ideas.card.tasks_one": "{count} task",
+  "culturalProduction.ideas.card.tasks_other": "{count} tasks",
+  "culturalProduction.ideas.byline": "Added by {name} on {date}",
+  "culturalProduction.ideas.bylineUnknown":
+    "Added on {date} by a former team member",
+  "culturalProduction.ideas.form.addTitle": "Add an idea",
+  "culturalProduction.ideas.form.editTitle": "Edit idea",
+  "culturalProduction.ideas.form.titleLabel": "Title",
+  "culturalProduction.ideas.form.titlePlaceholder":
+    "Drag bingo at a bar in Anjos",
+  "culturalProduction.ideas.form.descriptionLabel": "Description",
+  "culturalProduction.ideas.form.descriptionHint":
+    "What it is, who it's for, and anything you already know",
+  "culturalProduction.ideas.form.eventTypeLabel": "Event type",
+  "culturalProduction.ideas.form.statusLabel": "Status",
+  "culturalProduction.ideas.form.characterCount": "{count} of {max} characters",
+  "culturalProduction.ideas.form.saveAddCta": "Add idea",
+  "culturalProduction.ideas.form.saveEditCta": "Save idea",
+  "culturalProduction.ideas.form.addedToast": "Idea added",
+  "culturalProduction.ideas.form.savedToast": "Idea saved",
+  "culturalProduction.ideas.drawer.label": "Idea",
+  "culturalProduction.ideas.drawer.statusLabel": "Status",
+  "culturalProduction.ideas.drawer.editCta": "Edit idea",
+  "culturalProduction.ideas.drawer.deleteCta": "Delete idea",
+  "culturalProduction.ideas.drawer.deleteConfirmTitle": "Delete this idea?",
+  "culturalProduction.ideas.drawer.deleteConfirmBody":
+    "Its comments go with it. Tasks linked to it stay on the task list.",
+  "culturalProduction.ideas.drawer.deletedToast": "Idea deleted",
+  "culturalProduction.ideas.drawer.backersHeading": "Who's in",
+  "culturalProduction.ideas.drawer.backCta": "I'm in",
+  "culturalProduction.ideas.drawer.backersNone":
+    "Nobody is in yet. Be the first",
+  "culturalProduction.ideas.drawer.linkedTasksHeading": "Tasks for this idea",
+  "culturalProduction.ideas.drawer.linkedTasksNone":
+    "No tasks yet. Add one to get it moving",
+  "culturalProduction.ideas.drawer.addTaskCta": "Add task",
+  "culturalProduction.ideas.drawer.commentsHeading": "Comments",
+  "culturalProduction.ideas.drawer.commentsNone": "No comments yet",
+  "culturalProduction.ideas.drawer.commentLabel": "Add a comment",
+  "culturalProduction.ideas.drawer.commentPlaceholder":
+    "Share a thought, a contact or a question",
+  "culturalProduction.ideas.drawer.commentCta": "Post comment",
+  "culturalProduction.ideas.drawer.commentDeleteCta": "Delete comment",
+  "culturalProduction.ideas.drawer.commentDeleteAria":
+    "Delete the comment from {date}",
+  "culturalProduction.ideas.drawer.commentDeleteConfirmTitle":
+    "Delete this comment?",
+  "culturalProduction.ideas.drawer.commentDeletedToast": "Comment deleted",
+  "culturalProduction.ideas.drawer.notFound": "This idea isn't here anymore",
+  "culturalProduction.ideas.drawer.loadError.title":
+    "We couldn't load this idea",
+  "culturalProduction.ideas.drawer.loadError.retryCta": "Load the idea again",
+  "culturalProduction.tasks.addCta": "Add task",
+  "culturalProduction.tasks.toolbarLabel": "Filter tasks",
+  "culturalProduction.tasks.assigneeFilterLabel": "Assigned to",
+  "culturalProduction.tasks.assignee.everyone": "Everyone",
+  "culturalProduction.tasks.assignee.me": "Assigned to me",
+  "culturalProduction.tasks.assignee.unassigned": "Unassigned",
+  "culturalProduction.tasks.statusFilterLabel": "Status",
+  "culturalProduction.tasks.statusView.open": "Open",
+  "culturalProduction.tasks.statusView.all": "All",
+  "culturalProduction.tasks.statusView.withCount": "{status} ({count})",
+  "culturalProduction.tasks.count_one": "{count} task",
+  "culturalProduction.tasks.count_other": "{count} tasks",
+  "culturalProduction.tasks.truncated": "Showing the first 500 tasks",
+  "culturalProduction.tasks.loadError.title": "We couldn't load the tasks",
+  "culturalProduction.tasks.loadError.retryCta": "Load the tasks again",
+  "culturalProduction.tasks.empty.title": "No tasks yet",
+  "culturalProduction.tasks.empty.body":
+    "Add a task, or create the tasks for an event from a guide",
+  "culturalProduction.tasks.empty.guidesCta": "Open the guides",
+  "culturalProduction.tasks.empty.mine.title": "Nothing is assigned to you",
+  "culturalProduction.tasks.empty.mine.body":
+    "Tasks someone gives you show up here",
+  "culturalProduction.tasks.empty.unassigned.title":
+    "Every task has someone on it",
+  "culturalProduction.tasks.empty.filtered.title":
+    "No tasks match these filters",
+  "culturalProduction.tasks.empty.showEveryone": "Show everyone",
+  "culturalProduction.tasks.empty.clearFilters": "Clear filters",
+  "culturalProduction.tasks.row.openAria": "Open the task {title}",
+  "culturalProduction.tasks.row.statusLabel": "Status of {title}",
+  "culturalProduction.tasks.row.due": "Due {date}",
+  "culturalProduction.tasks.row.dueToday": "Due today",
+  "culturalProduction.tasks.row.overdue": "Overdue since {date}",
+  "culturalProduction.tasks.row.noDue": "No due date",
+  "culturalProduction.tasks.row.done": "Done {date}",
+  "culturalProduction.tasks.row.forEvent": "For the event on {date}",
+  "culturalProduction.tasks.row.fromGuide": "Guide: {title}",
+  "culturalProduction.tasks.row.fromIdea": "Idea: {title}",
+  "culturalProduction.tasks.row.hasNotes": "Has notes",
+  "culturalProduction.tasks.row.unassigned": "Unassigned",
+  "culturalProduction.tasks.row.assigneesAria": "Assigned to {names}",
+  "culturalProduction.tasks.row.assigneesMore": "+{count}",
+  "culturalProduction.tasks.statusToast": "Moved to {status}",
+  "culturalProduction.tasks.form.addTitle": "Add a task",
+  "culturalProduction.tasks.form.titleLabel": "Title",
+  "culturalProduction.tasks.form.titlePlaceholder":
+    "Book the venue for the quiz night",
+  "culturalProduction.tasks.form.notesLabel": "Notes",
+  "culturalProduction.tasks.form.notesHint":
+    "Links, contacts, anything the next person needs",
+  "culturalProduction.tasks.form.dueLabel": "Due date",
+  "culturalProduction.tasks.form.dueClearCta": "Clear due date",
+  "culturalProduction.tasks.form.statusLabel": "Status",
+  "culturalProduction.tasks.form.assigneesLabel": "Assigned to",
+  "culturalProduction.tasks.form.assignCta": "Assign staff",
+  "culturalProduction.tasks.form.ideaLabel": "Idea",
+  "culturalProduction.tasks.form.ideaNone": "No idea linked",
+  "culturalProduction.tasks.form.guideLabel": "Guide",
+  "culturalProduction.tasks.form.guideNone": "No guide linked",
+  "culturalProduction.tasks.form.saveAddCta": "Add task",
+  "culturalProduction.tasks.form.saveEditCta": "Save task",
+  "culturalProduction.tasks.form.addedToast": "Task added",
+  "culturalProduction.tasks.form.savedToast": "Task saved",
+  "culturalProduction.tasks.drawer.label": "Task",
+  "culturalProduction.tasks.drawer.byline": "Added by {name} on {date}",
+  "culturalProduction.tasks.drawer.bylineUnknown":
+    "Added on {date} by a former team member",
+  "culturalProduction.tasks.drawer.deleteCta": "Delete task",
+  "culturalProduction.tasks.drawer.deleteConfirmTitle": "Delete this task?",
+  "culturalProduction.tasks.drawer.deleteConfirmBody":
+    "Its notes and assignees go with it.",
+  "culturalProduction.tasks.drawer.deletedToast": "Task deleted",
+  "culturalProduction.tasks.drawer.discardTitle":
+    "Discard your changes to this task?",
+  "culturalProduction.tasks.drawer.discardCta": "Discard changes",
+  "culturalProduction.tasks.drawer.keepEditingCta": "Keep editing",
+  "culturalProduction.tasks.drawer.notFound": "This task isn't here anymore",
+  "culturalProduction.tasks.drawer.loadError.title":
+    "We couldn't load this task",
+  "culturalProduction.tasks.drawer.loadError.retryCta": "Load the task again",
+  "culturalProduction.staff.pickerListLabel":
+    "People with Cultural Production access",
+  "culturalProduction.staff.searchLabel": "Search staff",
+  "culturalProduction.staff.searchPlaceholder": "Search by name",
+  "culturalProduction.staff.previewHint": "Search to find more of the team",
+  "culturalProduction.staff.searchEmpty":
+    "Nobody with Cultural Production access matches {query}",
+  "culturalProduction.staff.capReached":
+    "A task can have up to {max} people. Unassign someone to add another",
+  "culturalProduction.staff.loadError": "We couldn't load the staff list",
+  "culturalProduction.staff.retry": "Load the staff list again",
+  "culturalProduction.staff.you": "You",
+  "culturalProduction.staff.youInSentence": "you",
+  "culturalProduction.staff.unassignAria": "Unassign {name}",
+  "culturalProduction.staff.unassignSelfAria": "Unassign yourself",
+  "culturalProduction.staff.assignedToast": "{name} is on this task",
+  "culturalProduction.staff.assignedSelfToast": "You're on this task",
+  "culturalProduction.staff.unassignedToast": "{name} is off this task",
+  "culturalProduction.staff.unassignedSelfToast": "You're off this task",
+  "culturalProduction.guides.addCta": "Add guide",
+  "culturalProduction.guides.toolbarLabel": "Guides",
+  "culturalProduction.guides.empty.title": "No guides yet",
+  "culturalProduction.guides.empty.body":
+    "Write down how a kind of event is run, so the next producer can run it too",
+  "culturalProduction.guides.loadError.title": "We couldn't load the guides",
+  "culturalProduction.guides.loadError.retryCta": "Load the guides again",
+  "culturalProduction.guides.card.openAria": "Open the guide {title}",
+  "culturalProduction.guides.card.sections_one": "{count} section",
+  "culturalProduction.guides.card.sections_other": "{count} sections",
+  "culturalProduction.guides.card.steps_one": "{count} checklist step",
+  "culturalProduction.guides.card.steps_other": "{count} checklist steps",
+  "culturalProduction.guides.card.updated": "Edited by {name} on {date}",
+  "culturalProduction.guides.card.updatedUnknown": "Edited on {date}",
+  "culturalProduction.guides.card.starter":
+    "Starter guide from the QueerPulse team",
+  "culturalProduction.guides.form.addTitle": "Add a guide",
+  "culturalProduction.guides.form.titleLabel": "Title",
+  "culturalProduction.guides.form.titlePlaceholder": "Film night",
+  "culturalProduction.guides.form.eventTypeLabel": "Event type",
+  "culturalProduction.guides.form.localeLabel": "Language",
+  "culturalProduction.guides.form.summaryLabel": "Summary",
+  "culturalProduction.guides.form.summaryHint":
+    "One or two sentences on what this guide covers",
+  "culturalProduction.guides.form.saveAddCta": "Add guide",
+  "culturalProduction.guides.form.addedToast":
+    "Guide added. Add its sections next",
+  "culturalProduction.guides.page.backCta": "Back to guides",
+  "culturalProduction.guides.page.editCta": "Edit guide",
+  "culturalProduction.guides.page.createTasksCta": "Create tasks for an event",
+  "culturalProduction.guides.page.moreActionsLabel": "More guide actions",
+  "culturalProduction.guides.page.deleteCta": "Delete guide",
+  "culturalProduction.guides.page.deleteConfirmTitle": "Delete this guide?",
+  "culturalProduction.guides.page.deleteConfirmBody":
+    "Tasks made from it stay on the task list.",
+  "culturalProduction.guides.page.deletedToast": "Guide deleted",
+  "culturalProduction.guides.page.notFound.title":
+    "This guide isn't here anymore",
+  "culturalProduction.guides.page.notFound.body":
+    "Someone deleted it, or the link has a typo",
+  "culturalProduction.guides.page.loadError.title":
+    "We couldn't load this guide",
+  "culturalProduction.guides.page.loadError.retryCta": "Load the guide again",
+  "culturalProduction.guides.page.contentsLabel": "Sections",
+  "culturalProduction.guides.page.noSections":
+    "This guide has no sections yet. Edit it to add the first one",
+  "culturalProduction.guides.page.checklistHeading": "Checklist",
+  "culturalProduction.guides.stepWhen.before_one":
+    "{count} day before the event",
+  "culturalProduction.guides.stepWhen.before_other":
+    "{count} days before the event",
+  "culturalProduction.guides.stepWhen.dayOf": "On the day of the event",
+  "culturalProduction.guides.stepWhen.after_one": "{count} day after the event",
+  "culturalProduction.guides.stepWhen.after_other":
+    "{count} days after the event",
+  "culturalProduction.guides.stepWhen.anyTime": "Any time",
+  "culturalProduction.guides.editor.heading": "Edit guide",
+  "culturalProduction.guides.editor.sectionsHeading": "Sections",
+  "culturalProduction.guides.editor.addSectionCta": "Add section",
+  "culturalProduction.guides.editor.sectionLabel": "Section {number}",
+  "culturalProduction.guides.editor.headingLabel": "Heading",
+  "culturalProduction.guides.editor.bodyLabel": "Text",
+  "culturalProduction.guides.editor.bodyHint":
+    "Leave a blank line between paragraphs. Start a line with - for a list item. Write [label](/admin/path) for a link inside QueerPulse.",
+  "culturalProduction.guides.editor.stepsHeading": "Checklist",
+  "culturalProduction.guides.editor.addStepCta": "Add step",
+  "culturalProduction.guides.editor.stepTextLabel": "Step {number}",
+  "culturalProduction.guides.editor.stepDaysLabel": "Days before the event",
+  "culturalProduction.guides.editor.stepDaysHint":
+    "0 is the day of the event. Use a negative number for after it: -1 is the day after. Leave it empty for any time",
+  "culturalProduction.guides.editor.moveSectionUpCta": "Move section up",
+  "culturalProduction.guides.editor.moveSectionDownCta": "Move section down",
+  "culturalProduction.guides.editor.removeSectionCta": "Remove section",
+  "culturalProduction.guides.editor.moveStepUpCta": "Move step up",
+  "culturalProduction.guides.editor.moveStepDownCta": "Move step down",
+  "culturalProduction.guides.editor.removeStepCta": "Remove step",
+  "culturalProduction.guides.editor.stepsTotal":
+    "{count} of {max} checklist steps in this guide",
+  "culturalProduction.guides.editor.saveCta": "Save guide",
+  "culturalProduction.guides.editor.savedToast": "Guide saved",
+  "culturalProduction.guides.editor.discardTitle":
+    "Discard your changes to this guide?",
+  "culturalProduction.guides.editor.discardBody":
+    "The guide stays as it was last saved.",
+  "culturalProduction.guides.editor.discardCta": "Discard changes",
+  "culturalProduction.guides.editor.keepEditingCta": "Keep editing",
+  "culturalProduction.guides.editor.reloadLatestCta": "Load the latest version",
+  "culturalProduction.batch.title": "Create tasks for an event",
+  "culturalProduction.batch.intro":
+    "One task for each checklist step, each due on a day counted from the event date.",
+  "culturalProduction.batch.eventDateLabel": "Event date",
+  "culturalProduction.batch.assigneesLabel": "Assign every task to",
+  "culturalProduction.batch.assigneesHint":
+    "Optional. You can change who does what afterwards",
+  "culturalProduction.batch.previewHeading": "Tasks to create",
+  "culturalProduction.batch.previewDue": "Due {date}",
+  "culturalProduction.batch.previewNoDue": "No due date",
+  "culturalProduction.batch.previewPast_one":
+    "{count} task is already past its due day",
+  "culturalProduction.batch.previewPast_other":
+    "{count} tasks are already past their due day",
+  "culturalProduction.batch.submitCta_one": "Create {count} task",
+  "culturalProduction.batch.submitCta_other": "Create {count} tasks",
+  "culturalProduction.batch.creatingCta": "Creating tasks",
+  "culturalProduction.batch.createdToast_one": "{count} task created",
+  "culturalProduction.batch.createdToast_other": "{count} tasks created",
+  "culturalProduction.batch.openTasksCta": "Open the tasks",
+  "culturalProduction.batch.noSteps":
+    "This guide has no checklist steps yet. Edit it to add some first",
+  "culturalProduction.error.ideaNotFound":
+    "This idea isn't here anymore. Someone may have deleted it",
+  "culturalProduction.error.taskNotFound":
+    "This task isn't here anymore. Someone may have deleted it",
+  "culturalProduction.error.guideNotFound":
+    "This guide isn't here anymore. Someone may have deleted it",
+  "culturalProduction.error.commentNotFound":
+    "This comment isn't here anymore. Someone may have deleted it",
+  "culturalProduction.error.titleRequired": "Give it a title",
+  "culturalProduction.error.titleTooLong": "Keep the title to {max} characters",
+  "culturalProduction.error.descriptionTooLong":
+    "Keep the description to {max} characters",
+  "culturalProduction.error.notesTooLong": "Keep the notes to {max} characters",
+  "culturalProduction.error.eventTypeInvalid":
+    "Pick an event type from the list",
+  "culturalProduction.error.ideaStatusInvalid":
+    "Pick a status from the list: New, Exploring, Planned or Parked",
+  "culturalProduction.error.taskStatusInvalid":
+    "Pick a status from the list: To do, Doing or Done",
+  "culturalProduction.error.assignedToInvalid":
+    "This view doesn't exist. Pick Everyone, Assigned to me or Unassigned",
+  "culturalProduction.error.dueDateInvalid":
+    "Pick a real due date between 2000 and 2100",
+  "culturalProduction.error.eventDateInvalid":
+    "Pick a real event date between 2000 and 2100",
+  "culturalProduction.error.linkedIdeaNotFound":
+    "The linked idea was deleted. Pick another one or leave it empty",
+  "culturalProduction.error.linkedGuideNotFound":
+    "The linked guide was deleted. Pick another one or leave it empty",
+  "culturalProduction.error.commentEmpty": "Write something before you post",
+  "culturalProduction.error.commentTooLong":
+    "Keep the comment to {max} characters",
+  "culturalProduction.error.commentNotYours":
+    "Only the person who wrote this comment, a moderator or an admin can delete it",
+  "culturalProduction.error.ideaNotYours":
+    "Only the person who added this idea, a moderator or an admin can delete it",
+  "culturalProduction.error.taskNotYours":
+    "Only the person who added this task, a moderator or an admin can delete it",
+  "culturalProduction.error.guideNotYours":
+    "Only the person who wrote this guide, a moderator or an admin can delete it",
+  "culturalProduction.error.assigneeNotFound":
+    "This account no longer exists, so it can't be assigned",
+  "culturalProduction.error.assigneeNotStaff.no_access":
+    "This person doesn't have Cultural Production access, so they can't be assigned",
+  "culturalProduction.error.assigneeNotStaff.suspended":
+    "This account is suspended, so it can't be assigned",
+  "culturalProduction.error.assigneeNotStaff.deactivated":
+    "This account is deactivated, so it can't be assigned",
+  "culturalProduction.error.assigneeNotStaff.unknownReason":
+    "This person can't be assigned because their account or access changed",
+  "culturalProduction.error.tooManyAssignees":
+    "A task can have up to {max} people assigned",
+  "culturalProduction.error.guideLocaleInvalid":
+    "Pick the guide's language: English or Portuguese",
+  "culturalProduction.error.guideSummaryTooLong":
+    "Keep the summary to {max} characters",
+  "culturalProduction.error.guideSectionsInvalid":
+    "This guide's sections reached QueerPulse in a shape it can't read. Reload the guide and try again",
+  "culturalProduction.error.guideTooManySections":
+    "A guide can have up to {max} sections",
+  "culturalProduction.error.guideHeadingRequired":
+    "Section {section} needs a heading",
+  "culturalProduction.error.guideHeadingTooLong":
+    "Keep the heading of section {section} to {max} characters",
+  "culturalProduction.error.guideBodyTooLong":
+    "Keep the text of section {section} to {max} characters",
+  "culturalProduction.error.guideTooManySteps.section":
+    "Section {section} can have up to {max} checklist steps",
+  "culturalProduction.error.guideTooManySteps.total":
+    "A guide can have up to {max} checklist steps in all",
+  "culturalProduction.error.guideStepTextRequired":
+    "Step {step} in section {section} needs some text",
+  "culturalProduction.error.guideStepTextTooLong":
+    "Keep step {step} in section {section} to {max} characters",
+  "culturalProduction.error.guideStepDaysInvalid":
+    "Step {step} in section {section} needs a whole number of days from {min} to {max}",
+  "culturalProduction.error.guideRevisionInvalid":
+    "This save reached QueerPulse without the guide's version. Reload the guide and try again",
+  "culturalProduction.error.guideEditConflict":
+    "Someone saved this guide while you were editing. Load the latest version, then make your changes again",
+  "culturalProduction.error.guideHasNoSteps":
+    "This guide has no checklist steps yet, so there are no tasks to create",
+  "culturalProduction.failure.offline":
+    "You're offline, so this didn't reach QueerPulse. Check your connection and try again",
+  "culturalProduction.failure.timeout":
+    "QueerPulse took too long to answer. Try again",
+  "culturalProduction.failure.rateLimited":
+    "You've made a lot of changes in a short time. Wait a minute, then try again",
+  "culturalProduction.failure.server":
+    "Our server ran into a problem. This one is on us, so try again in a moment",
+  "culturalProduction.failure.unreachable":
+    "We couldn't reach QueerPulse. Check your connection, or try again in a moment",
+  "culturalProduction.failure.forbidden":
+    "Cultural Production is open to moderators, admins and the Cultural Producer and Music manager & producer grants, and this account has none of them",
+  "culturalProduction.failure.notFound":
+    "This server doesn't offer Cultural Production yet. Reload the page, and tell the tech team if it keeps happening",
+  "culturalProduction.failure.restricted":
+    "You can't make changes while a moderation restriction is in effect on your account",
+  "culturalProduction.failure.unknown":
+    "This didn't go through and the server sent no reason. Try again",
 };

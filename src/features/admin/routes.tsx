@@ -315,6 +315,14 @@ const AdminLeadPage = lazyNamed(
   () => import("./leads/AdminLeadPage"),
   "AdminLeadPage",
 );
+const AdminCulturalProductionPage = lazyNamed(
+  () => import("./culturalProduction/AdminCulturalProductionPage"),
+  "AdminCulturalProductionPage",
+);
+const AdminCulturalGuidePage = lazyNamed(
+  () => import("./culturalProduction/AdminCulturalGuidePage"),
+  "AdminCulturalGuidePage",
+);
 const AdminVjPage = lazyNamed(() => import("../vj/AdminVjPage"), "AdminVjPage");
 const VjScreenPage = lazyNamed(
   () => import("../vj/screen/VjScreenPage"),
@@ -401,6 +409,28 @@ function leadRoutes() {
       <Route
         path={`${routes.adminLeads}/:leadId`}
         element={<AdminLeadPage />}
+      />
+    </>
+  );
+}
+
+/** Cultural Production: the ideas, tasks and guides page and one guide's
+ *  page. `AdminCulturalProductionController` guards them with
+ *  `RolesOrStaffGuard`, `@Roles(Moderator, Admin)` and
+ *  `@StaffRoles('cultural_producer', 'music_manager_producer')`. authGate
+ *  admits moderators through its `MOD_ACCESSIBLE_ADMIN_PATTERNS` entries and
+ *  either grant through its `CAPABILITY_ELEVATED_PATTERNS` entry for
+ *  `routes.adminCulturalProduction` and everything under it. */
+function culturalProductionRoutes() {
+  return (
+    <>
+      <Route
+        path={routes.adminCulturalProduction}
+        element={<AdminCulturalProductionPage />}
+      />
+      <Route
+        path={routes.adminCulturalGuide}
+        element={<AdminCulturalGuidePage />}
       />
     </>
   );
@@ -612,6 +642,7 @@ export function adminRoutes() {
       {quizshowTemplateRoutes()}
       {musicEventRoutes()}
       {leadRoutes()}
+      {culturalProductionRoutes()}
       <Route
         path={routes.adminCommunityTagRequests}
         element={<AdminCommunityTagRequestsPage />}
