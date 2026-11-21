@@ -3,6 +3,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import { CommunityPostComposer } from "./CommunityPostComposer";
 import { CommunityWelcomeCard } from "./CommunityWelcomeCard";
+import { useComposerFocusRequest } from "./useComposerFocusRequest";
 import type { usePulseTabActions } from "./usePulseTabActions";
 import styles from "./PulseTab.module.css";
 
@@ -30,6 +31,7 @@ export function PulseComposerArea({
   actions: ReturnType<typeof usePulseTabActions>;
 }) {
   const { t } = useTranslation();
+  const { isFocusRequested, onFocusHandled } = useComposerFocusRequest();
 
   return (
     <>
@@ -64,6 +66,8 @@ export function PulseComposerArea({
             )}
             submitIcon={<FiSend aria-hidden />}
             attach={actions.imageAttach}
+            isFocusRequested={isFocusRequested}
+            onFocusHandled={onFocusHandled}
             {...(canAnnounce
               ? {
                   announcement: {

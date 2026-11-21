@@ -8,6 +8,7 @@ import { StudioComposerPreview } from "../studio/share/StudioComposerPreview";
 import type { Person } from "./communityDetails";
 import { photoOf } from "./communityPeople";
 import type { usePostImageAttach } from "./usePostImageAttach";
+import { useFocusWhenRequested } from "./useComposerFocusRequest";
 import styles from "./CommunityPostComposer.module.css";
 
 export type PostImageAttach = ReturnType<typeof usePostImageAttach>;
@@ -47,6 +48,8 @@ export function CommunityPostComposer({
   submitStyle,
   attach,
   announcement,
+  isFocusRequested,
+  onFocusHandled,
 }: {
   /** The signed-in member, so the composer shows their real name and face
    *  rather than a generic chip. `null` while the session is still resolving. */
@@ -68,10 +71,15 @@ export function CommunityPostComposer({
   attach: PostImageAttach;
   /** Lets the viewer send this as an announcement. Omit to hide the switch. */
   announcement?: ComposerAnnouncementToggle;
+  /** True when a link asked for this composer to take focus on arrival. */
+  isFocusRequested?: boolean;
+  /** Called once the field has been scrolled into view and focused. */
+  onFocusHandled?: () => void;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const fieldRef = useRef<HTMLTextAreaElement>(null);
+  useFocusWhenRequested(fieldRef, isFocusRequested === true, onFocusHandled);
   const {
     image,
     uploading: isUploading,

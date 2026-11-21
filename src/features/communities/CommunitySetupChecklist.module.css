@@ -1,0 +1,224 @@
+/* The setup checklist: a paper card on the cream page, beside the other
+   notices above the hub tabs. Same surface as the house rules prompt.
+   Tokens only. */
+
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.headText {
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-19);
+  color: var(--text-strong);
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.lead {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 62ch;
+}
+
+.progress {
+  flex: none;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  margin: 4px 0 0;
+  white-space: nowrap;
+}
+
+.list {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.item:first-child {
+  border-top: none;
+}
+
+.itemIcon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 22px;
+  color: var(--ink-40);
+}
+.itemIcon svg {
+  width: 18px;
+  height: 18px;
+}
+.itemDone .itemIcon {
+  color: var(--jade-ink);
+}
+
+.itemText {
+  min-width: 0;
+  flex: 1;
+}
+
+.itemTitle {
+  display: inline-block;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text-strong);
+}
+
+/* The open item's action: a router link, or the shared Button on an edit
+   row. Scoped under `.list .item` so it outranks the Button's own pill
+   classes in both themes (`.button`, `.ghost`, `.sm` and the dark `.ghost`)
+   and reads as an underlined title. */
+.list .item .itemAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-4);
+  background: none;
+  font-family: inherit;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text-strong);
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.3);
+  text-underline-offset: 3px;
+  transform: none;
+  transition: none;
+}
+.list .item .itemAction:hover:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+  background: none;
+  border-color: transparent;
+  transform: none;
+}
+/* The Button sinks on press; a text-style title stays put, like the link
+   rows beside it. */
+.list .item .itemAction:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: none;
+}
+.list .item .itemAction:focus-visible,
+.actions .dismiss:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.itemBody {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin: 2px 0 0;
+}
+
+/* A done row stays listed and reads quieter. */
+.itemDone .itemTitle {
+  font-weight: 500;
+  color: var(--ink-60);
+}
+.itemDone .itemBody {
+  color: var(--ink-40);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .itemIcon,
+  .itemTitle,
+  .list .item .itemAction,
+  .itemBody {
+    transition: color var(--dur-base) var(--ease);
+  }
+}
+
+@media (--md) {
+  .head {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .progress {
+    margin: 0;
+  }
+}
+
+/* Phones and touch tablets: a 44px tap target on every row action, drawn by
+   a layer that leaves the layout alone, so edit, link and done rows keep one
+   rhythm. The layer ends at the title's bottom edge, so the body below keeps
+   its own taps, and grows upward through the row's top padding into the
+   bottom padding of the row above, which holds no text. */
+@media (--md), (pointer: coarse) {
+  .item {
+    padding: 12px 0;
+  }
+
+  .list .item .itemAction {
+    position: relative;
+  }
+  .list .item .itemAction::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    min-height: 44px;
+  }
+
+  .actions .dismiss {
+    min-height: 44px;
+  }
+}
+
+/* The start of the hub, where focus lands when Dismiss checklist folds the
+   card away. It is never a Tab stop, so like the main landmark it draws no
+   ring around the whole hub. */
+.focusAfterDismiss:focus,
+.focusAfterDismiss:focus-visible {
+  outline: none;
+  box-shadow: none;
+}

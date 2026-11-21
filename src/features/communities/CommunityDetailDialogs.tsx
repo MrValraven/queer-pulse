@@ -48,7 +48,8 @@ export function CommunityDetailDialogs({ state }: { state: ReadyState }) {
     joining,
     setJoining,
     editing,
-    setEditing,
+    editFocusField,
+    closeEditing,
     confirmingLeave,
     setConfirmingLeave,
     confirmingWithdraw,
@@ -90,7 +91,8 @@ export function CommunityDetailDialogs({ state }: { state: ReadyState }) {
           editable={editable}
           canChangeAccess={role === "owner"}
           previewStats={cardStats}
-          onClose={() => setEditing(false)}
+          focusField={editFocusField ?? undefined}
+          onClose={closeEditing}
         />
       )}
 

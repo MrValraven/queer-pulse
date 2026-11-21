@@ -96,6 +96,8 @@ export function CommunityDetailPage() {
     setConfirmingLeave,
     setConfirmingWithdraw,
     setDecliningInvite,
+    setupChecklist,
+    openEditAt,
   } = state;
 
   // Rendered only from the loaded branch: the not-found / error / loading
@@ -172,6 +174,8 @@ export function CommunityDetailPage() {
         rosterResult={rosterResult}
         related={related}
         communityPulse={communityPulse}
+        setupChecklist={setupChecklist}
+        onOpenEditAt={openEditAt}
       />
 
       <CommunityDetailDialogs state={state} />

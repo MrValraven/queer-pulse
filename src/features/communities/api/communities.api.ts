@@ -155,6 +155,20 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
    *  Support tab and sidebar card without fetching the values. Optional so an
    *  older backend reads as 0. */
   givingMethodCount?: number;
+  /** The founder setup checklist. Sent to the staff (owner, co-owner, mod)
+   *  of a top-level community only; the key is absent for everybody else and
+   *  on a space. */
+  setupChecklist?: CommunitySetupChecklistDTO;
+}
+
+/** The facts the setup checklist reads that the rest of the detail lacks. */
+export interface CommunitySetupChecklistDTO {
+  /** True once a staff member has dismissed the checklist. */
+  isDismissed: boolean;
+  /** Members holding a staff role (owner, co-owner, mod), the owner included. */
+  staffCount: number;
+  /** Every community post still standing, Pulse and Discussion together. */
+  postCount: number;
 }
 
 /** One item of `GET /communities/:slug/subcommunities`: a discover card plus
@@ -310,7 +324,11 @@ export interface CreateCommunityDto {
    *  `MAX_COMMUNITY_TAGS`. Optional; omit to leave unchanged on PATCH. */
   tags?: string[];
 }
-export type UpdateCommunityDto = Partial<CreateCommunityDto>; // `handle` ignored on PATCH
+export type UpdateCommunityDto = Partial<CreateCommunityDto> & {
+  /** Staff only, top-level communities only: hides the setup checklist for
+   *  every staff member. One-way, so the only value sent is `true`. */
+  setupChecklistDismissed?: true;
+}; // `handle` ignored on PATCH
 export interface CreatePostDto {
   body: string;
   image?: string;

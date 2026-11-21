@@ -662,3 +662,66 @@ describe("StartCommunityPage across a demo switch", () => {
     expect(ownersAfterSwitch).not.toContain(demoOwnerName);
   });
 });
+
+describe("start community draft quick step", () => {
+  it("saves the quick step beside the chapter while the quick flow is open", () => {
+    renderAutosave({
+      draft: { ...emptyCommunity, name: "Club" },
+      step: 2,
+      quickStep: 3,
+      isDirty: true,
+      hasEdited: true,
+    });
+    expect(lastAutosaveOptions().payload).toMatchObject({
+      draft: { name: "Club" },
+      step: 2,
+      quickStep: 3,
+    });
+  });
+
+  it("leaves the quick step out of a wizard save", () => {
+    renderAutosave({
+      draft: { ...emptyCommunity, name: "Club" },
+      step: 2,
+      isDirty: true,
+      hasEdited: true,
+    });
+    const payload = lastAutosaveOptions().payload;
+    expect(payload).toMatchObject({ draft: { name: "Club" }, step: 2 });
+    expect(payload).not.toHaveProperty("quickStep");
+  });
+
+  it("reads a saved quick step back from the server draft", () => {
+    fakeRead.draft = {
+      ...serverDraftNamed("Quick club"),
+      payload: {
+        draft: { ...emptyCommunity, name: "Quick club" },
+        step: 4,
+        quickStep: 2,
+      },
+    };
+    const { result } = renderHook(() => useStartCommunityDraftLoad("marta"), {
+      wrapper: TestProviders,
+    });
+    expect(result.current.source).toBe("server");
+    expect(result.current.initial?.step).toBe(4);
+    expect(result.current.initial?.quickStep).toBe(2);
+  });
+
+  it("drops a saved quick step outside one to three", () => {
+    fakeRead.draft = {
+      ...serverDraftNamed("Quick club"),
+      payload: {
+        draft: { ...emptyCommunity, name: "Quick club" },
+        step: 4,
+        quickStep: 7,
+      },
+    };
+    const { result } = renderHook(() => useStartCommunityDraftLoad("marta"), {
+      wrapper: TestProviders,
+    });
+    expect(result.current.initial?.step).toBe(4);
+    expect(result.current.initial?.quickStep).toBeUndefined();
+    expect(result.current.initial).not.toHaveProperty("quickStep");
+  });
+});

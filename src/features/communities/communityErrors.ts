@@ -37,6 +37,8 @@ export const COMMUNITY_CODE_OVERRIDES: CauseErrorOverrides = {
   PARENT_MEMBERSHIP_REQUIRED: "communities:error.parentRequired",
   RULES_ACCEPTANCE_REQUIRED: "communities:error.rulesChanged",
   SUBCOMMUNITY_TIER_TOO_OPEN: "communities:error.spaceTierTooOpen",
+  setup_checklist_unavailable_for_spaces:
+    "communities:error.setupChecklistSpaces",
 };
 
 /** Refusals sent as an English sentence only, so matched by their exact text

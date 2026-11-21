@@ -16,6 +16,34 @@ import { useCommunityPulse } from "./api/useCommunityPulse";
 import { useCommunityUpcomingGatherings } from "./api/useCommunityUpcomingGatherings";
 import { useMyCommunityInvites } from "./api/useCommunityInvites";
 import { useCommunityDetailActions } from "./useCommunityDetailActions";
+import {
+  buildSetupChecklist,
+  type SetupChecklistView,
+} from "./communitySetupChecklist.model";
+import type { EditCommunityFocusField } from "./editCommunityFocusField";
+
+/**
+ * The edit modal's open state, plus the field a setup checklist row asked it
+ * to open onto. The field is null when the modal opens from the hero, which
+ * keeps the modal's default first focus.
+ */
+function useEditCommunityDialog() {
+  const [editing, setEditing] = useState(false);
+  const [editFocusField, setEditFocusField] =
+    useState<EditCommunityFocusField | null>(null);
+  // Opens the edit modal onto one field, for the setup checklist's edit rows.
+  const openEditAt = (field: EditCommunityFocusField) => {
+    setEditFocusField(field);
+    setEditing(true);
+  };
+  // Closes the edit modal and forgets the field, so the next open from the
+  // hero starts at the top of the form.
+  const closeEditing = () => {
+    setEditing(false);
+    setEditFocusField(null);
+  };
+  return { editing, setEditing, editFocusField, openEditAt, closeEditing };
+}
 
 /**
  * All queries, membership state, derived values, and action handlers for the
@@ -34,7 +62,7 @@ export function useCommunityDetailState() {
   const { demoMode } = useDemoMode();
   const { isMember, hasRequested, roleIn } = useCommunityMembership();
   const [joining, setJoining] = useState(false);
-  const [editing, setEditing] = useState(false);
+  const editDialog = useEditCommunityDialog();
   // A space (subcommunity) join proactively gates on `living.parent.isMember`
   // below, which reads the page's own load. This flag covers the race where
   // the viewer left the parent between that load and clicking Join: it flips
@@ -54,6 +82,7 @@ export function useCommunityDetailState() {
     myJoinRequestStatus,
     invitedAt,
     editable,
+    setupChecklist: setupChecklistStatus,
     notFound,
     gated,
     isLoading,
@@ -268,6 +297,19 @@ export function useCommunityDetailState() {
     activeThisWeek: living?.stats.activeThisWeek ?? community.activeThisWeek,
   };
 
+  // The setup checklist; `buildSetupChecklist` documents when it hides.
+  const setupChecklist: SetupChecklistView | null = buildSetupChecklist({
+    slug,
+    status: setupChecklistStatus,
+    role,
+    isTopLevel: (living?.parent ?? null) === null,
+    isFrozen: Boolean(living?.frozen || detail.frozen),
+    isArchived: living?.isArchived === true,
+    editable,
+    memberCount: cardStats.memberCount,
+    hasHubTabs: living != null,
+  });
+
   // Wraps `actions.onJoined`/`actions.onRequested` so a live 403 coded
   // `PARENT_MEMBERSHIP_REQUIRED` (the parent-membership race described above
   // `hasParentMembershipRequiredFromJoinAttempt`'s declaration) flips that
@@ -347,7 +389,9 @@ export function useCommunityDetailState() {
     nonMemberGatherings,
     joining,
     setJoining,
-    editing,
-    setEditing,
+    setupChecklist,
+    // `editing` / `setEditing` / `editFocusField` / `openEditAt` /
+    // `closeEditing`, the edit modal's open state and the field it opens onto.
+    ...editDialog,
   };
 }

@@ -256,6 +256,8 @@ export const communities: Catalog = {
     "You can file one owner review a day, and you have filed one already today. Try again tomorrow.",
   "error.ownerReviewOpen":
     "This community already has an open owner review, so there is nothing more to file.",
+  "error.setupChecklistSpaces":
+    "Spaces have no setup checklist, so there is nothing to dismiss here.",
   "error.noProfile":
     "We can't tell which roster entry is yours because your profile hasn't loaded. Refresh the page and try again.",
 
@@ -381,6 +383,41 @@ export const communities: Catalog = {
   "detail.rulesUpdate.laterCta": "Later",
   "detail.rulesUpdate.confirmedToast": "Thanks for reading the updated rules.",
   "detail.rulesUpdate.errorToast": "That did not save. Try again in a moment.",
+
+  // Setup checklist (community page, staff only)
+  "detail.setupChecklist.title": "Finish setting up {name}",
+  "detail.setupChecklist.lead":
+    "Only stewards of this community see this list. Each item ticks itself once it is done.",
+  "detail.setupChecklist.progress": "{done} of {total} done",
+  "detail.setupChecklist.dismiss": "Dismiss checklist",
+  "detail.setupChecklist.dismissedToast":
+    "Checklist dismissed. Everything on it stays in your community settings and Mod tools.",
+  "detail.setupChecklist.status.done": "Done",
+  "detail.setupChecklist.status.open": "Still to do",
+  "detail.setupChecklist.item.cover.title": "Add a cover image",
+  "detail.setupChecklist.item.cover.body":
+    "A wide photo across the top of your community page.",
+  "detail.setupChecklist.item.avatar.title": "Add a community mark",
+  "detail.setupChecklist.item.avatar.body":
+    "A small square mark shown beside your community's name.",
+  "detail.setupChecklist.item.welcome.title": "Write a welcome message",
+  "detail.setupChecklist.item.welcome.body":
+    "New members read it once, right after they join.",
+  "detail.setupChecklist.item.tags.title": "Add tags",
+  "detail.setupChecklist.item.tags.body":
+    "Tags help people find your community when they browse.",
+  "detail.setupChecklist.item.coSteward.title": "Add a co-steward",
+  "detail.setupChecklist.item.coSteward.body":
+    "Share the running of the community with someone you trust.",
+  "detail.setupChecklist.item.coSteward.bodyWaiting":
+    "Someone has to join before you can make them a co-steward.",
+  "detail.setupChecklist.item.invite.title": "Invite your first members",
+  "detail.setupChecklist.item.invite.body":
+    "From Mod tools, send invitations to people you know.",
+  "detail.setupChecklist.item.firstPost.title": "Write the first post",
+  "detail.setupChecklist.item.firstPost.body":
+    "Start the conversation on Pulse so new members find something to read.",
+
   "detail.save.savedToast": "Community saved to your profile.",
   "detail.save.removedToast": "Community removed from saved.",
   "detail.save.saveAriaLabel": "Save {name}",
@@ -1660,6 +1697,25 @@ export const communities: Catalog = {
   "start.thread.backTo": "Back to {thread}",
   "start.thread.stepOf": "Step {step} of {total} · <b>{thread}</b>",
   "start.thread.stepOfAriaLabel": "Step {step} of {total} · {thread}",
+
+  // Quick start (mobile, 3 steps)
+  "start.quick.stepOf": "Step {step} of {total}",
+  "start.quick.name.label": "Community name",
+  "start.quick.step.name.title": "Name your community",
+  "start.quick.step.name.lead":
+    "A name, the kind of space and one line people read first.",
+  "start.quick.step.who.title": "Who it's for",
+  "start.quick.step.who.lead": "Say what it is for and who you hope will join.",
+  "start.quick.step.open.title": "Open it",
+  "start.quick.step.open.lead":
+    "Choose who can find it, pick its address and read what members agree to.",
+  "start.quick.next.who": "Next: who it's for",
+  "start.quick.next.open": "Next: open it",
+  "start.quick.next.submit": "Open community",
+  "start.quick.accessLabel": "Who can find it and join",
+  "start.quick.values.heading": "Shared values members agree to",
+  "start.quick.values.editLater":
+    "You can edit these later from your community page.",
 
   // ── Founding-thread panel copy (PANELS) ────────────────────────────────────
   "start.panel.open.thread": "Open",

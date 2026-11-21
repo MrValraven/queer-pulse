@@ -3542,7 +3542,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-20.headline":
-    "A velocidade VJ aceita qualquer valor escrito e os ecrãs cortam direto se uma transição falhar.",
+    "As comunidades nascem no telemóvel e a equipa ganha a produção cultural para planear eventos.",
   "changelog.releases.2026-11-16.headline":
     "Os contactos ganham responsáveis, os rascunhos esperam num cartão Continuar e a administração renova-se.",
   "changelog.releases.2026-11-14.headline":
@@ -3916,6 +3916,10 @@ export const marketing: Catalog = {
     "Cartões de parceiros mais ricos no diretório",
   "changelog.entries.partner-cards-redesign.body":
     "Os negócios parceiros têm um cartão largo com a foto, uma etiqueta de parceria e a nota da nossa equipa.",
+  "changelog.entries.quick-start-community.title":
+    "Cria uma comunidade no telemóvel em três passos",
+  "changelog.entries.quick-start-community.body":
+    "Dás-lhe um nome, dizes para quem é e abres, e uma lista na página mostra o que juntar a seguir.",
   "changelog.entries.cultural-production.title":
     "Produção cultural para a equipa que organiza os eventos do QueerPulse",
   "changelog.entries.cultural-production.body":

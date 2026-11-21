@@ -248,6 +248,8 @@ export const communities: Catalog = {
     "Só podes enviar um pedido de verificação à equipa por dia e hoje já enviaste um. Tenta outra vez amanhã.",
   "error.ownerReviewOpen":
     "Esta comunidade já tem um pedido de verificação à equipa em aberto, por isso não precisas de enviar outro.",
+  "error.setupChecklistSpaces":
+    "Os espaços não têm lista de preparação, por isso não há nada para dispensar aqui.",
   "error.noProfile":
     "Não conseguimos saber qual é a tua entrada na lista porque o teu perfil ainda não carregou. Atualiza a página e tenta outra vez.",
 
@@ -372,6 +374,42 @@ export const communities: Catalog = {
     "Agradecemos teres lido as regras atualizadas.",
   "detail.rulesUpdate.errorToast":
     "Não foi possível guardar. Tenta de novo daqui a pouco.",
+
+  // Setup checklist (community page, staff only)
+  "detail.setupChecklist.title": "Termina de preparar {name}",
+  "detail.setupChecklist.lead":
+    "Só as pessoas responsáveis por esta comunidade veem esta lista. Cada ponto fica marcado sozinho quando estiver feito.",
+  "detail.setupChecklist.progress": "{done} de {total} feitos",
+  "detail.setupChecklist.dismiss": "Dispensar a lista",
+  "detail.setupChecklist.dismissedToast":
+    "Lista dispensada. Tudo o que tinha continua nas definições da comunidade e nas ferramentas de moderação.",
+  "detail.setupChecklist.status.done": "Feito",
+  "detail.setupChecklist.status.open": "Por fazer",
+  "detail.setupChecklist.item.cover.title": "Adicionar imagem de capa",
+  "detail.setupChecklist.item.cover.body":
+    "Uma foto larga no topo da página da comunidade.",
+  "detail.setupChecklist.item.avatar.title": "Adicionar marca da comunidade",
+  "detail.setupChecklist.item.avatar.body":
+    "Uma pequena marca quadrada ao lado do nome da comunidade.",
+  "detail.setupChecklist.item.welcome.title": "Escrever nota de boas-vindas",
+  "detail.setupChecklist.item.welcome.body":
+    "Quem entra lê-a uma vez, logo depois de se juntar.",
+  "detail.setupChecklist.item.tags.title": "Adicionar etiquetas",
+  "detail.setupChecklist.item.tags.body":
+    "As etiquetas ajudam as pessoas a encontrar a tua comunidade.",
+  "detail.setupChecklist.item.coSteward.title": "Adicionar corresponsável",
+  "detail.setupChecklist.item.coSteward.body":
+    "Partilha a gestão da comunidade com alguém de confiança.",
+  "detail.setupChecklist.item.coSteward.bodyWaiting":
+    "Alguém tem de entrar antes de lhe poderes dar o papel de corresponsável.",
+  "detail.setupChecklist.item.invite.title": "Convidar as primeiras pessoas",
+  "detail.setupChecklist.item.invite.body":
+    "Nas ferramentas de moderação, envia convites a quem conheces.",
+  "detail.setupChecklist.item.firstPost.title":
+    "Escrever a primeira publicação",
+  "detail.setupChecklist.item.firstPost.body":
+    "Começa a conversa no Pulso para quem chega encontrar algo para ler.",
+
   "detail.save.savedToast": "Comunidade guardada no teu perfil.",
   "detail.save.removedToast": "Comunidade removida dos guardados.",
   "detail.save.saveAriaLabel": "Guardar {name}",
@@ -1647,6 +1685,26 @@ export const communities: Catalog = {
   "start.thread.backTo": "Voltar a {thread}",
   "start.thread.stepOf": "Passo {step} de {total} · <b>{thread}</b>",
   "start.thread.stepOfAriaLabel": "Passo {step} de {total} · {thread}",
+
+  // Quick start (mobile, 3 steps)
+  "start.quick.stepOf": "Passo {step} de {total}",
+  "start.quick.name.label": "Nome da comunidade",
+  "start.quick.step.name.title": "Dá um nome à tua comunidade",
+  "start.quick.step.name.lead":
+    "Um nome, o tipo de espaço e uma frase que as pessoas leem primeiro.",
+  "start.quick.step.who.title": "Para quem é",
+  "start.quick.step.who.lead":
+    "Diz para que serve e quem esperas que se junte.",
+  "start.quick.step.open.title": "Abre a comunidade",
+  "start.quick.step.open.lead":
+    "Escolhe quem a pode encontrar e o endereço, e lê o que as pessoas aceitam ao entrar.",
+  "start.quick.next.who": "Seguinte: para quem é",
+  "start.quick.next.open": "Seguinte: abrir",
+  "start.quick.next.submit": "Abrir comunidade",
+  "start.quick.accessLabel": "Quem a pode encontrar e entrar",
+  "start.quick.values.heading": "Valores partilhados que as pessoas aceitam",
+  "start.quick.values.editLater":
+    "Podes editá-los mais tarde na página da comunidade.",
 
   // ── Texto dos painéis do fio condutor (PANELS) ────────────────────────────
   "start.panel.open.thread": "Abrir",

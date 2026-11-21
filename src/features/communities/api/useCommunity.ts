@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { isValidElement, useMemo, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
@@ -7,6 +7,7 @@ import { useCommunityMembership } from "../../../app/providers/useCommunityMembe
 import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
   getCommunity,
+  type CommunitySetupChecklistDTO,
   type JoinRequestStatus,
   type RosterRole,
   type UpdateCommunityDto,
@@ -29,6 +30,9 @@ import { localizeDemoCommunity } from "../memberCountLabel";
 import { DEMO_SPACE_DETAILS, findDemoSpace } from "../spaces.data";
 import type { Community } from "../../homepage/data/types";
 import type { LivingCommunity } from "../community.model";
+import { useCreatedCommunities } from "../startCommunity/createdCommunities.store";
+import { useDemoSharedPosts } from "../demoSharedPosts";
+import { demoSetupChecklistFor } from "../communitySetupChecklist.demo";
 
 export interface CommunityResult {
   community: Community | null;
@@ -55,6 +59,10 @@ export interface CommunityResult {
   /** The current owner/mod-editable fields, seeded from the live DTO or (in
    *  demo) the mock view-models merged with any session edit override. */
   editable: EditableCommunityFields | null;
+  /** The founder setup checklist facts, for the staff of a top-level
+   *  community only, else null. Live reads the detail's `setupChecklist`;
+   *  demo builds them from the fixtures (`communitySetupChecklist.demo.ts`). */
+  setupChecklist: CommunitySetupChecklistDTO | null;
   /** True when the community doesn't exist or is private + hidden (→ 404 path). */
   notFound: boolean;
   /**
@@ -88,12 +96,27 @@ const EMPTY: CommunityResult = {
   myJoinRequestStatus: null,
   invitedAt: null,
   editable: null,
+  setupChecklist: null,
   notFound: false,
   gated: false,
   isLoading: false,
   isError: false,
   refetch: NOOP,
 };
+
+/**
+ * The plain words inside a mock `about` paragraph. The flagship fixtures write
+ * their paragraphs as JSX fragments, so reading only string entries left the
+ * demo purpose empty and the edit form refused to save anything at all.
+ */
+function plainTextOf(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(plainTextOf).join("");
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    return plainTextOf(node.props.children);
+  }
+  return "";
+}
 
 /**
  * Assemble the demo `EditableCommunityFields` from the mock view-models
@@ -111,7 +134,9 @@ function demoEditableFields(
     tagline: community.description,
     type: community.type,
     whoFor: typeof detail.whoFor[0] === "string" ? detail.whoFor[0] : "",
-    purpose: typeof detail.about[0] === "string" ? detail.about[0] : "",
+    // The first about paragraph is the purpose the community shows, whether
+    // the fixture wrote it as a string or as a JSX fragment.
+    purpose: plainTextOf(detail.about[0]).replace(/\s+/g, " ").trim(),
     accessTier:
       living?.accessTier ??
       community.accessTier ??
@@ -175,6 +200,8 @@ export function useCommunity(slug: string | undefined): CommunityResult {
   const createdDetail = useCreatedDetail(slug);
   const { roleIn, hasRequested } = useCommunityMembership();
   const { overrideFor } = useCommunityEdits();
+  const { created } = useCreatedCommunities();
+  const sharedPosts = useDemoSharedPosts(demoMode ? slug : undefined);
 
   const demoResult = useMemo<CommunityResult>(() => {
     // A demo space (subcommunity) is kept out of the Discover registry, so
@@ -194,26 +221,38 @@ export function useCommunity(slug: string | undefined): CommunityResult {
     if (!community || !detail) return { ...EMPTY, notFound: true };
     const baseLiving = getLiving(slug);
     const override = slug ? overrideFor(slug) : undefined;
+    const viewerRole = slug ? roleIn(slug) : null;
     const editable = demoEditableFields(
       community,
       detail,
       baseLiving,
       override,
     );
+    const setupChecklist = demoSetupChecklistFor({
+      role: viewerRole,
+      isSpace: Boolean(foundDemoSpace) || baseLiving?.parent != null,
+      living: baseLiving,
+      foundingStewardCount:
+        created.find((createdCommunity) => createdCommunity.slug === slug)
+          ?.stewards.length ?? null,
+      sharedPostCount: sharedPosts.length,
+      override,
+    });
     return {
       community: override
         ? applyCommunityOverride(community, override, t)
         : community,
       detail: override ? applyDetailOverride(detail, override) : detail,
       living: override ? applyLivingOverride(baseLiving, override) : baseLiving,
-      myRole: slug ? roleIn(slug) : null,
+      myRole: viewerRole,
       // The demo store holds only real roster rows, so a role is a row.
-      isRosterMember: slug ? roleIn(slug) != null : false,
+      isRosterMember: viewerRole != null,
       myJoinRequestStatus: slug && hasRequested(slug) ? "pending" : null,
       // The demo membership store holds memberships and pending requests and
       // nothing else, so the prototype has no invitation to report.
       invitedAt: null,
       editable,
+      setupChecklist,
       notFound: false,
       // Demo mode has no server to refuse anything, so it never gates. A later
       // task computes the demo gate elsewhere.
@@ -230,6 +269,8 @@ export function useCommunity(slug: string | undefined): CommunityResult {
     roleIn,
     hasRequested,
     overrideFor,
+    created,
+    sharedPosts,
     t,
   ]);
 
@@ -250,6 +291,8 @@ export function useCommunity(slug: string | undefined): CommunityResult {
           myJoinRequestStatus: dto.myJoinRequestStatus,
           invitedAt: dto.invitedAt ?? null,
           editable: dtoToEditable(dto),
+          // Absent unless the viewer is staff of a top-level community.
+          setupChecklist: dto.setupChecklist ?? null,
           notFound: false,
           gated: false,
           isLoading: false,

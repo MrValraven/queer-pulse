@@ -1,9 +1,12 @@
 import type { CommunityDraft } from "./startCommunity.data";
+import type { QuickStep } from "./quickStartCommunity.model";
 
 /** What a parked wizard needs to come back exactly where it was. */
 export interface StoredCommunityDraft {
   draft: CommunityDraft;
   step: number;
+  /** The quick flow step a phone left the draft on; the old tab copy never holds one. */
+  quickStep?: QuickStep;
 }
 
 /**

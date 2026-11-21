@@ -3448,7 +3448,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-11-20.headline":
-    "VJ speed takes any typed value, and screens cut straight on when a transition can't play.",
+    "Communities start from a phone, and the team gets Cultural Production to plan events.",
   "changelog.releases.2026-11-16.headline":
     "Leads get staff in charge, drafts wait on a Continue card, and admin gets a redesign.",
   "changelog.releases.2026-11-14.headline":
@@ -3821,6 +3821,10 @@ export const marketing: Catalog = {
     "Richer partner cards in the directory",
   "changelog.entries.partner-cards-redesign.body":
     "Partner businesses get a wide card with their photo, a Partner label and our team's note about them.",
+  "changelog.entries.quick-start-community.title":
+    "Start a community from your phone in three steps",
+  "changelog.entries.quick-start-community.body":
+    "Name it, say who it's for and open it, then a checklist on its page lists what to add next.",
   "changelog.entries.cultural-production.title":
     "Cultural Production for the team that runs QueerPulse events",
   "changelog.entries.cultural-production.body":

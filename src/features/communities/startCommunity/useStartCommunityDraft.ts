@@ -16,6 +16,7 @@ import {
   type StoredCommunityDraft,
 } from "./communityDraftStorage";
 import { communityDraftProgress } from "./startCommunityDraftProgress";
+import { isQuickStep, type QuickStep } from "./quickStartCommunity.model";
 
 /** The founder's one community draft slot on the server. */
 const COMMUNITY_DRAFT_SLOT: CreatorDraftSlot = {
@@ -40,17 +41,21 @@ function isStoredCommunityPayload(payload: Record<string, unknown>): boolean {
   );
 }
 
-/** Reads a stored payload back as the wizard's draft and chapter; null for any other shape. */
+/**
+ * Reads a stored payload back as the wizard's draft and chapter, plus the
+ * quick flow step when it holds a valid one; null for any other shape.
+ */
 function storedCommunityDraftFrom(
   serverDraft: CreatorDraftResponse | null,
 ): StoredCommunityDraft | null {
   if (serverDraft === null) return null;
   if (!isStoredCommunityPayload(serverDraft.payload)) return null;
-  const { draft, step } = serverDraft.payload as {
+  const { draft, step, quickStep } = serverDraft.payload as {
     draft: CommunityDraft;
     step: number;
+    quickStep?: unknown;
   };
-  return { draft, step };
+  return isQuickStep(quickStep) ? { draft, step, quickStep } : { draft, step };
 }
 
 /**
@@ -87,6 +92,8 @@ export interface StartCommunityAutosaveOptions {
   ownerSlug: string;
   draft: CommunityDraft;
   step: number;
+  /** The open quick flow step; undefined while the full wizard is open. */
+  quickStep?: QuickStep;
   missingByStep: Record<number, string[]>;
   isDirty: boolean;
   /** True once the founder changed something or moved chapter. */
@@ -115,6 +122,7 @@ export function useStartCommunityAutosave({
   ownerSlug,
   draft,
   step,
+  quickStep,
   missingByStep,
   isDirty,
   hasEdited,
@@ -122,10 +130,14 @@ export function useStartCommunityAutosave({
   source,
 }: StartCommunityAutosaveOptions): StartCommunityAutosave {
   const shouldSave = isDirty && (hasEdited || source === "legacy");
-  const payload = useMemo(
-    () => (shouldSave ? { draft, step } : null),
-    [shouldSave, draft, step],
-  );
+  // The quick step rides beside the chapter only while the quick flow is open,
+  // so a wizard save keeps the payload shape it always had.
+  const payload = useMemo(() => {
+    if (!shouldSave) return null;
+    return quickStep === undefined
+      ? { draft, step }
+      : { draft, step, quickStep };
+  }, [shouldSave, draft, step, quickStep]);
   const { progress, missing } = useMemo(
     () => communityDraftProgress(missingByStep, step),
     [missingByStep, step],

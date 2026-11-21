@@ -1,0 +1,232 @@
+/* ==========================================================
+   Quick start: the phone's three-step way to open a community.
+   Field inputs reuse StartCommunityPage.module.css. Tokens only.
+   ========================================================== */
+
+/* A column at least one screen tall between the app bar and the tab bar, so
+   on a short step the footer still pins to the bottom above the tab bar.
+   `--quick-footer-room` is the sticky footer's tallest height (one row of
+   chips over Back and a two-line Next) plus a little air. Focused fields keep
+   that much space below them, so the footer never covers a field reached by
+   keyboard (WCAG 2.4.11). */
+.quick {
+  --quick-footer-room: 168px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - var(--sticky-top) - var(--bottom-inset));
+}
+.stepBody :is(input, textarea, select, button, [role="radio"]) {
+  scroll-margin-top: calc(var(--sticky-top) + 16px);
+  scroll-margin-bottom: calc(var(--quick-footer-room) + var(--bottom-inset));
+}
+/* The free height of a short step opens up between the save line and the
+   footer, so the save line stays with the fields. */
+.draftStatus {
+  margin-bottom: auto;
+}
+
+/* ---- header ---- */
+.header {
+  margin-bottom: 22px;
+}
+.backLink {
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-pill);
+}
+@media (hover: hover) {
+  .backLink:hover {
+    color: var(--text-strong);
+  }
+}
+.backLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.stepOf {
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin: 0 0 8px;
+}
+.meter {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.meterSegment {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.09);
+}
+.meterSegmentFilled {
+  background: var(--accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .meterSegment {
+    transition: background 0.3s var(--ease);
+  }
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-28);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 8px;
+}
+/* Focus lands here on a step change so a screen reader announces the step.
+   It is a heading for reading, so it carries no ring. */
+.title:focus {
+  outline: none;
+}
+.lead {
+  font-size: var(--text-15);
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---- a label for a group of controls (chips, access cards, values) ---- */
+.groupLabel {
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+}
+
+/* ---- category chips: a 44px target on touch and phone widths ---- */
+@media (pointer: coarse) {
+  .categoryChip {
+    min-height: 44px;
+  }
+}
+@media (--mobile) {
+  .categoryChip {
+    min-height: 44px;
+  }
+}
+
+/* ---- access cards: the private tier's icon keeps its jade tint at rest ---- */
+.accessIconWrap {
+  display: flex;
+  flex: none;
+}
+/* The note is a block under the name row, so its hairline sits above the
+   whole note. */
+.accessNote {
+  display: block;
+}
+
+/* ---- shared values, read-only ---- */
+.values {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0;
+}
+.valuesList {
+  list-style: none;
+  margin: 0;
+  padding: 14px 16px;
+  display: grid;
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}
+.valueItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.5;
+}
+.valueIcon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--jade);
+}
+.valuesNote {
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ---- sticky footer ---- */
+/* Full bleed across the page gutter (the `.wrap` cancel the tree already
+   uses), so the paper bar spans the screen while its buttons line up with
+   the fields above. `--bottom-inset` clears the tab bar and the home
+   indicator. */
+.footer {
+  position: sticky;
+  bottom: var(--bottom-inset);
+  z-index: var(--z-sticky);
+  margin: var(--gap-sm) calc(-1 * var(--wrap-px)) 0;
+  padding: 12px var(--wrap-px);
+  background: var(--paper);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.footerActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+/* Back keeps its size and Next takes the rest of the row. Next may wrap its
+   label onto two lines, so both buttons fit from 320px up in EN and PT. The
+   row class lifts these over the Button module's own nowrap. */
+.footerActions .footerBack {
+  flex: none;
+}
+.footerActions .footerNext {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
+  justify-content: center;
+}
+
+/* What is still needed, as one row: the label keeps its width and the chips
+   scroll sideways when they outgrow the row, so the footer stays one chip row
+   tall on a 320px phone in PT. The scrollbar stays hidden; the chips are
+   short labels, each one also starred on its field above. */
+.footer .neededBar {
+  flex-wrap: nowrap;
+}
+.footer .neededLabel {
+  flex: none;
+}
+.footer .neededChips {
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.footer .neededChips::-webkit-scrollbar {
+  display: none;
+}
+.footer .neededChip {
+  flex: none;
+  white-space: nowrap;
+}

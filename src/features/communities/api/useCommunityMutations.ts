@@ -515,6 +515,9 @@ export function useDeleteCommunityPost(slug: string) {
       void queryClient.invalidateQueries({
         queryKey: ["community-posts", slug],
       });
+      // The detail carries the setup checklist's post count, so a deleted
+      // post has to reach it too.
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
     },
   });
 }
@@ -535,6 +538,9 @@ export function useRestoreCommunityPost(slug: string) {
       void queryClient.invalidateQueries({
         queryKey: ["community-posts", slug],
       });
+      // The detail carries the setup checklist's post count, so a restored
+      // post has to reach it too.
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
     },
   });
 }

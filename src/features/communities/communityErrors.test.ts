@@ -19,6 +19,16 @@ describe("communityCause: coded refusals", () => {
       expect(communityCause(new ApiError(403, "x", { code }))).toEqual({ key });
     },
   );
+
+  it("names the space refusal of a checklist dismissal", () => {
+    expect(
+      communityCause(
+        new ApiError(400, "x", {
+          code: "setup_checklist_unavailable_for_spaces",
+        }),
+      ),
+    ).toEqual({ key: "communities:error.setupChecklistSpaces" });
+  });
 });
 
 describe("communityCause: refusals worded only as a sentence", () => {
