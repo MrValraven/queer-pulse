@@ -1,20 +1,20 @@
-import { MentionText } from "../../shared/mentions/MentionText";
+import { MarkdownLite } from "../../shared/markdown";
 import { splitStudioPostText } from "../studio/share/studioPostText";
 import { StudioPostCard } from "../studio/share/StudioPostCard";
-import styles from "./CommunityDetailPage.module.css";
+import detail from "./CommunityDetailPage.module.css";
+import styles from "./CommunityThreadOpText.module.css";
 
-/** A discussion's opening post as written, with a shared Studio link taken
- *  out of the words and shown as its card under them. */
+/** A discussion's opening post as written, formatting included, with a shared
+ *  Studio link taken out of the words and shown as its card under them. The
+ *  body is markdown-lite, so a markdown link around that link stays whole. */
 export function CommunityThreadOpText({ text }: { text: string }) {
-  const { target, visibleText } = splitStudioPostText(text, {
-    isMarkdown: false,
-  });
+  const { target, visibleText } = splitStudioPostText(text);
   return (
     <>
       {visibleText && (
-        <p className={styles.postText}>
-          <MentionText text={visibleText} />
-        </p>
+        <div className={`${detail.postText} ${styles.markdownBody}`}>
+          <MarkdownLite text={visibleText} />
+        </div>
       )}
       {target && <StudioPostCard target={target} />}
     </>

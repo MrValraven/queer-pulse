@@ -3829,6 +3829,13 @@ export const marketing: Catalog = {
     "Start a community from your phone in three steps",
   "changelog.entries.quick-start-community.body":
     "Name it, say who it's for and open it, then a checklist on its page lists what to add next.",
+  "changelog.entries.vj-default-cut.title": "VJ screens cut by default",
+  "changelog.entries.vj-default-cut.body":
+    "A new show switches clips instantly, and fades or other transitions are one tap away on the remote.",
+  "changelog.entries.community-composer-formatting.title":
+    "Write community posts with formatting",
+  "changelog.entries.community-composer-formatting.body":
+    "Pulse and Discussion get the forum's toolbar, a field that grows and a preview, so long posts stay readable.",
   "changelog.entries.quicker-app-install.title":
     "Install the app straight from the homepage",
   "changelog.entries.quicker-app-install.body":

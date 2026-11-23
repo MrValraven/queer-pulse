@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Avatar, Button, SpaceLabel } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { markdownLitePlainText } from "../../shared/markdown";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { photoOf } from "../communities/communityPeople";
 import { communityPostPath } from "../communities/communityPostPath";
@@ -93,6 +94,9 @@ export function CommunityPostCard({
   const studioText = hub
     ? splitStudioPostText(hub.post.body, { isMarkdown: false })
     : splitStudioSummaryText(post.body, post.studioLink);
+  // The quote is a short preview of a markdown-lite body, so it shows the
+  // words without their formatting marks.
+  const quoteText = markdownLitePlainText(studioText.visibleText);
   // A flat post arrives with an empty `context` (the server leaves its title
   // blank), so the card names the audience in the reader's language on its
   // meta line. It has no community to open, so it carries no footer link.
@@ -164,9 +168,7 @@ export function CommunityPostCard({
               })
         }
       />
-      {studioText.visibleText && (
-        <FeedQuote>{studioText.visibleText}</FeedQuote>
-      )}
+      {quoteText && <FeedQuote>{quoteText}</FeedQuote>}
       {/* LazyStudioShareCard directly: the shell's 12px gap spaces it, and StudioPostCard's margin would double that. */}
       {studioText.target && (
         <LazyStudioShareCard target={studioText.target} surface="post" />

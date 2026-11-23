@@ -21,7 +21,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
       "quick-exit-everywhere",
       "hide-profile-from-them",
     ],
-    pushes: 1,
+    pushes: 2,
   },
   "20 Nov 2026": {
     highlights: ["cultural-production", "quick-start-community"],

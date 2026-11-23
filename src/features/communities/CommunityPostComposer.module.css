@@ -69,6 +69,23 @@
   flex-wrap: wrap;
 }
 
+/* Two classes so this beats the caller's `align-items: center` regardless of
+   which CSS Module the bundler emits first. The body grows downward while the
+   member writes, so every column hangs from the top; at rest the one-line
+   field, the avatar slot and Share are all one button tall, which keeps the
+   compact row looking centred. */
+.root.root {
+  align-items: flex-start;
+}
+
+/* Centres any avatar size against the one-line field and the Share button. */
+.avatarSlot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 .actions {
   flex: none;
   display: flex;
@@ -86,12 +103,6 @@
   .actions {
     flex-basis: 100%;
     justify-content: flex-end;
-  }
-  /* Two classes so this beats the caller's `align-items: center` regardless of
-     which CSS Module the bundler emits first. Centring a 38px avatar against a
-     field that is now three lines tall floats it in mid-air. */
-  .root.root {
-    align-items: flex-start;
   }
 }
 

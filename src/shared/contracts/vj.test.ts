@@ -34,7 +34,7 @@ describe("vj contract mirror", () => {
       liveGeneratorId: null,
       liveGeneratorVariant: null,
       liveSince: null,
-      transition: { mode: "fade", length: { unit: "ms", value: 800 } },
+      transition: { mode: "cut", length: { unit: "ms", value: 800 } },
       overlay: {
         text: "",
         style: "big",

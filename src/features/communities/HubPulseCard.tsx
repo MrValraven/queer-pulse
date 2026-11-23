@@ -4,6 +4,7 @@ import { Avatar, SpaceLabel } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { markdownLitePlainText } from "../../shared/markdown";
 import { communityPath } from "../../app/routeMap";
 import type { Post } from "./community.model";
 import { photoOf } from "./communityPeople";
@@ -37,8 +38,11 @@ export function HubPulseCard({ item }: { item: HubPost }) {
   const { target, visibleText } = splitStudioPostText(post.body, {
     isMarkdown: false,
   });
+  // The card is a clamped snippet, so the body's formatting marks come off
+  // and only the words show.
   const bodyText =
-    visibleText || (target ? t(studioShareLabelKey(target.kind)) : "");
+    markdownLitePlainText(visibleText) ||
+    (target ? t(studioShareLabelKey(target.kind)) : "");
   return (
     <article className={styles.pulseCard}>
       <Link to={communityPath(communitySlug)} className={styles.pulseFrom}>
@@ -134,7 +138,7 @@ export function HubExcerptCard({ item }: { item: HubExcerpt }) {
         )}
       </Link>
       <div className={styles.pulseTime}>{communityTime.ago({ createdAt })}</div>
-      <p className={styles.pulseBody}>{excerpt}</p>
+      <p className={styles.pulseBody}>{markdownLitePlainText(excerpt)}</p>
       <div className={styles.pulseFoot}>
         <Link to={communityPath(communitySlug)} className={styles.pulseOpen}>
           {t("communities:hub.pulseCard.open")} <FiArrowRight aria-hidden />

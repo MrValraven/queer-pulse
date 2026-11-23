@@ -1,0 +1,15 @@
+/* A discussion's opening post, rendered as markdown-lite one block per line.
+   Paragraphs and list items keep the post's own size, ink and leading from
+   `.postText` over the renderer's forum-sized base, and blocks sit 12px
+   apart. */
+.markdownBody p,
+.markdownBody li {
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+.markdownBody p,
+.markdownBody ul,
+.markdownBody ol {
+  margin: 0 0 12px;
+}

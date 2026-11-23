@@ -13,6 +13,7 @@ import {
 import type { Member } from "../data/members";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import { initialsFromParts } from "../../../shared/lib/initials";
+import { markdownLitePlainText } from "../../../shared/markdown/markdownLitePlainText";
 import {
   OPEN_TO_PRESETS,
   type OpenToEntry,
@@ -109,6 +110,17 @@ const KNOWN_ACTIVITY_ACTIONS = new Set<ActivityAction>([
   "join",
   "persona",
 ]);
+
+/** An activity row's quoted line. A community post's line is an excerpt of
+ *  its markdown-lite body, so it shows the words without the formatting
+ *  marks; every other row's line is shown as the backend wrote it. */
+function activityRowSub(
+  action: string | null | undefined,
+  sub: string | null | undefined,
+): string | null {
+  if (!sub) return sub ?? null;
+  return action === "communityPost" ? markdownLitePlainText(sub) : sub;
+}
 
 function toActivityAction(action?: string | null): ActivityAction | null {
   return action && KNOWN_ACTIVITY_ACTIONS.has(action as ActivityAction)
@@ -354,7 +366,7 @@ export function profileToMember(dto: ProfileDTO): Member {
     activity: (dto.activity ?? []).map((activityRow) => ({
       icon: ACTIVITY_ICONS[activityRow.kind] ?? FiFileText,
       title: activityRow.title,
-      sub: activityRow.sub ?? null,
+      sub: activityRowSub(activityRow.action, activityRow.sub),
       // Normalised to null so the renderer has one "no destination" case. A
       // backend that stores no link for this row, and every row written before
       // links existed, both arrive as null/undefined here.

@@ -30,7 +30,7 @@ import styles from "./VjDockRows.module.css";
 
 /** The contract default for a stage that has not loaded yet. */
 const VJ_DEFAULT_TRANSITION: VjTransition = {
-  mode: "fade",
+  mode: "cut",
   length: { unit: "ms", value: 800 },
 };
 const VJ_LENGTH_MS_STEP = 100;

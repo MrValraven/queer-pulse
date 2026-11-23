@@ -5,6 +5,7 @@ import type { ButtonVariant } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { StudioComposerPreview } from "../studio/share/StudioComposerPreview";
+import { CommunityComposerBody } from "./CommunityComposerBody";
 import type { Person } from "./communityDetails";
 import { photoOf } from "./communityPeople";
 import type { usePostImageAttach } from "./usePostImageAttach";
@@ -29,8 +30,10 @@ export interface ComposerAnnouncementToggle {
  * file-picker markup existed twice.
  *
  * Presentation stays with the caller: the row and textarea classes come from
- * whichever tab is rendering, so neither surface changes shape. Only the
- * image-attach affordances are owned here, since they were byte-identical.
+ * whichever tab is rendering, so neither surface changes shape. The image
+ * attach affordances live here, since they were byte-identical, and so does
+ * the body: `CommunityComposerBody` gives both tabs the forum's formatting
+ * toolbar, a field that grows with the post, and a Write | Preview switch.
  */
 export function CommunityPostComposer({
   viewer,
@@ -51,8 +54,8 @@ export function CommunityPostComposer({
   isFocusRequested,
   onFocusHandled,
 }: {
-  /** The signed-in member, so the composer shows their real name and face
-   *  rather than a generic chip. `null` while the session is still resolving. */
+  /** The signed-in member, so the composer shows their own name and face.
+   *  `null` while the session is still resolving. */
   viewer: Person | null;
   avatarSize?: number;
   /** The composer row's own class, from the calling tab's CSS module. */
@@ -95,23 +98,24 @@ export function CommunityPostComposer({
       className={[className, styles.root].filter(Boolean).join(" ")}
       style={style}
     >
-      <Avatar
-        initials={viewer?.initials ?? "?"}
-        tint={viewer?.tint ?? "plum"}
-        src={viewer ? photoOf(viewer, demoMode) : undefined}
-        size={avatarSize}
-        alt={viewer?.name ?? ""}
-      />
+      <div className={styles.avatarSlot}>
+        <Avatar
+          initials={viewer?.initials ?? "?"}
+          tint={viewer?.tint ?? "plum"}
+          src={viewer ? photoOf(viewer, demoMode) : undefined}
+          size={avatarSize}
+          alt={viewer?.name ?? ""}
+        />
+      </div>
       <div className={styles.field}>
-        <textarea
-          ref={fieldRef}
-          className={textareaClassName}
-          rows={1}
-          aria-label={placeholder}
+        <CommunityComposerBody
+          textareaRef={fieldRef}
+          textareaClassName={textareaClassName}
+          ariaLabel={placeholder}
           placeholder={placeholder}
           value={value}
-          onChange={(event) => onChange(event.target.value)}
-          style={{ width: "100%" }}
+          onChange={onChange}
+          onSubmit={onSubmit}
         />
         <StudioComposerPreview
           text={value}
@@ -159,8 +163,8 @@ export function CommunityPostComposer({
         )}
       </div>
       {/* Attach + send travel together so a phone can drop the pair onto its
-          own line rather than squeezing the field (and with it the
-          announcement switch) into a ~120px column. */}
+          own line, which leaves the field (and with it the announcement
+          switch) the full width of the card. */}
       <div className={styles.actions}>
         <input
           ref={inputRef}

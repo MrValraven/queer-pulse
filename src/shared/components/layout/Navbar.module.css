@@ -28,8 +28,12 @@
     box-shadow var(--dur-slow) var(--ease),
     background var(--dur-slow) var(--ease);
 }
+/* Scrolled pill: the alpha is high so page content under the nav stays
+   unreadable when a browser skips the backdrop blur (hardware acceleration
+   off, some screenshot tools). Where the blur does paint, it still adds its
+   glass softness on top. */
 .scrolled {
-  background: rgba(var(--cream-rgb), 0.82);
+  background: rgba(var(--cream-rgb), 0.97);
   box-shadow:
     0 14px 40px -16px rgba(var(--plum-rgb), 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -373,7 +377,7 @@
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .scrolled {
-  background: color-mix(in srgb, var(--cream) 94%, transparent);
+  background: color-mix(in srgb, var(--cream) 97%, transparent);
 }
 /* The dark pill rules above outrank `.appBar`, so the strip restates its solid
    fill and hairline here to match the dark tab bar. */

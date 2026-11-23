@@ -130,6 +130,7 @@ export function CommunityThread({
               <CommunityInlineTextEditor
                 initial={opBody}
                 isBusy={isSavingOpEdit}
+                hasFormatting
                 onCancel={() => setEditingOp(false)}
                 onSave={saveOpEdit}
               />

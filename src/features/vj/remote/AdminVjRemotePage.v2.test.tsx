@@ -464,7 +464,7 @@ describe("AdminVjRemotePage v2", () => {
     await renderPage();
     const user = userEvent.setup();
     await user.click(
-      screen.getByRole("button", { name: "Transition: Fade. Change it" }),
+      screen.getByRole("button", { name: "Transition: Cut. Change it" }),
     );
     await user.click(
       await screen.findByRole("button", { name: "Dip to white" }),

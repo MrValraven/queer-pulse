@@ -3924,6 +3924,13 @@ export const marketing: Catalog = {
     "Cria uma comunidade no telemóvel em três passos",
   "changelog.entries.quick-start-community.body":
     "Dás-lhe um nome, dizes para quem é e abres, e uma lista na página mostra o que juntar a seguir.",
+  "changelog.entries.vj-default-cut.title": "Os ecrãs VJ cortam por defeito",
+  "changelog.entries.vj-default-cut.body":
+    "Um espetáculo novo troca de clip na hora, e os fades e outras transições ficam a um toque no comando.",
+  "changelog.entries.community-composer-formatting.title":
+    "Escreve publicações nas comunidades com formatação",
+  "changelog.entries.community-composer-formatting.body":
+    "O Pulse e a Discussão ganham a barra do fórum, um campo que cresce e pré-visualização, para textos longos se lerem bem.",
   "changelog.entries.quicker-app-install.title":
     "Instala a app diretamente a partir da página inicial",
   "changelog.entries.quicker-app-install.body":

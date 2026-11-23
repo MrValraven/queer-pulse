@@ -104,6 +104,22 @@
   margin: 12px 0 0;
   white-space: pre-wrap;
 }
+/* The body is markdown-lite, rendered one block per line. Paragraphs and list
+   items keep the post's own size and leading over the renderer's forum-sized
+   base, and every block sits on the card's 12px rhythm, so a plain post that
+   was written before formatting existed keeps its look: each of its lines is
+   a paragraph, and a blank line between two of them becomes one 12px gap. */
+.pBody p,
+.pBody li {
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+}
+.pBody p,
+.pBody ul,
+.pBody ol {
+  margin: 0 0 12px;
+}
 .pImg {
   margin-top: 12px;
   border-radius: var(--radius-14);

@@ -2,6 +2,7 @@
  *  tab and the published post. Import from here rather than reaching into the
  *  module files, so the preview and the post can never drift apart. */
 export { MarkdownLite } from "./MarkdownLite";
+export { markdownLitePlainText } from "./markdownLitePlainText";
 export {
   parseMarkdownLite,
   parseSpans,

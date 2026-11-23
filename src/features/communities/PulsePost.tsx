@@ -6,6 +6,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { MarkdownLite } from "../../shared/markdown";
 import { ConfirmDeleteModal } from "../forum/ConfirmDeleteModal";
 import { splitStudioPostText } from "../studio/share/studioPostText";
 import { StudioPostCard } from "../studio/share/StudioPostCard";
@@ -70,19 +71,23 @@ function PulsePostBody({
       <CommunityInlineTextEditor
         initial={body}
         isBusy={isSavingEdit}
+        hasFormatting
         onCancel={onCancelEdit}
         onSave={onSaveEdit}
       />
     );
   }
   // One card per post: the first Studio link, out of the words and under
-  // them, after any photo (the forum's order for its link card).
-  const { target, visibleText } = splitStudioPostText(body, {
-    isMarkdown: false,
-  });
+  // them, after any photo (the forum's order for its link card). The body is
+  // markdown-lite, so a markdown link around the Studio URL stays whole.
+  const { target, visibleText } = splitStudioPostText(body);
   return (
     <>
-      {visibleText && <p className={styles.pBody}>{visibleText}</p>}
+      {visibleText && (
+        <div className={styles.pBody}>
+          <MarkdownLite text={visibleText} />
+        </div>
+      )}
       {post.image && (
         <div className={styles.pImg}>
           <img

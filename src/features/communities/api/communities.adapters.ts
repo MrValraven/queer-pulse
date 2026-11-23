@@ -7,6 +7,7 @@ import {
 } from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
 import { activeLocale } from "../../../shared/i18n/locale";
+import { markdownLitePlainText } from "../../../shared/markdown/markdownLitePlainText";
 import type { TFunction } from "../../../shared/i18n/types";
 import { gatheringWhen } from "../../gatherings/gatheringSchedule";
 import { splitStudioPostText } from "../../studio/share/studioPostText";
@@ -458,11 +459,14 @@ export function threadHeadingFromBody(
   const { target, visibleText } = splitStudioPostText(body, {
     isMarkdown: false,
   });
+  // The body is markdown-lite: the heading is its first line as a reader
+  // sees it, without the bold, list or quote marks around it.
+  const plainText = markdownLitePlainText(visibleText);
   const firstLine =
-    visibleText
+    plainText
       .split("\n")
       .map((line) => line.trim())
-      .find(Boolean) ?? visibleText.trim();
+      .find(Boolean) ?? plainText.trim();
   if (!firstLine && target) {
     return translate(studioShareLabelKey(target.kind));
   }

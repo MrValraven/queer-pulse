@@ -63,6 +63,18 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "vj-default-cut",
+        category: "improvement",
+        date: "23 Nov 2026",
+        ...entryKeys("vj-default-cut"),
+      },
+      {
+        id: "community-composer-formatting",
+        category: "improvement",
+        date: "23 Nov 2026",
+        ...entryKeys("community-composer-formatting"),
+      },
+      {
         id: "quicker-app-install",
         category: "improvement",
         date: "23 Nov 2026",

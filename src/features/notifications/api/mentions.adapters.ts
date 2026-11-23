@@ -2,6 +2,7 @@ import { communityPath, thread } from "../../../app/routeMap";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { gatheringPath } from "../../gatherings/gatheringPaths";
 import type { Formatters } from "../../../shared/i18n/format";
+import { markdownLitePlainText } from "../../../shared/markdown/markdownLitePlainText";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Mention, MentionAction, MentionCategory } from "../mentions.data";
 import type { MentionActorDTO, MentionDTO } from "./mentions.api";
@@ -170,7 +171,12 @@ function toMention(dto: MentionDTO, t: TFunction, fmt: Formatters): Mention {
     createdAtIso: dto.createdAt,
     fresh,
     unread: !dto.read,
-    content: dto.excerpt,
+    // A community post is markdown-lite, so its excerpt shows the words
+    // without the formatting marks.
+    content:
+      dto.source === "community" && dto.excerpt
+        ? markdownLitePlainText(dto.excerpt)
+        : dto.excerpt,
     whereText: whereTextFor(dto, t),
     whereTo,
     actions: actionsFor(dto, whereTo),

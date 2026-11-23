@@ -1,0 +1,127 @@
+/* The community composer's body: toolbar row, growing field, preview. The
+   toolbar's own buttons keep the forum editor's stylesheet (they are the same
+   `ComposeBodyToolbar`); this file only lays them out for a feed card. */
+
+.body {
+  min-width: 0;
+}
+
+/* ---- Toolbar row --------------------------------------------------------- */
+/* Seven tools plus Write | Preview. On a phone the switch wraps to its own
+   line, still pushed right by its auto margin, and the tools wrap too, so the
+   row never runs past the card edge. */
+.toolsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+
+.modeSwitch {
+  margin-left: auto;
+}
+
+/* ---- The field ----------------------------------------------------------- */
+/* One line at rest. `useAutoGrowTextarea` sets the height to the content;
+   max-height caps it at about fourteen lines, after which the text scrolls
+   inside. Border-box with no border, so the measured scrollHeight (content
+   plus padding) is exactly the box. The vertical padding makes a single line
+   as tall as the Share button beside it. The side padding gives the focus
+   ring room around the text, and the matching negative margin keeps the text
+   lined up with the toolbar above it. */
+.input {
+  display: block;
+  width: calc(100% + 20px);
+  box-sizing: border-box;
+  padding: 10px;
+  margin-inline: -10px;
+  border: none;
+  line-height: 1.5;
+  resize: none;
+  max-height: calc(1.5em * 14 + 20px);
+  overflow-y: auto;
+}
+
+/* The in-place editor's field when it carries formatting: the bordered box
+   sits on the wrapper, so the growing textarea itself stays borderless. */
+.editBox {
+  padding: 4px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-10);
+  background: var(--cream);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+.editBox:has(textarea:focus-visible) {
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-accent-strong);
+}
+
+.editInput {
+  font-family: inherit;
+  font-size: inherit;
+  color: var(--ink);
+  background: transparent;
+  outline: none;
+}
+
+.editInput:focus-visible {
+  outline: none;
+}
+
+/* ---- Write | Preview swap ------------------------------------------------ */
+/* Both panes stay mounted: the showing one sets the height and the hidden one
+   lies over it out of flow. The outgoing pane fades out first and the
+   incoming one fades up once it has gone, so raw and rendered text never read
+   as doubled. */
+.panes {
+  position: relative;
+  --pane-fade-out: calc(var(--dur-fast) * 0.6);
+}
+
+.pane {
+  transition:
+    opacity var(--dur-fast) var(--ease-out) var(--pane-fade-out),
+    visibility 0s;
+}
+
+.paneHidden {
+  transition:
+    opacity var(--pane-fade-out) var(--ease-in),
+    visibility 0s linear var(--pane-fade-out);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Same box as the field, so switching panes does not move the row below. */
+.preview {
+  min-height: calc(1.5em + 20px);
+  padding: 10px 0;
+  font-size: var(--text-16);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.previewEmpty {
+  margin: 0;
+  font-style: italic;
+  color: var(--ink-40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pane,
+  .paneHidden,
+  .editBox {
+    transition: none;
+  }
+}
