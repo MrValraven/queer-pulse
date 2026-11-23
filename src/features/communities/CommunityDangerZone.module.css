@@ -70,3 +70,12 @@
   font-weight: 700;
   color: var(--accent-ink);
 }
+
+/* One state of a row whose explainer and status line trade places through
+   the shared Collapse: the text and its action stacked like the row itself. */
+.rowState {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}

@@ -12,17 +12,16 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { primeMessageChime } from "../../../shared/lib/messageChime";
 import { PageMeta } from "../../../shared/seo/PageMeta";
 import {
-  QUIZSHOW_ERROR_CODES,
   QUIZSHOW_LIMITS,
-  type QuizshowErrorCode,
   type QuizshowHostState,
   type QuizshowPlayMode,
 } from "../../../shared/contracts/quizshow";
-import { quizshowErrorKeyOf } from "../api/quizshowErrors";
 import {
-  isHostState,
-  type QuizshowClientState,
-} from "../realtime/quizshowClientStore";
+  quizshowErrorKeyOf,
+  quizshowLoadFailureKeyOf,
+  quizshowRefusalKeyOf,
+} from "../api/quizshowErrors";
+import { isHostState } from "../realtime/quizshowClientStore";
 import {
   useQuizshowSession,
   type QuizshowSessionController,
@@ -54,16 +53,8 @@ import styles from "./QuizshowRemote.module.css";
 
 /** The remote plays its cues quietly and locally: the last seconds and the reveal. */
 const REMOTE_CUES: readonly QuizshowCue[] = ["timeAlmostUp", "reveal"];
-const KNOWN_ERROR_CODES: ReadonlySet<string> = new Set(QUIZSHOW_ERROR_CODES);
 /** Stays mounted while the players panel folds, so the toggle's aria-controls always resolves. */
 const PLAYERS_PANEL_ID = "quizshow-remote-players-panel";
-
-function refusalKeyOf(refusalCode: QuizshowClientState["refusalCode"]): string {
-  if (refusalCode !== null && KNOWN_ERROR_CODES.has(refusalCode)) {
-    return quizshowErrorKeyOf(refusalCode as QuizshowErrorCode);
-  }
-  return "quizshow:errors.generic";
-}
 
 /**
  * The phase's standard limit in ms, so a countdown bar that mounts during a
@@ -360,8 +351,14 @@ export function QuizshowRemoteView({
   const { demoMode } = useDemoMode();
   const [barHeight, setBarHeight] = useState(0);
   useQuizshowFramelessPage();
-  const { isOrganizer, isLoading, sessionId, errorCode, hasLoadFailed } =
-    hostSession;
+  const {
+    isOrganizer,
+    isLoading,
+    sessionId,
+    errorCode,
+    hasLoadFailed,
+    loadError,
+  } = hostSession;
   // The design review's switch to see team UI in demo; otherwise the open session's mode.
   const playMode: QuizshowPlayMode =
     demoMode && searchParams.get("demoPlayMode") === "teams"
@@ -400,7 +397,7 @@ export function QuizshowRemoteView({
   else if (errorCode !== null)
     view = { kind: "message", messageKey: quizshowErrorKeyOf(errorCode) };
   else if (hasLoadFailed)
-    view = { kind: "message", messageKey: "quizshow:errors.generic" };
+    view = { kind: "message", messageKey: quizshowLoadFailureKeyOf(loadError) };
   else if (!isOrganizer)
     view = { kind: "message", messageKey: "quizshow:errors.not_organiser" };
   // A demo game with no open lobby has no session to drive either; the demo event always has one.
@@ -410,7 +407,10 @@ export function QuizshowRemoteView({
   )
     view = { kind: "message", messageKey: hostSession.noGameKeys.remote };
   else if (state.status === "refused")
-    view = { kind: "message", messageKey: refusalKeyOf(state.refusalCode) };
+    view = {
+      kind: "message",
+      messageKey: quizshowRefusalKeyOf(state.refusalCode),
+    };
   else if (session !== null) view = { kind: "console", session };
   const viewKey = view.kind === "message" ? view.messageKey : view.kind;
   // The measured control bar, so the last section always clears it; 0 keeps the CSS fallback.

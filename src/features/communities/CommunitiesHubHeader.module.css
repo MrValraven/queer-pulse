@@ -5,24 +5,38 @@
 
 /* PRD-140. The only route to the invitations shelf. Rendered only when an
    invitation is waiting, so it reads as news. */
+/* The waiting-on-you links under the lead, side by side, wrapping on a phone. */
+.hubLinks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+/* A 44px tap target. The hover underline sits on the text itself, so it
+   stays under the words at any target height. */
 .invitesLink {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: var(--tap-min);
   font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
+  text-decoration: underline transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-fast) var(--ease);
 }
 
-.invitesLink:hover {
-  border-bottom-color: currentColor;
+@media (hover: hover) {
+  .invitesLink:hover {
+    text-decoration-color: currentColor;
+  }
 }
 
 .invitesLink:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   border-radius: var(--radius-4);
 }
 

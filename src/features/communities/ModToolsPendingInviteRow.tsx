@@ -1,6 +1,6 @@
 import { Button, MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { memberRefToPerson } from "../../shared/api/refs";
+import { isInactiveMemberRef, memberRefToPerson } from "../../shared/api/refs";
 import type { CommunityPendingInviteDTO } from "./api/communityInvites.api";
 import styles from "./ModToolsPanels.module.css";
 
@@ -31,8 +31,8 @@ export function ModToolsPendingInviteRow({
   formatDate: (iso: string) => string;
 }) {
   const { t } = useTranslation();
-  const member = memberRefToPerson(invite.member);
-  const inviter = memberRefToPerson(invite.invitedBy);
+  const member = memberRefToPerson(invite.member, t);
+  const inviter = memberRefToPerson(invite.invitedBy, t);
   // A member ref with both name parts blank still has to render as somebody,
   // and the profile slug is the one identifier it always carries.
   const memberName = member?.name || invite.member.slug;
@@ -46,6 +46,7 @@ export function ModToolsPendingInviteRow({
             slug: invite.member.slug,
             name: memberName,
             avatarUrl: member?.avatarUrl ?? undefined,
+            isInactiveMember: isInactiveMemberRef(invite.member),
           }}
           size={36}
         />

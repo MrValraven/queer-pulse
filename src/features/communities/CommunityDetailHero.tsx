@@ -170,6 +170,7 @@ export function CommunityDetailHero({
             community={community}
             communitySlug={communitySlug}
             joined={joined}
+            isSpace={parent != null}
             heroAvatars={heroAvatars}
             memberNum={memberNum}
             hasCount={hasCount}

@@ -3844,21 +3844,11 @@ export const admin: Catalog = {
   "modPanel.settings.archive.confirm.body":
     "Isto encerra a comunidade para todas as pessoas. Mantêm o histórico, mas ela desaparece da descoberta e ninguém pode publicar. Só tu, como fundadora, podes fazer isto.",
   "modPanel.settings.archive.confirm.cta": "Sim, arquivar",
-  "modPanel.settings.transfer.title": "Transferir propriedade",
-  "modPanel.settings.transfer.desc":
-    "Entrega a comunidade a outra pessoa. Passas a moderadora.",
-  "modPanel.settings.transfer.cta": "Transferir",
-  "modPanel.settings.transfer.toast":
-    "Propriedade transferida. Passaste a moderadora aqui.",
-  "modPanel.settings.transfer.modal.title": "Transferir propriedade",
-  "modPanel.settings.transfer.modal.body":
-    "Escolhe a pessoa que se vai tornar responsável. Ficas como moderadora.",
   "modPanel.settings.transfer.modal.pickLabel":
-    "Escolhe a nova pessoa responsável",
+    "Escolhe a quem oferecer a gestão",
   "modPanel.settings.transfer.modal.emptyTitle": "Ainda não há a quem entregar",
   "modPanel.settings.transfer.modal.emptyDesc":
-    "Precisas de pelo menos mais uma pessoa antes de poder transferir a propriedade.",
-  "modPanel.settings.transfer.modal.cta": "Transferir propriedade",
+    "Precisas de pelo menos mais uma pessoa na comunidade antes de poderes oferecer a gestão.",
 
   // ── Rede de votos de confiança (visualização da rede de confiança) ─────────
   "vouchGraph.modes.network": "Rede",
@@ -10668,6 +10658,13 @@ export const admin: Catalog = {
   "culturalProduction.tasks.statusView.withCount": "{status} ({count})",
   "culturalProduction.tasks.count_one": "{count} tarefa",
   "culturalProduction.tasks.count_other": "{count} tarefas",
+  "culturalProduction.tasks.columns.task": "Tarefa",
+  "culturalProduction.tasks.columns.due": "Prazo",
+  "culturalProduction.tasks.columns.status": "Estado",
+  "culturalProduction.tasks.columns.assignees": "Responsáveis",
+  "culturalProduction.tasks.group.toggleAria_one": "{status}, {count} tarefa",
+  "culturalProduction.tasks.group.toggleAria_other":
+    "{status}, {count} tarefas",
   "culturalProduction.tasks.truncated": "A mostrar as primeiras 500 tarefas",
   "culturalProduction.tasks.loadError.title":
     "Não conseguimos carregar as tarefas",
@@ -10975,4 +10972,21 @@ export const admin: Catalog = {
     "Não podes fazer alterações enquanto houver uma restrição de moderação na tua conta",
   "culturalProduction.failure.unknown":
     "Isto não seguiu e o servidor não indicou o motivo. Tenta de novo",
+  "moderation.refusal.reportAboutYou":
+    "Esta denúncia é sobre ti ou sobre algo que publicaste, por isso outra pessoa da equipa vai abri-la e decidir.",
+  "members.suspension.confirm.noteLabel": "Porque é que a estás a levantar",
+  "members.suspension.confirm.notePlaceholder":
+    "Diz o que mudou. Isto fica no registo de auditoria com o teu nome.",
+  "members.suspension.missingNoteToast":
+    "Escreve porque estás a levantar a suspensão antes de confirmares.",
+  "listingClaims.errors.claim_reviewer_is_claimant":
+    "Foste tu que fizeste este pedido, por isso tem de ser outra pessoa a decidir.",
+  "listingClaims.errors.reviewFailed": "O pedido não ficou decidido",
+  "members.row.ariaLabelNoReports": "Abrir {name}: {status}, {role}",
+  "governance.audit.actionType.housing_group_create":
+    "Grupo de habitação criado",
+  "governance.audit.actionType.housing_group_update":
+    "Grupo de habitação editado",
+  "platformLog.kind.mod.housing_group_create": "criou um grupo de habitação",
+  "platformLog.kind.mod.housing_group_update": "editou um grupo de habitação",
 };

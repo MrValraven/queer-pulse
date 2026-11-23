@@ -297,19 +297,29 @@ export const system: Catalog = {
   "pwaPrompt.tabs.ios": "iPhone",
   "pwaPrompt.tabs.android": "Android",
   "pwaPrompt.tabs.desktop": "Desktop",
-  "pwaPrompt.instructions.ios.title": "iPhone · Safari · 3 taps",
+  // iOS 26 Safari tucks Share behind the three-dot More button in its default
+  // compact layout; the other layouts, and Chrome, Edge and Firefox on iOS
+  // 16.4+, show Share in the toolbar or address bar. Step 1 covers both.
+  "pwaPrompt.instructions.ios.title": "iPhone & iPad · Safari, Chrome & more",
   "pwaPrompt.instructions.ios.step1":
-    "Tap the <b>Share</b> icon at the bottom of Safari",
+    "Tap <b>Share</b> in the toolbar, or tap the <b>three dots</b> first and then <b>Share</b>",
   "pwaPrompt.instructions.ios.step2":
-    "Scroll & tap <b>Add to Home Screen</b> <em>· near the bottom</em>",
-  "pwaPrompt.instructions.ios.step3": "Tap <b>Add</b> in the top-right. Done.",
-  "pwaPrompt.instructions.android.title": "Android · Chrome & Firefox · 2 taps",
+    "Tap <b>Add to Home Screen</b> <em>· scroll down the list if you don't see it</em>",
+  "pwaPrompt.instructions.ios.step3":
+    "Keep <b>Open as Web App</b> on if you see it, then tap <b>Add</b>",
+  "pwaPrompt.instructions.android.title": "Android · Chrome & Samsung Internet",
   "pwaPrompt.instructions.android.step1":
-    "Tap the <b>three-dot menu</b> top-right",
+    "Open the browser menu: the <b>three dots</b> in Chrome, the <b>three lines</b> in Samsung Internet",
   "pwaPrompt.instructions.android.step2":
-    "Choose <b>Install app</b> or <b>Add to home screen</b>",
+    "Tap <b>Install app</b> or <b>Add to home screen</b> <em>· in Samsung Internet, Add page to, then Home screen</em>",
   "pwaPrompt.instructions.android.step3":
-    "Confirm · QueerPulse will appear with your other apps. <em>Works the same.</em>",
+    "Tap <b>Install</b> and QueerPulse joins your other apps",
+  // Shown first inside a social app's built-in browser (Instagram, Facebook,
+  // TikTok and the like), which cannot install a web app at all.
+  "pwaPrompt.instructions.inApp.iosStep":
+    "Tap the <b>three dots</b> menu and choose <b>Open in Safari</b> <em>· or Open in browser</em>",
+  "pwaPrompt.instructions.inApp.androidStep":
+    "Tap the <b>three dots</b> menu and choose <b>Open in Chrome</b> <em>· or Open in browser</em>",
   "pwaPrompt.instructions.desktop.title": "Desktop · Chrome & Edge",
   "pwaPrompt.instructions.desktop.step1":
     "Look for the <b>install icon</b> in the address bar (right side)",
@@ -321,8 +331,6 @@ export const system: Catalog = {
   "pwaPrompt.laterCta": "Maybe later",
   "pwaPrompt.actionsFoot":
     "Snoozing this stops us asking on this device for <b>30 days</b>.",
-  "pwaPrompt.toast.installHint":
-    "Look for the install prompt · usually top-right",
   "pwaPrompt.toast.snoozed": "Won't ask again for 30 days",
 
   // ── InstallNudge.tsx / PushNotificationRow.tsx ───────────────────────────
@@ -340,7 +348,8 @@ export const system: Catalog = {
   "pwaInstall.nudge.bodyIos":
     "Add it to your Home Screen to get notifications. Takes about 30 seconds.",
   "pwaInstall.nudge.cta": "Show me how",
-  "pwaInstall.nudge.dismiss": "Dismiss the install suggestion",
+  "pwaInstall.nudge.install": "Install",
+  "pwaInstall.nudge.notNow": "Not now",
 
   // ── StatusPage.tsx / StatusComponents.tsx / status.data.ts ───────────────
   "status.hero.allOperational": "All systems operational",

@@ -353,6 +353,8 @@ function LivingHubTabContent({
           total={living.stats.members}
           slug={living.slug}
           paging={rosterPaging}
+          viewerRole={role}
+          isSpace={living.parent !== null}
         />
       )}
       {active === "events" && (

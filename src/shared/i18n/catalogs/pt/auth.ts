@@ -61,7 +61,7 @@ export const auth: Catalog = {
     "Este endereço já está associado a uma conta QueerPulse, por isso não podemos abrir uma segunda. Entra com um código enviado para este endereço, ou com a conta Google com que entraste da primeira vez.",
   "signIn.notice.oauthFailed.title": "Algo correu mal",
   "signIn.notice.oauthFailed.body":
-    "O início de sessão não terminou do lado da Google. Nada foi alterado, tenta outra vez daqui a pouco.",
+    "O início de sessão parou antes de terminar. Nada foi alterado. Tenta outra vez daqui a pouco.",
   "signIn.notice.offline.title": "Estás offline",
   "signIn.notice.offline.body":
     "Não conseguimos chegar ao QueerPulse sem ligação. Verifica o teu Wi-Fi ou dados móveis e tenta novamente.",
@@ -326,7 +326,7 @@ export const auth: Catalog = {
   "emailCode.error.codeExpired":
     "Este código expirou. Os códigos são válidos durante 10 minutos, por isso envia um novo.",
   "emailCode.error.codeUsedUp":
-    "Essa foi a quinta tentativa errada, por isso este código deixou de funcionar. Envia um novo código para tentares outra vez.",
+    "Essa foi a terceira tentativa errada, por isso este código deixou de funcionar. Envia um novo código para tentares outra vez.",
   "emailCode.error.codeReplaced":
     "Pediste um código mais recente, por isso este deixou de funcionar. Usa o código do email mais recente.",
   "emailCode.error.codeAlreadyUsed":
@@ -412,10 +412,6 @@ export const auth: Catalog = {
     "Li as <guidelines>diretrizes da comunidade</guidelines> e estou aqui de boa-fé.",
   "requestInvite.readHint":
     "Abre as diretrizes e lê até ao fim para continuar.",
-  "requestInvite.submit": "Enviar o meu pedido",
-  "requestInvite.sending": "A enviar o teu pedido…",
-  "requestInvite.submitError":
-    "Não foi possível enviar o teu pedido. Tenta outra vez",
   // 429: o formulário público tem um limite de 3 pedidos/hora por IP. Tentar
   // de imediato não vai resultar, por isso a mensagem define a expectativa
   // com clareza em vez de convidar a essa tentativa.
@@ -942,4 +938,37 @@ export const auth: Catalog = {
     "Agora que já estás à vontade, há mais coisas para experimentares. Cada uma dá-te um emblema ou uma vantagem no fim.",
   "gettingStarted.sideQuests.cta": "Começar",
   "gettingStarted.sideQuests.showMore": "Mostrar mais {count}",
+  "requestInvite.codeStep.lead":
+    "Antes de o teu pedido chegar à nossa equipa, confirma que este email é teu.",
+  "requestInvite.codeStep.verifyCta":
+    "Verificar o código e enviar o meu pedido",
+  "requestInvite.codesOff.title":
+    "Os pedidos de convite estão em pausa por agora",
+  "requestInvite.codesOff.body":
+    "Confirmamos cada pedido com um código enviado para o teu email, e neste momento não conseguimos enviar esses códigos. Volta a tentar daqui a pouco.",
+  "requestInvite.codeError.emailCodeUnavailable":
+    "Neste momento não conseguimos enviar códigos de confirmação, por isso o teu pedido ainda não pode seguir. Tenta outra vez daqui a pouco.",
+  "requestInvite.codeError.codeAlreadyUsed":
+    "Este código já foi usado. Pede um código novo para enviares o teu pedido.",
+  "requestInvite.codeError.networkBusy":
+    "Foram pedidos muitos códigos a partir desta rede. Podes tentar outra vez às {time}.",
+  "signIn.notice.invalidState.title": "Este início de sessão expirou",
+  "signIn.notice.invalidState.body":
+    "O início de sessão começou há mais de 10 minutos ou noutro navegador, por isso parámos para proteger a tua conta. Começa outra vez a partir desta página.",
+  "signIn.notice.adminPolicy.title": "A tua organização bloqueia esta app",
+  "signIn.notice.adminPolicy.body":
+    "O administrador do teu Google Workspace não permite o QueerPulse nesta conta. Pede-lhe para o autorizar ou inicia sessão com uma conta Google pessoal.",
+  "signIn.notice.googleServerError.title": "A Google teve um erro",
+  "signIn.notice.googleServerError.body":
+    "A Google reportou um problema do lado dela enquanto iniciava a tua sessão. Nada foi alterado. Tenta outra vez daqui a pouco.",
+  "signIn.notice.googleUnavailable.title":
+    "O início de sessão com Google está ocupado",
+  "signIn.notice.googleUnavailable.body":
+    "A Google pediu-nos para tentar mais tarde. Espera uns minutos e tenta outra vez.",
+  "signIn.notice.googleSetup.title":
+    "O início de sessão com Google precisa de uma correção do nosso lado",
+  "signIn.notice.googleSetup.body":
+    "A Google recusou a forma como lhe pedimos para iniciar a tua sessão. Isso é connosco. Tenta outra vez mais tarde.",
+  "requestInvite.codesOffSub":
+    "O QueerPulse cresce através de confiança. A forma mais certa de entrar é receberes um voto de confiança de uma pessoa que já cá está, por isso se conheces alguém aqui, pede-lhe um convite.",
 };

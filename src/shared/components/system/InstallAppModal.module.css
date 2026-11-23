@@ -1,3 +1,10 @@
+.note {
+  margin: 0 0 12px;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
 .howto {
   padding: 16px 18px;
   background: var(--cream);
@@ -13,23 +20,45 @@
   margin-bottom: 10px;
 }
 
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each step is one row: a round number badge, then the instruction. The badge
+   gives the eye a column to run down, so the member can find their place again
+   after switching to the browser's menu and back. */
 .step {
   display: grid;
   grid-template-columns: 24px 1fr;
-  gap: 10px;
-  padding: 7px 0;
+  align-items: start;
+  gap: 12px;
+  padding: 8px 0;
   font-size: var(--text-13-5);
   color: var(--ink);
   line-height: 1.55;
 }
 
-.stepN {
+.step + .step {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.stepNumber {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
   font-family: var(--serif);
   font-weight: 500;
-  font-size: var(--text-16);
-  color: var(--accent);
+  font-size: var(--text-13);
   line-height: 1;
-  padding-top: 1px;
+  /* The text beside it runs 13.5px at 1.55, so its first line box is about
+     21px tall; this raises the 24px badge until both centres meet. */
+  margin-top: -1.5px;
 }
 
 .step b {
@@ -42,7 +71,7 @@
   color: var(--accent-ink);
 }
 
-.installBtn {
+.footerButton {
   width: 100%;
   justify-content: center;
 }

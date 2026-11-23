@@ -521,4 +521,16 @@ export const myevents: Catalog = {
   "toast.leftWaitlist": "You've left the waitlist.",
   "toast.skippedThisOne": "Skipped this one. You're still in the series.",
   "toast.leftWholeSeries": "Left the whole series.",
+  "card.joinLinkReadyToast":
+    "Your link is ready. Press Join link again to open the room",
+  "calSubscribe.resetTitle": "Reset calendar link",
+  "calSubscribe.resetSub": "Calendars on your old link stop updating",
+  "calSubscribe.resetConfirmTitle": "Reset your calendar link?",
+  "calSubscribe.resetConfirmBody":
+    "Every calendar app that uses your current link stops updating right away. You get a new link copied to your clipboard, and you add it again in Google or Apple Calendar.",
+  "calSubscribe.resetConfirmLabel": "Reset calendar link",
+  "calSubscribe.resetToast":
+    "New feed link copied. Calendars on your old link no longer update.",
+  "calSubscribe.resetMintFailToast":
+    "Your old calendar link is switched off, but we could not create a new one. Choose Subscribe to your feed to get a new link.",
 };

@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { INACTIVE_MEMBER_LABEL_KEY } from "../../shared/api/refs";
 import { AvatarStack } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -134,9 +135,11 @@ export function LiveNewMembersGroupCard({
   weekStart: string;
   isContinuation?: boolean;
 }) {
+  const { t } = useTranslation();
+  const inactiveLabel = t(INACTIVE_MEMBER_LABEL_KEY);
   return (
     <NewMembersGroupCard
-      members={items.map(feedItemToNewMemberRow)}
+      members={items.map((item) => feedItemToNewMemberRow(item, inactiveLabel))}
       weekStart={weekStart}
       isContinuation={isContinuation}
     />

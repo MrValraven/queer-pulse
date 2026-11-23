@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { AddMonthSharedTimes } from "./AddMonthSharedTimes";
+import type { TemplateEndSpan } from "./addMonthDates";
 import type { AddMonthTimes } from "./addMonthState";
 import { awaitCatalog } from "../../../test/awaitCatalog";
 
@@ -29,13 +30,18 @@ const DEVICE_ZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const OTHER_ZONE =
   DEVICE_ZONE === "Pacific/Auckland" ? "America/Lima" : "Pacific/Auckland";
 
-async function renderTimes(times: AddMonthTimes, timezone = DEVICE_ZONE) {
+async function renderTimes(
+  times: AddMonthTimes,
+  timezone = DEVICE_ZONE,
+  templateSpan: TemplateEndSpan | null = null,
+) {
   const onChange = vi.fn();
   render(
     <TestProviders>
       <AddMonthSharedTimes
         times={times}
         timezone={timezone}
+        templateSpan={templateSpan}
         onChange={onChange}
       />
     </TestProviders>,
@@ -87,6 +93,14 @@ describe("AddMonthSharedTimes", () => {
   it("says the event ends the next day when the end is at or before the start", async () => {
     await renderTimes({ startTime: "22:00", endTime: "03:00" });
     expect(screen.getByText("Ends the next day")).toBeInTheDocument();
+  });
+
+  it("says how many days later a weekend event ends while the end is its own (PRD-518)", async () => {
+    await renderTimes({ startTime: "21:00", endTime: "02:00" }, DEVICE_ZONE, {
+      endTime: "02:00",
+      endDayOffset: 2,
+    });
+    expect(screen.getByText("Ends 2 days later")).toBeInTheDocument();
   });
 
   it("stays quiet about the next day when the end is later the same day", async () => {

@@ -4,7 +4,10 @@ import {
   gatheringPath,
   gatheringSlugFromParam,
 } from "../../gatherings/gatheringPaths";
-import { quizshowErrorCodeOf } from "../api/quizshowErrors";
+import {
+  isQuizshowEventMissing,
+  quizshowErrorCodeOf,
+} from "../api/quizshowErrors";
 import { useQuizshowQuiz } from "../api/useQuizshowQuiz";
 import { QUIZSHOW_DEMO_SESSION_ID } from "../quizshow.constants";
 import { eventScope, quizshowScopeKey } from "../quizshowScope";
@@ -42,7 +45,9 @@ export function useQuizshowEventSession(
     ? null
     : (quizshowErrorCodeOf(quizQuery.error) ??
       quizshowErrorCodeOf(eventQuery.error) ??
-      (eventQuery.isError ? "quizshow_event_not_found" : null));
+      (isQuizshowEventMissing(eventQuery.error)
+        ? "quizshow_event_not_found"
+        : null));
   const isLoading =
     eventQuery.isLoading || (isOrganizer && quizQuery.isLoading);
 
@@ -67,6 +72,9 @@ export function useQuizshowEventSession(
     sessionId,
     errorCode,
     hasLoadFailed: !isSessionHeld && (eventQuery.isError || quizQuery.isError),
+    loadError: isSessionHeld
+      ? undefined
+      : (quizQuery.error ?? eventQuery.error ?? undefined),
     playMode: liveSession?.playMode ?? "solo",
   };
 }

@@ -9,6 +9,7 @@ import {
   postDtoToPost,
   postToThread,
   pulseEventToCommunityEvent,
+  rosterEntryToRosterMember,
   threadHeadingFromBody,
 } from "./communities.adapters";
 import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
@@ -16,7 +17,12 @@ import { createFormatters } from "../../../shared/i18n/format";
 import { studioShareLabelKey } from "../../studio/share/studioShareLabel";
 import type { Catalog, TFunction } from "../../../shared/i18n/types";
 import type { Post } from "../community.model";
-import type { CommunityDetailDTO, CommunityPostDTO } from "./communities.api";
+import type {
+  CommunityDetailDTO,
+  CommunityPostDTO,
+  RosterEntryDTO,
+} from "./communities.api";
+import type { CommunityFlairDTO } from "../badges/api/communityBadges.api";
 
 // The adapters localize their own copy now, so they take a `t`. The stub
 // echoes the key: these assertions are about the post/reply FLAGS, not copy.
@@ -71,6 +77,8 @@ function post(overrides: Partial<CommunityPostDTO> = {}): CommunityPostDTO {
   return {
     id: "post-42",
     author: { slug: "rita", firstName: "Rita", lastName: "V", avatarUrl: null },
+    authorFlair: null,
+    authorHasRecentGift: false,
     body: "hello world",
     image: null,
     kind: "post",
@@ -92,6 +100,8 @@ function post(overrides: Partial<CommunityPostDTO> = {}): CommunityPostDTO {
           lastName: "T",
           avatarUrl: null,
         },
+        authorFlair: null,
+        authorHasRecentGift: false,
         text: "nice",
         createdAt: "2026-07-23T10:05:00Z",
         editedAt: null,
@@ -124,6 +134,118 @@ describe("communities adapters carry the post/reply flags", () => {
     expect(thread.canDelete).toBe(true);
     expect(thread.replies[0]?.id).toBe("reply-1");
     expect(thread.replies[0]?.canEdit).toBe(false);
+  });
+});
+
+const regularFlair: CommunityFlairDTO = {
+  name: "Regular",
+  starterKey: "regular",
+  iconKey: "calendar",
+  tint: "jade",
+};
+
+function rosterEntry(overrides: Partial<RosterEntryDTO> = {}): RosterEntryDTO {
+  return {
+    member: { slug: "rita", firstName: "Rita", lastName: "V", avatarUrl: null },
+    role: "member",
+    flair: null,
+    hasRecentGift: false,
+    joinedAt: "2026-07-01T10:00:00Z",
+    ...overrides,
+  };
+}
+
+describe("communities adapters carry the name-line badge fields", () => {
+  it("carries the roster row's worn badge and gift mark", () => {
+    const member = rosterEntryToRosterMember(
+      rosterEntry({ flair: regularFlair, hasRecentGift: true }),
+      translate,
+    );
+    expect(member.flair).toEqual(regularFlair);
+    expect(member.hasRecentGift).toBe(true);
+  });
+
+  it("puts the post author's badge on the author", () => {
+    const mapped = postDtoToPost(
+      post({ authorFlair: regularFlair, authorHasRecentGift: true }),
+      "queer-runners",
+      translate,
+    );
+    expect(mapped.author.flair).toEqual(regularFlair);
+    expect(mapped.author.hasRecentGift).toBe(true);
+  });
+
+  it("puts each reply author's badge on the reply author", () => {
+    const base = post();
+    const mapped = postDtoToPost(
+      post({
+        replies: [
+          {
+            ...base.replies[0]!,
+            authorFlair: regularFlair,
+            authorHasRecentGift: true,
+          },
+        ],
+      }),
+      "queer-runners",
+      translate,
+    );
+    expect(mapped.replies[0]?.author.flair).toEqual(regularFlair);
+    expect(mapped.replies[0]?.author.hasRecentGift).toBe(true);
+  });
+
+  it("keeps the badge on a thread reply", () => {
+    const base = post();
+    const thread = postToThread(
+      postDtoToPost(
+        post({
+          replies: [
+            {
+              ...base.replies[0]!,
+              authorFlair: regularFlair,
+              authorHasRecentGift: true,
+            },
+          ],
+        }),
+        "queer-runners",
+        translate,
+      ),
+      translate,
+    );
+    expect(thread.replies[0]?.flair).toEqual(regularFlair);
+    expect(thread.replies[0]?.hasRecentGift).toBe(true);
+  });
+
+  it("reads missing badge fields as none", () => {
+    // A frontend that ships before the backend receives DTOs without the fields.
+    const {
+      flair: _flair,
+      hasRecentGift: _gift,
+      ...legacyEntry
+    } = rosterEntry();
+    const member = rosterEntryToRosterMember(
+      legacyEntry as RosterEntryDTO,
+      translate,
+    );
+    expect(member.flair).toBeNull();
+    expect(member.hasRecentGift).toBe(false);
+
+    const base = post();
+    const {
+      authorFlair: _postFlair,
+      authorHasRecentGift: _postGift,
+      ...legacyPost
+    } = base;
+    const mapped = postDtoToPost(
+      {
+        ...legacyPost,
+        replies: [],
+      } as unknown as CommunityPostDTO,
+      "queer-runners",
+      translate,
+    );
+    expect(mapped.author.flair).toBeNull();
+    expect(mapped.author.hasRecentGift).toBe(false);
   });
 });
 

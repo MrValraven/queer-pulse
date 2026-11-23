@@ -91,14 +91,12 @@ export function DeleteAccountSection({
   // blocker and unmounts with it.
   const pageTitleRef = useRef<HTMLHeadingElement>(null);
 
-  // Erasure strands anything only this member can hand over. Fail closed:
-  // while the two sources are still resolving, treat erasure as blocked rather
-  // than briefly allowing it before the first fetch lands. Pausing is
-  // reversible and strands nothing, so it is never blocked.
+  // Nothing the member owns blocks erasure: the gate below lists what it hands
+  // on. Fail closed only while the check is still resolving, so erasure is
+  // never offered before the member can see that list. Pausing is reversible
+  // and hands nothing on, so it is never held.
   const dependencies = useAccountDependencies();
-  const isEraseBlocked =
-    option === "delete" &&
-    (dependencies.isLoading || dependencies.hasDependencies);
+  const isEraseBlocked = option === "delete" && dependencies.isLoading;
 
   const content = DELETE_CONTENT[option];
   const confirmPhrase = content.phraseKey ? t(content.phraseKey) : null;
@@ -237,8 +235,8 @@ export function DeleteAccountSection({
         onSubmit={handleSubmit}
       />
 
-      {isEraseBlocked && !dependencies.isLoading && (
-        <p className={styles.pageSub}>
+      {isEraseBlocked && (
+        <p className={styles.pageSub} role="status">
           {t("members:profile.accountData.stepAway.erase.disabledHint")}
         </p>
       )}

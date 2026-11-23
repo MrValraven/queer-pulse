@@ -9,6 +9,8 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Avatar } from "../ui";
+import { OwnershipOfferTriggerDot } from "../../../features/communities/OwnershipOfferTriggerDot";
+import { useWaitingOwnershipOfferCount } from "../../../features/communities/useCommunityOwnershipOfferBadge";
 import { MEMBER_TABS, PUBLIC_TABS, activeTabKey } from "./bottomTabs";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { useIsLandingVisitor } from "./useIsLandingVisitor";
@@ -35,6 +37,15 @@ export function BottomTabBar() {
   const isLinkVisible = useIsLinkVisible();
   const { initials, photo } = useAccountIdentity();
   const isLandingVisitor = useIsLandingVisitor();
+  // Ownership offers waiting on this member put a dot on the You tab, and the
+  // tab's name says how many, since its aria-label replaces its content.
+  const waitingOfferCount = useWaitingOwnershipOfferCount();
+  const accountLabel =
+    waitingOfferCount > 0
+      ? `${t("nav:account")}, ${t("communities:ownershipOffer.badgeLabel", {
+          count: waitingOfferCount,
+        })}`
+      : t("nav:account");
 
   // A signed-out visitor on the landing page gets the page itself as the
   // navigation: LandingNav carries sign-in, and the hero carries the invite.
@@ -119,17 +130,20 @@ export function BottomTabBar() {
           }
           aria-haspopup="dialog"
           aria-expanded={activeSheet === "account"}
-          aria-label={t("nav:account")}
+          aria-label={accountLabel}
           {...{ [NAV_DRAWER_TRIGGER_ATTRIBUTE]: "" }}
         >
-          <Avatar
-            initials={initials}
-            src={photo ?? undefined}
-            alt=""
-            tint="coral"
-            size={24}
-            className={styles.tabAvatar}
-          />
+          <span className={styles.avatarSlot}>
+            <Avatar
+              initials={initials}
+              src={photo ?? undefined}
+              alt=""
+              tint="coral"
+              size={24}
+              className={styles.tabAvatar}
+            />
+            <OwnershipOfferTriggerDot className={styles.offerDot} />
+          </span>
           <span className={styles.label}>{t("nav:you")}</span>
         </button>
       )}

@@ -1,4 +1,8 @@
 import { Badge, Button, MemberIdentity } from "../../shared/components/ui";
+import {
+  INACTIVE_MEMBER_LABEL_KEY,
+  isInactiveMemberRef,
+} from "../../shared/api/refs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CommunityBanDTO } from "./api/communityBans.api";
 import { CommunityRuleCitation } from "./CommunityRuleCitation";
@@ -9,8 +13,10 @@ import styles from "./ModToolsPanels.module.css";
 function banMemberName(
   ref: CommunityBanDTO["member"],
   fallback: string,
+  inactiveLabel: string,
 ): string {
   if (!ref) return fallback;
+  if (isInactiveMemberRef(ref)) return inactiveLabel;
   return `${ref.firstName} ${ref.lastName}`.trim() || fallback;
 }
 
@@ -46,6 +52,7 @@ export function BanRow({
   const memberName = banMemberName(
     ban.member,
     t("communities:detail.modtools.bans.formerMember"),
+    t(INACTIVE_MEMBER_LABEL_KEY),
   );
   const when = formatDate(ban.createdAt);
 
@@ -57,6 +64,7 @@ export function BanRow({
             slug: ban.member?.slug,
             name: memberName,
             avatarUrl: ban.member?.avatarUrl ?? undefined,
+            isInactiveMember: isInactiveMemberRef(ban.member),
           }}
           size={36}
         />
@@ -66,6 +74,7 @@ export function BanRow({
                 name: banMemberName(
                   ban.bannedBy,
                   t("communities:detail.modtools.bans.formerMember"),
+                  t(INACTIVE_MEMBER_LABEL_KEY),
                 ),
                 date: when,
               })

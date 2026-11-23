@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { sx } from "./myEvents.styles";
+import { ConfirmDialog } from "../../shared/components/ui/ConfirmDialog";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { getCalendarFeedUrl } from "./api/calendarFeed.api";
+import {
+  getCalendarFeedUrl,
+  revokeCalendarFeedToken,
+} from "./api/calendarFeed.api";
 import { useMyEvents } from "./MyEventsContext";
 import { isInMonth } from "./myEvents.helpers";
 import { downloadICS } from "./myEvents.ics";
@@ -15,6 +20,19 @@ export function CalendarSubscribe() {
   const { demoMode } = useDemoMode();
   const { toast, viewM, viewY, events } = useMyEvents();
   const monthLong = fmt.date(new Date(viewY, viewM, 1), { month: "long" });
+  const copyFeedUrl = async (url: string, successMessage: string) => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      toast(t("myevents:calSubscribe.feedCopyFailToast"), "info");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast(successMessage, "success");
+    } catch {
+      // The browser refused the clipboard write; the link itself was made.
+      toast(t("myevents:calSubscribe.feedCopyFailToast"), "info");
+    }
+  };
   // Demo mode has no real backend token to mint, so it keeps the toast-only
   // affordance the prototype always had; live mode mints the caller's real
   // signed feed URL (`GET /me/calendar-feed-token`) and copies IT — a real,
@@ -33,17 +51,31 @@ export function CalendarSubscribe() {
       toast(myEventsActionErrorMessage(error, t), "error");
       return;
     }
-    if (typeof navigator === "undefined" || !navigator.clipboard) {
-      toast(t("myevents:calSubscribe.feedCopyFailToast"), "info");
+    await copyFeedUrl(url, t("myevents:calSubscribe.feedToast"));
+  };
+  // SEC-18. Switches the current feed URL off (`DELETE /me/calendar-feed-token`)
+  // and mints a fresh one, so a leaked link stops publishing the member's
+  // events. Two steps with their own failure lines: when only the second step
+  // fails the old link is already dead, and the toast says so.
+  const resetFeedLink = async () => {
+    if (demoMode) {
+      toast(t("myevents:calSubscribe.resetToast"), "success");
       return;
     }
     try {
-      await navigator.clipboard.writeText(url);
-      toast(t("myevents:calSubscribe.feedToast"), "success");
-    } catch {
-      // The browser refused the clipboard write; the link itself was made.
-      toast(t("myevents:calSubscribe.feedCopyFailToast"), "info");
+      await revokeCalendarFeedToken();
+    } catch (error) {
+      toast(myEventsActionErrorMessage(error, t), "error");
+      return;
     }
+    let url: string;
+    try {
+      url = await getCalendarFeedUrl();
+    } catch {
+      toast(t("myevents:calSubscribe.resetMintFailToast"), "error");
+      return;
+    }
+    await copyFeedUrl(url, t("myevents:calSubscribe.resetToast"));
   };
   const exportMonth = () => {
     // `isInMonth`, the same reading the grid and the agenda use, so the export
@@ -116,6 +148,61 @@ export function CalendarSubscribe() {
           </span>
         </span>
       </button>
+      <ResetFeedLinkButton onReset={resetFeedLink} />
     </div>
+  );
+}
+
+/** "Reset calendar link": asks first, because every calendar app on the
+ *  current link stops updating the moment the member confirms. */
+function ResetFeedLinkButton({ onReset }: { onReset: () => Promise<void> }) {
+  const { t } = useTranslation();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const confirmReset = async () => {
+    setIsResetting(true);
+    try {
+      await onReset();
+    } finally {
+      setIsResetting(false);
+      setIsConfirmOpen(false);
+    }
+  };
+  return (
+    <>
+      <button
+        type="button"
+        className={sx("cal-sub-btn")}
+        onClick={() => setIsConfirmOpen(true)}
+      >
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M13 8a5 5 0 1 1-1.5-3.5M13 2.5v2.5h-2.5" />
+        </svg>
+        <span className={sx("csb-t")}>
+          {t("myevents:calSubscribe.resetTitle")}
+          <span className={sx("csb-sub")}>
+            {t("myevents:calSubscribe.resetSub")}
+          </span>
+        </span>
+      </button>
+      <ConfirmDialog
+        open={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={() => void confirmReset()}
+        title={t("myevents:calSubscribe.resetConfirmTitle")}
+        description={t("myevents:calSubscribe.resetConfirmBody")}
+        confirmLabel={t("myevents:calSubscribe.resetConfirmLabel")}
+        loading={isResetting}
+        initialFocus="cancel"
+      />
+    </>
   );
 }

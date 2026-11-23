@@ -23,6 +23,19 @@ export function claimPerkErrorCopy(error: unknown): CauseErrorCopy {
   });
 }
 
+/** The coded 403 `GET /profiles/:slug/recognition` answers when the viewer
+ *  is held to the member's limited card (queerpulse-backend
+ *  `recognition/recognition.service.ts`, SEC-20). */
+export const PROFILE_LIMITED_CODE = "PROFILE_LIMITED";
+
+/** `GET /profiles/:slug/recognition`: `PROFILE_LIMITED` when level and badges
+ *  belong to a full profile this viewer cannot open. */
+export function recognitionErrorCopy(error: unknown): CauseErrorCopy {
+  return causeErrorKey(error, {
+    [PROFILE_LIMITED_CODE]: "members:profile.hero.recognitionLimited",
+  });
+}
+
 /** `PATCH /me/recognition/badges/:key/visibility`: 404 for a badge that does
  *  not exist or one the member has not earned. */
 export function badgeVisibilityErrorCopy(error: unknown): CauseErrorCopy {

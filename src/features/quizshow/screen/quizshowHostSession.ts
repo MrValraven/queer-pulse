@@ -37,6 +37,9 @@ export interface QuizshowHostSession {
   errorCode: QuizshowErrorCode | null;
   /** The event, game or quiz could not be read; `errorCode` holds the reason when the server named one. False while a session is held. */
   hasLoadFailed: boolean;
+  /** The error behind `hasLoadFailed`, so a page can tell an offline device or a server
+   *  fault from a refusal. Read it with `quizshowLoadFailureKeyOf`. */
+  loadError?: unknown;
   /** The open session's play mode; solo until a session says otherwise. */
   playMode: QuizshowPlayMode;
 }

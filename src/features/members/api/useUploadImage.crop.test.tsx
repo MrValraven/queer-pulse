@@ -63,6 +63,8 @@ vi.mock("./uploads.api", async (importOriginal) => {
       }),
     ),
     saveCrop: vi.fn(() => Promise.resolve(undefined)),
+    // SEC-43: the post-PUT check passes unless a test says otherwise.
+    confirmUpload: vi.fn(() => Promise.resolve(undefined)),
   };
 });
 
@@ -152,6 +154,10 @@ describe("useUploadImage (live mode) — crop persistence", () => {
 
     expect(resolved?.key).toBe("uploads/test-key.webp");
     expect(resolved?.crop).toEqual(NON_IDENTITY_CROP);
+    // SEC-43: the stored bytes are confirmed once the PUT resolved.
+    expect(uploadsApi.confirmUpload).toHaveBeenCalledWith(
+      "uploads/test-key.webp",
+    );
     await waitFor(() =>
       expect(uploadsApi.saveCrop).toHaveBeenCalledWith(
         "uploads/test-key.webp",
@@ -522,6 +528,38 @@ describe("useUploadImage (live mode): failure causes", () => {
     expect(await uploadFailure(useUploadImageLive, wrapper)).toMatchObject({
       i18nKey: "shared:apiError.refused",
       values: { status: 418 },
+    });
+  });
+});
+
+// SEC-43: a refusal from the post-PUT check names its own cause.
+describe("useUploadImage (live mode): stored-bytes confirmation", () => {
+  it("names a JPEG that still carries its location", async () => {
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+    } = await loadLive();
+    // The same module instance `causeErrorKey` checks against after the reset.
+    const { ApiError } = await import("../../../shared/api/client");
+    vi.mocked(uploadsApi.confirmUpload).mockRejectedValueOnce(
+      new ApiError(422, "x", { code: "UPLOAD_HAS_LOCATION_DATA" }),
+    );
+    const { result } = renderHook(() => useUploadImageLive("story-cover"), {
+      wrapper,
+    });
+
+    let refusal: unknown;
+    await act(async () => {
+      try {
+        await result.current(testFile());
+      } catch (error) {
+        refusal = error;
+      }
+    });
+
+    expect(refusal).toMatchObject({
+      i18nKey: "shared:apiError.uploadHasLocationData",
     });
   });
 });

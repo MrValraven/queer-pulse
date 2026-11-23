@@ -4,6 +4,8 @@ import { mediaMax } from "../../../shared/theme/breakpoints";
 import type {
   CulturalAssignedToFilter,
   CulturalTaskListDTO,
+  CulturalTaskListItemDTO,
+  CulturalTaskStatus,
 } from "./api/culturalProduction.types";
 import {
   DEFAULT_CULTURAL_TASK_STATUS_VIEW,
@@ -15,7 +17,51 @@ import type { TaskDueState } from "./taskDueState";
 const TASKS_PREFIX = "admin:culturalProduction.tasks";
 
 /** Row-shaped placeholders while the task list loads. */
-export const TASK_LIST_SKELETON_ROWS = [0, 1, 2, 3] as const;
+export const TASK_LIST_SKELETON_ROWS = [0, 1, 2, 3, 4] as const;
+
+/** The column names over a wide list, in the order the columns show. */
+export const TASK_COLUMN_KEYS = [
+  `${TASKS_PREFIX}.columns.task`,
+  `${TASKS_PREFIX}.columns.due`,
+  `${TASKS_PREFIX}.columns.status`,
+  `${TASKS_PREFIX}.columns.assignees`,
+] as const;
+
+/** The status groups each view splits its rows into, in the order they
+ *  show: Open reads what is moving first, then what waits; All adds the
+ *  done ones last. A single-status view has no groups. */
+export const TASK_GROUP_STATUSES: Record<
+  CulturalTaskStatusView,
+  readonly CulturalTaskStatus[] | null
+> = {
+  open: ["doing", "todo"],
+  all: ["doing", "todo", "done"],
+  todo: null,
+  doing: null,
+  done: null,
+};
+
+/** One status group of the list and its rows, in the list's own order. */
+export interface TaskListGroup {
+  status: CulturalTaskStatus;
+  tasks: CulturalTaskListItemDTO[];
+}
+
+/** The groups a view shows, each holding at least one row, or null when
+ *  the view spans a single status and the rows read as one run. */
+export function taskGroupsOf(
+  statusView: CulturalTaskStatusView,
+  tasks: readonly CulturalTaskListItemDTO[],
+): TaskListGroup[] | null {
+  const statuses = TASK_GROUP_STATUSES[statusView];
+  if (statuses === null) return null;
+  return statuses
+    .map((status) => ({
+      status,
+      tasks: tasks.filter((task) => task.status === status),
+    }))
+    .filter((group) => group.tasks.length > 0);
+}
 
 /** Below this width the Assigned to view is a compact select. */
 export const TASK_ASSIGNEE_PHONE_QUERY = mediaMax("md");

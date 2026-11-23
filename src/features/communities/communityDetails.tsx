@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { COMMUNITY_DETAILS } from "./communityDetails.data";
+import type { CommunityFlairDTO } from "./badges/api/communityBadges.api";
 
 export type Tint = "coral" | "jade" | "plum";
 
@@ -15,6 +16,15 @@ export interface Person {
    *  API `MemberRef`. Preferred over the static registry lookup so real users
    *  (owner + members) show their actual picture, not just initials. */
   avatarUrl?: string | null;
+  /** The badge this member wears in this community, and whether a gift mark
+   *  shows. Live from the roster, post and reply DTOs; demo joins the badges
+   *  store at render (`useCommunityMemberDecor`). */
+  flair?: CommunityFlairDTO | null;
+  hasRecentGift?: boolean;
+  /** The backend's stand-in for a paused, suspended or deleting account: the
+   *  name is the inactive label, and there is no slug, photo or initials, so
+   *  nothing links to a profile and the avatar is a blank disc. */
+  isInactiveMember?: boolean;
 }
 export interface Reply {
   initials: string;
@@ -27,6 +37,11 @@ export interface Reply {
    *  reply be told apart from someone else's (e.g. hiding "Report" on your
    *  own reply) without a separate DTO flag. */
   authorSlug?: string;
+  /** The badge this member wears in this community, and whether a gift mark
+   *  shows. Live from the roster, post and reply DTOs; demo joins the badges
+   *  store at render (`useCommunityMemberDecor`). */
+  flair?: CommunityFlairDTO | null;
+  hasRecentGift?: boolean;
   /** ISO creation timestamp (live rows) — the relative-time source, rendered
    *  through `useCommunityTime()` at render so it localizes and stays fresh. */
   createdAt?: string;

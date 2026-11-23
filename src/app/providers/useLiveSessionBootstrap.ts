@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import {
   ApiError,
   clearOnAuthLost,
+  isSessionRefusedByServer,
   refreshSession,
   setOnAuthLost,
   setSessionState,
@@ -12,6 +13,22 @@ import {
   type AuthUser,
 } from "../../features/auth/api/auth.api";
 import type { AuthErrorCode } from "./authContext";
+import {
+  adoptConfirmedMember,
+  wipeFixedKeyMemberStores,
+} from "./wipeMemberLocalData";
+
+/**
+ * Quick Exit sends its logout as the page leaves, and that request needs the
+ * CSRF token in hand: a token still to be fetched would wait on a round trip
+ * the unloading page never finishes, and the logout would never go out. The
+ * launch bootstrap fetches the token before `/auth/me`, but a fetch that
+ * failed leaves it empty, so every confirmed session asks again. A cached
+ * token makes this a no-op.
+ */
+function warmCsrfForQuickExit(): void {
+  void bootstrapCsrf();
+}
 
 type ReconcileInput = {
   /**
@@ -56,24 +73,39 @@ export function useReconcileSession({
   return useCallback((): Promise<void> => {
     if (reconciling.current) return reconciling.current;
     const run = (async () => {
+      const refreshStartedAt = Date.now();
       const ok = await refreshSession();
+      // Whether the server itself refused the session (a refresh it answered
+      // 401 or 403, or a 401 from /auth/me). A network fault, a lock timeout,
+      // a 5xx or a 429 is no answer about the session, so it keeps the stores.
+      let isSessionRejected = !ok && isSessionRefusedByServer(refreshStartedAt);
       if (ok) {
+        const meStartedAt = Date.now();
         try {
           const freshUser = await fetchMe();
           setSessionState("active");
+          warmCsrfForQuickExit();
+          // A different member's session wipes the last member's traces
+          // before any member UI renders.
+          adoptConfirmedMember(freshUser.id);
           setUser(freshUser);
           setLoggedIn(true);
           markEverLoggedIn();
           setAuthError(null);
           return;
-        } catch {
+        } catch (error: unknown) {
           // Refresh rotated a token but /auth/me still refused it — fall through
           // and treat it as a genuine loss, same as a failed refresh.
+          isSessionRejected = isSessionRefusedByServer(meStartedAt, error);
         }
       }
       setSessionState("none");
       setUser(null);
       setLoggedIn(false);
+      // An involuntary loss the server confirmed (a refresh it rejected, a
+      // 401, a remote sign-out): the fixed-key stores name no member, so they
+      // go now.
+      if (isSessionRejected) wipeFixedKeyMemberStores();
       // Only a tab that previously confirmed a real session can "expire" —
       // otherwise this is just a never-signed-in visitor, the same treatment the
       // bootstrap below gives its own signed-out case.
@@ -137,10 +169,15 @@ export function useLiveSessionBootstrap({
     // Reset before the async /auth/me bootstrap round trip resolves below.
     setAuthError(null);
     setChecking(true);
+    const bootstrapStartedAt = Date.now();
     bootstrapCsrf()
       .then(fetchMe)
       .then((u) => {
         setSessionState("active");
+        warmCsrfForQuickExit();
+        // Before any member UI renders: a different member's session wipes
+        // the last member's traces (they never signed out here).
+        adoptConfirmedMember(u.id);
         if (!active) return;
         setUser(u);
         setLoggedIn(true);
@@ -155,7 +192,16 @@ export function useLiveSessionBootstrap({
         // about, and leaves the session genuinely unknown, so the client keeps
         // its recovery paths armed.
         const isSignedOut = err instanceof ApiError && err.status === 401;
-        if (isSignedOut) setSessionState("none");
+        if (isSignedOut) {
+          setSessionState("none");
+          // No session at launch: whatever a fixed-key store still holds
+          // belongs to a member whose session ended away from this device.
+          // The 401 can also stand for a refresh that hit a blip, so only a
+          // refusal the server itself gave wipes.
+          if (isSessionRefusedByServer(bootstrapStartedAt, err)) {
+            wipeFixedKeyMemberStores();
+          }
+        }
         if (!active) return;
         setUser(null);
         setLoggedIn(false);

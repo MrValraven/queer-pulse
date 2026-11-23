@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useMemberContact } from "../connect/useMemberContact";
 import { useIncomingRequestActions } from "../connect/useIncomingRequestActions";
 import { useVouch } from "../../app/providers/useVouch";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
 import { ProfileHelloModal } from "./ProfileHelloModal";
@@ -44,6 +45,14 @@ export function MobileProfileActions({
     profile.first,
   );
   const { openVouch, hasVouched, removeVouch } = useVouch();
+  const { demoMode } = useDemoMode();
+  // PRD-506, the same rule as the desktop hero: a private member takes no new
+  // requests, so the connect action stays off the row. Demo keeps it.
+  const isConnectClosed =
+    !demoMode &&
+    profile.visibility === "private" &&
+    !connected &&
+    !hasIncomingRequest;
   const vouched = hasVouched(profile.slug);
   const [helloOpen, setHelloOpen] = useState(false);
   const fullName = `${profile.first} ${profile.last}`;
@@ -54,7 +63,7 @@ export function MobileProfileActions({
     first: profile.first,
   });
 
-  const primary = asVisitor ? (
+  const primary = isConnectClosed ? null : asVisitor ? (
     <Button size="md" className={styles.actionButton} disabled>
       {t("members:profile.hero.connectCta")}
     </Button>

@@ -79,6 +79,7 @@ const SCREEN_B_ID = "22222222-2222-4222-8222-22222222222b";
 const WARM_UP_PACK_ID = "00000000-0000-4000-8000-0000000000a1";
 const NEON_GRID_ID = "00000000-0000-4000-8000-0000000000c1";
 const WARM_HAZE_ID = "00000000-0000-4000-8000-0000000000c2";
+const PINK_TUNNEL_ID = "00000000-0000-4000-8000-0000000000c4";
 const FRIDAY_SET_ID = "00000000-0000-4000-8000-0000000000b1";
 
 interface VjTabRecorder {
@@ -552,6 +553,17 @@ describe("VJ demo flow: scenes and set lists", () => {
       effects: { settings: { tint: { isOn: true, variant: "coral" } } },
     });
 
+    // Step 2 of the seeded Friday set is the Pink tunnel clip; Peak is step 3.
+    expect(
+      await applyAtOfAccepted(remote, (commands) =>
+        commands.setlistNext({ isFlashConfirmed: true }),
+      ),
+    ).toBeNull();
+    expect(stageOf(screen).state).toMatchObject({
+      setlistIndex: 1,
+      liveClipId: PINK_TUNNEL_ID,
+    });
+
     await applyAtOfAccepted(remote, (commands) =>
       commands.setTempo({ quantize: "bar" }),
     );
@@ -563,18 +575,18 @@ describe("VJ demo flow: scenes and set lists", () => {
     expect(applyAt).toBe(tempo === undefined ? null : nextBarAt(tempo, sentAt));
     if (applyAt === null) return;
     expect(stageOf(remote).latestState).toMatchObject({
-      setlistIndex: 1,
+      setlistIndex: 2,
       liveClipId: null,
       liveGeneratorId: "prideFlagWave",
       liveGeneratorVariant: "rainbow",
     });
-    expect(stageOf(remote).state?.liveClipId).toBe(WARM_HAZE_ID);
+    expect(stageOf(remote).state?.liveClipId).toBe(PINK_TUNNEL_ID);
     expect(lastStageFrameOf(screen)?.applyAt).toBe(applyAt);
 
     await advanceToServerTime(applyAt);
     for (const tab of [screen, remote]) {
       expect(stageOf(tab).state).toMatchObject({
-        setlistIndex: 1,
+        setlistIndex: 2,
         liveClipId: null,
         liveGeneratorId: "prideFlagWave",
         effects: {

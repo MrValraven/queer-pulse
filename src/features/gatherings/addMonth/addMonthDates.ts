@@ -125,16 +125,34 @@ export function sortedDates(dates: Iterable<string>): string[] {
   });
 }
 
+/** The starting event's calendar span, as the template read carries it. */
+export interface TemplateEndSpan {
+  /** "HH:mm", null when the starting event has no end. */
+  endTime: string | null;
+  /** Calendar days from its start day to its end day, null with no end. */
+  endDayOffset: number | null;
+}
+
 /**
- * An end at or before the start on the clock reads as the next day, the rule
- * `steps/schedulePair.ts` documents. The server builds the real instants.
+ * How many calendar days after its own date an event ends, the rule the
+ * server's `resolveBatchRowSchedule` applies (PRD-518). On the clock alone an
+ * end at or before the start reads as the next day (`steps/schedulePair.ts`).
+ * While the end is still the starting event's own end, that event's longer
+ * span wins, so a weekend event keeps its weekend. Zero with no end. The
+ * server builds the real instants.
  */
-export function isEndNextDay(
+export function endDaysLater(
   startTime: string,
   endTime: string | null,
-): boolean {
-  if (endTime === null) return false;
-  return endTime <= startTime;
+  templateSpan: TemplateEndSpan | null = null,
+): number {
+  if (endTime === null) return 0;
+  // "HH:mm" strings compare in clock order, both being zero-padded.
+  const clockDays = endTime <= startTime ? 1 : 0;
+  const templateDays = templateSpan?.endDayOffset ?? 0;
+  const isTemplateEnd =
+    templateSpan !== null && endTime === templateSpan.endTime;
+  return isTemplateEnd && templateDays > clockDays ? templateDays : clockDays;
 }
 
 /** Joins the wanted parts in order with single spaces, dropping commas and literals. */

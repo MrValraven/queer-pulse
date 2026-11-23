@@ -1,5 +1,9 @@
 import { FiClock, FiInfo } from "react-icons/fi";
 import { Button, MemberIdentity } from "../../shared/components/ui";
+import {
+  INACTIVE_MEMBER_LABEL_KEY,
+  isInactiveMemberRef,
+} from "../../shared/api/refs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { CommunityBanRatificationDTO } from "./api/communityBanRatifications.api";
@@ -15,8 +19,10 @@ export type CommunityBanRatifyDecision = "ratify" | "decline";
 function proposerName(
   ref: CommunityBanRatificationDTO["requestedBy"],
   fallback: string,
+  inactiveLabel: string,
 ): string {
   if (!ref) return fallback;
+  if (isInactiveMemberRef(ref)) return inactiveLabel;
   return `${ref.firstName} ${ref.lastName}`.trim() || fallback;
 }
 
@@ -94,6 +100,7 @@ export function ModToolsBanRatificationRow({
             slug: hold.member.slug,
             name: memberName,
             avatarUrl: hold.member.avatarUrl ?? undefined,
+            isInactiveMember: isInactiveMemberRef(hold.member),
           }}
           size={32}
         />
@@ -105,6 +112,7 @@ export function ModToolsBanRatificationRow({
               name: proposerName(
                 hold.requestedBy,
                 t("communities:detail.modtools.bans.formerMember"),
+                t(INACTIVE_MEMBER_LABEL_KEY),
               ),
               date: shortDate(hold.requestedAt),
             })

@@ -3,6 +3,7 @@ import { FiStar } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import { CollaboratorPicker } from "./CollaboratorPicker";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { ProtectWorkSection } from "./rights/ProtectWorkSection";
 import { isTattooBodyPhotoSection } from "./skins/tattoo/tattooVocab.data";
 import styles from "./ItemDrawerSettings.module.css";
@@ -74,6 +75,11 @@ export function ItemDrawerSettings({
   onPatch: (patch: Partial<SubprofileItemView>) => void;
 }) {
   const { t } = useTranslation();
+  // SEC-03: an Unlinked persona's public page names no credited member, and
+  // the collaborator picker says so. Both item drawers render this rail
+  // inside the persona editor, so the loaded persona is read from there.
+  const { subprofile } = useSubprofileEditorContext();
+  const isPersonaUnlinked = subprofile.linkVisibility === "unlinked";
   // A gallery photo has no collaborators and the public view never shows
   // them; with no spotlight either, the rail would be empty. A tattoo body
   // photo is the client's skin, so it carries no collaborators either.
@@ -95,6 +101,7 @@ export function ItemDrawerSettings({
         <CollaboratorPicker
           collaborators={draft.collaborators}
           onChange={(collaborators) => onPatch({ collaborators })}
+          isPersonaUnlinked={isPersonaUnlinked}
         />
       )}
       {/* Owner-only "Protect this work": only meaningful once the item has a

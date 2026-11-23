@@ -111,7 +111,7 @@ export const forPerformers: Catalog = {
     "Mostra-a no teu perfil, ou deixa-a autónoma para que nada nela aponte para ti.",
   "safety.coOwners.title": "Gere-a com quem te representa ou trabalha contigo",
   "safety.coOwners.body":
-    "Convida uma pessoa das tuas conexões para cogerir a página. Quando aceitar, pode editá-la e publicá-la contigo.",
+    "Convida uma pessoa da tua rede para cogerir a página. Quando aceitar, pode editá-la e publicá-la contigo.",
 
   // Questions
   "faq.whoSees.question": "Quem pode ver a minha página de persona?",
@@ -123,7 +123,7 @@ export const forPerformers: Catalog = {
   "faq.coOwner.question":
     "Posso gerir a página com quem me representa ou trabalha comigo?",
   "faq.coOwner.answer":
-    "Sim. Convida essa pessoa das tuas conexões para <b>cogerir</b> a página. Quando aceitar, pode editá-la e publicá-la contigo. Só tu, que a criaste, podes mudar o endereço, restringir quem a vê, ligá-la ao teu perfil, despublicá-la ou apagá-la.",
+    "Sim. Convida essa pessoa da tua rede para <b>cogerir</b> a página. Quando aceitar, pode editá-la e publicá-la contigo. Só tu, que a criaste, podes mudar o endereço, restringir quem a vê, ligá-la ao teu perfil, despublicá-la ou apagá-la.",
 
   // Closing
   "closing.title": "Dá ao teu número <em>uma página só dele</em>",

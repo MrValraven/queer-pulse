@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { FiDownload } from "react-icons/fi";
 import { Button, Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -164,6 +165,58 @@ function StudioBuyReferenceStates({
           ? `${t("studio:purchase.reference.label")} ${reference.referenceCode}`
           : ""}
       </p>
+    </div>
+  );
+}
+
+/** What replaces the payment step when the amount is EUR 0: no methods and no
+ *  payment code. The artist still confirms the download. */
+export function StudioBuyFreeNotice({ artistName }: { artistName: string }) {
+  const { t } = useTranslation();
+  return (
+    <p className={styles.notice}>
+      <FiDownload aria-hidden className={styles.noticeIcon} />
+      <span>{t("studio:purchase.sheet.freeNote", { artist: artistName })}</span>
+    </p>
+  );
+}
+
+/** The free sheet's pinned footer: the refused line above one direct button.
+ *  A payment code that failed to load is fetched again by the button itself,
+ *  so only a code still loading holds it. */
+export function StudioBuyFreeFooter({
+  failureLine,
+  isFailureShown,
+  isCodeLoading,
+  isSubmitting,
+  onPress,
+}: {
+  failureLine: string;
+  isFailureShown: boolean;
+  isCodeLoading: boolean;
+  isSubmitting: boolean;
+  onPress: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.footer}>
+      <Collapse isOpen={isFailureShown}>
+        <div className={styles.footerFailure}>
+          <p role="alert" className={styles.errorLine}>
+            {failureLine}
+          </p>
+        </div>
+      </Collapse>
+      <Button
+        variant="primary"
+        size="lg"
+        className={styles.paidButton}
+        aria-disabled={isCodeLoading || isSubmitting || undefined}
+        aria-busy={isSubmitting || undefined}
+        onClick={onPress}
+      >
+        {t("studio:purchase.sheet.freeCta")}
+      </Button>
     </div>
   );
 }

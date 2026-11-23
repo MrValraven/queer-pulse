@@ -16,6 +16,20 @@ const MAILBOX_FAILURE_KEYS: Record<string, string> = {
   IDENTITY_NOT_IN_CONVERSATION: "messages:mailbox.failure.wrongMailbox",
 };
 
+/**
+ * PRD-511: the other sends the server refuses for good. Each code names its
+ * own reason, so the row says why and offers no Retry. `RECIPIENT_UNAVAILABLE`
+ * covers a block either way and its copy never names the block.
+ */
+const PERMANENT_SEND_FAILURE_KEYS: Record<string, string> = {
+  SENDER_ACCOUNT_INACTIVE: "messages:status.failure.accountInactive",
+  GROUP_MEMBERSHIP_ENDED: "messages:status.failure.groupLeft",
+  RECIPIENT_NOT_CONNECTED: "messages:status.failure.notConnected",
+  RECIPIENT_UNAVAILABLE: "messages:status.failure.recipientUnavailable",
+  OFFICIAL_THREAD_READ_ONLY: "messages:status.failure.officialReadOnly",
+  GIF_HOST_NOT_ALLOWED: "messages:status.failure.gifSource",
+};
+
 export interface MessageRunFailedRowProps {
   /** The run's last message, already known to be a failed own send. */
   message: ChatMessage;
@@ -44,11 +58,14 @@ export function MessageRunFailedRow({
     void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
   }, [isLostSeat, queryClient]);
 
-  const mailboxFailureKey = message.failureCode
-    ? MAILBOX_FAILURE_KEYS[message.failureCode]
+  const permanentFailureKey = message.failureCode
+    ? (MAILBOX_FAILURE_KEYS[message.failureCode] ??
+      PERMANENT_SEND_FAILURE_KEYS[message.failureCode])
     : undefined;
-  if (mailboxFailureKey) {
-    return <span className={styles.failedReason}>{t(mailboxFailureKey)}</span>;
+  if (permanentFailureKey) {
+    return (
+      <span className={styles.failedReason}>{t(permanentFailureKey)}</span>
+    );
   }
 
   // A body that's grown past the server's length limit since it was typed

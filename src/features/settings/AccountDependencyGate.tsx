@@ -4,7 +4,17 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryListingsActions } from "../../app/providers/useDirectoryListingsActions";
 import { useRoster } from "../communities/api/useRoster";
-import { TransferOwnershipModal } from "../communities/TransferOwnershipModal";
+import { OfferOwnershipModal } from "../communities/OfferOwnershipModal";
+import {
+  useCancelCommunityOwnershipOffer,
+  useCommunityOwnershipOffer,
+} from "../communities/api/useCommunityOwnershipOffers";
+import {
+  communityErrorText,
+  OWNERSHIP_OFFER_OWNER_SIDE_KEYS,
+} from "../communities/communityErrors";
+import { memberRefDisplayName } from "../../shared/api/refs";
+import { useFormat } from "../../shared/i18n/format";
 import { ListingDeleteFlow } from "../marketing/listBusiness/delete/ListingDeleteFlow";
 import {
   useAccountDependenciesCheck,
@@ -14,44 +24,99 @@ import {
 import styles from "../members/AccountData.module.css";
 
 /**
- * One owned community blocking erasure. Its only out is a real ownership
- * transfer (`POST /communities/:slug/transfer`, the same
- * `TransferOwnershipModal` the community danger zone uses): a community
- * requires an owner and there is no anonymous-owner state, so this is a real
- * precondition rather than informational copy. The roster only loads once the
+ * One community the member owns, shown by the settings gate and the profile's
+ * step-away panel. It never blocks erasure: an offer needs someone else to
+ * accept it, and the backend already hands an erased owner's community on
+ * (`CommunityOwnerOrphanService`, worded for the member in the
+ * `dependency.communitiesPassOn` intro). The row offers the member the chance
+ * to choose who takes it on first (PRD-514): with no open offer it opens the
+ * same `OfferOwnershipModal` the community danger zone uses
+ * (`POST /communities/:slug/ownership-offer`). With an offer already open it
+ * says who it went to and when it lapses, and offers to cancel it, since a
+ * community holds one open offer at a time. The roster only loads once the
  * modal is actually opened (`useRoster` is disabled until `slug` is set).
  *
- * `onTransferClosed` re-reads the dependency check when the modal closes: the
- * transfer invalidates the communities caches only, and the row should leave
- * once the server agrees it is gone.
+ * `onOfferClosed`, when given, re-reads the dependency check after the modal
+ * closes, so the row leaves as soon as the server agrees the community has
+ * changed hands.
  */
-function CommunityDependencyRow({
+export function CommunityDependencyRow({
   community,
-  onTransferClosed,
+  onOfferClosed,
 }: {
   community: AccountDependencyCommunity;
-  onTransferClosed: () => void;
+  onOfferClosed?: () => void;
 }) {
   const { t } = useTranslation();
-  const [isTransferOpen, setTransferOpen] = useState(false);
-  const { roster } = useRoster(isTransferOpen ? community.slug : undefined);
+  const fmt = useFormat();
+  const { showToast } = useToast();
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
+  const rosterRead = useRoster(isOfferModalOpen ? community.slug : undefined);
+  const { offer, isLoading } = useCommunityOwnershipOffer(community.slug);
+  const cancelOffer = useCancelCommunityOwnershipOffer(community.slug);
+  const openOffer = offer?.status === "offered" ? offer : null;
+
+  const cancel = () => {
+    if (cancelOffer.isPending) return;
+    cancelOffer.mutate(undefined, {
+      onSuccess: () =>
+        showToast(t("communities:ownershipOffer.cancelled"), "success"),
+      onError: (error) =>
+        showToast(
+          communityErrorText(t, error, OWNERSHIP_OFFER_OWNER_SIDE_KEYS),
+          "error",
+        ),
+    });
+  };
 
   return (
     <>
       <li className={styles.dependencyRow}>
-        <span>{community.name}</span>
-        <Button variant="ghost" size="sm" onClick={() => setTransferOpen(true)}>
-          {t("members:profile.accountData.stepAway.dependency.transferCta")}
-        </Button>
+        <div>
+          <span>{community.name}</span>
+          {openOffer && (
+            <p className={styles.hint} role="status">
+              {t("communities:ownershipOffer.pending", {
+                name:
+                  memberRefDisplayName(openOffer.offeree, t) ||
+                  t("communities:common.someMember"),
+                date: fmt.date(new Date(openOffer.expiresAt)),
+              })}
+            </p>
+          )}
+        </div>
+        {openOffer ? (
+          <Button
+            key="cancel"
+            variant="ghost"
+            size="sm"
+            onClick={cancel}
+            disabled={cancelOffer.isPending}
+          >
+            {t("communities:ownershipOffer.cancel")}
+          </Button>
+        ) : (
+          <Button
+            key="send"
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsOfferModalOpen(true)}
+            disabled={isLoading}
+          >
+            {t("communities:ownershipOffer.offerCta")}
+          </Button>
+        )}
       </li>
-      {isTransferOpen && (
-        <TransferOwnershipModal
+      {isOfferModalOpen && (
+        <OfferOwnershipModal
           slug={community.slug}
-          name={community.name}
-          roster={roster}
+          roster={rosterRead.roster}
+          isRosterLoading={rosterRead.isLoading}
+          isRosterError={rosterRead.isError}
+          onRosterRetry={rosterRead.refetch}
           onClose={() => {
-            setTransferOpen(false);
-            onTransferClosed();
+            setIsOfferModalOpen(false);
+            onOfferClosed?.();
           }}
         />
       )}
@@ -79,15 +144,16 @@ function focusAfterListingRowRemoved(resolveTarget: () => HTMLElement | null) {
 }
 
 /**
- * One live listing blocking erasure. A listing has NO ownership-transfer
- * capability on the backend, so its remedy is a permanent delete
+ * One live listing an active member owns. Erasure keeps it live without an
+ * owner (see `listingsStayLive`), so the row never blocks anything. The
+ * optional "Delete listing" button opens a permanent delete
  * (`DELETE /listings/:ref`) through the shared `ListingDeleteFlow`, the same
  * multi-step confirmation every other listing delete goes through, backed by
  * the awaited `deleteListing`.
  *
  * The flow's gentler exits (hide it, mark it closed) are left out on purpose:
- * `useAccountDependencies` counts every listing whose status is live, so
- * neither of them would unblock erasure.
+ * the listing stays live whichever of them is picked, so they change nothing
+ * about what erasure does with it.
  *
  * `onDeleted` runs after a confirmed delete, once the toast is up. The row
  * disappears as soon as the listings overlay drops the ref, so the caller
@@ -140,10 +206,10 @@ export function ListingDependencyRow({
 }
 
 /**
- * The gate for a member whose account is not active. Every remedy (transfer,
- * the roster read its picker needs, listing delete) sits behind the
- * active-member guard, so the rows carry no buttons. The intro says what
- * erasure itself does with each kind of row, and erasure stays available.
+ * The gate for a member whose account is not active. Every remedy (an
+ * ownership offer, the roster read its picker needs, listing delete) sits
+ * behind the active-member guard, so the rows carry no buttons. The intro says
+ * what erasure itself does with each kind of row, and erasure stays available.
  */
 function InformationalDependencyList({
   communities,
@@ -177,8 +243,9 @@ function InformationalDependencyList({
 }
 
 /**
- * Everything that would be stranded by erasing this account, each row with its
- * own real remedy.
+ * What erasing this account hands on or leaves behind, each row with its own
+ * optional step. Nothing here blocks erasure: owned communities pass on as
+ * the `dependency.communitiesPassOn` intro describes, and listings stay live.
  *
  * This gate used to live only on the profile's "Your data" side sheet, which
  * was one of three surfaces offering erasure. Now that `/account/delete` is the
@@ -189,7 +256,7 @@ function InformationalDependencyList({
  * a member may already have read do not change under them.
  *
  * After a listing delete, focus goes to this gate's container while other
- * blockers remain. When that listing was the last one, the gate renders
+ * rows remain. When that listing was the last one, the gate renders
  * nothing, so focus goes to `fallbackFocusRef` (the page title).
  *
  * When the live check itself failed, both lists arrive empty and mean
@@ -223,6 +290,8 @@ export function AccountDependencyGate({
     );
 
   if (communities.length === 0 && listings.length === 0) {
+    // Erasure stays available either way: the backend hands on or releases
+    // whatever the member owns.
     if (!isCheckFailed) return null;
     return (
       <div role="status" className={styles.block}>
@@ -242,30 +311,41 @@ export function AccountDependencyGate({
   }
   return (
     <div ref={containerRef} tabIndex={-1} className={styles.block}>
-      <p className={styles.dependencyIntro}>
-        {t("members:profile.accountData.stepAway.erase.blockedByDependencies")}
-      </p>
       {communities.length > 0 && (
-        <ul className={styles.dependencyList}>
-          {communities.map((community) => (
-            <CommunityDependencyRow
-              key={community.slug}
-              community={community}
-              onTransferClosed={refresh}
-            />
-          ))}
-        </ul>
+        <>
+          <p className={styles.dependencyIntro}>
+            {t(
+              "members:profile.accountData.stepAway.dependency.communitiesPassOn",
+            )}
+          </p>
+          <ul className={styles.dependencyList}>
+            {communities.map((community) => (
+              <CommunityDependencyRow
+                key={community.slug}
+                community={community}
+                onOfferClosed={refresh}
+              />
+            ))}
+          </ul>
+        </>
       )}
       {listings.length > 0 && (
-        <ul className={styles.dependencyList}>
-          {listings.map((listing) => (
-            <ListingDependencyRow
-              key={listing.ref}
-              listing={listing}
-              onDeleted={focusStableTargetAfterDelete}
-            />
-          ))}
-        </ul>
+        <>
+          <p className={styles.dependencyIntro}>
+            {t(
+              "members:profile.accountData.stepAway.dependency.listingsStayLive",
+            )}
+          </p>
+          <ul className={styles.dependencyList}>
+            {listings.map((listing) => (
+              <ListingDependencyRow
+                key={listing.ref}
+                listing={listing}
+                onDeleted={focusStableTargetAfterDelete}
+              />
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

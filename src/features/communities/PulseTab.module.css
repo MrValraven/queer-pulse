@@ -87,7 +87,9 @@
   color: var(--text-strong);
   display: flex;
   align-items: center;
-  gap: 7px;
+  /* The badge name line takes this gap back and re-adds it per piece. */
+  --name-line-gap: 7px;
+  gap: var(--name-line-gap);
   flex-wrap: wrap;
 }
 .pTime {
@@ -178,6 +180,14 @@
   margin-top: 11px;
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
+/* The 2px top offset sits on the slot, outside the badge ring, so the ring
+   around .rAv stays a circle. */
+.rAvSlot {
+  display: flex;
+  flex: none;
+  margin-top: 2px;
+  align-self: flex-start;
+}
 .rAv {
   width: 28px;
   height: 28px;
@@ -188,29 +198,40 @@
   font-size: var(--text-9);
   font-weight: 700;
   flex: none;
-  margin-top: 2px;
 }
 .rBody {
   flex: 1;
   min-width: 0;
 }
 .rHead {
+  /* The badge name line takes this gap back and re-adds it per piece. */
+  --name-line-gap: 8px;
+
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--name-line-gap);
 }
 .rMenu {
   margin-left: auto;
   flex: none;
 }
+/* The reply head stays one line: the badge chip beside the name shrinks to
+   its icon and then steps aside first, only then does the name end in an
+   ellipsis, and the time keeps its width. */
 .rName {
+  min-width: 0;
+  overflow: hidden;
   font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .rTime {
+  flex: none;
   font-size: var(--text-11-5);
   color: var(--ink-40);
+  white-space: nowrap;
 }
 .rText {
   font-size: var(--text-13-5);

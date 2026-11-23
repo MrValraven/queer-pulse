@@ -1,5 +1,9 @@
 import type { AvatarTint } from "../../shared/components/ui";
-import { tintForSlug } from "../../shared/api/refs";
+import {
+  INACTIVE_MEMBER_LABEL_KEY,
+  isInactiveMemberRef,
+  tintForSlug,
+} from "../../shared/api/refs";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMemberContact } from "../connect/useMemberContact";
@@ -29,7 +33,11 @@ function useMemberCardModel(item: FeedItem) {
   const { t } = useTranslation();
   const formatters = useFormat();
   const slug = item.actor?.handle ?? "";
-  const name = item.title;
+  // PRD-507. A stand-in for a paused or deleting account arrives titled
+  // "A member" with an empty handle, so nothing links; it shows no initials
+  // and reads its name in the viewer's language.
+  const isInactive = isInactiveMemberRef(item.actor);
+  const name = isInactive ? t(INACTIVE_MEMBER_LABEL_KEY) : item.title;
   const { connected, isSelf } = useMemberContact(slug);
 
   const context = resolveMemberContext({
@@ -64,7 +72,7 @@ function useMemberCardModel(item: FeedItem) {
     photo: {
       slug,
       name,
-      initials: initialsFor(name),
+      initials: isInactive ? "" : initialsFor(name),
       tint,
       src: item.actor?.avatarUrl ?? undefined,
     },

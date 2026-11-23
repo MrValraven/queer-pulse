@@ -1,11 +1,13 @@
 import { ApiError } from "../../shared/api/client";
 import {
+  apiErrorCode,
   causeErrorKey,
   type CauseErrorCopy,
   type CauseErrorOverrides,
 } from "../../shared/api/causeErrorKey";
 import type { ToastMessage } from "../../shared/components/feedback/toastContext";
 import type { TFunction } from "../../shared/i18n/types";
+import { UNBLOCK_TO_CONTACT_CODE } from "../messages/api/firstContactError";
 
 /**
  * Cause lines for the failed actions on the housing, verification and
@@ -40,9 +42,20 @@ export function causeLine(
 }
 
 /**
+ * A flatmate hello (`POST /flatmate-profiles/:slug/hello`), delivered as an
+ * enquiry. SEC-19: a block the other member placed, or a profile that is gone,
+ * answers 404 and reads as "not available", naming no block. The sender's own
+ * block answers 409 `UNBLOCK_TO_CONTACT` and asks them to unblock first.
+ */
+export const FLATMATE_HELLO_OVERRIDES: CauseErrorOverrides = {
+  [UNBLOCK_TO_CONTACT_CODE]: "economy:flatmates.card.sayHelloUnblockFirst",
+  404: "economy:flatmates.card.sayHelloUnavailable",
+};
+
+/**
  * A housing viewing action (accept, propose, decline, cancel, complete):
  * `HousingViewingsService`. 403 is "wait for the other person" or "withdraw
- * with cancel instead" (it is never a missing role), 404 is a viewing or home
+ * with cancel" (it is never a missing role), 404 is a viewing or home
  * that is gone, and 409 is the slot clash with another accepted viewing.
  */
 export const HOUSING_VIEWING_ACTION_OVERRIDES: CauseErrorOverrides = {
@@ -53,17 +66,24 @@ export const HOUSING_VIEWING_ACTION_OVERRIDES: CauseErrorOverrides = {
 };
 
 /**
- * The 400 refusals on a viewing carry no machine code, only a sentence, so
- * the three that need their own advice are told apart by that sentence. This is
- * the one place that reads English prose; a reworded backend sentence falls
- * back to the general "this viewing has moved on" line instead of breaking.
+ * The 400 refusal for a viewing that has not happened yet carries the machine
+ * code `housing_viewing_not_happened_yet`. The other two 400s that need their
+ * own advice still carry only a sentence, so they are told apart by it. This
+ * is the one place that reads English prose; a reworded backend sentence falls
+ * back to the general "this viewing has moved on" line.
+ * The sentence match for "has not happened yet" stays only for a response from
+ * a server that predates the code.
  */
+const NOT_YET_HAPPENED_CODE = "housing_viewing_not_happened_yet";
 const HOME_OFF_BOARD_SENTENCE = "no longer on the board";
 const TIME_PASSED_SENTENCES = ["must be in the future", "already passed"];
 const NOT_YET_HAPPENED_SENTENCE = "has not happened yet";
 
 export function housingViewingActionCause(error: unknown): CauseErrorCopy {
   if (error instanceof ApiError && error.status === 400) {
+    if (apiErrorCode(error) === NOT_YET_HAPPENED_CODE) {
+      return { key: "economy:housingViewing.cause.notYetHappened" };
+    }
     const sentence = error.message.toLowerCase();
     if (sentence.includes(HOME_OFF_BOARD_SENTENCE)) {
       return { key: "economy:housingViewing.cause.homeOffBoard" };

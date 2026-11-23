@@ -7,6 +7,7 @@ import { useEmailCodeSignInState } from "../../../shared/api/useIsEmailCodeSignI
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { openReauthDialog } from "./reauthDialogStore";
+import { reauthErrorMessage } from "./reauthErrorMessage";
 
 /**
  * Step-up re-authentication: proving the caller confirmed it is them just now,
@@ -214,7 +215,7 @@ export function beginReauth(options?: { onConfirmed?: () => void }): void {
  * googleCallback`'s reauth branch), whose maxAge is the short access-token
  * TTL (`auth.config.ts`). A member idle on the delete or export page past
  * that TTL would otherwise leave with a stale cookie and land back on
- * `reauth_failed` even though their session is perfectly good. `refreshSession`
+ * `reauth_session_expired` even though their session is perfectly good. `refreshSession`
  * is the same cross-tab, single-flight refresh every other 401 recovery in
  * the app shares (`shared/api/client.ts`), so this never double-spends the
  * rotating refresh token against a concurrent tab or an in-flight request.
@@ -229,7 +230,7 @@ export function beginReauth(options?: { onConfirmed?: () => void }): void {
  * this redirects to `routes.signIn` with a `next` back to the current path,
  * matching the pattern `authGate.ts` already uses for a signed-out visitor
  * hitting a gated route. Sending the browser to Google from here would only
- * land back on `reauth_failed`. For an active member whose session was fine
+ * land back on `reauth_session_expired`. For an active member whose session was fine
  * all along, this lands on the sign-in screen still signed in, and
  * `authGate.ts`'s guest-only handling (`isGuestOnlyPath`) bounces them
  * straight back to that same `next` path, so a transient network blip costs
@@ -300,7 +301,8 @@ export function useReauthCompletion(): void {
     if (token) {
       showToast(t("settings:reauth.completion.success"), "success");
     } else {
-      showToast(t("settings:reauth.completion.failed"), "error");
+      // Each cause gets its own line (PRD-502).
+      showToast(reauthErrorMessage(error ?? "", t), "error");
     }
     // Runs once on mount — a reauth fragment only ever exists on the fresh
     // redirect landing, never reappearing on later in-app navigation.

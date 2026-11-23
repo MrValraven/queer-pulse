@@ -22,6 +22,10 @@ export interface RecognitionState extends Recognition {
    * were the member's real level/badge/perk counts.
    */
   hasRealData: boolean;
+  /** The live fetch's failure, for a caller that names its cause (see
+   *  `recognitionErrorCopy`); always null in demo mode. `PROFILE_LIMITED`
+   *  (SEC-20) is a 403, which the app-wide `queryClient` rule never retries. */
+  error: unknown;
 }
 
 /**
@@ -58,7 +62,7 @@ export function useRecognition(
   // the self view. Leaving the preview then showed the owner "0 perks" until a
   // refetch landed. The two endpoints are not interchangeable, so neither are
   // their keys.
-  const { data, isPending, isError } = useQuery<Recognition>({
+  const { data, isPending, isError, error } = useQuery<Recognition>({
     queryKey: [
       "recognition",
       demoMode,
@@ -78,5 +82,6 @@ export function useRecognition(
     isLoading: !demoMode && isPending,
     isError: !demoMode && isError,
     hasRealData: demoMode || (!!data && !isError),
+    error: demoMode ? null : error,
   };
 }

@@ -49,4 +49,5 @@ export const common: Catalog = {
   "cta.openModerationQueue": "Abrir na fila de moderação",
   "toast.openedModerationQueue":
     "Abrimos as denúncias de {name} na fila de moderação.",
+  "member.inactiveLabel": "[membro desativado]",
 };

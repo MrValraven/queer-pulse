@@ -3,6 +3,7 @@ import type { ToastContextValue } from "../../shared/components/feedback/toastCo
 import type { TFunction } from "../../shared/i18n/types";
 import type { ModReportView } from "./moderationAge";
 import { useReportAssignment } from "./api/useReportAssignment";
+import { useEnforcementRefusal } from "./api/enforcementTargetError";
 
 export interface UseModerationAssignmentActionsParams {
   setOpen: Dispatch<SetStateAction<ModReportView[]>>;
@@ -25,6 +26,14 @@ export function useModerationAssignmentActions({
   showToast,
 }: UseModerationAssignmentActionsParams) {
   const reportAssignment = useReportAssignment();
+  // SEC-31: claiming a report about yourself is refused with a reason code,
+  // and the moderator reads that reason; an outage keeps the service line.
+  const describeRefusal = useEnforcementRefusal();
+  const showAssignmentError = (error: unknown) =>
+    showToast(
+      describeRefusal(error, t("admin:moderation.queue.serviceErrorToast")),
+      "error",
+    );
 
   /** Patches a report's assignee fields in every place it's held locally, so
    *  the drawer and the "Assigned to me" filter reflect the claim/release
@@ -51,8 +60,7 @@ export function useModerationAssignmentActions({
             result.assignedModeratorId,
             result.assignedModeratorName,
           ),
-        onError: () =>
-          showToast(t("admin:moderation.queue.serviceErrorToast"), "error"),
+        onError: showAssignmentError,
       },
     );
   };
@@ -63,8 +71,7 @@ export function useModerationAssignmentActions({
       { id: report.id, assign: false },
       {
         onSuccess: () => patchAssignment(report.id, null, undefined),
-        onError: () =>
-          showToast(t("admin:moderation.queue.serviceErrorToast"), "error"),
+        onError: showAssignmentError,
       },
     );
   };

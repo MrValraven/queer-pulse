@@ -1,0 +1,15 @@
+/* Mirrors the member picker's row rhythm (MemberSelectList's .row), so the
+   list swaps in without a jump. */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-stat-gap);
+  margin-top: var(--gap-sm);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
+}

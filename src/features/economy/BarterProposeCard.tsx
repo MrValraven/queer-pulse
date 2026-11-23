@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { ApiError } from "../../shared/api/client";
+import { apiErrorCode } from "../../shared/api/causeErrorKey";
+import { UNBLOCK_TO_CONTACT_CODE } from "../messages/api/firstContactError";
 import { Button, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -15,12 +17,17 @@ import styles from "./BarterDetailPage.module.css";
 
 /**
  * Turns the API's refusal into the sentence that explains it. Every branch is a
- * real server answer: 403 for your own listing or a blocked pair, 404 for a
- * listing that is gone, 409 for a closed listing or a proposal you already sent.
+ * real server answer: 403 for your own listing, 404 for a listing that is not
+ * available (gone, or a pair with a block either way, which SEC-19 answers
+ * alike), 409 for a closed listing or a proposal you already sent, and the
+ * coded 409 `UNBLOCK_TO_CONTACT` for the proposer's own block.
  */
 function refusalMessage(error: unknown, t: TFunction): string {
   if (!(error instanceof ApiError)) {
     return t("economy:barterDetail.propose.errorFailed");
+  }
+  if (apiErrorCode(error) === UNBLOCK_TO_CONTACT_CODE) {
+    return t("economy:barterDetail.propose.errorUnblockFirst");
   }
   if (error.status === 403) {
     return t("economy:barterDetail.propose.errorNotAllowed");

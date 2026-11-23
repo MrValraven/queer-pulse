@@ -17,13 +17,19 @@ export interface AccountDependencyListing {
 }
 
 export interface AccountDependencies {
-  /** Communities the caller owns. A community requires an owner and this
-   *  codebase has no anonymous-owner state, so each one blocks erasure for a
-   *  member who can transfer it (see `isInformational`). */
+  /** Communities the caller owns. They never block erasure: an ownership
+   *  offer needs someone else to accept it, and the backend hands an erased
+   *  owner's community to its longest-standing co-owner, then mod, then (for
+   *  a space) the parent community's owner, or flags it for our team to
+   *  review. The gate lists them with an optional ownership offer. */
   communities: AccountDependencyCommunity[];
-  /** The caller's own listings that are publicly live right now. */
+  /** The caller's own listings that are publicly live right now. They never
+   *  block erasure: the backend keeps them live without an owner so whoever
+   *  runs the place can claim them. The gate lists them as information with an
+   *  optional delete. */
   listings: AccountDependencyListing[];
-  /** True while the live check is still resolving its first fetch. */
+  /** True while the live check is still resolving its first fetch. Callers
+   *  hold erasure while it is true, the only thing that holds it. */
   isLoading: boolean;
   /** True when the live check failed and no earlier answer is on hand, so the
    *  two empty lists above mean "unknown". Callers keep erasure available
@@ -31,15 +37,11 @@ export interface AccountDependencies {
    *  `AccountDependencyGate` says the check could not load. */
   isError?: boolean;
   /** True when the member cannot act on these lists: their account is not
-   *  active (suspended or deactivated), and every remedy (transfer,
+   *  active (suspended or deactivated), and every remedy (ownership offer,
    *  roster read, listing delete) sits behind the active-member guard. The
-   *  lists still arrive, `hasDependencies` reports false so erasure stays
-   *  available, and `AccountDependencyGate` shows them as information only. */
+   *  lists still arrive and `AccountDependencyGate` shows them as information
+   *  only. */
   isInformational?: boolean;
-  /** True when something blocks erasure. Always false while
-   *  `isInformational`, so a member who cannot act is never locked out of the
-   *  right to erasure. */
-  hasDependencies: boolean;
 }
 
 export const ACCOUNT_DEPENDENCIES_QUERY_KEY = ["account", "dependencies"];
@@ -69,7 +71,7 @@ function useAccountDependenciesQuery() {
 }
 
 /**
- * Everything that would be stranded by erasing this account.
+ * Everything erasing this account would hand on or leave live.
  *
  * Live mode reads `GET /account/dependencies`, one request answering both
  * lists. It used to be composed from `GET /me/communities` and
@@ -85,16 +87,14 @@ function useAccountDependenciesQuery() {
  *   silently hide an owned private community and let its sole owner request
  *   erasure anyway.)
  * - Listings: the caller's own listings whose status is `live`. A listing still
- *   in review isn't publicly reachable yet, so it doesn't need a transfer or
- *   close step before erasure.
+ *   in review isn't publicly reachable yet, so the gate leaves it out.
  *
  * A listing deleted this session through the gate drops out at once through
  * the provider's `withdrawn` set, before the refetch lands.
  *
  * A member whose account is not active (suspended or deactivated) still
- * gets both lists, flagged `isInformational`, with `hasDependencies` false:
- * they cannot transfer or delete anything, so blocking erasure on these lists
- * would lock them out of it.
+ * gets both lists, flagged `isInformational`: they cannot offer or delete
+ * anything, so the gate shows the rows without their buttons.
  *
  * Demo mode keeps its no-network composition: the session membership store
  * filtered to owned communities, and the session's listing overlay filtered to
@@ -135,8 +135,6 @@ export function useAccountDependencies(): AccountDependencies {
     isLoading: !demoMode && query.isLoading,
     isError: !demoMode && query.isError && liveData === undefined,
     isInformational,
-    hasDependencies:
-      !isInformational && (communities.length > 0 || listings.length > 0),
   };
 }
 
@@ -144,10 +142,11 @@ export function useAccountDependencies(): AccountDependencies {
  * For `AccountDependencyGate`, which renders the lists its caller hands it:
  * whether the live check failed (same rule as `isError` above), whether the
  * member can act on the rows at all (same rule as `isInformational`), and a
- * `refresh` to re-read it once a row's remedy has run. A community transfer
- * invalidates the communities caches only, so without this the transferred
- * community would keep blocking erasure until the next fetch. Subscribing here
- * dedupes against the caller's `useAccountDependencies` query.
+ * `refresh` to re-read it once a row's optional step has run. An accepted
+ * ownership offer invalidates the communities caches only, so without this a
+ * community that changed hands would stay listed until the next fetch.
+ * Subscribing here dedupes against the caller's `useAccountDependencies`
+ * query.
  */
 export function useAccountDependenciesCheck() {
   const { demoMode } = useDemoMode();

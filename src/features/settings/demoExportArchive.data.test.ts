@@ -201,3 +201,56 @@ describe("demo data export, Studio purchases and sales", () => {
     expect(deletedAccountSale?.payerName).toBeNull();
   });
 });
+
+describe("demo data export, community badges and gifts", () => {
+  it("writes the four badge keys for the communities category", () => {
+    const content = buildDemoArchiveContent(["communities"]);
+    for (const archiveKey of [
+      "communityBadges",
+      "communityEventsAttended",
+      "communityGiftsReceived",
+      "communityGiftsSent",
+    ]) {
+      expect(CATEGORY_ARCHIVE_KEYS.communities).toContain(archiveKey);
+      expect(Array.isArray(content[archiveKey])).toBe(true);
+    }
+  });
+
+  it("exports the events tally as a bare count with no event or date", () => {
+    const [tally] = buildDemoArchiveContent(["communities"])
+      .communityEventsAttended as Array<Record<string, unknown>>;
+    expect(Object.keys(tally ?? {})).toEqual([
+      "communityId",
+      "communitySlug",
+      "communityName",
+      "eventsAttended",
+    ]);
+    expect(typeof tally?.eventsAttended).toBe("number");
+  });
+
+  it("names the sender of a received gift by display name", () => {
+    const [gift] = buildDemoArchiveContent(["communities"])
+      .communityGiftsReceived as Array<{ senderName: string | null }>;
+    expect(typeof gift?.senderName).toBe("string");
+    expect(gift?.senderName?.length).toBeGreaterThan(0);
+  });
+});
+
+describe("demo data export, community ownership offers", () => {
+  it("writes the offers key for the communities category, naming the other party by id only", () => {
+    expect(CATEGORY_ARCHIVE_KEYS.communities).toContain(
+      "communityOwnershipOffers",
+    );
+    const offers = buildDemoArchiveContent([
+      "communities",
+    ]).communityOwnershipOffers;
+    expect(offers).toEqual([
+      expect.objectContaining({
+        side: "received",
+        otherPartyUserId: "demo-user-monica",
+        communitySlug: "queer-runners",
+      }),
+    ]);
+    expect(JSON.stringify(offers)).not.toContain("Mónica");
+  });
+});

@@ -14,6 +14,7 @@ import {
   GUIDE_SKELETON_CARD_COUNT,
   sortGuidesForLanguage,
 } from "./guidesTab.data";
+import { useEntranceViewKey } from "./useEntranceViewKey";
 import styles from "./Guides.module.css";
 
 const GUIDES_PREFIX = "admin:culturalProduction.guides";
@@ -41,7 +42,9 @@ function GuidesSkeleton() {
  * viewer's app language first. "Add guide" opens the add dialog, which
  * opens the new guide's page in its editor. The list swaps between its
  * loading, failed, empty and filled views with one fade while the panel
- * eases to the new height.
+ * eases to the new height. Guides that land while the tab is still fading
+ * in take the loading view's place under that fade, so the cards reveal
+ * once (`useEntranceViewKey`).
  */
 export function GuidesTab() {
   const { t, language } = useTranslation();
@@ -55,6 +58,7 @@ export function GuidesTab() {
     : isError
       ? "error"
       : "loading";
+  const viewKey = useEntranceViewKey(viewName);
 
   const addButton = (
     <Button size="sm" onClick={() => setIsAdding(true)}>
@@ -75,7 +79,7 @@ export function GuidesTab() {
       <MeasuredHeightFrame>
         <div className={styles.viewStage}>
           <AnimatePresence mode="popLayout" initial={false}>
-            <ViewFade key={viewName}>
+            <ViewFade key={viewKey}>
               {viewName === "loading" && <GuidesSkeleton />}
               {viewName === "error" && (
                 <CulturalLoadError

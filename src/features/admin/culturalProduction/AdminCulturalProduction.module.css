@@ -6,7 +6,9 @@
 }
 
 /* The positioned parent a leaving section is lifted out against while the
-   next one fades in (ViewFade, AnimatePresence mode="popLayout"). */
+   next one fades in (ViewFade, AnimatePresence mode="popLayout"). The frame
+   around it (MeasuredHeightFrame) eases it to each section's height on a tab
+   switch; the margin sits inside the frame, so the frame measures it. */
 .panel {
   position: relative;
   margin-block-start: var(--gap-sm);

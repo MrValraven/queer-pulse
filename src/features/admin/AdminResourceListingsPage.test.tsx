@@ -92,9 +92,10 @@ describe("AdminResourceListingsPage", () => {
     ).mockResolvedValue([]);
     renderPage();
 
+    expect(await screen.findByText("No listings yet")).toBeInTheDocument();
     expect(
-      await screen.findByText(
-        "No listings yet. Create the first one, or check the suggestions queue for ideas.",
+      screen.getByText(
+        "Create the first one, or check the suggestions queue for ideas.",
       ),
     ).toBeInTheDocument();
   });

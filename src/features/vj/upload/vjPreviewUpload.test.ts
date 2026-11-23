@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { VjClipDTO } from "../../../shared/contracts/vj";
-import { requestUpload } from "../../members/api/uploads.api";
+import { ApiError } from "../../../shared/api/client";
+import { confirmUpload, requestUpload } from "../../members/api/uploads.api";
 import { setVjClipPreview } from "../api/vj.api";
 import { demoSetVjClipPreview } from "../demo/vjDemoStore";
 import { makeVjPreview, type VjMadePreview } from "./vjPreview";
@@ -9,6 +10,7 @@ import { VjUploadFailure } from "./vjUploadFailure";
 
 vi.mock("../../members/api/uploads.api", () => ({
   requestUpload: vi.fn(),
+  confirmUpload: vi.fn(),
 }));
 vi.mock("../api/vj.api", () => ({
   createVjClip: vi.fn(),
@@ -66,6 +68,7 @@ beforeEach(() => {
     uploadUrl: UPLOAD_URL,
     key: PREVIEW_KEY,
   });
+  vi.mocked(confirmUpload).mockReset().mockResolvedValue(undefined);
   vi.mocked(setVjClipPreview).mockReset().mockResolvedValue(SAVED_CLIP);
   vi.mocked(demoSetVjClipPreview).mockReset().mockReturnValue(SAVED_CLIP);
   vi.mocked(makeVjPreview).mockReset().mockResolvedValue(madePreview());
@@ -110,7 +113,54 @@ describe("attachVjPreview", () => {
     expect(setVjClipPreview).toHaveBeenCalledWith(CLIP_ID, {
       previewStorageKey: PREVIEW_KEY,
     });
+    expect(confirmUpload).toHaveBeenCalledWith(PREVIEW_KEY);
+    const [confirmOrder = 0] =
+      vi.mocked(confirmUpload).mock.invocationCallOrder;
+    const [saveOrder = 0] =
+      vi.mocked(setVjClipPreview).mock.invocationCallOrder;
+    expect(confirmOrder).toBeGreaterThan(0);
+    expect(confirmOrder).toBeLessThan(saveOrder);
     expect(clip).toBe(SAVED_CLIP);
+  });
+
+  it.each([
+    [422, "UPLOAD_CONTENT_MISMATCH", "VJ_UPLOAD_CONTENT_MISMATCH"],
+    [404, "UPLOAD_NOT_FOUND", "VJ_UPLOAD_MISSING"],
+  ])(
+    "answers a %i %s confirm refusal as %s on the preview field and saves nothing",
+    async (status, confirmCode, vjCode) => {
+      stubFetch(() => Promise.resolve(new Response(null, { status: 200 })));
+      vi.mocked(confirmUpload).mockRejectedValue(
+        new ApiError(status, "refused", { code: confirmCode }),
+      );
+      const error: unknown = await attachVjPreview({
+        clipId: CLIP_ID,
+        preview: madePreview(),
+        isDemoMode: false,
+        signal: new AbortController().signal,
+      }).then(
+        () => null,
+        (reason: unknown) => reason,
+      );
+      expect(error).toBeInstanceOf(ApiError);
+      expect((error as ApiError).status).toBe(status);
+      expect((error as ApiError).data).toEqual({
+        code: vjCode,
+        field: "previewStorageKey",
+      });
+      expect(setVjClipPreview).not.toHaveBeenCalled();
+    },
+  );
+
+  it("does not confirm a preview whose PUT failed", async () => {
+    stubFetch(() => Promise.resolve(new Response(null, { status: 403 })));
+    await attachVjPreview({
+      clipId: CLIP_ID,
+      preview: madePreview(),
+      isDemoMode: false,
+      signal: new AbortController().signal,
+    }).catch(() => undefined);
+    expect(confirmUpload).not.toHaveBeenCalled();
   });
 
   it("names a failed PUT as VJ_UPLOAD_PUT_FAILED", async () => {
@@ -160,6 +210,7 @@ describe("attachVjPreview", () => {
     });
     expect(clip).toBe(SAVED_CLIP);
     expect(requestUpload).not.toHaveBeenCalled();
+    expect(confirmUpload).not.toHaveBeenCalled();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

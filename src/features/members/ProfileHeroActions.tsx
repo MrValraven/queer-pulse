@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useMemberContact } from "../connect/useMemberContact";
 import { useIncomingRequestActions } from "../connect/useIncomingRequestActions";
 import { useVouch } from "../../app/providers/useVouch";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type MemberProfile } from "./data/memberProfiles";
 import { ProfileHelloModal } from "./ProfileHelloModal";
@@ -36,6 +37,15 @@ export function ProfileHeroActions({
     profile.first,
   );
   const { openVouch, hasVouched } = useVouch();
+  const { demoMode } = useDemoMode();
+  // PRD-506. A private member takes no new requests and the server returns
+  // their limited card, so the connect action stays off the row. Demo data
+  // carries no limited card, so demo keeps it.
+  const isConnectClosed =
+    !demoMode &&
+    profile.visibility === "private" &&
+    !connected &&
+    !hasIncomingRequest;
   const vouched = hasVouched(profile.slug);
   const [helloOpen, setHelloOpen] = useState(false);
   const fullName = `${profile.first} ${profile.last}`;
@@ -55,9 +65,11 @@ export function ProfileHeroActions({
           // primary + vouch CTAs a real viewer gets, rendered inert so
           // preview mode doesn't leave an empty, misleading action row.
           <>
-            <Button size="lg" disabled>
-              {t("members:profile.hero.connectCta")}
-            </Button>
+            {!isConnectClosed && (
+              <Button size="lg" disabled>
+                {t("members:profile.hero.connectCta")}
+              </Button>
+            )}
             <Button size="lg" variant="ghost" disabled>
               {t("members:profile.hero.vouchForCta", {
                 first: profile.first,
@@ -90,18 +102,20 @@ export function ProfileHeroActions({
                 </Button>
               </>
             ) : (
-              <Button
-                size="lg"
-                onClick={() =>
-                  connected
-                    ? setHelloOpen(true)
-                    : contact({ slug: profile.slug, name: fullName })
-                }
-              >
-                {connected
-                  ? t("connect:contact.message")
-                  : t("members:profile.hero.connectCta")}
-              </Button>
+              !isConnectClosed && (
+                <Button
+                  size="lg"
+                  onClick={() =>
+                    connected
+                      ? setHelloOpen(true)
+                      : contact({ slug: profile.slug, name: fullName })
+                  }
+                >
+                  {connected
+                    ? t("connect:contact.message")
+                    : t("members:profile.hero.connectCta")}
+                </Button>
+              )
             )}
             {/* Vouching steps aside while a request is waiting: three large
                 buttons is not an action row, and the vouch CTA comes straight

@@ -6,7 +6,10 @@ import {
   SegmentedControl,
   Select,
 } from "../../../shared/components/ui";
+import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useMediaQuery } from "../../../shared/hooks";
+import { useFormat } from "../../../shared/i18n/format";
+import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminToolbar, adminToolbarClasses } from "../ui";
 import {
@@ -53,12 +56,39 @@ function useStatusChipOptions(counts: CulturalTaskListDTO["counts"] | null) {
   });
 }
 
+/** How many tasks are in view, its figure rolling as it changes. The
+ *  line stays mounted (empty while the list has no rows), so a polite
+ *  live region announces each new count. */
+function TasksCount({ shownCount }: { shownCount: number | null }) {
+  const numberFormat = useFormat();
+  return (
+    <span className={styles.count} aria-live="polite">
+      {shownCount === null || shownCount === 0 ? null : (
+        <Translation
+          i18nKey={`${TASKS_PREFIX}.count`}
+          values={{ count: shownCount }}
+          slots={{
+            count: (
+              <RollingNumber
+                value={numberFormat.number(shownCount)}
+                numericValue={shownCount}
+              />
+            ),
+          }}
+        />
+      )}
+    </span>
+  );
+}
+
 /**
  * The task filters, laid out by the shared admin toolbar: the Assigned to
  * view (Everyone, Assigned to me, Unassigned; a compact select on a
- * phone, where the three segments run out of width) and the status chips (Open,
- * each status with its count, All), both kept in the URL. The count of
- * tasks in view follows them, and "Add task" sits at the end.
+ * phone, where the three segments run out of width) and the status chips
+ * (Open, each status with its count, All), both kept in the URL. The two
+ * filters wrap as whole units in one cell, while the count of tasks in view
+ * and "Add task" hold the end of the first line; on a phone they share the
+ * last line.
  */
 export function TasksToolbar({
   url,
@@ -89,56 +119,56 @@ export function TasksToolbar({
     <AdminToolbar
       className={styles.toolbar}
       label={t(`${TASKS_PREFIX}.toolbarLabel`)}
-      count={
-        shownCount === null || shownCount === 0
-          ? undefined
-          : t(`${TASKS_PREFIX}.count`, { count: shownCount })
-      }
       end={
-        <Button size="sm" onClick={onAdd}>
-          <FiPlus aria-hidden />
-          {t(`${TASKS_PREFIX}.addCta`)}
-        </Button>
+        <>
+          <TasksCount shownCount={shownCount} />
+          <Button size="sm" onClick={onAdd}>
+            <FiPlus aria-hidden />
+            {t(`${TASKS_PREFIX}.addCta`)}
+          </Button>
+        </>
       }
     >
-      <div className={styles.filter}>
-        <span id={assigneeLabelId} className={styles.filterLabel}>
-          {t(`${TASKS_PREFIX}.assigneeFilterLabel`)}
-        </span>
-        {isPhone ? (
-          <Select
-            size="sm"
-            className={`${adminToolbarClasses.select} ${styles.phoneTarget}`}
-            labelledBy={assigneeLabelId}
-            options={assigneeOptions}
-            value={assigneeValue}
-            onChange={chooseAssignee}
+      <div className={styles.filters}>
+        <div className={styles.filter}>
+          <span id={assigneeLabelId} className={styles.filterLabel}>
+            {t(`${TASKS_PREFIX}.assigneeFilterLabel`)}
+          </span>
+          {isPhone ? (
+            <Select
+              size="sm"
+              className={`${adminToolbarClasses.select} ${styles.phoneTarget}`}
+              labelledBy={assigneeLabelId}
+              options={assigneeOptions}
+              value={assigneeValue}
+              onChange={chooseAssignee}
+            />
+          ) : (
+            <SegmentedControl
+              labelledBy={assigneeLabelId}
+              options={assigneeOptions}
+              value={assigneeValue}
+              onChange={chooseAssignee}
+            />
+          )}
+        </div>
+        <div className={styles.filter}>
+          <span id={statusLabelId} className={styles.filterLabel}>
+            {t(`${TASKS_PREFIX}.statusFilterLabel`)}
+          </span>
+          <FilterChips
+            className={adminToolbarClasses.chips}
+            labelledBy={statusLabelId}
+            options={statusOptions}
+            value={url.taskStatusView}
+            onChange={(chosen) => {
+              const view = TASK_STATUS_VIEW_OPTIONS.find(
+                (option) => option === chosen,
+              );
+              if (view !== undefined) url.setTaskStatusView(view);
+            }}
           />
-        ) : (
-          <SegmentedControl
-            labelledBy={assigneeLabelId}
-            options={assigneeOptions}
-            value={assigneeValue}
-            onChange={chooseAssignee}
-          />
-        )}
-      </div>
-      <div className={styles.filter}>
-        <span id={statusLabelId} className={styles.filterLabel}>
-          {t(`${TASKS_PREFIX}.statusFilterLabel`)}
-        </span>
-        <FilterChips
-          className={adminToolbarClasses.chips}
-          labelledBy={statusLabelId}
-          options={statusOptions}
-          value={url.taskStatusView}
-          onChange={(chosen) => {
-            const view = TASK_STATUS_VIEW_OPTIONS.find(
-              (option) => option === chosen,
-            );
-            if (view !== undefined) url.setTaskStatusView(view);
-          }}
-        />
+        </div>
       </div>
     </AdminToolbar>
   );

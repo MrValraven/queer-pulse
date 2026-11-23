@@ -25,6 +25,7 @@ const template: EventBatchTemplateDTO = {
   timezone: "Europe/Lisbon",
   startTime: "21:00",
   endTime: "23:30",
+  endDayOffset: 0,
   coverImageUrl: null,
   gatheringFamily: "watch",
   eventType: "Drag show",

@@ -3,10 +3,10 @@ import { AuthContext, type AuthErrorCode } from "./authContext";
 import { useDemoMode } from "./DemoModeProvider";
 import {
   ApiError,
+  isSessionRefusedByServer,
   refreshSession,
   setSessionState,
 } from "../../shared/api/client";
-import { queryClient } from "../../shared/api/queryClient";
 import {
   fetchMe,
   postLogout,
@@ -18,20 +18,13 @@ import {
   currentUser,
   currentUserSlug,
 } from "../../features/members/data/demoCurrentUser";
-import { clearStoredGatheringDrafts } from "../../features/gatherings/createGatheringDraftStorage";
-import { clearStoredAddMonthDrafts } from "../../features/gatherings/addMonth/addMonthDraftStorage";
-import { clearLegacyCreatorDraftCopies } from "../../features/creatorDrafts/legacyCreatorDraftStorage";
-import { clearCreatorDraftDemoStore } from "../../features/creatorDrafts/api/creatorDrafts.demoStore";
-import { CREATOR_DRAFT_QUERY_ROOT } from "../../features/creatorDrafts/api/creatorDraftQueryKeys";
-import { clearQuestionnaireDrafts } from "../../features/goTogether/questionnaire/questionnaireDraftStorage";
-import { clearDraftsForScope } from "../../features/messages/drafts";
-import { clearOutboxForScope } from "../../features/messages/outbox";
-import { clearStudioEpisodeMemory } from "../../features/studio/player/studioEpisodeMemory";
-import { clearStudioQueueSnapshots } from "../../features/studio/player/studioQueueStorage";
-import { clearStudioWarningConsent } from "../../features/studio/player/studioWarningGate";
-import { clearStudioTrackReveals } from "../../features/forum/forumWarnings.helpers";
 import { logoutAndDetachPush } from "../../features/push/detachPushOnSignOut";
-import { purgeMessagingCache } from "../../shared/api/queryPersistence/messagingCachePersistence";
+import {
+  adoptConfirmedMember,
+  wipeFixedKeyMemberStores,
+  wipeMemberLocalData,
+  wipeMemberSessionCaches,
+} from "./wipeMemberLocalData";
 import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
 import {
   useLiveSessionBootstrap,
@@ -150,71 +143,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(() => {
     setPreparing(false);
-    // Forget every unpublished gathering draft and every unpublished month of
-    // events in this browser before the cache goes, in demo and live alike, so
-    // the next person on a shared device starts clean. Only this explicit
-    // sign-out clears them: a session that expires keeps its draft for the
-    // member's return (ruling F4).
-    clearStoredGatheringDrafts();
-    clearStoredAddMonthDrafts();
-    // Creator drafts live on the server now. Their only client copies are the
-    // react-query cache, the demo store and the old browser keys, so all
-    // three go here, in demo and live, before anything else.
-    queryClient.removeQueries({ queryKey: [CREATOR_DRAFT_QUERY_ROOT] });
-    clearCreatorDraftDemoStore();
-    clearLegacyCreatorDraftCopies();
-    // The same for an unsaved Go together questionnaire: its answers are
-    // sensitive, so the next member in this tab never inherits them.
-    clearQuestionnaireDrafts();
-    // And the Studio player's saved queue for this tab, whoever played it.
-    clearStudioQueueSnapshots();
-    // Studio artist kinds: played episodes, saved places and speed go with
-    // the saved queue, for every member on this device (spec 5.7).
-    clearStudioEpisodeMemory();
-    // Studio safety: the warned tracks this tab agreed to hear go too, so
-    // the next member here is asked again (spec 6.3).
-    clearStudioWarningConsent();
-    // With the lyrics and show notes this tab uncovered (spec 6.2).
-    clearStudioTrackReveals();
-    // And every unsent DM: the offline outbox and each composer draft, for the
-    // signing-out member's own scope (ENG-404). Runs here so the wipe happens
-    // whether or not the Messages page is mounted to see the scope change.
-    const signingOutScopeId = demoMode ? "demo" : (user?.id ?? null);
-    clearOutboxForScope(signingOutScopeId);
-    clearDraftsForScope(signingOutScopeId);
-    if (demoMode) {
+    const scopeId = demoMode ? "demo" : (user?.id ?? null);
+    // Sign out first: the client session state is cleared before anything
+    // else, so a wipe step that fails can never leave the member looking
+    // signed in on a device they asked to be signed out of. Then every
+    // per-member trace in this browser goes (drafts, the DM outbox, Studio
+    // memory, the story draft, recent searches, the issuer details), in demo
+    // and live alike. Quick Exit runs the same wipe, so the two never drift.
+    if (!demoMode) setSessionState("none");
+    try {
+      wipeMemberLocalData(scopeId);
+    } finally {
       setLoggedIn(false);
-      return;
+      if (!demoMode) {
+        setUser(null);
+        // Then the persisted messaging cache and every authenticated query.
+        wipeMemberSessionCaches();
+        // Fire-and-forget: one logout request goes out as soon as this
+        // device's push endpoint is read (a local read, capped at a few
+        // hundred ms) and carries it, so the backend removes the push row in
+        // the same request that revokes the session (ENG-225).
+        void logoutAndDetachPush(postLogout);
+      }
     }
-    // Clear local session state FIRST, then fire the logout best-effort. Waiting
-    // on the round trip meant a hung or slow backend left the member looking
-    // signed in on a device they just asked to be signed out of.
-    setSessionState("none");
-    setUser(null);
-    setLoggedIn(false);
-    // Drop every authenticated query (conversations, messages, profile, blocks,
-    // the Infinity-staleTime bootstrap) so a shared device cannot render the
-    // previous member's data from cache after they sign out.
-    //
-    // Treat this as the backstop. The primary guarantee for cross-member
-    // isolation lives in the keys themselves: `sessionBootstrapQueryKey` (see
-    // `src/shared/api/useSessionBootstrap.ts`) carries the member id, so the
-    // next member reads a different cache entry whether or not this line ever
-    // runs. Keep the clear anyway, for every key that is not yet member-scoped
-    // and for the memory it frees.
-    //
-    // The messaging cache persisted for offline reading (PRD-375) goes first,
-    // so the clear below cannot race a queued write, and every other open tab
-    // of this app drops its copy too.
-    void purgeMessagingCache();
-    queryClient.clear();
-    // Still fire-and-forget, so nothing above waits on it. One logout request
-    // goes out as soon as this device's push endpoint is read (a local read,
-    // capped at a few hundred ms) and carries it, so the backend removes the
-    // push row in the same request that revokes the session (ENG-225). The
-    // browser unsubscribe, the shown notifications, the badge and the local
-    // sync records are cleared in parallel and never hold the logout.
-    void logoutAndDetachPush(postLogout);
   }, [demoMode, user?.id]);
 
   const endPreparing = useCallback(() => setPreparing(false), []);
@@ -233,16 +184,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // an explicit refresh never races the automatic one and double-spends the
     // rotating token — which the backend would read as reuse and sign out every
     // session. A false result means the rotation failed: treat it as logged out.
+    const refreshStartedAt = Date.now();
     const ok = await refreshSession();
     if (!ok) {
       setSessionState("none");
       setUser(null);
       setLoggedIn(false);
+      // An involuntary loss the server confirmed: fixed-key stores carry no
+      // member to wait for. A network fault or a 5xx keeps them.
+      if (isSessionRefusedByServer(refreshStartedAt)) {
+        wipeFixedKeyMemberStores();
+      }
       return;
     }
+    const meStartedAt = Date.now();
     try {
       const u = await fetchMe();
       setSessionState("active");
+      adoptConfirmedMember(u.id);
       setUser(u);
       setLoggedIn(true);
       setAuthError(null);
@@ -260,6 +219,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSessionState("none");
       setUser(null);
       setLoggedIn(false);
+      if (isSessionRefusedByServer(meStartedAt, err)) {
+        wipeFixedKeyMemberStores();
+      }
     }
   }, [demoMode]);
 

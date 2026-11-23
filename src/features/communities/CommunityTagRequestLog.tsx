@@ -8,6 +8,8 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
+import { memberRefDisplayName } from "../../shared/api/refs";
 import { isCommunityStaff } from "./communityStaff";
 import type { CommunityRole } from "./membership.types";
 import type { CommunityTagRequestDTO } from "./api/communityTagRequests.api";
@@ -16,12 +18,14 @@ import styles from "./CommunityTagRequestLog.module.css";
 
 /**
  * The requester's display name, or null when the backend could not resolve the
- * profile. Null renders no byline at all rather than an invented one.
+ * profile, which renders no byline at all. A requester whose account has since
+ * closed reads as the inactive-member label.
  */
-function requesterName(request: CommunityTagRequestDTO): string | null {
-  const requestedBy = request.requestedBy;
-  if (!requestedBy) return null;
-  return `${requestedBy.firstName} ${requestedBy.lastName}`.trim() || null;
+function requesterName(
+  request: CommunityTagRequestDTO,
+  t: TFunction,
+): string | null {
+  return memberRefDisplayName(request.requestedBy, t) || null;
 }
 
 /**
@@ -47,7 +51,7 @@ function CommunityTagRequestRow({
   const { t } = useTranslation();
   const format = useFormat();
   const isResolved = request.status === "resolved";
-  const name = requesterName(request);
+  const name = requesterName(request, t);
 
   return (
     <li className={styles.row}>

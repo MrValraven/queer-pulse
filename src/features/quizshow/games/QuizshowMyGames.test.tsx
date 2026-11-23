@@ -84,8 +84,9 @@ function currentLocation(): string {
 }
 
 function deleteEverySeededGame() {
-  demoDeleteGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz);
-  demoDeleteGame(QUIZSHOW_DEMO_GAME_IDS.afterDark);
+  for (const gameId of Object.values(QUIZSHOW_DEMO_GAME_IDS)) {
+    demoDeleteGame(gameId);
+  }
 }
 
 function lastCreatedGame(): QuizshowGameResponse {

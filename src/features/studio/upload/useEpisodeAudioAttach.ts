@@ -9,7 +9,9 @@ import {
 } from "../api/studio.types";
 import {
   StudioAudioUploadError,
+  confirmStudioAudioUpload,
   uploadStudioAudio,
+  uploadedKeyOf,
   type StudioAudioUploadHandle,
 } from "../api/studioAudioUpload";
 import { useConfirmStudioTrackAudio } from "../api/useStudioTrackMutations";
@@ -33,8 +35,10 @@ import {
 const UPLOAD_CANCELLED_LINE_KEY = "studio:uploadFlow.files.cancelled";
 
 /** What a stopped attach keeps, so Retry resumes where it stopped: the MP3
- *  once converted, and the stored key once uploaded (a failed confirm then
- *  retries the confirm alone, never the upload or the conversion). */
+ *  once converted, the stored key once its bytes landed (a failed storage
+ *  check then retries that check alone), and the checked key once uploaded
+ *  (a failed confirm then retries the confirm alone and keeps the upload and
+ *  the conversion). */
 interface HeldAudio {
   sourceFile: File;
   /** The file to upload: the MP3 for a converted WAV or AIFF, else the pick. */
@@ -42,6 +46,20 @@ interface HeldAudio {
   contentType: StudioAudioContentType;
   wasConverted: boolean;
   uploadedKey: string | null;
+  /** Bytes in storage whose check (`confirmStudioAudioUpload`) failed. */
+  uncheckedKey: string | null;
+}
+
+/** The full bar while the stored bytes or the track's audio are checked. */
+function confirmingProgressOf(fileName: string): EpisodeAudioProgress {
+  return {
+    fileName,
+    progress: 100,
+    barPercent: 100,
+    isConfirming: true,
+    isConverting: false,
+    isChecking: false,
+  };
 }
 
 /** Runs one attach: a token per run, so a run that was cancelled or
@@ -184,6 +202,12 @@ export function useEpisodeAudioAttach(
     }
   }
 
+  /** Retry after a failed storage check: checks the stored key alone. */
+  async function checkStored(key: string, fileName: string) {
+    setProgress(confirmingProgressOf(fileName));
+    return await confirmStudioAudioUpload(key);
+  }
+
   /** Runs the steps `work` still needs: convert, upload, confirm. */
   async function resume(initialWork: HeldAudio) {
     const isCurrent = run.startRun();
@@ -199,18 +223,14 @@ export function useEpisodeAudioAttach(
       work = { ...work, uploadFile };
       setHeld(work);
       const uploadedKey =
-        work.uploadedKey ?? (await upload(work, uploadFile, isCurrent));
+        work.uploadedKey ??
+        (work.uncheckedKey
+          ? await checkStored(work.uncheckedKey, fileName)
+          : await upload(work, uploadFile, isCurrent));
       if (!isCurrent()) return;
-      work = { ...work, uploadedKey };
+      work = { ...work, uploadedKey, uncheckedKey: null };
       setHeld(work);
-      setProgress({
-        fileName,
-        progress: 100,
-        barPercent: 100,
-        isConfirming: true,
-        isConverting: false,
-        isChecking: false,
-      });
+      setProgress(confirmingProgressOf(fileName));
       await confirmAudio.mutateAsync({
         trackId,
         releaseId: release.id,
@@ -220,6 +240,9 @@ export function useEpisodeAudioAttach(
     } catch (error) {
       if (!isCurrent()) return;
       if (error instanceof StudioAudioUploadError && error.isAborted) return;
+      // Bytes already in storage whose check failed: Retry checks them again.
+      const storedKey = uploadedKeyOf(error);
+      if (storedKey) work = { ...work, uncheckedKey: storedKey };
       // The server deleted an unreadable object: Retry uploads it again.
       if (studioErrorCodeOf(error) === "studio_audio_unreadable")
         work = { ...work, uploadedKey: null };
@@ -254,6 +277,7 @@ export function useEpisodeAudioAttach(
       contentType: first.contentType,
       wasConverted: first.needsConversion,
       uploadedKey: null,
+      uncheckedKey: null,
     });
   }
 

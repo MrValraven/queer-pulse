@@ -19,8 +19,9 @@ import { isAccountRestricted } from "./errorMessage";
  *     the response body (`ApiError.data.code`, see `shared/api/client.ts`).
  *  3. Causes the backend identifies on any endpoint, which a feature's status
  *     override must not hide: a moderation restriction (`ACCOUNT_RESTRICTED`),
- *     an inactive membership (`ACTIVE_MEMBERSHIP_REQUIRED`) and a refused
- *     security check (`CSRF_REJECTED`).
+ *     an inactive membership (`ACTIVE_MEMBERSHIP_REQUIRED`), a refused
+ *     security check (`CSRF_REJECTED`) and the upload refusals
+ *     (`UPLOAD_CAUSE_KEY_BY_CODE`).
  *  4. `overrides[status]`, the feature's own line for an uncoded status.
  *  5. The shared line for the status, ending in `refused` with `{status}`.
  *
@@ -59,6 +60,13 @@ export const SHARED_CAUSE_KEY = {
   rateLimited: "shared:apiError.reasonRateLimited",
   serverFault: "shared:apiError.serverFault",
   refused: "shared:apiError.refused",
+  uploadDailyQuotaReached: "shared:apiError.uploadDailyQuotaReached",
+  uploadHasLocationData: "shared:apiError.uploadHasLocationData",
+  uploadContentMismatch: "shared:apiError.uploadContentMismatch",
+  uploadNotFound: "shared:apiError.uploadNotFound",
+  uploadCheckUnavailable: "shared:apiError.uploadCheckUnavailable",
+  uploadKeyNotConfirmable: "shared:apiError.uploadKeyNotConfirmable",
+  uploadTooManyReferences: "shared:apiError.uploadTooManyReferences",
 } as const;
 
 /**
@@ -81,6 +89,33 @@ export const CSRF_REJECTED_CODE = "CSRF_REJECTED";
  * `common/coded-error.ts`, `PLATFORM_ERROR_CODE`).
  */
 export const UPLOAD_NOT_YOURS_CODE = "UPLOAD_NOT_YOURS";
+
+/**
+ * The machine codes the upload routes refuse with (queerpulse-backend
+ * `storage/upload-error-codes.ts`), each with its own shared line. Any
+ * surface that uploads gets the specific cause without an override.
+ *  - `UPLOAD_DAILY_QUOTA_REACHED`: the presign passed the member's daily byte
+ *    allowance (429).
+ *  - `UPLOAD_HAS_LOCATION_DATA`: `POST /uploads/confirm` found GPS data in a
+ *    JPEG (422).
+ *  - `UPLOAD_CONTENT_MISMATCH`: the stored bytes are not the declared type
+ *    (422).
+ *  - `UPLOAD_NOT_FOUND`: nothing was stored under the key (404).
+ *  - `UPLOAD_CHECK_UNAVAILABLE`: the storage check could not run just now
+ *    (503); trying again is the answer.
+ *  - `UPLOAD_KEY_NOT_CONFIRMABLE`: the key names no member upload (400).
+ *  - `UPLOAD_TOO_MANY_REFERENCES`: a save referenced more photos than one
+ *    request may verify (400).
+ */
+export const UPLOAD_CAUSE_KEY_BY_CODE: Readonly<Record<string, string>> = {
+  UPLOAD_DAILY_QUOTA_REACHED: SHARED_CAUSE_KEY.uploadDailyQuotaReached,
+  UPLOAD_HAS_LOCATION_DATA: SHARED_CAUSE_KEY.uploadHasLocationData,
+  UPLOAD_CONTENT_MISMATCH: SHARED_CAUSE_KEY.uploadContentMismatch,
+  UPLOAD_NOT_FOUND: SHARED_CAUSE_KEY.uploadNotFound,
+  UPLOAD_CHECK_UNAVAILABLE: SHARED_CAUSE_KEY.uploadCheckUnavailable,
+  UPLOAD_KEY_NOT_CONFIRMABLE: SHARED_CAUSE_KEY.uploadKeyNotConfirmable,
+  UPLOAD_TOO_MANY_REFERENCES: SHARED_CAUSE_KEY.uploadTooManyReferences,
+};
 
 /** The machine `code` on an `ApiError`'s parsed body, or null when it has none. */
 export function apiErrorCode(error: unknown): string | null {
@@ -176,5 +211,10 @@ export function causeErrorKey(
   if (apiErrorCode(error) === CSRF_REJECTED_CODE) {
     return { key: SHARED_CAUSE_KEY.securityCheck };
   }
+  const uploadCauseKey =
+    code !== null && Object.hasOwn(UPLOAD_CAUSE_KEY_BY_CODE, code)
+      ? UPLOAD_CAUSE_KEY_BY_CODE[code]
+      : undefined;
+  if (uploadCauseKey) return { key: uploadCauseKey };
   return causeErrorKeyForStatus(error.status, overrides);
 }

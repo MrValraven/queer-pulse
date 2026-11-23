@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
-import { requestUpload } from "../../members/api/uploads.api";
+import { confirmUpload, requestUpload } from "../../members/api/uploads.api";
+import { createVjClip } from "../api/vj.api";
 import { vjErrorKeyOf } from "../vjErrors";
 import { VjDecodeError, type VjDecodedClip } from "./vjDecode";
 import { readVjBlobBytes } from "./vjSniff";
@@ -12,9 +13,11 @@ import {
   type VjPrepareSeams,
 } from "./vjUpload";
 import { VjUploadFailure } from "./vjUploadFailure";
+import type { VjClipDTO } from "../../../shared/contracts/vj";
 
 vi.mock("../../members/api/uploads.api", () => ({
   requestUpload: vi.fn(),
+  confirmUpload: vi.fn(),
 }));
 vi.mock("../api/vj.api", () => ({
   createVjClip: vi.fn(),
@@ -69,6 +72,7 @@ async function failureOf(work: Promise<unknown>): Promise<VjUploadFailure> {
 
 beforeEach(() => {
   vi.mocked(requestUpload).mockReset();
+  vi.mocked(confirmUpload).mockReset().mockResolvedValue(undefined);
 });
 
 describe("prepareVjClipFile", () => {
@@ -346,6 +350,13 @@ describe("uploadVjClip", () => {
     expect(vjErrorKeyOf(error)).toBe("vj:error.uploadMissing");
   });
 
+  it("does not confirm a thumbnail whose PUT failed", async () => {
+    presignAnswers();
+    stubFetch(() => Promise.resolve({ ok: false, status: 403 } as Response));
+    await liveUpload();
+    expect(confirmUpload).not.toHaveBeenCalled();
+  });
+
   it("marks a presign 429 so the row waits and tries again", async () => {
     const refusal = new ApiError(429, "Too Many Requests");
     vi.mocked(requestUpload).mockRejectedValue(refusal);
@@ -355,5 +366,106 @@ describe("uploadVjClip", () => {
     expect(isVjPresignRateLimited(new ApiError(429, "Too Many Requests"))).toBe(
       false,
     );
+  });
+});
+
+const THUMBNAIL_KEY = "vj-thumbnails/key.webp";
+const CLIP_KEY = "vj-clips/key.mp4";
+
+/** Two presigns in upload order: the thumbnail, then the clip. */
+function presignAnswersInOrder(): void {
+  vi.mocked(requestUpload)
+    .mockResolvedValueOnce({
+      uploadUrl: "https://storage.test/thumbnail",
+      key: THUMBNAIL_KEY,
+    })
+    .mockResolvedValueOnce({
+      uploadUrl: "https://storage.test/clip",
+      key: CLIP_KEY,
+    });
+}
+
+/** Both PUTs land, so every outcome below comes from the confirm step. */
+function bothPutsLand(): void {
+  presignAnswersInOrder();
+  stubFetch(() => Promise.resolve(OK_RESPONSE));
+  vi.stubGlobal("XMLHttpRequest", fakeXhrClass({ status: 200 }));
+}
+
+// Open item A: the server checks each stored object before the clip is created.
+describe("uploadVjClip confirm step", () => {
+  beforeEach(() => {
+    vi.mocked(createVjClip)
+      .mockReset()
+      .mockResolvedValue({} as VjClipDTO);
+  });
+
+  it("confirms the thumbnail, then the clip, before creating the clip", async () => {
+    bothPutsLand();
+    const error = await liveUpload();
+    expect(error).toBeNull();
+    expect(vi.mocked(confirmUpload).mock.calls).toEqual([
+      [THUMBNAIL_KEY],
+      [CLIP_KEY],
+    ]);
+    const lastConfirmOrder = Math.max(
+      ...vi.mocked(confirmUpload).mock.invocationCallOrder,
+    );
+    expect(vi.mocked(createVjClip).mock.invocationCallOrder[0]).toBeGreaterThan(
+      lastConfirmOrder,
+    );
+    expect(createVjClip).toHaveBeenCalledWith(
+      expect.objectContaining({
+        storageKey: CLIP_KEY,
+        thumbnailStorageKey: THUMBNAIL_KEY,
+      }),
+    );
+  });
+
+  it("names clip bytes the server finds of another type and creates nothing", async () => {
+    bothPutsLand();
+    vi.mocked(confirmUpload)
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(
+        new ApiError(422, "Unprocessable Entity", {
+          code: "UPLOAD_CONTENT_MISMATCH",
+        }),
+      );
+    const error = await liveUpload();
+    expect(error).toBeInstanceOf(ApiError);
+    expect((error as ApiError).status).toBe(422);
+    expect((error as ApiError).data).toEqual({
+      code: "VJ_UPLOAD_CONTENT_MISMATCH",
+      field: "storageKey",
+    });
+    expect(vjErrorKeyOf(error)).toBe("vj:error.uploadContentMismatch");
+    expect(createVjClip).not.toHaveBeenCalled();
+  });
+
+  it("names a thumbnail the server cannot find and never presigns the clip", async () => {
+    bothPutsLand();
+    vi.mocked(confirmUpload).mockRejectedValueOnce(
+      new ApiError(404, "Not Found", { code: "UPLOAD_NOT_FOUND" }),
+    );
+    const error = await liveUpload();
+    expect((error as ApiError).data).toEqual({
+      code: "VJ_UPLOAD_MISSING",
+      field: "thumbnailStorageKey",
+    });
+    expect(vjErrorKeyOf(error)).toBe("vj:error.uploadMissing");
+    expect(requestUpload).toHaveBeenCalledTimes(1);
+    expect(createVjClip).not.toHaveBeenCalled();
+  });
+
+  it("passes a check that could not run through with its own code", async () => {
+    bothPutsLand();
+    const refusal = new ApiError(503, "Service Unavailable", {
+      code: "UPLOAD_CHECK_UNAVAILABLE",
+    });
+    vi.mocked(confirmUpload).mockRejectedValueOnce(refusal);
+    const error = await liveUpload();
+    expect(error).toBe(refusal);
+    expect(vjErrorKeyOf(error)).toBe("vj:failure.server");
+    expect(createVjClip).not.toHaveBeenCalled();
   });
 });

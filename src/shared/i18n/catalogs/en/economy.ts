@@ -646,7 +646,7 @@ export const economy: Catalog = {
   "housingModal.message.successBodyNoReplyTime":
     "Your message is on its way to <strong>{toName}</strong>. You'll get a notification here when they reply. Contact details are shared once you both agree to take it further.",
   "housingModal.message.unavailable":
-    "This home isn't on the board any more, so your message wasn't sent.",
+    "This home isn't available to message right now, so your message wasn't sent.",
   "housingModal.message.body":
     "About <strong>{listingTitle}</strong>. Keep it human, a sentence about who you are and why it suits you goes a long way. Your profile is shared with the message.",
   "housingModal.message.note":
@@ -1960,9 +1960,9 @@ export const economy: Catalog = {
   "barterDetail.propose.errorAlreadySent":
     "You already have a proposal on this swap. Carry on in your messages.",
   "barterDetail.propose.errorNotAllowed":
-    "You can't propose a swap here. It may be your own post, or you and this member can't reach each other.",
+    "You can't propose a swap on your own post.",
   "barterDetail.propose.errorGone":
-    "This swap is gone. Have a look at what else is on the exchange.",
+    "This swap isn't available any more. Have a look at what else is on the exchange.",
   "barterDetail.propose.errorFailed":
     "Your proposal didn't send. Give it another try in a moment.",
   "barterDetail.propose.yoursTitle": "This is your swap",
@@ -4688,4 +4688,10 @@ export const economy: Catalog = {
 
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   "barterDetail.propose.openThreadCta": "Open the conversation",
+  "flatmates.card.sayHelloUnblockFirst":
+    "Unblock this member before sending a hello",
+  "flatmates.card.sayHelloUnavailable":
+    "This member isn't available for a hello right now",
+  "barterDetail.propose.errorUnblockFirst":
+    "Unblock this member before proposing a swap.",
 };

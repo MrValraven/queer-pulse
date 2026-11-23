@@ -5,7 +5,10 @@ import type {
   CreateReportInput,
   ReportDTO,
 } from "../../safety/api/reports.api";
-import { useCreateReport } from "../../safety/api/useCreateReport";
+import {
+  useAnnounceFilingOutcome,
+  useCreateReport,
+} from "../../safety/api/useCreateReport";
 import { useMatchedChat } from "../matchedChatContext";
 import { reportMatchedChatMember } from "./messages.api";
 
@@ -30,7 +33,11 @@ export function useConversationReportMutation(isGroupReport: boolean) {
 function useReportMatchedChatMember() {
   const { demoMode } = useDemoMode();
   const matchedChat = useMatchedChat();
+  const announceFilingOutcome = useAnnounceFilingOutcome();
   return useMutation<ReportDTO, Error, CreateReportInput>({
+    // PRD-510: the named state of a repeat filing, the line `useCreateReport`
+    // shows for every other report route.
+    onSuccess: (report) => announceFilingOutcome(report),
     // The modal renders its own failure toast, see `useCreateReport`.
     meta: { silentError: true },
     mutationFn: async ({

@@ -415,7 +415,11 @@ describe("StartCommunityPage quick founding", () => {
     goLive();
     seedDraft({ draft: completeDraft, step: 8, quickStep: 3 });
     createMutate.mockImplementation((_dto, callbacks) => {
-      callbacks.onSuccess?.({ slug: "sunday-swim", name: "Sunday Swim" });
+      // React Query runs onSuccess after the request settles, never inside
+      // mutate(): by then the page is on "opening" and its leave guard is off.
+      queueMicrotask(() =>
+        callbacks.onSuccess?.({ slug: "sunday-swim", name: "Sunday Swim" }),
+      );
     });
     installMatchMedia(true);
     renderStartPage();
@@ -423,7 +427,7 @@ describe("StartCommunityPage quick founding", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Open community/ }));
 
-    expect(screen.getByTestId("community-probe")).toHaveTextContent(
+    expect(await screen.findByTestId("community-probe")).toHaveTextContent(
       "sunday-swim",
     );
     expect(showToast).toHaveBeenCalledWith(
@@ -439,7 +443,11 @@ describe("StartCommunityPage wizard founding", () => {
     goLive();
     seedDraft({ draft: completeDraft, step: 8 });
     createMutate.mockImplementation((_dto, callbacks) => {
-      callbacks.onSuccess?.({ slug: "sunday-swim", name: "Sunday Swim" });
+      // React Query runs onSuccess after the request settles, never inside
+      // mutate(): by then the page is on "opening" and its leave guard is off.
+      queueMicrotask(() =>
+        callbacks.onSuccess?.({ slug: "sunday-swim", name: "Sunday Swim" }),
+      );
     });
     installMatchMedia(false);
     renderStartPage();
@@ -447,7 +455,7 @@ describe("StartCommunityPage wizard founding", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Open the doors/ }));
 
-    expect(screen.getByTestId("community-probe")).toHaveTextContent(
+    expect(await screen.findByTestId("community-probe")).toHaveTextContent(
       "sunday-swim",
     );
     expect(showToast).not.toHaveBeenCalledWith(

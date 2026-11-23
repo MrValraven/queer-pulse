@@ -116,6 +116,16 @@ const REPORT_EVIDENCE_EXPIRED_CODE = "REPORT_EVIDENCE_EXPIRED";
  */
 const STUDIO_USE_COPYRIGHT_CLAIM_CODE = "studio_use_copyright_claim";
 
+/**
+ * PRD-510: a repeat filing lands on the reporter's open report about the same
+ * subject for the same reason, and this coded 409 says that open report
+ * already holds as much detail and evidence as one report can. Mirrors
+ * `REPORT_FOLLOW_UP_LIMIT_CODE` in the backend's `reports/reports.service.ts`.
+ * The plain 409 line would tell them the filing collided with something, when
+ * the truth is that a moderator already has everything they sent.
+ */
+const REPORT_FOLLOW_UP_LIMIT_CODE = "REPORT_FOLLOW_UP_LIMIT";
+
 /** How a failed report submission should be explained to the member. */
 export type ReportSubmissionRefusal =
   /** A rolling flood cap: shown as `safety:report.floodCap`. */
@@ -128,6 +138,8 @@ export type ReportSubmissionRefusal =
   | { kind: "evidenceExpired" }
   /** Copyright on a Studio track or release: the claim form takes it. */
   | { kind: "useCopyrightClaim" }
+  /** PRD-510: the open report this filing would add to is already full. */
+  | { kind: "followUpLimit" }
   /**
    * The server would not accept this filing from this caller: a 401, or a 403
    * that survived the API client's own CSRF re-fetch and retry.
@@ -231,6 +243,13 @@ export function classifyReportSubmissionError(
   ) {
     return { kind: "useCopyrightClaim" };
   }
+  if (
+    error.status === 409 &&
+    (error.data as { code?: unknown } | null | undefined)?.code ===
+      REPORT_FOLLOW_UP_LIMIT_CODE
+  ) {
+    return { kind: "followUpLimit" };
+  }
   // Read BEFORE the generic 401/403 branch: a restricted or inactive reporter
   // is also a 403, but "sign in and try again" would send them round a loop.
   // The shared classifier owns both detections, so they cannot drift.
@@ -299,6 +318,7 @@ export function useReportSubmissionError(): (
   const notParticipantMessage = t("safety:report.notParticipant");
   const evidenceExpiredMessage = t("safety:report.evidenceExpired");
   const claimFormMessage = t("studio:errors.useCopyrightClaim");
+  const followUpLimitMessage = t("safety:report.followUpLimit");
   // The shared cause lines (`shared/api/causeErrorKey.ts`), for the failures
   // that name a cause every surface shares.
   const noConnectionMessage = t(SHARED_CAUSE_KEY.noConnection);
@@ -354,6 +374,11 @@ export function useReportSubmissionError(): (
           ? fallbackMessage
           : claimFormMessage;
       }
+      if (refusal.kind === "followUpLimit") {
+        return followUpLimitMessage === "safety:report.followUpLimit"
+          ? fallbackMessage
+          : followUpLimitMessage;
+      }
       if (refusal.kind === "burst") {
         // `t()` echoes the key back while its namespace is still loading, and a
         // raw `safety:report.tooFast` in front of a member is worse than the
@@ -385,6 +410,7 @@ export function useReportSubmissionError(): (
       notParticipantMessage,
       evidenceExpiredMessage,
       claimFormMessage,
+      followUpLimitMessage,
       noConnectionMessage,
       timedOutMessage,
       serverFaultMessage,

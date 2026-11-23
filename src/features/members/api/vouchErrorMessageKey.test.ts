@@ -72,12 +72,10 @@ describe("vouchErrorMessageKey", () => {
     ).toBe("members:vouch.modal.error.blocked");
   });
 
-  it("maps any other 403 to the blocked key", () => {
-    expect(
-      vouchErrorMessageKey(
-        new ApiError(403, "You cannot vouch for this member"),
-      ),
-    ).toBe("members:vouch.modal.error.blocked");
+  it("maps an uncoded 403 to the blocked key", () => {
+    expect(vouchErrorMessageKey(new ApiError(403, "Forbidden"))).toBe(
+      "members:vouch.modal.error.blocked",
+    );
   });
 
   it("falls back to the generic message for a non-ApiError failure", () => {

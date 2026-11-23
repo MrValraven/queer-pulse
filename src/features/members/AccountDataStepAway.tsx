@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
@@ -7,9 +7,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { logError } from "../../shared/observability/logger";
-import { useRoster } from "../communities/api/useRoster";
-import { TransferOwnershipModal } from "../communities/TransferOwnershipModal";
-import { ListingDependencyRow } from "../settings/AccountDependencyGate";
+import { AccountDependencyGate } from "../settings/AccountDependencyGate";
 import type { DeletionRequest } from "../settings/api/account.api";
 import {
   accountStepUpErrorCopy,
@@ -22,15 +20,11 @@ import {
   useReauth,
   useRequestDeletion,
 } from "../settings/api/useAccountMutations";
-import {
-  useAccountDependencies,
-  type AccountDependencyCommunity,
-  type AccountDependencyListing,
-} from "./api/useAccountDependencies";
+import { useAccountDependencies } from "./api/useAccountDependencies";
 import { StepAwayDialogs, type ConfirmKind } from "./StepAwayDialogs";
 import styles from "./AccountData.module.css";
 
-/** Already-pending deletion request banner, shown in place of the step-away
+/** Already-pending deletion request banner, shown ahead of the step-away
  *  actions. Mirrors `DeleteAccountSections`' `DeletePendingBanner`. */
 function PendingDeletionBanner({
   request,
@@ -69,87 +63,13 @@ function PendingDeletionBanner({
   );
 }
 
-/** The owned-community / live-listing rows blocking "Erase me", each with its
- *  own real remedy, grouped separately so the main component stays under
- *  the file's line budget. */
-function DependencyList({
-  communities,
-  listings,
-}: {
-  communities: AccountDependencyCommunity[];
-  listings: AccountDependencyListing[];
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.block}>
-      <p className={styles.dependencyIntro}>
-        {t("members:profile.accountData.stepAway.erase.blockedByDependencies")}
-      </p>
-      {communities.length > 0 && (
-        <ul className={styles.dependencyList}>
-          {communities.map((community) => (
-            <CommunityDependencyRow
-              key={community.slug}
-              community={community}
-            />
-          ))}
-        </ul>
-      )}
-      {listings.length > 0 && (
-        <ul className={styles.dependencyList}>
-          {listings.map((listing) => (
-            <ListingDependencyRow key={listing.ref} listing={listing} />
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
 /**
- * One owned community blocking erasure. Its only out is a real ownership
- * transfer (`POST /communities/:slug/transfer`, the same
- * `TransferOwnershipModal` the community danger zone uses). A community
- * requires an owner and there's no anonymous-owner state, so this is a real
- * precondition that blocks erasure. The roster only loads once the
- * modal is actually opened (`useRoster` is disabled until `slug` is set).
- */
-function CommunityDependencyRow({
-  community,
-}: {
-  community: AccountDependencyCommunity;
-}) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const { roster } = useRoster(open ? community.slug : undefined);
-
-  return (
-    <>
-      <li className={styles.dependencyRow}>
-        <span>{community.name}</span>
-        <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
-          {t("members:profile.accountData.stepAway.dependency.transferCta")}
-        </Button>
-      </li>
-      {open && (
-        <TransferOwnershipModal
-          slug={community.slug}
-          name={community.name}
-          roster={roster}
-          onClose={() => setOpen(false)}
-        />
-      )}
-    </>
-  );
-}
-
-/**
- * "Hide me" (deactivate, reversible) / "Erase me" (deletion-request, gated).
- * Each action sits behind a `ConfirmDialog`. "Erase me" stays visible and
- * DISABLED while `useAccountDependencies` still reports any owned communities
- * or live listings, wired to that hook's live result: a community can't
- * exist without an owner, so this precondition is real, and each dependency
- * row below carries its own real remedy.
+ * "Hide me" (deactivate, reversible) / "Erase me" (deletion-request).
+ * Each action sits behind a `ConfirmDialog`. "Erase me" waits only for the
+ * dependency check's first answer. Above it, the shared
+ * `AccountDependencyGate` lists what erasure hands on: owned communities with
+ * an optional ownership offer (the backend passes each one on at erasure) and
+ * live listings with an optional delete (erasure keeps them live).
  */
 export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
   const { t } = useTranslation();
@@ -161,6 +81,8 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
   const cancelDeletion = useCancelDeletion();
   const getDeletionRequest = useGetDeletionRequest();
   const dependencies = useAccountDependencies();
+  // Where focus lands after the gate deletes its last listing and unmounts.
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   const [confirmKind, setConfirmKind] = useState<ConfirmKind>(null);
   const [reason, setReason] = useState("");
@@ -168,7 +90,7 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
   const [pending, setPending] = useState<DeletionRequest | null>(null);
   const [cancelling, setCancelling] = useState(false);
 
-  // On mount, surface any already-pending deletion request instead of the
+  // On mount, surface any already-pending deletion request ahead of the
   // step-away actions. Mirrors `DeleteAccountSection`'s equivalent check.
   useEffect(() => {
     let active = true;
@@ -182,9 +104,9 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
     };
   }, [getDeletionRequest]);
 
-  // Fail closed: while dependencies are still loading, treat "erase" as
-  // blocked rather than briefly allowing it before the first fetch lands.
-  const eraseBlocked = dependencies.isLoading || dependencies.hasDependencies;
+  // Fail closed: while dependencies are still loading, hold "erase", so it is
+  // never offered before the member can see what it hands on.
+  const eraseBlocked = dependencies.isLoading;
 
   async function handleCancelPending() {
     setCancelling(true);
@@ -262,7 +184,7 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
 
   return (
     <section className={styles.section}>
-      <h3 className={styles.heading}>
+      <h3 className={styles.heading} ref={headingRef} tabIndex={-1}>
         {t("members:profile.accountData.stepAway.title")}
       </h3>
 
@@ -286,12 +208,11 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
           {t("members:profile.accountData.stepAway.erase.body")}
         </p>
 
-        {dependencies.hasDependencies && (
-          <DependencyList
-            communities={dependencies.communities}
-            listings={dependencies.listings}
-          />
-        )}
+        <AccountDependencyGate
+          communities={dependencies.communities}
+          listings={dependencies.listings}
+          fallbackFocusRef={headingRef}
+        />
 
         <Button
           variant="danger"
@@ -300,8 +221,8 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
         >
           {t("members:profile.accountData.stepAway.erase.cta")}
         </Button>
-        {eraseBlocked && !dependencies.isLoading && (
-          <p className={styles.hint}>
+        {eraseBlocked && (
+          <p className={styles.hint} role="status">
             {t("members:profile.accountData.stepAway.erase.disabledHint")}
           </p>
         )}

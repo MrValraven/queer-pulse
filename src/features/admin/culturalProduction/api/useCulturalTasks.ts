@@ -1,4 +1,8 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useQuery,
+  type UseQueryResult,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../../app/providers/DemoModeProvider";
 import {
   getCulturalTask,
@@ -16,7 +20,10 @@ const LIVE_STALE_MS = 30_000;
 
 /** The task list for one set of filters, with the todo, doing and done
  *  counts under `assignedTo`. Demo reads the demo store, which only demo
- *  writes change, so it never goes stale there. */
+ *  writes change, so it never goes stale there. While a new set of filters
+ *  loads, the previous answer stays as placeholder data
+ *  (`isPlaceholderData`), so the list keeps its rows on screen and only the
+ *  very first read shows the loading view. */
 export function useCulturalTasks(
   filters: CulturalTaskFilters,
 ): UseQueryResult<CulturalTaskListDTO, Error> {
@@ -25,6 +32,7 @@ export function useCulturalTasks(
     queryKey: culturalKeys.tasks(filters, demoMode),
     staleTime: demoMode ? Number.POSITIVE_INFINITY : LIVE_STALE_MS,
     retry: shouldRetryCulturalRead,
+    placeholderData: keepPreviousData,
     meta: { silentError: true },
     queryFn: async ({ signal }) => {
       if (demoMode) {

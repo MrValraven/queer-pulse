@@ -10,6 +10,7 @@ import {
 import type { AppealView, ModReportView } from "./moderationAge";
 import type { ModQueueData } from "./api/useModReports";
 import { useReviewAppeal } from "./api/useReviewAppeal";
+import { useEnforcementRefusal } from "./api/enforcementTargetError";
 import { useDeferredCommits } from "./useDeferredCommits";
 import { useModerationReportActions } from "./useModerationReportActions";
 import { useModerationAssignmentActions } from "./useModerationAssignmentActions";
@@ -46,6 +47,9 @@ export function useModerationQueueActions({
 }: UseModerationQueueActionsParams) {
   const [, setSearchParams] = useSearchParams();
   const reviewAppeal = useReviewAppeal();
+  // SEC-31: an appeal of the viewer's own case is refused with a reason code,
+  // which the moderator reads; an outage keeps the service line.
+  const describeRefusal = useEnforcementRefusal();
 
   const [open, setOpen] = useState<ModReportView[]>(data?.open ?? []);
   const [appeals, setAppeals] = useState<AppealView[]>(data?.appeals ?? []);
@@ -226,9 +230,15 @@ export function useModerationQueueActions({
         { id, decision, note },
         {
           onSuccess: () => pendingAppealRemoval.current.delete(id),
-          onError: () => {
+          onError: (error) => {
             pendingAppealRemoval.current.delete(id);
-            showToast(t("admin:moderation.queue.serviceErrorToast"), "error");
+            showToast(
+              describeRefusal(
+                error,
+                t("admin:moderation.queue.serviceErrorToast"),
+              ),
+              "error",
+            );
             void refetch();
           },
         },

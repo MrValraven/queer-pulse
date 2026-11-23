@@ -5041,7 +5041,7 @@ export const studio: Catalog = {
     "Receber fica disponível quando tiveres uma página de artista",
   "wall.heading": "Com o apoio de",
   "wall.listLabel": "Pessoas que compraram {title}",
-  "wall.showAll": "Mostrar todas as pessoas que apoiam",
+  "wall.showAll": "Ver toda a gente que apoia",
   "wall.loadMoreFailed": "Não conseguimos carregar mais pessoas que apoiam",
   "owner.v3.paymentsLink": "Pagamentos por confirmar",
   "owner.v3.gettingPaidLink": "Receber",
@@ -5205,4 +5205,11 @@ export const studio: Catalog = {
     "Artistas podem pôr preço em álbuns, EPs, singles e nas suas faixas. Quem compra paga diretamente à pessoa artista, pela sua ligação de pagamento, número MB WAY ou IBAN. A QueerPulse não é parte da venda. Não guarda nem movimenta o dinheiro, e não pode reembolsar um pagamento.",
   "termsLive.sec.selling.p2":
     "Uma compra abre as transferências e o mural de apoio quando a pessoa artista confirma o pagamento. Um reembolso ou um desacordo sobre dinheiro fica entre quem compra e a pessoa artista. Se uma pessoa artista recebeu o teu pagamento e não o confirmou, denuncia a página de artista à nossa equipa.",
+  "purchase.sheet.freeCta": "Obter o download grátis",
+  "purchase.sheet.freeCreateFailed":
+    "Não conseguimos registar o teu download grátis",
+  "purchase.sheet.freeNote":
+    "Este é grátis. {artist} confirma o teu download e depois podes acompanhá-lo nas tuas compras",
+  "purchase.sheet.freeDoneStatus":
+    "{artist} vai confirmar o teu download grátis. Acompanha-o nas tuas compras",
 };

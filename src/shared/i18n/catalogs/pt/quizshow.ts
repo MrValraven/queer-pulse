@@ -934,4 +934,12 @@ export const quizshow: Catalog = {
   "stage.afterRoundEm": "Depois da ronda <em>{number}</em> de {total}",
   "stage.roundsToGo_one": "Falta {count} ronda",
   "stage.roundsToGo_other": "Faltam {count} rondas",
+  "errors.offline":
+    "Este dispositivo está sem ligação. Volta a ligar-te à internet e tenta outra vez",
+  "errors.server_unavailable":
+    "Não conseguimos chegar ao servidor. Tenta outra vez daqui a pouco",
+  "errors.refused_unknown":
+    "A sessão em direto recusou esta ligação sem indicar o motivo. Recarrega a página para tentar outra vez",
+  "errors.signed_out":
+    "A tua sessão terminou. Entra outra vez para conduzires este jogo",
 };

@@ -97,6 +97,101 @@ if (typeof Element !== "undefined" && !Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
 }
 
+// jsdom has no Web Animations API, so `element.animate(...)` (the height
+// handover in MeasuredHeightFrame, popover exits, drag geometry) throws
+// "content.animate is not a function" from a layout effect. This stand-in
+// settles at once: `finished` resolves and `onfinish` plus a "finish" event
+// fire on the next microtask, so code waiting on the end of a motion moves on.
+//
+// It sits on HTMLElement and SVGElement, never on Element itself: motion's
+// WAAPI detection reads `Object.hasOwnProperty.call(Element.prototype,
+// "animate")`, and a stub there would switch every m.* animation in the suite
+// onto this fake. For the same reason `useExitingPopover`, which probes
+// `Element.prototype.animate`, still takes its no-animation path.
+class InstantAnimation extends EventTarget {
+  currentTime: number | null = null;
+  startTime: number | null = null;
+  playbackRate = 1;
+  playState: AnimationPlayState = "running";
+  effect = null;
+  timeline = null;
+  id = "";
+  pending = false;
+  oncancel: ((event: Event) => void) | null = null;
+  onfinish: ((event: Event) => void) | null = null;
+  onremove: ((event: Event) => void) | null = null;
+  readonly finished: Promise<this>;
+  readonly ready: Promise<this>;
+  private resolveFinished: (animation: this) => void = () => {};
+  private isSettled = false;
+
+  constructor() {
+    super();
+    this.finished = new Promise<this>((resolve) => {
+      this.resolveFinished = resolve;
+    });
+    this.ready = Promise.resolve(this);
+    queueMicrotask(() => this.finish());
+  }
+
+  finish(): void {
+    if (this.isSettled) return;
+    this.isSettled = true;
+    this.playState = "finished";
+    this.resolveFinished(this);
+    const event = new Event("finish");
+    this.onfinish?.(event);
+    this.dispatchEvent(event);
+  }
+
+  cancel(): void {
+    if (this.isSettled) return;
+    this.isSettled = true;
+    this.playState = "idle";
+    const event = new Event("cancel");
+    this.oncancel?.(event);
+    this.dispatchEvent(event);
+  }
+
+  play(): void {}
+  pause(): void {}
+  reverse(): void {}
+  persist(): void {}
+  commitStyles(): void {}
+  updatePlaybackRate(rate: number): void {
+    this.playbackRate = rate;
+  }
+}
+
+// A suite that stubs or spies `Element.prototype.animate` itself (the
+// quizshow wheels) would be shadowed by these subclass stubs, so they hand the
+// call to that suite's function whenever one is there.
+function installAnimateStub(prototype: { animate?: unknown }): void {
+  if (typeof prototype.animate === "function") return;
+  prototype.animate = function animate(this: Element, ...args: unknown[]) {
+    const suiteAnimate: unknown = Object.getOwnPropertyDescriptor(
+      Element.prototype,
+      "animate",
+    )?.value;
+    if (typeof suiteAnimate === "function") {
+      return (suiteAnimate as (...callArgs: unknown[]) => unknown).apply(
+        this,
+        args,
+      );
+    }
+    return new InstantAnimation();
+  };
+}
+
+if (typeof window !== "undefined") {
+  if (typeof HTMLElement !== "undefined") {
+    installAnimateStub(HTMLElement.prototype);
+  }
+  if (typeof SVGElement !== "undefined") {
+    installAnimateStub(SVGElement.prototype);
+  }
+}
+
 // jsdom ships `URL` but not the blob-URL helpers, so any component that turns a
 // File/Blob into a preview URL (e.g. the list-a-business photo-upload wizard on
 // /local/directory/list) throws "window.URL.createObjectURL is not a function"

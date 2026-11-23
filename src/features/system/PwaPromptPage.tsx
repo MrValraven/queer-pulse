@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Collapse } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  detectInAppBrowser,
   detectPlatform,
+  getInstallStepKeys,
   useInstallPrompt,
   INSTALL_INSTRUCTIONS as INSTRUCTIONS,
   INSTALL_TAB_LABEL_KEY as TAB_LABEL_KEY,
@@ -31,7 +33,73 @@ const FEATURES: { labelKey: string; detailKey: string }[] = [
   },
 ];
 
+// The same artwork the manifest puts on the home screen, so the header shows
+// what actually lands on the phone.
+const HOME_SCREEN_ICON_URL = `${import.meta.env.BASE_URL}icons/icon-192-v3.png`;
+
 type Platform = InstallPlatform;
+
+/**
+ * App-listing header: the home-screen icon beside the app name and the kicker,
+ * then the heading and the lead. The icon is decorative because the heading
+ * already names the app.
+ */
+function PwaPromptHeader() {
+  const { t } = useTranslation();
+  return (
+    <header className={styles.header}>
+      <div className={styles.identity}>
+        <img
+          src={HOME_SCREEN_ICON_URL}
+          width={72}
+          height={72}
+          alt=""
+          className={styles.appIcon}
+        />
+        <div className={styles.identityText}>
+          <span className={styles.appName}>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
+          </span>
+          <span className={styles.kicker}>{t("system:pwaPrompt.kicker")}</span>
+        </div>
+      </div>
+      <h1 className={styles.h1}>
+        <Translation
+          i18nKey="system:pwaPrompt.heading"
+          components={{ em: <em /> }}
+        />
+      </h1>
+      <p className={styles.lead}>
+        <Translation
+          i18nKey="system:pwaPrompt.lead"
+          components={{ em: <em /> }}
+        />
+      </p>
+    </header>
+  );
+}
+
+function PwaPromptFeatures() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.featureList}>
+      {FEATURES.map((feature) => (
+        <div key={feature.labelKey} className={styles.featureRow}>
+          <div className={styles.featureIc}>
+            <FiCheck aria-hidden />
+          </div>
+          <div>
+            <b>{t(feature.labelKey)}</b>
+            <span>{t(feature.detailKey)}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function PwaPromptPage() {
   const navigate = useNavigate();
@@ -40,8 +108,11 @@ export function PwaPromptPage() {
   // Default to the visitor's actual platform rather than always iOS; the tabs
   // stay switchable so anyone can read the other sets of instructions.
   const [platform, setPlatform] = useState<Platform>(detectPlatform);
-  const { canInstall, promptInstall } = useInstallPrompt();
+  const { canInstall, requestInstall } = useInstallPrompt();
   const { isInstalled } = useDisplayMode();
+  // Set when the browser had an install offer and then failed to open its
+  // dialog; the written steps are the way forward from there.
+  const [hasInstallFailed, setHasInstallFailed] = useState(false);
   // Hold the snooze redirect timer so it can't fire navigate(-1) after the
   // page has already unmounted.
   const snoozeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
@@ -49,18 +120,22 @@ export function PwaPromptPage() {
   );
   useEffect(() => () => clearTimeout(snoozeTimerRef.current), []);
 
-  const { titleKey, stepKeys } = INSTRUCTIONS[platform];
+  const { titleKey } = INSTRUCTIONS[platform];
+  // Inside a social app's built-in browser the iPhone and Android tabs open
+  // with the "open this page in your browser" step (see getInstallStepKeys).
+  // The desktop tab keeps its own three steps, the same guard InstallAppModal
+  // applies.
+  const isInAppBrowser = detectInAppBrowser() && platform !== "desktop";
+  const stepKeys = getInstallStepKeys(platform, isInAppBrowser);
+  // Only a browser that has offered its own install dialog gets the button.
+  // iOS never offers one, and Chrome may not have yet, so the written steps
+  // are the answer there, as in InstallAppModal.
+  const shouldShowInstallButton =
+    canInstall && !hasInstallFailed && !isInstalled;
 
   async function install() {
-    // Chrome path: show the browser's real install dialog.
-    if (canInstall) {
-      const accepted = await promptInstall();
-      if (accepted) return;
-    }
-    // iOS fires no beforeinstallprompt and Safari has no programmatic install,
-    // so the on-screen instructions are the actual answer there. Same fallback
-    // when Chrome hasn't (yet) judged the app installable.
-    showToast(t("system:pwaPrompt.toast.installHint"), "info");
+    const outcome = await requestInstall();
+    if (outcome === "failed") setHasInstallFailed(true);
   }
 
   function snooze() {
@@ -71,45 +146,8 @@ export function PwaPromptPage() {
   return (
     <SystemStateShell>
       <div className={styles.card}>
-        <div className={styles.ic}>
-          <div className={styles.icInner}>
-            <span className={styles.icDot} />
-            <span>
-              <Translation
-                i18nKey="shared:brand.wordmark"
-                components={{ em: <em /> }}
-              />
-            </span>
-          </div>
-        </div>
-
-        <div className={styles.kicker}>{t("system:pwaPrompt.kicker")}</div>
-        <h1 className={styles.h1}>
-          <Translation
-            i18nKey="system:pwaPrompt.heading"
-            components={{ em: <em /> }}
-          />
-        </h1>
-        <p className={styles.lead}>
-          <Translation
-            i18nKey="system:pwaPrompt.lead"
-            components={{ em: <em /> }}
-          />
-        </p>
-
-        <div className={styles.featureList}>
-          {FEATURES.map((f) => (
-            <div key={f.labelKey} className={styles.featureRow}>
-              <div className={styles.featureIc}>
-                <FiCheck aria-hidden />
-              </div>
-              <div>
-                <b>{t(f.labelKey)}</b>
-                <span>{t(f.detailKey)}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+        <PwaPromptHeader />
+        <PwaPromptFeatures />
 
         <div className={styles.tabs}>
           {(["ios", "android", "desktop"] as Platform[]).map(
@@ -133,9 +171,9 @@ export function PwaPromptPage() {
 
         <div className={styles.howto}>
           <h4 className={styles.howtoTitle}>{t(titleKey)}</h4>
-          {stepKeys.map((stepKey, i) => (
+          {stepKeys.map((stepKey, stepIndex) => (
             <div key={stepKey} className={styles.step}>
-              <span className={styles.stepN}>{i + 1}</span>
+              <span className={styles.stepN}>{stepIndex + 1}</span>
               <span>
                 <Translation
                   i18nKey={stepKey}
@@ -146,17 +184,24 @@ export function PwaPromptPage() {
           ))}
         </div>
 
+        <Collapse isOpen={hasInstallFailed}>
+          <p className={styles.installFailedNote}>
+            {t("shared:installAppModal.installFailed")}
+          </p>
+        </Collapse>
+
         <div className={styles.actions}>
-          <Button
-            onClick={() => void install()}
-            className={styles.installBtn}
-            disabled={isInstalled}
-          >
-            {t("system:pwaPrompt.installCta")}
-          </Button>
-          <button type="button" className={styles.laterBtn} onClick={snooze}>
+          {shouldShowInstallButton && (
+            <Button
+              onClick={() => void install()}
+              className={styles.installBtn}
+            >
+              {t("system:pwaPrompt.installCta")}
+            </Button>
+          )}
+          <Button variant="ghost" onClick={snooze} className={styles.laterBtn}>
             {t("system:pwaPrompt.laterCta")}
-          </button>
+          </Button>
         </div>
         <p className={styles.actionsFoot}>
           <Translation

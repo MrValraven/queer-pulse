@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Avatar, Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
+import {
+  INACTIVE_MEMBER_LABEL_KEY,
+  isInactiveMemberRef,
+} from "../../../shared/api/refs";
 import type { ReaderCommentDTO } from "./readerComments.api";
 import { ArticleCommentComposer } from "./ArticleCommentComposer";
 import styles from "./ArticleComments.module.css";
@@ -44,15 +48,17 @@ export function ArticleCommentItem({
     const authorName = item.author.displayName.trim();
     // A blanked row arrives with an empty author, so the name slot would
     // otherwise render as a gap beside the timestamp.
-    const displayedName =
-      isUnavailable || !authorName
+    const isAuthorInactive = !isUnavailable && isInactiveMemberRef(item.author);
+    const displayedName = isAuthorInactive
+      ? t(INACTIVE_MEMBER_LABEL_KEY)
+      : isUnavailable || !authorName
         ? t("magazine:comments.unknownAuthor")
         : authorName;
 
     return (
       <div key={item.id} className={isReply ? styles.reply : styles.comment}>
         <Avatar
-          initials={displayedName.slice(0, 1)}
+          initials={isAuthorInactive ? "" : displayedName.slice(0, 1)}
           src={isUnavailable ? undefined : (item.author.avatarUrl ?? undefined)}
           name={displayedName}
           size={isReply ? 30 : 38}

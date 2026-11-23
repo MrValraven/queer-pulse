@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { AUTH_STORAGE_KEY } from "../../marketing/cookies.data";
 import type {
   StudioLandingNextEventView,
@@ -83,6 +84,8 @@ describe("StudioLandingProof strip", () => {
   it("lists the three public counts", async () => {
     mocks.landing = landingOf({});
     renderProof();
+    // The list items render before the lazy studio catalog paints their copy.
+    await awaitCatalog("studio");
     const items = await screen.findAllByRole("listitem");
     expect(items).toHaveLength(3);
     expect(items[0]).toHaveTextContent("14 artists");

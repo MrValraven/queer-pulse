@@ -1,4 +1,8 @@
-import { currentUser, currentUserEmail } from "../members/data/members";
+import {
+  currentUser,
+  currentUserEmail,
+  memberName,
+} from "../members/data/members";
 import type { ExportFormat } from "./api/account.api";
 
 /**
@@ -41,6 +45,11 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "communityActivity",
     "communityRequests",
     "feedPreferences",
+    "communityBadges",
+    "communityEventsAttended",
+    "communityGiftsReceived",
+    "communityGiftsSent",
+    "communityOwnershipOffers",
   ],
   events: [
     "events",
@@ -228,6 +237,83 @@ function demoStudioSaleRows() {
 }
 
 /**
+ * The demo viewer's community badge rows, in the contract section 8 and
+ * section 12 shapes. All four share one community, Queer Runners Lisboa.
+ */
+const DEMO_BADGE_COMMUNITY = {
+  communityId: "demo-community-queer-runners",
+  communitySlug: "queer-runners",
+  communityName: "Queer Runners Lisboa",
+};
+
+function demoCommunityBadgeRows() {
+  return [
+    {
+      ...DEMO_BADGE_COMMUNITY,
+      badgeId: "demo-badge-regular",
+      badgeName: "Regular",
+      iconKey: "calendar",
+      tint: "jade",
+      ruleType: "events_checked_in",
+      threshold: 3,
+      isEnabled: true,
+      awardedAt: "2026-10-05T18:00:00.000Z",
+      isWorn: true,
+    },
+  ];
+}
+
+/** One bare tally per community: no event and no date, as the server keeps it. */
+function demoCommunityEventsAttendedRows() {
+  return [{ ...DEMO_BADGE_COMMUNITY, eventsAttended: 4 }];
+}
+
+function demoCommunityGiftsReceivedRows() {
+  return [
+    {
+      id: "demo-gift-received-1",
+      ...DEMO_BADGE_COMMUNITY,
+      giftKey: "heart",
+      note: "Thank you for the Sunday route",
+      senderName: memberName("carla"),
+      sentAt: "2026-10-12T09:30:00.000Z",
+      hiddenAt: null,
+      removedAt: null,
+    },
+  ];
+}
+
+function demoCommunityGiftsSentRows() {
+  return [
+    {
+      id: "demo-gift-sent-1",
+      ...DEMO_BADGE_COMMUNITY,
+      giftKey: "smile",
+      note: null,
+      sentAt: "2026-10-14T17:45:00.000Z",
+      removedAt: null,
+    },
+  ];
+}
+
+/** PRD-514. One ownership offer the demo member received, shaped like the
+ *  live `communityOwnershipOffers` rows: the other party by account id only. */
+function demoCommunityOwnershipOfferRows() {
+  return [
+    {
+      id: "demo-ownership-offer-1",
+      ...DEMO_BADGE_COMMUNITY,
+      side: "received",
+      otherPartyUserId: "demo-user-monica",
+      status: "offered",
+      offeredAt: "2026-11-18T10:00:00.000Z",
+      expiresAt: "2026-12-02T10:00:00.000Z",
+      respondedAt: null,
+    },
+  ];
+}
+
+/**
  * Small, plausible demo content for one archive key, built from the existing
  * demo mocks where that is cheap (the current user, one community, one
  * event). A key with no sensible mock still gets a present, empty value
@@ -269,6 +355,16 @@ function demoContentFor(archiveKey: string): unknown {
           slug: "queer-book-club",
         },
       ];
+    case "communityBadges":
+      return demoCommunityBadgeRows();
+    case "communityEventsAttended":
+      return demoCommunityEventsAttendedRows();
+    case "communityGiftsReceived":
+      return demoCommunityGiftsReceivedRows();
+    case "communityGiftsSent":
+      return demoCommunityGiftsSentRows();
+    case "communityOwnershipOffers":
+      return demoCommunityOwnershipOfferRows();
     case "events":
       return [
         {

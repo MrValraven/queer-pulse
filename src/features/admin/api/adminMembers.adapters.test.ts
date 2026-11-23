@@ -108,6 +108,16 @@ describe("cardDtoToMember", () => {
     ).toBe(3);
   });
 
+  it("keeps a withheld count (the viewer's own row) as null", () => {
+    expect(
+      cardDtoToMember(
+        { ...baseCardDto, verified: false, openReportCount: null },
+        translate,
+        fmt,
+      ).openReportsCount,
+    ).toBeNull();
+  });
+
   it("newThisWeek is false for an old joinedAt, true for one under 7 days old", () => {
     expect(cardDtoToMember(baseCardDto, translate, fmt).newThisWeek).toBe(
       false,
@@ -277,6 +287,18 @@ describe("detailDtoToMember", () => {
       labelKey: "admin:members.glance.reportsAgainst",
       value: "0",
     });
+  });
+
+  it("leaves reportsAgainst out of the glance when the count is withheld", () => {
+    const detail = detailDtoToMember(
+      { ...baseDetailDto, openReportCount: null },
+      translate,
+      fmt,
+    );
+    expect(detail.glance.map((glanceStat) => glanceStat.labelKey)).toEqual([
+      "admin:members.glance.vouches",
+      "admin:members.glance.memberFor",
+    ]);
   });
 
   it('glance memberFor reads "New" under 30 days old', () => {

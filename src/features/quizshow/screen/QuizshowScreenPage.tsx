@@ -9,12 +9,11 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PageMeta } from "../../../shared/seo";
 import { primeMessageChime } from "../../../shared/lib/messageChime";
 import {
-  QUIZSHOW_ERROR_CODES,
-  type QuizshowErrorCode,
-} from "../../../shared/contracts/quizshow";
-import { quizshowErrorKeyOf } from "../api/quizshowErrors";
+  quizshowErrorKeyOf,
+  quizshowLoadFailureKeyOf,
+  quizshowRefusalKeyOf,
+} from "../api/quizshowErrors";
 import { hasQuizshowScopeId } from "../api/useQuizshowQuiz";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
 import { useQuizshowSession } from "../realtime/useQuizshowSession";
 import type { QuizshowCue } from "../sound/quizshowCues";
@@ -45,15 +44,6 @@ const SCREEN_CUES: readonly QuizshowCue[] = [
   "wheelTick",
   "wheelLand",
 ];
-const KNOWN_ERROR_CODES: ReadonlySet<string> = new Set(QUIZSHOW_ERROR_CODES);
-
-function refusalKeyOf(refusalCode: QuizshowClientState["refusalCode"]): string {
-  const code =
-    refusalCode !== null && KNOWN_ERROR_CODES.has(refusalCode)
-      ? (refusalCode as QuizshowErrorCode)
-      : null;
-  return quizshowErrorKeyOf(code);
-}
 
 function QuizshowScreenMessage({
   messageKey,
@@ -131,7 +121,7 @@ function QuizshowScreenLive({
       <QuizshowConnectionBanner status={state.status} />
       {state.status === "refused" ? (
         <QuizshowScreenMessage
-          messageKey={refusalKeyOf(state.refusalCode)}
+          messageKey={quizshowRefusalKeyOf(state.refusalCode)}
           hostSession={hostSession}
         />
       ) : (
@@ -149,7 +139,8 @@ function QuizshowScreenLive({
 function messageKeyOf(hostSession: QuizshowHostSession): string | null {
   if (hostSession.errorCode !== null)
     return quizshowErrorKeyOf(hostSession.errorCode);
-  if (hostSession.hasLoadFailed) return "quizshow:errors.generic";
+  if (hostSession.hasLoadFailed)
+    return quizshowLoadFailureKeyOf(hostSession.loadError);
   if (!hostSession.isOrganizer) return "quizshow:errors.not_organiser";
   if (hostSession.sessionId === null) return hostSession.noGameKeys.screen;
   return null;

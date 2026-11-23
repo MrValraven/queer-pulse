@@ -955,9 +955,11 @@ describe("reduceVjDemoStage sequence commands", () => {
   it("Loop saves through the writer, then lands the Loop copy", () => {
     const shelf = sequenceShelf();
     const writeSetlistLooping = vi.fn(() => null);
+    // Build the playing stage first: it spends a command sequence of its own.
+    const stage = playingStage(shelf);
     sequenceCounter += 1;
     const result = reduceVjDemoStage(
-      playingStage(shelf),
+      stage,
       {
         kind: "frame",
         tabId: "remote-tab",

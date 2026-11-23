@@ -15,6 +15,7 @@ export type ModSection =
   | "reports"
   | "members"
   | "ratifications"
+  | "badges"
   | "invites"
   | "spaces"
   | "support"
@@ -47,7 +48,7 @@ export const MOD_NAV: ModNavItem[] = [
   { id: "members", labelKey: "communities:detail.modtools.nav.members" },
   {
     // Permanent bars waiting on a second owner, co-owner or moderator
-    // (PRD-25). Directly under Members, because a hold is a member's state in
+    // (PRD-25). Right after Members, because a hold is a member's state in
     // exactly the sense a ban is, and the ban list next door is where the
     // other half of the story lives.
     //
@@ -57,6 +58,13 @@ export const MOD_NAV: ModNavItem[] = [
     id: "ratifications",
     labelKey: "communities:detail.modtools.nav.ratifications",
     badge: "ratifications",
+  },
+  {
+    // The community's own badges (design: `?mod=badges`). Offered for a
+    // top-level community only: badges are out of v1 for a space, so
+    // `ModToolsTab` filters this item out there, as it does `card`.
+    id: "badges",
+    labelKey: "communities:detail.modtools.nav.badges",
   },
   { id: "invites", labelKey: "communities:detail.modtools.nav.invites" },
   {

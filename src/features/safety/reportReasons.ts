@@ -104,7 +104,12 @@ export type ReportSubjectType =
   // Pulse Live (2026-10-19): ONE player-written answer in a live game (a party answer), addressed by its uuid. Hosts hide it in the game; staff act on the account. Mirrors the backend ReportSubjectType.QuizshowAnswer.
   | "quizshow_answer"
   // Pulse Live (2026-10-20): ONE live game that is not tied to an event, addressed by its session id. Anyone with a player row may report it, removed players included. Staff end or delete the game from the report drawer's own panel. Mirrors the backend ReportSubjectType.QuizshowGame.
-  | "quizshow_game";
+  | "quizshow_game"
+  // Community badges (contract section 7): ONE gift on a member's name line,
+  // addressed by the gift's uuid. Only the recipient may file it. It goes to
+  // platform moderation alone and stays out of the community reports queue.
+  // Mirrors the backend `ReportSubjectType.CommunityGift`.
+  | "community_gift";
 
 export type ReasonCode =
   | "outing"
@@ -592,6 +597,19 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "outing",
     "doxxing",
     "untagged_explicit",
+    "spam",
+    "other",
+  ],
+  // A community gift note (contract section 7). Mirrors the backend's
+  // `SUBJECT_REASONS[ReportSubjectType.CommunityGift]` in the same order.
+  // `outing` and `doxxing` stay on the list because a note can name people
+  // or places.
+  community_gift: [
+    "harassment",
+    "hate_speech",
+    "discrimination",
+    "outing",
+    "doxxing",
     "spam",
     "other",
   ],

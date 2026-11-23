@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import {
   classifyEnforcementError,
+  isReportAboutActorError,
   summarizeBulkFailures,
   type EnforcementTarget,
 } from "./enforcementTargetError";
@@ -155,5 +156,44 @@ describe("summarizeBulkFailures", () => {
 
   it("returns nothing at all for a clean sweep", () => {
     expect(summarizeBulkFailures([])).toBe("");
+  });
+});
+
+describe("isReportAboutActorError (SEC-31)", () => {
+  it("recognises the report-about-you refusal by its code", () => {
+    expect(
+      isReportAboutActorError(
+        new ApiError(403, "Server sentence.", { code: "REPORT_ABOUT_ACTOR" }),
+      ),
+    ).toBe(true);
+  });
+
+  it("leaves every other refusal and a network failure alone", () => {
+    expect(
+      isReportAboutActorError(
+        new ApiError(403, "Server sentence.", {
+          code: "ENFORCEMENT_TARGET_PROTECTED",
+          target: "staff_account",
+        }),
+      ),
+    ).toBe(false);
+    expect(isReportAboutActorError(new TypeError("Failed to fetch"))).toBe(
+      false,
+    );
+  });
+});
+
+describe("summarizeBulkFailures with coded entries (SEC-31)", () => {
+  it("reads a coded entry in the localized line and leaves the rest as sent", () => {
+    expect(
+      summarizeBulkFailures(
+        [
+          { reason: "Server sentence.", code: "REPORT_ABOUT_ACTOR" },
+          { reason: "This report has already been resolved." },
+        ],
+        2,
+        { REPORT_ABOUT_ACTOR: "Localized line." },
+      ),
+    ).toBe("Localized line.; This report has already been resolved.");
   });
 });

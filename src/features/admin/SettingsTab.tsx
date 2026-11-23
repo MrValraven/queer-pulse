@@ -140,9 +140,9 @@ export function SettingsTab({
         </div>
       </AdminPanel>
 
-      {/* Archiving and transferring the whole community are owner-only on the
-          server, so live mode shows the danger zone to the owner alone (a mod
-          would just hit a 403). Demo keeps it always visible: it's the mock
+      {/* Archiving and offering ownership of the whole community (PRD-514) are
+          owner-only on the server, so live mode shows the danger zone to the
+          owner alone (a mod would just hit a 403). Demo keeps it always visible: it's the mock
           showcase, and the seeded moderator persona never actually owns a
           flagship. */}
       {(demoMode || isOwner) && (
@@ -172,14 +172,14 @@ export function SettingsTab({
           <div className={styles.dangerRow}>
             <div className={styles.dangerInfo}>
               <div className={styles.dangerTitle}>
-                {t("admin:modPanel.settings.transfer.title")}
+                {t("communities:ownershipOffer.title")}
               </div>
               <div className={styles.dangerDesc}>
-                {t("admin:modPanel.settings.transfer.desc")}
+                {t("communities:ownershipOffer.explainer")}
               </div>
             </div>
             <Button variant="ghost" onClick={() => setTransferOpen(true)}>
-              {t("admin:modPanel.settings.transfer.cta")}
+              {t("communities:ownershipOffer.offerCta")}
             </Button>
           </div>
         </AdminPanel>

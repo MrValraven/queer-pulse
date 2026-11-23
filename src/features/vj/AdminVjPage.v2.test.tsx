@@ -114,7 +114,7 @@ describe("AdminVjPage v2 (demo)", () => {
     });
     const clipsTab = within(tablist).getByRole("tab", { name: "Clips" });
     const showTab = within(tablist).getByRole("tab", {
-      name: "Scenes and set lists",
+      name: "Scenes and sequences",
     });
     expect(clipsTab).toHaveAttribute("aria-selected", "true");
     expect(showTab).toHaveAttribute("aria-selected", "false");
@@ -126,18 +126,18 @@ describe("AdminVjPage v2 (demo)", () => {
     expect(locationSearch().has("view")).toBe(false);
   });
 
-  it("switches to Scenes and set lists and keeps the choice in the URL", async () => {
+  it("switches to Scenes and sequences and keeps the choice in the URL", async () => {
     const user = userEvent.setup();
     const { unmount } = renderPage();
     await screen.findByRole("heading", { name: "Warm-up" });
 
     await user.click(
-      await screen.findByRole("tab", { name: "Scenes and set lists" }),
+      await screen.findByRole("tab", { name: "Scenes and sequences" }),
     );
 
     await waitFor(() => expect(locationSearch().get("view")).toBe("show"));
     expect(
-      await screen.findByRole("tabpanel", { name: "Scenes and set lists" }),
+      await screen.findByRole("tabpanel", { name: "Scenes and sequences" }),
     ).toBeInTheDocument();
     expect(
       await screen.findByRole("heading", { name: "Scenes" }),
@@ -150,10 +150,10 @@ describe("AdminVjPage v2 (demo)", () => {
     unmount();
     renderPage("?view=show");
     expect(
-      await screen.findByRole("tab", { name: "Scenes and set lists" }),
+      await screen.findByRole("tab", { name: "Scenes and sequences" }),
     ).toHaveAttribute("aria-selected", "true");
     expect(
-      await screen.findByRole("heading", { name: "Set lists" }),
+      await screen.findByRole("heading", { name: "Sequences" }),
     ).toBeInTheDocument();
   });
 
@@ -165,7 +165,7 @@ describe("AdminVjPage v2 (demo)", () => {
     const peakHourId = storedPackNamed("Peak hour").id;
     await waitFor(() => expect(locationSearch().get("pack")).toBe(peakHourId));
 
-    await user.click(screen.getByRole("tab", { name: "Scenes and set lists" }));
+    await user.click(screen.getByRole("tab", { name: "Scenes and sequences" }));
     await waitFor(() => expect(locationSearch().get("view")).toBe("show"));
     expect(locationSearch().get("pack")).toBe(peakHourId);
 
@@ -267,7 +267,7 @@ describe("AdminVjPage v2 (demo)", () => {
     );
   });
 
-  it("shows the seeded scenes and the Friday set list", async () => {
+  it("shows the seeded scenes and the Friday set", async () => {
     renderPage("?view=show");
     const scenes = await screen.findByRole(
       "list",
@@ -279,7 +279,7 @@ describe("AdminVjPage v2 (demo)", () => {
 
     const setlists = await screen.findByRole(
       "list",
-      { name: "Set lists in order" },
+      { name: "Sequences in order" },
       SLOW_STEP,
     );
     expect(within(setlists).getByText("Friday set")).toBeInTheDocument();

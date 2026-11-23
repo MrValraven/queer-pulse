@@ -18,6 +18,7 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
 import type { HubPost } from "../communities/HubPulseCard";
 import {
   FEED_TABS,
@@ -132,12 +133,16 @@ function FeedTabs({
  *  `feedItemToPost`; the other four cards render straight off the raw
  *  `FeedItem`. `default` is a defensive no-op for a future item type the
  *  backend ships before this switch is updated for it. */
-function renderLiveFeedCard(item: FeedItem, fmt: Formatters): React.ReactNode {
+function renderLiveFeedCard(
+  item: FeedItem,
+  fmt: Formatters,
+  t: TFunction,
+): React.ReactNode {
   switch (item.type) {
     case "community_post":
       return (
         <CommunityPostCard
-          post={feedItemToPost(item, fmt)}
+          post={feedItemToPost(item, fmt, t)}
           // SOC-04: ranking explanation + the counts that make the card
           // actable. SOC-18: the room this came from, so its menu can offer
           // "show me less of this" without ever touching membership.
@@ -214,6 +219,7 @@ export function FeedListBody({
   /** The "All" tab: new members of one week share a group card. */
   isGroupingNewMembers?: boolean;
 }) {
+  const { t } = useTranslation();
   const fmt = useFormat();
   const livePages = liveItemPages ?? [liveItems];
 
@@ -240,7 +246,7 @@ export function FeedListBody({
               style={{ animationDelay: revealDelay(index) }}
             >
               {entry.kind === "item" ? (
-                renderLiveFeedCard(entry.item, fmt)
+                renderLiveFeedCard(entry.item, fmt, t)
               ) : (
                 <LiveNewMembersGroupCard
                   items={entry.members}

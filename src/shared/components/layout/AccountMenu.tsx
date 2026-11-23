@@ -21,6 +21,7 @@ import {
   type AccountLinkItem,
 } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
+import { QuickExitMenuItem } from "../../../features/safety/QuickExit";
 import { useHasRoleLinks } from "./useHasRoleLinks";
 import {
   RoleLinks,
@@ -31,6 +32,11 @@ import {
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
+import {
+  useCommunityOwnershipOfferBadge,
+  useOwnershipOfferRowHref,
+} from "../../../features/communities/useCommunityOwnershipOfferBadge";
+import { OwnershipOfferTriggerDot } from "../../../features/communities/OwnershipOfferTriggerDot";
 import { useAccountRowVisibility } from "./useAccountRowVisibility";
 import styles from "./AccountMenu.module.css";
 
@@ -127,6 +133,7 @@ export function AccountMenu({
             size={28}
           />
           <span className={styles.name}>{name.split(" ")[0]}</span>
+          <OwnershipOfferTriggerDot className={styles.triggerDot} />
           <FiChevronDown
             aria-hidden
             className={[styles.chevron, open && styles.chevronOpen]
@@ -160,6 +167,7 @@ export function AccountMenu({
               size={30}
             />
             <span className={styles.railName}>{name.split(" ")[0]}</span>
+            <OwnershipOfferTriggerDot className={styles.triggerDot} />
           </button>
           <div className={styles.railCluster}>
             <button
@@ -346,6 +354,11 @@ function AccountMenuPanel({
       </div>
 
       <div className={styles.footer}>
+        <QuickExitMenuItem
+          className={`${styles.item} ${styles.itemButton}`}
+          iconClassName={styles.itemIcon}
+          labelClassName={styles.itemLabel}
+        />
         <Link
           to={routes.homepage}
           className={`${styles.item} ${styles.signOut}`}
@@ -371,6 +384,13 @@ function AccountMenuLinkGroups({ onClose }: { onClose: () => void }) {
   const personaBadge = usePersonaBadge();
   const gettingStartedBadge = useGettingStartedBadge();
   const inviteQuotaBadge = useInviteQuotaBadge();
+  const communityOfferBadge = useCommunityOwnershipOfferBadge();
+  const communityOfferRowHref = useOwnershipOfferRowHref();
+  // While ownership offers wait, the communities row leads to the invitations
+  // page that lists them. `AccountSheet` keeps the same override.
+  const hrefByRoute: Record<string, string | undefined> = {
+    [routes.communities]: communityOfferRowHref,
+  };
   // Live counts can't live in the static ACCOUNT_GROUPS array, so each badge
   // hook is attached to its row here, matched by `to` (see `AccountItem.badge`).
   // `AccountSheet` keeps an identical map so the two surfaces never drift.
@@ -378,6 +398,8 @@ function AccountMenuLinkGroups({ onClose }: { onClose: () => void }) {
     [routes.subprofilesDashboard]: personaBadge,
     [routes.gettingStarted]: gettingStartedBadge,
     [routes.invite]: inviteQuotaBadge,
+    // PRD-514: ownership offers waiting on this member's answer.
+    [routes.communities]: communityOfferBadge,
   };
   return ACCOUNT_GROUPS.map((group) =>
     group.filter(
@@ -396,8 +418,13 @@ function AccountMenuLinkGroups({ onClose }: { onClose: () => void }) {
             return (
               <Link
                 key={item.to}
-                to={item.to}
-                className={[styles.item, item.hintKey && styles.itemWide]
+                to={hrefByRoute[item.to] ?? item.to}
+                // A hint or a trailing badge needs the full row, so the label
+                // never breaks mid-word in the two-up grid.
+                className={[
+                  styles.item,
+                  (item.hintKey || badge) && styles.itemWide,
+                ]
                   .filter(Boolean)
                   .join(" ")}
                 onClick={onClose}

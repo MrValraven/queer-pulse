@@ -9,7 +9,7 @@ import {
   type ModBulkVars,
 } from "./api/useModAction";
 import {
-  summarizeBulkFailures,
+  useBulkFailureSummary,
   useEnforcementRefusal,
 } from "./api/enforcementTargetError";
 import type { ModActionCode } from "./api/moderation.api";
@@ -57,6 +57,7 @@ export function useModerationReportActions({
   // Turns a typed enforcement refusal into the sentence a moderator reads. A
   // genuine outage keeps the caller's own generic copy.
   const describeRefusal = useEnforcementRefusal();
+  const summarizeFailures = useBulkFailureSummary();
 
   const resolveReport = (id: string, opts: ResolveOpts = {}) => {
     const verb = opts.verb ?? "resolved";
@@ -162,12 +163,11 @@ export function useModerationReportActions({
           onSuccess: (data) => {
             ids.forEach((id) => pendingOpenRemoval.current.delete(id));
             if (data.failed.length > 0) {
-              // Shown exactly as the server sent them. A bulk `failed[]` entry
-              // carries the message string and nothing else, so the typed
-              // `code`/`target` the single-report path reads is unavailable
-              // here. See `summarizeBulkFailures` for why text-matching them
-              // back into a case is off the table.
-              const reasons = summarizeBulkFailures(data.failed);
+              // A coded entry this build knows (SEC-31's report-about-you)
+              // reads in the moderator's language; the rest are shown as the
+              // server sent them. See `summarizeBulkFailures` for why
+              // text-matching them back into a case is off the table.
+              const reasons = summarizeFailures(data.failed);
               showToast(
                 t("admin:moderation.queue.bulkPartialToast", {
                   succeededCount: data.updated.length,

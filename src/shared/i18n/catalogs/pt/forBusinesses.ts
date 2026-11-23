@@ -106,7 +106,7 @@ export const forBusinesses: Catalog = {
     "Depois de a nossa equipa o ler e de ficar publicado, qualquer pessoa da comunidade que explore o diretório o encontra. Escolhes como apareces nele: com o teu nome e papel, só com o papel ou <b>em anonimato</b>, visível só para a nossa equipa.",
   "faq.team.question": "Mais do que uma pessoa pode gerir o anúncio?",
   "faq.team.answer":
-    "Sim. Convida pessoas das tuas conexões para te ajudarem a gerir. Depois de aceitarem, podem editar o anúncio e responder à caixa de mensagens do negócio contigo. Só tu podes convidar pessoas ou retirar um lugar.",
+    "Sim. Convida pessoas da tua rede para te ajudarem a gerir. Depois de aceitarem, podem editar o anúncio e responder à caixa de mensagens do negócio contigo. Só tu podes convidar pessoas ou retirar um lugar.",
   "faq.noPremises.question": "Posso registar um negócio sem espaço físico?",
   "faq.noPremises.answer":
     "Sim. Escolhe <b>Só online</b> para uma loja ou serviço a que as pessoas chegam por um site ou pelas redes sociais, ou <b>Itinerante</b> para visitas guiadas, serviços de cabeleireiro ao domicílio e tudo o que vai ter com a clientela. Dizes onde trabalhas, toda a Lisboa ou algumas freguesias, e as localidades onde também vais.",

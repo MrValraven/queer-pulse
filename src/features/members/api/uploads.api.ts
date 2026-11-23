@@ -161,6 +161,31 @@ export const requestUpload = (
   } satisfies PresignRequest);
 
 /**
+ * Ask the server to check an upload's stored bytes once its storage `PUT`
+ * resolved. `POST /uploads/confirm`, `204` when the object is servable.
+ *
+ * The presigned PUT goes straight to the bucket, so the server checks the
+ * bytes here before the key is attached anywhere (SEC-43). It refuses with
+ * a machine `code` that `causeErrorKey` names on its own:
+ *  - `UPLOAD_HAS_LOCATION_DATA` (422): a JPEG still carries GPS EXIF;
+ *  - `UPLOAD_CONTENT_MISMATCH` (422): the bytes are not the declared type;
+ *  - `UPLOAD_NOT_FOUND` (404): nothing was stored under the key;
+ *  - `UPLOAD_CHECK_UNAVAILABLE` (503): the check could not run just now;
+ *  - `UPLOAD_KEY_NOT_CONFIRMABLE` (400): the key names no member upload;
+ *  - `UPLOAD_NOT_YOURS` (403): the caller may not presign this key.
+ * Member keys, Studio audio keys (`studioAudioUpload`, any persona owner who
+ * passes the Studio presign checks) and VJ keys (`vjUpload`,
+ * `vjPreviewUpload`, an Admin or a `vj_operator`) are all confirmable; the
+ * server checks MP3 and M4A audio and MP4, WebM, GIF and WebP media by their
+ * leading bytes.
+ * Live mode only: a demo upload never reaches storage, so a demo caller skips
+ * it.
+ */
+export async function confirmUpload(key: string): Promise<void> {
+  await apiPost<void>("/uploads/confirm", { key });
+}
+
+/**
  * Persist the reframe crop chosen for an already-uploaded image, keyed by its
  * storage `key`. `POST /uploads/crop`, `204` on success. Best-effort from the
  * caller's point of view: `useUploadImage` calls this after the upload PUT

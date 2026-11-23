@@ -7,6 +7,7 @@ import { MentionText } from "../../shared/mentions/MentionText";
 import { isEmojiOnly } from "./messageRuns";
 import { firstLinkUrl, renderWithLinks } from "./linkify";
 import { resolveChatPlaceLink } from "./chatPlaceLink";
+import { internalPlaceSlug, isOwnStudioUrl } from "./internalLinkTargets";
 import { useMessageLinkCard } from "./api/useMessageLinkCard";
 import { MessageLinkCard } from "./MessageLinkCard";
 import { PlaceShareBubble } from "./PlaceShareBubble";
@@ -24,6 +25,7 @@ import {
 } from "./MessageDocumentAttachment";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
 import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import { withRenderableGifThumbnail } from "./gifMediaHosts";
 import { PhotoBubbleImage } from "./PhotoBubbleImage";
 import { StickerBubble } from "./StickerBubble";
 import { ReplyQuoteContent } from "./ReplyQuoteContent";
@@ -104,7 +106,10 @@ export function MessageBubbleBody({
             ? t("messages:formerMember")
             : message.replyTo.senderName
         }
-        source={replyQuoteSourceFromReplyTo(message.replyTo)}
+        // SEC-24: a GIF parent from a refused host quotes without a thumbnail.
+        source={withRenderableGifThumbnail(
+          replyQuoteSourceFromReplyTo(message.replyTo),
+        )}
         classNames={replyQuoteClassNames}
       />
     </button>
@@ -468,11 +473,21 @@ function TextBubble({
   // is the one link this bubble turns into a player (Studio rich cards).
   const studioMatch = findStudioLink(message.text);
   const previewUrl = studioMatch?.url ?? firstLinkUrl(message.text);
-  const linkCard = useMessageLinkCard(previewUrl);
+  // SEC-23: a stranger's external link gets no card. Unfurling it on this
+  // reader's render would tell the linked host when the thread was opened;
+  // the link stays in the text. Own place and Studio cards are never unfurled.
+  const isStrangerExternalLink =
+    isPendingConnection &&
+    !isSent &&
+    !!previewUrl &&
+    !isOwnStudioUrl(previewUrl) &&
+    internalPlaceSlug(previewUrl) === null;
+  const cardUrl = isStrangerExternalLink ? null : previewUrl;
+  const linkCard = useMessageLinkCard(cardUrl);
   // The place-name link `renderWithLinks` swaps `previewUrl` for, once the
   // card resolved as a real directory place (never for the ordinary OG
   // unfurl case); see `resolveChatPlaceLink`'s own doc.
-  const placeLink = resolveChatPlaceLink(previewUrl, linkCard);
+  const placeLink = resolveChatPlaceLink(cardUrl, linkCard);
   // "Link-only": the whole message, trimmed, IS the matched link — nothing
   // else to read. Compared against the raw (un-normalized) text too, since
   // `firstLinkUrl` upgrades a bare `www.` host to an `https://` href and a
@@ -556,8 +571,8 @@ function TextBubble({
     >
       {forwardedNode}
       {replyQuoteNode}
-      {previewUrl && (
-        <MessageLinkCard url={previewUrl} state={linkCard} isSent={isSent} />
+      {cardUrl && (
+        <MessageLinkCard url={cardUrl} state={linkCard} isSent={isSent} />
       )}
       {shouldRenderText ? (
         // Inline wrapper (no styles of its own) so the body's line boxes are

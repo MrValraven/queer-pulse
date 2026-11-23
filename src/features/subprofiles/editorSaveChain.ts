@@ -19,11 +19,16 @@ const FAIL_KEY_BY_UNMET_CODE: Record<string, string> = Object.fromEntries(
  *   both carry `unmet` codes, and the publish checklist already holds the
  *   fail copy for each. The first code with copy wins; a `HANDLE_TAKEN` with
  *   no usable code reads as the taken-handle copy.
+ * - 400 `UNLINKED_PERSONA_OWNER_CREDIT` (SEC-03): an Unlinked persona's item
+ *   credits the member handle of its creator or a co-owner.
  */
 export function personaRefusalMessageKey(error: unknown): string | null {
   if (isAccountRestricted(error)) return "shared:apiError.accountRestricted";
   if (!(error instanceof ApiError)) return null;
   const body = error.data as { code?: unknown; unmet?: unknown } | null;
+  if (error.status === 400 && body?.code === "UNLINKED_PERSONA_OWNER_CREDIT") {
+    return "subprofiles:itemEditor.collaboratorsOwnerCreditRefused";
+  }
   const isHandleTaken = error.status === 409 && body?.code === "HANDLE_TAKEN";
   const isNotReady =
     error.status === 422 && body?.code === "SUBPROFILE_NOT_READY";

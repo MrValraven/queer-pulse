@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
+import { awaitCatalog } from "../../test/awaitCatalog";
 import { TestProviders } from "../../test/TestProviders";
 import { StudioAdminPage } from "./StudioAdminPage";
 
@@ -46,12 +47,14 @@ vi.mock("./StudioAdminAccessRequests.data", async (importOriginal) => {
   };
 });
 
-function renderPage() {
+async function renderPage() {
   render(
     <TestProviders initialEntries={["/admin/studio"]}>
       <StudioAdminPage />
     </TestProviders>,
   );
+  // The tabs mount before the admin catalog lands, with blank labels.
+  await awaitCatalog("admin");
 }
 
 function tabNames(tabs: readonly HTMLElement[]) {
@@ -67,7 +70,7 @@ beforeEach(() => {
 describe("Studio console tabs by viewer (demo)", () => {
   it("shows a curator only Shelves, Scenes and Artists", async () => {
     holder.hasStaffTier = false;
-    renderPage();
+    await renderPage();
     const tabs = await screen.findAllByRole("tab");
     expect(tabNames(tabs)).toEqual(["Shelves", "Scenes", "Artists"]);
     expect(
@@ -79,7 +82,7 @@ describe("Studio console tabs by viewer (demo)", () => {
 
   it("never reads the Waiting count for a curator", async () => {
     holder.hasStaffTier = false;
-    renderPage();
+    await renderPage();
     await screen.findAllByRole("tab");
     expect(requestOptions.length).toBeGreaterThan(0);
     requestOptions.forEach((options) => expect(options.isEnabled).toBe(false));
@@ -87,7 +90,7 @@ describe("Studio console tabs by viewer (demo)", () => {
   });
 
   it("shows staff all six tabs", async () => {
-    renderPage();
+    await renderPage();
     const tabs = await screen.findAllByRole("tab");
     expect(tabNames(tabs)).toEqual([
       "Shelves",
@@ -101,7 +104,7 @@ describe("Studio console tabs by viewer (demo)", () => {
   });
 
   it("opens the Artists tab", async () => {
-    renderPage();
+    await renderPage();
     fireEvent.click(await screen.findByRole("tab", { name: "Artists" }));
     expect(await screen.findByRole("tabpanel")).toHaveAccessibleName("Artists");
     expect(

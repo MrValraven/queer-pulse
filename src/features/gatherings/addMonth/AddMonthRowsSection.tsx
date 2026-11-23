@@ -97,6 +97,10 @@ export function AddMonthRowsSection({
   const context = useMemo<AddMonthRowContext>(
     () => ({
       sharedTimes: state.times,
+      templateSpan: {
+        endTime: template.endTime,
+        endDayOffset: template.endDayOffset,
+      },
       sharedCoverUrl: sharedCover
         ? sharedCover.previewUrl
         : template.coverImageUrl,
@@ -111,6 +115,8 @@ export function AddMonthRowsSection({
       state.times,
       template.coverImageUrl,
       template.description,
+      template.endDayOffset,
+      template.endTime,
     ],
   );
   const shownIssues = useMemo(

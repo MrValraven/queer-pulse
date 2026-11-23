@@ -1,7 +1,12 @@
-import { tintForSlug } from "../../../shared/api/refs";
+import {
+  authorDisplayName,
+  isInactiveMemberRef,
+  tintForSlug,
+} from "../../../shared/api/refs";
 import { initialsFromName } from "../../../shared/lib/initials";
 import { formatRelative } from "../../../shared/lib/date";
 import type { Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { FeedPost } from "../feed.data";
 import type { FeedItem } from "./feed.api";
 
@@ -30,16 +35,27 @@ export function initials(name: string): string {
 }
 
 /** GET /feed item → the `FeedPost` a `CommunityPostCard` renders. */
-export function feedItemToPost(item: FeedItem, fmt: Formatters): FeedPost {
+export function feedItemToPost(
+  item: FeedItem,
+  fmt: Formatters,
+  translate?: TFunction,
+): FeedPost {
   const actor = item.actor;
   const slug = actor?.handle ?? "";
-  const name = actor?.displayName ?? "A member";
+  // The inactive member's stand-in carries an empty name and handle; the
+  // byline reads the inactive label and shows no initials.
+  const isInactive = isInactiveMemberRef(actor);
+  const name = !actor
+    ? "A member"
+    : translate
+      ? authorDisplayName(actor, translate)
+      : actor.displayName;
   const tint = slug ? tintForSlug(slug) : AUTHOR_TINTS[0];
   return {
     id: item.id,
     slug,
     authorName: name,
-    authorInitials: initials(name),
+    authorInitials: isInactive ? "" : initials(name),
     authorTint: tint,
     time: formatRelative(item.createdAt, fmt),
     context: item.title,

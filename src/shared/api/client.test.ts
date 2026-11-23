@@ -429,6 +429,142 @@ describe("refresh outcome signal", () => {
   });
 });
 
+describe("isSessionRefusedByServer", () => {
+  // The fixed-key member stores are wiped only on this answer, so a network
+  // blip or a struggling backend must leave them alone.
+  function stubRefresh(refreshResponse: () => Promise<Response>) {
+    return stubFetch(
+      vi.fn((url: string | URL | Request) => {
+        const requestedUrl = requestUrl(url);
+        if (requestedUrl.includes("/csrf-token"))
+          return Promise.resolve(res(200, { csrfToken: "tok" }));
+        if (requestedUrl.includes("/auth/refresh")) return refreshResponse();
+        return Promise.resolve(res(401));
+      }),
+    );
+  }
+
+  it("is true when the server answers the refresh with 401", async () => {
+    const { refreshSession, isSessionRefusedByServer } = await loadClient();
+    stubRefresh(() => Promise.resolve(res(401)));
+    const startedAt = Date.now();
+
+    await refreshSession();
+    expect(isSessionRefusedByServer(startedAt)).toBe(true);
+  });
+
+  it("is false when the refresh is rejected with a 503", async () => {
+    const { refreshSession, isSessionRefusedByServer } = await loadClient();
+    stubRefresh(() => Promise.resolve(res(503)));
+    const startedAt = Date.now();
+
+    await refreshSession();
+    expect(isSessionRefusedByServer(startedAt)).toBe(false);
+  });
+
+  it("is false when the refresh is rejected with a CSRF 403", async () => {
+    const { refreshSession, isSessionRefusedByServer } = await loadClient();
+    stubRefresh(() => Promise.resolve(res(403)));
+    const startedAt = Date.now();
+
+    await refreshSession();
+    expect(isSessionRefusedByServer(startedAt)).toBe(false);
+  });
+
+  it("is false when the wait for the refresh lock times out", async () => {
+    const { refreshSession, isSessionRefusedByServer } = await loadClient();
+    stubRefresh(() => Promise.resolve(res(200)));
+    Object.defineProperty(navigator, "locks", {
+      configurable: true,
+      value: {
+        request: vi.fn(() =>
+          Promise.reject(
+            new DOMException("The lock request was aborted", "AbortError"),
+          ),
+        ),
+      },
+    });
+    try {
+      const startedAt = Date.now();
+
+      await refreshSession();
+      expect(isSessionRefusedByServer(startedAt)).toBe(false);
+    } finally {
+      Reflect.deleteProperty(navigator, "locks");
+    }
+  });
+
+  it("reads a joined refresh that began before the attempt and settled after it", async () => {
+    const { refreshSession, isSessionRefusedByServer } = await loadClient();
+    let now = 1_000;
+    const dateNowSpy = vi.spyOn(Date, "now").mockImplementation(() => now);
+    let answerRefresh: (response: Response) => void = () => undefined;
+    const fetchFn = stubRefresh(
+      () =>
+        new Promise<Response>((resolve) => {
+          answerRefresh = resolve;
+        }),
+    );
+    try {
+      const earlierRefresh = refreshSession();
+      now = 2_000;
+      const startedAt = Date.now();
+      const joinedRefresh = refreshSession();
+      now = 3_000;
+      answerRefresh(res(401));
+      await Promise.all([earlierRefresh, joinedRefresh]);
+
+      expect(
+        fetchFn.mock.calls.filter((call) =>
+          String(call[0]).includes("/auth/refresh"),
+        ),
+      ).toHaveLength(1);
+      expect(isSessionRefusedByServer(startedAt)).toBe(true);
+    } finally {
+      dateNowSpy.mockRestore();
+    }
+  });
+
+  it("is false when the refresh fails on the network", async () => {
+    const { refreshSession, isSessionRefusedByServer } = await loadClient();
+    stubRefresh(() => Promise.reject(new TypeError("Failed to fetch")));
+    const startedAt = Date.now();
+
+    await refreshSession();
+    expect(isSessionRefusedByServer(startedAt)).toBe(false);
+  });
+
+  it("is false for the ApiError(401) a network-failed refresh turns into", async () => {
+    const { apiGet, isSessionRefusedByServer } = await loadClient();
+    stubRefresh(() => Promise.reject(new TypeError("Failed to fetch")));
+    const startedAt = Date.now();
+
+    const error: unknown = await apiGet("/thing").catch(
+      (caught: unknown) => caught,
+    );
+    expect(error).toMatchObject({ name: "ApiError", status: 401 });
+    expect(isSessionRefusedByServer(startedAt, error)).toBe(false);
+  });
+
+  it("is true for a direct 401 when no refresh ran", async () => {
+    const { apiGet, setSessionState, isSessionRefusedByServer } =
+      await loadClient();
+    setSessionState("none");
+    const fetchFn = stubRefresh(() => Promise.resolve(res(200)));
+    const startedAt = Date.now();
+
+    const error: unknown = await apiGet("/thing").catch(
+      (caught: unknown) => caught,
+    );
+    expect(
+      fetchFn.mock.calls.some((call) =>
+        String(call[0]).includes("/auth/refresh"),
+      ),
+    ).toBe(false);
+    expect(isSessionRefusedByServer(startedAt, error)).toBe(true);
+  });
+});
+
 describe("request behaviours", () => {
   it("does not fetch a CSRF token for safe verbs (GET)", async () => {
     const { apiGet } = await loadClient();

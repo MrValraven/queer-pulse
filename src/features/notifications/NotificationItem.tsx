@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { studioKeys } from "../studio/api/studioQueryKeys";
+import { communityBadgeRowVerbKey } from "./communityBadgeNotifications";
 import { NotificationItemActions } from "./NotificationItemActions";
 import {
   NotificationItemLead,
@@ -118,14 +119,21 @@ export function NotificationItem({
   // part of it: a screen reader must hear "and 39 others", since that is the
   // difference between one reply and a conversation. The reason follows the
   // sentence, so the overlay link carries everything the row shows.
-  const rowLabel = `${unreadLabel ? `${unreadLabel}. ` : ""}${
+  const spokenText = `${
     typeof notification.text === "string"
       ? notification.text
       : notification.meta
-  }${othersLabel ? ` ${othersLabel}` : ""}.${spokenReason} ${t(
-    rowGoesToProfile
-      ? "notifications:actions.viewProfile"
-      : "notifications:actions.viewThread",
+  }${othersLabel ? ` ${othersLabel}` : ""}`;
+  // A community badge row opens the sheet, so its link names that verb and its
+  // sentence takes a full stop only when the copy lacks one.
+  const badgeVerbKey = communityBadgeRowVerbKey(notification.sourceHref);
+  const rowLabel = `${unreadLabel ? `${unreadLabel}. ` : ""}${
+    badgeVerbKey ? asSentence(spokenText) : `${spokenText}.`
+  }${spokenReason} ${t(
+    badgeVerbKey ??
+      (rowGoesToProfile
+        ? "notifications:actions.viewProfile"
+        : "notifications:actions.viewThread"),
   )}`;
 
   return (
@@ -203,6 +211,8 @@ export function NotificationItem({
             actions={notification.actions}
             onResolve={onResolve}
             onBeforeNavigate={refreshStudioAccess}
+            onMarkRead={onMarkRead}
+            senderName={notification.actor?.name}
           />
         )}
       </div>

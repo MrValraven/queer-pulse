@@ -4,23 +4,28 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { getMember } from "../../members/data/members";
 import { initialsFromParts } from "../../../shared/lib/initials";
-import { getInvite, type InviteDTO } from "./invite.api";
+import { getInvite, type InviteDTO, type InviteInviterDTO } from "./invite.api";
+
+/** The inviter as the landing shows them. */
+export interface InviteInviterView {
+  slug: string;
+  name: string;
+  firstName: string;
+  initials: string;
+  photo?: string;
+  since?: string;
+  /** True only for an active ambassador whose tag is visible. The onboarding
+   *  welcome step names them as one when this is true. */
+  isAmbassador: boolean;
+}
 
 /** Page-ready, presentation-normalized invite (status + the inviter's details). */
 export interface InviteView {
   code: string;
   status: InviteDTO["status"];
-  inviter: {
-    slug: string;
-    name: string;
-    firstName: string;
-    initials: string;
-    photo?: string;
-    since?: string;
-    /** True only for an active ambassador whose tag is visible. The onboarding
-     *  welcome step names them as one when this is true. */
-    isAmbassador: boolean;
-  };
+  /** Null unless the invite can be used (SEC-13): a revoked, used or expired
+   *  invite, or one from an inviter who left, names nobody. */
+  inviter: InviteInviterView | null;
   note?: string;
   /** The inviter's vouch (why they're inviting you), surfaced at onboarding. */
   vouch?: string;
@@ -40,6 +45,14 @@ export interface InviteView {
   memberCount: number;
 }
 
+/** An invite the landing can open: it names its inviter. */
+export type ResolvedInviteView = InviteView & { inviter: InviteInviterView };
+
+/** True when the invite carries its inviter, which only a usable one does. */
+export function hasInviter(view: InviteView): view is ResolvedInviteView {
+  return view.inviter !== null;
+}
+
 /** What the query caches: everything except the language-dependent label. */
 type InviteQueryData = Omit<InviteView, "expiryLabel">;
 
@@ -56,22 +69,25 @@ function parseExpiry(iso: string | null): Date | null {
   return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
 }
 
+function inviterToView(inviter: InviteInviterDTO): InviteInviterView {
+  return {
+    slug: inviter.slug,
+    name: `${inviter.firstName} ${inviter.lastName}`,
+    firstName: inviter.firstName,
+    initials: initialsFromParts(inviter.firstName, inviter.lastName),
+    photo: inviter.avatarUrl ?? undefined,
+    since: inviter.memberSince,
+    isAmbassador: inviter.isAmbassador === true,
+  };
+}
+
 function dtoToView(dto: InviteDTO): InviteQueryData {
-  const { inviter } = dto;
   return {
     code: dto.code,
     status: dto.status,
-    inviter: {
-      slug: inviter.slug,
-      name: `${inviter.firstName} ${inviter.lastName}`,
-      firstName: inviter.firstName,
-      initials: initialsFromParts(inviter.firstName, inviter.lastName),
-      photo: inviter.avatarUrl ?? undefined,
-      since: inviter.memberSince,
-      isAmbassador: inviter.isAmbassador === true,
-    },
-    note: dto.note,
-    vouch: dto.vouch,
+    inviter: dto.inviter ? inviterToView(dto.inviter) : null,
+    note: dto.note ?? undefined,
+    vouch: dto.vouch ?? undefined,
     inviterActive: dto.inviterActive,
     expiresAt: parseExpiry(dto.expiresAt),
     // Falls back to 0 only if the backend ever omits the expiry window; in

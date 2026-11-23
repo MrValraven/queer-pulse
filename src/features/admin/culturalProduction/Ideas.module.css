@@ -18,8 +18,11 @@
   margin-inline-start: auto;
 }
 
-/* ── The grid ── one column on a phone, two from 720px, three from 1100px. */
+/* ── The grid ── one column on a phone, two from 720px, three from 1100px.
+   A card a filter drops is lifted out against the grid while it fades
+   (AnimatePresence mode="popLayout"), so the grid is its positioned parent. */
 .grid {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--gap-sm);

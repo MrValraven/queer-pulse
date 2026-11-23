@@ -1,6 +1,7 @@
 // src/features/messages/replyQuoteSource.ts
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
 import type { ChatMessage } from "./data";
+import { withRenderableGifThumbnail } from "./gifMediaHosts";
 
 /** What a reply quote needs to describe its parent, whichever side it comes
  *  from: the bubble reads it off `ChatMessage.replyTo` (the server's quote
@@ -48,7 +49,8 @@ export function replyQuoteSourceFromMessage(
     message.attachment && !isDocumentAttachment(message.attachment)
       ? message.attachment
       : null;
-  return {
+  // SEC-24: a GIF from a refused host quotes without a thumbnail.
+  return withRenderableGifThumbnail({
     kind: message.kind ?? "user",
     text: message.text,
     thumbnailUrl: mediaAttachment
@@ -56,5 +58,5 @@ export function replyQuoteSourceFromMessage(
       : null,
     fileName: documentAttachment?.fileName || null,
     isDeleted: !!message.deletedAt,
-  };
+  });
 }

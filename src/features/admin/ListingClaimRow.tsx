@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { memberRefToPerson } from "../../shared/api/refs";
 import { routes } from "../../app/routeMap";
+import { describeErrorToast } from "../../shared/api/errorMessage";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
@@ -18,7 +19,10 @@ import {
   type AvatarTone,
 } from "./ui";
 import { QueueOverdueChip } from "./QueueAssignmentControls";
-import { useReviewListingClaim } from "./api/useReviewListingClaim";
+import {
+  isOwnClaimReviewRefusal,
+  useReviewListingClaim,
+} from "./api/useReviewListingClaim";
 import { adminListingEditPath } from "./api/adminListingEdit.api";
 import { focusListingQueueHeadingAfterRemove } from "./listingQueueFocus";
 import type {
@@ -84,6 +88,18 @@ export function ListingClaimRow({
             "success",
           );
           focusListingQueueHeadingAfterRemove();
+        },
+        onError: (reviewError) => {
+          setIsApproveConfirmOpen(false);
+          showToast(
+            isOwnClaimReviewRefusal(reviewError)
+              ? t("admin:listingClaims.errors.claim_reviewer_is_claimant")
+              : describeErrorToast(
+                  t("admin:listingClaims.errors.reviewFailed"),
+                  reviewError,
+                ),
+            "error",
+          );
         },
       },
     );

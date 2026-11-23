@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiMail } from "react-icons/fi";
+import { FiKey, FiMail } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { FilterPageHeader } from "../../shared/components/filterPage";
 import { Translation } from "../../shared/i18n/Translation";
@@ -10,6 +10,7 @@ import { routes } from "../../app/routeMap";
 import { CommunitiesTopTabs } from "./CommunitiesTopTabs";
 import { COMMUNITY_INVITATIONS_PATH } from "./communityInvitations.path";
 import { useMyCommunityInvites } from "./api/useCommunityInvites";
+import { useMyCommunityOwnershipOffers } from "./api/useCommunityOwnershipOffers";
 import {
   useMyCommunities,
   useMyCommunitiesResolving,
@@ -51,6 +52,10 @@ export function CommunitiesHubHeader({
   });
   const { invites } = useMyCommunityInvites({ enabled: isMineTab });
   const hasInvites = isMineTab && invites.length > 0;
+  // PRD-514: open ownership offers live on the same shelf, so they get their
+  // own way in beside the invitations link.
+  const { offers } = useMyCommunityOwnershipOffers({ enabled: isMineTab });
+  const hasOffers = isMineTab && offers.length > 0;
 
   const mineEyebrow = t("communities:hub.eyebrow");
   const discoverEyebrow = t("communities:hubShell.eyebrow");
@@ -100,7 +105,12 @@ export function CommunitiesHubHeader({
       // fetch is a wrong number. The shimmer holds the line until it lands.
       isLeadLoading={isMineTab && isMembershipsLoading}
       note={
-        hasInvites ? <HubInvitationsLink count={invites.length} /> : undefined
+        hasInvites || hasOffers ? (
+          <span className={styles.hubLinks}>
+            {hasOffers && <HubOwnershipOffersLink count={offers.length} />}
+            {hasInvites && <HubInvitationsLink count={invites.length} />}
+          </span>
+        ) : undefined
       }
       actions={
         <>
@@ -161,6 +171,18 @@ function HubInvitationsLink({ count }: { count: number }) {
     <Link to={COMMUNITY_INVITATIONS_PATH} className={styles.invitesLink}>
       <FiMail aria-hidden />
       {t("communities:hub.invitesLink", { count })}
+    </Link>
+  );
+}
+
+/** The way into the open ownership offers (PRD-514), which share the
+ *  invitations shelf. Shown only while one is waiting, on "My communities". */
+function HubOwnershipOffersLink({ count }: { count: number }) {
+  const { t } = useTranslation();
+  return (
+    <Link to={COMMUNITY_INVITATIONS_PATH} className={styles.invitesLink}>
+      <FiKey aria-hidden />
+      {t("communities:hub.ownershipOffersLink", { count })}
     </Link>
   );
 }

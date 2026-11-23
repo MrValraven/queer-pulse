@@ -816,7 +816,7 @@ export const marketing: Catalog = {
     "Vai a <settingsLink>Definições</settingsLink> e depois a Perfil. As alterações aplicam-se em todo o lado de imediato.",
   "help.qa.privateProfile.q": "Posso tornar o meu perfil privado?",
   "help.qa.privateProfile.a":
-    "Sim, em <settingsLink>Definições</settingsLink> e depois Privacidade. Um perfil privado continua visível para as tuas conexões. Só <strong>não aparece na pesquisa nem no diretório público</strong>.",
+    "Sim, em <settingsLink>Definições</settingsLink> e depois Privacidade. Um perfil privado <strong>não aparece na pesquisa nem no diretório público</strong>, e toda a gente além de ti, incluindo as tuas conexões, vê só uma versão limitada dele.",
   "help.qa.unknownSession.q":
     "Não reconheço um dispositivo nas minhas sessões ativas. E agora?",
   "help.qa.unknownSession.a":
@@ -3541,6 +3541,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-23.headline":
+    "Crachás nas comunidades, saída rápida em todas as páginas e mais privacidade para todas as pessoas.",
+  "changelog.releases.2026-11-22.headline":
+    "A lista de tarefas da Produção Cultural agrupa o trabalho por estado e filtra sem cintilar.",
   "changelog.releases.2026-11-20.headline":
     "As comunidades nascem no telemóvel e a equipa ganha a produção cultural para planear eventos.",
   "changelog.releases.2026-11-16.headline":
@@ -3920,6 +3924,42 @@ export const marketing: Catalog = {
     "Cria uma comunidade no telemóvel em três passos",
   "changelog.entries.quick-start-community.body":
     "Dás-lhe um nome, dizes para quem é e abres, e uma lista na página mostra o que juntar a seguir.",
+  "changelog.entries.quicker-app-install.title":
+    "Instala a app diretamente a partir da página inicial",
+  "changelog.entries.quicker-app-install.body":
+    "No telemóvel, um toque abre o instalador do Android ou os passos para o teu browser, incluindo o Instagram.",
+  "changelog.entries.community-badges.title":
+    "As comunidades celebram as pessoas com crachás e presentes",
+  "changelog.entries.community-badges.body":
+    "As pessoas ganham crachás ao participar e usam um junto ao nome, e a equipa pode enviar presentes.",
+  "changelog.entries.quick-exit-everywhere.title":
+    "A saída rápida funciona em todas as páginas",
+  "changelog.entries.quick-exit-everywhere.body":
+    "Termina a sessão e limpa o que este dispositivo guardou, seja no feed, numa conversa ou num perfil.",
+  "changelog.entries.community-ownership-offers.title":
+    "A titularidade de uma comunidade passa por proposta",
+  "changelog.entries.community-ownership-offers.body":
+    "Quem recebe a proposta aceita ou recusa, e um indicador avisa quando há uma à espera.",
+  "changelog.entries.invite-request-email-code.title":
+    "Pedir um convite confirma primeiro o teu email",
+  "changelog.entries.invite-request-email-code.body":
+    "Introduzes um código enviado para o teu email antes de o pedido seguir para a nossa equipa.",
+  "changelog.entries.private-members-stay-private.title":
+    "Os perfis privados ficam fora da lista de membros e da pesquisa",
+  "changelog.entries.private-members-stay-private.body":
+    "Quem escolhe Só a rede aparece apenas às suas ligações diretas.",
+  "changelog.entries.hide-profile-from-them.title":
+    "Esconde o teu perfil de uma pessoa",
+  "changelog.entries.hide-profile-from-them.body":
+    "Escolhe Esconder o meu perfil em qualquer perfil e essa pessoa deixa de ver o teu.",
+  "changelog.entries.security-privacy-hardening.title":
+    "Mais proteção de segurança e privacidade",
+  "changelog.entries.security-privacy-hardening.body":
+    "Publicações e personas anónimas ficam anónimas, as fotos já não revelam quem as publicou, e entrar é mais seguro.",
+  "changelog.entries.cultural-production-task-list.title":
+    "Uma lista de tarefas mais clara na Produção Cultural",
+  "changelog.entries.cultural-production-task-list.body":
+    "As tarefas agrupam-se por estado com uma coluna de prazo própria, e o menu de estado abre por cima de todas as linhas.",
   "changelog.entries.cultural-production.title":
     "Produção cultural para a equipa que organiza os eventos do QueerPulse",
   "changelog.entries.cultural-production.body":

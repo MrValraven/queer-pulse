@@ -1,3 +1,4 @@
+import { apiErrorCode, causeErrorKey } from "../../shared/api/causeErrorKey";
 import {
   ACCOUNT_RESTRICTED_COPY,
   isAccountRestricted,
@@ -189,15 +190,35 @@ function putFailureKeyOf(error: StudioAudioUploadError): string {
   return "studio:uploadFlow.files.errorUpload";
 }
 
+/** A Studio audio key is refused at confirm with `UPLOAD_NOT_YOURS` when
+ *  the member is no longer one of its persona's owners, so that refusal
+ *  reads as the persona owner line. */
+const CONFIRM_CAUSE_OVERRIDES = {
+  UPLOAD_NOT_YOURS: "studio:errors.notPersonaOwner",
+};
+
+/** A failed confirm of the stored bytes: a cancel reads as cancelled, a
+ *  Studio refusal (Studio access ended, a persona kind that cannot upload)
+ *  as its Studio line, any other refusal through `causeErrorKey`. */
+function confirmFailureKeyOf(error: StudioAudioUploadError): string {
+  if (error.isAborted) return "studio:uploadFlow.files.cancelled";
+  if (studioErrorCodeOf(error.cause) !== null)
+    return studioErrorMessageKeyOf(error.cause, "upload");
+  return causeErrorKey(error.cause, CONFIRM_CAUSE_OVERRIDES).key;
+}
+
 /** One message per failure a row can show. A presign that never got an
  *  answer reads its reason (offline, unreachable, timeout) through
- *  `studioReasonOf`; a presign outage keeps the plain stopped line. */
+ *  `studioReasonOf`; a presign outage keeps the plain stopped line. A
+ *  refused confirm of the stored bytes names its own cause
+ *  (`confirmFailureKeyOf`). */
 export function uploadErrorKeyOf(error: unknown): string {
   if (error instanceof StudioAudioUploadError) {
     if (error.stage === "presign" && error.status === 413)
       return "studio:uploadFlow.files.errorTooLarge";
     if (isPresignRefusal(error))
       return studioErrorMessageKeyOf(error.cause, "upload");
+    if (error.stage === "confirm") return confirmFailureKeyOf(error);
     if (error.stage === "put") return putFailureKeyOf(error);
     const reason = studioReasonOf(error.cause);
     if (
@@ -218,16 +239,37 @@ const HARD_ERROR_CODES: ReadonlySet<StudioErrorCode> = new Set([
   "studio_track_limit",
 ]);
 
+/** Confirm refusals that come back the same on every Retry: the stored
+ *  bytes are of another type, or the key is one the member may not use. */
+const HARD_CONFIRM_CODES: ReadonlySet<string> = new Set([
+  "UPLOAD_CONTENT_MISMATCH",
+  "UPLOAD_NOT_YOURS",
+]);
+
+/** A confirm of the stored bytes the server refused for good: a hard upload
+ *  code, any Studio refusal (Studio access ended, a persona kind that cannot
+ *  upload), or a member under a restriction. */
+const isHardConfirmRefusal = (error: StudioAudioUploadError) => {
+  if (error.stage !== "confirm") return false;
+  if (isAccountRestricted(error.cause)) return true;
+  if (studioErrorCodeOf(error.cause) !== null) return true;
+  const code = apiErrorCode(error.cause);
+  return code !== null && HARD_CONFIRM_CODES.has(code);
+};
+
 /** Failures a Retry cannot fix: the server refuses the same file (413), the
  *  uploaded object belongs to someone else (422 wrong owner), the release
- *  left draft or is full (409), the presign was refused (403), or the member
- *  is under a restriction (403).
+ *  left draft or is full (409), the presign was refused (403), the confirm
+ *  found bytes of another type, a key the member may not use, ended Studio
+ *  access or a persona kind that cannot upload, or the member is under a
+ *  restriction (403).
  *  The row keeps Remove, so the member can drop it and add the file again. */
 export function isRetryableUploadError(error: unknown): boolean {
   if (error instanceof StudioAudioUploadError)
     return !(
       (error.stage === "presign" && error.status === 413) ||
-      isPresignRefusal(error)
+      isPresignRefusal(error) ||
+      isHardConfirmRefusal(error)
     );
   if (isAccountRestricted(error)) return false;
   const code = studioErrorCodeOf(error);

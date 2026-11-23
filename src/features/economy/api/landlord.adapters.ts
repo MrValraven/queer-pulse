@@ -6,6 +6,7 @@ import type {
 } from "./landlord.api";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
+import { INACTIVE_MEMBER_LABEL_KEY } from "../../../shared/api/refs";
 
 /** The board section only renders identity + stars + note. */
 export type LandlordCard = Pick<
@@ -78,8 +79,10 @@ function recDtoToRecommendation(
   return {
     // The handle the per-recommendation report control is addressed by.
     id: rec.id,
-    initials: rec.initials, // server-computed from the DTO's own member ref
-    name: rec.name,
+    // Server-computed from the DTO's own member ref. The inactive member's
+    // stand-in (PRD-507) arrives with both empty and reads the inactive label.
+    initials: rec.initials,
+    name: rec.isInactiveMember ? t(INACTIVE_MEMBER_LABEL_KEY) : rec.name,
     tint: rec.tint,
     stars: rec.stars,
     text: rec.text,

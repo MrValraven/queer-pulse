@@ -1,0 +1,109 @@
+/* Community badge chip and avatar ring. Ground, ink and ring tokens live in
+   styles/tokens/colors.css as --flair-<tint>-ground, --flair-<tint>-ink and
+   --ring-flair-<tint>, so both themes flip with the token block. */
+
+.chip {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.chipMd {
+  padding: 3px 10px;
+  font-size: var(--text-13);
+}
+
+.chipIcon {
+  flex: none;
+}
+
+.chipName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tintJade {
+  background: var(--flair-jade-ground);
+  color: var(--flair-jade-ink);
+}
+
+.tintAccent {
+  background: var(--flair-accent-ground);
+  color: var(--flair-accent-ink);
+}
+
+.tintPlum {
+  background: var(--flair-plum-ground);
+  color: var(--flair-plum-ink);
+}
+
+.tintRose {
+  background: var(--flair-rose-ground);
+  color: var(--flair-rose-ink);
+}
+
+.tintAmber {
+  background: var(--flair-amber-ground);
+  color: var(--flair-amber-ink);
+}
+
+.tintViolet {
+  background: var(--flair-violet-ground);
+  color: var(--flair-violet-ink);
+}
+
+.ring {
+  display: inline-flex;
+  border-radius: 50%;
+}
+
+/* No worn badge: the same round inline-flex box as `.ring`, so a ringless
+   avatar never picks up a line box, the header keeps its height, and a ring
+   fading out stays a circle. */
+.plain {
+  display: inline-flex;
+  border-radius: 50%;
+}
+
+.ringJade {
+  box-shadow: var(--ring-flair-jade);
+}
+
+.ringAccent {
+  box-shadow: var(--ring-flair-accent);
+}
+
+.ringPlum {
+  box-shadow: var(--ring-flair-plum);
+}
+
+.ringRose {
+  box-shadow: var(--ring-flair-rose);
+}
+
+.ringAmber {
+  box-shadow: var(--ring-flair-amber);
+}
+
+.ringViolet {
+  box-shadow: var(--ring-flair-violet);
+}
+
+/* On both states, so taking a badge off fades the ring out the same way
+   wearing one fades it in. */
+@media (prefers-reduced-motion: no-preference) {
+  .ring,
+  .plain {
+    transition: box-shadow var(--dur-base) var(--ease-out);
+  }
+}

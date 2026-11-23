@@ -795,7 +795,7 @@ export const marketing: Catalog = {
     "Head to <settingsLink>Settings</settingsLink>, then Profile. Changes apply everywhere immediately.",
   "help.qa.privateProfile.q": "Can I make my profile private?",
   "help.qa.privateProfile.a":
-    "Yes, in <settingsLink>Settings</settingsLink>, then Privacy. A private profile is still visible to people you're connected with. It just <strong>won't appear in search or the public directory</strong>.",
+    "Yes, in <settingsLink>Settings</settingsLink>, then Privacy. A private profile <strong>won't appear in search or the public directory</strong>, and everyone but you, your connections included, sees only a limited version of it.",
   "help.qa.unknownSession.q":
     "I don't recognise a device in my active sessions. What now?",
   "help.qa.unknownSession.a":
@@ -3447,6 +3447,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-23.headline":
+    "Community badges, Quick Exit on every page and tighter privacy for everyone.",
+  "changelog.releases.2026-11-22.headline":
+    "Cultural Production's task list groups work by status and filters without flicker.",
   "changelog.releases.2026-11-20.headline":
     "Communities start from a phone, and the team gets Cultural Production to plan events.",
   "changelog.releases.2026-11-16.headline":
@@ -3825,6 +3829,42 @@ export const marketing: Catalog = {
     "Start a community from your phone in three steps",
   "changelog.entries.quick-start-community.body":
     "Name it, say who it's for and open it, then a checklist on its page lists what to add next.",
+  "changelog.entries.quicker-app-install.title":
+    "Install the app straight from the homepage",
+  "changelog.entries.quicker-app-install.body":
+    "On a phone, one tap opens Android's install dialog or the steps for your browser, Instagram included.",
+  "changelog.entries.community-badges.title":
+    "Communities celebrate their members with badges and gifts",
+  "changelog.entries.community-badges.body":
+    "Members earn badges by taking part and wear one by their name, and staff can send gifts as thanks.",
+  "changelog.entries.quick-exit-everywhere.title":
+    "Quick Exit works from every page",
+  "changelog.entries.quick-exit-everywhere.body":
+    "It signs you out and clears what this device kept, from the feed, a chat or a profile.",
+  "changelog.entries.community-ownership-offers.title":
+    "Community ownership moves by offer",
+  "changelog.entries.community-ownership-offers.body":
+    "The new owner accepts or declines, and a badge tells them when an offer is waiting.",
+  "changelog.entries.invite-request-email-code.title":
+    "Asking for an invite confirms your email first",
+  "changelog.entries.invite-request-email-code.body":
+    "You enter a code we send to your email before your request goes to our team.",
+  "changelog.entries.private-members-stay-private.title":
+    "Private members stay out of the member list and search",
+  "changelog.entries.private-members-stay-private.body":
+    "Members who choose Network only show to their direct connections.",
+  "changelog.entries.hide-profile-from-them.title":
+    "Hide your profile from one person",
+  "changelog.entries.hide-profile-from-them.body":
+    "Pick Hide my profile from them on any profile and that person stops seeing yours.",
+  "changelog.entries.security-privacy-hardening.title":
+    "Stronger security and privacy protections",
+  "changelog.entries.security-privacy-hardening.body":
+    "Anonymous posts and personas stay anonymous, photo links no longer name the poster, and sign-in is tighter.",
+  "changelog.entries.cultural-production-task-list.title":
+    "A sharper task list in Cultural Production",
+  "changelog.entries.cultural-production-task-list.body":
+    "Tasks group by status with their own due column, and the status menu opens cleanly over every row.",
   "changelog.entries.cultural-production.title":
     "Cultural Production for the team that runs QueerPulse events",
   "changelog.entries.cultural-production.body":

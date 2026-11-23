@@ -89,6 +89,8 @@ export function useForwardGroupSearch(
     queryKey: [FORWARD_GROUP_SEARCH_KEY, scopeIdentityId, debouncedQuery],
     enabled: isServerSearchEnabled,
     gcTime: 0,
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     // The previous term's answer, from the same mailbox only.
     placeholderData: (previousGroups, previousQuery) =>
       previousQuery?.queryKey[1] === scopeIdentityId

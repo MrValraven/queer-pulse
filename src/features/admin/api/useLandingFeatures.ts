@@ -81,6 +81,8 @@ export function useLandingEligible(section: LandingSection, search: string) {
   const { demoMode } = useDemoMode();
   const query = useQuery<AdminEligibleEntityDTO[]>({
     queryKey: [ADMIN_LANDING_KEY, "eligible", section, search, demoMode],
+    // The key holds what the staff member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     queryFn: async () => {
       if (demoMode) return getDemoLandingEligible(section, search);
       return getAdminLandingEligible(section, search);

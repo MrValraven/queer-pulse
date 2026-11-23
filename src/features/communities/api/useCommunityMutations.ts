@@ -1,4 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  communityBadgeKeys,
+  refreshLiveNameLines,
+} from "../badges/api/communityBadgeKeys";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
@@ -20,7 +24,6 @@ import {
   reviewJoinRequest,
   setMemberRole,
   suggestCommunityTag,
-  transferCommunityOwnership,
   unreactToPost,
   updateCommunity,
   updatePost,
@@ -174,6 +177,11 @@ export function useJoinCommunity(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["communities"] });
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
+      // A join, leave or seat change moves what the badge sheet shows: the
+      // member view, the manage pane and the worn badge.
+      void queryClient.invalidateQueries({
+        queryKey: communityBadgeKeys.all(slug),
+      });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
       // A space's card on its parent's Spaces tab shows the viewer's own
       // roster row, so the parent's list refreshes too.
@@ -201,6 +209,14 @@ export function useLeaveCommunity(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["communities"] });
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      // A join, leave or seat change moves what the badge sheet shows: the
+      // member view, the manage pane and the worn badge.
+      void queryClient.invalidateQueries({
+        queryKey: communityBadgeKeys.all(slug),
+      });
+      // The leaver's worn badge and gift mark go with their roster row, so the
+      // live name lines on posts and replies drop their flair.
+      if (!demoMode) refreshLiveNameLines(queryClient, slug);
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
       // A space's card on its parent's Spaces tab shows the viewer's own
       // roster row, so the parent's list refreshes too.
@@ -231,6 +247,11 @@ export function useReviewJoinRequest(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      // An approval seats a new member, which moves the badge holders and
+      // the manage pane.
+      void queryClient.invalidateQueries({
+        queryKey: communityBadgeKeys.all(slug),
+      });
     },
   });
 }
@@ -269,6 +290,13 @@ export function useRemoveMember(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      // A leave, removal or ban moves what the badge sheet shows, and the
+      // removed member's worn badge and gift mark go with their roster row,
+      // so the live name lines on posts and replies drop their flair.
+      void queryClient.invalidateQueries({
+        queryKey: communityBadgeKeys.all(slug),
+      });
+      if (!demoMode) refreshLiveNameLines(queryClient, slug);
       void queryClient.invalidateQueries({
         queryKey: ["community-ban-ratifications", slug],
       });
@@ -305,6 +333,11 @@ export function useSetMemberRole(slug: string) {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      // A join, leave or seat change moves what the badge sheet shows: the
+      // member view, the manage pane and the worn badge.
+      void queryClient.invalidateQueries({
+        queryKey: communityBadgeKeys.all(slug),
+      });
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
       // Membership cards print the holder's CURRENT roster role, read live by
@@ -466,28 +499,6 @@ export function useDismissCommunityReport(slug: string) {
       void queryClient.invalidateQueries({
         queryKey: ["community-reports", slug],
       });
-    },
-  });
-}
-
-/** POST /communities/:slug/transfer — owner-only ownership transfer. Live moves
- *  ownership (caller becomes a mod) + invalidates the detail/roster/memberships;
- *  demo is a no-op the caller reflects with its own toast. */
-export function useTransferOwnership(slug: string) {
-  const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
-  return useMutation<CommunityDetailDTO | null, Error, { memberSlug: string }>({
-    // The transfer modal toasts its own error, so silence the global duplicate.
-    meta: { silentError: true },
-    mutationFn: async ({ memberSlug }) => {
-      if (demoMode) return null;
-      return transferCommunityOwnership(slug, memberSlug);
-    },
-    onSuccess: () => {
-      if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });
 }

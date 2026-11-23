@@ -329,6 +329,15 @@ const en: Record<string, string> = {
   "push:listingOwnerOffer.title": "Ownership offer",
   "push:listingOwnerOffer.body":
     "{name} has offered you ownership of {listingName}.",
+  // PRD-514: a community owner offered this member the ownership, and the
+  // owner hears back when the recipient declines. `PushNotificationListener`'s
+  // English fallbacks stay word-for-word identical to these.
+  "push:communityOwnershipOffered.title": "Ownership offer",
+  "push:communityOwnershipOffered.body":
+    "{name} has offered you ownership of {communityName}.",
+  "push:communityOwnershipOfferDeclined.title": "Offer declined",
+  "push:communityOwnershipOfferDeclined.body":
+    "{name} declined your offer of {communityName}.",
   // QueerPulse Go together (design spec 2026-09-28). None of the three names
   // the gathering: `PushNotificationListener`'s English fallback titles and
   // bodies for all three must stay word-for-word identical to these, since
@@ -574,6 +583,12 @@ const pt: Record<string, string> = {
   "push:listingOwnerOffer.title": "Oferta de propriedade",
   "push:listingOwnerOffer.body":
     "{name} ofereceu-te a propriedade de {listingName}.",
+  "push:communityOwnershipOffered.title": "Oferta de gestão",
+  "push:communityOwnershipOffered.body":
+    "{name} ofereceu-te a gestão de {communityName}.",
+  "push:communityOwnershipOfferDeclined.title": "Oferta recusada",
+  "push:communityOwnershipOfferDeclined.body":
+    "{name} recusou a tua oferta de {communityName}.",
   "push:goTogether.pairInvite.title": "Vamos juntes",
   "push:goTogether.pairInvite.body": "{name} quer ir contigo a um evento",
   "push:goTogether.groupReady.title": "Vamos juntes",

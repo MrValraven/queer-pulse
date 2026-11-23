@@ -14,6 +14,7 @@ import { QuizshowImportButtons } from "./QuizshowImportButtons";
 
 const TARGET_GAME_ID = QUIZSHOW_DEMO_GAME_IDS.flatQuiz;
 const SOURCE_GAME_ID = QUIZSHOW_DEMO_GAME_IDS.afterDark;
+const DEMO_GAME_COUNT = Object.keys(QUIZSHOW_DEMO_GAME_IDS).length;
 
 function createClient(): QueryClient {
   return new QueryClient({
@@ -63,7 +64,10 @@ describe("QuizshowImportSourcePicker on a game", () => {
       ),
     ).toBeTruthy();
     expect(await within(dialog).findByText(sourceGameQuizTitle)).toBeTruthy();
-    expect(within(dialog).getByText("Your game")).toBeTruthy();
+    // Every demo game but the one being edited, each tagged as a game.
+    expect(within(dialog).getAllByText("Your game")).toHaveLength(
+      DEMO_GAME_COUNT - 1,
+    );
     expect(within(dialog).getAllByText(/rounds?/).length).toBeGreaterThan(1);
     expect(
       within(dialog).getAllByRole("button", { name: "Copy this quiz" }).length,
@@ -125,7 +129,10 @@ describe("QuizshowImportSourcePicker on a game", () => {
 
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("Copy from a past event")).toBeTruthy();
-    expect((await within(dialog).findAllByText("Your game")).length).toBe(2);
+    // An event takes from every demo game.
+    expect((await within(dialog).findAllByText("Your game")).length).toBe(
+      DEMO_GAME_COUNT,
+    );
   });
 
   it("labels the copy button Copy a game or event quiz on a game", async () => {

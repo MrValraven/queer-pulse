@@ -46,6 +46,11 @@ export const COMMUNITY_GOVERNANCE_ACTION_TONE: Record<
   card_replaced: "plum",
   support_offered: "jade",
   support_offer_answered: "plum",
+  badge_created: "jade",
+  badge_updated: "plum",
+  badge_deleted: "danger",
+  gift_sent: "jade",
+  gift_removed: "amber",
 };
 
 /** The chip tone for a raw wire value. An action this client has not learned

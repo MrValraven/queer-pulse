@@ -31,6 +31,8 @@ export function useArchive(q: string) {
   const { demoMode } = useDemoMode();
   const query = useQuery<ArchiveEntryDto[]>({
     queryKey: ["magazine-archive", demoMode, q],
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     queryFn: async () => {
       if (demoMode) {
         const normalizedQuery = foldForSearch(q.trim());

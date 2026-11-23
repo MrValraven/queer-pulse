@@ -54,10 +54,16 @@
   }
 }
 .rosterBadgeRow {
+  /* The badge name line takes this gap back and re-adds it per piece, and
+     sits last, so the spare room a wrapped-away chip leaves falls at the end
+     of the centred row. */
+  --name-line-gap: 6px;
+  --name-line-order: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--name-line-gap);
   flex-wrap: wrap;
   min-height: 18px;
   margin-bottom: 6px;
@@ -287,7 +293,9 @@
   color: var(--text-strong);
   display: flex;
   align-items: center;
-  gap: 7px;
+  /* The badge name line takes this gap back and re-adds it per piece. */
+  --name-line-gap: 7px;
+  gap: var(--name-line-gap);
   flex-wrap: wrap;
 }
 .modNote {

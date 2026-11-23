@@ -69,6 +69,30 @@
   margin-top: 42px;
   align-items: center;
 }
+/* Sits one CTA gap below the CTA row, so it reads as part of the same group. */
+.installRow {
+  margin-top: 14px;
+}
+
+/* Phones: the CTAs and the install button form one column of equal-width
+   pills, capped so a large phone keeps them a comfortable size. Button is
+   inline-flex with centred content, so each label stays centred as it
+   stretches. The install button keeps its quieter variant and size, which
+   carries the hierarchy, and the 14px rhythm holds between all three. */
+@media (--sm) {
+  .cta {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 420px;
+  }
+  .cta > *,
+  .installRow > * {
+    width: 100%;
+  }
+  .installRow {
+    max-width: 420px;
+  }
+}
 .note {
   font-size: var(--text-13-5);
   color: var(--ink-40);

@@ -5087,4 +5087,10 @@ export const studio: Catalog = {
     "Artists can set a price on albums, EPs, singles and their tracks. Buyers pay the artist directly through the artist's own payment link, MB WAY number or IBAN. QueerPulse is not a party to the sale. It does not hold or move the money, and it cannot refund a payment.",
   "termsLive.sec.selling.p2":
     "A purchase unlocks its downloads and the supporter wall once the artist confirms the payment. A refund or a disagreement about money is between the buyer and the artist. If an artist took your payment and did not confirm it, report their artist page to our team.",
+  "purchase.sheet.freeCta": "Get the free download",
+  "purchase.sheet.freeCreateFailed": "We couldn't record your free download",
+  "purchase.sheet.freeNote":
+    "This one is free. {artist} confirms your download, then you can follow it in your purchases",
+  "purchase.sheet.freeDoneStatus":
+    "{artist} will confirm your free download. Follow it in your purchases",
 };

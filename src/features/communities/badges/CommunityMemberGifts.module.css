@@ -1,0 +1,222 @@
+/* Name-line badge pieces: the wrapper that holds the chip and the gift mark,
+   the gift mark button, and the gifts dialog list. Chip and ring styles live
+   in CommunityFlair.module.css. Gift tints read the same
+   --flair-<tint>-ground and --flair-<tint>-ink tokens, so both themes flip
+   with the token block. */
+
+/* The line is a flex item in every name row that asks for only its smallest
+   width (a zero basis, floored at its min-content), so a wrapping row keeps it
+   on the line the name and role pill already use, and a single-line row
+   shrinks it before the name or the time. Leftover room grows it back up to
+   its full width.
+   Each piece brings its own leading space (--name-line-gap, which every name
+   row sets to its own gap) and the line takes the row's gap back with a
+   negative margin, so a line whose chip has wrapped away costs the row no
+   extra gap.
+   Inside, the row runs reversed behind an empty first item, with the gift
+   mark next in flex order, so it reads chip then mark. The mark is never
+   dropped. The chip asks for its icon-only width; with less room than that
+   it wraps onto a second line that sits a tap target below and is clipped
+   away, so it never adds a line and the name keeps its letters (screen
+   readers still read the chip, and the avatar ring still shows the badge).
+   The pieces left centre in the spare room. The clip reaches half a tap
+   target past every edge, so the mark's 44px hit area and the focus rings
+   stay whole. */
+.nameLine {
+  --chip-block: calc(var(--text-11) * 1.4 + 2px);
+
+  display: inline-flex;
+  flex: 1 1 0;
+  flex-flow: row-reverse wrap;
+  gap: var(--tap-min) 0;
+  align-items: center;
+  justify-content: center;
+  order: var(--name-line-order, 0);
+  min-width: min-content;
+  max-width: max-content;
+  max-block-size: var(--chip-block);
+  /* Like the gift mark, the chip lays out at 16px tall, so it never makes a
+     row of shorter pills taller. */
+  margin-block: calc((var(--chip-block) - 16px) / -2);
+  margin-inline-start: calc(var(--name-line-gap, 6px) * -1);
+  clip-path: inset(calc(var(--tap-min) / -2));
+  vertical-align: middle;
+}
+
+/* The empty first item holds line one, so even a lone chip can wrap away. */
+.nameLine::before {
+  content: "";
+  order: -2;
+}
+
+/* One chip or mark inside the line: inline-flex keeps the 16px mark from
+   gaining line-box height. */
+.slot {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  margin-inline-start: var(--name-line-gap, 6px);
+}
+
+.markSlot {
+  order: -1;
+}
+
+/* The chip's slot asks for the chip's icon-only width (its 8px side padding
+   twice plus its 1em icon at --text-11, see .chip in
+   CommunityFlair.module.css) and grows up to the full chip, so the badge name
+   ellipsizes down to the icon before the chip wraps away. The grid track
+   starts at zero, which keeps the slot out of the line's min-content. */
+.chipSlot {
+  --chip-icon-only: calc(2 * 8px + var(--text-11));
+
+  display: inline-grid;
+  flex: 1 1 calc(var(--chip-icon-only) + var(--name-line-gap, 6px));
+  grid-template-columns: minmax(0, max-content);
+  min-width: 0;
+  max-width: max-content;
+  margin-inline-start: 0;
+}
+
+/* The chip's leading space sits inside the track, so a chip that has wrapped
+   away adds nothing to the line's min-content. */
+.chipSlot > * {
+  margin-inline-start: var(--name-line-gap, 6px);
+}
+
+/* The line takes programmatic focus when the gift mark that held it goes away
+   (tabIndex -1 keeps it out of the tab order). */
+.nameLine:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* 24px of ink, 44px of hit area (data-tap-target draws the pseudo-element).
+   The negative block margin takes the 24px box back down to 16px of layout, so
+   a name line keeps the height of its text. */
+.giftMark {
+  --mark-size: 24px;
+  --mark-overhang: 4px;
+
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--mark-size);
+  height: var(--mark-size);
+  margin-block: calc(var(--mark-overhang) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-text);
+  font-size: var(--text-13);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.giftMark:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .giftMark:hover {
+    background: rgba(var(--accent-rgb), 0.24);
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  gap: var(--gap-sm);
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.giftName {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: var(--text-14);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.giftDate {
+  color: var(--ink-60);
+  font-size: var(--text-13);
+}
+
+.giftIcon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--flair-jade-ground);
+  color: var(--flair-jade-ink);
+  font-size: var(--text-16);
+}
+
+.giftIcon[data-tint="accent"] {
+  background: var(--flair-accent-ground);
+  color: var(--flair-accent-ink);
+}
+
+.giftIcon[data-tint="plum"] {
+  background: var(--flair-plum-ground);
+  color: var(--flair-plum-ink);
+}
+
+.giftIcon[data-tint="rose"] {
+  background: var(--flair-rose-ground);
+  color: var(--flair-rose-ink);
+}
+
+.giftIcon[data-tint="amber"] {
+  background: var(--flair-amber-ground);
+  color: var(--flair-amber-ink);
+}
+
+.giftIcon[data-tint="violet"] {
+  background: var(--flair-violet-ground);
+  color: var(--flair-violet-ink);
+}
+
+.empty {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .giftMark {
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+}

@@ -16,11 +16,13 @@ import {
  */
 
 /**
- * `POST /join-requests` (public, no session). Codes: `JOIN_REQUESTS_CLOSED`
- * (an admin paused requests mid-fill) and `REAPPLICATION_COOLDOWN` (a decline
- * within the last 30 days). The 409 duplicate and the 403 `UNDER_18` are
- * handled by the form itself, as a confirmation and a pause screen. The
- * throttle is 3 requests per hour per IP, so the 429 line says to wait.
+ * The public join-request routes (`/auth/email-code/join-request/request` and
+ * `/verify`, open to signed-out callers). Codes: `JOIN_REQUESTS_CLOSED` (an admin paused
+ * requests mid-fill) and `REAPPLICATION_COOLDOWN` (a decline within the last
+ * 30 days, told only after the email code checks out). The 409 duplicate and
+ * the 403 `UNDER_18` are handled by the form itself, as a confirmation and a
+ * pause screen, and the email-code reasons are worded by `EmailCodeErrorText`.
+ * Filing is throttled at 10 per hour per IP, so the 429 line says to wait.
  */
 export const REQUEST_INVITE_ERROR_OVERRIDES: CauseErrorOverrides = {
   JOIN_REQUESTS_CLOSED: "auth:requestInvite.closedError",

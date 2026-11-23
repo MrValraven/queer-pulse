@@ -4045,4 +4045,8 @@ export const subprofiles: Catalog = {
     "A nossa equipa retirou um lançamento desta persona do Studio. Fala com a nossa equipa antes de mudares o tipo.",
   "kindChange.error.studioTakenDown_other":
     "A nossa equipa retirou {count} lançamentos desta persona do Studio. Fala com a nossa equipa antes de mudares o tipo.",
+  "itemEditor.collaboratorsUnlinkedNote":
+    "Esta persona é autónoma, por isso as pessoas que creditas aqui ficam fora da página pública. As personas creditadas continuam a aparecer.",
+  "itemEditor.collaboratorsOwnerCreditRefused":
+    "Uma persona autónoma não pode creditar-te a ti nem a quem a gere contigo pelo nome de membro. Tira esse crédito e guarda outra vez.",
 };

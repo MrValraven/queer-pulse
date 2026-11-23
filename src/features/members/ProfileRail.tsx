@@ -6,6 +6,7 @@ import { useProfileSubprofiles } from "../subprofiles/api/usePublicSubprofile";
 import { useSubprofiles } from "../subprofiles/api/useSubprofiles";
 import type { Member } from "./data/members";
 import { useMemberListings } from "./api/useMemberListings";
+import { useMemberProfile } from "./api/useMemberProfile";
 import { useProfileEventsVisible } from "./api/useProfileEvents";
 import { ProfileHeroRecognition } from "./ProfileHeroRecognition";
 import { ProfileNavAwaitingCount } from "./ProfileNavAwaitingCount";
@@ -53,6 +54,13 @@ export function ProfileRail({
   const fullName = `${profile.first} ${profile.last}`;
   const portraitTint = profile.tint === "auth" ? "plum" : profile.tint;
   const [photoOpen, setPhotoOpen] = useState(false);
+  // Whether the viewer is held to this member's limited card. The same query
+  // (and cache entry) `ProfilePage` reads, so it costs no request. Your own
+  // profile skips the read, the visitor preview included.
+  const { data: memberProfile } = useMemberProfile(
+    self ? undefined : profile.slug,
+  );
+  const isLimited = !self && (memberProfile?.limited ?? false);
   // See the docblock: an empty `hood` means the viewer isn't entitled to it (or
   // the member never set one), and the visitor preview additionally honours the
   // owner's own `hoodVisible` toggle.
@@ -117,7 +125,11 @@ export function ProfileRail({
         </div>
       )}
 
-      <ProfileHeroRecognition isSelf={realSelf} slug={profile.slug} />
+      <ProfileHeroRecognition
+        isSelf={realSelf}
+        slug={profile.slug}
+        isLimited={isLimited}
+      />
 
       {/* A real self's own network numbers (below) already include their
           vouch count, so showing both here would repeat the same fact twice

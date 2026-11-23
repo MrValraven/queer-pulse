@@ -96,9 +96,13 @@ function memberToTeam(
     initials: person?.initials ?? "",
     background: tint.bg,
     color: tint.color,
-    name: person
-      ? `${person.firstName} ${person.lastName[0] ?? ""}.`.trim()
-      : "",
+    // The inactive member's stand-in has no names to shorten, so it reads
+    // the inactive label `memberRefToPerson` already put on it.
+    name: !person
+      ? ""
+      : person.isInactiveMember
+        ? person.name
+        : `${person.firstName} ${person.lastName[0] ?? ""}.`.trim(),
     slug: ref.slug,
   };
 }

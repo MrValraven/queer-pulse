@@ -7,7 +7,7 @@ import {
   SHARED_CAUSE_KEY,
   type CauseErrorOverrides,
 } from "../../shared/api/causeErrorKey";
-import { requestUpload } from "../members/api/uploads.api";
+import { confirmUpload, requestUpload } from "../members/api/uploads.api";
 import {
   DocumentProcessingError,
   validateDocumentTypeAndSize,
@@ -174,8 +174,9 @@ export async function putWithRetry(
  *
  * - **Demo mode:** never touches the network; `key` and `previewUrl` are both
  *   the same local object URL.
- * - **Live mode:** presigns, `PUT`s the raw file with one automatic retry, and
- *   returns the storage `key` alongside a freshly created `previewUrl`.
+ * - **Live mode:** presigns, `PUT`s the raw file with one automatic retry,
+ *   asks the server to check the stored bytes (`confirmUpload`), and returns
+ *   the storage `key` alongside a freshly created `previewUrl`.
  */
 export function useUploadDocument() {
   const { demoMode } = useDemoMode();
@@ -227,15 +228,21 @@ export function useUploadDocument() {
           options?.onProgress,
           options?.signal,
         );
+        // SEC-43: the server checks the stored bytes before the key is sent
+        // anywhere. A refusal carries its own code (bytes of another type,
+        // nothing stored, a check that could not run), and the catch below
+        // names it through `causeErrorKey`.
+        await confirmUpload(presigned.key);
         outstandingPreviewUrls.current.delete(previewUrl);
         return { key: presigned.key, previewUrl };
       } catch (err) {
         if (err instanceof DocumentUploadAbortedError) throw err;
         logError(err, { scope: "useUploadDocument" });
         if (err instanceof DocumentProcessingError) throw err;
-        // The presign request failed: name its real cause (offline, a
-        // timeout, a restriction, a rate limit) and keep the original error
-        // on `cause`.
+        // The presign request or the confirm check failed: name its real
+        // cause (offline, a timeout, a restriction, a rate limit, a coded
+        // refusal of the stored bytes) and keep the original error on
+        // `cause`.
         const presignCopy = causeErrorKey(err, DOCUMENT_UPLOAD_CAUSE_OVERRIDES);
         throw new DocumentProcessingError(presignCopy.key, presignCopy.values, {
           cause: err,

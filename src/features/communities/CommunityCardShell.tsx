@@ -153,8 +153,11 @@ export function CommunityCardShell({
         )}
         {shownRoster.length > 0 && (
           <div className={styles.cardAvStack}>
-            {shownRoster.map((member) => (
-              <span className={styles.cardAv} key={member.slug ?? member.name}>
+            {shownRoster.map((member, index) => (
+              <span
+                className={styles.cardAv}
+                key={member.slug || `${member.name}-${index}`}
+              >
                 <Avatar
                   initials={member.initials}
                   tint={member.tint}

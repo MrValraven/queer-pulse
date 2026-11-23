@@ -143,7 +143,8 @@ describe("quizshow games in demo mode", () => {
   it("drops a deleted game from My games at once", async () => {
     const gameId = QUIZSHOW_DEMO_GAME_IDS.flatQuiz;
     const { queryClient, wrapper } = setup();
-    queryClient.setQueryData(quizshowKeys.games(true), demoListGames());
+    const seededList = demoListGames();
+    queryClient.setQueryData(quizshowKeys.games(true), seededList);
     queryClient.setQueryData(
       quizshowKeys.game(gameId, true),
       demoGetGame(gameId),
@@ -173,9 +174,13 @@ describe("quizshow games in demo mode", () => {
       true,
     );
 
-    expect(cachedGameIds(queryClient)).toEqual([
-      QUIZSHOW_DEMO_GAME_IDS.afterDark,
-    ]);
+    // The other two demo games stay, newest first as they were.
+    expect(cachedGameIds(queryClient)).toEqual(
+      seededList.games
+        .map((game) => game.id)
+        .filter((listedId) => listedId !== gameId),
+    );
+    expect(cachedGameIds(queryClient)).toHaveLength(2);
     expect(isCached(queryClient, quizshowKeys.game(gameId, true))).toBe(false);
     expect(isCached(queryClient, quizshowKeys.gameResults(gameId, true))).toBe(
       false,

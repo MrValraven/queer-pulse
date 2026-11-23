@@ -31,6 +31,10 @@ export interface EventBatchTemplateDTO {
   startTime: string;
   /** "HH:mm" in `timezone`, null when the template has no end. */
   endTime: string | null;
+  /** PRD-518: calendar days from the template's start day to its end day in
+   *  `timezone`, null when it has no end. A date whose end is still
+   *  `endTime` keeps this span. */
+  endDayOffset: number | null;
   /** Display URL for the preview. The page never sends it back: an absent
    *  `shared.coverImageUrl` copies the stored cover server-side. */
   coverImageUrl: string | null;

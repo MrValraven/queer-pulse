@@ -10,7 +10,7 @@ import { RequestInviteForm } from "./RequestInviteForm";
  *
  * Two layers:
  *  1. the shared `AgeAttestation` control's own contract, and
- *  2. its gating effect inside `RequestInviteForm` — omitting the attestation
+ *  2. its gating effect inside `RequestInviteForm`: omitting the attestation
  *     must block account creation and, on a rejected submit, flag the box.
  *
  * `auth` is a lazy i18n namespace, so labels resolve one render after mount
@@ -73,10 +73,10 @@ describe("AgeAttestation control", () => {
 
 /**
  * The consent checkbox is read-only by design: only reading the community
- * guidelines to the end ticks it (see `RequestInviteForm`'s `agreeRow` note).
+ * guidelines to the end ticks it (see `RequestInviteAgreeRow`).
  * That gate flips on an IntersectionObserver sentinel, and the global test stub
  * never fires, so this one reports the sentinel visible the moment it is
- * observed — what a real browser does when the clauses are short enough not to
+ * observed, which is what a real browser does when the clauses are short enough not to
  * scroll, which the modal already treats as "read".
  */
 class ImmediateIntersectionObserver {
@@ -134,10 +134,10 @@ describe("RequestInviteForm age gate", () => {
     );
 
     const submit = await screen.findByRole("button", {
-      name: "Send my request",
+      name: "Email me a code",
     });
-    // The button stays clickable on purpose (aria-disabled, not disabled) so an
-    // invalid submit can answer with errors — but aria-disabled reflects the gate.
+    // The button stays clickable on purpose (aria-disabled) so an invalid
+    // submit can answer with errors, and aria-disabled reflects the gate.
     expect(submit).toHaveAttribute("aria-disabled", "true");
 
     const first = container.querySelector<HTMLInputElement>("#ri-first")!;
@@ -178,13 +178,13 @@ describe("RequestInviteForm age gate", () => {
     );
 
     const submit = await screen.findByRole("button", {
-      name: "Send my request",
+      name: "Email me a code",
     });
     const age = container.querySelector<HTMLInputElement>("#ri-age")!;
     expect(age).toHaveAttribute("aria-invalid", "false");
 
-    // Attempting to submit reveals outstanding errors rather than failing
-    // silently — the un-ticked attestation is one of them.
+    // Attempting to submit reveals every outstanding error, and the
+    // un-ticked attestation is one of them.
     fireEvent.click(submit);
 
     await waitFor(() => expect(age).toHaveAttribute("aria-invalid", "true"));

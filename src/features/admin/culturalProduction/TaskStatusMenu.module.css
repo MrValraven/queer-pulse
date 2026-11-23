@@ -1,0 +1,211 @@
+/* A task row's status pill (TaskStatusMenu) and the menu it opens, which is
+   portalled to the body so no row or clipping frame can cover it. */
+
+/* ── Trigger ── */
+.trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  /* As wide as its label, so the chevron sits right after the status name;
+     on a wide list the column keeps the row steady when it changes. */
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  min-block-size: 32px;
+  padding: 0 8px 0 10px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 500;
+  color: var(--ink);
+  text-align: start;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-8);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:not(:disabled):hover {
+    background: var(--wash);
+  }
+}
+
+.trigger[data-open] {
+  background: var(--wash);
+  border-color: rgba(var(--line-rgb), 0.12);
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Its own write is on the way: a quieter pill that keeps focus and width. */
+.trigger[aria-busy="true"] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.triggerInvalid {
+  border-color: var(--accent-ink);
+}
+
+.face {
+  display: inline-flex;
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+.faceValue {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-inline-size: 0;
+}
+
+.faceLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  flex: none;
+  inline-size: 14px;
+  block-size: 14px;
+  color: var(--ink-60);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Status glyphs ── */
+.glyph {
+  flex: none;
+  inline-size: 15px;
+  block-size: 15px;
+}
+
+.glyphTodo {
+  color: var(--ink-60);
+}
+
+.glyphDoing {
+  color: var(--amber-ink);
+}
+
+.glyphDone {
+  color: var(--jade-ink);
+}
+
+/* ── Menu ── */
+.menu {
+  /* Fixed before the first placement too, so the hidden first commit never
+     joins the body's flow. */
+  position: fixed;
+  z-index: var(--z-popover);
+  min-inline-size: 11rem;
+  max-inline-size: calc(100vw - 24px);
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-panel);
+  outline: none;
+  /* Grows from the trigger's edge: the top while it hangs below, the bottom
+     once it opens upward. */
+  transform-origin: top right;
+}
+
+.menuFlipped {
+  transform-origin: bottom right;
+}
+
+.menuLeaving {
+  pointer-events: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  inline-size: 100%;
+  min-block-size: 36px;
+  padding: 6px 10px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 500;
+  color: var(--ink);
+  text-align: start;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-8);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background: var(--wash);
+  }
+}
+
+.item:focus-visible {
+  outline: none;
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.item[aria-checked="true"] {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.itemLabel {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.itemCheck {
+  flex: none;
+  inline-size: 15px;
+  block-size: 15px;
+  color: var(--text-strong);
+  opacity: 0;
+}
+
+.itemCheckShown {
+  opacity: 1;
+}
+
+/* Phones and touch screens: a thumb sized pill and rows. */
+@media (max-width: 640px) {
+  .trigger {
+    min-block-size: var(--tap-min);
+  }
+}
+
+@media (pointer: coarse) {
+  .item {
+    min-block-size: var(--tap-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger,
+  .chevron,
+  .item {
+    transition: none;
+  }
+}

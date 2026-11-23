@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getReportAudit, type AuditEntryDTO } from "./moderation.api";
+import { isReportAboutActorError } from "./enforcementTargetError";
 
 /** A demo audit trail for a report — the "report opened" entry every report has. */
 function demoAudit(reportId: string): AuditEntryDTO[] {
@@ -28,7 +29,17 @@ export function useReportAudit(reportId: string) {
     queryKey: ["mod-report-audit", demoMode, reportId],
     queryFn: async () => {
       if (demoMode) return demoAudit(reportId);
-      return getReportAudit(reportId);
+      try {
+        return await getReportAudit(reportId);
+      } catch (error) {
+        // SEC-31: the trail of a report about the signed-in staff member is
+        // refused with a reason code. The drawer names that reason where the
+        // report's context would be (`useModReportDetail`'s `isAboutViewer`)
+        // and drops this section, so it settles empty here and raises no
+        // second, generic error toast.
+        if (isReportAboutActorError(error)) return [];
+        throw error;
+      }
     },
   });
 }

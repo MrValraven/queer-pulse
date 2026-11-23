@@ -99,7 +99,7 @@ export const forCommunities: Catalog = {
     "Anuncia a noite, junta pessoas coanfitriãs, convida outras comunidades como convidadas e monta o lineup. Quem organiza convida pessoas para o cartaz, e quando aceitam aparecem com o seu ofício ao lado do nome.",
   "walkthrough.door.title": "Abre a porta na noite do evento",
   "walkthrough.door.body":
-    "Faz o check-in pela lista de pessoas convidadas ou lendo o cartão de membro, e vê as entradas a crescer. Depois do evento, quem organiza junta as fotos ao álbum do evento.",
+    "Faz o check-in pela lista de pessoas convidadas ou lendo o cartão de sócio, e vê as entradas a crescer. Depois do evento, quem organiza junta as fotos ao álbum do evento.",
 
   // ── Try it ──
   "tryIt.title": "Acompanha um evento do início ao fim",

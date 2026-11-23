@@ -63,6 +63,65 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "quicker-app-install",
+        category: "improvement",
+        date: "23 Nov 2026",
+        ...entryKeys("quicker-app-install"),
+      },
+      {
+        id: "community-badges",
+        category: "feature",
+        date: "23 Nov 2026",
+        ...entryKeys("community-badges"),
+      },
+      {
+        id: "quick-exit-everywhere",
+        category: "feature",
+        date: "23 Nov 2026",
+        ...entryKeys("quick-exit-everywhere"),
+        tag: { labelKey: "marketing:changelog.tag.safety", to: routes.safety },
+      },
+      {
+        id: "community-ownership-offers",
+        category: "feature",
+        date: "23 Nov 2026",
+        ...entryKeys("community-ownership-offers"),
+      },
+      {
+        id: "invite-request-email-code",
+        category: "improvement",
+        date: "23 Nov 2026",
+        ...entryKeys("invite-request-email-code"),
+        tag: {
+          labelKey: "marketing:changelog.tag.requestInvite",
+          to: routes.requestInvite,
+        },
+      },
+      {
+        id: "private-members-stay-private",
+        category: "improvement",
+        date: "23 Nov 2026",
+        ...entryKeys("private-members-stay-private"),
+      },
+      {
+        id: "hide-profile-from-them",
+        category: "feature",
+        date: "23 Nov 2026",
+        ...entryKeys("hide-profile-from-them"),
+      },
+      {
+        id: "security-privacy-hardening",
+        category: "fix",
+        date: "23 Nov 2026",
+        ...entryKeys("security-privacy-hardening"),
+      },
+      {
+        id: "cultural-production-task-list",
+        category: "improvement",
+        date: "22 Nov 2026",
+        ...entryKeys("cultural-production-task-list"),
+      },
+      {
         id: "quick-start-community",
         category: "feature",
         date: "20 Nov 2026",

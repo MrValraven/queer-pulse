@@ -12,6 +12,9 @@ export interface ReaderCommentAuthorDTO {
   handle: string;
   displayName: string;
   avatarUrl: string | null;
+  /** PRD-507. A paused, suspended or deleting account: the name arrives empty
+   *  and the comment shows `common:member.inactiveLabel`. */
+  isInactiveMember?: true;
 }
 
 export interface ReaderCommentDTO {

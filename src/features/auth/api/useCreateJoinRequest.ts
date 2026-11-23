@@ -9,12 +9,15 @@ import { rememberJoinRequestStatus } from "./joinRequestStatusToken";
 import { TERMS_VERSION } from "./ageAttestation.api";
 import { usePlatformStatus } from "../../../shared/api/usePlatformStatus";
 
-/** What the request-invite form hands the mutation. */
+/** What the request-invite form hands the mutation, once the applicant has
+ *  typed the code that confirms their address. */
 export interface JoinRequestVars {
+  /** The challenge the code belongs to. */
+  challengeId: string;
+  /** The 6-digit code from the email. */
+  code: string;
   /** How the applicant wants to be called. */
   name: string;
-  /** Required — with no account behind this flow it's the only way back to them. */
-  email: string;
   /** Optional free-text city. */
   city?: string;
   message: string;
@@ -30,11 +33,13 @@ export interface JoinRequestVars {
 }
 
 /**
- * Submit a prospective member's request to join (RequestInvitePage). Demo mode
- * simulates a successful submission locally so the "You're on the list" screen
- * shows with no backend. Live mode POSTs the **public** /join-requests route
- * with name/email/city plus the 18+ attestation — no session needed, since the
- * applicant has no account yet.
+ * File a prospective member's request to join (RequestInvitePage) with the
+ * code that confirmed their address (SEC-10). Demo mode simulates it locally,
+ * with `000000` answering `code_incorrect` like the sign-in demo, so the
+ * "You're on the list" screen shows with no backend. Live mode POSTs the
+ * **public** `/auth/email-code/join-request/verify` route with the form, the
+ * 18+ attestation and the code; no session needed, since the applicant has no
+ * account yet.
  *
  * On success the token from the 201 is written to storage HERE rather than in
  * the form, so no future caller of this mutation can submit a request and
@@ -54,8 +59,9 @@ export function useCreateJoinRequest() {
     // RequestInviteForm toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async ({
+      challengeId,
+      code,
       name,
-      email,
       city,
       message,
       mutualMemberEmail,
@@ -67,6 +73,9 @@ export function useCreateJoinRequest() {
         // The demo token is a real fixture code, so the confirmation screen's
         // "check your request" link lands on a populated status page instead of
         // a dead end. Loaded on demand to stay out of the live bundle.
+        const demoCode = await import("../emailCode.data");
+        await demoCode.demoLatency();
+        demoCode.demoVerifyEmailCode({ challengeId, code });
         const { DEMO_STATUS_TOKENS } =
           await import("../joinRequestStatus.data");
         return {
@@ -77,8 +86,9 @@ export function useCreateJoinRequest() {
         };
       }
       return createJoinRequest({
+        challengeId,
+        code,
         name,
-        email,
         city: city?.trim() || undefined,
         message,
         mutualMemberEmail: mutualMemberEmail?.trim() || undefined,

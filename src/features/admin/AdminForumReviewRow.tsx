@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { formatRelative } from "../../shared/lib/date";
+import { authorDisplayName } from "../../shared/api/refs";
 import { thread as threadPath } from "../../app/routeMap";
 import { contentWarningLabels } from "../forum/forumWarnings.helpers";
 import { AdminChip, AdminRowActions, adminRowActionClasses } from "./ui";
@@ -52,7 +53,9 @@ export function AdminForumReviewRow({
   const warningLabels = contentWarningLabels(thread.contentWarnings, t);
   const isScheduled = isInFuture(thread.publishedAt);
   const metaParts = [
-    thread.author.displayName,
+    // The inactive member's stand-in reads as its label, so the meta line
+    // always names someone.
+    authorDisplayName(thread.author, t),
     categoryLabel === categoryKey ? thread.category : categoryLabel,
     thread.community
       ? t("admin:adminForumReview.row.inCommunity", {

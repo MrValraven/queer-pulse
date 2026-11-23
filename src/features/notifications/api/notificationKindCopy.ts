@@ -33,6 +33,11 @@ export type LifecycleNotificationKind =
   | "community_unfrozen"
   | "community_role_changed"
   | "community_ownership_transferred"
+  // PRD-514. An owner offered the member a community (to the offered member),
+  // and the offered member declined (to the owner who offered it). Both carry
+  // the other member as `actorId` and name the community.
+  | "community_ownership_offered"
+  | "community_ownership_offer_declined"
   | "community_owner_review_requested"
   // Staff duty mail: a staff member was put in charge of a lead.
   | "lead_assigned"
@@ -168,6 +173,8 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   community_unfrozen: "community",
   community_role_changed: "community",
   community_ownership_transferred: "community",
+  community_ownership_offered: "community",
+  community_ownership_offer_declined: "community",
   // Staff duty mail that deep-links into a console, the same tab as
   // community_report_filed.
   community_owner_review_requested: "platform",
@@ -429,6 +436,8 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   community_unfrozen: ["communityName"],
   community_role_changed: ["communityName"],
   community_ownership_transferred: ["communityName"],
+  community_ownership_offered: ["communityName"],
+  community_ownership_offer_declined: ["communityName"],
   community_owner_review_requested: ["communityName"],
   // The task or guide title sits at the end of the row; a payload without
   // it reads the kind's fallback phrase.
@@ -530,6 +539,30 @@ const EDIT_SUGGESTION_FIELDS = new Set<string>([
   "website",
   "description",
 ]);
+
+/**
+ * PRD-514. Both ownership offer sentences open on the other member: the owner
+ * who offered, or the member who declined. A row whose actor did not resolve
+ * (an erased or inactive account) still reads as a whole sentence through the
+ * kind's `nameFallback`; a resolved actor renders the `textNamed` variant. A
+ * no-op for every other type, so `formatNotification` calls it
+ * unconditionally.
+ */
+export function applyOwnershipOfferNameToken(
+  type: string,
+  tokens: TranslateOptions,
+  t: TFunction,
+  actorDisplayName: string | undefined,
+): void {
+  if (
+    type !== "community_ownership_offered" &&
+    type !== "community_ownership_offer_declined"
+  ) {
+    return;
+  }
+  tokens.name =
+    actorDisplayName?.trim() || t(`notifications:type.${type}.nameFallback`);
+}
 
 /**
  * Overwrites, on `tokens`, every payload value these kinds interpolate with

@@ -186,6 +186,16 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "features/auth/OnboardingPage.tsx, features/auth/api/joinRequestStatusToken.ts, features/system/appLaunch.utils.ts",
   },
   {
+    id: "sharedDeviceSafety",
+    names: ["qp.auth.last-member", "qp.messaging-cache.purge-pending"],
+    kind: "localStorage",
+    category: "functional",
+    purposeKey: `${NS}.sharedDeviceSafety.purpose`,
+    lifetimeKey: `${NS}.lifetime.untilCleared`,
+    sourceHint:
+      "app/providers/wipeMemberLocalData.ts, shared/api/queryPersistence/messagingCachePersistence.ts",
+  },
+  {
     id: "drafts",
     names: [
       "qp.drafts.v1",

@@ -8,6 +8,7 @@ import type { NotifType } from "../notifications.types";
 import { ADMIN_QUEUE_ROUTES } from "./adminQueueRoutes";
 import {
   applyLifecycleTokens,
+  applyOwnershipOfferNameToken,
   fundingDeadlineToken,
   isLifecycleKind,
   textVariantOf,
@@ -16,6 +17,8 @@ import {
   type LifecycleNotificationKind,
   openCallsTopicLabel,
 } from "./notificationKindCopy";
+import { communityBadgeDisplayName } from "../../communities/badges/communityBadgeDisplayName";
+import { communityGiftNameKey } from "../../communities/badges/communityBadgeCopy.data";
 import { collabResponseKey } from "./communityCollabNotifications";
 import { notificationReasonOf } from "./notificationReason";
 import {
@@ -461,6 +464,15 @@ export type NotificationKind =
   // the pitch queue. The row deep-links to the writer workspace's pitches
   // tab, where the pass note lives.
   | "magazine_pitch_passed"
+  // Community badges, contract section 6. Both sit in the Recognition
+  // category, are in-app only, and a muted community suppresses them.
+  // `community_badge_earned` carries `{ communitySlug, communityName,
+  // badgeId, badgeName, starterKey }` and names the badge through
+  // `communityBadgeDisplayName`. `community_gift_received` carries
+  // `{ communitySlug, communityName, giftKey, note }` and resolves the sender
+  // as the actor.
+  | "community_badge_earned"
+  | "community_gift_received"
   // A membership card thirty days from expiry (SUS-07; mirrors the backend
   // `notifications_type_enum` value added in
   // `AddCardSelfRenewAndExpiryWarning1795620000000`, emitted from
@@ -838,6 +850,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // A pitch answer is the desk's word on a member's own submission, same tab
   // as the four rows above it.
   magazine_pitch_passed: "platform",
+  // Recognition inside a community reads as community news.
+  community_badge_earned: "community",
+  community_gift_received: "community",
   // A credential of the member's own running out is the platform's word about
   // their own standing, same tab as account_deletion_final_warning.
   card_expiring: "platform",
@@ -1558,6 +1573,52 @@ function communityNameToken(
 }
 
 /**
+ * The copy tokens of the two community badge kinds: the community, then the
+ * badge name or the gift name. Any other kind adds nothing.
+ */
+function communityBadgeTokens(
+  type: string,
+  payload: unknown,
+  t: TFunction,
+): TranslateOptions {
+  if (type === "community_badge_earned") {
+    return {
+      communityName: communityNameToken(type, payload, t),
+      badgeName: badgeNameToken(payload, t),
+    };
+  }
+  if (type !== "community_gift_received") return {};
+  const giftKey = (payload as { giftKey?: unknown } | null)?.giftKey;
+  return {
+    communityName: communityNameToken(type, payload, t),
+    giftName: t(
+      communityGiftNameKey(typeof giftKey === "string" ? giftKey : ""),
+    ),
+  };
+}
+
+/**
+ * The badge name in a `community_badge_earned` row, read through the one place
+ * a badge name becomes text (an untouched starter reads in the viewer's
+ * language, a renamed one as stored). A payload with no name reads as a short
+ * word that still fits the sentence.
+ */
+function badgeNameToken(payload: unknown, t: TFunction): string {
+  const { badgeName, starterKey } =
+    (payload as { badgeName?: unknown; starterKey?: unknown } | null) ?? {};
+  if (typeof badgeName !== "string" || badgeName.trim() === "") {
+    return t("notifications:type.community_badge_earned.badgeNameFallback");
+  }
+  return communityBadgeDisplayName(
+    {
+      name: badgeName,
+      starterKey: typeof starterKey === "string" ? starterKey : null,
+    },
+    t,
+  );
+}
+
+/**
  * Resolves the whole meta line for an `ambassador_granted` row: "Ambassador ·
  * Trans health" when the payload carries a focus area this build has a label
  * for (F1's closed `AMBASSADOR_FOCUS_AREAS` list, via `isAmbassadorFocusArea`
@@ -2132,6 +2193,7 @@ export function formatNotification(
     // of showing `{communityName}` to somebody being asked to act.
     tokens.communityName = communityNameToken(type, payload, t);
   }
+  Object.assign(tokens, communityBadgeTokens(type, payload, t));
   if (type === "submission_decided") {
     // Overrides the raw `subjectLabel` `interpolationTokens` already copied
     // through with the same value, defensively re-resolved so a row missing it
@@ -2193,6 +2255,7 @@ export function formatNotification(
     tokens.listingName = listingNameToken(payload, t);
     tokens.name = listingActorNameToken(actorDisplayName, t);
   }
+  applyOwnershipOfferNameToken(type, tokens, t, actorDisplayName);
   return {
     text: t(`notifications:type.${key}.${textVariantOf(type, tokens)}`, tokens),
     // `ambassador_granted` is the one kind whose meta line is resolved as a

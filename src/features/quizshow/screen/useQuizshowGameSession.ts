@@ -57,6 +57,7 @@ export function useQuizshowGameSession(
     sessionId,
     errorCode,
     hasLoadFailed: !isSessionHeld && gameQuery.isError,
+    loadError: isSessionHeld ? undefined : gameQuery.error,
     playMode: liveSession?.playMode ?? "solo",
   };
 }

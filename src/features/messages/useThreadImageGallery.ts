@@ -4,6 +4,7 @@ import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage } from "./data";
 import { colleagueSenderLabel, isTypedByViewer } from "./viewerSideSender";
+import { renderableGifUrl } from "./gifMediaHosts";
 
 /** One entry in the conversation's photo sequence, already resolved to
  *  everything the viewer paints: the pixels, who sent it, and when. */
@@ -125,7 +126,13 @@ export function isViewablePhoto(message: ChatMessage): boolean {
   return (
     !!attachment &&
     !isDocumentAttachment(attachment) &&
-    !isStickerAttachment(attachment)
+    !isStickerAttachment(attachment) &&
+    // SEC-24: a GIF whose url or preview leaves the GIF provider's hosts
+    // never reaches the viewer, the media grid (which paints the preview) or
+    // the tap-to-open path, so none of them fires a request to it.
+    renderableGifUrl(message.kind, attachment.url) !== null &&
+    (!attachment.previewUrl ||
+      renderableGifUrl(message.kind, attachment.previewUrl) !== null)
   );
 }
 

@@ -5,6 +5,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useAuth } from "../../../app/providers/authContext";
 import { routes } from "../../../app/routeMap";
 import { requestInvitePath } from "../../auth/api/joinRequestSource";
+import { InstallAppButton } from "../../../shared/components/system/InstallAppButton";
 import { MembersExplainerModal } from "./MembersExplainerModal";
 import styles from "./Hero.module.css";
 
@@ -67,6 +68,14 @@ export function Hero() {
               </Button>
             )}
           </div>
+
+          {/* A third, quieter action on its own row, for confirmed guests on a
+              phone; members already get the install nudge and the account
+              sheet row. It renders in the first client render and fades in,
+              and the LCP element stays the title above. */}
+          {isConfirmedGuest && (
+            <InstallAppButton className={styles.installRow} />
+          )}
 
           <Reveal as="p" className={styles.note} delay={220}>
             <span className={styles.liveDot} aria-hidden />

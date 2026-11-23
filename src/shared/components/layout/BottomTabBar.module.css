@@ -85,6 +85,36 @@
   border-radius: 50%;
 }
 
+/* Holds the avatar and the ownership-offer dot pinned to its top right. */
+.avatarSlot {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+/* Ownership offers wait on this member. The paper ring cuts the coral dot out
+   of the avatar, the same mark the desktop account menu trigger carries. */
+.offerDot {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--ring-paper);
+  pointer-events: none;
+  animation: offerDotIn var(--dur-base, 0.25s) var(--ease, ease);
+}
+@keyframes offerDotIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 .label {
   font-size: var(--text-11);
   line-height: 1;
@@ -98,5 +128,8 @@
   }
   .tab:active {
     transform: none;
+  }
+  .offerDot {
+    animation: none;
   }
 }

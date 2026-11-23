@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { memberRefToPerson } from "../../../shared/api/refs";
+import { memberRefDisplayName } from "../../../shared/api/refs";
+import type { TFunction } from "../../../shared/i18n/types";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { PostRevisionEntry } from "../../forum/EditHistoryModal";
 import {
   getCommunityPostHistory,
@@ -11,19 +13,21 @@ import type {
   CommunityReplyHistoryEntry,
 } from "./communities.api";
 
-function authorName(entry: {
-  author: CommunityPostHistoryEntry["author"];
-}): string {
-  return memberRefToPerson(entry.author)?.name ?? "";
+function authorName(
+  entry: { author: CommunityPostHistoryEntry["author"] },
+  t: TFunction,
+): string {
+  return memberRefDisplayName(entry.author, t);
 }
 
 // Community posts/replies have no title, so `previousTitle` is always null.
 function postEntryToRevision(
   entry: CommunityPostHistoryEntry,
+  t: TFunction,
 ): PostRevisionEntry {
   return {
     id: entry.id,
-    authorName: authorName(entry),
+    authorName: authorName(entry, t),
     createdAt: entry.createdAt,
     previousBody: entry.previousBody,
     previousTitle: null,
@@ -32,10 +36,11 @@ function postEntryToRevision(
 
 function replyEntryToRevision(
   entry: CommunityReplyHistoryEntry,
+  t: TFunction,
 ): PostRevisionEntry {
   return {
     id: entry.id,
-    authorName: authorName(entry),
+    authorName: authorName(entry, t),
     createdAt: entry.createdAt,
     previousBody: entry.previousText,
     previousTitle: null,
@@ -50,6 +55,7 @@ export function useCommunityPostHistory(
   postId: string | undefined,
   enabled: boolean,
 ): { revisions: PostRevisionEntry[]; isLoading: boolean } {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const live = !demoMode && enabled && !!postId;
   const query = useQuery({
@@ -58,7 +64,9 @@ export function useCommunityPostHistory(
     queryFn: () => getCommunityPostHistory(slug, postId as string),
   });
   return {
-    revisions: (query.data?.revisions ?? []).map(postEntryToRevision),
+    revisions: (query.data?.revisions ?? []).map((entry) =>
+      postEntryToRevision(entry, t),
+    ),
     isLoading: live && query.isLoading,
   };
 }
@@ -69,6 +77,7 @@ export function useCommunityReplyHistory(
   replyId: string | undefined,
   enabled: boolean,
 ): { revisions: PostRevisionEntry[]; isLoading: boolean } {
+  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const live = !demoMode && enabled && !!postId && !!replyId;
   const query = useQuery({
@@ -78,7 +87,9 @@ export function useCommunityReplyHistory(
       getCommunityReplyHistory(slug, postId as string, replyId as string),
   });
   return {
-    revisions: (query.data?.revisions ?? []).map(replyEntryToRevision),
+    revisions: (query.data?.revisions ?? []).map((entry) =>
+      replyEntryToRevision(entry, t),
+    ),
     isLoading: live && query.isLoading,
   };
 }

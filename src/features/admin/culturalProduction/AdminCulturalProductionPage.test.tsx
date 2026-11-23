@@ -5,6 +5,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { routes } from "../../../app/routeMap";
 import { CULTURAL_PRODUCTION_NAV_TO } from "../../../shared/components/layout/adminNav.data";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { AdminCulturalProductionPage } from "./AdminCulturalProductionPage";
 import { resetDemoCulturalProduction } from "./culturalProductionDemoStore";
@@ -28,7 +29,7 @@ function LocationProbe() {
   return <output data-testid="location-search">{location.search}</output>;
 }
 
-function renderPage(entry: string = routes.adminCulturalProduction) {
+async function renderPage(entry: string = routes.adminCulturalProduction) {
   render(
     <TestProviders initialEntries={[entry]}>
       <Routes>
@@ -44,6 +45,8 @@ function renderPage(entry: string = routes.adminCulturalProduction) {
       </Routes>
     </TestProviders>,
   );
+  // The tab labels and the heading read the lazily loaded admin catalog.
+  await awaitCatalog("admin", "shared");
   return userEvent.setup();
 }
 
@@ -58,8 +61,8 @@ function searchParams(): URLSearchParams {
 describe("AdminCulturalProductionPage", () => {
   beforeEach(() => resetDemoCulturalProduction());
 
-  it("opens on the Ideas tab", () => {
-    renderPage();
+  it("opens on the Ideas tab", async () => {
+    await renderPage();
     expect(
       screen.getByRole("heading", { name: "Cultural Production" }),
     ).toBeTruthy();
@@ -70,8 +73,8 @@ describe("AdminCulturalProductionPage", () => {
     );
   });
 
-  it("renders the Tasks tab from the nav link", () => {
-    renderPage(CULTURAL_PRODUCTION_NAV_TO);
+  it("renders the Tasks tab from the nav link", async () => {
+    await renderPage(CULTURAL_PRODUCTION_NAV_TO);
     expect(tabNamed(/^Tasks/).getAttribute("aria-selected")).toBe("true");
     expect(screen.getByRole("tabpanel").id).toBe(
       "cultural-production-panel-tasks",
@@ -80,7 +83,7 @@ describe("AdminCulturalProductionPage", () => {
   });
 
   it("shows the due count on the Tasks tab", async () => {
-    renderPage();
+    await renderPage();
     const tasksTab = tabNamed(/^Tasks/);
     expect(
       await within(tasksTab).findByText(
@@ -93,14 +96,14 @@ describe("AdminCulturalProductionPage", () => {
   });
 
   it("opens the idea drawer from ?idea=", async () => {
-    renderPage(`${routes.adminCulturalProduction}?idea=${IDEA_ID}`);
+    await renderPage(`${routes.adminCulturalProduction}?idea=${IDEA_ID}`);
     const drawer = await screen.findByRole("dialog");
     expect(await within(drawer).findByText(IDEA_TITLE)).toBeTruthy();
     expect(tabNamed(/^Ideas/).getAttribute("aria-selected")).toBe("true");
   });
 
   it("opens the task drawer from ?task= and closes it on Escape", async () => {
-    const user = renderPage(
+    const user = await renderPage(
       `${routes.adminCulturalProduction}?tab=tasks&task=${TASK_ID}`,
     );
     const drawer = await screen.findByRole("dialog");
@@ -111,7 +114,7 @@ describe("AdminCulturalProductionPage", () => {
   });
 
   it("keeps the tab when a drawer closes", async () => {
-    const user = renderPage(
+    const user = await renderPage(
       `${routes.adminCulturalProduction}?tab=tasks&task=${TASK_ID}`,
     );
     const drawer = await screen.findByRole("dialog");

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { Modal } from "../../shared/components/ui";
+import { Collapse, Modal } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -13,7 +13,11 @@ import {
 import { useStudioPurchaseMutations } from "./api/useStudioPurchaseMutations";
 import { useStudioPurchaseReference } from "./api/useStudioPurchaseReference";
 import { StudioBuyAmountField } from "./StudioBuyAmountField";
-import { StudioBuyPaymentStep } from "./StudioBuyPaymentMethods";
+import {
+  StudioBuyFreeFooter,
+  StudioBuyFreeNotice,
+  StudioBuyPaymentStep,
+} from "./StudioBuyPaymentMethods";
 import {
   StudioBuyFooter,
   StudioBuyNotice,
@@ -99,8 +103,15 @@ function StudioBuyDialog({ offer, onClose, onPurchased }: StudioBuySheetProps) {
   const { reference } = paymentReference;
   const isReferenceReady = paymentReference.status === "ready";
   const typedCents = centsFromEuroText(amountText);
+  // A name-your-price amount of EUR 0 is a free download: no payment methods,
+  // no payment code to quote. The purchase is still created so the artist
+  // confirms it.
+  const isFree = typedCents === 0 && amountErrorKeyOf(price, 0) === null;
   const showFailure = (reasonKey: string, canRequestNewCode = false) => {
-    const line = `${t("studio:purchase.sheet.createFailed")}. ${t(reasonKey)}`;
+    const failedKey = isFree
+      ? "studio:purchase.sheet.freeCreateFailed"
+      : "studio:purchase.sheet.createFailed";
+    const line = `${t(failedKey)}. ${t(reasonKey)}`;
     setFailure({ line, isShown: true, canRequestNewCode });
   };
   const hideError = () => setFailure((shown) => ({ ...shown, isShown: false }));
@@ -117,7 +128,15 @@ function StudioBuyDialog({ offer, onClose, onPurchased }: StudioBuySheetProps) {
   };
 
   async function claimPayment() {
-    if (isSubmitting || reference === null || !isReferenceReady) return;
+    if (isSubmitting) return;
+    if (isFree && paymentReference.status === "failed") {
+      // The code is hidden on a free sheet, so the button fetches a new one
+      // and names why the last request failed.
+      showFailure(studioErrorMessageKeyOf(paymentReference.error, "load"));
+      paymentReference.requestNew();
+      return;
+    }
+    if (reference === null || !isReferenceReady) return;
     const refusalKey = amountErrorKeyOf(price, typedCents);
     if (refusalKey !== null) {
       setAmountErrorKey(refusalKey);
@@ -135,7 +154,7 @@ function StudioBuyDialog({ offer, onClose, onPurchased }: StudioBuySheetProps) {
           ? { trackId: offer.item.trackId ?? undefined }
           : { releaseId: offer.item.releaseId ?? undefined }),
         amountCents: typedCents,
-        payerName: payerName.trim() || null,
+        payerName: isFree ? null : payerName.trim() || null,
         isOnWall,
         shownAsSubprofileId: isOnWall ? shownAs : null,
         referenceCode: reference.referenceCode,
@@ -168,13 +187,23 @@ function StudioBuyDialog({ offer, onClose, onPurchased }: StudioBuySheetProps) {
       isStudioPlayerSurface
       shouldCollapseSubWithKeyboard
       footer={
-        <StudioBuyFooter
-          failure={failure}
-          onRequestNewCode={requestNewCode}
-          referenceStatus={paymentReference.status}
-          isSubmitting={isSubmitting}
-          onPress={() => void claimPayment()}
-        />
+        isFree ? (
+          <StudioBuyFreeFooter
+            failureLine={failure.line}
+            isFailureShown={failure.isShown}
+            isCodeLoading={paymentReference.status === "loading"}
+            isSubmitting={isSubmitting}
+            onPress={() => void claimPayment()}
+          />
+        ) : (
+          <StudioBuyFooter
+            failure={failure}
+            onRequestNewCode={requestNewCode}
+            referenceStatus={paymentReference.status}
+            isSubmitting={isSubmitting}
+            onPress={() => void claimPayment()}
+          />
+        )
       }
     >
       <div className={styles.body} aria-busy={isSubmitting || undefined}>
@@ -187,18 +216,22 @@ function StudioBuyDialog({ offer, onClose, onPurchased }: StudioBuySheetProps) {
             isDisabled={isSubmitting}
             inputRef={amountInputRef}
           />
-          <StudioBuyPaymentStep
-            artistName={artistName}
-            amountCents={typedCents ?? price.amountCents}
-            methods={offer.paymentMethods}
-            paymentReference={paymentReference}
-          />
-          <StudioBuyPayerField
-            artistName={artistName}
-            value={payerName}
-            onChange={setPayerName}
-            isDisabled={isSubmitting}
-          />
+          <Collapse isOpen={!isFree}>
+            <div className={styles.sections}>
+              <StudioBuyPaymentStep
+                artistName={artistName}
+                amountCents={typedCents ?? price.amountCents}
+                methods={offer.paymentMethods}
+                paymentReference={paymentReference}
+              />
+              <StudioBuyPayerField
+                artistName={artistName}
+                value={payerName}
+                onChange={setPayerName}
+                isDisabled={isSubmitting}
+              />
+            </div>
+          </Collapse>
           <StudioBuyWallFields
             artistName={artistName}
             isOnWall={isOnWall}
@@ -208,7 +241,11 @@ function StudioBuyDialog({ offer, onClose, onPurchased }: StudioBuySheetProps) {
             onShownAsChange={setShownAs}
           />
         </div>
-        <StudioBuyNotice artistName={artistName} />
+        {isFree ? (
+          <StudioBuyFreeNotice artistName={artistName} />
+        ) : (
+          <StudioBuyNotice artistName={artistName} />
+        )}
       </div>
     </Modal>
   );

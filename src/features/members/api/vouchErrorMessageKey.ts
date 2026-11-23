@@ -10,7 +10,9 @@ import { NOT_ACTIVE_MEMBER_CODE } from "../../../shared/api/causeErrorKey";
  *
  * - 409 already vouched.
  * - 404 the member is gone or inactive (the vouchee lookup is an
- *   active-status join).
+ *   active-status join), or a block stands between the two members in either
+ *   direction: the backend answers a block with the same 404 "Member not
+ *   found", so the copy never reveals who blocked whom.
  * - 403 with `data.code === "ACCOUNT_RESTRICTED"` (`NotRestrictedGuard`): a
  *   moderation restriction, distinct from a block. This gets the shared,
  *   existing `shared:apiError.accountRestricted` copy, because that copy names the
@@ -24,7 +26,8 @@ import { NOT_ACTIVE_MEMBER_CODE } from "../../../shared/api/causeErrorKey";
  *   this is the VOUCHER's own membership going inactive, so it gets the generic `members:vouch.modal.error` copy. The
  *   "unavailable" copy names the target member, which would misplace the
  *   blame here.
- * - Any other 403 is a block on the target member.
+ * - Any other 403 carries no code this client knows, so it gets the neutral
+ *   `blocked` line ("You can't vouch for this member right now").
  *
  * Demo mode and any other failure fall back to the generic
  * `members:vouch.modal.error` copy that already existed.

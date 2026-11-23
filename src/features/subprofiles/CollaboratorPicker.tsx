@@ -23,6 +23,9 @@ import styles from "./CollaboratorPicker.module.css";
 interface CollaboratorPickerProps {
   collaborators: CollaboratorDTO[];
   onChange: (collaborators: CollaboratorDTO[]) => void;
+  /** The item belongs to an Unlinked persona, whose public page names no
+   *  credited member (SEC-03). The picker says so before anyone is tagged. */
+  isPersonaUnlinked?: boolean;
 }
 
 /** The credit a picked connection becomes. Only `.handle` is sent on save
@@ -53,12 +56,14 @@ function toCollaborator(person: ConnectionView): CollaboratorDTO {
 export function CollaboratorPicker({
   collaborators,
   onChange,
+  isPersonaUnlinked = false,
 }: CollaboratorPickerProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const fieldId = useId();
   const searchId = `${fieldId}-search`;
   const helperId = `${fieldId}-helper`;
+  const unlinkedNoteId = `${fieldId}-unlinked-note`;
   const resultsId = `${fieldId}-results`;
   const [searchTerm, setSearchTerm] = useState("");
   const [isListOpen, setIsListOpen] = useState(false);
@@ -168,6 +173,11 @@ export function CollaboratorPicker({
           ? t("subprofiles:itemEditor.collaboratorsCapHint")
           : t("subprofiles:itemEditor.collaboratorsHelper")}
       </p>
+      {isPersonaUnlinked && (
+        <p className={styles.helper} id={unlinkedNoteId}>
+          {t("subprofiles:itemEditor.collaboratorsUnlinkedNote")}
+        </p>
+      )}
 
       <CollaboratorPills collaborators={collaborators} onRemove={remove} />
 
@@ -182,7 +192,9 @@ export function CollaboratorPicker({
               autoComplete="off"
               className={styles.searchInput}
               placeholder={t("subprofiles:itemEditor.collaboratorsPlaceholder")}
-              aria-describedby={helperId}
+              aria-describedby={
+                isPersonaUnlinked ? `${helperId} ${unlinkedNoteId}` : helperId
+              }
               aria-controls={isListOpen ? resultsId : undefined}
               value={searchTerm}
               onChange={(event) => {

@@ -673,9 +673,12 @@
   }
 }
 .thMeta {
+  /* The badge name line takes this gap back and re-adds it per piece. */
+  --name-line-gap: 10px;
+
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--name-line-gap);
   font-size: var(--text-12-5);
   color: var(--ink-40);
   flex-wrap: wrap;
@@ -731,11 +734,28 @@
   flex: none;
   margin-top: 2px;
 }
+/* A reply avatar wrapped in the badge ring: the 2px top offset moves to the
+   slot, because a margin inside the ring would bend its circle. */
+.rAvSlot {
+  display: flex;
+  flex: none;
+  margin-top: 2px;
+  align-self: flex-start;
+}
+.rAvInSlot {
+  margin-top: 0;
+}
+/* One line in the reply head: the badge chip beside it shrinks to its icon
+   and then steps aside first, only then does the name end in an ellipsis. */
 .rName {
+  min-width: 0;
+  overflow: hidden;
   font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .rText {
   font-size: var(--text-13-5);
@@ -977,12 +997,16 @@
   min-width: 0;
 }
 .rHead {
+  /* The badge name line takes this gap back and re-adds it per piece. */
+  --name-line-gap: 8px;
+
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--name-line-gap);
 }
 .rMenu {
   margin-left: auto;
+  flex: none;
 }
 .opMenu {
   margin-left: 4px;

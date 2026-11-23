@@ -1,4 +1,8 @@
 import { Badge, Button, MemberIdentity } from "../../shared/components/ui";
+import {
+  INACTIVE_MEMBER_LABEL_KEY,
+  isInactiveMemberRef,
+} from "../../shared/api/refs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   isCommunitySupportOption,
@@ -13,7 +17,9 @@ import styles from "./ModToolsPanels.module.css";
 function offerAuthorName(
   offer: CommunitySupportOfferDTO,
   fallback: string,
+  inactiveLabel: string,
 ): string {
+  if (isInactiveMemberRef(offer.offeredBy)) return inactiveLabel;
   if (offer.offeredBy) {
     const { firstName, lastName } = offer.offeredBy;
     const name = `${firstName} ${lastName}`.trim();
@@ -48,6 +54,7 @@ export function SupportOfferRow({
   const authorName = offerAuthorName(
     offer,
     t("communities:detail.modtools.support.formerStaff"),
+    t(INACTIVE_MEMBER_LABEL_KEY),
   );
   const isOpen = offer.status === "new";
   const options = offer.options.filter(isCommunitySupportOption);
@@ -60,6 +67,7 @@ export function SupportOfferRow({
             slug: offer.offeredBy?.slug,
             name: authorName,
             avatarUrl: offer.offeredBy?.avatarUrl ?? undefined,
+            isInactiveMember: isInactiveMemberRef(offer.offeredBy),
           }}
           size={36}
         />

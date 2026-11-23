@@ -8,6 +8,7 @@ import { PinIcon } from "./messageIcons";
 import { studioSnippetPreviewText } from "./studioSharePreview";
 import styles from "./MessagesPage.module.css";
 import bannerStyles from "./ConversationPinnedBanner.module.css";
+import { renderableGifUrl } from "./gifMediaHosts";
 
 /** The SAME pin glyph as the in-bubble pinned mark (`messageIcons.ts`) so the
  *  two sites cannot drift apart. Decorative; the banner carries its own
@@ -34,18 +35,20 @@ function pinnedMediaDescriptor(
   if (message.kind === "image" || message.kind === "gif") {
     const attachment = message.attachment;
     if (!attachment || !("previewUrl" in attachment)) return null;
+    // SEC-24: a GIF from a refused host pins with its label alone.
+    const thumbnailUrl = renderableGifUrl(message.kind, attachment.previewUrl);
     return {
       label:
         message.kind === "gif"
           ? t("messages:viewer.gifBadge")
           : t("messages:attachments.fallbackText"),
-      thumbnail: (
+      thumbnail: thumbnailUrl ? (
         <img
           className={bannerStyles.pinnedMediaThumb}
-          src={attachment.previewUrl}
+          src={thumbnailUrl}
           alt=""
         />
-      ),
+      ) : null,
     };
   }
   if (message.kind === "sticker") {

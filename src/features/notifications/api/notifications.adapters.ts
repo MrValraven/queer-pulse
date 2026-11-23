@@ -42,6 +42,12 @@ import {
   lifecycleSourceHref,
   personaImportHref,
 } from "./notificationKindHrefs";
+import { COMMUNITY_INVITATIONS_PATH } from "../../communities/communityInvitations.path";
+import {
+  applyCommunityBadgeRow,
+  communityBadgeSourceHref,
+  isCommunityBadgeKind,
+} from "../communityBadgeNotifications";
 import { isMemberWrittenReason } from "./notificationReason";
 import { reasonLeadKeyOf } from "./notificationReason";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
@@ -284,6 +290,8 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "event_rsvp",
   "community_reply",
   "forum_thread_reply",
+  // A gift names its sender as the actor.
+  "community_gift_received",
   // A topic-new-post row always carries the posting member as an actor
   // (`payload.actorId`, written by `TopicFollowNotificationsListener`).
   "topic_new_post",
@@ -374,6 +382,11 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "studio_playlist_editor_invite_accepted",
   "studio_playlist_editor_invite_declined",
   "studio_playlist_editor_added",
+  // PRD-514. The owner who offered a community, and the member who declined
+  // one. The named copy keeps `{communityName}`, which rides in on
+  // `actor.textValues`.
+  "community_ownership_offered",
+  "community_ownership_offer_declined",
 ]);
 
 /**
@@ -792,6 +805,8 @@ export function notificationDtoToView(
 
   applyStudioKindExtras(view, dto, t);
   applyListingTeamAction(view, dto, t);
+  // Community badges: the row's actions and glyph.
+  applyCommunityBadgeRow(view, dto.type, dto.payload, t, textValues ?? {});
 
   return view;
 }
@@ -908,6 +923,22 @@ function safeSpaceSourceHref(payload: Record<string, unknown>): string {
   return typeof listingSlug === "string" && listingSlug
     ? businessPath(listingSlug)
     : routes.safeSpaces;
+}
+
+/**
+ * PRD-514. An ownership offer is answered in the inbox on the invitations
+ * shelf. The owner's decline row opens the mod console's danger pane, where
+ * the offer panel sits ready for a new offer. No slug means no destination.
+ */
+function ownershipOfferSourceHref(
+  type: string,
+  payload: Record<string, unknown> | null | undefined,
+): string | undefined {
+  if (type === "community_ownership_offered") return COMMUNITY_INVITATIONS_PATH;
+  const communitySlug = payload?.communitySlug;
+  return typeof communitySlug === "string" && communitySlug
+    ? `${communityPath(communitySlug)}?tab=modtools&mod=danger`
+    : undefined;
 }
 
 /**
@@ -1036,6 +1067,11 @@ function sourceHrefFromPayload(
       ? `${communityPath(communitySlug)}?tab=modtools&mod=spaces`
       : undefined;
   }
+  // Community badges. An earned row opens the sheet on that badge, a gift row
+  // opens the member's gifts. No slug means no destination; the row still reads.
+  if (isCommunityBadgeKind(type)) {
+    return communityBadgeSourceHref(type, payload);
+  }
   // QueerPulse Ambassadors design, section 5.6: "Tapping the grant
   // notification opens the circle community." Unlike the space-request pair
   // above, this recipient is not being handed a console pane to act in, they
@@ -1122,6 +1158,10 @@ function sourceHrefFromPayload(
   // the 200-line function cap; see its own comment for the per-kind reasoning.
   if (type.startsWith("go_together_")) {
     return goTogetherSourceHref(type, payload);
+  }
+  // PRD-514, both ownership offer kinds (see `ownershipOfferSourceHref`).
+  if (type.startsWith("community_ownership_offer")) {
+    return ownershipOfferSourceHref(type, payload);
   }
   // ENG-409. The newly rendered kinds whose destination the generic `source`
   // branches below would miss; `null` means "not one of them, fall through".

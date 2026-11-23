@@ -226,10 +226,11 @@ export function useCommunityDetailState() {
   // rather than `isOwnerRole`. Read off the DTO's `myRole` in live mode, never
   // `isMember()`, which is demo-only.
   const isOwner = role === "owner";
-  // Transfer ownership lives in the mod console's danger pane, which is
-  // addressed by `?tab=modtools&mod=danger`. Linking to it (rather than
-  // reaching into `CommunityDangerZone`'s local modal state) is what lets the
-  // owner-facing leave dialog hand them the only real exit there is.
+  // The ownership offer lives in the mod console's danger pane, which is
+  // addressed by `?tab=modtools&mod=danger`. Linking to it keeps
+  // `CommunityDangerZone`'s modal state local and lets the owner-facing leave
+  // dialog hand them the only real exit there is: offering the community to
+  // someone who accepts.
   const transferOwnershipHref = `${communityPath(slug)}?tab=modtools&mod=danger`;
   // PRD-140. A standing invitation only ever reaches a non-member, and only in
   // live mode. It replaces the join CTA with accept/decline, and for a

@@ -292,21 +292,28 @@ export const system: Catalog = {
   "pwaPrompt.tabs.ios": "iPhone",
   "pwaPrompt.tabs.android": "Android",
   "pwaPrompt.tabs.desktop": "Computador",
-  "pwaPrompt.instructions.ios.title": "iPhone · Safari · 3 toques",
+  // Ver o catálogo EN: no Safari do iOS 26, Partilhar pode estar atrás do
+  // botão de três pontos; o passo 1 cobre os dois casos.
+  "pwaPrompt.instructions.ios.title": "iPhone e iPad · Safari, Chrome e outros",
   "pwaPrompt.instructions.ios.step1":
-    "Toca no ícone <b>Partilhar</b> na parte de baixo do Safari",
+    "Toca em <b>Partilhar</b> na barra de ferramentas, ou toca primeiro nos <b>três pontos</b> e depois em <b>Partilhar</b>",
   "pwaPrompt.instructions.ios.step2":
-    "Desliza e toca em <b>Adicionar ao ecrã principal</b> <em>· perto do fundo</em>",
+    "Toca em <b>Adicionar ao ecrã principal</b> <em>· desliza a lista para baixo se não o vires</em>",
   "pwaPrompt.instructions.ios.step3":
-    "Toca em <b>Adicionar</b> no canto superior direito. Pronto.",
-  "pwaPrompt.instructions.android.title":
-    "Android · Chrome e Firefox · 2 toques",
+    "Deixa <b>Abrir como app web</b> ligado se o vires e toca em <b>Adicionar</b>",
+  "pwaPrompt.instructions.android.title": "Android · Chrome e Samsung Internet",
   "pwaPrompt.instructions.android.step1":
-    "Toca no <b>menu de três pontos</b> no canto superior direito",
+    "Abre o menu do navegador: os <b>três pontos</b> no Chrome, as <b>três linhas</b> no Samsung Internet",
   "pwaPrompt.instructions.android.step2":
-    "Escolhe <b>Instalar aplicação</b> ou <b>Adicionar ao ecrã principal</b>",
+    "Toca em <b>Instalar app</b> ou <b>Adicionar ao ecrã principal</b> <em>· no Samsung Internet, Adicionar página a e depois Ecrã principal</em>",
   "pwaPrompt.instructions.android.step3":
-    "Confirma · a QueerPulse vai aparecer com as tuas outras aplicações. <em>Funciona da mesma forma.</em>",
+    "Toca em <b>Instalar</b> e a QueerPulse junta-se às tuas outras aplicações",
+  // Aparece primeiro no navegador interno de uma app social (Instagram,
+  // Facebook, TikTok e afins), que não consegue instalar uma app web.
+  "pwaPrompt.instructions.inApp.iosStep":
+    "Toca no menu dos <b>três pontos</b> e escolhe <b>Abrir no Safari</b> <em>· ou Abrir no navegador</em>",
+  "pwaPrompt.instructions.inApp.androidStep":
+    "Toca no menu dos <b>três pontos</b> e escolhe <b>Abrir no Chrome</b> <em>· ou Abrir no navegador</em>",
   "pwaPrompt.instructions.desktop.title": "Computador · Chrome e Edge",
   "pwaPrompt.instructions.desktop.step1":
     "Procura o <b>ícone de instalação</b> na barra de endereço (lado direito)",
@@ -318,8 +325,6 @@ export const system: Catalog = {
   "pwaPrompt.laterCta": "Talvez depois",
   "pwaPrompt.actionsFoot":
     "Adiar isto impede-nos de perguntar de novo neste dispositivo durante <b>30 dias</b>.",
-  "pwaPrompt.toast.installHint":
-    "Procura o aviso de instalação · normalmente no canto superior direito",
   "pwaPrompt.toast.snoozed": "Não voltamos a perguntar durante 30 dias",
 
   // ── InstallNudge.tsx / PushNotificationRow.tsx ───────────────────────────
@@ -334,7 +339,8 @@ export const system: Catalog = {
   "pwaInstall.nudge.bodyIos":
     "Adiciona ao ecrã principal para receberes notificações. Demora cerca de 30 segundos.",
   "pwaInstall.nudge.cta": "Mostra-me como",
-  "pwaInstall.nudge.dismiss": "Dispensar a sugestão de instalação",
+  "pwaInstall.nudge.install": "Instalar",
+  "pwaInstall.nudge.notNow": "Agora não",
 
   // ── StatusPage.tsx / StatusComponents.tsx / status.data.ts ───────────────
   "status.hero.allOperational": "Todos os sistemas operacionais",

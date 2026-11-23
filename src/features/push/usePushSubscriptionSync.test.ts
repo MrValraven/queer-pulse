@@ -30,6 +30,7 @@ const subscribePush = vi.fn((..._args: unknown[]) =>
 );
 vi.mock("./push.api", () => ({
   subscribePush: (...args: unknown[]) => subscribePush(...args),
+  rememberThisDevicePushEndpoint: () => {},
 }));
 
 const readPendingSubscription = vi.fn((): Promise<unknown> =>

@@ -44,9 +44,7 @@ describe("StudioTriagePage in Portuguese", () => {
         /conheces-me como quem traduziu o disco da Mariana/,
       ),
     ).toBeInTheDocument();
-    expect(
-      await screen.findByText("Reclamada por Sara M."),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Assumida por Sara M.")).toBeInTheDocument();
 
     expect(screen.queryByText("Lead sheet attached")).toBeNull();
     expect(screen.queryByText("Claimed by Sara M.")).toBeNull();

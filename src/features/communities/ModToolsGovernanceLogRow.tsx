@@ -3,6 +3,7 @@ import { Badge, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
+import { memberRefDisplayName } from "../../shared/api/refs";
 import {
   isCommunityGovernanceLogAction,
   type CommunityGovernanceLogEntryDTO,
@@ -22,15 +23,17 @@ const BYLINE_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
   year: "numeric",
 };
 
-/** A member ref's display name, or the placeholder for an account that has
+/** A member ref's display name, the inactive label for a paused or deleting
+ *  account's stand-in (PRD-507), or the placeholder for an account that has
  *  since been erased. The FKs behind this trail are `ON DELETE SET NULL`
  *  precisely so an entry outlives the people in it. */
 function refName(
   ref: CommunityGovernanceLogEntryDTO["actor"],
   fallback: string,
+  t: TFunction,
 ): string {
   if (!ref) return fallback;
-  return `${ref.firstName} ${ref.lastName}`.trim() || fallback;
+  return memberRefDisplayName(ref, t) || fallback;
 }
 
 /** The chip label for an action, humanized when this client has no copy for a
@@ -65,8 +68,15 @@ function summaryLine(
       name: targetName,
     });
   }
+  // A platform takedown of a gift carries no target, so its sentence names
+  // the team that removed it.
+  if (entry.action === "gift_removed" && !entry.target) {
+    return t("communities:detail.modtools.history.summary.gift_removedByTeam");
+  }
   return t(`communities:detail.modtools.history.summary.${entry.action}`, {
     name: targetName,
+    // The three badge actions name the badge as it was written in the entry.
+    badge: entry.details.badgeName ?? "",
   });
 }
 
@@ -101,8 +111,8 @@ export function ModToolsGovernanceLogRow({
   const fmt = useFormat();
 
   const formerMember = t("communities:detail.modtools.history.formerMember");
-  const targetName = refName(entry.target, formerMember);
-  const actorName = entry.actor ? refName(entry.actor, formerMember) : null;
+  const targetName = refName(entry.target, formerMember, t);
+  const actorName = entry.actor ? refName(entry.actor, formerMember, t) : null;
   const createdAt = new Date(entry.createdAt);
 
   return (
@@ -145,7 +155,10 @@ export function ModToolsGovernanceLogRow({
         </p>
       )}
 
-      <ModToolsGovernanceLogDetails details={entry.details} />
+      <ModToolsGovernanceLogDetails
+        action={entry.action}
+        details={entry.details}
+      />
     </FadeIn>
   );
 }

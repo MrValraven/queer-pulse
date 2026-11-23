@@ -97,7 +97,13 @@ export function LegalLawyersSection() {
                     onCta={() => {
                       const href = contactHrefForListing(listing);
                       if (href) {
-                        window.open(href, listing.website ? "_blank" : "_self");
+                        // A listed site opened in a new tab gets no handle back to this
+                        // tab, so a compromised site cannot redirect QueerPulse.
+                        if (listing.website) {
+                          window.open(href, "_blank", "noopener,noreferrer");
+                        } else {
+                          window.open(href, "_self");
+                        }
                       }
                     }}
                     animation="fade"

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { requestUpload } from "../../members/api/uploads.api";
+import { confirmUpload, requestUpload } from "../../members/api/uploads.api";
 import { ImageProcessingError } from "../../members/api/uploadProcessing";
 import { useUploadImage } from "../../members/api/useUploadImage";
 import { DocumentProcessingError } from "../../messages/documentUploadProcessing";
@@ -61,9 +61,10 @@ const MESSAGES_STORAGE_REJECTED_TYPE_KEY =
  * The error a failed menu upload surfaces, carrying the catalog key of its
  * real cause. An image or document pipeline error already names its cause and
  * passes through (the document one with the menu's own wording for a refused
- * type); anything else is the presign request failing, which reads as the
- * shared cause (offline, signed out, restricted, rate limited, timeout) or one
- * of the menu's own lines.
+ * type); anything else is the presign request or the confirm check failing,
+ * which reads as the shared cause (offline, signed out, restricted, rate
+ * limited, timeout, a coded refusal of the stored bytes) or one of the menu's
+ * own lines.
  */
 export function menuUploadFailure(error: unknown): Error {
   if (
@@ -94,8 +95,9 @@ export function menuUploadFailure(error: unknown): Error {
  *
  * A photo goes through `useUploadImage("listing-menu")`, so it gets the same
  * metadata strip and re-encode as every other photo. A PDF has no pixels to
- * re-encode and is sent as-is with the message-document PUT. In demo mode
- * nothing touches the network and `url` is a local object URL.
+ * re-encode and is sent as-is with the message-document PUT, then the server
+ * checks the stored bytes (`confirmUpload`) before the key is kept. In demo
+ * mode nothing touches the network and `url` is a local object URL.
  */
 export function useUploadListingMenuFile() {
   const { demoMode } = useDemoMode();
@@ -131,6 +133,9 @@ export function useUploadListingMenuFile() {
           file.size,
         );
         await putWithRetry(presigned.uploadUrl, file, PDF_TYPE);
+        // SEC-43: the server checks the stored bytes before the draft keeps
+        // the key; `menuUploadFailure` names a coded refusal.
+        await confirmUpload(presigned.key);
         return { url: presigned.key, contentType: PDF_TYPE, fileName };
       } catch (error) {
         throw menuUploadFailure(error);

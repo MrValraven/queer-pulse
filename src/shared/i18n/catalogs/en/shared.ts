@@ -211,6 +211,16 @@ export const shared: Catalog = {
   "installAppModal.title": "Install the app",
   "installAppModal.sub":
     "Add QueerPulse to your home screen in a few taps. Same app, no app store.",
+  "installAppModal.inAppNote":
+    "Apps like Instagram open links in their own browser, and that browser can't install apps. Open this page in your phone's browser first.",
+  "installAppModal.copyLink": "Copy link",
+  "installAppModal.installFailed":
+    "Your browser didn't open its install dialog. Use these steps instead.",
+  "installAppModal.linkCopied": "Link copied",
+  "installAppModal.copyLinkUnsupported":
+    "This in-app browser doesn't let pages copy links. Use its menu to open this page in your browser.",
+  "installAppModal.copyLinkBlocked":
+    "The app blocked this page from using your clipboard. Use its menu to open this page in your browser.",
   "accountMenu.ariaLabel": "Account menu",
   "accountMenu.header.subtitle": "Profile & account",
   "accountSheet.title": "Your account",
@@ -981,4 +991,19 @@ export const shared: Catalog = {
   "filterPage.appliedCount_one": "{count} applied",
   "filterPage.appliedCount_other": "{count} applied",
   "filterPage.removeChipLabel": "Remove {label}",
+  "apiError.uploadDailyQuotaReached":
+    "You've uploaded as much as your account can today. Try again tomorrow.",
+  "apiError.uploadHasLocationData":
+    "This photo still holds the location it was taken at. Pick it again and the app removes the location before uploading. If you see this again, reload the page first.",
+  "apiError.uploadContentMismatch":
+    "This file isn't the type it says it is. Pick the file again.",
+  "apiError.uploadNotFound": "Your upload didn't finish. Pick the file again.",
+  "apiError.uploadCheckUnavailable":
+    "We couldn't check your upload just now. Try again in a moment.",
+  "apiError.uploadKeyNotConfirmable":
+    "This upload can't be checked. Pick the file again.",
+  "apiError.uploadTooManyReferences":
+    "This save includes too many photos at once. Remove a few and try again.",
+  "consent.storage.sharedDeviceSafety.purpose":
+    "Which member last signed in on this device, so the next person never inherits their drafts or searches, and a note to clear saved messages at the next launch after a quick exit.",
 };

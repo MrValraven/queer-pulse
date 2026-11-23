@@ -325,6 +325,7 @@ export function PulsePost({
       </div>
       <PulsePostReplies
         replies={replies}
+        communitySlug={post.communitySlug}
         canReportReply={(reply) =>
           isMember && !permissions.isOwnReply(reply) && !reply.deleted
         }

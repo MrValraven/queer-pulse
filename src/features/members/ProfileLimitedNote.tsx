@@ -39,7 +39,8 @@ const COPY_KEYS: Record<VisibilityMode, { title: string; body: string }> = {
  * Without it the page is a hero and then nothing at all, which reads as an
  * abandoned account instead of a boundary somebody chose. This says whose
  * choice it was, in the member's own terms, and offers the one action that
- * actually changes anything: the connection request.
+ * actually changes anything: the connection request, for every tier that still
+ * takes one.
  *
  * It never names or counts what is behind the boundary. The viewer's client
  * was not told, and guessing at "12 photos hidden" would leak the shape of a
@@ -60,6 +61,13 @@ export function ProfileLimitedNote({
   const { isPending } = useConnectionsHydrated();
   const copy = COPY_KEYS[visibility] ?? COPY_KEYS.open;
   const hasSentRequest = isPending(slug);
+  const canReachOut = visibility !== "private" || hasIncomingRequest;
+  // A private member who already asked to connect is waiting for an answer, so
+  // the body speaks to that request.
+  const bodyKey =
+    visibility === "private" && hasIncomingRequest
+      ? "members:profile.limited.private.incomingBody"
+      : copy.body;
 
   return (
     <div className="wrap">
@@ -73,15 +81,17 @@ export function ProfileLimitedNote({
           <FiLock />
         </span>
         <h2 className={styles.title}>{t(copy.title, { name: firstName })}</h2>
-        <p className={styles.body}>{t(copy.body, { name: firstName })}</p>
+        <p className={styles.body}>{t(bodyKey, { name: firstName })}</p>
         {hasSentRequest && (
           <p className={styles.status}>
             {t("members:profile.limited.requestSent", { name: firstName })}
           </p>
         )}
-        {/* Already connected and still limited means `private`: there is no
-            request left to send, so the note ends on its sentence. */}
-        {!hasSentRequest && !connected && (
+        {/* PRD-506. A private member does not take new requests, so the note
+            ends on its sentence. The one button a private profile can still
+            show answers a request that member already sent. Connected and
+            still limited also ends on the sentence. */}
+        {!hasSentRequest && !connected && canReachOut && (
           <Button
             variant="primary"
             onClick={() => contact({ slug, name: firstName })}

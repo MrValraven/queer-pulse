@@ -5,17 +5,44 @@ export interface PushSubscribePayload {
   keys: { p256dh: string; auth: string };
 }
 
+/**
+ * This device's push endpoint as last seen by the subscription sync or a
+ * successful subscribe, held in memory so Quick Exit can read it
+ * synchronously and send it with its logout (the backend then drops the push
+ * row in the same request). Null until a sync or subscribe has run on this
+ * page.
+ */
+let thisDevicePushEndpoint: string | null = null;
+
+/** Remember (or, with null, forget) this device's push endpoint. */
+export function rememberThisDevicePushEndpoint(endpoint: string | null): void {
+  thisDevicePushEndpoint = endpoint;
+}
+
+/** This device's push endpoint, when this page has learned it. */
+export function readThisDevicePushEndpoint(): string | null {
+  return thisDevicePushEndpoint;
+}
+
 /** POST /push/subscribe — register this device for Web Push. */
-export const subscribePush = (payload: PushSubscribePayload) =>
-  apiPost<{ ok: true }>("/push/subscribe", payload);
+export const subscribePush = async (payload: PushSubscribePayload) => {
+  const result = await apiPost<{ ok: true }>("/push/subscribe", payload);
+  rememberThisDevicePushEndpoint(payload.endpoint);
+  return result;
+};
 
 /**
  * POST /push/unsubscribe: drop this device's subscription when the member turns
  * push off. Sign-out does not call it: `POST /auth/logout` carries the endpoint
  * and removes the row in the same request.
  */
-export const unsubscribePush = (endpoint: string) =>
-  apiPost<{ ok: true }>("/push/unsubscribe", { endpoint });
+export const unsubscribePush = async (endpoint: string) => {
+  const result = await apiPost<{ ok: true }>("/push/unsubscribe", {
+    endpoint,
+  });
+  if (thisDevicePushEndpoint === endpoint) rememberThisDevicePushEndpoint(null);
+  return result;
+};
 
 /** POST /push/test — send this member a single test push to their devices. */
 export const testPush = () => apiPost<{ ok: true }>("/push/test", {});

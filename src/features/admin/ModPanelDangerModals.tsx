@@ -1,19 +1,34 @@
 import { useState } from "react";
 import {
   Avatar,
+  Button,
   ConfirmDialog,
   EmptyState,
   Eyebrow,
+  LoadErrorState,
+  Modal,
+  SkeletonLine,
+  Spinner,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { memberRefDisplayName } from "../../shared/api/refs";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useArchiveCommunity } from "../communities/api/useCommunityMutations";
 import {
-  useArchiveCommunity,
-  useTransferOwnership,
-} from "../communities/api/useCommunityMutations";
+  useCancelCommunityOwnershipOffer,
+  useCommunityOwnershipOffer,
+  useOfferCommunityOwnership,
+} from "../communities/api/useCommunityOwnershipOffers";
 import { useRoster } from "../communities/api/useRoster";
+import type { RosterMember } from "../communities/community.model";
+import {
+  communityErrorText,
+  OWNERSHIP_OFFER_OWNER_SIDE_KEYS,
+} from "../communities/communityErrors";
 import { photoOf } from "../communities/communityPeople";
+import { RosterPickerSkeleton } from "../communities/RosterPickerSkeleton";
 import styles from "./ModPanel.module.css";
 
 /* -------------------------------------------------------------------------- */
@@ -77,12 +92,18 @@ export function ArchiveConfirmModal({
 /* -------------------------------------------------------------------------- */
 
 /**
- * Picks a member to hand the community to, then transfers ownership. Live:
- * POSTs `/communities/:slug/transfer` (owner-only) via `useTransferOwnership`;
- * the caller is demoted to a moderator server-side. Demo: a no-op that confirms
- * + toasts. The candidate list is the real roster (live) or the mock roster
- * (demo), minus the current owner and anyone without a resolvable slug (a slug
- * is the transfer target the API addresses).
+ * The owner's "hand this community on" step in the mod panel (PRD-514).
+ * Ownership moves by offer: with no open offer the owner picks a roster member
+ * and sends one (`POST /communities/:slug/ownership-offer`), and nothing moves
+ * until that member accepts it from their inbox. With an offer already open
+ * the dialog says who it went to and when it lapses, and its action cancels
+ * it, since the backend keeps one open offer per community. Demo reads and
+ * writes the same hooks' cached demo state. The export keeps its name so
+ * `SettingsTab` mounts it unchanged.
+ *
+ * "Send offer" stays disabled until someone is picked, and a roster with
+ * nobody else on it shows only its empty state and the close button, since
+ * there is no offer to send.
  */
 export function TransferOwnershipModal({
   slug,
@@ -92,81 +113,190 @@ export function TransferOwnershipModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
+  const fmt = useFormat();
   const { showToast } = useToast();
-  const { roster } = useRoster(slug);
-  const transferOwnership = useTransferOwnership(slug);
+  const rosterRead = useRoster(slug);
+  // The picker waits for this read: an open offer turns the dialog into its
+  // cancel step, and a send before the read lands could only be refused.
+  const { offer, isLoading: isOfferLoading } = useCommunityOwnershipOffer(slug);
+  const offerOwnership = useOfferCommunityOwnership(slug);
+  const cancelOffer = useCancelCommunityOwnershipOffer(slug);
   const [selected, setSelected] = useState<string>("");
+  const openOffer = offer?.status === "offered" ? offer : null;
+  const isPending = offerOwnership.isPending || cancelOffer.isPending;
 
-  const candidates = roster.filter(
+  const candidates = rosterRead.roster.filter(
     (member) => member.role !== "owner" && Boolean(member.slug),
   );
+  const picked = candidates.find((member) => member.slug === selected);
+  // A roster still loading, or one that failed, is never read as empty: only
+  // a settled read with nobody else on it means there is no offer to send.
+  // A failed next page leaves the loaded rows standing (the read is shared
+  // with the Members tab), so only a failure with nothing loaded counts.
+  const isRosterFailed = rosterRead.isError && rosterRead.roster.length === 0;
+  const isRosterSettled = !rosterRead.isLoading && !isRosterFailed;
+  const hasNobodyToOffer =
+    !openOffer && isRosterSettled && candidates.length === 0;
+  const showError = (error: Error) =>
+    showToast(
+      communityErrorText(t, error, OWNERSHIP_OFFER_OWNER_SIDE_KEYS),
+      "error",
+    );
 
-  const confirm = () => {
-    if (!selected || transferOwnership.isPending) return;
-    transferOwnership.mutate(
-      { memberSlug: selected },
+  const send = () => {
+    if (!picked?.slug) return;
+    offerOwnership.mutate(
       {
-        onSuccess: () => {
-          showToast(t("admin:modPanel.settings.transfer.toast"), "success");
+        memberSlug: picked.slug,
+        offeree: {
+          slug: picked.slug,
+          firstName: picked.name,
+          lastName: "",
+          avatarUrl: picked.avatarUrl ?? null,
+        },
+      },
+      {
+        onSuccess: (sent) => {
+          showToast(
+            t("communities:ownershipOffer.pending", {
+              name: picked.name,
+              date: fmt.date(new Date(sent.expiresAt)),
+            }),
+            "success",
+          );
           onClose();
         },
-        onError: () =>
-          showToast(t("admin:modPanel.settings.errorToast"), "error"),
+        onError: showError,
       },
     );
   };
 
+  const cancel = () =>
+    cancelOffer.mutate(undefined, {
+      onSuccess: () => {
+        showToast(t("communities:ownershipOffer.cancelled"), "success");
+        onClose();
+      },
+      onError: showError,
+    });
+
+  const isBusy = isPending || isOfferLoading;
+  const confirm = () => {
+    if (isBusy) return;
+    if (openOffer) cancel();
+    else send();
+  };
+
   return (
-    <ConfirmDialog
-      open
+    <Modal
+      title={t("communities:ownershipOffer.title")}
       onClose={onClose}
-      onConfirm={confirm}
-      title={t("admin:modPanel.settings.transfer.modal.title")}
-      description={t("admin:modPanel.settings.transfer.modal.body")}
-      tone="destructive"
-      loading={transferOwnership.isPending}
-      confirmLabel={t("admin:modPanel.settings.transfer.modal.cta")}
-      cancelLabel={t("admin:modPanel.settings.cancel")}
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={isPending}>
+            {t("admin:modPanel.settings.cancel")}
+          </Button>
+          {!hasNobodyToOffer && (openOffer || !isRosterFailed) && (
+            <Button
+              variant={openOffer ? "danger" : "primary"}
+              onClick={confirm}
+              disabled={isBusy || (!openOffer && !picked)}
+              aria-busy={isPending || undefined}
+            >
+              {isPending && <Spinner />}
+              {t(
+                openOffer
+                  ? "communities:ownershipOffer.cancel"
+                  : "communities:ownershipOffer.send",
+              )}
+            </Button>
+          )}
+        </>
+      }
     >
-      <Eyebrow>{t("admin:modPanel.settings.irreversible")}</Eyebrow>
-      {candidates.length === 0 ? (
-        <EmptyState
+      <p>
+        {openOffer
+          ? t("communities:ownershipOffer.pending", {
+              name:
+                memberRefDisplayName(openOffer.offeree, t) ||
+                t("communities:common.someMember"),
+              date: fmt.date(new Date(openOffer.expiresAt)),
+            })
+          : t("communities:ownershipOffer.explainer")}
+      </p>
+      {isOfferLoading ? (
+        <SkeletonLine width="60%" />
+      ) : openOffer ? null : rosterRead.isLoading ? (
+        <RosterPickerSkeleton />
+      ) : isRosterFailed ? (
+        <LoadErrorState
           compact
-          title={t("admin:modPanel.settings.transfer.modal.emptyTitle")}
-          description={t("admin:modPanel.settings.transfer.modal.emptyDesc")}
+          onRetry={rosterRead.refetch}
+          title={t("communities:ownershipOffer.rosterErrorTitle")}
+          description={t("communities:ownershipOffer.rosterErrorBody")}
         />
       ) : (
-        <div
-          role="radiogroup"
-          aria-label={t("admin:modPanel.settings.transfer.modal.pickLabel")}
-        >
-          {candidates.map((member) => (
-            <label className={styles.modRow} key={member.slug}>
-              <input
-                type="radio"
-                name="transfer-owner"
-                value={member.slug}
-                checked={selected === member.slug}
-                onChange={() => setSelected(member.slug ?? "")}
-              />
-              <Avatar
-                initials={member.initials}
-                tint={member.tint}
-                src={photoOf(member, demoMode)}
-                size={38}
-                alt={member.name}
-              />
-              <div className={styles.modMain}>
-                <div className={styles.modName}>{member.name}</div>
-                {member.title && (
-                  <div className={styles.modMeta}>{member.title}</div>
-                )}
-              </div>
-            </label>
-          ))}
-        </div>
+        <OfferCandidateList
+          candidates={candidates}
+          selected={selected}
+          onSelect={setSelected}
+        />
       )}
-    </ConfirmDialog>
+    </Modal>
+  );
+}
+
+/** The roster members the owner may offer the community to, as a radiogroup.
+ *  Split out of `TransferOwnershipModal` to keep it under 200 lines. */
+function OfferCandidateList({
+  candidates,
+  selected,
+  onSelect,
+}: {
+  candidates: RosterMember[];
+  selected: string;
+  onSelect: (slug: string) => void;
+}) {
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  if (candidates.length === 0) {
+    return (
+      <EmptyState
+        compact
+        title={t("admin:modPanel.settings.transfer.modal.emptyTitle")}
+        description={t("admin:modPanel.settings.transfer.modal.emptyDesc")}
+      />
+    );
+  }
+  return (
+    <div
+      role="radiogroup"
+      aria-label={t("admin:modPanel.settings.transfer.modal.pickLabel")}
+    >
+      {candidates.map((member) => (
+        <label className={styles.modRow} key={member.slug}>
+          <input
+            type="radio"
+            name="offer-owner"
+            value={member.slug}
+            checked={selected === member.slug}
+            onChange={() => onSelect(member.slug ?? "")}
+          />
+          <Avatar
+            initials={member.initials}
+            tint={member.tint}
+            src={photoOf(member, demoMode)}
+            size={38}
+            alt={member.name}
+          />
+          <div className={styles.modMain}>
+            <div className={styles.modName}>{member.name}</div>
+            {member.title && (
+              <div className={styles.modMeta}>{member.title}</div>
+            )}
+          </div>
+        </label>
+      ))}
+    </div>
   );
 }

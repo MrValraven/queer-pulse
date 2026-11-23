@@ -3,6 +3,7 @@ import { useSocial } from "../../app/providers/useSocial";
 import { useProfileData } from "../../app/providers/useProfile";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { INACTIVE_MEMBER_LABEL_KEY } from "../../shared/api/refs";
 import { BlockMemberModal } from "../members/BlockMemberModal";
 import type { BlockOptions } from "../social/api/social.api";
 
@@ -55,7 +56,7 @@ export function usePostAuthorSafety(author?: PostAuthor): {
   if (!author || !slug || slug === profile.slug || author.official)
     return { actions: [], dialog: null };
 
-  const firstName = firstNameOf(author.name);
+  const firstName = firstNameOf(author.name, t(INACTIVE_MEMBER_LABEL_KEY));
 
   const dialog = isConfirmingBlock ? (
     <BlockMemberModal
@@ -125,7 +126,10 @@ export function usePostAuthorSafety(author?: PostAuthor): {
 }
 
 /** The name used in safety copy, matching `ProfileSafetyMenu`'s first-name
- *  address ("Mute Rita" rather than "Mute Rita Vasconcelos"). */
-function firstNameOf(name: string): string {
+ *  address ("Mute Rita" for Rita Vasconcelos). The inactive
+ *  member's label (PRD-507) is a phrase with no first name, so it stays
+ *  whole. */
+function firstNameOf(name: string, inactiveLabel: string): string {
+  if (name === inactiveLabel) return name;
   return name.split(" ")[0] ?? name;
 }

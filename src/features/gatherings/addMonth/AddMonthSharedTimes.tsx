@@ -4,7 +4,7 @@ import { Collapse } from "../../../shared/components/ui/Collapse";
 import { DatePicker } from "../../../shared/components/ui/DatePicker";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { Field, FieldRow } from "../CreateGatheringFields";
-import { isEndNextDay } from "./addMonthDates";
+import { endDaysLater, type TemplateEndSpan } from "./addMonthDates";
 import type { AddMonthTimes } from "./addMonthState";
 import styles from "./AddMonthCalendar.module.css";
 
@@ -19,17 +19,21 @@ function deviceTimeZone(): string {
 
 /**
  * The start and optional end every date shares unless its own card says
- * otherwise. Times are wall clock in the starting event's zone, and an end at
- * or before the start reads as the next day.
+ * otherwise. Times are wall clock in the starting event's zone. An end at or
+ * before the start reads as the next day, and the starting event's own end
+ * keeps its span, so a weekend event reads "ends 2 days later".
  */
 export function AddMonthSharedTimes({
   times,
   timezone,
+  templateSpan = null,
   onChange,
 }: {
   times: AddMonthTimes;
   /** The starting event's IANA zone. */
   timezone: string;
+  /** The starting event's end and its calendar span (PRD-518). */
+  templateSpan?: TemplateEndSpan | null;
   onChange: (times: AddMonthTimes) => void;
 }) {
   const { t } = useTranslation();
@@ -38,6 +42,7 @@ export function AddMonthSharedTimes({
   const startLabelId = `${fieldId}-start-label`;
   const endLabelId = `${fieldId}-end-label`;
   const isZoneDifferent = timezone !== "" && timezone !== deviceTimeZone();
+  const daysLater = endDaysLater(times.startTime, times.endTime, templateSpan);
 
   return (
     <div className={styles.block} role="group" aria-labelledby={headingId}>
@@ -79,10 +84,14 @@ export function AddMonthSharedTimes({
         </Field>
       </FieldRow>
       <div aria-live="polite">
-        <Collapse isOpen={isEndNextDay(times.startTime, times.endTime)}>
+        <Collapse isOpen={daysLater > 0}>
           <p className={styles.note}>
             <FiClock aria-hidden />
-            {t("gatherings:addMonth.times.endsNextDay")}
+            {daysLater > 1
+              ? t("gatherings:addMonth.times.endsDaysLater", {
+                  count: daysLater,
+                })
+              : t("gatherings:addMonth.times.endsNextDay")}
           </p>
         </Collapse>
       </div>

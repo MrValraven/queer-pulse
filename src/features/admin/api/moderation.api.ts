@@ -263,7 +263,9 @@ export interface ModBulkInput {
  *  the whole batch — `updated` and `failed` partition the selection. */
 export interface ModBulkResult {
   updated: string[];
-  failed: { id: string; reason: string }[];
+  /** `code` is the refusal's machine-readable reason when it carried one
+   *  (SEC-31: `REPORT_ABOUT_ACTOR`); see `summarizeBulkFailures`. */
+  failed: { id: string; reason: string; code?: string }[];
 }
 
 export interface AuditEntryDTO {

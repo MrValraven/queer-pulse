@@ -770,6 +770,17 @@ export const notifications: Catalog = {
   // sistema (sem autor); {badgeName} vem do payload.
   "type.badge_earned.text": "Ganhaste o crachá {badgeName}.",
   "type.badge_earned.meta": "Crachá ganho",
+  "type.community_badge_earned.text":
+    "Ganhaste o crachá {badgeName} em {communityName}.",
+  "type.community_badge_earned.meta": "Crachá da comunidade",
+  "type.community_badge_earned.communityFallback": "a tua comunidade",
+  "type.community_badge_earned.badgeNameFallback": "novo",
+  "type.community_gift_received.text":
+    "Recebeste o presente {giftName} em {communityName}.",
+  "type.community_gift_received.textNamed":
+    "<profile>{name}</profile> enviou-te o presente {giftName} em {communityName}.",
+  "type.community_gift_received.meta": "Presente da comunidade",
+  "type.community_gift_received.communityFallback": "a tua comunidade",
 
   "type.writer_application_approved.text":
     "A tua candidatura a escritor foi aprovada. Já podes submeter histórias.",
@@ -1132,6 +1143,7 @@ export const notifications: Catalog = {
   "row.reasonLead": "Motivo indicado pela moderação:",
   "row.reasonLeadMember": "Motivo indicado por quem pediu:",
   "row.reasonLeadQuestion": "A pergunta da moderação:",
+  "row.reasonLeadGiftNote": "A nota:",
   "actions.viewThread": "Ver conversa",
   "actions.viewEvent": "Ver evento",
   "actions.viewProfile": "Ver perfil",
@@ -1143,6 +1155,12 @@ export const notifications: Catalog = {
   "actions.declinedToast": "Recusado com delicadeza",
   "actions.readNow": "Ler agora",
   "actions.seeDetails": "Ver detalhes",
+  "actions.wearBadge": "Usar este crachá",
+  "actions.woreBadgeToast":
+    "Agora estás a usar {badgeName} em {communityName}.",
+  "actions.openBadges": "Abrir crachás",
+  "actions.openGifts": "Abrir os teus presentes",
+  "actions.reportGift": "Denunciar presente",
   // PRD-31: a linha de demonstração devolve quem modera à sua própria fila de
   // pedidos, que é onde a decisão sobre o pedido continua à espera.
   "actions.openRequestsQueue": "Abrir a fila de pedidos",
@@ -1674,4 +1692,21 @@ export const notifications: Catalog = {
   "type.cultural_task_batch_assigned.guideTitleFallback": "do evento",
   "actions.reviewTeamInvite": "Ver convite",
   "actions.reviewTeamRequest": "Ver pedido",
+  "type.community_ownership_offered.text":
+    "{name} ofereceu-te a gestão de {communityName}. Abre para aceitar ou recusar.",
+  "type.community_ownership_offered.meta": "Oferta de gestão",
+  "type.community_ownership_offered.communityNameFallback":
+    "uma comunidade de que fazes parte",
+  "type.community_ownership_offer_declined.text":
+    "{name} recusou a tua oferta de {communityName}. Continuas a ser a pessoa responsável.",
+  "type.community_ownership_offer_declined.meta": "Oferta de gestão",
+  "type.community_ownership_offer_declined.communityNameFallback":
+    "a tua comunidade",
+  "type.community_ownership_offered.textNamed":
+    "<profile>{name}</profile> ofereceu-te a gestão de {communityName}. Abre para aceitar ou recusar.",
+  "type.community_ownership_offered.nameFallback": "A pessoa responsável",
+  "type.community_ownership_offer_declined.textNamed":
+    "<profile>{name}</profile> recusou a tua oferta de {communityName}. Continuas a ser a pessoa responsável.",
+  "type.community_ownership_offer_declined.nameFallback":
+    "A pessoa a quem a ofereceste",
 };

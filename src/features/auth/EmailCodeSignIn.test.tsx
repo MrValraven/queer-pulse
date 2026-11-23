@@ -103,7 +103,7 @@ describe("EmailCodeSignIn", () => {
     await enterCode("000000");
     expect(
       await screen.findByText(
-        "That code is incorrect. You have 4 tries left.",
+        "That code is incorrect. You have 2 tries left.",
         {},
         { timeout: 3000 },
       ),

@@ -4,6 +4,7 @@ import { EditCommunityModal } from "./EditCommunityModal";
 import { LeaveCommunityModal } from "./LeaveCommunityModal";
 import { WithdrawJoinRequestModal } from "./WithdrawJoinRequestModal";
 import { DeclineInviteModal } from "./DeclineInviteModal";
+import { CommunityBadgeSheetHost } from "./badges/CommunityBadgeSheetHost";
 
 /** The resolved detail page's state, the only shape these dialogs are opened
  *  from. Derived from the hook rather than restated, so a field added there
@@ -124,6 +125,15 @@ export function CommunityDetailDialogs({ state }: { state: ReadyState }) {
           onClose={() => setDecliningInvite(false)}
         />
       )}
+
+      {/* The badge sheet opens from `?badges=`, so the sidebar card, the
+          phone hero button and a notification link all land here. The host
+          ignores the param in a space. */}
+      <CommunityBadgeSheetHost
+        slug={slug}
+        communityName={community.name}
+        isSpace={living?.parent != null}
+      />
     </>
   );
 }

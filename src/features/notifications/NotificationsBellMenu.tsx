@@ -119,6 +119,9 @@ export function NotificationsBellMenu({
   // inside through `additionalInsideRef`.
   useOutsideDismiss(isOpen, triggerRef, close, {
     onEscape: () => {
+      // A modal dialog opened from a row (the report dialog) answers Escape
+      // itself; the panel behind it stays open until the dialog is gone.
+      if (document.querySelector('[aria-modal="true"]')) return;
       close();
       triggerRef.current?.focus();
     },

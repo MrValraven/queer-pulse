@@ -206,6 +206,12 @@ export interface ForumPostResponse extends BaseForumPostResponse {
    *  that reply was rendered as the question, wearing its author's name and
    *  permissions, and vanished from the reply list. */
   isOp: boolean;
+  /** SEC-05: did the thread's author write this post? The server's "OP"
+   *  marker for a reply. On an anonymous thread the author's own replies wear
+   *  the masked byline (an empty handle), so matching handles cannot find
+   *  them. Optional so an older backend that omits it falls back to the
+   *  handle match. */
+  isByThreadAuthor?: boolean;
 }
 
 // ── Forum DTOs + raw calls ───────────────────────────────────────────────────

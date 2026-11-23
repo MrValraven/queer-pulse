@@ -30,7 +30,9 @@ export interface InviteStateConfig {
   leadKey: string;
   /** Show the "Expired {date}" row (only meaningful when time ran out). */
   showExpiry: boolean;
-  /** Show the "Vouched by {inviter}" row + allow the resend CTA. */
+  /** Show the "Vouched by {inviter}" row + allow the resend CTA, when the
+   *  invite carries an inviter. Since SEC-13 the backend names the inviter only
+   *  on a usable invite, so on these screens the row stays hidden. */
   showInviter: boolean;
   primary: InviteStateCta;
   secondary: InviteStateCta;
@@ -168,19 +170,13 @@ export function reasonFromInvite(
 
 /**
  * Propless fallback for the `/system/invite-expired` simulations preview: a
- * representative expired invite so the design panel keeps showing a full card.
+ * representative expired invite, shaped like the live answer, which names no
+ * inviter once an invite has expired (SEC-13).
  */
 export const DEMO_EXPIRED_INVITE: InviteView = {
   code: "PREVIEW",
   status: "expired",
-  inviter: {
-    slug: "catarina-vaz",
-    name: "Catarina Vaz",
-    firstName: "Catarina",
-    initials: "CV",
-    since: "2024",
-    isAmbassador: false,
-  },
+  inviter: null,
   inviterActive: true,
   expiryLabel: "6 June 2026",
   validForDays: 14,

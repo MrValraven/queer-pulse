@@ -10,6 +10,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { communityBadgeKeys } from "../badges/api/communityBadgeKeys";
 import { getLiving } from "../livingCommunities.data";
 import {
   getCommunityRules,
@@ -117,6 +118,11 @@ export function useJoinCommunityWithRules(slug: string) {
       });
       void queryClient.invalidateQueries({ queryKey: ["communities"] });
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      // A join, leave or seat change moves what the badge sheet shows: the
+      // member view, the manage pane and the worn badge.
+      void queryClient.invalidateQueries({
+        queryKey: communityBadgeKeys.all(slug),
+      });
       void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
       // A space's card on its parent's Spaces tab shows the viewer's own
@@ -230,6 +236,11 @@ export function useTriageJoinRequest(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      // An approval seats a new member, which moves the badge holders and
+      // the manage pane.
+      void queryClient.invalidateQueries({
+        queryKey: communityBadgeKeys.all(slug),
+      });
     },
   });
 }

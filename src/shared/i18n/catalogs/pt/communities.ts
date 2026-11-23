@@ -205,21 +205,21 @@ export const communities: Catalog = {
   "error.alreadyMember":
     "Já fazes parte desta comunidade. Atualiza a página para a veres.",
   "error.ownerCannotLeave":
-    "A pessoa responsável não pode sair nem ser removida. Transfere primeiro a titularidade para outra pessoa da comunidade.",
+    "A pessoa responsável não pode sair nem ser removida. Oferece primeiro a gestão a outra pessoa da comunidade.",
   "error.ownerRoleFixed":
-    "O papel da pessoa responsável não pode ser alterado. Se queres que outra pessoa lidere, transfere primeiro a titularidade.",
+    "O papel da pessoa responsável não pode ser alterado. Se queres que outra pessoa lidere, oferece-lhe primeiro a gestão.",
   "error.ownRoleFixed":
     "Não podes alterar o teu próprio papel aqui. Pede à pessoa responsável ou à moderação.",
   "error.alreadyOwner":
     "Essa pessoa já é responsável por esta comunidade. Atualiza para veres quem é responsável agora.",
   "error.houseAccountOwner":
-    "A titularidade não pode passar para a conta da própria QueerPulse. Escolhe uma pessoa da comunidade.",
+    "A gestão não pode passar para a conta da própria QueerPulse. Escolhe uma pessoa da comunidade.",
   "error.cannotBeListed":
     "Uma comunidade só pode aparecer na lista pública quando o nível de acesso é público ou por pedido, e um espaço não pode aparecer de todo. Muda o nível de acesso ou deixa-a fora da lista.",
   "error.needsHigherRole":
     "O teu papel aqui não chega para essa alteração. A pessoa responsável ou quem é cotitular pode fazê-la por ti.",
   "error.ownerOnly":
-    "Só a pessoa responsável por esta comunidade pode fazer isso. Pede-lhe que o faça ou que te passe a titularidade.",
+    "Só a pessoa responsável por esta comunidade pode fazer isso. Pede-lhe que o faça ou que te ofereça a gestão.",
   "error.needsStaffRole":
     "Só a pessoa responsável e a moderação desta comunidade podem fazer isso, e o teu papel pode ter mudado desde que abriste esta página. Atualiza para confirmar.",
   "error.announcementStaffOnly":
@@ -432,9 +432,8 @@ export const communities: Catalog = {
   "detail.invite.declinedToast": "Convite recusado.",
   "detail.leave.owner.title": "És a pessoa responsável por {name}",
   "detail.leave.owner.body":
-    "Uma comunidade não pode ficar sem quem responda por ela. Passa {name} a alguém que já faça parte dela e continuas a moderar, livre para saíres quando quiseres.",
+    "Uma comunidade precisa de alguém que responda por ela. Oferece primeiro a gestão de {name} a alguém que já faça parte dela e, quando aceitar, continuas a moderar, livre para saíres quando quiseres.",
   "detail.leave.owner.cancel": "Agora não",
-  "detail.leave.owner.transferCta": "Transferir titularidade",
   "leave.doneToast": "Saíste de {name}.",
   "leave.failedToast":
     "Não foi possível sair dessa comunidade. Tenta daqui a pouco.",
@@ -581,6 +580,7 @@ export const communities: Catalog = {
   "detail.modtools.nav.card": "Cartão de membro",
   "detail.modtools.nav.danger": "Zona de risco",
   "detail.modtools.nav.spaces": "Espaços",
+  "detail.modtools.nav.badges": "Crachás",
   "detail.modtools.overview.attention.label": "A precisar de ti",
   "detail.modtools.overview.attention.requests_one":
     "Uma pessoa está à espera para entrar",
@@ -770,7 +770,7 @@ export const communities: Catalog = {
   "detail.modtools.members.makeCoOwnerCta": "Tornar cotitular",
   "detail.modtools.members.removeCoOwnerCta": "Remover cotitular",
   "detail.modtools.members.coOwnerNote":
-    "Quem é cotitular partilha os teus poderes aqui: rever pedidos de entrada, moderar publicações, editar a comunidade e gerir as pessoas. Transferir a titularidade, arquivar a comunidade e mudar o papel de quem é cotitular continuam a ser só teus.",
+    "Quem é cotitular partilha os teus poderes aqui: rever pedidos de entrada, moderar publicações, editar a comunidade e gerir as pessoas. Oferecer a gestão, arquivar a comunidade e mudar o papel de quem é cotitular continuam a ser só teus.",
   "detail.modtools.members.removeCta": "Remover da comunidade",
   "detail.modtools.members.ownerTag": "Responsável",
   "detail.modtools.members.actionsAria": "Ações para {name}",
@@ -797,7 +797,7 @@ export const communities: Catalog = {
   "detail.modtools.confirm.removeMember.confirmCta": "Remover pessoa",
   "detail.modtools.confirm.grantCoOwner.title": "Tornar {name} cotitular?",
   "detail.modtools.confirm.grantCoOwner.body":
-    "Passa a poder fazer tudo o que tu fazes nesta comunidade, à exceção de transferir a titularidade, arquivá-la e mudar o papel de outra pessoa cotitular. Podes reverter quando quiseres.",
+    "Passa a poder fazer tudo o que tu fazes nesta comunidade, à exceção de oferecer a gestão, arquivá-la e mudar o papel de outra pessoa cotitular. Podes reverter quando quiseres.",
   "detail.modtools.confirm.grantCoOwner.confirmCta": "Tornar cotitular",
   "detail.modtools.confirm.revokeCoOwner.title":
     "Remover {name} como cotitular?",
@@ -836,18 +836,7 @@ export const communities: Catalog = {
     "Isto fecha a comunidade definitivamente. Fica só de leitura e não pode ser reaberta. Não é possível desfazer esta ação.",
   "detail.dangerZone.archive.confirm.cancel": "Cancelar",
   "detail.dangerZone.archive.confirm.confirmCta": "Arquivar comunidade",
-  "detail.dangerZone.transfer.label": "Transferir a titularidade",
-  "detail.dangerZone.transfer.text":
-    "Passa a comunidade a outra pessoa que faça parte dela. Manténs o teu papel atual.",
-  "detail.dangerZone.transfer.cta": "Transferir",
-  "detail.dangerZone.transfer.successToast":
-    "A titularidade foi transferida para {owner}.",
-  "detail.dangerZone.transfer.confirm.title":
-    "Transferir a titularidade de {name}?",
-  "detail.dangerZone.transfer.confirm.body":
-    "Escolhe quem passa a ser responsável. Vai ficar com controlo total de {name}.",
   "detail.dangerZone.transfer.confirm.cancel": "Cancelar",
-  "detail.dangerZone.transfer.confirm.confirmCta": "Transferir titularidade",
   "detail.dangerZone.transfer.confirm.empty":
     "Ainda não há mais ninguém na comunidade a quem a possas passar.",
   // PRD-149. The transfer picker searches the SERVER (`roster?q=`) instead of
@@ -1213,6 +1202,11 @@ export const communities: Catalog = {
   "detail.modtools.history.action.support_offered": "Apoio oferecido",
   "detail.modtools.history.action.support_offer_answered":
     "Resposta a oferta de apoio",
+  "detail.modtools.history.action.badge_created": "Crachá criado",
+  "detail.modtools.history.action.badge_updated": "Crachá alterado",
+  "detail.modtools.history.action.badge_deleted": "Crachá apagado",
+  "detail.modtools.history.action.gift_sent": "Presente enviado",
+  "detail.modtools.history.action.gift_removed": "Presente removido",
 
   "detail.modtools.history.summary.role_changed": "O papel de {name} mudou",
   "detail.modtools.history.summary.member_removed":
@@ -1249,6 +1243,17 @@ export const communities: Catalog = {
     "A equipa da QueerPulse ofereceu apoio a esta comunidade",
   "detail.modtools.history.summary.support_offer_answered":
     "A moderação respondeu a uma oferta de apoio",
+  "detail.modtools.history.summary.badge_created":
+    "O crachá {badge} foi criado",
+  "detail.modtools.history.summary.badge_updated":
+    "O crachá {badge} foi editado",
+  "detail.modtools.history.summary.badge_deleted":
+    "O crachá {badge} foi apagado",
+  "detail.modtools.history.summary.gift_sent": "{name} recebeu um presente",
+  "detail.modtools.history.summary.gift_removed":
+    "Foi removido um presente a {name}",
+  "detail.modtools.history.summary.gift_removedByTeam":
+    "A nossa equipa removeu um presente",
   "detail.modtools.history.summary.unknown": "{action}",
   "detail.modtools.history.summary.unknownWithTarget": "{action}: {name}",
 
@@ -1266,6 +1271,14 @@ export const communities: Catalog = {
   "detail.modtools.history.detail.reason": "Motivo",
   "detail.modtools.history.detail.bannedAt": "Bloqueio aplicado",
   "detail.modtools.history.detail.cardSerial": "Cartão",
+  "detail.modtools.history.detail.badgeName": "Crachá",
+  "detail.modtools.history.detail.holderCount": "Pessoas que o perderam",
+  "detail.modtools.history.detail.giftKey": "Presente",
+  "detail.modtools.history.badgeField.name": "Nome",
+  "detail.modtools.history.badgeField.iconKey": "Ícone",
+  "detail.modtools.history.badgeField.tint": "Cor",
+  "detail.modtools.history.badgeField.threshold": "Número a atingir",
+  "detail.modtools.history.badgeField.isEnabled": "Ativo",
   "detail.modtools.history.role.owner": "Responsável",
   "detail.modtools.history.role.coOwner": "Cotitular",
   "detail.modtools.history.role.mod": "Moderação",
@@ -1305,9 +1318,9 @@ export const communities: Catalog = {
 
   "detail.dangerZone.yourRole.owner": "Esta comunidade é tua.",
   "detail.dangerZone.yourRole.coOwner":
-    "És cotitular desta comunidade. Transferir a titularidade e arquivar continuam a caber a quem é responsável.",
+    "És cotitular desta comunidade. Oferecer a gestão e arquivar continuam a caber à pessoa responsável.",
   "detail.dangerZone.yourRole.mod":
-    "Moderas esta comunidade. Transferir a titularidade e arquivar continuam a caber a quem é responsável.",
+    "Moderas esta comunidade. Oferecer a gestão e arquivar continuam a caber à pessoa responsável.",
   "detail.dangerZone.ownerReview.label":
     "Avisar que quem é responsável não responde",
   "detail.dangerZone.ownerReview.text":
@@ -1563,6 +1576,281 @@ export const communities: Catalog = {
   "badges.reaction.support": "Apoio",
   "badges.reaction.fire": "Fogo",
   "badges.reaction.ariaLabel": "{label}: {count}",
+
+  // Crachás, presentes e o crachá em uso (badges/*)
+  "badges.starter.regular": "Habitual",
+  "badges.starter.old_friend": "Amizade antiga",
+  "badges.starter.helping_hands": "Mãos que ajudam",
+  "badges.starter.in_the_conversation": "Na conversa",
+  "badges.rule.tenure_days.name": "Tempo na comunidade",
+  "badges.rule.tenure_days.earn_one":
+    "Fazer parte da comunidade há {count} dia",
+  "badges.rule.tenure_days.earn_other":
+    "Fazer parte da comunidade há {count} dias",
+  "badges.rule.tenure_days.progress_one": "{progress} de {total} dia",
+  "badges.rule.tenure_days.progress_other": "{progress} de {total} dias",
+  "badges.rule.tenure_days.thresholdLabel": "Dias na comunidade",
+  "badges.rule.tenure_days.unit": "dias",
+  "badges.rule.events_checked_in.name": "Presença em eventos",
+  "badges.rule.events_checked_in.earn_one": "Marcar presença em {count} evento",
+  "badges.rule.events_checked_in.earn_other":
+    "Marcar presença em {count} eventos",
+  "badges.rule.events_checked_in.progress_one":
+    "{progress} de {total} evento em que estiveste aqui",
+  "badges.rule.events_checked_in.progress_other":
+    "{progress} de {total} eventos em que estiveste aqui",
+  "badges.rule.events_checked_in.thresholdLabel":
+    "Eventos com presença marcada",
+  "badges.rule.events_checked_in.unit": "eventos",
+  "badges.rule.volunteer_hours.name": "Horas de voluntariado",
+  "badges.rule.volunteer_hours.earn_one":
+    "Fazer voluntariado durante {count} hora",
+  "badges.rule.volunteer_hours.earn_other":
+    "Fazer voluntariado durante {count} horas",
+  "badges.rule.volunteer_hours.progress_one": "{progress} de {total} hora",
+  "badges.rule.volunteer_hours.progress_other": "{progress} de {total} horas",
+  "badges.rule.volunteer_hours.thresholdLabel": "Horas de voluntariado",
+  "badges.rule.volunteer_hours.unit": "horas",
+  "badges.rule.posts_and_replies.name": "Publicações e respostas",
+  "badges.rule.posts_and_replies.earn_one":
+    "Escrever {count} publicação ou resposta",
+  "badges.rule.posts_and_replies.earn_other":
+    "Escrever {count} publicações ou respostas",
+  "badges.rule.posts_and_replies.progress_one":
+    "{progress} de {total} publicação ou resposta",
+  "badges.rule.posts_and_replies.progress_other":
+    "{progress} de {total} publicações e respostas",
+  "badges.rule.posts_and_replies.thresholdLabel": "Publicações e respostas",
+  "badges.rule.posts_and_replies.unit": "publicações e respostas",
+  "badges.tint.jade": "Jade",
+  "badges.tint.accent": "Coral",
+  "badges.tint.plum": "Ameixa",
+  "badges.tint.rose": "Rosa",
+  "badges.tint.amber": "Âmbar",
+  "badges.tint.violet": "Violeta",
+  "badges.gift.heart.name": "Coração",
+  "badges.gift.star.name": "Estrela",
+  "badges.gift.coffee.name": "Café",
+  "badges.gift.feather.name": "Pena",
+  "badges.gift.sun.name": "Sol",
+  "badges.gift.life_buoy.name": "Boia",
+  "badges.gift.music.name": "Canção",
+  "badges.gift.smile.name": "Sorriso",
+  "badges.gift.unknown.name": "Presente",
+  "badges.counter": "{count} de {max} caracteres",
+  "badges.flair.srPrefix": "Crachá:",
+  "badges.icon.award": "Prémio",
+  "badges.icon.star": "Estrela",
+  "badges.icon.heart": "Coração",
+  "badges.icon.sun": "Sol",
+  "badges.icon.moon": "Lua",
+  "badges.icon.zap": "Relâmpago",
+  "badges.icon.feather": "Pena",
+  "badges.icon.coffee": "Café",
+  "badges.icon.music": "Música",
+  "badges.icon.headphones": "Auscultadores",
+  "badges.icon.mic": "Microfone",
+  "badges.icon.book_open": "Livro aberto",
+  "badges.icon.camera": "Câmara",
+  "badges.icon.film": "Filme",
+  "badges.icon.pen_tool": "Caneta",
+  "badges.icon.smile": "Sorriso",
+  "badges.icon.compass": "Bússola",
+  "badges.icon.map_pin": "Marcador de mapa",
+  "badges.icon.flag": "Bandeira",
+  "badges.icon.calendar": "Calendário",
+  "badges.icon.clock": "Relógio",
+  "badges.icon.users": "Pessoas",
+  "badges.icon.message_circle": "Balão de conversa",
+  "badges.icon.life_buoy": "Boia",
+  "badges.sheet.title": "Crachás em {name}",
+  "badges.sheet.lead.member":
+    "Os crachás chegam sozinhos à medida que participas. Só tu vês os que ganhaste, até escolheres um para usar.",
+  "badges.sheet.lead.visitor":
+    "Quem faz parte de {name} ganha estes crachás ao participar. Junta-te para começares a ganhá-los.",
+  "badges.sheet.tabsLabel": "Crachás e presentes",
+  "badges.sheet.tab.badges": "Crachás",
+  "badges.sheet.tab.gifts": "Presentes",
+  "badges.sheet.empty": "Esta comunidade não tem crachás ativos neste momento.",
+  "badges.sheet.earnedOn": "Ganho a {date}",
+  "badges.sheet.notEarned": "Ainda por ganhar",
+  "badges.sheet.wearing": "Estás a usar este crachá",
+  "badges.giftDialog.pickHint": "Escolhe um presente para enviar.",
+  "badges.form.previewPlaceholder": "Nome do crachá",
+  "badges.sheet.wear": "Usar este crachá",
+  "badges.sheet.stopWearing": "Deixar de usar este crachá",
+  "badges.sheet.wearHint":
+    "Toda a gente em {name} vê o crachá que usas ao lado do teu nome.",
+  "badges.sheet.woreToast": "Agora estás a usar {badge} em {name}.",
+  "badges.sheet.stoppedToast": "Já não estás a usar nenhum crachá em {name}.",
+  "badges.entry.title": "Crachás",
+  "badges.entry.body.member": "Vê como vais e escolhe um crachá para usar.",
+  "badges.entry.body.visitor":
+    "Vê o que quem faz parte de {name} pode ganhar aqui.",
+  "badges.entry.cta": "Abrir crachás",
+  "badges.entry.heroAria": "Abrir os crachás de {name}",
+  "badges.shelf.lead":
+    "Só tu vês esta prateleira. Um presente aparece ao lado do teu nome durante 7 dias, a não ser que o escondas.",
+  "badges.shelf.empty":
+    "Ainda não há presentes. Quando a equipa desta comunidade te enviar um, aparece aqui.",
+  "badges.shelf.from": "De {name}",
+  "badges.shelf.fromDeleted": "De uma pessoa que apagou a conta",
+  "badges.shelf.sentOn": "Enviado a {date}",
+  "badges.shelf.showingUntil": "Visível ao lado do teu nome até {date}",
+  "badges.shelf.hiddenNote": "Escondido do lado do teu nome",
+  "badges.shelf.hide": "Esconder presente",
+  "badges.shelf.show": "Mostrar presente",
+  "badges.shelf.hiddenToast":
+    "Presente escondido. Já não aparece ao lado do teu nome.",
+  "badges.shelf.shownToast": "Presente visível outra vez.",
+  "badges.shelf.report": "Denunciar presente",
+  "badges.shelf.reportAria": "Denunciar o presente {gift} de {name}",
+  "badges.shelf.reportSubject": "o presente {gift} de {name}",
+  "badges.shelf.reportSubjectDeleted":
+    "o presente {gift} de uma pessoa que apagou a conta",
+  "badges.shelf.reportAriaDeleted":
+    "Denunciar o presente {gift} de uma pessoa que apagou a conta",
+  "badges.shelf.loadMore": "Mostrar mais presentes",
+  "badges.giftMark.tooltip": "Presente recente",
+  "badges.giftMark.aria":
+    "{name} recebeu um presente há pouco. Mostrar presentes",
+  "badges.giftMark.dialogTitle": "Presentes recentes para {name}",
+  "badges.giftMark.empty": "Estes presentes já não estão visíveis.",
+  "badges.giftMark.remove": "Remover presente",
+  "badges.giftMark.removeConfirmTitle": "Remover este presente?",
+  "badges.giftMark.removeConfirmBody":
+    "Desaparece para toda a gente, incluindo da prateleira de {name}.",
+  "badges.giftMark.removeCancel": "Manter presente",
+  "badges.giftMark.removedToast": "Presente removido.",
+  "badges.manage.title": "Crachás",
+  "badges.manage.lead":
+    "As pessoas ganham estes crachás sozinhas quando chegam ao número que definires. Cada pessoa escolhe um para usar ao lado do nome, ou nenhum.",
+  "badges.manage.readOnly":
+    "Só a pessoa responsável e quem é cotitular podem alterar os crachás. Aqui podes ver como estão definidos.",
+  "badges.manage.count": "{count} de {limit} crachás",
+  "badges.manage.create": "Criar crachá",
+  "badges.manage.limitReached":
+    "Esta comunidade tem {limit} crachás, o máximo possível. Apaga um para abrires espaço.",
+  "badges.manage.holders_one": "{count} pessoa tem-no",
+  "badges.manage.holders_other": "{count} pessoas têm-no",
+  "badges.manage.enabledAria": "Atribuir e mostrar {badge}",
+  "badges.manage.offNote":
+    "Desativado: escondido em todo o lado e sem ser atribuído",
+  "badges.manage.edit": "Editar crachá",
+  "badges.manage.editAria": "Editar crachá: {badge}",
+  "badges.manage.delete": "Apagar crachá",
+  "badges.manage.deleteAria": "Apagar crachá: {badge}",
+  "badges.manage.switchedOnToast":
+    "{badge} está ativo. Quem já cumpre recebe-o em silêncio, sem notificação.",
+  "badges.manage.switchedOffToast":
+    "{badge} está desativado e escondido em todo o lado. As pessoas mantêm-no para quando o voltares a ativar.",
+  "badges.form.createTitle": "Criar crachá",
+  "badges.form.editTitle": "Editar {badge}",
+  "badges.form.name": "Nome",
+  "badges.form.icon": "Ícone",
+  "badges.form.tint": "Cor",
+  "badges.form.rule": "Como se ganha",
+  "badges.form.ruleLocked":
+    "A forma de ganhar um crachá fica fixa depois de o criares. Cria um crachá novo para outra regra.",
+  "badges.form.thresholdRange": "Entre {min} e {max} {unit}",
+  "badges.form.lowerNote":
+    "Baixar o número atribui-o em silêncio a quem passa a cumprir. Subi-lo não o tira a ninguém.",
+  "badges.form.enabled": "Ativar já",
+  "badges.form.preview": "Pré-visualização",
+  "badges.form.previewNote":
+    "É assim que aparece ao lado do nome de uma pessoa.",
+  "badges.form.previewName": "O teu nome",
+  "badges.form.save": "Guardar crachá",
+  "badges.form.cancel": "Cancelar",
+  "badges.form.createdToast":
+    "{badge} criado. Quem já cumpre recebe-o em silêncio, sem notificação.",
+  "badges.form.savedToast": "{badge} guardado.",
+  "badges.delete.title": "Apagar {badge}?",
+  "badges.delete.body_one":
+    "{count} pessoa tem este crachá e perde-o quando o apagares. Quem o estiver a usar fica sem crachá. Não é possível desfazer.",
+  "badges.delete.body_other":
+    "{count} pessoas têm este crachá e perdem-no quando o apagares. Quem o estiver a usar fica sem crachá. Não é possível desfazer.",
+  "badges.delete.bodyNone":
+    "Ainda ninguém tem este crachá. Não é possível desfazer.",
+  "badges.delete.confirm": "Apagar crachá",
+  "badges.delete.cancel": "Manter crachá",
+  "badges.delete.doneToastNone": "{badge} apagado.",
+  "badges.manage.empty":
+    "Ainda não há crachás aqui. Cria um e as pessoas começam a ganhá-lo.",
+  "badges.delete.doneToast_one": "{badge} apagado. {count} pessoa perdeu-o.",
+  "badges.delete.doneToast_other":
+    "{badge} apagado. {count} pessoas perderam-no.",
+  "badges.sendGift": "Enviar um presente",
+  "badges.sendGiftAria": "Enviar um presente a {name}",
+  "badges.giftDialog.title": "Enviar um presente a {name}",
+  "badges.giftDialog.lead":
+    "Um pequeno obrigado da equipa. {name} recebe uma notificação, e o presente aparece ao lado do nome aqui durante 7 dias.",
+  "badges.giftDialog.pick": "Escolhe um presente",
+  "badges.giftDialog.note": "Nota (opcional)",
+  "badges.giftDialog.notePlaceholder": "Diz porque é",
+  "badges.giftDialog.allowance_one":
+    "Podes enviar mais {count} presente esta semana.",
+  "badges.giftDialog.allowance_other":
+    "Podes enviar mais {count} presentes esta semana.",
+  "badges.giftDialog.allowanceUsed":
+    "Já enviaste {limit} presentes aqui esta semana. Podes enviar o próximo a {date}.",
+  "badges.giftDialog.send": "Enviar presente",
+  "badges.giftDialog.cancel": "Cancelar",
+  "badges.giftDialog.sentToast": "Presente enviado a {name}.",
+  "badges.error.badge_limit_reached":
+    "Esta comunidade já tem {limit} crachás, o máximo possível. Apaga um antes de criares outro.",
+  "badges.error.badge_threshold_out_of_range":
+    "Escolhe um número inteiro entre {min} e {max} {unit}.",
+  "badges.error.badge_name_taken":
+    "Esta comunidade já tem um crachá com esse nome. Escolhe outro.",
+  "badges.error.badge_name_required": "Dá um nome ao crachá.",
+  "badges.error.badge_name_too_long":
+    "O nome de um crachá tem no máximo {maxLength} caracteres.",
+  "badges.error.badge_icon_unknown":
+    "Esse ícone não está nos ícones de crachá. Escolhe um da lista.",
+  "badges.error.badge_tint_unknown":
+    "Essa cor não está nas cores de crachá. Escolhe uma da lista.",
+  "badges.error.badge_rule_unknown":
+    "Escolhe da lista como se ganha este crachá.",
+  "badges.error.badge_rule_locked":
+    "A forma de ganhar um crachá fica fixa depois de criado. Cria um crachá novo para outra regra.",
+  "badges.error.badge_enabled_invalid":
+    "A definição de ativo não chegou. Muda-a outra vez.",
+  "badges.error.badge_not_found":
+    "Este crachá foi apagado ou pertence a outra comunidade. Atualiza para veres os crachás atuais.",
+  "badges.error.badge_manage_owner_only":
+    "Só a pessoa responsável e quem é cotitular podem alterar crachás.",
+  "badges.error.badge_settings_staff_only":
+    "Só a pessoa responsável, quem é cotitular e a moderação podem ver as definições dos crachás.",
+  "badges.error.gift_sender_not_staff":
+    "Só a pessoa responsável, quem é cotitular e a moderação desta comunidade podem enviar presentes.",
+  "badges.error.gift_recipient_not_member":
+    "Essa pessoa já não faz parte desta comunidade, por isso não pode receber um presente aqui.",
+  "badges.error.gift_recipient_unavailable":
+    "Não podes enviar um presente a esta pessoa.",
+  "badges.error.gift_to_self": "Não podes enviar um presente a ti.",
+  "badges.error.gift_weekly_limit_reached":
+    "Enviaste {limit} presentes aqui nos últimos 7 dias, o máximo por semana. Podes enviar outro a {resetsAt}.",
+  "badges.error.gift_unknown":
+    "Esse presente não está na lista. Escolhe um da lista.",
+  "badges.error.gift_note_too_long":
+    "A nota de um presente tem no máximo {maxLength} caracteres.",
+  "badges.error.gift_note_invalid":
+    "A nota do presente não chegou como texto. Escreve-a outra vez e envia.",
+  "badges.error.gift_not_found":
+    "Este presente foi removido, por isso não há nada a alterar.",
+  "badges.error.gift_remove_not_allowed":
+    "Só quem enviou este presente, a pessoa responsável ou quem é cotitular o podem remover.",
+  "badges.error.gift_hidden_invalid":
+    "A definição de esconder não chegou. Tenta esconder ou mostrar o presente outra vez.",
+  "badges.error.flair_badge_id_invalid":
+    "Não foi possível ler esse crachá. Atualiza e escolhe-o outra vez.",
+  "badges.error.flair_badge_disabled":
+    "Este crachá está desativado, por isso não o podes usar agora.",
+  "badges.error.flair_badge_not_earned":
+    "Ainda não ganhaste este crachá, por isso não o podes usar.",
+  "badges.error.spaces":
+    "Os espaços não têm crachás nem presentes. Encontras isso na comunidade principal.",
 
   // ── Modal de adesão ────────────────────────────────────────────────────────
   "join.progress": "Passo {step} de {total}",
@@ -2515,4 +2803,74 @@ export const communities: Catalog = {
 
   // Separador Eventos: um convívio em que esta comunidade é convidada nomeia a comunidade principal.
   "detail.events.withLead": "Com {name}",
+  "error.ratifiedBarNeedsOwnerLevel":
+    "Uma segunda pessoa da moderação assinou este bloqueio para o tornar permanente, por isso só a pessoa responsável ou quem é cotitular o pode levantar ou dar-lhe uma data de fim.",
+  "error.ownerPlacedBanNeedsOwnerLevel":
+    "Este bloqueio foi aplicado pela pessoa responsável ou por quem é cotitular, por isso só a pessoa responsável ou quem é cotitular o pode levantar ou encurtar.",
+  "ownershipOffer.title": "Passar esta comunidade a outra pessoa",
+  "ownershipOffer.explainer":
+    "Escolhe um membro a quem a oferecer. Pode aceitar ou recusar, a gestão só passa quando aceitar, e a oferta expira ao fim de 14 dias.",
+  "ownershipOffer.send": "Enviar oferta",
+  "ownershipOffer.pending": "Oferta enviada a {name}. Expira a {date}.",
+  "ownershipOffer.cancel": "Cancelar oferta",
+  "ownershipOffer.cancelled": "Oferta cancelada.",
+  "ownershipOffer.inboxTitle": "Ofertas de gestão",
+  "ownershipOffer.inboxItem": "{name} ofereceu-te a gestão.",
+  "ownershipOffer.accept": "Aceitar a gestão",
+  "ownershipOffer.decline": "Recusar oferta",
+  "ownershipOffer.accepted":
+    "Agora és a pessoa responsável por {communityName}.",
+  "ownershipOffer.declined": "Oferta recusada. A gestão fica como estava.",
+  "ownershipOffer.expiresOn": "Disponível até {date}",
+  "ownershipOffer.error.OWNERSHIP_OFFER_OPEN":
+    "Esta comunidade já tem uma oferta em aberto. Cancela-a para a ofereceres a outra pessoa.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_NOT_FOUND":
+    "Não encontrámos essa oferta. Pode ter sido cancelada.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_ANSWERED":
+    "Esta oferta já teve resposta.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_EXPIRED":
+    "Esta oferta expirou. Pede à pessoa responsável que envie uma nova.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_OWNER_CHANGED":
+    "Esta comunidade mudou de mãos desde que a oferta foi feita, por isso agora só a podes recusar.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_RECIPIENT_NOT_MEMBER":
+    "Saíste desta comunidade, por isso agora só podes recusar a oferta.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_SELF":
+    "Já és a pessoa responsável por esta comunidade.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_ALREADY_OWNER":
+    "Essa pessoa já é responsável por esta comunidade.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_HOUSE_ACCOUNT":
+    "Não é possível oferecer uma comunidade à conta da casa QueerPulse.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_MEMBER_NOT_FOUND":
+    "Essa pessoa não está na lista de membros desta comunidade.",
+  "ownershipOffer.ownerFallback": "A pessoa responsável",
+  "ownershipOffer.acceptAriaLabel": "Aceitar a gestão de {communityName}",
+  "ownershipOffer.declineAriaLabel": "Recusar oferta de {communityName}",
+  "ownershipOffer.acceptConfirm.title": "Assumir {communityName}?",
+  "ownershipOffer.acceptConfirm.body":
+    "Passas a ser a pessoa responsável e {name} continua na moderação.",
+  "ownershipOffer.declineConfirm.title": "Recusar a oferta de {communityName}?",
+  "ownershipOffer.declineConfirm.body":
+    "A gestão fica com {name}, que vai saber que recusaste.",
+  "ownershipOffer.keepDeciding": "Ainda não",
+  "ownershipOffer.badgeLabel_one": "{count} oferta de gestão à espera",
+  "ownershipOffer.badgeLabel_other": "{count} ofertas de gestão à espera",
+  "hub.ownershipOffersLink_one": "{count} oferta de gestão à espera",
+  "hub.ownershipOffersLink_other": "{count} ofertas de gestão à espera",
+  "ownershipOffer.offerCta": "Oferecer a gestão",
+  "invites.listTitle": "Convites",
+  "ownershipOffer.sendTo": "Enviar oferta a {name}",
+  "invites.introWithOffers":
+    "Comunidades que te convidaram a entrar ou te ofereceram a gestão. A resposta é sempre tua.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_CANCELLED":
+    "A pessoa responsável retirou esta oferta, por isso já não há nada a que responder.",
+  "ownershipOffer.ownerError.OWNERSHIP_OFFER_ANSWERED":
+    "Esta oferta já teve resposta antes de a cancelares, por isso já não há nada para cancelar.",
+  "ownershipOffer.ownerError.OWNERSHIP_OFFER_OWNER_CHANGED":
+    "Já não és a pessoa responsável por esta comunidade, por isso não a podes oferecer a ninguém.",
+  "error.staffPlacedBanNeedsOwnerLevel":
+    "A equipa da plataforma aplicou este bloqueio, por isso só a pessoa responsável ou quem é cotitular o pode levantar ou encurtar.",
+  "ownershipOffer.rosterLoading": "A carregar as pessoas da comunidade",
+  "ownershipOffer.rosterErrorTitle": "Não conseguimos carregar as pessoas",
+  "ownershipOffer.rosterErrorBody":
+    "A lista de pessoas da comunidade não carregou, por isso ainda não há ninguém para escolher. Tenta outra vez para a carregar.",
 };

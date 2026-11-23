@@ -2,16 +2,17 @@ import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import { isStaffRoleId } from "../staffRoles.registry";
 import type { AvatarTone } from "../ui";
-import type {
-  AdminMember,
-  CommTone,
-  DrawerStat,
-  FlaggedMember,
-  FlaggedStatusId,
-  GraphNode,
-  MemberDetail,
-  ModerationEntry,
-  VouchAvatar,
+import {
+  REPORTS_AGAINST_GLANCE_KEY,
+  type AdminMember,
+  type CommTone,
+  type DrawerStat,
+  type FlaggedMember,
+  type FlaggedStatusId,
+  type GraphNode,
+  type MemberDetail,
+  type ModerationEntry,
+  type VouchAvatar,
 } from "../adminMembers.data";
 import type {
   AdminMemberCardDTO,
@@ -133,7 +134,12 @@ function memberCardFrom(
     verified: memberDto.verified,
     role: memberDto.role,
     avatarUrl: memberDto.avatarUrl,
-    openReportsCount: memberDto.openReportCount || undefined,
+    // Null is a withheld count (the viewer's own row) and stays null, so the
+    // chips can leave it out; a zero count reads as no count.
+    openReportsCount:
+      memberDto.openReportCount === null
+        ? null
+        : memberDto.openReportCount || undefined,
     statusTone: memberDto.verified ? "jade" : "coral",
     newThisWeek:
       Date.now() - Date.parse(memberDto.joinedAt) < MILLISECONDS_PER_WEEK,
@@ -252,7 +258,7 @@ function glanceFor(
   detailDto: AdminMemberDetailDTO,
   t: TFunction,
 ): DrawerStat[] {
-  return [
+  const stats: DrawerStat[] = [
     {
       labelKey: "admin:members.glance.vouches",
       value: String(detailDto.vouchCount),
@@ -261,11 +267,16 @@ function glanceFor(
       labelKey: "admin:members.glance.memberFor",
       value: memberForGlanceValue(detailDto.joinedAt, t),
     },
-    {
-      labelKey: "admin:members.glance.reportsAgainst",
-      value: String(detailDto.openReportCount),
-    },
   ];
+  // A withheld count (the viewer's own detail) gets no stat: printing it
+  // would state a number the backend never sent.
+  if (detailDto.openReportCount !== null) {
+    stats.push({
+      labelKey: REPORTS_AGAINST_GLANCE_KEY,
+      value: String(detailDto.openReportCount),
+    });
+  }
+  return stats;
 }
 
 /** "21 members vouch for Inês" — or, once the member has vouched for others,

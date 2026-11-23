@@ -46,3 +46,83 @@
   align-items: center;
   gap: 8px;
 }
+
+/* PRD-514. The ownership offers inbox above the invitations: a short list of
+   paper rows on the cream body, each naming the community, who offered it and
+   when the offer lapses, with the two answers. */
+.offers {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: var(--section-y-56);
+}
+.offersTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  color: var(--ink);
+}
+/* The invitations list's own heading, shown only when offers sit above it. */
+.invitesTitle {
+  margin: 0 0 14px;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  color: var(--ink);
+}
+.offerList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 22px;
+}
+.offerRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+.offerCommunity {
+  /* A 44px tap target around the serif name, aligned to the row's text. */
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: var(--tap-min);
+  /* Pulls the extra target height back out of the row's rhythm. */
+  margin-block: calc((var(--tap-min) - 1lh) / -2);
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .offerCommunity:hover {
+    color: var(--accent-ink);
+  }
+}
+.offerText {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.offerRow .rowActions {
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+/* The two answers share each line evenly, so a wrapped pair on a phone
+   reads as two full-width buttons. */
+.offerRow .rowActions > * {
+  flex: 1 1 auto;
+}
+.offerRow .rowWhen {
+  margin: 0;
+}

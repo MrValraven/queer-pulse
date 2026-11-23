@@ -1,8 +1,10 @@
 import type { IconType } from "react-icons";
 import {
   FiAlertTriangle,
+  FiClock,
   FiCloudOff,
   FiHeart,
+  FiLock,
   FiMail,
   FiUserPlus,
   FiWifiOff,
@@ -21,8 +23,9 @@ export type Notice = { Icon: IconType; title: string; body: string };
  * navigation to this page rather than a response we can read; the code in the
  * query is the only thing that survives the round trip. Codes come from
  * `SignupRejectedError.reason`, the `state` nonce check, and `OAuthCallbackError`
- * (which reflects Google's own `?error=`, so unknown values reach us and fall
- * through to the generic notice; never render the raw code).
+ * (which reflects Google's own `?error=` from an allowlist; anything else
+ * arrives as `oauth_failed` and gets the generic notice; never render the raw
+ * code). Each cause has its own notice (PRD-503).
  */
 export function noticeForAuthError(code: string, t: TFunction): Notice {
   switch (code) {
@@ -111,7 +114,45 @@ export function noticeForAuthError(code: string, t: TFunction): Notice {
         title: t("auth:signIn.notice.registrationDisabled.title"),
         body: t("auth:signIn.notice.registrationDisabled.body"),
       };
+    // Our own `oauth_state` nonce cookie lapsed (10 minutes) or the attempt
+    // started in another browser. Google did nothing wrong here.
     case "invalid_state":
+      return {
+        Icon: FiClock,
+        title: t("auth:signIn.notice.invalidState.title"),
+        body: t("auth:signIn.notice.invalidState.body"),
+      };
+    // A Google Workspace admin blocks the app for this account. Retrying with
+    // the same account cannot work, so the copy names the two ways in.
+    case "admin_policy_enforced":
+      return {
+        Icon: FiLock,
+        title: t("auth:signIn.notice.adminPolicy.title"),
+        body: t("auth:signIn.notice.adminPolicy.body"),
+      };
+    case "server_error":
+      return {
+        Icon: FiCloudOff,
+        title: t("auth:signIn.notice.googleServerError.title"),
+        body: t("auth:signIn.notice.googleServerError.body"),
+      };
+    case "temporarily_unavailable":
+      return {
+        Icon: FiClock,
+        title: t("auth:signIn.notice.googleUnavailable.title"),
+        body: t("auth:signIn.notice.googleUnavailable.body"),
+      };
+    // Google refused the shape of our own authorization request: a setup
+    // fault on our side, whichever of the four codes Google picked.
+    case "invalid_request":
+    case "invalid_scope":
+    case "unauthorized_client":
+    case "unsupported_response_type":
+      return {
+        Icon: FiAlertTriangle,
+        title: t("auth:signIn.notice.googleSetup.title"),
+        body: t("auth:signIn.notice.googleSetup.body"),
+      };
     case "oauth_failed":
     default:
       return {

@@ -44,7 +44,18 @@ export interface ReportDTO {
   slaDueAt?: string;
   /** Human acknowledgement copy the surface may show. */
   acknowledgement?: string;
+  /**
+   * PRD-510: what this filing did. `filed` opened a new report;
+   * `details_added` appended the new account and evidence to the reporter's
+   * open report on the same subject for the same reason; `already_open` found
+   * that open report with nothing new to add. Optional because a demo report
+   * built on the client may leave it out, which reads as `filed`.
+   */
+  filing?: ReportFilingOutcome;
 }
+
+/** PRD-510: mirrors `ReportFilingOutcome` in the backend's `reports.service.ts`. */
+export type ReportFilingOutcome = "filed" | "details_added" | "already_open";
 
 /** Create a report from any surface. Reporter may be anonymous. */
 export const createReport = (body: CreateReportInput) =>

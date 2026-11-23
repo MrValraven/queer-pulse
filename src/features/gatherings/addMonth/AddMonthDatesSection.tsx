@@ -46,6 +46,7 @@ export function AddMonthDatesSection({
       <AddMonthSharedTimes
         times={state.times}
         timezone={template.timezone}
+        templateSpan={template}
         onChange={(times) => dispatch({ type: "setSharedTimes", times })}
       />
       <AddMonthCalendar

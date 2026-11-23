@@ -4,19 +4,27 @@ import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useRecognition } from "./api/useRecognition";
 import { levelNameKeyFor } from "./levelLadder.data";
+import { recognitionErrorCopy } from "./memberActionErrors";
 import styles from "./ProfileHeroMain.module.css";
 
 /** The hero's recognition strip, picked by view: the fuller self view on your
  *  own profile, the narrower visitor view everywhere else (the visitor
- *  preview of your own profile included). */
+ *  preview of your own profile included). A limited card renders no strip at
+ *  all and never asks for one: level and badges belong to the full profile
+ *  (SEC-20), and the backend refuses that read with `PROFILE_LIMITED`. */
 export function ProfileHeroRecognition({
   isSelf,
   slug,
+  isLimited = false,
 }: {
   isSelf: boolean;
   slug: string;
+  /** The viewer is held to this member's limited card. */
+  isLimited?: boolean;
 }) {
-  return isSelf ? <HeroRecognition /> : <OtherMemberRecognition slug={slug} />;
+  if (isSelf) return <HeroRecognition />;
+  if (isLimited) return null;
+  return <OtherMemberRecognition slug={slug} />;
 }
 
 /**
@@ -92,11 +100,21 @@ function HeroRecognition() {
  */
 function OtherMemberRecognition({ slug }: { slug: string }) {
   const { t } = useTranslation();
-  const { level, badges, hasRealData } = useRecognition(slug);
+  const { level, badges, hasRealData, isError, error } = useRecognition(slug);
   // The ladder's words are owned by the frontend and keyed on the level
   // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
   // own English name.
   const levelNameKey = levelNameKeyFor(level.level);
+  // A failed read says why in one quiet line. `PROFILE_LIMITED` lands here
+  // when the profile turned limited after the page loaded.
+  if (isError) {
+    const copy = recognitionErrorCopy(error);
+    return (
+      <div className={styles.heroRecog}>
+        <span className={styles.heroRecogChip}>{t(copy.key, copy.values)}</span>
+      </div>
+    );
+  }
   if (!hasRealData) {
     return (
       <div className={styles.heroRecog} aria-hidden>

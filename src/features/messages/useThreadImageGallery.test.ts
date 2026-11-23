@@ -26,13 +26,59 @@ function photoMessage(overrides: Partial<ChatMessage> = {}): ChatMessage {
   };
 }
 
+/** A GIF on the GIF provider's media host (SEC-24 only renders those). */
+function gifMessage(overrides: Partial<ChatMessage> = {}): ChatMessage {
+  return photoMessage({
+    kind: "gif",
+    attachment: {
+      url: "https://static.klipy.com/ii/abc/cat.gif",
+      previewUrl: "https://static.klipy.com/ii/abc/cat-small.gif",
+      width: 480,
+      height: 360,
+      provider: "klipy",
+    },
+    ...overrides,
+  });
+}
+
 describe("isViewablePhoto", () => {
   it("accepts an image message with a renderable attachment", () => {
     expect(isViewablePhoto(photoMessage())).toBe(true);
   });
 
   it("accepts a gif message", () => {
-    expect(isViewablePhoto(photoMessage({ kind: "gif" }))).toBe(true);
+    expect(isViewablePhoto(gifMessage())).toBe(true);
+  });
+
+  // SEC-24: a GIF whose url or preview leaves the GIF provider's hosts never
+  // reaches the viewer, the media grid or the tap-to-open path.
+  it("rejects a gif from a refused host", () => {
+    expect(
+      isViewablePhoto(
+        gifMessage({
+          attachment: {
+            url: "https://tracker.example/pixel.gif",
+            previewUrl: "https://tracker.example/pixel-small.gif",
+            width: 1,
+            height: 1,
+            provider: "klipy",
+          },
+        }),
+      ),
+    ).toBe(false);
+    expect(
+      isViewablePhoto(
+        gifMessage({
+          attachment: {
+            url: "https://static.klipy.com/ii/abc/cat.gif",
+            previewUrl: "https://tracker.example/pixel-small.gif",
+            width: 1,
+            height: 1,
+            provider: "klipy",
+          },
+        }),
+      ),
+    ).toBe(false);
   });
 
   it("rejects a text message", () => {
@@ -179,8 +225,8 @@ describe("collectThreadPhotos", () => {
       kind: "gif",
       text: "GIF",
       attachment: {
-        url: "https://cdn.example/cat.gif",
-        previewUrl: "https://cdn.example/cat-small.gif",
+        url: "https://static.klipy.com/ii/abc/cat.gif",
+        previewUrl: "https://static.klipy.com/ii/abc/cat-small.gif",
         width: 480,
         height: 360,
         provider: "klipy",
@@ -195,7 +241,7 @@ describe("collectThreadPhotos", () => {
   });
 
   it("uses the localized gif label as alt when a gif has no caption", () => {
-    const gif = photoMessage({ id: "m1", kind: "gif", text: "GIF" });
+    const gif = gifMessage({ id: "m1", text: "GIF" });
     const t: TFunction = (key) => `translated:${key}`;
     const photos = collectThreadPhotos([{ day: "Today", items: [gif] }], {
       ...options,
@@ -205,7 +251,7 @@ describe("collectThreadPhotos", () => {
   });
 
   it("keeps a gif's body as alt when no translator is passed", () => {
-    const gif = photoMessage({ id: "m1", kind: "gif", text: "GIF" });
+    const gif = gifMessage({ id: "m1", text: "GIF" });
     const photos = collectThreadPhotos(
       [{ day: "Today", items: [gif] }],
       options,

@@ -31,6 +31,9 @@ import {
  * app (`purgeMessagingCache` broadcasts):
  * - on sign-out, which also covers account deletion and deactivation because
  *   both flows end in sign-out;
+ * - on Quick Exit, and again on the next launch before any read when the
+ *   Quick Exit marker is still set (the page can go before the delete
+ *   commits);
  * - when a confirmed session ends and `/auth/me` confirms nobody is signed in;
  * - when a different member signs in on the device;
  * - when the inbox alone outgrows the size budget;
@@ -84,6 +87,39 @@ function isPersistableMessagingQuery(query: Query): boolean {
   );
 }
 
+/**
+ * Set synchronously by Quick Exit just before it leaves. The IndexedDB delete
+ * it starts may not commit before the page goes, so the next launch checks
+ * this marker before any read (provisional offline restore included): it
+ * purges the record, clears the marker and reads nothing.
+ */
+const QUICK_EXIT_MARKER_KEY = "qp.messaging-cache.purge-pending";
+
+/** Leave the marker for the next launch. Never throws. */
+export function markQuickExitPending(): void {
+  try {
+    window.localStorage.setItem(QUICK_EXIT_MARKER_KEY, "1");
+  } catch {
+    // Storage blocked: the delete Quick Exit started is all there is.
+  }
+}
+
+function hasQuickExitMarker(): boolean {
+  try {
+    return window.localStorage.getItem(QUICK_EXIT_MARKER_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
+function clearQuickExitMarker(): void {
+  try {
+    window.localStorage.removeItem(QUICK_EXIT_MARKER_KEY);
+  } catch {
+    // Storage blocked: nothing to clear.
+  }
+}
+
 /** `readPersistedMessagingCache`'s result, kept distinct from a confirmed
  *  empty store (`{ status: "ok"; record: null }`) so a caller deciding
  *  whether there is something to protect can tell "could not check" apart
@@ -99,6 +135,18 @@ export type PersistedMessagingCacheReadResult =
  *  open); see `readPersistedMessagingCache` for the common case that folds
  *  this into `null` too. */
 export async function readPersistedMessagingCacheResult(): Promise<PersistedMessagingCacheReadResult> {
+  if (hasQuickExitMarker()) {
+    // A Quick Exit happened here: whatever the store holds is purged unread.
+    // The marker goes only once a re-read confirms the store is empty, so a
+    // delete that failed is tried again on the next read.
+    await purgeMessagingCache();
+    const recheck = await messagingCacheStore.read();
+    if (recheck.status === "unavailable" || recheck.value !== undefined) {
+      return { status: "unavailable" };
+    }
+    clearQuickExitMarker();
+    return { status: "ok", record: null };
+  }
   const result = await messagingCacheStore.read();
   if (result.status === "unavailable") return result;
   const record = result.value;

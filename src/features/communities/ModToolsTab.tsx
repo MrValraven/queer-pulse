@@ -17,6 +17,7 @@ import { ModToolsSpaces } from "./ModToolsSpaces";
 import { ModToolsBans } from "./ModToolsBans";
 import { ModToolsSupport } from "./ModToolsSupport";
 import { ModToolsGovernanceLog } from "./ModToolsGovernanceLog";
+import { ModToolsBadges } from "./badges/ModToolsBadges";
 import { ModToolsBanRatifications } from "./ModToolsBanRatifications";
 import { CommunityRemovalOutcomeDialog } from "./CommunityRemovalOutcomeDialog";
 import { ModToolsConfirmDialog } from "./ModToolsConfirmDialog";
@@ -36,6 +37,9 @@ type RosterPaging = Pick<
   | "fetchNextPage"
   | "isFetchingNextPage"
   | "isFetchNextPageError"
+  | "isLoading"
+  | "isError"
+  | "refetch"
 >;
 
 /**
@@ -88,12 +92,13 @@ export function ModToolsTab({
   // nest one level only, so a space never gets the pane.
   const isSpace = living.parent !== null;
   const canHostSpaces = !isSpace;
-  // Membership cards and platform support offers are out of v1 for a space
-  // (the backend refuses both there), so a space's rail leaves them out.
+  // Membership cards, platform support offers and community badges are out of
+  // v1 for a space (the backend refuses all three there), so a space's rail
+  // leaves them out.
   const isSectionOffered = (id: ModSection) =>
     id === "spaces"
       ? canHostSpaces
-      : id === "card" || id === "support"
+      : id === "card" || id === "support" || id === "badges"
         ? !isSpace
         : true;
 
@@ -282,6 +287,8 @@ function ModToolsPane({
           memberKey={actions.memberKey}
           roleOverrides={actions.roleOverrides}
           viewerRole={role}
+          communitySlug={living.slug}
+          isSpace={living.parent !== null}
           paging={rosterPaging}
           onPromote={actions.promote}
           onDemote={actions.demote}
@@ -302,6 +309,15 @@ function ModToolsPane({
           onOpenRatifications={() => onOpenSection("ratifications")}
         />
       </>
+    );
+  }
+  if (section === "badges") {
+    return (
+      <ModToolsBadges
+        slug={living.slug}
+        communityName={communityName}
+        viewerRole={role}
+      />
     );
   }
   if (section === "ratifications") {
@@ -340,6 +356,7 @@ function ModToolsPane({
       name={communityName}
       role={role}
       roster={actions.manageable}
+      rosterRead={rosterPaging}
     />
   );
 }

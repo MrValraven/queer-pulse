@@ -1,15 +1,21 @@
 import {
   useCallback,
+  useEffect,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FiX, FiLogOut, FiMoon, FiSun } from "react-icons/fi";
-import { m, useDragControls, type PanInfo } from "motion/react";
+import {
+  AnimatePresence,
+  m,
+  useDragControls,
+  type PanInfo,
+} from "motion/react";
 import { Avatar, useScrimDismiss } from "../ui";
-import { useScrollLock } from "../../hooks";
+import { useInstallPrompt, useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
@@ -30,6 +36,7 @@ import {
   INSTALL_APP_ACTION,
 } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
+import { QuickExitMenuItem } from "../../../features/safety/QuickExit";
 import { useHasRoleLinks } from "./useHasRoleLinks";
 import {
   RoleLinks,
@@ -40,6 +47,10 @@ import {
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
+import {
+  useCommunityOwnershipOfferBadge,
+  useOwnershipOfferRowHref,
+} from "../../../features/communities/useCommunityOwnershipOfferBadge";
 import { useAccountRowVisibility } from "./useAccountRowVisibility";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import { InstallAppModal } from "../system/InstallAppModal";
@@ -74,6 +85,46 @@ export function AccountSheet() {
   const { reducedMotion } = useMotionPrefs();
   const panelRef = useRef<HTMLDivElement>(null);
   const dragControls = useDragControls();
+  const { canInstall, requestInstall } = useInstallPrompt();
+  const { key: locationKey } = useLocation();
+  const isSheetOpen = activeSheet === "account";
+  // Lives here, in the component that stays mounted while the sheet is closed
+  // (Navbar mounts it under the mobile breakpoint), because the sheet closes
+  // as the install row is tapped. Held in the sheet's body, this state
+  // unmounted with it in that same render, so the modal never appeared and
+  // the tap looked like it did nothing.
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+
+  // The modal belongs to the page it opened over. A Back gesture that
+  // navigates while it is up (Android) closes it, so it never floats over the
+  // next page. Keyed on the router's location key, as Navbar's sheet close is:
+  // popping the sheet's own history entry leaves the key unchanged.
+  const previousLocationKeyRef = useRef(locationKey);
+  useEffect(() => {
+    if (previousLocationKeyRef.current === locationKey) return;
+    previousLocationKeyRef.current = locationKey;
+    setIsInstallModalOpen(false);
+  }, [locationKey]);
+
+  // One tap to the browser's own install dialog where Chrome has offered one;
+  // the step-by-step modal everywhere else (iOS, in-app browsers, Chrome before
+  // it fires `beforeinstallprompt`). `closeSheet` pops the sheet's history
+  // entry with `history.back()`: opening a dialog is no navigation, so nothing
+  // else consumed it.
+  // Native path: `requestInstall` runs first, inside this click, which keeps
+  // the user activation the dialog needs. The sheet stays open behind the
+  // dialog and closes once it settles, so the history pop can never land
+  // while the native dialog is up. A "failed" outcome (the dialog never
+  // opened) falls through to the manual steps, so the tap always ends
+  // somewhere. Modal path: the sheet closes first, then the modal opens.
+  const openInstallApp = useCallback(() => {
+    async function startInstall() {
+      const outcome = canInstall ? await requestInstall() : "failed";
+      closeSheet();
+      if (outcome === "failed") setIsInstallModalOpen(true);
+    }
+    void startInstall();
+  }, [closeSheet, canInstall, requestInstall]);
 
   // Drag is armed only from the grabber (see .grabberZone's onPointerDown),
   // never the panel itself — the panel is the sheet's scroll container, so a
@@ -97,12 +148,12 @@ export function AccountSheet() {
     [closeSheet],
   );
 
-  // Conditional lock: this sheet is mounted for the whole session and
-  // early-returns null when closed, so an unconditional lock would freeze page
-  // scroll permanently (and the hook can't move below the early return).
-  useScrollLock(activeSheet === "account");
+  // Conditional lock: this sheet stays mounted while closed and renders no
+  // panel then, so an unconditional lock would freeze page scroll for as long
+  // as it is mounted.
+  useScrollLock(isSheetOpen);
   useNavDrawerFocus({
-    isOpen: activeSheet === "account",
+    isOpen: isSheetOpen,
     panelRef,
     onClose: closeSheet,
   });
@@ -111,61 +162,77 @@ export function AccountSheet() {
   // (a text-selection drag released past the edge) — see `useScrimDismiss`.
   const scrimProps = useScrimDismiss(closeSheet);
 
-  if (activeSheet !== "account") return null;
+  // Rendered whether or not the sheet is open: the install row closes the
+  // sheet in the same tap that opens this modal. AnimatePresence lets the
+  // modal play its exit (see useModalExit), and the single return below keeps
+  // it at one position in the tree so that exit is never cut short.
+  const installModal = (
+    <AnimatePresence>
+      {isInstallModalOpen && (
+        <InstallAppModal onClose={() => setIsInstallModalOpen(false)} />
+      )}
+    </AnimatePresence>
+  );
 
   return (
-    <div className={styles.overlay} role="presentation" {...scrimProps}>
-      <m.div
-        ref={panelRef}
-        className={styles.panel}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t("shared:accountSheet.title")}
-        tabIndex={-1}
-        drag={reducedMotion ? false : "y"}
-        dragListener={false}
-        dragControls={dragControls}
-        dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={{ top: 0, bottom: 0.6 }}
-        dragMomentum={false}
-        onDragEnd={onPanelDragEnd}
-      >
-        {/* Supplementary gesture surface (aria-hidden); the always-present
+    <>
+      {isSheetOpen && (
+        <div className={styles.overlay} role="presentation" {...scrimProps}>
+          <m.div
+            ref={panelRef}
+            className={styles.panel}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("shared:accountSheet.title")}
+            tabIndex={-1}
+            drag={reducedMotion ? false : "y"}
+            dragListener={false}
+            dragControls={dragControls}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.6 }}
+            dragMomentum={false}
+            onDragEnd={onPanelDragEnd}
+          >
+            {/* Supplementary gesture surface (aria-hidden); the always-present
             Close button below — plus backdrop/Esc/Back — is the real
             keyboard-reachable equivalent, and the only one under reduced
             motion, where this pointerdown handler no-ops. */}
-        <div
-          className={styles.grabberZone}
-          aria-hidden
-          onPointerDown={armSheetDrag}
-        >
-          <div className={styles.grabber} />
+            <div
+              className={styles.grabberZone}
+              aria-hidden
+              onPointerDown={armSheetDrag}
+            >
+              <div className={styles.grabber} />
+            </div>
+            <button
+              type="button"
+              className={styles.closeButton}
+              aria-label={t("nav:closeMenu")}
+              onClick={closeSheet}
+            >
+              <FiX />
+            </button>
+            <AccountSheetBody
+              name={name}
+              photo={photo}
+              initials={initials}
+              role={role}
+              setRole={setRole}
+              canSwitch={canSwitch}
+              navMode={navMode}
+              setNavMode={setNavMode}
+              demoMode={demoMode}
+              available={available}
+              toggle={toggle}
+              onNavigate={closeSheetForNavigation}
+              onInstallApp={openInstallApp}
+              onSignOut={signOut}
+            />
+          </m.div>
         </div>
-        <button
-          type="button"
-          className={styles.closeButton}
-          aria-label={t("nav:closeMenu")}
-          onClick={closeSheet}
-        >
-          <FiX />
-        </button>
-        <AccountSheetBody
-          name={name}
-          photo={photo}
-          initials={initials}
-          role={role}
-          setRole={setRole}
-          canSwitch={canSwitch}
-          navMode={navMode}
-          setNavMode={setNavMode}
-          demoMode={demoMode}
-          available={available}
-          toggle={toggle}
-          onNavigate={closeSheetForNavigation}
-          onSignOut={signOut}
-        />
-      </m.div>
-    </div>
+      )}
+      {installModal}
+    </>
   );
 }
 
@@ -186,6 +253,7 @@ function AccountSheetBody({
   available,
   toggle,
   onNavigate,
+  onInstallApp,
   onSignOut,
 }: {
   name: string;
@@ -200,22 +268,31 @@ function AccountSheetBody({
   available: boolean;
   toggle: () => void;
   onNavigate: () => void;
+  /** Closes the sheet and starts the install (see AccountSheet). */
+  onInstallApp: () => void;
   onSignOut: () => void;
 }) {
   const { t } = useTranslation();
   const personaBadge = usePersonaBadge();
   const gettingStartedBadge = useGettingStartedBadge();
   const inviteQuotaBadge = useInviteQuotaBadge();
+  const communityOfferBadge = useCommunityOwnershipOfferBadge();
+  const communityOfferRowHref = useOwnershipOfferRowHref();
   // Same per-row badge map the desktop `AccountMenuPanel` builds, kept in step
   // with it: live counts can't sit in the static ACCOUNT_GROUPS array.
   const badgeByRoute: Record<string, ReactNode> = {
     [routes.subprofilesDashboard]: personaBadge,
     [routes.gettingStarted]: gettingStartedBadge,
     [routes.invite]: inviteQuotaBadge,
+    // PRD-514: ownership offers waiting on this member's answer.
+    [routes.communities]: communityOfferBadge,
+  };
+  // While offers wait, that row leads to the invitations page listing them.
+  const hrefByRoute: Record<string, string | undefined> = {
+    [routes.communities]: communityOfferRowHref,
   };
   const { isInstalled } = useDisplayMode();
   const isAccountRowVisible = useAccountRowVisibility(); // liveOnly, earlyAccess
-  const [installOpen, setInstallOpen] = useState(false);
   const hasRoleLinks = useHasRoleLinks(role);
   const { theme, toggleTheme } = useTheme();
   const themeLabel = t(
@@ -270,10 +347,7 @@ function AccountSheetBody({
                       key={item.action}
                       type="button"
                       className={`${menu.item} ${styles.row}`}
-                      onClick={() => {
-                        onNavigate();
-                        setInstallOpen(true);
-                      }}
+                      onClick={onInstallApp}
                     >
                       <ItemIcon aria-hidden className={menu.itemIcon} />
                       <span className={menu.itemLabel}>{t(item.labelKey)}</span>
@@ -283,7 +357,7 @@ function AccountSheetBody({
                 return (
                   <Link
                     key={item.to}
-                    to={item.to}
+                    to={hrefByRoute[item.to] ?? item.to}
                     replace
                     className={`${menu.item} ${styles.row}`}
                     onClick={onNavigate}
@@ -355,22 +429,46 @@ function AccountSheetBody({
           showNavModeSwitch={false}
           onNavigate={onNavigate}
         />
-
-        <div className={menu.divider} />
-        <Link
-          to={routes.homepage}
-          replace
-          className={`${menu.item} ${menu.signOut} ${styles.row}`}
-          onClick={() => {
-            onSignOut();
-            onNavigate();
-          }}
-        >
-          <FiLogOut aria-hidden className={menu.itemIcon} />
-          <span className={menu.itemLabel}>{t("nav:signOut")}</span>
-        </Link>
       </div>
-      {installOpen && <InstallAppModal onClose={() => setInstallOpen(false)} />}
+      {/* Pinned under the scroll region, as in the desktop menu's footer, so
+          Quick Exit is one tap away however long the sheet runs. */}
+      <div className={styles.leaveFooter}>
+        <AccountSheetLeaveRows onNavigate={onNavigate} onSignOut={onSignOut} />
+      </div>
+    </>
+  );
+}
+
+/** The sheet's last two rows: Quick Exit (the same action as the safety
+ * pages' button) and Sign out. Split out to keep {@link AccountSheetBody}
+ * under the repo's 200-line limit. */
+function AccountSheetLeaveRows({
+  onNavigate,
+  onSignOut,
+}: {
+  onNavigate: () => void;
+  onSignOut: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <QuickExitMenuItem
+        className={`${menu.item} ${menu.itemButton} ${styles.row}`}
+        iconClassName={menu.itemIcon}
+        labelClassName={menu.itemLabel}
+      />
+      <Link
+        to={routes.homepage}
+        replace
+        className={`${menu.item} ${menu.signOut} ${styles.row}`}
+        onClick={() => {
+          onSignOut();
+          onNavigate();
+        }}
+      >
+        <FiLogOut aria-hidden className={menu.itemIcon} />
+        <span className={menu.itemLabel}>{t("nav:signOut")}</span>
+      </Link>
     </>
   );
 }

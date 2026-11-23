@@ -60,9 +60,11 @@ vi.mock("../../shared/i18n/useTranslation", () => ({
 vi.mock("./api/useStudioReleaseMutations", () => ({
   useReorderStudioTracks: () => ({ mutateAsync: reorder }),
 }));
+const confirmStudioAudioUpload = vi.fn<(key: string) => Promise<string>>();
 vi.mock("./api/studioAudioUpload", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api/studioAudioUpload")>()),
   uploadStudioAudio: (options: unknown) => uploadStudioAudio(options),
+  confirmStudioAudioUpload: (key: string) => confirmStudioAudioUpload(key),
 }));
 
 const mp3 = (name: string) =>
@@ -103,6 +105,9 @@ beforeEach(() => {
   [createTrack, confirmAudio, deleteTrack, reorder, uploadStudioAudio].forEach(
     (mock) => mock.mockReset(),
   );
+  confirmStudioAudioUpload
+    .mockReset()
+    .mockImplementation((key) => Promise.resolve(key));
   let trackNumber = 0;
   createTrack.mockImplementation(({ title }: { title: string }) =>
     Promise.resolve({ id: `t${(trackNumber += 1)}`, title }),
@@ -647,5 +652,102 @@ describe("useStudioTrackUploads order after removing a row", () => {
       }),
     );
     expect(reorder).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("useStudioTrackUploads after a failed storage check", () => {
+  // Open item A: a storage check that failed keeps the stored key, so Retry
+  // runs that check alone and never presigns or PUTs the file again.
+  it("retries a failed storage check on the stored key without uploading again", async () => {
+    const checkRefusal = new ApiError(503, "unavailable", {
+      code: "UPLOAD_CHECK_UNAVAILABLE",
+    });
+    uploadStudioAudio.mockReturnValueOnce(
+      handle(
+        Promise.reject(
+          new StudioAudioUploadError(
+            "confirm",
+            503,
+            false,
+            checkRefusal,
+            "key-8",
+          ),
+        ),
+      ),
+    );
+    const { result } = renderHook(() => useStudioTrackUploads("r1", "p1", []));
+    act(() => result.current.addFiles([mp3("Tide.mp3")]));
+    await waitFor(() => expect(result.current.rows[0]?.stage).toBe("failed"));
+    expect(result.current.rows[0]?.errorKey).toBe(
+      "shared:apiError.uploadCheckUnavailable",
+    );
+    expect(result.current.rows[0]?.isRetryable).toBe(true);
+    act(() => result.current.retry(result.current.rows[0]!.localId));
+    await waitFor(() => expect(result.current.rows[0]?.stage).toBe("ready"));
+    expect(confirmStudioAudioUpload).toHaveBeenCalledWith("key-8");
+    expect(uploadStudioAudio).toHaveBeenCalledTimes(1);
+    expect(createTrack).toHaveBeenCalledTimes(1);
+    expect(confirmAudio).toHaveBeenLastCalledWith({
+      trackId: "t1",
+      releaseId: "r1",
+      key: "key-8",
+    });
+  });
+
+  it("uploads the file again when the storage check finds no stored object", async () => {
+    uploadStudioAudio
+      .mockReturnValueOnce(
+        handle(
+          Promise.reject(
+            new StudioAudioUploadError(
+              "confirm",
+              404,
+              false,
+              new ApiError(404, "missing", { code: "UPLOAD_NOT_FOUND" }),
+              "key-10",
+            ),
+          ),
+        ),
+      )
+      .mockReturnValueOnce(handle(Promise.resolve("key-11")));
+    const { result } = renderHook(() => useStudioTrackUploads("r1", "p1", []));
+    act(() => result.current.addFiles([mp3("Tide.mp3")]));
+    await waitFor(() => expect(result.current.rows[0]?.stage).toBe("failed"));
+    expect(result.current.rows[0]?.errorKey).toBe(
+      "shared:apiError.uploadNotFound",
+    );
+    expect(result.current.rows[0]?.isRetryable).toBe(true);
+    act(() => result.current.retry(result.current.rows[0]!.localId));
+    await waitFor(() => expect(result.current.rows[0]?.stage).toBe("ready"));
+    expect(confirmStudioAudioUpload).not.toHaveBeenCalled();
+    expect(uploadStudioAudio).toHaveBeenCalledTimes(2);
+    expect(confirmAudio).toHaveBeenLastCalledWith({
+      trackId: "t1",
+      releaseId: "r1",
+      key: "key-11",
+    });
+  });
+
+  it("offers no Retry when the storage check finds bytes of another type", async () => {
+    uploadStudioAudio.mockReturnValueOnce(
+      handle(
+        Promise.reject(
+          new StudioAudioUploadError(
+            "confirm",
+            422,
+            false,
+            new ApiError(422, "mismatch", { code: "UPLOAD_CONTENT_MISMATCH" }),
+            "key-9",
+          ),
+        ),
+      ),
+    );
+    const { result } = renderHook(() => useStudioTrackUploads("r1", "p1", []));
+    act(() => result.current.addFiles([mp3("Tide.mp3")]));
+    await waitFor(() => expect(result.current.rows[0]?.stage).toBe("failed"));
+    expect(result.current.rows[0]?.errorKey).toBe(
+      "shared:apiError.uploadContentMismatch",
+    );
+    expect(result.current.rows[0]?.isRetryable).toBe(false);
   });
 });

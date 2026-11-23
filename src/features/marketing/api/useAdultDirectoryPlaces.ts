@@ -43,7 +43,9 @@ export function useAdultDirectoryPlaces({
   const result = useQuery<DirectoryPlace[]>({
     queryKey: [DIRECTORY_KEY, "adult", demoMode, trimmedQuery],
     enabled: isActive,
-    meta: { silentError: true },
+    // The key holds the member's typed search, so it stays out of error
+    // reports.
+    meta: { silentError: true, isPrivateQueryKey: true },
     queryFn: async () => {
       if (demoMode) {
         const needle = trimmedQuery.toLowerCase();

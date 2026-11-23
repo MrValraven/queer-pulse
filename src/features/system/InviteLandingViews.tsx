@@ -6,7 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { routes } from "../../app/routeMap";
-import type { InviteView } from "../../features/auth/api/useInvite";
+import type { ResolvedInviteView } from "../../features/auth/api/useInvite";
 import { Under18Notice } from "../auth/Under18Notice";
 import { buildLoaderSteps, WHAT_ITEMS } from "./inviteLanding.data";
 import { AGE_ATTESTATION_ID, InviteJoinControls } from "./InviteJoinControls";
@@ -20,7 +20,7 @@ function InviterAvatar({
   view,
   className,
 }: {
-  view: InviteView;
+  view: ResolvedInviteView;
   className?: string;
 }) {
   // External avatar CDNs (e.g. Google's lh3.googleusercontent.com from OAuth)
@@ -74,7 +74,7 @@ export function InviteSealedView({
   view,
   onOpen,
 }: {
-  view: InviteView;
+  view: ResolvedInviteView;
   onOpen: () => void;
 }) {
   const { t } = useTranslation();
@@ -121,7 +121,7 @@ export function InviteOpeningView({
   view,
   step,
 }: {
-  view: InviteView;
+  view: ResolvedInviteView;
   step: number;
 }) {
   const { t } = useTranslation();
@@ -177,7 +177,7 @@ export function InviteCardView({
   onOpenTerms,
   onOpenPrivacy,
 }: {
-  view: InviteView;
+  view: ResolvedInviteView;
   onGoogle: () => void;
   /** The email code join succeeded in demo; live mode leaves the page. */
   onEmailJoined: () => void;

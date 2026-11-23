@@ -50,10 +50,24 @@ describe("messageRequestCause", () => {
     });
   });
 
-  it("says the recipient was not found for a 404", () => {
+  it("says the recipient is not available for a 404", () => {
     expect(messageRequestCause(new ApiError(404, "x"))).toEqual({
       key: "messages:request.error.notFound",
     });
+  });
+
+  it("asks the requester to unblock first for their own block", () => {
+    const ownBlock = new ApiError(
+      409,
+      "Unblock this member before sending a request",
+      { code: "UNBLOCK_TO_CONTACT" },
+    );
+    expect(messageRequestCause(ownBlock)).toEqual({
+      key: "messages:request.error.unblockFirst",
+    });
+    expect(messageRequestErrorKey(ownBlock)).toBe(
+      "messages:request.error.unblockFirst",
+    );
   });
 
   it("names a restriction, an inactive membership, a fault and a lost connection", () => {

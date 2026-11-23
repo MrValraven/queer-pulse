@@ -4,6 +4,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "../forum/PostActionsMenu";
+import { CommunityMemberAvatarRing } from "./badges/CommunityMemberAvatarRing";
+import { CommunityMemberFlair } from "./badges/CommunityMemberFlair";
 import type { Post } from "./community.model";
 import { photoOf, roleLookup } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
@@ -12,6 +14,7 @@ import { useCommunityTime } from "./communityTime";
 import type { PulsePostPermissions } from "./usePulsePostState";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./PulseTab.module.css";
+import inactiveStyles from "./inactiveMemberName.module.css";
 
 /** A Pulse post's byline row: author, relative time, and the actions menu.
  *  Split out of `PulsePost` to keep both components under the 200-line limit. */
@@ -57,17 +60,33 @@ export function PulsePostHeader({
 
   return (
     <header className={styles.pHead}>
-      <Avatar
-        initials={post.author.initials}
-        tint={post.author.tint}
-        src={photoOf(post.author, demoMode)}
-        size={40}
-        alt={post.author.name}
-      />
+      <CommunityMemberAvatarRing
+        communitySlug={post.communitySlug}
+        member={post.author}
+      >
+        <Avatar
+          initials={post.author.initials}
+          tint={post.author.tint}
+          src={photoOf(post.author, demoMode)}
+          size={40}
+          alt={post.author.name}
+        />
+      </CommunityMemberAvatarRing>
       <div className={styles.pWho}>
         <div className={styles.pName}>
-          {post.author.name} <MemberStaffBadge slug={post.author.slug} />{" "}
+          {post.author.isInactiveMember ? (
+            <span className={inactiveStyles.inactiveName}>
+              {post.author.name}
+            </span>
+          ) : (
+            post.author.name
+          )}{" "}
+          <MemberStaffBadge slug={post.author.slug} />{" "}
           <RoleBadge role={roleOf(post.author)} />
+          <CommunityMemberFlair
+            communitySlug={post.communitySlug}
+            member={post.author}
+          />
         </div>
         <div className={styles.pTime}>
           {communityTime.ago(post)}

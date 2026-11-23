@@ -9,6 +9,7 @@ import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
 import { CommunityNotificationControl } from "./CommunityNotificationControl";
 import { CommunityReportControl } from "../safety/CommunityReportControl";
 import { buildCommunityShareMessage } from "./communityShareMessage";
+import { CommunityBadgesHeroButton } from "./badges/CommunityBadgesHeroButton";
 
 /**
  * The hero's trailing action row: edit (owner/mod only), then one run of
@@ -26,6 +27,7 @@ export function CommunityHeroSecondaryActions({
   community,
   communitySlug,
   joined,
+  isSpace,
   heroAvatars,
   memberNum,
   hasCount,
@@ -39,6 +41,8 @@ export function CommunityHeroSecondaryActions({
   community: Community;
   communitySlug: string | undefined;
   joined: boolean;
+  /** A space has no badges, so the phone Badges button stays off its hero. */
+  isSpace: boolean;
   heroAvatars: Person[];
   memberNum: number;
   hasCount: boolean;
@@ -91,6 +95,11 @@ export function CommunityHeroSecondaryActions({
             text: buildCommunityShareMessage(community, t),
           }}
         />
+      )}
+      {/* The phone way into the badge sheet. It shows only where the sidebar,
+          and its Badges card, has folded away. */}
+      {communitySlug && !isSpace && (
+        <CommunityBadgesHeroButton communityName={communityName} />
       )}
       {/* Two more quiet icons follow: the member's own notification level for
           this community, and reporting the space itself. A tooltip names each

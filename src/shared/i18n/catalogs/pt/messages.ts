@@ -160,8 +160,7 @@ export const messages: Catalog = {
   "viewer.save": "Descarregar",
   "viewer.saved": "Foto descarregada",
   "viewer.saveFallback":
-    "Não foi possível descarregar a foto, por isso abrimos numa nova aba.",
-  "viewer.saveFailed": "Não foi possível descarregar a foto. Tenta de novo.",
+    "Não conseguimos guardar essa foto, por isso enviámo-la para um novo separador. Se não abriu, permite pop-ups para a QueerPulse e tenta outra vez.",
   "viewer.prev": "Foto anterior",
   "viewer.next": "Foto seguinte",
 
@@ -1069,7 +1068,7 @@ export const messages: Catalog = {
   "request.error.rateLimited":
     "Estás a enviar pedidos de mensagem depressa demais. Espera um minuto e tenta outra vez.",
   "request.error.notFound":
-    "Não encontrámos {name}. Pode ter mudado de identificador ou saído da QueerPulse. Procura essa pessoa outra vez para confirmar.",
+    "{name} não está disponível para pedidos de mensagem de momento",
   "requests.replyCta": "Responder",
   "requests.inboundHeading": "Novos pedidos",
   "requests.outboundHeading": "Os teus pedidos enviados",
@@ -1254,4 +1253,18 @@ export const messages: Catalog = {
   "join.usedUpLinkTitle": "Este link de convite já chegou ao limite",
   "join.usedUpLinkBody":
     "Já deixou entrar o número máximo de pessoas. Pede a alguém do grupo que te envie um novo.",
+  "status.failure.accountInactive":
+    "Não entregue · A tua conta não pode enviar mensagens agora",
+  "status.failure.groupLeft": "Não entregue · Já não estás neste grupo",
+  "status.failure.notConnected":
+    "Não entregue · Vais poder enviar mensagem depois de uma resposta ou de um pedido de ligação aceite",
+  "status.failure.recipientUnavailable":
+    "Não entregue · Não podes enviar mensagem a este membro",
+  "status.failure.officialReadOnly":
+    "Não entregue · As respostas a esta conversa estão fechadas",
+  "status.failure.gifSource":
+    "Não entregue · Escolhe este GIF no seletor de GIFs",
+  "attachments.gifSourceRefused": "GIF indisponível",
+  "request.error.unblockFirst":
+    "Desbloqueia este membro antes de enviar um pedido",
 };

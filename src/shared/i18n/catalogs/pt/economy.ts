@@ -650,7 +650,7 @@ export const economy: Catalog = {
   "housingModal.message.successBodyNoReplyTime":
     "A tua mensagem está a caminho de <strong>{toName}</strong>. Vais receber aqui uma notificação quando responder. Os contactos são partilhados assim que ambas as partes concordarem em avançar.",
   "housingModal.message.unavailable":
-    "Esta casa já não está no quadro, por isso a tua mensagem não foi enviada.",
+    "Esta casa não está disponível para mensagens de momento, por isso a tua mensagem não foi enviada.",
   "housingModal.message.body":
     "Sobre <strong>{listingTitle}</strong>. Sê natural: uma frase sobre quem és e porque é que esta casa te serve já ajuda muito. O teu perfil é partilhado com a mensagem.",
   "housingModal.message.note":
@@ -1958,9 +1958,9 @@ export const economy: Catalog = {
   "barterDetail.propose.errorAlreadySent":
     "Já tens uma proposta nesta troca. Continua a conversa nas tuas mensagens.",
   "barterDetail.propose.errorNotAllowed":
-    "Não podes propor uma troca aqui. Pode ser a tua própria publicação, ou tu e esta pessoa não se conseguem contactar.",
+    "Não podes propor uma troca na tua própria publicação.",
   "barterDetail.propose.errorGone":
-    "Esta troca já não existe. Vê o que mais há na troca de competências.",
+    "Esta troca já não está disponível. Vê o que mais há na troca de competências.",
   "barterDetail.propose.errorFailed":
     "A tua proposta não foi enviada. Tenta outra vez daqui a um bocado.",
   "barterDetail.propose.yoursTitle": "Esta troca é tua",
@@ -4690,4 +4690,10 @@ export const economy: Catalog = {
 
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   "barterDetail.propose.openThreadCta": "Abrir a conversa",
+  "flatmates.card.sayHelloUnblockFirst":
+    "Desbloqueia este membro antes de enviares um olá",
+  "flatmates.card.sayHelloUnavailable":
+    "Este membro não está disponível para um olá de momento",
+  "barterDetail.propose.errorUnblockFirst":
+    "Desbloqueia este membro antes de propores uma troca.",
 };

@@ -13,6 +13,7 @@ import {
   type CropRect,
 } from "../../../shared/components/ui/cropGeometry";
 import {
+  confirmUpload,
   requestUpload,
   saveCrop,
   type UploadContentType,
@@ -297,14 +298,21 @@ export function useUploadImage(kind: UploadKind) {
         const presigned = await requestUpload(kind, contentType, blob.size);
         key = presigned.key;
         await putWithRetry(presigned.uploadUrl, blob, options?.onProgress);
+        // SEC-43: the server checks the stored bytes before the key is
+        // attached anywhere (the file route checks them again when serving).
+        // A refusal carries its own code (location data still in a JPEG,
+        // bytes of another type, nothing stored, a check that could not run),
+        // and the catch below names it through `causeErrorKey`.
+        await confirmUpload(key);
       } catch (err) {
         logError(err, { scope: "useUploadImage", kind });
         if (err instanceof ImageProcessingError) throw err;
-        // The presign request failed: name its real cause (offline, a
-        // timeout, a restriction, a rate limit) and keep the `ApiError` on
-        // `cause` for callers that branch on its status.
-        const presignCopy = causeErrorKey(err, UPLOAD_CAUSE_OVERRIDES);
-        throw new ImageProcessingError(presignCopy.key, presignCopy.values, {
+        // The presign request or the confirm check failed: name its real
+        // cause (offline, a timeout, a restriction, a rate limit, or the
+        // confirm step's own refusal code) and keep the `ApiError` on `cause`
+        // for callers that branch on its status.
+        const failureCopy = causeErrorKey(err, UPLOAD_CAUSE_OVERRIDES);
+        throw new ImageProcessingError(failureCopy.key, failureCopy.values, {
           cause: err,
         });
       }

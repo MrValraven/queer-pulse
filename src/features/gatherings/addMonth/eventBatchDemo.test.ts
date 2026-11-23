@@ -173,6 +173,22 @@ describe("createDemoEventBatch", () => {
     });
   });
 
+  it("reads each starting event's span the way the server does (PRD-518)", async () => {
+    expect(demoEventBatchTemplate("newcomers-mixer-july").endDayOffset).toBe(0);
+    const batch = dto(["2026-11-07"]);
+    batch.shared = { startTime: "22:00", endTime: "02:00" };
+    const created = await createDemoEventBatch(batch, now);
+
+    expect(demoEventBatchTemplate(created.events[0]!.slug)).toMatchObject({
+      startTime: "22:00",
+      endTime: "02:00",
+      endDayOffset: 1,
+    });
+    expect(demoBatchHostingEvents()).toEqual([
+      expect.objectContaining({ date: "2026-11-07", endDate: "2026-11-08" }),
+    ]);
+  });
+
   it("appends the new events to the demo hosting list", async () => {
     await createDemoEventBatch(dto(["2026-11-07"]), now);
     expect(demoBatchHostingEvents()).toEqual([

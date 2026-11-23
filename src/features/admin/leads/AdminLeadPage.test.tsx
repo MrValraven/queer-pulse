@@ -224,9 +224,12 @@ describe("AdminLeadPage (demo)", () => {
     expect(
       await screen.findByText("This lead isn't here anymore"),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Back to leads" })).toHaveAttribute(
-      "href",
-      routes.adminLeads,
+    // The frame's own "Back to leads" stays above the body, and the empty
+    // state offers its own button: both return to the unfiltered list.
+    const backLinks = screen.getAllByRole("link", { name: "Back to leads" });
+    expect(backLinks).toHaveLength(2);
+    backLinks.forEach((link) =>
+      expect(link).toHaveAttribute("href", routes.adminLeads),
     );
     expect(
       screen.queryByRole("heading", { level: 1, name: "Cave 23" }),

@@ -36,3 +36,28 @@ export const INSTALL_TAB_LABEL_KEY: Record<InstallPlatform, string> = {
   android: "system:pwaPrompt.tabs.android",
   desktop: "system:pwaPrompt.tabs.desktop",
 };
+
+/**
+ * The extra first step shown inside a social app's built-in browser (see
+ * `detectInAppBrowser`): move the page into the phone's own browser, where the
+ * install steps below it can work. Desktop has no such step.
+ */
+export const IN_APP_BROWSER_STEP_KEY: Partial<Record<InstallPlatform, string>> =
+  {
+    ios: "system:pwaPrompt.instructions.inApp.iosStep",
+    android: "system:pwaPrompt.instructions.inApp.androidStep",
+  };
+
+/**
+ * The steps to render for `platform`, with the open-in-browser step first when
+ * the page is running inside a social app's built-in browser.
+ */
+export function getInstallStepKeys(
+  platform: InstallPlatform,
+  isInAppBrowser: boolean,
+): string[] {
+  const { stepKeys } = INSTALL_INSTRUCTIONS[platform];
+  const inAppStepKey = IN_APP_BROWSER_STEP_KEY[platform];
+  if (!isInAppBrowser || !inAppStepKey) return stepKeys;
+  return [inAppStepKey, ...stepKeys];
+}

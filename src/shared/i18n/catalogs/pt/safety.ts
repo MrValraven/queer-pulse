@@ -27,8 +27,6 @@ export const safety: Catalog = {
   "nav.safetyGuideLabel": "Guia de segurança",
 
   // ── Quick exit (saída rápida fixa em páginas de segurança sensíveis) ─────
-  "quickExit.label": "Saída rápida",
-  "quickExit.aria": "Saída rápida: sair desta página agora para um site neutro",
 
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.meta.title":
@@ -355,11 +353,11 @@ export const safety: Catalog = {
   "blockMute.choose.blockDesc":
     "Esta pessoa não pode ver o teu perfil, enviar-te mensagem, nem ver-te na pesquisa. Não é possível estabelecer conexão entre as duas contas.",
   "blockMute.choose.blockNote":
-    "<strong>Nota:</strong> Se partilharem comunidades, {name} vai continuar a aparecer nas listas de pessoas, mas não vai conseguir interagir diretamente contigo.",
+    "<strong>Nota:</strong> Se partilharem comunidades, tu e {name} deixam de aparecer nas listas de pessoas de ambos, e nenhum dos dois consegue interagir diretamente com o outro.",
   "blockMute.choose.continueCta": "Continuar",
   "blockMute.choose.cancelCta": "Cancelar",
   "blockMute.choose.liveDurationNote":
-    "Um silenciamento dura até o desfazeres. Os silenciamentos temporizados são uma pré-visualização só de demonstração.",
+    "Um silenciamento dura até o desfazeres.",
 
   "blockMute.explainer.sub":
     "Silenciar e bloquear começam sempre a partir do perfil de alguém. Abre o perfil da pessoa que queres silenciar ou bloquear e usa aí o menu de segurança.",
@@ -1259,4 +1257,18 @@ export const safety: Catalog = {
     "Desbloqueaste {name}. Não tinham conexão antes, por isso envia um pedido se quiseres voltar a enviar mensagens.",
   "myReports.subject.quizshow_answer": "Sobre uma resposta do Pulse Live",
   "myReports.subject.quizshow_game": "Sobre um jogo do Pulse Live",
+  "myReports.subject.community_gift": "Sobre um presente de uma comunidade",
+  "report.filing.detailsAdded":
+    "Já tinhas uma denúncia aberta sobre isto, por isso juntámos os teus novos detalhes a essa denúncia. Quem a está a analisar vai vê-los.",
+  "report.filing.alreadyOpen":
+    "Já tens uma denúncia aberta sobre isto pelo mesmo motivo, e está com a equipa de moderação.",
+  "report.followUpLimit":
+    "A tua denúncia aberta sobre isto já tem tudo o que uma denúncia consegue guardar, e a equipa de moderação tem tudo. Se aconteceu algo novo e urgente, usa a página de Contacto.",
+  "profileMenu.hideFrom": "Esconder o meu perfil de {name}",
+  "profileMenu.hiddenFromToast":
+    "{name} já não vê o teu perfil. Podes desfazer isto em Quem vê o quê.",
+  "profileMenu.hiddenFromDemoToast":
+    "{name} já não vê o teu perfil. Na demo, isto volta ao início quando recarregas.",
+  "profileMenu.showTo": "Mostrar o meu perfil a {name}",
+  "profileMenu.shownToToast": "{name} já pode ver o teu perfil outra vez.",
 };

@@ -126,7 +126,8 @@ describe("wheel geometry", () => {
     expect(fit.fontSize).toBe(5.4);
     expect(Array.from(fit.text)).toHaveLength(19);
     expect(fit.text).toBe(`${wideCharacter.repeat(18)}…`);
-    const shortAstral = wheelLabelFit(wideCharacter.repeat(10));
-    expect(shortAstral.fontSize).toBeCloseTo(62 / (0.6 * 10), 6);
+    const shortAstral = wheelLabelFit(wideCharacter.repeat(15));
+    expect(shortAstral.text).toBe(wideCharacter.repeat(15));
+    expect(shortAstral.fontSize).toBeCloseTo(62 / (0.6 * 15), 6);
   });
 });

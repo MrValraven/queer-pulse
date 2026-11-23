@@ -138,8 +138,12 @@
   }
 }
 
-@media (max-width: 500px) {
+/* Phones: the brand sits at the top of .root and scrolls away with the page,
+   so it never floats over a long card. The root's 88px top padding keeps it
+   clear of the card before any scroll. */
+@media (--sm) {
   .brand {
+    position: absolute;
     top: 18px;
     left: 28px;
   }

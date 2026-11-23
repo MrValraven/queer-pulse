@@ -72,17 +72,42 @@ describe("TasksTab (demo)", () => {
     resetDemoCulturalProduction();
   });
 
-  it("lists open tasks by due day with the overdue one first", async () => {
+  it("groups open tasks by status, doing first, each group by due day", async () => {
     renderTab();
     const titles = await rowTitles();
     expect(titles).toHaveLength(7);
     expect(titles.slice(0, 3)).toEqual([
+      PERMIT_TITLE,
       BINGO_TITLE,
       QUIZ_TEMPLATE_TITLE,
-      PERMIT_TITLE,
     ]);
     expect(titles.at(-1)).toBe(POSTER_TITLE);
     expect(titles).not.toContain(THANK_VENUE_TITLE);
+    expect(
+      screen.getByRole("button", { name: "Doing, 1 task" }),
+    ).toHaveAttribute("aria-expanded", "true");
+    expect(
+      screen.getByRole("button", { name: "To do, 6 tasks" }),
+    ).toBeInTheDocument();
+  });
+
+  it("folds a status group away and brings it back", async () => {
+    const { user } = renderTab();
+    await rowTitles();
+    const toDoGroup = screen.getByRole("button", { name: "To do, 6 tasks" });
+    await user.click(toDoGroup);
+    expect(toDoGroup).toHaveAttribute("aria-expanded", "false");
+    await waitFor(() => expect(shownTitles()).toEqual([PERMIT_TITLE]));
+    await user.click(toDoGroup);
+    await waitFor(() => expect(shownTitles()).toHaveLength(7));
+  });
+
+  it("shows no group headings in a single-status view", async () => {
+    renderTab("?tab=tasks&status=todo");
+    expect(await rowTitles()).toHaveLength(6);
+    expect(
+      screen.queryByRole("button", { name: /^To do, / }),
+    ).not.toBeInTheDocument();
   });
 
   it("marks overdue and due today rows", async () => {
@@ -166,10 +191,13 @@ describe("TasksTab (demo)", () => {
     await rowTitles();
     await user.click(
       within(rowOf(BINGO_TITLE)).getByRole("button", {
-        name: `Status of ${BINGO_TITLE}`,
+        name: (accessibleName) =>
+          accessibleName.startsWith(`Status of ${BINGO_TITLE},`),
       }),
     );
-    await user.click(await screen.findByRole("option", { name: "Done" }));
+    await user.click(
+      await screen.findByRole("menuitemradio", { name: "Done" }),
+    );
 
     expect(await screen.findByText("Moved to Done")).toBeInTheDocument();
     expect(demoGetCulturalTask("demo-task-bingo-venue").status).toBe("done");

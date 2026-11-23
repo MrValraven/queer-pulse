@@ -9,6 +9,7 @@ import {
 import { FiImage } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useChatImageViewer } from "./ChatImageViewerContext";
+import { isAllowedGifMediaUrl } from "./gifMediaHosts";
 import { PHOTO_RETRY_EVENT, retryIfPhotoFailed } from "./photoRetry";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -71,7 +72,11 @@ export function PhotoBubbleImage({
   // swapped for the server copy at ack) gets its own fresh attempt.
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
-  const isFailed = failedUrl === url;
+  // SEC-24: a GIF from outside the GIF provider's hosts never loads; it shows
+  // the unavailable frame with no Try again, since retrying cannot help.
+  const isGifSourceRefused =
+    message.kind === "gif" && !isAllowedGifMediaUrl(url);
+  const isFailed = failedUrl === url || isGifSourceRefused;
 
   useEffect(() => {
     const opener = openerRef.current;
@@ -156,11 +161,15 @@ export function PhotoBubbleImage({
           >
             <FiImage aria-hidden size={20} />
             <span id={contentLabelId}>
-              {t("messages:attachments.photoLoadFailed")}
+              {isGifSourceRefused
+                ? t("messages:attachments.gifSourceRefused")
+                : t("messages:attachments.photoLoadFailed")}
             </span>
-            <span className={styles.photoFallbackRetry}>
-              {t("messages:attachments.photoRetry")}
-            </span>
+            {!isGifSourceRefused && (
+              <span className={styles.photoFallbackRetry}>
+                {t("messages:attachments.photoRetry")}
+              </span>
+            )}
           </span>
         ) : (
           <img

@@ -34,6 +34,26 @@ export interface NotifAction {
     action: "accept" | "decline";
     toast: string;
   };
+  /**
+   * When set, the action WEARS the earned community badge from the row itself
+   * (`PUT /communities/:slug/flair`), then toasts `toast`. The row stays: the
+   * member may still open the sheet from it. `href` is the sheet link, so a
+   * row whose mutation cannot run still reaches somewhere real.
+   */
+  wearBadge?: {
+    communitySlug: string;
+    badgeId: string;
+    toast: string;
+  };
+  /**
+   * When set, the action opens the report dialog for the community gift the
+   * row is about (`subjectType` `community_gift`, `subjectId` the gift id).
+   * `giftName` names the gift in the dialog. The row stays.
+   */
+  reportGift?: {
+    giftId: string;
+    giftName: string;
+  };
 }
 
 export interface Notification {

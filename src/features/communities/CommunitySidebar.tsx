@@ -16,6 +16,7 @@ import type { CommunityPulseResult } from "./api/useCommunityPulse";
 import { CommunityPulseSidebarCards } from "./CommunityPulseSidebarCards";
 import { CommunityGivingSidebarCard } from "./giving/CommunityGivingSidebarCard";
 import { GIVING_TAB_ID } from "./giving/givingConstants";
+import { CommunityBadgesSidebarCard } from "./badges/CommunityBadgesSidebarCard";
 import styles from "./CommunityDetailPage.module.css";
 
 const GATHERING = routes.gatherings;
@@ -34,6 +35,8 @@ export function CommunitySidebar({
   slug,
   communityName = "",
   givingMethodCount = 0,
+  isSpace,
+  isMember = false,
 }: {
   detail: CommunityDetail;
   related: Community[];
@@ -48,6 +51,10 @@ export function CommunitySidebar({
    *  only above zero; the page passes 0 without a living hub (D4), since the
    *  card's button opens a tab only that hub renders. */
   givingMethodCount?: number;
+  /** A space has no badges, so the Badges card stays off its sidebar. */
+  isSpace: boolean;
+  /** Picks the Badges card's member or visitor line. */
+  isMember?: boolean;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -176,6 +183,13 @@ export function CommunitySidebar({
           communityName={communityName}
         />
       </Collapse>
+
+      {slug && !isSpace && (
+        <CommunityBadgesSidebarCard
+          communityName={communityName}
+          isMember={isMember}
+        />
+      )}
 
       <CommunityPulseSidebarCards pulse={communityPulse} />
 

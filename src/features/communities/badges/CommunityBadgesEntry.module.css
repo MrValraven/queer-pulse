@@ -1,0 +1,37 @@
+/* The two ways into the badge sheet. The sidebar card's surface, label and
+   button width come from the shared sidebar classes in
+   CommunityDetailPage.module.css; this module adds the card's line of copy
+   and the breakpoint split between the card and the hero button. */
+
+.body {
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.cta {
+  margin-block-start: var(--gap-sm);
+}
+
+/* The sidebar itself folds away at the same breakpoint; the card says so too,
+   so it never shows on a phone wherever it is mounted. */
+@media (--mobile) {
+  .sidebarOnly {
+    display: none;
+  }
+}
+
+/* The hero button is the phone entry. Hidden by default and shown at the
+   exact breakpoint the sidebar hides at, so one entry always shows, even at
+   860px where the down and up queries overlap. `contents` lets the tooltip
+   wrapper sit in the hero's action row as if this span were not there. */
+.heroOnlyMobile {
+  display: none;
+}
+
+@media (--mobile) {
+  .heroOnlyMobile {
+    display: contents;
+  }
+}

@@ -21,6 +21,8 @@ export type EventBatchFailureReason =
   | "noAccess"
   | "templateNotFound"
   | "communityOnly"
+  | "houseMusicHostOnly"
+  | "networkHostOnly"
   | "tooManyDates"
   | "duplicateDate"
   | "dateInPast"
@@ -56,6 +58,8 @@ export interface EventBatchFailure {
 }
 
 const ACCOUNT_RESTRICTED_CODE = "ACCOUNT_RESTRICTED";
+const HOUSE_MUSIC_TEMPLATE_CODE = "EVENT_BATCH_TEMPLATE_HOUSE_MUSIC_HOST_ONLY";
+const NETWORK_COHOST_TEMPLATE_CODE = "EVENT_BATCH_TEMPLATE_NETWORK_COHOST";
 const REQUEST_TIMEOUT_STATUS = 408;
 /** The client's status for a 2xx answer whose body would not parse. */
 const UNREADABLE_ANSWER_STATUS = 422;
@@ -148,6 +152,10 @@ function reasonOf(
   }
   if (status === 403) {
     if (code === ACCOUNT_RESTRICTED_CODE) return "restricted";
+    // Only the host copies a QueerPulse Music event (staff included in the
+    // refusal) or a network event (a co-host is refused).
+    if (code === HOUSE_MUSIC_TEMPLATE_CODE) return "houseMusicHostOnly";
+    if (code === NETWORK_COHOST_TEMPLATE_CODE) return "networkHostOnly";
     // `StorageKeyOwnershipInterceptor`: a body cover is someone else's upload.
     if (code === UPLOAD_NOT_YOURS_CODE) return "coverNotYours";
     // `ActiveMemberGuard`: the caller's membership is paused or lapsed.
@@ -213,6 +221,8 @@ export const EVENT_BATCH_FAILURE_KEYS: Record<EventBatchFailureReason, string> =
     noAccess: "gatherings:addMonth.error.noAccess",
     templateNotFound: "gatherings:addMonth.error.templateNotFound",
     communityOnly: "gatherings:addMonth.error.communityOnly",
+    houseMusicHostOnly: "gatherings:addMonth.error.houseMusicHostOnly",
+    networkHostOnly: "gatherings:addMonth.error.networkHostOnly",
     tooManyDates: "gatherings:addMonth.error.tooManyDates",
     duplicateDate: "gatherings:addMonth.error.duplicateDate",
     dateInPast: "gatherings:addMonth.error.dateInPast",

@@ -16,29 +16,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ConnectionReportModal } from "../connect/ConnectionReportModal";
 import type { BlockOptions } from "../social/api/social.api";
 import { BlockMemberModal } from "./BlockMemberModal";
+import { HideProfileFromMenuItem } from "./HideProfileFromMenuItem";
+import { useHideProfileFrom } from "./useHideProfileFrom";
 import { ProfileMenuTrigger } from "./ProfileMenuTrigger";
 import styles from "./ProfileSafetyMenu.module.css";
 
-/**
- * Overflow "safety" menu shown on another member's profile hero (never your
- * own, the caller gates on the page's resolved `self`). Offers withdraw-vouch
- * (when currently vouched), report, mute/unmute, and block/unblock, wired
- * straight to `useSocial()` so demo and live both work. Mute and unblock are
- * immediate; withdrawing a vouch and blocking are destructive, so both confirm
- * first: withdraw-vouch via the shared `ConfirmDialog`, block via
- * `BlockMemberModal` (which also forwards the optional
- * `{ reason, alsoReport, reasonCode }`).
- *
- * "Report" is its own item rather than a checkbox inside Block (PRD-285). The
- * safety copy sends everyone to "always start from someone's profile", and
- * until this existed the only route from here was to BLOCK the person, which is
- * a different decision: somebody who wants a moderator to look at a member does
- * not necessarily want to sever the connection, and somebody who does want to
- * sever it should not have to in order to be heard. It opens
- * `ConnectionReportModal`, the app's existing `member`-subject report form,
- * which files through `POST /reports` and only shows its success panel once the
- * server has acknowledged.
- */
 /**
  * Outside-click dismiss, first-item focus on open, and roving-tabindex
  * keyboard nav for the menu, split out so `ProfileSafetyMenu` itself stays
@@ -111,6 +93,92 @@ function useSafetyMenuDismiss(
   return { onMenuKeyDown };
 }
 
+/**
+ * Block and unblock for the menu, split out so `ProfileSafetyMenu` itself
+ * stays under the repo's 200-line-per-component rule.
+ */
+function useBlockMenuActions(
+  slug: string,
+  firstName: string,
+  setOpen: Dispatch<SetStateAction<boolean>>,
+) {
+  const { t } = useTranslation();
+  const { showToast } = useToast();
+  const { isBlocked, toggleBlock } = useSocial();
+  const [confirmingBlock, setConfirmingBlock] = useState(false);
+  const blocked = isBlocked(slug);
+
+  // Block and unblock confirm only once the server has answered. `toggleBlock`
+  // flips the store optimistically and rolls back with its own error toast if
+  // the call fails, so toasting on the click showed "You blocked X" and the
+  // rollback error together. Believing a block worked when it did not is the
+  // one place a false success matters. `ConnectionMoreMenu` already waits for
+  // `onSettled(didSucceed)`; this now matches it. In demo mode the local store
+  // is the record and `onSettled(true)` fires synchronously. PRD-202.
+  const handleBlockClick = () => {
+    if (blocked) {
+      setOpen(false);
+      toggleBlock(slug, undefined, (didSucceed) => {
+        if (didSucceed) {
+          showToast(
+            t("safety:profileMenu.unblockedToast", { name: firstName }),
+            "success",
+          );
+        }
+      });
+      return;
+    }
+    setOpen(false);
+    setConfirmingBlock(true);
+  };
+
+  const confirmBlock = (options: BlockOptions) => {
+    setConfirmingBlock(false);
+    toggleBlock(slug, options, (didSucceed) => {
+      if (didSucceed) {
+        showToast(
+          t(
+            options.alsoReport
+              ? "safety:profileMenu.blockedReportedToast"
+              : "safety:profileMenu.blockedToast",
+            { name: firstName },
+          ),
+          "success",
+        );
+      }
+    });
+  };
+
+  return {
+    blocked,
+    confirmingBlock,
+    setConfirmingBlock,
+    handleBlockClick,
+    confirmBlock,
+  };
+}
+
+/**
+ * Overflow "safety" menu shown on another member's profile hero (never your
+ * own, the caller gates on the page's resolved `self`). Offers withdraw-vouch
+ * (when currently vouched), report, mute/unmute, and block/unblock, wired
+ * straight to `useSocial()` so demo and live both work. Mute and unblock are
+ * immediate, and so is "Hide my profile from {name}" (`useHideProfileFrom`);
+ * withdrawing a vouch and blocking are destructive, so both confirm
+ * first: withdraw-vouch via the shared `ConfirmDialog`, block via
+ * `BlockMemberModal` (which also forwards the optional
+ * `{ reason, alsoReport, reasonCode }`).
+ *
+ * "Report" is its own item, separate from Block's report checkbox (PRD-285). The
+ * safety copy sends everyone to "always start from someone's profile", and
+ * until this existed the only route from here was to BLOCK the person, which is
+ * a different decision: somebody who wants a moderator to look at a member does
+ * not necessarily want to sever the connection, and somebody who does want to
+ * sever it should not have to in order to be heard. It opens
+ * `ConnectionReportModal`, the app's existing `member`-subject report form,
+ * which files through `POST /reports` and only shows its success panel once the
+ * server has acknowledged.
+ */
 export function ProfileSafetyMenu({
   slug,
   firstName,
@@ -125,9 +193,15 @@ export function ProfileSafetyMenu({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { isBlocked, isMuted, toggleBlock, toggleMute } = useSocial();
+  const { isMuted, toggleMute } = useSocial();
   const [open, setOpen] = useState(false);
-  const [confirmingBlock, setConfirmingBlock] = useState(false);
+  const {
+    blocked,
+    confirmingBlock,
+    setConfirmingBlock,
+    handleBlockClick,
+    confirmBlock,
+  } = useBlockMenuActions(slug, firstName, setOpen);
   const [reporting, setReporting] = useState(false);
   const [confirmingWithdrawVouch, setConfirmingWithdrawVouch] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -135,8 +209,8 @@ export function ProfileSafetyMenu({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
 
-  const blocked = isBlocked(slug);
   const muted = isMuted(slug);
+  const hideProfile = useHideProfileFrom(slug, firstName);
 
   const { onMenuKeyDown } = useSafetyMenuDismiss(
     open,
@@ -193,47 +267,6 @@ export function ProfileSafetyMenu({
     });
   };
 
-  // Block and unblock confirm only once the server has answered. `toggleBlock`
-  // flips the store optimistically and rolls back with its own error toast if
-  // the call fails, so toasting on the click showed "You blocked X" and the
-  // rollback error together. Believing a block worked when it did not is the
-  // one place a false success matters. `ConnectionMoreMenu` already waits for
-  // `onSettled(didSucceed)`; this now matches it. In demo mode the local store
-  // is the record and `onSettled(true)` fires synchronously. PRD-202.
-  const handleBlockClick = () => {
-    if (blocked) {
-      setOpen(false);
-      toggleBlock(slug, undefined, (didSucceed) => {
-        if (didSucceed) {
-          showToast(
-            t("safety:profileMenu.unblockedToast", { name: firstName }),
-            "success",
-          );
-        }
-      });
-      return;
-    }
-    setOpen(false);
-    setConfirmingBlock(true);
-  };
-
-  const confirmBlock = (options: BlockOptions) => {
-    setConfirmingBlock(false);
-    toggleBlock(slug, options, (didSucceed) => {
-      if (didSucceed) {
-        showToast(
-          t(
-            options.alsoReport
-              ? "safety:profileMenu.blockedReportedToast"
-              : "safety:profileMenu.blockedToast",
-            { name: firstName },
-          ),
-          "success",
-        );
-      }
-    });
-  };
-
   const triggerLabel = t("safety:profileMenu.ariaLabel", { name: firstName });
 
   return (
@@ -247,65 +280,28 @@ export function ProfileSafetyMenu({
       />
 
       {open && (
-        <div
-          id={menuId}
-          ref={menuRef}
-          role="menu"
-          tabIndex={-1}
-          className={styles.menu}
-          onKeyDown={onMenuKeyDown}
-        >
-          {onWithdrawVouch && (
-            <button
-              type="button"
-              role="menuitem"
-              tabIndex={-1}
-              className={styles.item}
-              onClick={handleWithdrawVouch}
-            >
-              <FiX aria-hidden />
-              {t("members:profile.hero.withdrawVouchCta")}
-            </button>
-          )}
-          <button
-            type="button"
-            role="menuitem"
-            tabIndex={-1}
-            className={styles.item}
-            onClick={handleReport}
-          >
-            <FiFlag aria-hidden />
-            {t("safety:profileMenu.report", { name: firstName })}
-          </button>
-          <button
-            type="button"
-            role="menuitem"
-            tabIndex={-1}
-            className={styles.item}
-            onClick={handleMute}
-          >
-            <FiVolumeX aria-hidden />
-            {t(
-              muted ? "safety:profileMenu.unmute" : "safety:profileMenu.mute",
-              { name: firstName },
-            )}
-          </button>
-          <button
-            type="button"
-            role="menuitem"
-            tabIndex={-1}
-            className={`${styles.item} ${styles.danger}`}
-            onClick={handleBlockClick}
-          >
-            <FiSlash aria-hidden />
-            {t(
-              blocked
-                ? "safety:profileMenu.unblock"
-                : "safety:profileMenu.block",
-              { name: firstName },
-            )}
-          </button>
-        </div>
+        <ProfileSafetyMenuItems
+          menuId={menuId}
+          menuRef={menuRef}
+          onMenuKeyDown={onMenuKeyDown}
+          firstName={firstName}
+          isMuted={muted}
+          isBlocked={blocked}
+          isHidden={hideProfile.isHidden}
+          isHideBusy={hideProfile.isBusy}
+          onWithdrawVouch={onWithdrawVouch ? handleWithdrawVouch : undefined}
+          onReport={handleReport}
+          onMute={handleMute}
+          onHide={() => {
+            setOpen(false);
+            hideProfile.hide();
+          }}
+          onShow={() => {
+            setOpen(false);
+            hideProfile.show();
+          }}
+          onBlock={handleBlockClick}
+        />
       )}
 
       <ProfileSafetyMenuDialogs
@@ -320,6 +316,109 @@ export function ProfileSafetyMenu({
         onCloseWithdrawVouch={() => setConfirmingWithdrawVouch(false)}
         onConfirmWithdrawVouch={confirmWithdrawVouch}
       />
+    </div>
+  );
+}
+
+/** The open menu's items, in the order the menu reads: withdraw vouch (only
+ * while the viewer vouches), report, mute, hide my profile, block. Split out
+ * so `ProfileSafetyMenu` stays under the repo's 200-line-per-component rule. */
+function ProfileSafetyMenuItems({
+  menuId,
+  menuRef,
+  onMenuKeyDown,
+  firstName,
+  isMuted,
+  isBlocked,
+  isHidden,
+  isHideBusy,
+  onWithdrawVouch,
+  onReport,
+  onMute,
+  onHide,
+  onShow,
+  onBlock,
+}: {
+  menuId: string;
+  menuRef: RefObject<HTMLDivElement | null>;
+  onMenuKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
+  firstName: string;
+  isMuted: boolean;
+  isBlocked: boolean;
+  isHidden: boolean;
+  isHideBusy: boolean;
+  /** Undefined when the viewer has not vouched for this member. */
+  onWithdrawVouch?: () => void;
+  onReport: () => void;
+  onMute: () => void;
+  onHide: () => void;
+  onShow: () => void;
+  onBlock: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div
+      id={menuId}
+      ref={menuRef}
+      role="menu"
+      tabIndex={-1}
+      className={styles.menu}
+      onKeyDown={onMenuKeyDown}
+    >
+      {onWithdrawVouch && (
+        <button
+          type="button"
+          role="menuitem"
+          tabIndex={-1}
+          className={styles.item}
+          onClick={onWithdrawVouch}
+        >
+          <FiX aria-hidden />
+          {t("members:profile.hero.withdrawVouchCta")}
+        </button>
+      )}
+      <button
+        type="button"
+        role="menuitem"
+        tabIndex={-1}
+        className={styles.item}
+        onClick={onReport}
+      >
+        <FiFlag aria-hidden />
+        {t("safety:profileMenu.report", { name: firstName })}
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        tabIndex={-1}
+        className={styles.item}
+        onClick={onMute}
+      >
+        <FiVolumeX aria-hidden />
+        {t(isMuted ? "safety:profileMenu.unmute" : "safety:profileMenu.mute", {
+          name: firstName,
+        })}
+      </button>
+      <HideProfileFromMenuItem
+        firstName={firstName}
+        isHidden={isHidden}
+        isBusy={isHideBusy}
+        onHide={onHide}
+        onShow={onShow}
+      />
+      <button
+        type="button"
+        role="menuitem"
+        tabIndex={-1}
+        className={`${styles.item} ${styles.danger}`}
+        onClick={onBlock}
+      >
+        <FiSlash aria-hidden />
+        {t(
+          isBlocked ? "safety:profileMenu.unblock" : "safety:profileMenu.block",
+          { name: firstName },
+        )}
+      </button>
     </div>
   );
 }

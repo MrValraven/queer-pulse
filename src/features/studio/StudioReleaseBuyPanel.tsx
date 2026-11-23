@@ -68,9 +68,12 @@ export function StudioBuyPanelCard({
           onPurchased={(purchase) => {
             setIsSheetOpen(false);
             announce(
-              t("studio:purchase.sheet.doneStatus", {
-                artist: purchase.artist.name,
-              }),
+              t(
+                purchase.amountCents === 0
+                  ? "studio:purchase.sheet.freeDoneStatus"
+                  : "studio:purchase.sheet.doneStatus",
+                { artist: purchase.artist.name },
+              ),
             );
           }}
         />

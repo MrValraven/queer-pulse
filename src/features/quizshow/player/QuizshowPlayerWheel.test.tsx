@@ -1,5 +1,5 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
-import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { MotionProvider } from "../../../app/providers/MotionProvider";
 import { TestProviders } from "../../../test/TestProviders";
 import { awaitCatalog } from "../../../test/awaitCatalog";
@@ -124,13 +124,9 @@ async function renderWheel(
   await awaitCatalog("quizshow");
 }
 
-beforeAll(() => {
-  // jsdom has no Element.animate; the disc's pointer kicks call it.
-  if (typeof Element.prototype.animate !== "function") {
-    Element.prototype.animate = vi.fn();
-  }
-});
-
+// The disc's pointer kicks call element.animate, which src/test/setup.ts
+// stands in for on HTMLElement and SVGElement. A stub on Element.prototype
+// would turn motion's heading fade onto WAAPI with no Animation behind it.
 afterEach(cleanup);
 
 describe("QuizshowPlayerWheel", () => {

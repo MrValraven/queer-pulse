@@ -47,6 +47,8 @@ export function useAdminLandlords(
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<ItemsPage<AdminLandlordDTO>>({
     queryKey: [ADMIN_LANDLORDS_KEY, demoMode, filter, search],
+    // The key holds what the staff member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     initialPageParam: 1,
     queryFn: ({ pageParam, signal }) => {
       if (demoMode) {

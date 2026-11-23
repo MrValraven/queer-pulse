@@ -389,6 +389,59 @@ function isStudioWithdrawnFailure(error: unknown): boolean {
 }
 
 /**
+ * True when any top-level string segment of a query key names a search
+ * (`"search"`, `"rosterSearch"`, `[ADMIN_STUDIO_KEY, "releaseSearch", ...]`).
+ * Search hooks keep the typed text in their key, so their key stays out of
+ * every report whether or not the hook sets `meta.isPrivateQueryKey`.
+ */
+function isSearchQueryKey(queryKey: unknown): boolean {
+  if (!Array.isArray(queryKey)) return false;
+  return queryKey.some(
+    (segment: unknown) =>
+      typeof segment === "string" && /search/i.test(segment),
+  );
+}
+
+/** Object properties in a query key that hold typed search text. */
+const SEARCH_TEXT_KEY_PROPERTIES = new Set([
+  "q",
+  "query",
+  "search",
+  "searchterm",
+  "term",
+  "keyword",
+  "keywords",
+]);
+
+/** How deep the key walk goes; query keys are shallow, this only bounds a
+ *  pathological one. */
+const MAX_QUERY_KEY_DEPTH = 6;
+
+/**
+ * A copy of `value` (a query key or a part of one) with every
+ * `q`/`query`/`search`/`searchTerm`/`term`/`keyword(s)` property value replaced by
+ * `"[private]"`, in any letter case and at any depth. Covers the hooks that
+ * keep their filters in an object segment (`{ q: "..." }`) and forgot
+ * `meta.isPrivateQueryKey`.
+ */
+function redactSearchTextInQueryKey(value: unknown, depth = 0): unknown {
+  if (depth > MAX_QUERY_KEY_DEPTH) return "[private]";
+  if (Array.isArray(value)) {
+    return value.map((item: unknown) =>
+      redactSearchTextInQueryKey(item, depth + 1),
+    );
+  }
+  if (typeof value !== "object" || value === null) return value;
+  const redacted: Record<string, unknown> = {};
+  for (const [property, propertyValue] of Object.entries(value)) {
+    redacted[property] = SEARCH_TEXT_KEY_PROPERTIES.has(property.toLowerCase())
+      ? "[private]"
+      : redactSearchTextInQueryKey(propertyValue, depth + 1);
+  }
+  return redacted;
+}
+
+/**
  * QueryCache onError: classify first, report only the unexpected, toast only an
  * unexpected 5xx (pages own the rest).
  *
@@ -403,7 +456,11 @@ function isStudioWithdrawnFailure(error: unknown): boolean {
  *
  * `meta.isPrivateQueryKey: true` keeps the key out of the report: a key that
  * carries what a member typed (the leads search, say) logs `"[private]"` in
- * its place. The error itself is still reported.
+ * its place. The error itself is still reported. A key whose root names a
+ * search (`"search"`, `"rosterSearch"`, `"strangerMemberSearch"`) is treated
+ * the same way when its hook forgot the flag, see {@link isSearchQueryKey}.
+ * Every other key is reported with its search-text properties redacted, see
+ * {@link redactSearchTextInQueryKey}.
  */
 export function handleQueryError(
   error: unknown,
@@ -414,9 +471,13 @@ export function handleQueryError(
   },
 ): void {
   if (!isExpectedQueryFailure(error)) {
-    const isPrivateQueryKey = query.meta?.isPrivateQueryKey === true;
+    const isPrivateQueryKey =
+      query.meta?.isPrivateQueryKey === true ||
+      isSearchQueryKey(query.queryKey);
     logError(error, {
-      queryKey: isPrivateQueryKey ? "[private]" : query.queryKey,
+      queryKey: isPrivateQueryKey
+        ? "[private]"
+        : redactSearchTextInQueryKey(query.queryKey),
     });
   }
   if (demo.current) return;

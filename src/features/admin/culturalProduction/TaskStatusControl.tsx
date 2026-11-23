@@ -1,25 +1,23 @@
-import { Select } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
-  CULTURAL_TASK_STATUSES,
-  isCulturalTaskStatus,
   type CulturalTaskListItemDTO,
+  type CulturalTaskStatus,
 } from "./api/culturalProduction.types";
 import {
   useIsCulturalWriteInFlight,
   useUpdateCulturalTask,
 } from "./api/useCulturalTaskMutations";
 import { CULTURAL_TASK_STATUS_KEY } from "./culturalProductionLabels.data";
-import styles from "./Tasks.module.css";
+import { TaskStatusMenu } from "./TaskStatusMenu";
 
 /**
- * A row's status as a compact select, saved the moment a new one is picked
- * (a direct PATCH). The select shows the status on its way while the write
- * runs; a saved change reads "Moved to <status>" in a toast, and a refused
- * one goes to `onRefusal`, so the row can name why under the title. While
- * another Cultural Production write is in flight the select is disabled, so
- * the row reads busy and two writes never overlap.
+ * A row's status as a compact pill and menu, saved the moment a new one is
+ * picked (a direct PATCH). The pill shows the status on its way while the
+ * write runs; a saved change reads "Moved to <status>" in a toast, and a
+ * refused one goes to `onRefusal`, so the row can name why under the title.
+ * While another Cultural Production write is in flight the pill is disabled,
+ * so the row reads busy and two writes never overlap.
  */
 export function TaskStatusControl({
   task,
@@ -28,7 +26,7 @@ export function TaskStatusControl({
   onRefusal,
 }: {
   task: CulturalTaskListItemDTO;
-  /** The id of the row's refusal line, read as the select's description. */
+  /** The id of the row's refusal line, read as the pill's description. */
   refusalId: string;
   hasRefusal: boolean;
   /** Null clears the line. */
@@ -42,14 +40,9 @@ export function TaskStatusControl({
     ? updateTask.variables?.status
     : undefined;
   const shownStatus = pendingStatus ?? task.status;
-  const options = CULTURAL_TASK_STATUSES.map((status) => ({
-    value: status,
-    label: t(CULTURAL_TASK_STATUS_KEY[status]),
-  }));
 
-  const chooseStatus = (status: string | null) => {
-    if (!isCulturalTaskStatus(status) || status === shownStatus) return;
-    if (isWriting) return;
+  const chooseStatus = (status: CulturalTaskStatus) => {
+    if (status === shownStatus || isWriting) return;
     onRefusal(null);
     updateTask.mutate(
       { status },
@@ -67,18 +60,16 @@ export function TaskStatusControl({
   };
 
   return (
-    <Select
-      size="sm"
-      className={`${styles.statusSelect} ${styles.phoneTarget}`}
+    <TaskStatusMenu
+      status={shownStatus}
       label={t("admin:culturalProduction.tasks.row.statusLabel", {
         title: task.title,
       })}
-      options={options}
-      value={shownStatus}
-      disabled={isWriting && !updateTask.isPending}
-      aria-invalid={hasRefusal || undefined}
-      aria-describedby={hasRefusal ? refusalId : undefined}
-      onChange={chooseStatus}
+      isDisabled={isWriting && !updateTask.isPending}
+      isBusy={updateTask.isPending}
+      isInvalid={hasRefusal}
+      describedById={hasRefusal ? refusalId : undefined}
+      onPick={chooseStatus}
     />
   );
 }

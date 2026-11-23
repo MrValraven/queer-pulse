@@ -11,6 +11,7 @@ import {
   type GoTogetherMemberReportDTO,
 } from "./goTogetherGroupSafety.api";
 import { invalidateGoTogetherGroupSideEffects } from "./useGoTogetherGroup";
+import { useAnnounceFilingOutcome } from "../../safety/api/useCreateReport";
 
 /**
  * Block one group member. A block moves the BLOCKER: before the start into
@@ -42,6 +43,7 @@ interface ReportGroupMemberVariables {
  *  so nothing is invalidated. Demo mode acknowledges locally. */
 export function useReportGoTogetherGroupMember(groupId: string) {
   const { demoMode } = useDemoMode();
+  const announceFilingOutcome = useAnnounceFilingOutcome();
   return useMutation<
     GoTogetherMemberReportDTO,
     Error,
@@ -54,5 +56,8 @@ export function useReportGoTogetherGroupMember(groupId: string) {
       demoMode
         ? demoReportGroupMember(groupId, memberRef, body)
         : reportGoTogetherGroupMember(groupId, memberRef, body),
+    // PRD-510: a repeat report on this member for the same reason lands on
+    // the open one; the reporter is told, in the line every report flow uses.
+    onSuccess: (report) => announceFilingOutcome(report),
   });
 }

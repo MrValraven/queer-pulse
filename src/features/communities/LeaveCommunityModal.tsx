@@ -11,9 +11,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
  * `DELETE /communities/:slug/members/:me`, which the backend refuses outright:
  * `removeMember` throws "The owner cannot be removed", so the owner's only
  * feedback was a generic error toast, and nothing on the page pointed at
- * transferring ownership, which is the only real exit there is. They are now
+ * handing ownership on, which is the only real exit there is. They are now
  * told plainly that a community cannot be left without a successor, and handed
- * the route to the transfer.
+ * the route to the ownership offer (PRD-514): the danger pane, where they offer
+ * the community to a member who then accepts it.
  *
  * A CO-OWNER is not covered by that refusal and leaves like anyone else, so the
  * owner branch keys on the single accountable owner and nothing wider.
@@ -29,7 +30,7 @@ export function LeaveCommunityModal({
   name: string;
   /** The viewer is this community's single accountable owner. */
   isOwner?: boolean;
-  /** Where the transfer lives: the mod console's danger pane. */
+  /** Where the ownership offer lives: the mod console's danger pane. */
   transferOwnershipHref?: string;
   pending?: boolean;
   onConfirm: () => void;
@@ -53,7 +54,7 @@ export function LeaveCommunityModal({
                 to={transferOwnershipHref}
                 onClick={onClose}
               >
-                {t("communities:detail.leave.owner.transferCta")}
+                {t("communities:ownershipOffer.offerCta")}
               </Button>
             )}
           </>

@@ -6,7 +6,7 @@ import {
   type VjMadePreview,
   type VjPreviewInput,
 } from "./vjPreview";
-import { presignVj } from "./vjUpload";
+import { confirmVjUpload, presignVj } from "./vjUpload";
 import { VjUploadFailure } from "./vjUploadFailure";
 
 /** The step a preview is at, for the row or the backfill list. */
@@ -59,6 +59,7 @@ async function attachLive(
   );
   signal.throwIfAborted();
   await putPreview(presign.uploadUrl, preview, signal);
+  await confirmVjUpload(presign.key, "previewStorageKey");
   signal.throwIfAborted();
   onStage("saving");
   return await setVjClipPreview(options.clipId, {
@@ -94,8 +95,9 @@ function attachWithStages(
 
 /**
  * Stores a made preview on its clip (contract 9.4). Live: presign `vj_preview`,
- * PUT to storage, then `setVjClipPreview` with the key; a failed PUT names
- * `VJ_UPLOAD_PUT_FAILED`. Demo: the demo store keeps a blob URL for the page's
+ * PUT to storage, confirm the stored bytes (`confirmVjUpload`), then
+ * `setVjClipPreview` with the key; a failed PUT names `VJ_UPLOAD_PUT_FAILED`,
+ * and a confirm refusal names its VJ cause for the `previewStorageKey` field. Demo: the demo store keeps a blob URL for the page's
  * life. Server refusals pass through with their codes.
  */
 export async function attachVjPreview(

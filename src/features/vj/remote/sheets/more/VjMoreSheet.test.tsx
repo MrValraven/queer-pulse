@@ -31,7 +31,7 @@ const SHEET_BUTTONS = [
   { name: "Text on screen", sheet: "text" },
   { name: "Shuffle", sheet: "shuffle" },
   { name: "Mix", sheet: "mix" },
-  { name: "Scenes and set lists", sheet: "scenes" },
+  { name: "Scenes and sequences", sheet: "scenes" },
   { name: "Screens", sheet: "screens" },
   { name: "Event card", sheet: "eventCard" },
   { name: "MIDI controller", sheet: "midi" },

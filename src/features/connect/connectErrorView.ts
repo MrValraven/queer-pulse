@@ -2,6 +2,7 @@ import { ApiError } from "../../shared/api/client";
 import { causeErrorKey } from "../../shared/api/causeErrorKey";
 import {
   firstContactErrorReason,
+  UNBLOCK_TO_CONTACT_CODE,
   type FirstContactErrorReason,
 } from "../messages/api/firstContactError";
 
@@ -44,9 +45,11 @@ export type ConnectErrorView =
 
 /**
  * Exact messages thrown by the backend for `POST /connections`
- * (queerpulse-backend `src/connections/connections.service.ts`). There is no
- * machine-readable `code` field on the error body, so status + message is the
- * only signal we can switch on — keep these strings in sync with the service.
+ * (queerpulse-backend `src/connections/connections.service.ts`). Most of these
+ * refusals carry no machine-readable `code`, so status + message is the signal
+ * we switch on; keep these strings in sync with the service. The requester's
+ * own block also carries `UNBLOCK_TO_CONTACT`, read first, with `youBlocked`
+ * kept for a backend that sends the message alone.
  */
 const MESSAGE = {
   alreadyPending: "A request is already pending",
@@ -54,9 +57,7 @@ const MESSAGE = {
   theyAskedYou: "This member has already asked to connect with you",
   alreadyConnected: "You are already connected",
   youBlocked: "Unblock this member before sending a request",
-  notAccepting: "This member is not accepting connections",
   needsIntro: "This member requires an introduction from a mutual connection",
-  cannotConnect: "You cannot connect with this member",
 } as const;
 
 /**
@@ -103,13 +104,15 @@ const FIRST_CONTACT_VIEW: Record<FirstContactErrorReason, ConnectErrorView> = {
  * lockdown the client already handles) — falls through to an inline line that
  * names its cause through the shared classifier.
  *
- * Note on privacy: the backend deliberately reports a block *by the other
- * party*, and a decline cooldown or cap (PRD-20), as `alreadyPending`, so all
- * three render "you've already reached out" and none of them is distinguishable
- * from the others. `cannotConnect` (a block in either direction) stays
- * intentionally vague for the same reason. Only `theyAskedYou` was split out,
- * and it discloses nothing: the member is the addressee of that request, so it
- * is already in their bell and on their connections page.
+ * Note on privacy (SEC-19): a block *by the other party*, a member hidden from
+ * the requester, a live self-hide, a takedown and an inactive account all come
+ * back as the same 404 "Member not found", which renders one "this member is
+ * not available" panel, so none of them is distinguishable from the others. A
+ * decline cooldown or cap (PRD-20) stays the masked 409 `alreadyPending`. Only
+ * `theyAskedYou` was split out of that 409, and it discloses nothing: the
+ * member is the addressee of that request, so it is already in their bell and
+ * on their connections page. The requester's own block is theirs to know, so
+ * it names itself (`UNBLOCK_TO_CONTACT`).
  */
 export function describeConnectError(error: unknown): ConnectErrorView {
   if (!(error instanceof ApiError)) return causeInline(error);
@@ -121,6 +124,15 @@ export function describeConnectError(error: unknown): ConnectErrorView {
 
   if (error.status === 429) {
     return { mode: "inline", messageKey: "connect:form.rateLimitError" };
+  }
+
+  if (error.status === 404) {
+    return {
+      mode: "panel",
+      titleKey: "connect:notice.cannotConnect.title",
+      bodyKey: "connect:notice.cannotConnect.body",
+      icon: "held",
+    };
   }
 
   if (error.status === 409) {
@@ -139,7 +151,10 @@ export function describeConnectError(error: unknown): ConnectErrorView {
         icon: "reached",
       };
     }
-    if (error.message === MESSAGE.youBlocked) {
+    const isOwnBlock =
+      (error.data as { code?: unknown } | null | undefined)?.code ===
+        UNBLOCK_TO_CONTACT_CODE || error.message === MESSAGE.youBlocked;
+    if (isOwnBlock) {
       return {
         mode: "panel",
         titleKey: "connect:notice.youBlocked.title",
@@ -147,8 +162,8 @@ export function describeConnectError(error: unknown): ConnectErrorView {
         icon: "held",
       };
     }
-    // Everything else at 409 — a pending request, or a block by the other party
-    // the backend masks as one — reads as "already reached out".
+    // Everything else at 409 (a pending request, or a decline hold the
+    // backend masks as one) reads as "already reached out".
     return {
       mode: "panel",
       titleKey: "connect:notice.alreadyPending.title",
@@ -158,27 +173,11 @@ export function describeConnectError(error: unknown): ConnectErrorView {
   }
 
   if (error.status === 403) {
-    if (error.message === MESSAGE.notAccepting) {
-      return {
-        mode: "panel",
-        titleKey: "connect:notice.notAccepting.title",
-        bodyKey: "connect:notice.notAccepting.body",
-        icon: "held",
-      };
-    }
     if (error.message === MESSAGE.needsIntro) {
       return {
         mode: "panel",
         titleKey: "connect:notice.needsIntro.title",
         bodyKey: "connect:notice.needsIntro.body",
-        icon: "held",
-      };
-    }
-    if (error.message === MESSAGE.cannotConnect) {
-      return {
-        mode: "panel",
-        titleKey: "connect:notice.cannotConnect.title",
-        bodyKey: "connect:notice.cannotConnect.body",
         icon: "held",
       };
     }

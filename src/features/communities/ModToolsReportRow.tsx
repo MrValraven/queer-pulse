@@ -14,6 +14,7 @@ import {
 import type { IconType } from "react-icons";
 import { Avatar, Button } from "../../shared/components/ui";
 import { communityPath } from "../../app/routeMap";
+import { INACTIVE_MEMBER_LABEL_KEY } from "../../shared/api/refs";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { REASON_LABEL_KEYS } from "../safety/reportReasons";
@@ -114,6 +115,11 @@ export function ModToolsReportRow({
   const severity = report.severity ? SEVERITY_LOOK[report.severity] : null;
   const SeverityIcon = severity?.icon;
   const author = report.author;
+  // The inactive member's stand-in reaches the queue with no name (the
+  // adapter has no translator), so its label resolves here.
+  const authorName = author?.isInactiveMember
+    ? t(INACTIVE_MEMBER_LABEL_KEY)
+    : (author?.name ?? "");
   const threadHref = report.threadPostId
     ? `${communityPath(slug)}?tab=discussion#post-${report.threadPostId}`
     : null;
@@ -211,13 +217,13 @@ export function ModToolsReportRow({
         <span className={styles.reportMeta}>
           {author && report.reporter
             ? t("communities:detail.modtools.reports.meta", {
-                author: author.name,
+                author: authorName,
                 reporter: report.reporter.name,
                 time: communityTime.ago(report),
               })
             : author
               ? t("communities:detail.modtools.reports.metaAuthor", {
-                  author: author.name,
+                  author: authorName,
                   time: communityTime.ago(report),
                 })
               : t("communities:detail.modtools.reports.metaErasedAuthor", {

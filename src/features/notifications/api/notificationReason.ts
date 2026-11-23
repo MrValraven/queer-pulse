@@ -31,6 +31,8 @@ const REASON_FIELD: Record<string, string> = {
   listing_suggestion_needs_info: "reason",
   listing_suggestion_sent_back: "reason",
   listing_suggestion_removed: "reason",
+  // The sender's note on a community gift.
+  community_gift_received: "note",
 };
 
 /**
@@ -75,6 +77,7 @@ export function isMemberWrittenReason(type: string): boolean {
  */
 const REASON_LEAD_KEY: Record<string, string> = {
   listing_suggestion_needs_info: "notifications:row.reasonLeadQuestion",
+  community_gift_received: "notifications:row.reasonLeadGiftNote",
 };
 
 /** The lead-in key this kind's reason reads under, when it has its own. */

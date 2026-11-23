@@ -3,6 +3,7 @@
 }
 
 .trigger {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -38,6 +39,7 @@
   background: rgba(var(--cream-rgb), 0.05);
 }
 .railMain {
+  position: relative;
   flex: 1;
   min-width: 0;
   display: flex;
@@ -58,6 +60,37 @@
 @media (hover: hover) {
   .railMain:hover {
     background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+/* Ownership offers wait on this member: a coral dot on the avatar's top
+   edge. The paper ring cuts it out of the photo; on the plum rail it sits
+   flat. */
+.triggerDot {
+  position: absolute;
+  top: 3px;
+  left: 26px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--ring-paper);
+  pointer-events: none;
+  animation: triggerDotIn var(--dur-base, 0.25s) var(--ease, ease);
+}
+.railTrigger:not(.railLight) .triggerDot {
+  box-shadow: none;
+}
+@keyframes triggerDotIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .triggerDot {
+    animation: none;
   }
 }
 .railMain:focus-visible {
@@ -396,7 +429,7 @@
 .itemLabel {
   min-width: 0;
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   line-height: 1.3;
 }
 

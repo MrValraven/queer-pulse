@@ -1,15 +1,28 @@
 /* The Tasks tab: the filter bar, then the list as cards on a narrow screen
-   and as one table on a wide one (the leads list's frame). */
+   and as one table on a wide one (the leads list's frame), its rows split
+   into status groups when a view spans more than one status. */
 
 .tab {
   display: grid;
   gap: var(--gap-sm);
 }
 
-/* ── The filter bar ── */
+/* ── The filter bar ──
+   The filters share one wrapping cell, so on a narrower desktop the status
+   chips drop to a second line as a unit while the count and Add task keep
+   the top line's end. */
+.filters {
+  display: flex;
+  flex: 1 1 32rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  min-width: 0;
+}
+
 .filter {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex: none;
   align-items: center;
   gap: var(--gap-xs);
   min-width: 0;
@@ -19,6 +32,21 @@
   font-size: var(--text-caption);
   font-weight: 600;
   color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* When the filters wrap to a second line, the count and Add task keep the
+   top line. */
+.toolbar > :last-child {
+  align-self: flex-start;
+}
+
+/* The count of tasks in view reads as the start of the end actions. */
+.count {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* ── The list ── */
@@ -34,8 +62,9 @@
 
 .table {
   /* The columns of a wide list, shared by the head and every row: the task
-     with its meta line, the status select, the assignee stack. */
-  --task-columns: minmax(0, 1fr) 9.5rem 9rem;
+     with its meta line, the due line, the status control, the assignee
+     stack. */
+  --task-columns: minmax(0, 1fr) 12.75rem 8rem 7rem;
 }
 
 /* The column head shows only on a wide list; the two-class selector
@@ -44,15 +73,25 @@
   display: none;
 }
 
+/* Rows carry their own block-end gap, so a row that leaves takes its gap
+   with it. */
 .rows {
   margin: 0;
   padding: 0;
   list-style: none;
+  transition: opacity var(--dur-fast) var(--ease);
 }
 
-/* A row carries its own block-end gap, so a row that leaves takes its gap
-   with it. */
-.rowItem {
+/* Rows for the previous filters while the new ones load. The dim waits a
+   moment, so an answer that lands quickly never flashes it; it lifts at
+   once. */
+.rows[data-stale] {
+  opacity: 0.6;
+  transition-delay: var(--dur-fast);
+}
+
+.rowItem,
+.groupItem {
   position: relative;
 }
 
@@ -66,6 +105,45 @@
   border-radius: var(--admin-panel-radius);
 }
 
+/* A placeholder row in the row's own shape: a card on a narrow list (the
+   title and meta bars over the pill, due bar and avatar), the table's
+   columns on a wide one. */
+.skeletonShape {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "main main main"
+    "status due assignees";
+  align-items: center;
+  gap: 10px var(--gap-sm);
+  padding: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.skeletonMain {
+  grid-area: main;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.skeletonDue {
+  grid-area: due;
+  min-width: 0;
+}
+
+.skeletonStatus {
+  grid-area: status;
+  min-width: 0;
+}
+
+.skeletonAssignees {
+  grid-area: assignees;
+  display: flex;
+  min-width: 0;
+}
+
 .truncated {
   margin: 0;
   padding-block: var(--gap-xs);
@@ -74,15 +152,91 @@
   color: var(--ink-60);
 }
 
+/* ── A status group's heading ──
+   On a narrow list a quiet label over its cards; on a wide one a tinted
+   band inside the table. */
+.groupHeading {
+  margin: 0;
+  font: inherit;
+}
+
+.groupToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  inline-size: 100%;
+  min-block-size: var(--tap-min);
+  margin: 0;
+  padding: 0 var(--gap-xs);
+  font: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  text-align: start;
+  color: var(--text-strong);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-8);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .groupToggle:hover {
+    background: rgba(var(--line-rgb), 0.04);
+  }
+}
+
+.groupToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.groupChevron {
+  display: inline-flex;
+  flex: none;
+  color: var(--ink-60);
+}
+
+.groupChevron svg {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.groupGlyph {
+  flex: none;
+  inline-size: 15px;
+  block-size: 15px;
+}
+
+.glyphTodo {
+  color: var(--ink-60);
+}
+
+.glyphDoing {
+  color: var(--amber-ink);
+}
+
+.glyphDone {
+  color: var(--jade-ink);
+}
+
+.groupCount {
+  font-weight: 500;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ── One row: a card on a narrow list and in an idea's drawer ──
-   The title and its meta line, then the status beside the assignees. */
+   The title and its meta line, then the status, the due line and the
+   assignees. */
 .row {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas:
-    "main main"
-    "status assignees";
+    "main main main"
+    "status due assignees";
   align-items: center;
   gap: 10px var(--gap-sm);
   min-height: var(--tap-min);
@@ -96,6 +250,14 @@
     background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease),
     box-shadow var(--dur-fast) var(--ease);
+}
+
+/* A compact row (an idea's drawer) keeps its due line in the meta. */
+.row[data-compact] {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "main main"
+    "status assignees";
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -112,7 +274,20 @@
   min-width: 0;
 }
 
-/* The status select and the assignees sit above the title's stretched
+.rowDue {
+  grid-area: due;
+  display: flex;
+  min-width: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+/* On a card the due line may take two lines before it would cut a date. */
+.rowDue .metaText {
+  white-space: normal;
+}
+
+/* The status control and the assignees sit above the title's stretched
    hit area, so each takes its own presses. */
 .rowStatus {
   position: relative;
@@ -129,12 +304,8 @@
   min-width: 0;
 }
 
-.statusSelect {
-  min-inline-size: 8.5rem;
-}
-
 /* The title is the row's open button; its hit area stretches over the
-   whole row, under the status select. */
+   whole row, under the status control. */
 .rowOpen {
   justify-self: start;
   max-width: 100%;
@@ -158,11 +329,15 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  border-radius: inherit;
+  border-radius: var(--admin-panel-radius);
 }
 
+/* The ring is drawn by the stretched hit area, so the button itself drops
+   the global focus outline, shadow and radius. */
 .rowOpen:focus-visible {
   outline: none;
+  box-shadow: none;
+  border-radius: 0;
 }
 
 .rowOpen:focus-visible::after {
@@ -185,7 +360,8 @@
   text-decoration-color: rgba(var(--line-rgb), 0.4);
 }
 
-.row[data-done] .meta {
+.row[data-done] .meta,
+.row[data-done] .rowDue {
   color: var(--ink-40);
 }
 
@@ -198,6 +374,12 @@
   min-width: 0;
   font-size: var(--text-13-5);
   color: var(--ink-60);
+}
+
+/* A task with no idea, guide, event day or notes has no meta line, so its
+   title sits alone. */
+.meta:empty {
+  display: none;
 }
 
 .metaItem,
@@ -245,11 +427,28 @@
   }
 }
 
-/* Add task stays pinned to the end of the filter bar where the kit lets
-   its end actions follow the controls. */
+/* On a narrow screen the filters take the first lines and the count and
+   Add task share the last, the count at its start and the button at its
+   end. */
 @media (max-width: 719.98px) {
+  .filters {
+    flex-basis: 100%;
+  }
+
+  /* Each filter takes its own line, and the status chips shrink to the
+     space beside their label so they wrap inside the screen. */
+  .filter {
+    flex: 1 1 100%;
+  }
+
+  .filter:last-child > :last-child {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .toolbar > :last-child {
-    margin-inline-start: auto;
+    flex: 1 1 100%;
+    justify-content: space-between;
   }
 }
 
@@ -270,19 +469,60 @@
     padding-inline: var(--admin-panel-pad);
   }
 
+  /* The status control's face starts inside its own padding; the label
+     lines up with the status name. */
+  .headCell:nth-child(3) {
+    padding-inline-start: 10px;
+  }
+
   .skeletonRow {
     margin: 0;
     border-radius: 0;
+  }
+
+  .skeletonShape {
+    grid-template-columns: var(--task-columns);
+    grid-template-areas: "main due status assignees";
+    min-height: 58px;
+    padding: var(--gap-xs) var(--admin-panel-pad);
+    border: none;
+  }
+
+  /* The pill bar starts where the status name starts. */
+  .skeletonStatus {
+    padding-inline-start: 10px;
   }
 
   .skeletonRow + .skeletonRow {
     border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
   }
 
+  /* Every entry after the first opens on a hairline, so a group's band and
+     its rows split the same way. */
+  .rows > li + li .row,
+  .rows > li + li .groupHeading {
+    border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
+  }
+
+  .groupHeading {
+    background: rgba(var(--line-rgb), 0.025);
+  }
+
+  .groupToggle {
+    min-block-size: 40px;
+    padding-inline: calc(var(--admin-panel-pad) - 4px) var(--admin-panel-pad);
+    border-radius: 0;
+  }
+
+  .groupToggle:focus-visible {
+    outline-offset: -3px;
+    box-shadow: none;
+  }
+
   .row:not([data-compact]) {
     grid-template-columns: var(--task-columns);
-    grid-template-areas: "main status assignees";
-    min-height: 64px;
+    grid-template-areas: "main due status assignees";
+    min-height: 58px;
     margin: 0;
     padding: var(--gap-xs) var(--admin-panel-pad);
     background: transparent;
@@ -290,8 +530,27 @@
     border-radius: 0;
   }
 
-  .rows > li + li .row {
-    border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
+  /* One line per task: the title and the meta line cut with an ellipsis
+     (the open button's name carries the whole title). */
+  .row:not([data-compact]) .rowMain {
+    gap: 2px;
+  }
+
+  .row:not([data-compact]) .rowOpen {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  .row:not([data-compact]) .meta {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    font-size: var(--text-13);
+  }
+
+  .row:not([data-compact]) .rowDue .metaText {
+    white-space: nowrap;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -299,6 +558,10 @@
       background: rgba(var(--line-rgb), 0.03);
       box-shadow: none;
     }
+  }
+
+  .row:not([data-compact]) .rowOpen::after {
+    border-radius: 0;
   }
 
   .row:not([data-compact]) .rowOpen:focus-visible::after {

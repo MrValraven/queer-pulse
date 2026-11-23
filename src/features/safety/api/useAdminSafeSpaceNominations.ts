@@ -73,6 +73,8 @@ export function useAdminSafeSpaceNominations(
     total: number;
   }>({
     queryKey: [ADMIN_SAFE_SPACE_NOMINATIONS_KEY, query, demoMode],
+    // The key holds what the staff member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     queryFn: async () => {
       if (demoMode) {
         const items = filterDemoNominations(query);

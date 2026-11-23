@@ -22,8 +22,6 @@ export const safety: Catalog = {
   "nav.safetyGuideLabel": "Safety Guide",
 
   // ── Quick exit (fixed escape hatch on high-stakes safety pages) ──────────
-  "quickExit.label": "Quick exit",
-  "quickExit.aria": "Quick exit: leave this page now for a neutral site",
 
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.meta.title": "Report a concern to the QueerPulse safety team",
@@ -378,11 +376,10 @@ export const safety: Catalog = {
   "blockMute.choose.blockDesc":
     "They can't view your profile, message you, or see you in search. Neither of you can connect with the other.",
   "blockMute.choose.blockNote":
-    "<strong>Note:</strong> If you share communities, {name} will still appear in member lists, but won't be able to interact with you directly.",
+    "<strong>Note:</strong> If you share communities, you and {name} drop out of each other's member lists, and neither of you can interact with the other directly.",
   "blockMute.choose.continueCta": "Continue",
   "blockMute.choose.cancelCta": "Cancel",
-  "blockMute.choose.liveDurationNote":
-    "A mute lasts until you unmute. Timed mutes are a demo-only preview.",
+  "blockMute.choose.liveDurationNote": "A mute lasts until you unmute.",
 
   "blockMute.explainer.sub":
     "Muting and blocking always start from someone's profile. Open the profile of the person you want to mute or block, then use the safety menu there.",
@@ -1281,4 +1278,18 @@ export const safety: Catalog = {
     "You unblocked {name}. You weren't connected before, so send a request if you want to message again.",
   "myReports.subject.quizshow_answer": "About a Pulse Live answer",
   "myReports.subject.quizshow_game": "About a Pulse Live game",
+  "myReports.subject.community_gift": "About a community gift",
+  "report.filing.detailsAdded":
+    "You already had an open report about this, so we added your new details to it. The moderator reading it will see them.",
+  "report.filing.alreadyOpen":
+    "You already have an open report about this for the same reason, and it's with the moderation team.",
+  "report.followUpLimit":
+    "Your open report about this already holds as much as one report can, and a moderator has all of it. If something new and urgent has happened, use the Contact page.",
+  "profileMenu.hideFrom": "Hide my profile from {name}",
+  "profileMenu.hiddenFromToast":
+    "{name} can't see your profile now. You can undo this in Who sees what.",
+  "profileMenu.hiddenFromDemoToast":
+    "{name} can't see your profile now. In the demo this resets when you reload.",
+  "profileMenu.showTo": "Show my profile to {name}",
+  "profileMenu.shownToToast": "{name} can see your profile again.",
 };

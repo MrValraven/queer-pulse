@@ -5,7 +5,8 @@ import { StaffBadge, type StaffRole } from "./StaffBadge";
 import { staffBadgeRolesFor } from "../../staff/badgedStaffRoles";
 import { MemberAmbassadorTag } from "../../ambassadors/MemberAmbassadorTag";
 import { initialsFromName } from "../../lib/initials";
-import { tintForSlug } from "../../api/refs";
+import { INACTIVE_MEMBER_LABEL_KEY, tintForSlug } from "../../api/refs";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./MemberIdentity.module.css";
 
 export interface MemberIdentityPerson {
@@ -22,6 +23,12 @@ export interface MemberIdentityPerson {
    * an ordinary account.
    */
   staffBadgedRoles?: readonly string[];
+  /**
+   * The backend's stand-in for a paused, suspended or deleting account
+   * (`MemberRefDTO.isInactiveMember`). The row names it by the inactive
+   * label, links nowhere and draws a blank disc with no photo.
+   */
+  isInactiveMember?: boolean;
 }
 
 export interface MemberIdentityProps {
@@ -65,6 +72,9 @@ export function MemberIdentity({
   showStaffBadge = true,
   tint: tintOverride,
 }: MemberIdentityProps) {
+  if (person.isInactiveMember) {
+    return <InactiveMemberIdentity secondary={secondary} size={size} />;
+  }
   const initials = initialsFromName(person.name, "?");
   const tint =
     tintOverride ?? (person.slug ? tintForSlug(person.slug) : "default");
@@ -114,6 +124,38 @@ export function MemberIdentity({
           {shouldShowAmbassadorTag && (
             <MemberAmbassadorTag slug={person.slug} />
           )}
+        </span>
+        {secondary != null && secondary !== "" && (
+          <span className={styles.secondary}>{secondary}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The inactive member's row: a blank neutral disc, the translated label and
+ * the caller's secondary line. Its own component so the translation hook runs
+ * only for this branch and the named-person path stays exactly as it was. No
+ * staff badge or Ambassador tag: both are looked up by slug, and the stand-in
+ * has none.
+ */
+function InactiveMemberIdentity({
+  secondary,
+  size,
+}: {
+  secondary?: ReactNode;
+  size: number;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.identity}>
+      <Avatar initials="" tint="default" size={size} />
+      <div className={styles.body}>
+        <span className={styles.nameLine}>
+          <span className={[styles.name, styles.inactiveName].join(" ")}>
+            {t(INACTIVE_MEMBER_LABEL_KEY)}
+          </span>
         </span>
         {secondary != null && secondary !== "" && (
           <span className={styles.secondary}>{secondary}</span>

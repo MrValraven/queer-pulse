@@ -38,6 +38,11 @@ describe("eventBatchFailureOf", () => {
       }),
       "communityOnly",
     ],
+    [
+      coded(403, "EVENT_BATCH_TEMPLATE_HOUSE_MUSIC_HOST_ONLY"),
+      "houseMusicHostOnly",
+    ],
+    [coded(403, "EVENT_BATCH_TEMPLATE_NETWORK_COHOST"), "networkHostOnly"],
     [coded(400, "EVENT_BATCH_TOO_MANY_DATES", { limit: 31 }), "tooManyDates"],
     [coded(400, "EVENT_BATCH_DUPLICATE_DATE", rowKeys), "duplicateDate"],
     [

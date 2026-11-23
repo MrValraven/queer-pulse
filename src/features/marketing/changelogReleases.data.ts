@@ -15,6 +15,14 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "23 Nov 2026": {
+    highlights: [
+      "community-badges",
+      "quick-exit-everywhere",
+      "hide-profile-from-them",
+    ],
+    pushes: 1,
+  },
   "20 Nov 2026": {
     highlights: ["cultural-production", "quick-start-community"],
     pushes: 4,

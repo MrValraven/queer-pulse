@@ -1,0 +1,318 @@
+/* The community badge sheet: head, tabs, badge rows and the gift shelf.
+   Chip tints live in CommunityFlair.module.css; gift icon grounds read the
+   same --flair-<tint>-ground and --flair-<tint>-ink tokens, so both themes
+   flip with the token block. The sheet keeps the shared ModalSheet padding,
+   whose 32px sides already give the phone gutter and line up with the
+   drag-handle strip. */
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+  /* Room for the sheet's close button in the top corner. */
+  padding-inline-end: calc(var(--tap-min) + var(--gap-xs));
+}
+
+.title {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 60ch;
+}
+
+.leadText {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-15);
+  line-height: 1.55;
+}
+
+.leadHint {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  line-height: 1.5;
+}
+
+.tabs {
+  margin-bottom: var(--gap-sm);
+}
+
+.panel {
+  min-width: 0;
+}
+
+.panel:focus-visible {
+  border-radius: var(--radius-badge);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listItem {
+  min-width: 0;
+}
+
+.row,
+.giftRow,
+.skeletonBadge,
+.skeletonRow {
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: var(--gap-sm) 16px;
+  /* Leaves room so the centred scroll never parks the row under the
+     sheet's top strip. */
+  scroll-margin-block: 56px;
+}
+
+.rowFocused {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.rowChip {
+  display: flex;
+  min-width: 0;
+}
+
+.rowEarn {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-14);
+  line-height: 1.45;
+}
+
+.rowProgress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.track {
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.09);
+}
+
+.fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--jade);
+  transform-origin: left;
+}
+
+.rowProgressLine,
+.rowStatus {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  line-height: 1.4;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px var(--gap-sm);
+  align-items: center;
+  margin-top: 4px;
+}
+
+.wearing {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+  color: var(--jade);
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.wearingIcon {
+  flex: none;
+}
+
+.actionButton {
+  min-height: var(--tap-min);
+}
+
+.actionButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--gap-sm) 0;
+  color: var(--ink-60);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.skeletonBadge {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--gap-sm) 16px;
+}
+
+.skeletonRow {
+  display: flex;
+  gap: var(--gap-sm);
+  align-items: center;
+  padding: var(--gap-sm) 16px;
+}
+
+/* Gift shelf */
+
+.shelf {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.shelfLead {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.giftRow {
+  display: flex;
+  gap: var(--gap-sm);
+  align-items: flex-start;
+  padding: var(--gap-sm) 16px;
+}
+
+.giftIcon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--flair-jade-ground);
+  color: var(--flair-jade-ink);
+  font-size: var(--text-18);
+}
+
+.giftIcon[data-tint="accent"] {
+  background: var(--flair-accent-ground);
+  color: var(--flair-accent-ink);
+}
+
+.giftIcon[data-tint="plum"] {
+  background: var(--flair-plum-ground);
+  color: var(--flair-plum-ink);
+}
+
+.giftIcon[data-tint="rose"] {
+  background: var(--flair-rose-ground);
+  color: var(--flair-rose-ink);
+}
+
+.giftIcon[data-tint="amber"] {
+  background: var(--flair-amber-ground);
+  color: var(--flair-amber-ink);
+}
+
+.giftIcon[data-tint="violet"] {
+  background: var(--flair-violet-ground);
+  color: var(--flair-violet-ink);
+}
+
+.giftBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.giftName {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-15);
+  font-weight: 600;
+}
+
+.giftFrom,
+.giftMeta {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+}
+
+.giftNote {
+  margin: 4px 0;
+  padding-inline-start: 10px;
+  border-inline-start: 2px solid rgba(var(--line-rgb), 0.16);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-style: italic;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.giftMark,
+.giftMarkHidden {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+}
+
+.giftMark {
+  color: var(--jade);
+}
+
+.giftMarkHidden {
+  color: var(--ink-60);
+}
+
+.giftActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fill {
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+}

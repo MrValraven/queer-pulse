@@ -109,6 +109,15 @@
   min-height: 44px;
 }
 
+/* Quick Exit and Sign out, pinned under the scrolling middle the way the
+   desktop menu's footer is, so leaving never needs a full scroll. The panel's
+   own bottom padding already clears the home indicator (safe-area inset). */
+.leaveFooter {
+  flex-shrink: 0;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
 /* Identity header — scrolls with the content (it sits inside menu.scroll).
    padding-right clears the absolute close button. */
 .header {

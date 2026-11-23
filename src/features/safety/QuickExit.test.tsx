@@ -8,6 +8,7 @@ import {
 import { useEffect } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { AUTH_STORAGE_KEY } from "../marketing/cookies.data";
 import { useStudioPlayer } from "../studio/player/studioPlayerContext";
 import {
   consentToWarnedTrack,
@@ -15,6 +16,7 @@ import {
 } from "../studio/player/studioWarningGate";
 import { resumeStudioQueueSavingForTests } from "../studio/player/studioQueueStorage";
 import { QuickExit } from "./QuickExit";
+import { stopQuickExitStillHereWatchForTests } from "./useQuickExit";
 
 /**
  * Quick-exit safety net (audit item #12).
@@ -35,9 +37,13 @@ const SAFE_DESTINATION = "https://www.google.com";
 const realLocation = window.location;
 
 afterEach(() => {
+  stopQuickExitStillHereWatchForTests();
   vi.restoreAllMocks();
   resumeStudioQueueSavingForTests();
   window.sessionStorage.clear();
+  // Quick Exit in demo stores the mock session as signed out; a later test
+  // would mount a signed-out player that saves no queue.
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
   // Restore the genuine Location after each swap below.
   Object.defineProperty(window, "location", {
     configurable: true,
@@ -126,6 +132,38 @@ describe("QuickExit", () => {
 
     // The visible button stays the always-instant exit; Escape must not fire
     // here or it would throw away the in-progress input.
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it("ignores an Escape another control already handled", () => {
+    const replace = spyOnReplace();
+    render(
+      <TestProviders>
+        <QuickExit />
+      </TestProviders>,
+    );
+
+    const handledEscape = new KeyboardEvent("keydown", {
+      key: "Escape",
+      cancelable: true,
+    });
+    handledEscape.preventDefault();
+    window.dispatchEvent(handledEscape);
+
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it("leaves Escape to an open dialog", () => {
+    const replace = spyOnReplace();
+    render(
+      <TestProviders>
+        <div role="dialog" aria-modal="true" />
+        <QuickExit />
+      </TestProviders>,
+    );
+
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
     expect(replace).not.toHaveBeenCalled();
   });
 

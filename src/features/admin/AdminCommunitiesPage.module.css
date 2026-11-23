@@ -433,7 +433,7 @@
 
 /* Reassign-owner picker: a radiogroup of roster members inside a
    ConfirmDialog, mirroring ModPanel.module.css's .modRow/.modMain/.modName/
-   .modMeta (the member-facing TransferOwnershipModal). */
+   .modMeta (the owner's ownership-offer picker, TransferOwnershipModal). */
 .ownerPickList {
   display: flex;
   flex-direction: column;

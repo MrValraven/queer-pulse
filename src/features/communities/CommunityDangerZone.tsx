@@ -3,10 +3,11 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { Button, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RosterMember } from "./community.model";
+import type { PulsePaging } from "./api/useCommunityPosts";
 import type { CommunityRole } from "./membership.types";
 import { FreezeCommunityModal } from "./FreezeCommunityModal";
 import { ArchiveCommunityModal } from "./ArchiveCommunityModal";
-import { TransferOwnershipModal } from "./TransferOwnershipModal";
+import { CommunityOwnershipOfferPanel } from "./CommunityOwnershipOfferPanel";
 import { CommunityOwnerReviewSection } from "./CommunityOwnerReviewSection";
 import { useCommunityOwnerReview } from "./api/useCommunityOwnerReview";
 import {
@@ -16,18 +17,18 @@ import {
 } from "./communityStaffRole";
 import styles from "./CommunityDangerZone.module.css";
 
-type OpenModal = "freeze" | "archive" | "transfer" | null;
+type OpenModal = "freeze" | "archive" | null;
 
 /**
  * Staff-only danger zone at the bottom of Mod tools: freeze (owner, co-owner
- * or moderator), archive and transfer ownership (owner only), and the
+ * or moderator), archive and the ownership offer (owner only), and the
  * owner-absence escalation. Each row opens its own confirm modal — nothing
  * here fires straight off a click. Lives in the Mod tools tab (rather than the
  * edit-community modal) because these are moderation/staff actions on the
  * community itself, and the tab is already the deliberate, staff-gated surface
  * a member has to navigate to.
  *
- * A co-owner reaches everything a moderator does. Transferring ownership and
+ * A co-owner reaches everything a moderator does. Offering ownership and
  * archiving stay owner-only, and the role line at the top says so, so a
  * co-owner is never left guessing why a row is missing.
  */
@@ -36,11 +37,14 @@ export function CommunityDangerZone({
   name,
   role,
   roster,
+  rosterRead,
 }: {
   slug: string;
   name: string;
   role: CommunityRole | null;
   roster: RosterMember[];
+  /** Where the roster read stands, so the ownership picker waits on it. */
+  rosterRead?: Pick<PulsePaging, "isLoading" | "isError" | "refetch">;
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState<OpenModal>(null);
@@ -90,11 +94,12 @@ export function CommunityDangerZone({
         />
         {isOwner && (
           <>
-            <DangerRow
-              label={t("communities:detail.dangerZone.transfer.label")}
-              text={t("communities:detail.dangerZone.transfer.text")}
-              cta={t("communities:detail.dangerZone.transfer.cta")}
-              onClick={() => setOpen("transfer")}
+            <CommunityOwnershipOfferPanel
+              slug={slug}
+              roster={roster}
+              isRosterLoading={rosterRead?.isLoading}
+              isRosterError={rosterRead?.isError}
+              onRosterRetry={rosterRead?.refetch}
             />
             <DangerRow
               label={t("communities:detail.dangerZone.archive.label")}
@@ -118,14 +123,6 @@ export function CommunityDangerZone({
         <ArchiveCommunityModal
           slug={slug}
           name={name}
-          onClose={() => setOpen(null)}
-        />
-      )}
-      {open === "transfer" && (
-        <TransferOwnershipModal
-          slug={slug}
-          name={name}
-          roster={roster}
           onClose={() => setOpen(null)}
         />
       )}

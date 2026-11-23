@@ -41,6 +41,15 @@ describe("classifyReportSubmissionError", () => {
     ).toEqual({ kind: "useCopyrightClaim" });
   });
 
+  it("names a full open report apart from a plain conflict (PRD-510)", () => {
+    expect(
+      classifyReportSubmissionError(coded(409, "REPORT_FOLLOW_UP_LIMIT")),
+    ).toEqual({ kind: "followUpLimit" });
+    expect(classifyReportSubmissionError(new ApiError(409, "x"))).toEqual({
+      kind: "conflict",
+    });
+  });
+
   it("reads an uncoded 429 as the burst throttle", () => {
     expect(
       classifyReportSubmissionError(new ApiError(429, "Too Many")),

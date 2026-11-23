@@ -87,7 +87,9 @@ export function useCommunityPulse(
         onlineLabel,
       ),
     ),
-    threads: query.data.recentThreads.map(pulseThreadToCard),
+    threads: query.data.recentThreads.map((thread) =>
+      pulseThreadToCard(thread, t),
+    ),
     opportunities: query.data.openOpportunities.map(pulseOpportunityToCard),
     isLoading: false,
     isError: false,

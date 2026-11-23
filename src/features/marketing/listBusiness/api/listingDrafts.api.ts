@@ -57,6 +57,32 @@ export const saveListingDraft = (payload: ListingDraftPayload, id?: string) =>
     id ? { id, payload } : { payload },
   );
 
+/** The same upsert as `saveListingDraft`, sent with `keepalive` so a save fired
+ *  from `pagehide` outlives the closing page. A browser that refuses a
+ *  keepalive request (a body over 64 KiB, say) throws a TypeError before
+ *  anything leaves, and an update (`id` set) is sent once more as a plain
+ *  request. A first create is sent once: a network TypeError can follow a
+ *  request the server already stored, and a second create would mint a
+ *  second draft row. */
+export async function saveListingDraftKeepalive(
+  payload: ListingDraftPayload,
+  id?: string,
+): Promise<{ id: string }> {
+  try {
+    return await apiPost<{ id: string }>(
+      "/listing-drafts",
+      id ? { id, payload } : { payload },
+      undefined,
+      undefined,
+      undefined,
+      true,
+    );
+  } catch (error) {
+    if (!(error instanceof TypeError) || !id) throw error;
+    return saveListingDraft(payload, id);
+  }
+}
+
 /** GET /listing-drafts/:id: one owned draft with its full payload. */
 export const getListingDraft = (id: string) =>
   apiGet<ListingDraftRecord>(`/listing-drafts/${id}`);

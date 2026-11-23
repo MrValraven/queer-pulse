@@ -1,0 +1,15 @@
+/* Message and gift buttons share one centred, wrapping row under the card's
+   details. The row owns the top spacing the lone message button used to carry
+   itself. */
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.actions > span,
+.actions > button {
+  margin-top: 0;
+}

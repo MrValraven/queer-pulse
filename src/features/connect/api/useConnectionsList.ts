@@ -156,6 +156,8 @@ export function useConnectionsList(
     // infinite query rather than append a differently-filtered page 2 onto
     // pages fetched under the old filter.
     queryKey: ["connections", tab, demoMode, language, searchTerm.trim(), sort],
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     // Blocked has no /connections endpoint; demo mode never fetches. In both
     // cases we short out to the resolved views below and keep the query idle.
     // A caller that has not asked for the list yet keeps it idle too.

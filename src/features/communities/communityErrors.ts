@@ -5,6 +5,7 @@ import {
   type CauseErrorOverrides,
 } from "../../shared/api/causeErrorKey";
 import type { TFunction } from "../../shared/i18n/types";
+import type { OwnershipOfferCode } from "./api/communityOwnershipOffers.api";
 import {
   causeErrorKeyWithSentences,
   type SentenceRule,
@@ -26,6 +27,44 @@ import {
  * moderation restriction, inactive membership, rate limited, server fault.
  */
 
+/** PRD-514: each ownership offer refusal code to its own catalog line. A
+ *  `Record` over the code union, so a code added to the API list without a
+ *  line here fails the typecheck. */
+export const OWNERSHIP_OFFER_ERROR_KEYS: Record<OwnershipOfferCode, string> = {
+  OWNERSHIP_OFFER_OPEN: "communities:ownershipOffer.error.OWNERSHIP_OFFER_OPEN",
+  OWNERSHIP_OFFER_NOT_FOUND:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_NOT_FOUND",
+  OWNERSHIP_OFFER_ANSWERED:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_ANSWERED",
+  OWNERSHIP_OFFER_EXPIRED:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_EXPIRED",
+  OWNERSHIP_OFFER_CANCELLED:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_CANCELLED",
+  OWNERSHIP_OFFER_OWNER_CHANGED:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_OWNER_CHANGED",
+  OWNERSHIP_OFFER_RECIPIENT_NOT_MEMBER:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_RECIPIENT_NOT_MEMBER",
+  OWNERSHIP_OFFER_SELF: "communities:ownershipOffer.error.OWNERSHIP_OFFER_SELF",
+  OWNERSHIP_OFFER_ALREADY_OWNER:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_ALREADY_OWNER",
+  OWNERSHIP_OFFER_HOUSE_ACCOUNT:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_HOUSE_ACCOUNT",
+  OWNERSHIP_OFFER_MEMBER_NOT_FOUND:
+    "communities:ownershipOffer.error.OWNERSHIP_OFFER_MEMBER_NOT_FOUND",
+};
+
+/** The table above speaks to the member answering an offer. The owner's own
+ *  send and cancel reach two of those codes for a different reason (their
+ *  member answered first, or the community left their hands), so every
+ *  owner-side surface passes this as `extraOverrides` to get owner-worded
+ *  lines. */
+export const OWNERSHIP_OFFER_OWNER_SIDE_KEYS: CauseErrorOverrides = {
+  OWNERSHIP_OFFER_ANSWERED:
+    "communities:ownershipOffer.ownerError.OWNERSHIP_OFFER_ANSWERED",
+  OWNERSHIP_OFFER_OWNER_CHANGED:
+    "communities:ownershipOffer.ownerError.OWNERSHIP_OFFER_OWNER_CHANGED",
+};
+
 /** Backend machine `code` to catalog key. */
 export const COMMUNITY_CODE_OVERRIDES: CauseErrorOverrides = {
   COMMUNITY_MEMBERS_ONLY: "communities:error.membersOnly",
@@ -39,6 +78,17 @@ export const COMMUNITY_CODE_OVERRIDES: CauseErrorOverrides = {
   SUBCOMMUNITY_TIER_TOO_OPEN: "communities:error.spaceTierTooOpen",
   setup_checklist_unavailable_for_spaces:
     "communities:error.setupChecklistSpaces",
+  // A bar a second moderator signed, or one the owner level placed, can only
+  // be lifted or shortened by the owner or a co-owner.
+  RATIFIED_BAR_NEEDS_OWNER_LEVEL:
+    "communities:error.ratifiedBarNeedsOwnerLevel",
+  OWNER_PLACED_BAN_NEEDS_OWNER_LEVEL:
+    "communities:error.ownerPlacedBanNeedsOwnerLevel",
+  // A permanent bar platform staff placed is the owner level's to lift too.
+  STAFF_PLACED_BAN_NEEDS_OWNER_LEVEL:
+    "communities:error.staffPlacedBanNeedsOwnerLevel",
+  // PRD-514. Every refusal on the ownership offer routes has its own line.
+  ...OWNERSHIP_OFFER_ERROR_KEYS,
 };
 
 /** Refusals sent as an English sentence only, so matched by their exact text

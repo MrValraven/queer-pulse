@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiDelete, apiGet } from "../../../shared/api/client";
 import { API_BASE_URL } from "../../../shared/api/config";
 
 /** GET /me/calendar-feed-token — mints the caller's signed calendar-feed
@@ -18,3 +18,9 @@ export async function getCalendarFeedUrl(): Promise<string> {
   const { token } = await getCalendarFeedToken();
   return `${API_BASE_URL}/calendar/feed/${token}`;
 }
+
+/** DELETE /me/calendar-feed-token: switches the caller's current feed URL
+ *  off. Every calendar app still polling it stops receiving events. The next
+ *  `GET /me/calendar-feed-token` issues a fresh token. Idempotent. */
+export const revokeCalendarFeedToken = () =>
+  apiDelete<void>("/me/calendar-feed-token");

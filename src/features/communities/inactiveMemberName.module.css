@@ -1,0 +1,9 @@
+/* The inactive member's stand-in label on community surfaces (roster card,
+   pulse post header, reply rows). Matches MemberIdentity's quieter
+   .inactiveName treatment, so the label reads as a placeholder beside the
+   bold names of active members. Applied to an inner span, so it wins over the
+   surrounding name rule's weight and colour by inheritance. */
+.inactiveName {
+  font-weight: 500;
+  color: var(--ink-60);
+}

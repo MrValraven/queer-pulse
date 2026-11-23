@@ -1,5 +1,5 @@
 import type { AvatarTint } from "../../shared/components/ui";
-import { tintForSlug } from "../../shared/api/refs";
+import { isInactiveMemberRef, tintForSlug } from "../../shared/api/refs";
 import { initials } from "./api/feed.adapters";
 import type { FeedItem, FeedReason } from "./api/feed.api";
 
@@ -23,15 +23,22 @@ export interface NewMemberRowModel {
 }
 
 /** A live `new_member` item as a group row, deriving slug, name, pronouns,
- *  avatar, initials and tint exactly the way `MemberCard` does. */
-export function feedItemToNewMemberRow(item: FeedItem): NewMemberRowModel {
+ *  avatar, initials and tint exactly the way `MemberCard` does.
+ *  `inactiveLabel` is the reader's `common:member.inactiveLabel`, the name a
+ *  paused or deleting account shows in their language. */
+export function feedItemToNewMemberRow(
+  item: FeedItem,
+  inactiveLabel: string,
+): NewMemberRowModel {
   const slug = item.actor?.handle ?? "";
+  const isInactive = isInactiveMemberRef(item.actor);
   return {
     slug,
-    name: item.title,
+    name: isInactive ? inactiveLabel : item.title,
     pronouns: item.actor?.pronouns ?? null,
     avatarSrc: item.actor?.avatarUrl ?? undefined,
-    initials: initials(item.title),
+    // PRD-507. The stand-in for a paused or deleting account has no face.
+    initials: isInactive ? "" : initials(item.title),
     tint: slug ? tintForSlug(slug) : "plum",
     reason: item.reason,
     reasonSubject: item.reasonSubject,

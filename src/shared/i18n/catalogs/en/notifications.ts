@@ -805,6 +805,17 @@ export const notifications: Catalog = {
   // System-driven (no actor); {badgeName} comes from the payload.
   "type.badge_earned.text": "You earned the {badgeName} badge.",
   "type.badge_earned.meta": "Badge earned",
+  "type.community_badge_earned.text":
+    "You earned the {badgeName} badge in {communityName}.",
+  "type.community_badge_earned.meta": "Community badge",
+  "type.community_badge_earned.communityFallback": "your community",
+  "type.community_badge_earned.badgeNameFallback": "new",
+  "type.community_gift_received.text":
+    "You got a {giftName} gift in {communityName}.",
+  "type.community_gift_received.textNamed":
+    "<profile>{name}</profile> sent you a {giftName} gift in {communityName}.",
+  "type.community_gift_received.meta": "Community gift",
+  "type.community_gift_received.communityFallback": "your community",
 
   "type.writer_application_approved.text":
     "Your writer application was approved. You can submit stories now.",
@@ -1162,6 +1173,7 @@ export const notifications: Catalog = {
   "row.reasonLead": "Reason from the moderators:",
   "row.reasonLeadMember": "Reason from the member who asked:",
   "row.reasonLeadQuestion": "The moderators' question:",
+  "row.reasonLeadGiftNote": "Their note:",
   "actions.viewThread": "View thread",
   "actions.viewEvent": "View event",
   "actions.viewProfile": "View profile",
@@ -1174,6 +1186,12 @@ export const notifications: Catalog = {
   "actions.declinedToast": "Politely declined",
   "actions.readNow": "Read now",
   "actions.seeDetails": "See details",
+  "actions.wearBadge": "Wear this badge",
+  "actions.woreBadgeToast":
+    "You're wearing {badgeName} in {communityName} now.",
+  "actions.openBadges": "Open badges",
+  "actions.openGifts": "Open your gifts",
+  "actions.reportGift": "Report gift",
   // PRD-31: the demo ban-evasion row sends its moderator back to their own
   // join queue, which is where the decision on the request still waits.
   "actions.openRequestsQueue": "Open the requests queue",
@@ -1701,4 +1719,21 @@ export const notifications: Catalog = {
   "type.cultural_task_batch_assigned.guideTitleFallback": "event",
   "actions.reviewTeamInvite": "Review invite",
   "actions.reviewTeamRequest": "Review request",
+  "type.community_ownership_offered.text":
+    "{name} has offered you ownership of {communityName}. Open it to accept or decline.",
+  "type.community_ownership_offered.meta": "Ownership offer",
+  "type.community_ownership_offered.communityNameFallback":
+    "a community you're part of",
+  "type.community_ownership_offer_declined.text":
+    "{name} declined your offer of {communityName}. You still own it.",
+  "type.community_ownership_offer_declined.meta": "Ownership offer",
+  "type.community_ownership_offer_declined.communityNameFallback":
+    "your community",
+  "type.community_ownership_offered.textNamed":
+    "<profile>{name}</profile> has offered you ownership of {communityName}. Open it to accept or decline.",
+  "type.community_ownership_offered.nameFallback": "The owner",
+  "type.community_ownership_offer_declined.textNamed":
+    "<profile>{name}</profile> declined your offer of {communityName}. You still own it.",
+  "type.community_ownership_offer_declined.nameFallback":
+    "The member you offered it to",
 };

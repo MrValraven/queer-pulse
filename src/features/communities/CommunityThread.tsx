@@ -1,17 +1,16 @@
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PostActionsMenu } from "../forum/PostActionsMenu";
 import { ConfirmDeleteModal } from "../forum/ConfirmDeleteModal";
 import { ReportReplyModal } from "../forum/ReportReplyModal";
-import type { Person, Reply, Thread as ThreadData } from "./communityDetails";
+import type { Person, Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
 import { CommunityThreadHead } from "./CommunityThreadHead";
+import { CommunityThreadReplyRow } from "./CommunityThreadReplyRow";
 import { CommunityThreadOpText } from "./CommunityThreadOpText";
 import { CommunityInlineTextEditor } from "./CommunityInlineTextEditor";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import { CommunityHistoryModal } from "./CommunityHistoryModal";
 import { CommunityTakedownDialog } from "./CommunityTakedownDialog";
-import { MentionText } from "../../shared/mentions/MentionText";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { ResolvedMentionNamesProvider } from "../../shared/mentions/ResolvedMentionText";
 import { useCommunityThreadState } from "./useCommunityThreadState";
@@ -96,6 +95,7 @@ export function CommunityThread({
     <div className={styles.thread}>
       <CommunityThreadHead
         data={data}
+        communitySlug={slug}
         isOpen={open}
         onToggleOpen={() => setOpen((value) => !value)}
         voted={voted}
@@ -137,11 +137,12 @@ export function CommunityThread({
               <CommunityThreadOpText text={opBody} />
             )}
             {replies.map((threadReply) => (
-              <ThreadReplyRow
+              <CommunityThreadReplyRow
                 key={
                   threadReply.id ?? `${threadReply.name}:${threadReply.text}`
                 }
                 reply={threadReply}
+                communitySlug={slug}
                 demoMode={demoMode}
                 isEditing={
                   !!threadReply.id && editingReplyId === threadReply.id
@@ -339,91 +340,6 @@ function ThreadReplyBar({
           ? t("communities:common.loading")
           : t("communities:detail.thread.replyCta")}
       </Button>
-    </div>
-  );
-}
-
-function ThreadReplyRow({
-  reply,
-  demoMode,
-  isEditing,
-  isSavingEdit,
-  canReport,
-  onStartEdit,
-  onCancelEdit,
-  onSaveEdit,
-  onDelete,
-  onRestore,
-  onHistory,
-  onReport,
-}: {
-  reply: Reply;
-  demoMode: boolean;
-  isEditing: boolean;
-  /** True while this row's edit is being saved. */
-  isSavingEdit: boolean;
-  canReport: boolean;
-  onStartEdit: () => void;
-  onCancelEdit: () => void;
-  onSaveEdit: (text: string) => void;
-  onDelete: () => void;
-  onRestore: () => void;
-  onHistory: () => void;
-  onReport: () => void;
-}) {
-  const { t } = useTranslation();
-  const owned = demoMode && reply.name === "You";
-  const canEdit = demoMode ? owned && !reply.deleted : !!reply.canEdit;
-  const canDelete = demoMode ? owned && !reply.deleted : !!reply.canDelete;
-  const canRestore = demoMode ? owned && !!reply.deleted : !!reply.canRestore;
-  const canViewHistory = demoMode ? false : !!reply.canViewHistory;
-
-  return (
-    <div className={styles.reply}>
-      <div className={[styles.rAv, AV_CLASS[reply.tint]].join(" ")}>
-        {reply.initials}
-      </div>
-      <div className={styles.rBody}>
-        <div className={styles.rHead}>
-          <span className={styles.rName}>{reply.name}</span>
-          <span className={styles.rMenu}>
-            <PostActionsMenu
-              canEdit={canEdit}
-              canDelete={canDelete}
-              canRestore={canRestore}
-              canViewHistory={canViewHistory}
-              onEdit={onStartEdit}
-              onDelete={onDelete}
-              onRestore={onRestore}
-              onHistory={onHistory}
-              canReport={canReport}
-              onReport={onReport}
-            />
-          </span>
-        </div>
-        {reply.deleted ? (
-          <div className={styles.tombstone}>
-            {t("communities:detail.thread.tombstone")}
-          </div>
-        ) : isEditing ? (
-          <CommunityInlineTextEditor
-            initial={reply.text}
-            isBusy={isSavingEdit}
-            onCancel={onCancelEdit}
-            onSave={onSaveEdit}
-          />
-        ) : (
-          <div className={styles.rText}>
-            <MentionText text={reply.text} />
-            {reply.editedAt && (
-              <span className={styles.editedMark}>
-                {" "}
-                {t("communities:detail.thread.editedMark")}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

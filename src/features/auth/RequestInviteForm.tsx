@@ -1,19 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { FiLock } from "react-icons/fi";
-import { Button, Sending } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { Button, Collapse, Sending } from "../../shared/components/ui";
 import { focusFirstErrorAfterRender } from "../../shared/lib/focusFirstError";
-import { GuidelinesLink } from "../marketing/GuidelinesLink";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
-import { isDuplicateJoinRequest, isUnder18Error } from "./api/joinRequest.api";
-import { requestInviteErrorCopy } from "./authActionErrors";
 import { parseJoinRequestSource } from "./api/joinRequestSource";
 import { AgeAttestation } from "./AgeAttestation";
+import { RequestInviteAgreeRow } from "./RequestInviteAgreeRow";
+import { RequestInviteCodeStep } from "./RequestInviteCodeStep";
+import { JoinRequestCodeErrorText } from "./JoinRequestCodeErrorText";
 import { RequestInviteFields } from "./RequestInviteFields";
 import { Under18Notice } from "./Under18Notice";
+import { useRequestInviteCode } from "./useRequestInviteCode";
 import styles from "./auth.module.css";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,10 +18,16 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** How the submission ended, so the page can confirm in the right words. */
 export type RequestInviteOutcome = "sent" | "already";
 
+/**
+ * The form an applicant fills in to ask for an invite. Sending it emails a
+ * 6-digit code that confirms the address (SEC-10); the request is filed once
+ * the code is checked, on the step that replaces the form.
+ */
 export function RequestInviteForm({
   first,
   setFirst,
   onSent,
+  onCodeStepChange,
 }: {
   first: string;
   setFirst: (v: string) => void;
@@ -34,14 +37,15 @@ export function RequestInviteForm({
    * `"already"` (409) path, which creates no row and therefore mints no token.
    */
   onSent: (outcome: RequestInviteOutcome, statusToken: string | null) => void;
+  /** Told when the code step opens and closes, so the page can fold away
+   *  its intro while the applicant types the code. */
+  onCodeStepChange?: (isCodeStep: boolean) => void;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const [searchParams] = useSearchParams();
   // Which CTA sent them here, read once from `?from=`. Unknown/absent → null, so
   // a hand-edited param never becomes a stored source.
   const source = parseJoinRequestSource(searchParams.get("from"));
-  const createJoinRequest = useCreateJoinRequest();
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
@@ -51,7 +55,6 @@ export function RequestInviteForm({
   const [mutual, setMutual] = useState("");
   const [mutualTouched, setMutualTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
   // Flipped by the first rejected submit. Until then, only the blur-driven
@@ -59,6 +62,24 @@ export function RequestInviteForm({
   // haven't reached yet.
   const [attempted, setAttempted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const codeFlow = useRequestInviteCode({
+    getFormVars: () => ({
+      name: first.trim(),
+      city: city.trim() || undefined,
+      message: why.trim(),
+      mutualMemberEmail: mutual.trim() || undefined,
+      heardFrom: heardFrom.trim(),
+      socialProfile: socialProfile.trim() || undefined,
+      source: source ?? undefined,
+    }),
+    onSent,
+    onUnder18: () => setUnder18(true),
+  });
+
+  const isCodeStep = codeFlow.sentTo !== null;
+  useEffect(() => {
+    onCodeStepChange?.(isCodeStep);
+  }, [isCodeStep, onCodeStepChange]);
 
   const emailValid = EMAIL_RE.test(email.trim());
   const emailEmpty = email.trim().length === 0;
@@ -75,7 +96,7 @@ export function RequestInviteForm({
   const heardFromMissing = attempted && heardFrom.trim().length === 0;
   const consentMissing = attempted && !agreed;
   const ageMissing = attempted && !is18;
-  const submitting = createJoinRequest.isPending;
+  const submitting = codeFlow.isRequesting;
   const canSubmit =
     first.trim().length > 0 &&
     emailValid &&
@@ -98,41 +119,10 @@ export function RequestInviteForm({
       focusFirstErrorAfterRender(formRef.current);
       return;
     }
-    try {
-      const created = await createJoinRequest.mutateAsync({
-        name: first.trim(),
-        email: email.trim(),
-        city: city.trim() || undefined,
-        message: why.trim(),
-        mutualMemberEmail: mutual.trim() || undefined,
-        heardFrom: heardFrom.trim(),
-        socialProfile: socialProfile.trim() || undefined,
-        source: source ?? undefined,
-      });
-      onSent("sent", created.statusToken);
-    } catch (err) {
-      // 409: they already asked. That is not a mistake — confirm, don't scold.
-      // No new row means no new token, so the confirmation renders without a
-      // reference code rather than with an empty one.
-      if (isDuplicateJoinRequest(err)) {
-        onSent("already", null);
-        return;
-      }
-      // 403 UNDER_18: the same humane pause the attestation checkbox leads to.
-      if (isUnder18Error(err)) {
-        setUnder18(true);
-        return;
-      }
-      // Everything else names its real cause: requests closed mid-fill, the
-      // 30-day reapplication cooldown, rejected details, the per-IP throttle
-      // (3/hour, so an immediate retry fails again), a server fault, or no
-      // connection. See `requestInviteErrorCopy`.
-      const cause = requestInviteErrorCopy(err);
-      showToast(t(cause.key, cause.values), "error");
-    }
+    await codeFlow.requestCode(email);
   }
 
-  // Someone told us they're under 18 — pause on the humane block, not the form.
+  // Someone told us they're under 18: pause on the humane block.
   if (under18) {
     return (
       <Under18Notice
@@ -141,6 +131,9 @@ export function RequestInviteForm({
       />
     );
   }
+
+  // The code is on its way: the filled-in form waits one step back.
+  if (isCodeStep) return <RequestInviteCodeStep flow={codeFlow} />;
 
   return (
     <form
@@ -171,60 +164,30 @@ export function RequestInviteForm({
         setMutual={setMutual}
         mutualError={mutualError}
         onMutualBlur={() => setMutualTouched(true)}
+        shouldFocusEmail={codeFlow.hasReturnedToForm}
       />
 
-      <div className={`${styles.agreeRow} ${!agreed ? styles.locked : ""}`}>
-        {/* Read-only on purpose: reading the guidelines to the end is the only
-            way to tick this. A direct click (or Space) can't toggle it: it's
-            controlled by `agreed`, which only the guidelines' confirm button
-            flips (via `onRead`), so `preventDefault` blocks any manual toggle.
-            A click while locked opens the guidelines, so the click always
-            leads somewhere useful. */}
-        <input
-          id="ri-agree"
-          type="checkbox"
-          checked={agreed}
-          readOnly
-          onClick={(e) => {
-            e.preventDefault();
-            if (!agreed) setIsGuidelinesOpen(true);
-          }}
-          aria-invalid={consentMissing}
-          aria-describedby={!agreed ? "ri-agree-hint" : undefined}
-        />
-        <label htmlFor="ri-agree">
-          <Translation
-            i18nKey="auth:requestInvite.agree"
-            components={{
-              guidelines: (
-                <GuidelinesLink
-                  onRead={() => setAgreed(true)}
-                  isOpen={isGuidelinesOpen}
-                  onOpenChange={setIsGuidelinesOpen}
-                />
-              ),
-            }}
-          />
-        </label>
-      </div>
-      {!agreed && (
-        <p id="ri-agree-hint" className={styles.readHint}>
-          <FiLock aria-hidden /> {t("auth:requestInvite.readHint")}
-        </p>
-      )}
+      <RequestInviteAgreeRow
+        agreed={agreed}
+        onAgree={() => setAgreed(true)}
+        invalid={consentMissing}
+      />
 
       <AgeAttestation
         id="ri-age"
         invalid={ageMissing}
         confirmed={is18}
         onConfirmedChange={setIs18}
-        onUnder18={() => setUnder18(true)}
+        onUnder18={() => {
+          codeFlow.clearReturnedToForm();
+          setUnder18(true);
+        }}
       />
 
-      {/* `aria-disabled`, not `disabled`: the control must stay focusable and
-          clickable so an invalid submit can answer with errors + focus rather
-          than silence. It still renders as dimmed — Button.module.css styles
-          `[aria-disabled="true"]` exactly like `:disabled`. */}
+      {/* `aria-disabled`: the control must stay focusable and clickable so an
+          invalid submit can answer with errors and focus. It still renders as
+          dimmed, since Button.module.css styles `[aria-disabled="true"]`
+          exactly like `:disabled`. */}
       <Button
         type="submit"
         className={styles.authBtn}
@@ -232,11 +195,21 @@ export function RequestInviteForm({
         aria-busy={submitting}
       >
         {submitting ? (
-          <Sending label={t("auth:requestInvite.sending")} />
+          <Sending label={t("auth:emailCode.requesting")} />
         ) : (
-          t("auth:requestInvite.submit")
+          t("auth:emailCode.requestCta")
         )}
       </Button>
+      {/* Stays mounted so the refusal is announced as it folds in. */}
+      <div role="alert">
+        <Collapse isOpen={codeFlow.requestFailure !== null}>
+          {codeFlow.requestFailure ? (
+            <p className={styles.fieldError}>
+              <JoinRequestCodeErrorText failure={codeFlow.requestFailure} />
+            </p>
+          ) : null}
+        </Collapse>
+      </div>
     </form>
   );
 }

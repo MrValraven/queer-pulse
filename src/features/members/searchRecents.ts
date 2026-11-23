@@ -29,3 +29,16 @@ export function pushRecent(query: string): void {
     /* storage unavailable — recents are a non-critical nicety */
   }
 }
+
+/**
+ * Forget every recent search in this browser. Sign-out and Quick Exit call
+ * it, so the next person on a shared device never sees what the previous
+ * member searched for.
+ */
+export function clearRecents(): void {
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* storage unavailable: nothing was kept to forget */
+  }
+}

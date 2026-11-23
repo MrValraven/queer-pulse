@@ -58,6 +58,25 @@ const ENFORCEMENT_TARGET_UNRESOLVED_CODE = "ENFORCEMENT_TARGET_UNRESOLVED";
 /** The 403: it names an account this queue may never act on. */
 const ENFORCEMENT_TARGET_PROTECTED_CODE = "ENFORCEMENT_TARGET_PROTECTED";
 
+/**
+ * SEC-31: the 403 every staff report route answers when the report is about
+ * the signed-in staff member or something they posted. Mirrors
+ * `REPORT_ABOUT_ACTOR_CODE` in the backend's `moderation/report-about-actor.ts`.
+ * Deterministic like the two codes above: another staff member decides the
+ * report, so no surface may offer a retry.
+ */
+export const REPORT_ABOUT_ACTOR_CODE = "REPORT_ABOUT_ACTOR";
+
+/** The catalog line for {@link REPORT_ABOUT_ACTOR_CODE}. */
+export const REPORT_ABOUT_YOU_KEY = "admin:moderation.refusal.reportAboutYou";
+
+/** True for the SEC-31 refusal, keyed on `code` alone like everything here. */
+export function isReportAboutActorError(error: unknown): boolean {
+  if (!(error instanceof ApiError)) return false;
+  const body = error.data as { code?: unknown } | null | undefined;
+  return body?.code === REPORT_ABOUT_ACTOR_CODE;
+}
+
 /** The four discriminators the backend sends today. */
 export type EnforcementTarget =
   "no_account" | "ambiguous_authors" | "house_account" | "staff_account";
@@ -146,8 +165,18 @@ export function useEnforcementRefusal(): (
   const ambiguousAuthorsLine = t(TARGET_MESSAGE_KEYS.ambiguous_authors);
   const houseAccountLine = t(TARGET_MESSAGE_KEYS.house_account);
   const staffAccountLine = t(TARGET_MESSAGE_KEYS.staff_account);
+  const reportAboutYouLine = t(REPORT_ABOUT_YOU_KEY);
   return useCallback(
     (error: unknown, fallbackMessage: string) => {
+      // SEC-31, read first: it is a 403 like `staff_account`, with its own line.
+      if (isReportAboutActorError(error)) {
+        if (reportAboutYouLine !== REPORT_ABOUT_YOU_KEY) {
+          return reportAboutYouLine;
+        }
+        return error instanceof Error && error.message.trim()
+          ? error.message.trim()
+          : fallbackMessage;
+      }
       const refusal = classifyEnforcementError(error);
       if (refusal.kind === "failure") return fallbackMessage;
       const { target } = refusal;
@@ -166,7 +195,13 @@ export function useEnforcementRefusal(): (
       }
       return refusal.message || fallbackMessage;
     },
-    [noAccountLine, ambiguousAuthorsLine, houseAccountLine, staffAccountLine],
+    [
+      noAccountLine,
+      ambiguousAuthorsLine,
+      houseAccountLine,
+      staffAccountLine,
+      reportAboutYouLine,
+    ],
   );
 }
 
@@ -174,27 +209,56 @@ export function useEnforcementRefusal(): (
 
 /**
  * `PATCH /mod/reports/bulk` never throws for a partial batch: a refused report
- * lands in `failed[]` as `{ id, reason }`, where `reason` is the message STRING
- * only. It carries no `code` and no `target`, so {@link
- * classifyEnforcementError} cannot be used there and there is nothing to
- * localize against.
- *
- * So the reasons are shown exactly as the server sent them. Do NOT text-match
- * them back to a target to recover the structure: that is the prose-matching
- * this whole module exists to avoid, and it would silently start mislabelling
- * refusals the first time the backend rewords one. Widening the bulk `failed[]`
- * entries to carry `code`/`target` is the server-side follow-up that would let
- * this speak the moderator's language too.
+ * lands in `failed[]` as `{ id, reason, code? }`. `reason` is the server's
+ * sentence; `code` is present when the refusal carried one (SEC-31 follow-up).
+ * A code with a line of its own here (`localizedByCode`) reads in the
+ * moderator's language; every other reason is shown exactly as the server sent
+ * it. Do NOT text-match a `reason` back to a case to recover the structure:
+ * that is the prose-matching this whole module exists to avoid, and it would
+ * silently start mislabelling refusals the first time the backend rewords one.
  *
  * Distinct reasons only, because a batch of twenty refused for one reason
  * should say that reason once, and at most two, because a toast is not a
  * report. The count in the surrounding copy carries the rest.
  */
 export function summarizeBulkFailures(
-  failed: { reason: string }[],
+  failed: { reason: string; code?: string }[],
   maxReasons = 2,
+  localizedByCode: Readonly<Partial<Record<string, string>>> = {},
 ): string {
-  return [...new Set(failed.map((failure) => failure.reason))]
+  return [
+    ...new Set(
+      failed.map(
+        (failure) =>
+          (failure.code ? localizedByCode[failure.code] : undefined) ??
+          failure.reason,
+      ),
+    ),
+  ]
     .slice(0, maxReasons)
     .join("; ");
+}
+
+/**
+ * {@link summarizeBulkFailures} with the coded lines this build knows,
+ * resolved during render for the reason `useEnforcementRefusal` gives. Today
+ * that is SEC-31's report-about-you line; a key still loading falls back to
+ * the server's sentence.
+ */
+export function useBulkFailureSummary(): (
+  failed: { reason: string; code?: string }[],
+) => string {
+  const { t } = useTranslation();
+  const reportAboutYouLine = t(REPORT_ABOUT_YOU_KEY);
+  return useCallback(
+    (failed: { reason: string; code?: string }[]) =>
+      summarizeBulkFailures(
+        failed,
+        2,
+        reportAboutYouLine === REPORT_ABOUT_YOU_KEY
+          ? {}
+          : { [REPORT_ABOUT_ACTOR_CODE]: reportAboutYouLine },
+      ),
+    [reportAboutYouLine],
+  );
 }

@@ -3,6 +3,10 @@ import { INITIAL_DRAFT, type DraftForm } from "./submitStory.data";
 
 const STORY_DRAFT_KEY = "qp-story-draft-v1";
 
+/** Set by Quick Exit for the rest of this page: a debounced autosave still
+ *  pending as the page leaves would write the wiped draft straight back. */
+let isStoryDraftSavingEnded = false;
+
 /** How the "Saved" indicator reflects the ACTUAL localStorage write. */
 export type StoryDraftSaveState = "saved" | "saving" | "unsaved";
 
@@ -19,6 +23,24 @@ function readStoredStoryDraft(): StoredStoryDraft | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Forget the unpublished story draft (byline, headline, body) kept in this
+ * browser. Sign-out and Quick Exit call it, so the next member on a shared
+ * device never sees it in the resume banner.
+ */
+export function clearStoredStoryDraft(): void {
+  try {
+    localStorage.removeItem(STORY_DRAFT_KEY);
+  } catch {
+    /* storage unavailable: nothing was kept to forget */
+  }
+}
+
+/** Stop every story draft write for the rest of this page (Quick Exit). */
+export function endStoryDraftSaving(): void {
+  isStoryDraftSavingEnded = true;
 }
 
 /**
@@ -50,6 +72,7 @@ export function useStoryDraft(form: DraftForm, coverName: string | null) {
   const started = form !== INITIAL_DRAFT || coverName !== null;
 
   const writeNow = useCallback((): boolean => {
+    if (isStoryDraftSavingEnded) return false;
     const stamp = Date.now();
     try {
       localStorage.setItem(

@@ -6,8 +6,8 @@ import {
   formatMonthCaption,
   formatRowDate,
   formatRowDateLong,
+  endDaysLater,
   isDateSelectable,
-  isEndNextDay,
   lastAllowedDate,
   monthCells,
   monthOf,
@@ -82,11 +82,26 @@ describe("addMonthDates", () => {
     ]);
   });
 
-  it("isEndNextDay reads an end at or before the start as the next day", () => {
-    expect(isEndNextDay("22:00", "02:00")).toBe(true);
-    expect(isEndNextDay("19:00", "19:00")).toBe(true);
-    expect(isEndNextDay("19:00", "23:00")).toBe(false);
-    expect(isEndNextDay("19:00", null)).toBe(false);
+  it("endDaysLater reads an end at or before the start as the next day", () => {
+    expect(endDaysLater("22:00", "02:00")).toBe(1);
+    expect(endDaysLater("19:00", "19:00")).toBe(1);
+    expect(endDaysLater("19:00", "23:00")).toBe(0);
+    expect(endDaysLater("19:00", null)).toBe(0);
+  });
+
+  it("endDaysLater keeps the starting event's span while the end is its own (PRD-518)", () => {
+    const weekend = { endTime: "02:00", endDayOffset: 2 };
+    expect(endDaysLater("21:00", "02:00", weekend)).toBe(2);
+    // A changed end reads on the clock alone.
+    expect(endDaysLater("21:00", "03:00", weekend)).toBe(1);
+    expect(endDaysLater("21:00", "23:00", weekend)).toBe(0);
+    // A same-day span never shortens the clock's next day.
+    expect(
+      endDaysLater("21:00", "20:00", { endTime: "20:00", endDayOffset: 0 }),
+    ).toBe(1);
+    expect(
+      endDaysLater("21:00", null, { endTime: null, endDayOffset: null }),
+    ).toBe(0);
   });
 
   it("formatRowDate reads a calendar date the same in every device zone", () => {

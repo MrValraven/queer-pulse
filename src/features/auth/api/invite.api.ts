@@ -30,15 +30,20 @@ export interface InviteDTO {
   validForDays: number | null;
   /** Current community size, for the "247 members" line. */
   memberCount: number;
-  inviter: InviteInviterDTO;
+  /** The inviter's card. SEC-13: sent only while the invite can be used
+   *  (`status` is `valid` and the inviter is active); null on a revoked, used
+   *  or expired invite and for an inviter who is no longer active. */
+  inviter: InviteInviterDTO | null;
   /** Whether the inviter is still an active member. `false` means they're
    *  deactivated / suspended / banned / erased. The redeem flow must not let a
    *  new member join off a ghost, even when `status` is still `valid`. */
   inviterActive: boolean;
-  /** The personal note the inviter wrote, shown in the link preview / landing. */
-  note?: string;
-  /** The inviter's vouch (why they're inviting this person), shown at onboarding. */
-  vouch?: string;
+  /** The personal note the inviter wrote, shown on the landing. Null whenever
+   *  `inviter` is. */
+  note?: string | null;
+  /** The inviter's vouch (why they're inviting this person), shown at
+   *  onboarding. Null whenever `inviter` is. */
+  vouch?: string | null;
 }
 
 /** Resolve an invite code to its inviter + status. 404 → invalid code. */

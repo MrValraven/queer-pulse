@@ -108,6 +108,13 @@ describe("menuUploadFailure", () => {
     expect(failure.i18nKey).toBe("shared:apiError.accountRestricted");
   });
 
+  it("names a coded confirm refusal of the stored PDF", () => {
+    const failure = menuUploadFailure(
+      new ApiError(422, "x", { code: "UPLOAD_CONTENT_MISMATCH" }),
+    ) as DocumentProcessingError;
+    expect(failure.i18nKey).toBe("shared:apiError.uploadContentMismatch");
+  });
+
   it("names the lost connection for a network failure", () => {
     const failure = menuUploadFailure(
       new TypeError("Failed to fetch"),

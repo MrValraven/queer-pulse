@@ -1200,7 +1200,9 @@ describe("QuizshowScreenPage live", () => {
       liveMock.setQuiz({ liveSession: null, hasQuizFailed: true });
     });
     expect(
-      await screen.findByText("Something went wrong. Try again"),
+      await screen.findByText(
+        "We couldn't reach the server. Try again in a moment",
+      ),
     ).toBeInTheDocument();
   });
 

@@ -253,7 +253,10 @@ const PRIVATE_BREADCRUMB_PATHS = [
  * The same two kinds are dropped on every VJ page: buttons and inputs there carry clip titles, pack names and overlay text.
  * A missing hint, a missing event or a target that is no Element (a text
  * node, the window, the document) leaves the breadcrumb to the rules above.
- * Every other breadcrumb passes through unchanged.
+ * Every breadcrumb that is kept loses the text of its search parameters
+ * (`?q=` and the like, see {@link redactSearchTextInUrl}) on any page: the
+ * URL keeps its path, and the names and topics a member searched for stay
+ * on the device.
  */
 export function dropStudioPlayBreadcrumb(
   breadcrumb: Sentry.Breadcrumb,
@@ -285,7 +288,38 @@ export function dropStudioPlayBreadcrumb(
     breadcrumb.message,
   ];
   const isPrivate = candidates.some(isPrivateObservabilityUrl);
-  return isPrivate ? null : breadcrumb;
+  return isPrivate ? null : redactSearchTextInBreadcrumb(breadcrumb);
+}
+
+/** The breadcrumb fields that can hold a URL (or, for a message, text that
+ *  embeds one). */
+const BREADCRUMB_URL_FIELDS = ["url", "to", "from"] as const;
+
+/** Redacts the search text in a kept breadcrumb's URL fields, its message
+ *  and the string arguments of a console breadcrumb (`data.arguments`), in
+ *  place, so the SDK keeps the same object. */
+function redactSearchTextInBreadcrumb(
+  breadcrumb: Sentry.Breadcrumb,
+): Sentry.Breadcrumb {
+  const data = breadcrumb.data;
+  if (data) {
+    for (const field of BREADCRUMB_URL_FIELDS) {
+      const value: unknown = data[field];
+      if (typeof value === "string") data[field] = redactSearchTextInUrl(value);
+    }
+    const consoleArguments: unknown = data.arguments;
+    if (Array.isArray(consoleArguments)) {
+      data.arguments = consoleArguments.map((argument: unknown) =>
+        typeof argument === "string"
+          ? redactSearchTextInUrl(argument)
+          : argument,
+      );
+    }
+  }
+  if (typeof breadcrumb.message === "string") {
+    breadcrumb.message = redactSearchTextInUrl(breadcrumb.message);
+  }
+  return breadcrumb;
 }
 
 /** True while the page's path is under /studio (outside a browser, false). */
@@ -391,11 +425,108 @@ export function isPrivateObservabilityUrl(candidate: unknown): boolean {
 }
 
 /**
+ * Query parameters that carry text a member typed into a search box: the
+ * global search and the member, persona, community and staff lists all send
+ * it as one of these. Matched in any letter case.
+ */
+const SEARCH_TEXT_PARAMS = [
+  "q",
+  "query",
+  "search",
+  "searchTerm",
+  "term",
+  "keyword",
+  "keywords",
+] as const;
+
+/** What a redacted search value reads as, the same marker
+ *  `handleQueryError` writes for a private query key. */
+const REDACTED_SEARCH_TEXT = "[private]";
+
+/**
+ * `?q=` or `&q=` (and the other names above) up to the next `&`, `#` or
+ * whitespace, so the words after a URL quoted in a message survive
+ * (`?q=prep failed` reads `?q=[private] failed`). A colon ends the value
+ * only when a space or the end of the text follows it (`?q=lua: 500`), since
+ * a client that leaves `:` unencoded can put one inside the value.
+ */
+const SEARCH_TEXT_PARAM_PATTERN = new RegExp(
+  `([?&](?:${SEARCH_TEXT_PARAMS.join("|")})=)(?:[^&#\\s:]|:(?!\\s|$))*`,
+  "gi",
+);
+
+function isSearchTextParam(name: string): boolean {
+  const lowerName = name.toLowerCase();
+  return SEARCH_TEXT_PARAMS.some((param) => param.toLowerCase() === lowerName);
+}
+
+/**
+ * `url` with the value of every search parameter replaced by `[private]`, so
+ * `/search?q=clinic&type=people` reports as `/search?q=[private]&type=people`.
+ * Works on absolute and relative URLs and on text that embeds one (a
+ * breadcrumb message). A string with no search parameter comes back as is.
+ */
+export function redactSearchTextInUrl(url: string): string {
+  return url.replace(SEARCH_TEXT_PARAM_PATTERN, `$1${REDACTED_SEARCH_TEXT}`);
+}
+
+type RequestQueryString = NonNullable<
+  Sentry.ErrorEvent["request"]
+>["query_string"];
+
+/** The event's `request.query_string` with its search values redacted, in
+ *  each of the three shapes the SDK allows (string, pairs, record). */
+function redactSearchTextInQueryString(
+  queryString: RequestQueryString,
+): RequestQueryString {
+  if (typeof queryString === "string") {
+    return redactSearchTextInUrl(`?${queryString}`).slice(1);
+  }
+  if (Array.isArray(queryString)) {
+    return queryString.map(([name, value]): [string, string] => [
+      name,
+      isSearchTextParam(name) ? REDACTED_SEARCH_TEXT : value,
+    ]);
+  }
+  if (queryString) {
+    return Object.fromEntries(
+      Object.entries(queryString).map(([name, value]) => [
+        name,
+        isSearchTextParam(name) ? REDACTED_SEARCH_TEXT : value,
+      ]),
+    );
+  }
+  return queryString;
+}
+
+/**
+ * Redacts the search text in an event's own text: `event.message` and the
+ * `value` of every exception, where a failed request's message can quote its
+ * URL. In place, like {@link dropPrivateRequestUrl}.
+ */
+export function redactSearchTextInEvent(
+  event: Sentry.ErrorEvent,
+): Sentry.ErrorEvent {
+  if (typeof event.message === "string") {
+    event.message = redactSearchTextInUrl(event.message);
+  }
+  for (const exception of event.exception?.values ?? []) {
+    if (typeof exception.value === "string") {
+      exception.value = redactSearchTextInUrl(exception.value);
+    }
+  }
+  return event;
+}
+
+/**
  * The browser SDK attaches `location.href` as `event.request.url` and the
  * page's `Referer` header to every error event, so an error thrown on a
  * playlist page would name the playlist. Removes the URL (and any query
  * string) when it names a private path, and every `Referer` header, in any
- * key casing, that does. Everything else on the event passes through.
+ * key casing, that does. On every other page the URL, the query string and
+ * the `Referer` keep their path and lose only their search text (an error on
+ * `/search?q=...` would otherwise carry what the member searched for).
+ * Everything else on the event passes through.
  */
 export function dropPrivateRequestUrl(
   event: Sentry.ErrorEvent,
@@ -405,15 +536,25 @@ export function dropPrivateRequestUrl(
   if (isPrivateObservabilityUrl(request.url)) {
     delete request.url;
     delete request.query_string;
+  } else {
+    if (typeof request.url === "string") {
+      request.url = redactSearchTextInUrl(request.url);
+    }
+    if (request.query_string !== undefined) {
+      request.query_string = redactSearchTextInQueryString(
+        request.query_string,
+      );
+    }
   }
   const headers = request.headers;
   if (headers) {
     for (const headerName of Object.keys(headers)) {
-      if (
-        headerName.toLowerCase() === "referer" &&
-        isPrivateObservabilityUrl(headers[headerName])
-      ) {
+      if (headerName.toLowerCase() !== "referer") continue;
+      const referer = headers[headerName];
+      if (isPrivateObservabilityUrl(referer)) {
         delete headers[headerName];
+      } else if (typeof referer === "string") {
+        headers[headerName] = redactSearchTextInUrl(referer);
       }
     }
   }
@@ -449,12 +590,13 @@ export async function initObservability(): Promise<void> {
     // 2. Expected failure: a signed-out 401 is an answer the app handles, so it
     //    never spends monitoring quota. See SILENT_HTTP_STATUSES.
     // Events that pass both gates lose a page URL or Referer naming a Studio
-    // track, album or playlist (dropPrivateRequestUrl).
+    // track, album or playlist, and the search text in every other one
+    // (dropPrivateRequestUrl).
     beforeBreadcrumb: dropStudioPlayBreadcrumb,
     beforeSend: (event, hint) => {
       if (!enabled) return null;
       if (isExpectedHttpFailure(hint.originalException)) return null;
-      return dropPrivateRequestUrl(event);
+      return dropPrivateRequestUrl(redactSearchTextInEvent(event));
     },
   });
 

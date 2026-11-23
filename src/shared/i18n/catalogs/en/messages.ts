@@ -167,8 +167,7 @@ export const messages: Catalog = {
   "viewer.save": "Save",
   "viewer.saved": "Photo saved",
   "viewer.saveFallback":
-    "We couldn't save that photo, so it opened in a new tab.",
-  "viewer.saveFailed": "We couldn't save that photo. Try again.",
+    "We couldn't save that photo, so we sent it to a new tab. If it did not open, allow pop-ups for QueerPulse and try again.",
   "viewer.prev": "Previous photo",
   "viewer.next": "Next photo",
 
@@ -1072,7 +1071,7 @@ export const messages: Catalog = {
   "request.error.rateLimited":
     "You're sending message requests quickly. Wait a minute, then try again.",
   "request.error.notFound":
-    "We couldn't find {name}. They may have changed their handle or left QueerPulse. Search for them again to check.",
+    "{name} isn't available for message requests right now",
   "requests.replyCta": "Reply",
   "requests.inboundHeading": "New requests",
   "requests.outboundHeading": "Your sent requests",
@@ -1256,4 +1255,17 @@ export const messages: Catalog = {
   "join.usedUpLinkTitle": "This invite link has been used up",
   "join.usedUpLinkBody":
     "It has already let in as many people as it allows. Ask someone in the group to send you a fresh one.",
+  "status.failure.accountInactive":
+    "Not delivered · Your account can't send messages right now",
+  "status.failure.groupLeft": "Not delivered · You're no longer in this group",
+  "status.failure.notConnected":
+    "Not delivered · You can message them once they reply or you connect",
+  "status.failure.recipientUnavailable":
+    "Not delivered · You can't message this member",
+  "status.failure.officialReadOnly":
+    "Not delivered · Replies to this thread are closed",
+  "status.failure.gifSource":
+    "Not delivered · Pick this GIF from the GIF picker",
+  "attachments.gifSourceRefused": "GIF unavailable",
+  "request.error.unblockFirst": "Unblock this member before sending a request",
 };

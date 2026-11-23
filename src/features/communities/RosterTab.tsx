@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { FiCheck } from "react-icons/fi";
+import { AnimatePresence } from "motion/react";
 import {
-  Avatar,
   LoadErrorState,
   LoadMoreFooter,
   SearchInput,
@@ -11,14 +9,14 @@ import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { useAuth } from "../../app/providers/authContext";
 import type { RosterMember } from "./community.model";
+import type { CommunityRole } from "./membership.types";
 import type { PulsePaging } from "./api/useCommunityPosts";
-import { photoOf } from "./communityPeople";
-import { alsoIn } from "./communityConnections";
-import { RoleBadge } from "./CommunityBadges";
-import { RosterMessageButton } from "./RosterMessageButton";
+import { viewerPerson } from "./communityPeople";
+import { RosterMemberCard } from "./RosterMemberCard";
+import { canSendCommunityGifts } from "./badges/communityBadgeAccess";
+import { SendCommunityGiftDialog } from "./badges/SendCommunityGiftDialog";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
@@ -34,6 +32,8 @@ export function RosterTab({
   total,
   slug,
   paging,
+  viewerRole,
+  isSpace,
 }: {
   roster: RosterMember[];
   total: number;
@@ -42,11 +42,18 @@ export function RosterTab({
    *  Search below filters only the members loaded so far — "Load more" widens
    *  what search can find, same trade-off as any paginated-then-searched list. */
   paging: PulsePaging;
+  /** The viewer's seat here. Staff get a gift button on other members' cards. */
+  viewerRole: CommunityRole | null;
+  /** A space has no badges or gifts, so no gift button either. */
+  isSpace: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const [q, setQ] = useState("");
+  const [giftRecipient, setGiftRecipient] = useState<RosterMember | null>(null);
+  const viewerSlug = viewerPerson(user)?.slug;
+  const canGift = !isSpace && canSendCommunityGifts(viewerRole);
 
   const shown = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -84,58 +91,18 @@ export function RosterTab({
       />
 
       <div className={detail.memberGrid}>
-        {shown.map((m) => (
-          <div className={detail.mCard} key={m.slug ?? m.name}>
-            <div className={styles.rosterAv}>
-              <Avatar
-                initials={m.initials}
-                tint={m.tint}
-                src={photoOf(m, demoMode)}
-                size={48}
-                // The member's name is rendered as visible text right beside
-                // this avatar (see .rosterName below), so the image is
-                // decorative — omit `alt` (→ alt="") to avoid a screen reader
-                // double-reading the name (axe image-redundant-alt).
-                verified={m.verified}
-              />
-            </div>
-            <div className={styles.rosterName}>
-              <span className={styles.nameRow}>
-                {m.slug ? (
-                  <Link to={`/members/${m.slug}`} className={styles.rosterLink}>
-                    {m.name}
-                  </Link>
-                ) : (
-                  m.name
-                )}
-                <MemberStaffBadge slug={m.slug} />
-              </span>
-            </div>
-            <div className={styles.rosterBadgeRow}>
-              <RoleBadge role={m.role} />
-              {m.verified && (
-                <span className={styles.verified}>
-                  <FiCheck aria-hidden />{" "}
-                  {t("communities:detail.roster.verified")}
-                </span>
-              )}
-            </div>
-            {m.title && <div className={detail.mRole}>{m.title}</div>}
-            <div className={styles.rosterMeta}>
-              {[m.pronouns, m.hood].filter(Boolean).join(" · ")}
-            </div>
-            {(() => {
-              const others = alsoIn(m.slug, slug, demoMode);
-              return others.length > 0 ? (
-                <div className={styles.alsoIn}>
-                  {t("communities:detail.roster.alsoIn", {
-                    names: others.join(", "),
-                  })}
-                </div>
-              ) : null;
-            })()}
-            <RosterMessageButton member={m} />
-          </div>
+        {shown.map((m, index) => (
+          <RosterMemberCard
+            // An inactive member's stand-in has no slug, and two of them share
+            // the label as their name, so the index keeps their keys apart.
+            key={m.slug || `${m.name}-${index}`}
+            member={m}
+            communitySlug={slug}
+            isGiftable={
+              canGift && m.slug !== undefined && m.slug !== viewerSlug
+            }
+            onSendGift={setGiftRecipient}
+          />
         ))}
       </div>
       <p className={detail.showing}>
@@ -175,6 +142,16 @@ export function RosterTab({
           loadingLabel={t("communities:detail.roster.loadingMore")}
         />
       )}
+      <AnimatePresence>
+        {giftRecipient?.slug && (
+          <SendCommunityGiftDialog
+            key={giftRecipient.slug}
+            slug={slug}
+            recipient={{ slug: giftRecipient.slug, name: giftRecipient.name }}
+            onClose={() => setGiftRecipient(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

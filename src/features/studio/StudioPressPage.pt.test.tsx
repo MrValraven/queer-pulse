@@ -32,7 +32,7 @@ describe("StudioPressPage in Portuguese", () => {
       await screen.findByText("Fado · música devocional · canção erudita"),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText(/A Mariana trata da própria imprensa/),
+      await screen.findByText(/É a própria Mariana que trata da imprensa/),
     ).toBeInTheDocument();
     expect(
       await screen.findByRole("button", { name: "Copiar a biografia" }),

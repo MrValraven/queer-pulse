@@ -2,7 +2,10 @@ import { useCallback, useState } from "react";
 import { useSocial } from "../../app/providers/useSocial";
 import type { TFunction } from "../../shared/i18n/types";
 import { logError } from "../../shared/observability/logger";
-import { useCreateReport } from "../safety/api/useCreateReport";
+import {
+  isFilingOnOpenReport,
+  useCreateReport,
+} from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import type { ReasonCode } from "../safety/reportReasons";
 import type { MyEvent } from "./myEvents.types";
@@ -84,9 +87,13 @@ export function useMyEventsSafety({
           detail: trimmedDetail.length > 0 ? trimmedDetail : undefined,
         },
         {
-          onSuccess: () => {
+          onSuccess: (filed) => {
             setReport((r) => ({ ...r, open: false }));
-            toast(t("myevents:reportModal.sentToast"), "success");
+            // PRD-510: a repeat on an open report is named by `useCreateReport`
+            // in its own toast, so this one stays quiet for it.
+            if (!isFilingOnOpenReport(filed)) {
+              toast(t("myevents:reportModal.sentToast"), "success");
+            }
           },
           onError: (error) => {
             logError(error, { scope: "myevents.reportEvent" });

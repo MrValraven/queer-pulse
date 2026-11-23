@@ -32,16 +32,24 @@ export function AdminMemberRow({
   const { t } = useTranslation();
   const demoPortrait = useDemoPortrait();
   const openReportsCount = member.openReportsCount ?? 0;
-  const accessibleName = t("admin:members.row.ariaLabel", {
+  // Null is a count the backend withheld (the viewer's own row): the label
+  // and the chips leave it out.
+  const isReportCountWithheld = member.openReportsCount === null;
+  const labelValues = {
     name: member.name,
     status: member.verified
       ? t("admin:members.status.verified")
       : t("admin:members.row.notVerified"),
     role: t(`admin:members.role.value.${member.role}`),
-    reports: t("admin:members.status.openReports", {
-      count: openReportsCount,
-    }),
-  });
+  };
+  const accessibleName = isReportCountWithheld
+    ? t("admin:members.row.ariaLabelNoReports", labelValues)
+    : t("admin:members.row.ariaLabel", {
+        ...labelValues,
+        reports: t("admin:members.status.openReports", {
+          count: openReportsCount,
+        }),
+      });
 
   return (
     <button
@@ -63,13 +71,15 @@ export function AdminMemberRow({
         <span className={styles.rowTop}>
           <span className={styles.rowName}>{member.name}</span>
           <span className={styles.pronoun}>{member.pronoun}</span>
-          <AdminChip tone={member.statusTone} dot>
-            {member.verified
-              ? t("admin:members.status.verified")
-              : t("admin:members.status.openReports", {
-                  count: openReportsCount,
-                })}
-          </AdminChip>
+          {(member.verified || !isReportCountWithheld) && (
+            <AdminChip tone={member.statusTone} dot>
+              {member.verified
+                ? t("admin:members.status.verified")
+                : t("admin:members.status.openReports", {
+                    count: openReportsCount,
+                  })}
+            </AdminChip>
+          )}
           {member.role !== "member" && (
             <AdminChip tone={member.role === "admin" ? "violet" : "plum"}>
               {t(`admin:members.role.value.${member.role}`)}

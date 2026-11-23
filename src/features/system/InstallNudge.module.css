@@ -5,8 +5,11 @@
 .nudge {
   position: fixed;
   /* No `--consent-inset` term: InstallNudge.tsx holds the nudge back while the
-     consent banner is up, so the two never share the bottom edge. */
-  bottom: calc(16px + env(safe-area-inset-bottom));
+     consent banner is up, so the two never share the bottom edge.
+     `--bottom-inset` (standalone.css) already holds the bottom tab bar plus
+     the home indicator on a phone, so the card rests 16px above the bar. Where
+     the token is unset (desktop) the fallback clears the home indicator. */
+  bottom: calc(16px + var(--bottom-inset, env(safe-area-inset-bottom, 0px)));
   inset-inline-end: calc(16px + env(safe-area-inset-right));
   z-index: var(--z-sticky);
   width: min(380px, calc(100vw - 32px));
@@ -24,29 +27,6 @@
    composer owns the bottom edge, so nothing else may sit there. */
 :global(html[data-messages-thread="true"]) .nudge {
   display: none;
-}
-
-.trigger {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  color: inherit;
-  text-align: start;
-  text-decoration: none;
-  cursor: pointer;
-  border-radius: var(--radius-11);
-}
-
-.trigger:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
 }
 
 .icon {
@@ -68,7 +48,7 @@
 }
 
 .title {
-  display: block;
+  margin: 0;
   font-family: var(--sans);
   font-weight: 600;
   font-size: var(--text-14);
@@ -77,8 +57,7 @@
 }
 
 .text {
-  display: block;
-  margin-top: 3px;
+  margin: 3px 0 0;
   font-family: var(--sans);
   font-size: var(--text-12-5);
   line-height: 1.45;
@@ -86,40 +65,13 @@
   overflow-wrap: anywhere;
 }
 
-.cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 9px;
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: var(--text-12-5);
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.trigger:hover .cta {
-  text-decoration: underline;
-}
-
-.dismiss {
-  flex: none;
+/* Real buttons in a row under the copy: the primary install (or "Show me how")
+   first, "Not now" after it. Both are `size="sm"`, which keeps a 44px tap
+   target on touch screens. */
+.actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  /* 44px touch target via padding around a 16px icon box. */
-  width: 32px;
-  height: 32px;
-  margin: -4px -4px 0 0;
-  border: 0;
-  border-radius: 50%;
-  background: none;
-  color: var(--ink-40);
-  font-size: var(--text-16);
-  cursor: pointer;
-  transition: background 160ms var(--ease);
-}
-
-.dismiss:hover {
-  background: rgba(var(--plum-rgb), 0.07);
+  gap: 8px;
+  margin-top: 12px;
 }

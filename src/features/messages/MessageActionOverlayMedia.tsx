@@ -5,6 +5,7 @@ import { MentionText } from "../../shared/mentions/MentionText";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
 import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import { useStickerAttachmentLabel } from "../stickers/useStickerAttachmentLabel";
+import { renderableGifUrl } from "./gifMediaHosts";
 import { renderWithLinks } from "./linkify";
 import {
   AttachmentPreviewUnavailable,
@@ -120,7 +121,26 @@ export function MessageActionOverlayMedia({
       </div>
     );
   }
-  const { url, width, height } = attachment;
+  const { width, height } = attachment;
+  // SEC-24: a GIF on a host outside the GIF provider fires no request; the
+  // clone names why it shows no picture. A photo with no url left reads as
+  // the plain unavailable preview.
+  const url = renderableGifUrl(message.kind, attachment.url);
+  if (!url) {
+    return (
+      <div className={groupClassName}>
+        <AttachmentPreviewUnavailable
+          icon={<FiImage aria-hidden size={20} />}
+          label={
+            message.kind === "gif"
+              ? t("messages:attachments.gifSourceRefused")
+              : t("messages:attachments.previewUnavailable")
+          }
+        />
+        {captionNode}
+      </div>
+    );
+  }
   // Reserve the clone's final box BEFORE the image decodes, exactly like the
   // real bubble. A missing/zero dimension falls back to a plain 1:1 box,
   // keeping an intrinsic size at all times (see MessageBubbleBody).

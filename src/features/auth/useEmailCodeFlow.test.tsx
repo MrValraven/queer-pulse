@@ -143,7 +143,8 @@ describe("useEmailCodeFlow", () => {
     expect(result.current.flow.fieldFailure).toEqual({
       kind: "reason",
       reason: "code_incorrect",
-      attemptsLeft: 4,
+      // A code allows 3 tries, so one wrong code leaves 2.
+      attemptsLeft: 2,
     });
     expect(result.current.flow.code).toBe("");
     expect(result.current.flow.isVerifying).toBe(false);

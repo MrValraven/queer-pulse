@@ -1,4 +1,9 @@
-import { tintForSlug, type SlugTint } from "../../../shared/api/refs";
+import {
+  authorDisplayName,
+  isInactiveMemberRef,
+  tintForSlug,
+  type SlugTint,
+} from "../../../shared/api/refs";
 import { initialsFromName } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -171,8 +176,11 @@ export function threadToCard(
     // treats as "render nothing". Never a placeholder.
     excerpt: dto.excerpt ?? "",
     author: {
-      initials: initialsFromName(dto.author.displayName),
-      name: dto.author.displayName,
+      // The inactive member's stand-in shows the label and no initials.
+      initials: isInactiveMemberRef(dto.author)
+        ? ""
+        : initialsFromName(dto.author.displayName),
+      name: authorDisplayName(dto.author, t),
       background: s.background,
       color: s.color,
       slug,
@@ -242,7 +250,7 @@ export function threadToCard(
     isAnonymous: dto.isAnonymous ?? false,
     coAuthor: dto.coAuthor
       ? {
-          name: dto.coAuthor.displayName,
+          name: authorDisplayName(dto.coAuthor, t),
           // Empty handle links nowhere, same rule as the author above.
           slug: dto.coAuthor.handle || undefined,
         }
@@ -287,10 +295,12 @@ export function postToReply(
   return {
     id: dto.id,
     parentPostId: dto.parentPostId ?? null,
-    avatar: initialsFromName(dto.author.displayName),
+    avatar: isInactiveMemberRef(dto.author)
+      ? ""
+      : initialsFromName(dto.author.displayName),
     background: soft.background,
     color: soft.color,
-    name: dto.author.displayName,
+    name: authorDisplayName(dto.author, t),
     slug,
     photo: dto.author.avatarUrl ?? undefined,
     time: relative(dto.createdAt, t, fmt),
@@ -348,7 +358,7 @@ export function threadDetail(
   // Display name per loaded post id, so a quote-reply can be attributed to the
   // post it quotes without a second request.
   const authorNameByPostId = new Map(
-    posts.map((post) => [post.id, post.author.displayName]),
+    posts.map((post) => [post.id, authorDisplayName(post.author, t)]),
   );
   // Who counts as "OP" on a reply badge. Falls back to the THREAD's author when
   // the opening post itself is unavailable, so the marker survives a page that
@@ -357,12 +367,15 @@ export function threadDetail(
   // author), so it badges no reply; a tombstoned reply's empty handle would
   // otherwise match it.
   const opAuthorHandle = op?.author.handle || dto.author.handle || null;
+  // SEC-05: the server's own marker wins when it is sent, since a reply the
+  // author of an anonymous thread writes carries an empty handle.
   const mappedReplies = rest.map((post) =>
     postToReply(
       post,
       t,
       fmt,
-      opAuthorHandle !== null && post.author.handle === opAuthorHandle,
+      post.isByThreadAuthor ??
+        (opAuthorHandle !== null && post.author.handle === opAuthorHandle),
       post.parentPostId ? authorNameByPostId.get(post.parentPostId) : undefined,
     ),
   );

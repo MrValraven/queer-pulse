@@ -45,7 +45,7 @@ export function AdminReportDrawer({
   onUnassign?: (r: ModReport) => void;
 }) {
   const { t } = useTranslation();
-  const { detail, loading } = useModReportDetail(report);
+  const { detail, loading, isAboutViewer } = useModReportDetail(report);
   const {
     action,
     setAction,
@@ -116,6 +116,14 @@ export function AdminReportDrawer({
           )}
           <ReportContext detail={detail} report={report} />
         </>
+      ) : isAboutViewer ? (
+        // SEC-31: the report is about this staff member, so the server keeps
+        // its context, reporter and history from them. Said plainly, in the
+        // place the context would be.
+        <p className={styles.dTransparency} role="status">
+          <FiAlertCircle aria-hidden />{" "}
+          {t("admin:moderation.refusal.reportAboutYou")}
+        </p>
       ) : (
         <ReportContextFallback report={report} />
       )}
@@ -166,7 +174,7 @@ export function AdminReportDrawer({
         </p>
       )}
 
-      <ReportAudit reportId={report.id} />
+      {!isAboutViewer && <ReportAudit reportId={report.id} />}
     </AdminDrawer>
   );
 }

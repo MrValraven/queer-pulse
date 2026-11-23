@@ -36,7 +36,7 @@
 .panelEmpty {
   padding: 0 var(--admin-panel-pad) var(--admin-panel-pad);
 }
-/* The transfer modal's radio rows keep their own card look. */
+/* The ownership-offer picker's radio rows keep their own card look. */
 .modRow {
   display: flex;
   align-items: center;
@@ -84,8 +84,9 @@
    the name gets the full width. From about 510px of row width it all sits on
    one line. `max-width` caps the button group at the row, so a pair too wide
    for one line (PT "Retirar da moderação" + "Remover" at 375px) wraps inside
-   the group and the row never overflows. Scoped to these rows: the transfer
-   modal's radio rows and the report card's actions keep their layout. */
+   the group and the row never overflows. Scoped to these rows: the
+   ownership-offer picker's radio rows and the report card's actions keep
+   their layout. */
 .modRowWithActions {
   flex-wrap: wrap;
 }

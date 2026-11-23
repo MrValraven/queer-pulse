@@ -488,13 +488,15 @@ describe("QuizshowRemotePage players, teams and errors", () => {
     eventSessionMock.hasLoadFailed = false;
   });
 
-  it("shows a generic error when the event fails to load", async () => {
+  it("names the unreachable server when the event fails to load", async () => {
     eventSessionMock.hasLoadFailed = true;
     renderPage();
     await awaitCatalog("quizshow");
 
     expect(
-      screen.getByRole("heading", { name: "Something went wrong. Try again" }),
+      screen.getByRole("heading", {
+        name: "We couldn't reach the server. Try again in a moment",
+      }),
     ).toBeTruthy();
     expect(
       screen.getByRole("link", { name: "Back to the event" }),

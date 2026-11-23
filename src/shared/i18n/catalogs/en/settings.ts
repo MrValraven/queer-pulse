@@ -412,7 +412,8 @@ export const settings: Catalog = {
   "visibility.open.desc":
     "Anyone in the network can see your profile and say hello",
   "visibility.network.title": "Network only",
-  "visibility.network.desc": "Visible to people within two connections of you",
+  "visibility.network.desc":
+    "Only people you're directly connected with find you in search and see your full profile",
   "visibility.private.title": "Keep it quiet for now",
   "visibility.private.desc":
     "I'll reach out when I'm ready. Profile not visible in search.",
@@ -1045,7 +1046,7 @@ export const settings: Catalog = {
   // ── dataExport.data.ts — shared accordion tag dictionary ─────────────────
   "dataExport.accordion.posts.title": "Forum and community posts",
   "dataExport.accordion.posts.body":
-    "Every forum thread you started and every reply you wrote. Every community you run, with the purpose, rules and welcome message you wrote for it. Every post and reply you wrote in any community, including ones that were later removed, with the date they came down. Your votes on forum replies and polls, the threads you follow, earlier versions of your own posts, threads you co-wrote, and the polls run on threads you started. Every community you belong to, with your role, notification level and join date. Your reactions to community posts, the invites you sent and received, resources you added, and earlier versions of your own community posts and replies. Requests you sent a community or the platform team (to join, to switch on a space, a new tag, or a reading-group proposal, among others), the communities and threads you turned down in your feed, and the topics you follow.",
+    "Every forum thread you started and every reply you wrote. Every community you run, with the purpose, rules and welcome message you wrote for it. Every post and reply you wrote in any community, including ones that were later removed, with the date they came down. Your votes on forum replies and polls, the threads you follow, earlier versions of your own posts, threads you co-wrote, and the polls run on threads you started. Every community you belong to, with your role, notification level and join date. Your reactions to community posts, the invites you sent and received, resources you added, and earlier versions of your own community posts and replies. Requests you sent a community or the platform team (to join, to switch on a space, a new tag, or a reading-group proposal, among others), the communities and threads you turned down in your feed, and the topics you follow. The badges you earned in each community, the one you wear, how many of its events you attended, and the gifts you received and sent, with their notes.",
   "dataExport.accordion.gatherings.title": "Events and Go together",
   "dataExport.accordion.gatherings.body":
     "Events you hosted, with their details, and every RSVP you made, with its status and any waitlist place. Your Go together questionnaire, the events you opted into, the answers you gave about the people and groups you met, and your private Not for me choices. What you told the host with each RSVP (guests, access and dietary needs, pronouns, and your custom answer), events you bookmarked, co-host or appear on the lineup of, event invites you sent and received, announcements you sent as a host, captions on photos you uploaded, the recurring series you run, and your event settings (reminder lead time, default visibility and event emails).",
@@ -1126,6 +1127,7 @@ export const settings: Catalog = {
   "dataExport.tag.votesAndFollows": "votes and follows",
   "dataExport.tag.communityRoles": "community roles",
   "dataExport.tag.feedChoices": "feed choices",
+  "dataExport.tag.communityBadges": "community badges and gifts",
   "dataExport.tag.rsvpDetails": "RSVP details",
   "dataExport.tag.eventSettings": "event settings",
   "dataExport.tag.connectionNotes": "notes on your connections",
@@ -1475,4 +1477,26 @@ export const settings: Catalog = {
   "hiddenCommunities.empty.error.title":
     "Couldn't load your hidden communities",
   "hiddenCommunities.empty.error.desc": "Check your connection and try again.",
+  "dataExport.tag.communityOwnershipOffers":
+    "ownership offers you made or received",
+  "reauth.completion.cancelled":
+    "You cancelled the Google check. Nothing was changed.",
+  "reauth.completion.timedOut":
+    "The Google check timed out. Start it again from this page.",
+  "reauth.completion.sessionExpired":
+    "Your sign-in timed out while you were on Google. Start the check again from this page.",
+  "reauth.completion.wrongAccount":
+    "That Google account isn't the one on your QueerPulse account. Try again with the Google account linked to QueerPulse.",
+  "reauth.completion.adminPolicy":
+    "Your Google Workspace admin blocks QueerPulse on that account. Ask your admin to allow it, then try again.",
+  "reauth.completion.googleServerError":
+    "Google hit an error on its side. Try again in a moment.",
+  "reauth.completion.googleUnavailable":
+    "Google is busy right now. Try again in a few minutes.",
+  "reauth.completion.noEmail":
+    "Google didn't share your email, so we couldn't confirm it's you.",
+  "reauth.completion.emailUnverified":
+    "That Google account's email isn't verified yet, so we couldn't confirm it's you.",
+  "reauth.completion.googleSetup":
+    "Google refused the way we asked. That one's on us. Try again later.",
 };

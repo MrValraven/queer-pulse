@@ -23,7 +23,7 @@ import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
  * The backend's `GovernanceLogAction` enum, over the wire as its string values.
  * Order here is the order the action filter offers them in: roster actions
  * first, then ownership and lifecycle, then settings, then the membership-card
- * programme, then the platform's offers of support.
+ * programme, then the platform's offers of support, then badges and gifts.
  *
  * Every value the backend can write belongs here. One that is missing has no
  * chip tone and no copy of its own, and falls back to a humanized version of
@@ -57,6 +57,13 @@ export const COMMUNITY_GOVERNANCE_LOG_ACTIONS = [
   "card_replaced",
   "support_offered",
   "support_offer_answered",
+  // The community badges programme: an owner's badge edits, then the gifts
+  // staff send and take back.
+  "badge_created",
+  "badge_updated",
+  "badge_deleted",
+  "gift_sent",
+  "gift_removed",
 ] as const;
 
 export type CommunityGovernanceLogAction =
@@ -104,6 +111,17 @@ export interface CommunityGovernanceLogDetailsDTO {
   cardSerial?: string;
   /** `settings_changed`: the field-by-field diff. */
   changedSettings?: CommunityGovernanceSettingChangeDTO[];
+  /** The badge actions: which badge, under the name it carried when the entry
+   *  was written. `badge_updated` also sends its field diff as
+   *  `changedSettings`. */
+  badgeId?: string;
+  badgeName?: string;
+  /** `badge_deleted`: how many members lost the badge. */
+  holderCount?: number;
+  /** The gift actions: which gift, and its catalog key. A gift's note never
+   *  crosses into this trail. */
+  giftId?: string;
+  giftKey?: string;
 }
 
 export interface CommunityGovernanceLogEntryDTO {

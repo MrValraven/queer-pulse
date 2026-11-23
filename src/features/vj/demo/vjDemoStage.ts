@@ -193,7 +193,13 @@ function withFollowedSetlistItemIds(
   setlistReads: ReadonlyMap<string, VjSetlistFollowRead | null>,
 ): VjDemoStage {
   const activeSetlistId = stage.state.activeSetlistId;
-  if (activeSetlistId === null) return { ...stage, setlistItemIds: null };
+  if (activeSetlistId === null) {
+    // Keep the stage object when there is nothing to clear, so a change
+    // that touches nothing leaves the stage as it was.
+    return stage.setlistItemIds === null
+      ? stage
+      : { ...stage, setlistItemIds: null };
+  }
   const read = setlistReads.get(activeSetlistId.toLowerCase());
   if (read === undefined || read === null) return stage;
   return { ...stage, setlistItemIds: [...read.itemIds] };

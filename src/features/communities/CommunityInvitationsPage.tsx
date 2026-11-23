@@ -16,6 +16,8 @@ import {
   useMyCommunityInvites,
 } from "./api/useCommunityInvites";
 import { CommunityInvitationRow } from "./CommunityInvitationRow";
+import { CommunityOwnershipOffersSection } from "./CommunityOwnershipOffersSection";
+import { useMyCommunityOwnershipOffers } from "./api/useCommunityOwnershipOffers";
 import { DeclineInviteModal } from "./DeclineInviteModal";
 import { communityErrorText } from "./communityErrors";
 import styles from "./CommunityInvitations.module.css";
@@ -34,11 +36,18 @@ import styles from "./CommunityInvitations.module.css";
  *
  * Demo mode has no invitation record, so the shelf reads empty there rather
  * than inventing invitations out of fixtures.
+ *
+ * The open ownership offers addressed to this member (PRD-514) sit above the
+ * invitations: both are a community waiting on this member's answer, and an
+ * ownership notification links here.
  */
 export function CommunityInvitationsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { invites, isLoading, isError, refetch } = useMyCommunityInvites();
+  // With offers above, the invitations get a heading of their own so the two
+  // lists read as two sections.
+  const { offers } = useMyCommunityOwnershipOffers();
   const declineMutation = useDeclineCommunityInvite();
   const [decliningId, setDecliningId] = useState<string | null>(null);
   const declining = invites.find((invite) => invite.id === decliningId);
@@ -53,8 +62,7 @@ export function CommunityInvitationsPage() {
       {
         onSuccess: () =>
           showToast(t("communities:detail.invite.declinedToast"), "success"),
-        onError: (error) =>
-          showToast(communityErrorText(t, error), "error"),
+        onError: (error) => showToast(communityErrorText(t, error), "error"),
         onSettled: () => setDecliningId(null),
       },
     );
@@ -73,11 +81,22 @@ export function CommunityInvitationsPage() {
         }
         eyebrow={t("communities:detail.breadcrumb")}
         title={t("communities:invites.title")}
-        sub={t("communities:invites.intro")}
+        sub={t(
+          offers.length > 0
+            ? "communities:invites.introWithOffers"
+            : "communities:invites.intro",
+        )}
         compact
       />
       <div className={styles.body}>
         <div className="wrap">
+          {/* PRD-514: open ownership offers come first, since they lapse. */}
+          <CommunityOwnershipOffersSection />
+          {offers.length > 0 && (
+            <h2 className={styles.invitesTitle}>
+              {t("communities:invites.listTitle")}
+            </h2>
+          )}
           {isLoading ? (
             <div className={styles.list} aria-busy="true">
               <SkeletonCard />

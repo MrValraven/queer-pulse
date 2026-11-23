@@ -60,10 +60,11 @@ function navigateToDownload(url: string): void {
  * URL has its bytes fetched and handed to the shared blob download, because a
  * browser silently ignores the `download` attribute on a cross-origin link. A
  * refused fetch (no CORS header, offline)
- * falls back to opening the image in a new tab, with a toast saying so, so the
- * action is never a dead button. `window.open` can itself be blocked (Safari
- * is strict about popups opened after an `await`), so its return value is
- * checked before the "opened in a new tab" toast is allowed to claim that.
+ * falls back to opening the image in a new tab with `noopener,noreferrer`, so
+ * the action is never a dead button. That `window.open` can itself be blocked
+ * (Safari is strict about popups opened after an `await`) and the flags hide
+ * the outcome, so the toast says the photo was sent to a new tab and points at
+ * the pop-up setting.
  */
 export function useChatImageSave() {
   const { t } = useTranslation();
@@ -86,12 +87,11 @@ export function useChatImageSave() {
         downloadBlobFile(savedFileName(blob.type), blob);
         showToast(t("messages:viewer.saved"), "success");
       } catch {
-        const openedTab = window.open(url, "_blank", "noopener,noreferrer");
-        if (openedTab) {
-          showToast(t("messages:viewer.saveFallback"), "info");
-        } else {
-          showToast(t("messages:viewer.saveFailed"), "error");
-        }
+        // `noopener,noreferrer` makes `window.open` return null whether or not
+        // the tab opened, so the outcome cannot be read. The toast words the
+        // hint so it holds either way. The target is our own storage host.
+        window.open(url, "_blank", "noopener,noreferrer");
+        showToast(t("messages:viewer.saveFallback"), "info");
       } finally {
         setIsSaving(false);
       }

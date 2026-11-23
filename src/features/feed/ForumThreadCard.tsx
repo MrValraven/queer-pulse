@@ -5,7 +5,11 @@ import { useFormat } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import { Avatar, Button } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { tintForSlug } from "../../shared/api/refs";
+import {
+  authorDisplayName,
+  isInactiveMemberRef,
+  tintForSlug,
+} from "../../shared/api/refs";
 import { studioSnippetPreviewText } from "../messages/studioSharePreview";
 import { initials, relativeTime } from "./api/feed.adapters";
 import type { FeedItem } from "./api/feed.api";
@@ -138,6 +142,8 @@ interface ThreadByline {
   avatarUrl: string | null;
   authorSlug: string;
   authorName: string;
+  /** The inactive member's stand-in: the label as its name, blank initials. */
+  isInactive?: boolean;
 }
 
 /**
@@ -171,7 +177,8 @@ function threadByline(item: FeedItem, t: TFunction): ThreadByline {
     mask: null,
     avatarUrl: actor?.avatarUrl ?? null,
     authorSlug: actor?.handle ?? "",
-    authorName: actor?.displayName ?? anonymousName,
+    authorName: actor ? authorDisplayName(actor, t) : anonymousName,
+    isInactive: isInactiveMemberRef(actor),
   };
 }
 
@@ -194,9 +201,11 @@ function ThreadBylineAvatar({ byline }: { byline: ThreadByline }) {
   return (
     <Avatar
       initials={
-        byline.mask === "anonymous"
-          ? byline.authorName.slice(0, 1)
-          : initials(byline.authorName)
+        byline.isInactive
+          ? ""
+          : byline.mask === "anonymous"
+            ? byline.authorName.slice(0, 1)
+            : initials(byline.authorName)
       }
       tint={byline.authorSlug ? tintForSlug(byline.authorSlug) : "plum"}
       size={46}

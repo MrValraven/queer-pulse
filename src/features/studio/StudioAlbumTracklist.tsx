@@ -209,9 +209,12 @@ export function StudioAlbumTracklist({
           onPurchased={(purchase) => {
             setBuyTrackId(null);
             setAnnouncement((previous) => ({
-              line: t("studio:purchase.sheet.doneStatus", {
-                artist: purchase.artist.name,
-              }),
+              line: t(
+                purchase.amountCents === 0
+                  ? "studio:purchase.sheet.freeDoneStatus"
+                  : "studio:purchase.sheet.doneStatus",
+                { artist: purchase.artist.name },
+              ),
               serial: (previous?.serial ?? 0) + 1,
             }));
           }}

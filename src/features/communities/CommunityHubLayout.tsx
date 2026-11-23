@@ -116,6 +116,8 @@ export function CommunityHubLayout({
           slug={living?.slug ?? slug}
           communityName={community.name}
           givingMethodCount={living ? givingMethodCount : 0}
+          isSpace={living?.parent != null}
+          isMember={joined}
         />
       )}
     </div>

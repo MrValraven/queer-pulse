@@ -24,6 +24,19 @@ function load(): Issuer {
 }
 
 /**
+ * Forget the saved issuer details (name, NIF, address, email, IBAN). Sign-out
+ * and Quick Exit call it, so the next member on a shared device never gets
+ * the previous member's tax ID and IBAN pre-filled.
+ */
+export function clearStoredIssuer(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // localStorage unavailable: nothing was kept to forget.
+  }
+}
+
+/**
  * Issuer details backed by localStorage so they prefill across all generators.
  * Degrades silently to in-memory state when localStorage is unavailable.
  */

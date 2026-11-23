@@ -10,55 +10,72 @@
   z-index: 1;
 }
 
-.ic {
-  width: 78px;
-  height: 78px;
-  border-radius: var(--radius-card);
-  background: var(--plum);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
+/* App-listing header: icon and identity in one row, then the heading. The
+   global overflow-wrap: anywhere would split the app name mid-word inside
+   this narrow column, so the header breaks only between words. */
+.header {
+  overflow-wrap: break-word;
 }
 
-.icInner {
+.identity {
   display: flex;
   align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+/* The home-screen icon PNG has its own rounded corners; 22% follows its
+   curve so the shadow and the dark-mode hairline sit on the artwork edge.
+   The cream hairline is invisible on the light card and gives the plum
+   icon an edge on the dark plum card, where the plum shadow disappears. */
+.appIcon {
+  display: block;
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 22%;
+  box-shadow: var(--shadow-e2), var(--ring-cream-hairline);
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
   gap: 5px;
+  min-width: 0;
+}
+
+.appName {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-22);
+  color: var(--text-strong);
   letter-spacing: -0.005em;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
-.icInner em {
+.appName em {
   font-style: italic;
-}
-
-.icDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
 }
 
 .kicker {
   font-size: var(--text-11);
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--ls-label);
+  line-height: 1.45;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 14px;
+  color: var(--accent-text);
 }
 
+/* 28px at 320, about 30px on a 393px phone, 36px from about 560px up. */
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: var(--text-36);
+  font-size: clamp(var(--text-28), 4vw + var(--text-14), var(--text-36));
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.05;
+  text-wrap: balance;
   margin-bottom: 12px;
 }
 
@@ -139,9 +156,13 @@
   margin-bottom: 18px;
 }
 
+/* Tab labels never break mid-word ("Computador" in Portuguese is the widest);
+   on small phones each tab takes the width of its own label. */
 .tab {
   flex: 1;
   padding: 9px 14px;
+  white-space: nowrap;
+  overflow-wrap: normal;
   background: transparent;
   border: none;
   font-family: var(--sans);
@@ -208,6 +229,14 @@
   color: var(--accent-ink);
 }
 
+.installFailedNote {
+  padding-bottom: 14px;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* Centred so Maybe later sits in the middle when it is the only action. */
 .actions {
   display: flex;
   gap: 8px;
@@ -215,29 +244,27 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
   flex-wrap: wrap;
   align-items: center;
-}
-
-.installBtn {
-  flex: 1;
-  min-width: 140px;
   justify-content: center;
 }
 
-.laterBtn {
-  background: transparent;
-  color: var(--ink-60);
-  border: none;
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  cursor: pointer;
-  padding: 11px 16px;
-  transition: color 0.2s;
+/* The button mounts once the browser offers its install dialog, which can be
+   after the page has rendered, so it fades in. */
+.installBtn {
+  flex: 1;
+  min-width: 140px;
+  animation: installButtonEnter 0.3s var(--ease) both;
 }
 
-@media (hover: hover) {
-  .laterBtn:hover {
-    color: var(--text-strong);
+.laterBtn {
+  flex: none;
+}
+
+@keyframes installButtonEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -249,11 +276,57 @@
   line-height: 1.5;
 }
 
-@media (max-width: 500px) {
+/* Phones: a tighter card, a 64px icon, and the actions stack full width. */
+@media (--sm) {
   .card {
-    padding: 32px 22px 26px;
+    padding: 30px 24px 24px;
   }
-  .h1 {
-    font-size: var(--text-28);
+  .identity {
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .appIcon {
+    width: 64px;
+    height: 64px;
+  }
+  .appName {
+    font-size: var(--text-20);
+  }
+  .featureList {
+    padding: 14px 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .howto {
+    padding: 14px 16px;
+  }
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .installBtn {
+    flex: none;
+    min-width: 0;
+  }
+}
+
+/* Small phones: the tabs size to their labels. */
+@media (--xs) {
+  .card {
+    padding: 24px 20px 20px;
+  }
+  .featureRow {
+    gap: 12px;
+  }
+  .tabs {
+    gap: 4px;
+  }
+  .tab {
+    flex: 1 1 auto;
+    padding: 9px 8px;
+  }
+  .step {
+    grid-template-columns: 20px 1fr;
+    gap: 8px;
   }
 }

@@ -1,7 +1,13 @@
+import { apiErrorCode } from "../../../shared/api/causeErrorKey";
 import { ApiError } from "../../../shared/api/client";
-import { VJ_LIMITS, type VjClipDTO } from "../../../shared/contracts/vj";
+import {
+  VJ_LIMITS,
+  type VjClipDTO,
+  type VjRefusalCode,
+} from "../../../shared/contracts/vj";
 import { sanitizeGif } from "../../members/api/uploadProcessing";
 import {
+  confirmUpload,
   requestUpload,
   type PresignedUpload,
   type VjClipUploadContentType,
@@ -296,6 +302,43 @@ function putClip(
   });
 }
 
+/** The confirm refusals the VJ catalog has a line of its own for, as the VJ
+ *  code that line belongs to. Any other refusal keeps its own code and
+ *  status, which `vjErrorKeyOf` reads as a reason (a check that could not
+ *  run reads as a server fault, a key the admin may not use as forbidden). */
+const VJ_CODE_BY_CONFIRM_CODE: Readonly<Record<string, VjRefusalCode>> = {
+  UPLOAD_CONTENT_MISMATCH: "VJ_UPLOAD_CONTENT_MISMATCH",
+  UPLOAD_NOT_FOUND: "VJ_UPLOAD_MISSING",
+};
+
+/**
+ * Asks the server to check a VJ object's stored bytes once its PUT landed
+ * (`POST /uploads/confirm`), before the key reaches `createVjClip`. A
+ * refusal with a VJ line of its own is answered as the VJ refusal for the
+ * clip field it concerns, so the row names it; the rest pass through as is.
+ */
+export async function confirmVjUpload(
+  key: string,
+  field: "storageKey" | "thumbnailStorageKey" | "previewStorageKey",
+): Promise<void> {
+  try {
+    await confirmUpload(key);
+  } catch (error) {
+    const confirmCode = apiErrorCode(error);
+    if (
+      !(error instanceof ApiError) ||
+      confirmCode === null ||
+      !Object.hasOwn(VJ_CODE_BY_CONFIRM_CODE, confirmCode)
+    ) {
+      throw error;
+    }
+    throw new ApiError(error.status, error.message, {
+      code: VJ_CODE_BY_CONFIRM_CODE[confirmCode],
+      field,
+    });
+  }
+}
+
 async function uploadVjClipLive(
   prepared: VjPreparedClip,
   options: VjUploadClipOptions,
@@ -311,6 +354,8 @@ async function uploadVjClipLive(
     prepared.thumbnail,
     options.signal,
   );
+  await confirmVjUpload(thumbnailPresign.key, "thumbnailStorageKey");
+  options.signal.throwIfAborted();
   const clipPresign = await presignVj(
     "vj_clip",
     prepared.contentType,
@@ -318,6 +363,8 @@ async function uploadVjClipLive(
   );
   options.signal.throwIfAborted();
   await putClip(clipPresign.uploadUrl, prepared, options);
+  await confirmVjUpload(clipPresign.key, "storageKey");
+  options.signal.throwIfAborted();
   options.onProgress("saving", 100);
   return await createVjClip({
     title: prepared.title,
@@ -390,7 +437,7 @@ async function uploadVjClipDemo(
 
 /**
  * Uploads a prepared clip and creates it (contract 8.4 steps 6 and 7). Live:
- * presign and PUT the thumbnail, then the clip with progress, then
+ * presign, PUT and confirm the thumbnail, then the clip with progress, then
  * `createVjClip`. Demo: steps the progress, then saves to the demo store with
  * blob URLs. `signal` aborts the PUT.
  */

@@ -28,9 +28,18 @@ const resolvedCatalogs: Record<Language, Catalog> = {
   pt: catalogs.pt.notifications,
 };
 
+/** The `communities` catalog, read by the community badge kinds for a starter
+ * badge's or a gift's name. */
+const resolvedCommunitiesCatalogs: Record<Language, Catalog> = {
+  en: catalogs.en.communities,
+  pt: catalogs.pt.communities,
+};
+
 beforeAll(async () => {
   resolvedCatalogs.en = await loadNamespace("en", "notifications");
   resolvedCatalogs.pt = await loadPtNamespace("notifications");
+  resolvedCommunitiesCatalogs.en = await loadNamespace("en", "communities");
+  resolvedCommunitiesCatalogs.pt = await loadPtNamespace("communities");
 });
 
 /**
@@ -46,7 +55,9 @@ function makeT(language: Language): TFunction {
     const catalog =
       namespace === "shared"
         ? catalogs[language].shared
-        : resolvedCatalogs[language];
+        : namespace === "communities"
+          ? resolvedCommunitiesCatalogs[language]
+          : resolvedCatalogs[language];
     const hit = resolveEntry(catalog, path, language, options);
     // Surface a miss loudly instead of silently returning the key.
     if (hit === undefined) throw new Error(`missing key: ${key}`);
@@ -164,6 +175,12 @@ const KINDS: NotificationKind[] = [
   // whose payload never arrived still has to read as a whole sentence, with
   // the shared fallback filling `{title}`.
   "magazine_pitch_passed",
+  // Community badges (contract section 6). Listed with an empty payload for
+  // the same reason as the rows above: each interpolates the community and a
+  // badge or gift name, and a row whose payload never arrived still has to
+  // read as a whole sentence.
+  "community_badge_earned",
+  "community_gift_received",
 ];
 
 describe("formatNotification", () => {

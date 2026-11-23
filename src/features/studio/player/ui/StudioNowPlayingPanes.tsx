@@ -91,9 +91,11 @@ function PhonePanes({
   const paneMotion = usePaneMotion();
   const switcherRef = useRef<HTMLDivElement>(null);
   const isSwitcherStuck = useIsStuck(switcherRef);
-  // Opening leaves the sheet at its top (the cover). Compared with the last
-  // pane asked for, so a StrictMode re-run scrolls nothing twice.
-  const shownTabRef = useRef<StudioNowPlayingTab>(requestedTab);
+  // Opening on Lyrics leaves the sheet at its top (the cover); opening on
+  // another pane (Q, a queue button) scrolls the switcher into view, so the
+  // ref starts on Lyrics. Compared with the last pane asked for, so a
+  // StrictMode re-run scrolls nothing twice.
+  const shownTabRef = useRef<StudioNowPlayingTab>("lyrics");
   useEffect(() => {
     if (shownTabRef.current === requestedTab) return;
     shownTabRef.current = requestedTab;

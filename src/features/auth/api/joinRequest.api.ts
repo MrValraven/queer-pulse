@@ -3,7 +3,10 @@ import {
   apiGet,
   apiPatch,
   apiPost,
+  apiPostUnversioned,
 } from "../../../shared/api/client";
+import type { Language } from "../../../shared/i18n/types";
+import type { EmailCodeChallenge } from "./emailCode.api";
 
 /**
  * A prospective member's request to join QueerPulse. This is the platform-level
@@ -133,12 +136,16 @@ export interface JoinRequestDTO {
   internalNoteUpdatedByName?: string;
 }
 
-/** Payload for a prospective member's request to join. */
+/** Payload for a prospective member's request to join, sent with the code
+ *  that confirmed the address. The address itself is the one the code went
+ *  to, so it is not part of the body. */
 export interface CreateJoinRequestInput {
+  /** The challenge the confirmation code belongs to. */
+  challengeId: string;
+  /** The 6-digit code the applicant typed. */
+  code: string;
   /** How they'd like to be called — carried into the mod queue. */
   name: string;
-  /** Required: with no account behind this route, it's the only way back to them. */
-  email: string;
   /** Optional — helps the mod queue place someone. */
   city?: string;
   /** The applicant's own words — why they want in (1–1000 chars). */
@@ -365,23 +372,66 @@ export function joinRequestInviteRefreshRefusal(
   return REFRESH_REFUSALS.find((refusal) => refusal === code) ?? null;
 }
 
+/** The challenge body, checked field by field so a renamed backend field
+ *  surfaces as an error that names it. */
+function validateJoinRequestChallenge(data: unknown): EmailCodeChallenge {
+  if (typeof data !== "object" || data === null) {
+    throw new Error("expected a JSON object body");
+  }
+  const record = data as Record<string, unknown>;
+  for (const field of ["challengeId", "expiresAt", "resendAvailableAt"]) {
+    if (typeof record[field] !== "string") {
+      throw new Error(`expected "${field}" to be a string`);
+    }
+  }
+  return data as EmailCodeChallenge;
+}
+
 /**
- * Submit a join request. **Public route — no session required**: the applicant
- * has no account yet (the old flow wrongly demanded a signed-in "pending" user,
- * which could never exist). Body carries name/email/city/message plus the 18+
- * attestation, which the mod queue sees and the backend re-validates.
+ * SEC-10, step one: email the applicant a 6-digit code that confirms the
+ * address. Public. Every address gets the same answer, so this says nothing
+ * about whether the address applied before.
  *
- * Failure modes the UI must handle rather than treat as a generic error:
- * - `409` — an open request already exists for that email ({@link isDuplicateJoinRequest})
- * - `403 { code: "UNDER_18" }` — a supplied DOB computes to under 18 ({@link isUnder18Error})
- * - `429` — the public route's per-IP throttle (3/hour) tripped ({@link isRateLimitedError})
+ * Unversioned under `/auth` like the sign-in code routes: the requester cookie
+ * that binds the code to this browser is scoped to `path=/auth`.
+ *
+ * Refusals: the email-code reasons (`email_invalid`, `too_many_codes`,
+ * `network_busy`, `resend_too_soon`, `email_send_failed`,
+ * `email_code_unavailable`, read with `readEmailCodeFailure`) and
+ * `403 { code: "JOIN_REQUESTS_CLOSED" }`.
+ */
+export const requestJoinRequestCode = (email: string, locale: Language) =>
+  apiPostUnversioned(
+    "/auth/email-code/join-request/request",
+    { email, locale },
+    validateJoinRequestChallenge,
+  );
+
+/**
+ * SEC-10, step two: send the form with the code. The request is filed under
+ * the address the code was sent to, so the body carries no email. Public: the
+ * applicant has no account yet.
+ *
+ * Failure modes the UI handles one by one:
+ * - the code refusals (`code_incorrect`, `code_expired`, `code_used_up`,
+ *   `code_replaced`, `code_already_used`), read with `readEmailCodeFailure`
+ * - `409` an open request already exists for the address ({@link isDuplicateJoinRequest})
+ * - `403 { code: "REAPPLICATION_COOLDOWN" }` a decline within the last 30 days
+ * - `403 { code: "UNDER_18" }` a supplied DOB computes to under 18 ({@link isUnder18Error})
+ * - `429` the filing throttle (10 per hour per network) tripped ({@link isRateLimitedError})
+ *
+ * The cooldown and the 409 come back only after the code checks out, so only
+ * the person holding the inbox ever hears them.
  *
  * On success the 201 carries `statusToken`, which exists nowhere else, ever.
- * Every caller of this function is responsible for persisting it — see
- * {@link CreateJoinRequestResult.statusToken}.
+ * Every caller of this function is responsible for persisting it (see
+ * {@link CreateJoinRequestResult.statusToken}).
  */
 export const createJoinRequest = (input: CreateJoinRequestInput) =>
-  apiPost<CreateJoinRequestResult>("/join-requests", input);
+  apiPostUnversioned<CreateJoinRequestResult>(
+    "/auth/email-code/join-request/verify",
+    input,
+  );
 
 /**
  * True when the backend says this email already has an open request. Not a
@@ -421,8 +471,8 @@ export function isJoinRequestsClosedError(err: unknown): boolean {
 }
 
 /**
- * True when the public submit route's per-IP throttle (3 requests/hour, see
- * the `@Throttle` on `JoinRequestsController.submit`) tripped. An immediate
+ * True when the filing route's per-IP throttle (10 requests/hour, see the
+ * `@Throttle` on `EmailCodeController.joinRequestCodeVerify`) tripped. An immediate
  * retry will fail again for up to an hour, so the UI must not suggest one —
  * see {@link isDuplicateJoinRequest} for the sibling special case.
  */

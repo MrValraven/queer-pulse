@@ -139,7 +139,6 @@ function setFridaySteps(items: VjSetlistItemInput[]) {
   demoSetVjSetlistItems(fridaySet().id, { items });
   saveGate.sentBodies = [];
   saveGate.answers = [];
-  saveGate.answers = [];
 }
 
 function sceneSteps(sceneIds: string[]): VjSetlistItemInput[] {
@@ -283,6 +282,7 @@ function resetEditorDemo() {
   saveGate.held = null;
   saveGate.refusal = null;
   saveGate.sentBodies = [];
+  saveGate.answers = [];
 }
 
 describe("VjSetlistItemsEditor rows and adds (demo)", () => {

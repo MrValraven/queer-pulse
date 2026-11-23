@@ -57,7 +57,7 @@ describe("StudioBroadcastPage in Portuguese", () => {
     expect(screen.queryByText("System audio (loopback)")).toBeNull();
     expect(screen.queryByText("Private note · just for you")).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: /^apoio\s*4$/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^moderação\s*4$/i }));
     expect(
       await screen.findByText(
         "já está. PT + EN afixadas. 418 a ouvir, tudo estável",

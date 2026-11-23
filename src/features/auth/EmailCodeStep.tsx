@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   Button,
   CodeInput,
@@ -32,6 +33,12 @@ export interface EmailCodeStepProps {
   onSubmitCode: () => void;
   /** Omitted in the reauth dialog, where the address is the account's own. */
   onUseDifferentEmail?: () => void;
+  /** The check button's label when checking the code also does something
+   *  more (the join request files with it). "Check this code" when unset. */
+  verifyLabel?: string;
+  /** The words for `failure` when a flow words some reasons its own way.
+   *  `EmailCodeErrorText` when unset. */
+  failureText?: ReactNode;
 }
 
 /**
@@ -52,6 +59,8 @@ export function EmailCodeStep({
   onResend,
   onSubmitCode,
   onUseDifferentEmail,
+  verifyLabel,
+  failureText,
 }: EmailCodeStepProps) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -75,7 +84,11 @@ export function EmailCodeStep({
           className={styles.codeField}
           label={codeLabel}
           helper={t("auth:emailCode.spamHint")}
-          error={failure ? <EmailCodeErrorText failure={failure} /> : undefined}
+          error={
+            failure
+              ? (failureText ?? <EmailCodeErrorText failure={failure} />)
+              : undefined
+          }
         >
           {/* A new code remounts the boxes, so their autofocus lands on the
               first box after a resend (WCAG 2.4.3). */}
@@ -114,7 +127,7 @@ export function EmailCodeStep({
           disabled={code.length !== CODE_LENGTH || isVerifying}
           onClick={onSubmitCode}
         >
-          {t("auth:emailCode.verifyCta")}
+          {verifyLabel ?? t("auth:emailCode.verifyCta")}
         </Button>
         {/* A block, so the countdown's Collapse opens under the row without
             a flex gap, across the full width so it stays on one line. */}

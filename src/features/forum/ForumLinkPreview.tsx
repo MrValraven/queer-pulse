@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { hasPreviewContent } from "../messages/api/useLinkPreview";
+import { isLoadableLinkPreviewImage } from "../messages/linkPreviewImageSource";
 import { useForumLinkPreview } from "./api/useForumLinkPreview";
 import styles from "./ThreadPage.module.css";
 
@@ -38,7 +39,10 @@ export function ForumLinkPreview({
   if (!url || !hasPreviewContent(data)) return null;
 
   const { siteName, title, description, imageUrl } = data;
-  const shouldShowImage = !!imageUrl && !hasImageFailed;
+  // SEC-23: only the API's own image route (or the inline demo thumbnail) is
+  // ever loaded, so a reader's browser never contacts the linked host.
+  const shouldShowImage =
+    isLoadableLinkPreviewImage(imageUrl) && !hasImageFailed;
   const accessibleName = title
     ? t("forum:linkPreview.aria", { title })
     : t("forum:linkPreview.ariaGeneric", { site: siteName ?? url });

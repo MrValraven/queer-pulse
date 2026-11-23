@@ -51,6 +51,12 @@
   padding-inline-start: 10px;
 }
 
+/* With nobody assigned the stack is empty and gives back its padding, so
+   "Unassigned" starts at the column's edge. */
+.avatars:empty {
+  padding-inline-start: 0;
+}
+
 /* The avatar tones are washes, so each slot lays opaque paper under its
    avatar, in the kit's avatar shape. The next avatar then covers the one
    before it fully, and the paper ring reads as a gap in light and dark. */

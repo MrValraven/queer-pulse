@@ -806,6 +806,9 @@ export interface StudioPlaylistMemberDTO {
   slug: string;
   displayName: string;
   avatarUrl: string | null;
+  /** PRD-507. A paused, suspended or deleting account: `slug` and
+   *  `displayName` arrive empty and the view shows the inactive label. */
+  isInactiveMember?: true;
 }
 
 /** Who a playlist shows as. Exactly one of persona and member is set. */
@@ -967,6 +970,8 @@ export interface StudioPlaylistPersonDTO {
   slug: string;
   displayName: string;
   avatarUrl: string | null;
+  /** PRD-507. See `StudioPlaylistMemberDTO.isInactiveMember`. */
+  isInactiveMember?: true;
 }
 
 export interface StudioPlaylistEditorDTO {

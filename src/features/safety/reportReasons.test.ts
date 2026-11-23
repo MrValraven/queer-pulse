@@ -171,6 +171,7 @@ describe("SUBJECT_REASONS", () => {
       "studio_track",
       "quizshow_answer",
       "quizshow_game",
+      "community_gift",
     ];
     expect(Object.keys(SUBJECT_REASONS).sort()).toEqual(
       [...backendSubjectTypes].sort(),
@@ -248,5 +249,25 @@ describe("SUBJECT_REASONS for Studio purchases", () => {
   it("keeps the code off post and reply reports", () => {
     expect(SUBJECT_REASONS.post).not.toContain("payment_never_confirmed");
     expect(SUBJECT_REASONS.reply).not.toContain("payment_never_confirmed");
+  });
+});
+
+describe("SUBJECT_REASONS for a community gift note", () => {
+  /** Mirrors the contract's reasons for ReportSubjectType.CommunityGift. */
+  it("offers a gift note the contract's seven reasons in order", () => {
+    expect(SUBJECT_REASONS.community_gift).toEqual([
+      "harassment",
+      "hate_speech",
+      "discrimination",
+      "outing",
+      "doxxing",
+      "spam",
+      "other",
+    ]);
+  });
+
+  it("keeps outing and doxxing on a gift note", () => {
+    expect(SUBJECT_REASONS.community_gift).toContain("outing");
+    expect(SUBJECT_REASONS.community_gift).toContain("doxxing");
   });
 });

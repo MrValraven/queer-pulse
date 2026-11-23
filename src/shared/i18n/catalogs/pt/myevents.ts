@@ -516,4 +516,17 @@ export const myevents: Catalog = {
   "toast.leftWaitlist": "Saíste da lista de espera.",
   "toast.skippedThisOne": "Não vais a esta data. Continuas na série.",
   "toast.leftWholeSeries": "Saíste da série toda.",
+  "card.joinLinkReadyToast":
+    "O teu link está pronto. Carrega outra vez em Link para entrar para abrir a sala",
+  "calSubscribe.resetTitle": "Repor link do calendário",
+  "calSubscribe.resetSub":
+    "Os calendários com o link antigo deixam de atualizar",
+  "calSubscribe.resetConfirmTitle": "Repor o link do calendário?",
+  "calSubscribe.resetConfirmBody":
+    "Todas as apps de calendário que usam o teu link atual deixam de atualizar logo. Recebes um link novo copiado para a área de transferência e voltas a adicioná-lo no Google ou no Apple Calendar.",
+  "calSubscribe.resetConfirmLabel": "Repor link do calendário",
+  "calSubscribe.resetToast":
+    "Link novo copiado. Os calendários com o link antigo já não atualizam.",
+  "calSubscribe.resetMintFailToast":
+    "O teu link antigo do calendário foi desligado, mas não conseguimos criar um novo. Escolhe Subscreve o teu feed para obteres um link novo.",
 };

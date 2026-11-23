@@ -3,6 +3,35 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getModReport } from "./moderation.api";
 import { modReportDetailFrom } from "./moderation.adapters";
 import type { ReportDetail } from "../adminModeration.data";
+import { isReportAboutActorError } from "./enforcementTargetError";
+
+/** The original report, or SEC-31's settled answer that it is about the
+ *  signed-in staff member. */
+interface OriginalReportResult {
+  detail: ReportDetail | null;
+  isAboutViewer: boolean;
+}
+
+/**
+ * SEC-31: the server refuses a report's own subject with a coded 403. That is
+ * a settled answer the appeal drawer names, so it resolves here as data and
+ * raises no generic error toast; any other failure still throws.
+ */
+async function fetchOriginalReport(
+  reportId: string,
+): Promise<OriginalReportResult> {
+  try {
+    return {
+      detail: modReportDetailFrom(await getModReport(reportId)) ?? null,
+      isAboutViewer: false,
+    };
+  } catch (error) {
+    if (isReportAboutActorError(error)) {
+      return { detail: null, isAboutViewer: true };
+    }
+    throw error;
+  }
+}
 
 /**
  * The ORIGINAL reported content behind an appeal (COM-11) — an appeal review
@@ -25,17 +54,19 @@ export function useOriginalReport(reportId: string | undefined): {
   isError: boolean;
   /** Re-runs the failed fetch. */
   refetch: () => void;
+  /** SEC-31: the original report is about the signed-in staff member. */
+  isAboutViewer: boolean;
 } {
   const { demoMode } = useDemoMode();
   const enabled = !demoMode && reportId != null;
-  const query = useQuery<ReportDetail | null>({
+  const query = useQuery<OriginalReportResult>({
     queryKey: ["mod-report-original", reportId],
-    queryFn: async () =>
-      modReportDetailFrom(await getModReport(reportId as string)) ?? null,
+    queryFn: () => fetchOriginalReport(reportId as string),
     enabled,
   });
   return {
-    detail: query.data ?? undefined,
+    detail: query.data?.detail ?? undefined,
+    isAboutViewer: query.data?.isAboutViewer === true,
     loading: enabled && query.isLoading,
     isError: enabled && query.isError,
     refetch: () => void query.refetch(),

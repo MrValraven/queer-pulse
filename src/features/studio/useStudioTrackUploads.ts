@@ -4,7 +4,9 @@ import type { StudioTrackRowView } from "./api/studio.adapters";
 import { studioErrorCodeOf } from "./api/studio.api";
 import { STUDIO_LIMITS, type StudioAudioContentType } from "./api/studio.types";
 import {
+  confirmStudioAudioUpload,
   uploadStudioAudio,
+  uploadedKeyOf,
   type StudioAudioUploadHandle,
 } from "./api/studioAudioUpload";
 import { useReorderStudioTracks } from "./api/useStudioReleaseMutations";
@@ -92,6 +94,10 @@ export const UPLOAD_CANCELLED_KEY = "studio:uploadFlow.files.cancelled";
 /** What a row needs to resume where it failed. Kept out of render state. */
 interface RowWork extends ConvertibleWork {
   uploadedKey: string | null;
+  /** A key whose bytes reached storage but whose storage check
+   *  (`confirmStudioAudioUpload`) failed: Retry checks it again and skips
+   *  the presign and the PUT. */
+  uncheckedKey: string | null;
   handle: StudioAudioUploadHandle | null;
   isRunning: boolean;
   /** Bumped by Cancel upload: a run whose token is old stops at its next
@@ -329,6 +335,7 @@ function registerAcceptedFiles(
       wasConverted: false,
       conversion: null,
       uploadedKey: null,
+      uncheckedKey: null,
       handle: null,
       isRunning: false,
       runToken: 0,
@@ -559,9 +566,10 @@ export function useStudioTrackUploads(
     // picks it up, so the bar neither vanishes nor restarts.
     patchRow(localId, {
       stage: "queued",
-      progress: work.uploadedKey
-        ? uploadBarOf(100, work.wasConverted)
-        : uploadBarOf(0, work.wasConverted),
+      progress:
+        work.uploadedKey || work.uncheckedKey
+          ? uploadBarOf(100, work.wasConverted)
+          : uploadBarOf(0, work.wasConverted),
       errorKey: null,
       errorValues: null,
     });
@@ -577,6 +585,12 @@ export function useStudioTrackUploads(
         startRow.trackId ??
         (await createFor(localId, startRow.title, forReleaseId, isCancelled));
       if (trackId === null || isCancelled()) return;
+      if (!work.uploadedKey && work.uncheckedKey) {
+        // Retry after a failed storage check: check the stored key alone.
+        patchRow(localId, { stage: "confirming" });
+        work.uploadedKey = await confirmStudioAudioUpload(work.uncheckedKey);
+        work.uncheckedKey = null;
+      }
       if (!work.uploadedKey)
         work.uploadedKey = await uploadFor(localId, work, isCancelled);
       // Removed, cancelled or unmounted after the PUT: nothing to confirm.
@@ -595,6 +609,9 @@ export function useStudioTrackUploads(
       workRef.current.delete(localId);
     } catch (error) {
       if (isStopped(localId)) return;
+      // Bytes already in storage whose check failed: Retry checks them again.
+      const storedKey = uploadedKeyOf(error);
+      if (storedKey) work.uncheckedKey = storedKey;
       // The server deleted an unreadable object, so its key cannot be confirmed again.
       if (studioErrorCodeOf(error) === "studio_audio_unreadable")
         work.uploadedKey = null;
@@ -751,6 +768,7 @@ function rowCommandsOf({
         wasConverted: false,
         conversion: null,
         uploadedKey: null,
+        uncheckedKey: null,
         handle: null,
         isRunning: false,
         runToken: 0,

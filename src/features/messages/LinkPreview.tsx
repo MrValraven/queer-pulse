@@ -3,6 +3,8 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { hasPreviewContent } from "./api/useLinkPreview";
 import { linkSafetyReasonsLabel } from "./linkSafetyCopy";
+import { isLoadableLinkPreviewImage } from "./linkPreviewImageSource";
+import { useMessageSafetyContext } from "./MessageSafetyContext";
 import { OpenExternalConfirmDialog } from "./OpenExternalConfirmDialog";
 import { useLinkSafetyGuard } from "./useLinkSafetyGuard";
 import type { LinkPreviewResponse } from "../../shared/contracts/contracts";
@@ -42,6 +44,11 @@ export function LinkPreview({
 }: LinkPreviewProps) {
   const { t } = useTranslation();
   const [imageFailed, setImageFailed] = useState(false);
+  // SEC-23: in a thread with someone the viewer is not connected to yet, the
+  // card renders without its image. The image is the one part of the card
+  // fetched when the reader opens the thread, so leaving it out gives a
+  // stranger's page no signal of when (or whether) the message was read.
+  const { isPendingConnection } = useMessageSafetyContext();
   // PRD-371: the whole card is one big anchor, so the guard's click-intercept
   // goes on it directly — same suspicious-link check `linkify.tsx` applies to
   // an inline URL, since an unfurled card is just a richer rendering of the
@@ -65,7 +72,12 @@ export function LinkPreview({
   if (!hasPreviewContent(data)) return null;
 
   const { title, description, siteName, imageUrl } = data;
-  const showImage = !!imageUrl && !imageFailed;
+  // Only the API's own image route (or the inline demo thumbnail) is ever
+  // loaded, so the reader's browser never contacts the linked host.
+  const showImage =
+    isLoadableLinkPreviewImage(imageUrl) &&
+    !imageFailed &&
+    !isPendingConnection;
   const accessibleName = title
     ? t("messages:linkPreview.aria", { title })
     : t("messages:linkPreview.ariaGeneric", { site: siteName ?? url });

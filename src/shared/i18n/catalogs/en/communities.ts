@@ -213,9 +213,9 @@ export const communities: Catalog = {
   "error.alreadyMember":
     "You're already a member of this community. Refresh the page to see it.",
   "error.ownerCannotLeave":
-    "The owner can't leave or be removed. Transfer ownership to another member first.",
+    "The owner can't leave or be removed. Offer ownership to another member first.",
   "error.ownerRoleFixed":
-    "The owner's role can't be changed. Transfer ownership first if you want someone else to lead.",
+    "The owner's role can't be changed. If you want someone else to lead, offer them ownership first.",
   "error.ownRoleFixed":
     "You can't change your own role here. Ask another owner or moderator.",
   "error.alreadyOwner":
@@ -227,7 +227,7 @@ export const communities: Catalog = {
   "error.needsHigherRole":
     "Your role here is not high enough for that change. An owner or co-owner can make it for you.",
   "error.ownerOnly":
-    "Only this community's owner can do that. Ask them, or ask them to hand ownership to you.",
+    "Only this community's owner can do that. Ask them, or ask them to offer you ownership.",
   "error.needsStaffRole":
     "Only this community's owner and moderators can do that, and your role here may have changed since you opened this page. Refresh to check.",
   "error.announcementStaffOnly":
@@ -440,9 +440,8 @@ export const communities: Catalog = {
   "detail.invite.declinedToast": "Invitation declined.",
   "detail.leave.owner.title": "You are the owner of {name}",
   "detail.leave.owner.body":
-    "A community cannot be left without a successor: somebody has to be accountable for it. Hand {name} to a current member first, and you stay on as a moderator, free to leave whenever you like.",
+    "A community needs someone accountable for it. Offer {name} to a current member first, and once they accept you stay on as a moderator, free to leave whenever you like.",
   "detail.leave.owner.cancel": "Not now",
-  "detail.leave.owner.transferCta": "Transfer ownership",
   "leave.doneToast": "You have left {name}.",
   "leave.failedToast":
     "We couldn't leave that community. Try again in a moment.",
@@ -587,6 +586,7 @@ export const communities: Catalog = {
   "detail.modtools.nav.card": "Member card",
   "detail.modtools.nav.danger": "Danger zone",
   "detail.modtools.nav.spaces": "Spaces",
+  "detail.modtools.nav.badges": "Badges",
   "detail.modtools.overview.attention.label": "Needs attention",
   "detail.modtools.overview.attention.requests_one":
     "One person is waiting to join",
@@ -777,7 +777,7 @@ export const communities: Catalog = {
   "detail.modtools.members.makeCoOwnerCta": "Make co-owner",
   "detail.modtools.members.removeCoOwnerCta": "Remove co-owner",
   "detail.modtools.members.coOwnerNote":
-    "Co-owners share your powers here: reviewing join requests, moderating posts, editing the community and managing the roster. Transferring ownership, archiving the community and changing a co-owner's role stay with you alone.",
+    "Co-owners share your powers here: reviewing join requests, moderating posts, editing the community and managing the roster. Offering ownership, archiving the community and changing a co-owner's role stay with you alone.",
   "detail.modtools.members.removeCta": "Remove from community",
   "detail.modtools.members.ownerTag": "Owner",
   "detail.modtools.members.actionsAria": "Actions for {name}",
@@ -805,7 +805,7 @@ export const communities: Catalog = {
   "detail.modtools.confirm.removeMember.confirmCta": "Remove member",
   "detail.modtools.confirm.grantCoOwner.title": "Make {name} a co-owner?",
   "detail.modtools.confirm.grantCoOwner.body":
-    "They get everything you can do in this community, apart from transferring ownership, archiving it and changing another co-owner's role. You can take it back at any time.",
+    "They get everything you can do in this community, apart from offering ownership, archiving it and changing another co-owner's role. You can take it back at any time.",
   "detail.modtools.confirm.grantCoOwner.confirmCta": "Make co-owner",
   "detail.modtools.confirm.revokeCoOwner.title": "Remove {name} as co-owner?",
   "detail.modtools.confirm.revokeCoOwner.body":
@@ -843,17 +843,7 @@ export const communities: Catalog = {
     "This closes the community for good. It becomes read-only and can't be reopened. This can't be undone.",
   "detail.dangerZone.archive.confirm.cancel": "Cancel",
   "detail.dangerZone.archive.confirm.confirmCta": "Archive community",
-  "detail.dangerZone.transfer.label": "Transfer ownership",
-  "detail.dangerZone.transfer.text":
-    "Hand the community over to another member. You'll keep your current role.",
-  "detail.dangerZone.transfer.cta": "Transfer",
-  "detail.dangerZone.transfer.successToast":
-    "Ownership was transferred to {owner}.",
-  "detail.dangerZone.transfer.confirm.title": "Transfer ownership of {name}?",
-  "detail.dangerZone.transfer.confirm.body":
-    "Pick who takes over as owner. They'll get full control of {name}.",
   "detail.dangerZone.transfer.confirm.cancel": "Cancel",
-  "detail.dangerZone.transfer.confirm.confirmCta": "Transfer ownership",
   "detail.dangerZone.transfer.confirm.empty":
     "There's nobody else on the roster to hand this to yet.",
   // PRD-149. The transfer picker searches the SERVER (`roster?q=`) instead of
@@ -1232,6 +1222,11 @@ export const communities: Catalog = {
   "detail.modtools.history.action.card_replaced": "Card reissued",
   "detail.modtools.history.action.support_offered": "Support offered",
   "detail.modtools.history.action.support_offer_answered": "Support answered",
+  "detail.modtools.history.action.badge_created": "Badge created",
+  "detail.modtools.history.action.badge_updated": "Badge changed",
+  "detail.modtools.history.action.badge_deleted": "Badge deleted",
+  "detail.modtools.history.action.gift_sent": "Gift sent",
+  "detail.modtools.history.action.gift_removed": "Gift removed",
 
   "detail.modtools.history.summary.role_changed": "{name}'s role changed",
   "detail.modtools.history.summary.member_removed":
@@ -1269,6 +1264,17 @@ export const communities: Catalog = {
     "QueerPulse staff offered this community support",
   "detail.modtools.history.summary.support_offer_answered":
     "The moderators answered an offer of support",
+  "detail.modtools.history.summary.badge_created":
+    "The {badge} badge was created",
+  "detail.modtools.history.summary.badge_updated":
+    "The {badge} badge was edited",
+  "detail.modtools.history.summary.badge_deleted":
+    "The {badge} badge was deleted",
+  "detail.modtools.history.summary.gift_sent": "{name} received a gift",
+  "detail.modtools.history.summary.gift_removed":
+    "A gift to {name} was removed",
+  "detail.modtools.history.summary.gift_removedByTeam":
+    "Our team removed a gift",
   // The fallback sentence for an action this client has no copy for yet.
   "detail.modtools.history.summary.unknown": "{action}",
   "detail.modtools.history.summary.unknownWithTarget": "{action}: {name}",
@@ -1287,6 +1293,14 @@ export const communities: Catalog = {
   "detail.modtools.history.detail.reason": "Reason",
   "detail.modtools.history.detail.bannedAt": "Ban placed",
   "detail.modtools.history.detail.cardSerial": "Card",
+  "detail.modtools.history.detail.badgeName": "Badge",
+  "detail.modtools.history.detail.holderCount": "Members who lost it",
+  "detail.modtools.history.detail.giftKey": "Gift",
+  "detail.modtools.history.badgeField.name": "Name",
+  "detail.modtools.history.badgeField.iconKey": "Icon",
+  "detail.modtools.history.badgeField.tint": "Colour",
+  "detail.modtools.history.badgeField.threshold": "Number to reach",
+  "detail.modtools.history.badgeField.isEnabled": "Switched on",
   "detail.modtools.history.role.owner": "Owner",
   "detail.modtools.history.role.coOwner": "Co-owner",
   "detail.modtools.history.role.mod": "Moderator",
@@ -1325,9 +1339,9 @@ export const communities: Catalog = {
   // ── Danger zone · your standing + owner-absence escalation ────────────────
   "detail.dangerZone.yourRole.owner": "You own this community.",
   "detail.dangerZone.yourRole.coOwner":
-    "You are a co-owner here. Transferring ownership and archiving stay with the owner.",
+    "You are a co-owner here. Offering ownership and archiving stay with the owner.",
   "detail.dangerZone.yourRole.mod":
-    "You are a moderator here. Transferring ownership and archiving stay with the owner.",
+    "You are a moderator here. Offering ownership and archiving stay with the owner.",
   "detail.dangerZone.ownerReview.label": "Report an unreachable owner",
   "detail.dangerZone.ownerReview.text":
     "If the owner has stopped answering and this community is waiting on decisions only they can make, ask platform staff to look into it.",
@@ -1576,6 +1590,267 @@ export const communities: Catalog = {
   "badges.reaction.support": "Support",
   "badges.reaction.fire": "Fire",
   "badges.reaction.ariaLabel": "{label}: {count}",
+
+  // Community badges, gifts and the worn badge (badges/*)
+  "badges.starter.regular": "Regular",
+  "badges.starter.old_friend": "Old friend",
+  "badges.starter.helping_hands": "Helping hands",
+  "badges.starter.in_the_conversation": "In the conversation",
+  "badges.rule.tenure_days.name": "Time in the community",
+  "badges.rule.tenure_days.earn_one": "Be a member for {count} day",
+  "badges.rule.tenure_days.earn_other": "Be a member for {count} days",
+  "badges.rule.tenure_days.progress_one": "{progress} of {total} day",
+  "badges.rule.tenure_days.progress_other": "{progress} of {total} days",
+  "badges.rule.tenure_days.thresholdLabel": "Days in the community",
+  "badges.rule.tenure_days.unit": "days",
+  "badges.rule.events_checked_in.name": "Events attended",
+  "badges.rule.events_checked_in.earn_one": "Attend {count} event",
+  "badges.rule.events_checked_in.earn_other": "Attend {count} events",
+  "badges.rule.events_checked_in.progress_one":
+    "{progress} of {total} event attended here",
+  "badges.rule.events_checked_in.progress_other":
+    "{progress} of {total} events attended here",
+  "badges.rule.events_checked_in.thresholdLabel": "Events attended",
+  "badges.rule.events_checked_in.unit": "events",
+  "badges.rule.volunteer_hours.name": "Volunteer hours",
+  "badges.rule.volunteer_hours.earn_one": "Volunteer for {count} hour",
+  "badges.rule.volunteer_hours.earn_other": "Volunteer for {count} hours",
+  "badges.rule.volunteer_hours.progress_one": "{progress} of {total} hour",
+  "badges.rule.volunteer_hours.progress_other": "{progress} of {total} hours",
+  "badges.rule.volunteer_hours.thresholdLabel": "Volunteer hours",
+  "badges.rule.volunteer_hours.unit": "hours",
+  "badges.rule.posts_and_replies.name": "Posts and replies",
+  "badges.rule.posts_and_replies.earn_one": "Write {count} post or reply",
+  "badges.rule.posts_and_replies.earn_other": "Write {count} posts or replies",
+  "badges.rule.posts_and_replies.progress_one":
+    "{progress} of {total} post or reply",
+  "badges.rule.posts_and_replies.progress_other":
+    "{progress} of {total} posts and replies",
+  "badges.rule.posts_and_replies.thresholdLabel": "Posts and replies",
+  "badges.rule.posts_and_replies.unit": "posts and replies",
+  "badges.tint.jade": "Jade",
+  "badges.tint.accent": "Coral",
+  "badges.tint.plum": "Plum",
+  "badges.tint.rose": "Rose",
+  "badges.tint.amber": "Amber",
+  "badges.tint.violet": "Violet",
+  "badges.gift.heart.name": "Heart",
+  "badges.gift.star.name": "Star",
+  "badges.gift.coffee.name": "Coffee",
+  "badges.gift.feather.name": "Feather",
+  "badges.gift.sun.name": "Sunshine",
+  "badges.gift.life_buoy.name": "Life buoy",
+  "badges.gift.music.name": "Song",
+  "badges.gift.smile.name": "Smile",
+  "badges.gift.unknown.name": "Gift",
+  "badges.counter": "{count} of {max} characters",
+  "badges.flair.srPrefix": "Badge:",
+  "badges.icon.award": "Award",
+  "badges.icon.star": "Star",
+  "badges.icon.heart": "Heart",
+  "badges.icon.sun": "Sun",
+  "badges.icon.moon": "Moon",
+  "badges.icon.zap": "Lightning",
+  "badges.icon.feather": "Feather",
+  "badges.icon.coffee": "Coffee",
+  "badges.icon.music": "Music",
+  "badges.icon.headphones": "Headphones",
+  "badges.icon.mic": "Microphone",
+  "badges.icon.book_open": "Open book",
+  "badges.icon.camera": "Camera",
+  "badges.icon.film": "Film",
+  "badges.icon.pen_tool": "Pen",
+  "badges.icon.smile": "Smile",
+  "badges.icon.compass": "Compass",
+  "badges.icon.map_pin": "Map pin",
+  "badges.icon.flag": "Flag",
+  "badges.icon.calendar": "Calendar",
+  "badges.icon.clock": "Clock",
+  "badges.icon.users": "People",
+  "badges.icon.message_circle": "Speech bubble",
+  "badges.icon.life_buoy": "Life buoy",
+  "badges.sheet.title": "Badges in {name}",
+  "badges.sheet.lead.member":
+    "Badges arrive on their own as you take part here. Only you see the ones you've earned until you choose one to wear.",
+  "badges.sheet.lead.visitor":
+    "Members earn these by taking part in {name}. Join to start earning them.",
+  "badges.sheet.tabsLabel": "Badges and gifts",
+  "badges.sheet.tab.badges": "Badges",
+  "badges.sheet.tab.gifts": "Gifts",
+  "badges.sheet.empty": "This community has no badges switched on right now.",
+  "badges.sheet.earnedOn": "Earned {date}",
+  "badges.sheet.notEarned": "Not earned yet",
+  "badges.sheet.wearing": "You're wearing this badge",
+  "badges.giftDialog.pickHint": "Pick a gift to send.",
+  "badges.form.previewPlaceholder": "Badge name",
+  "badges.sheet.wear": "Wear this badge",
+  "badges.sheet.stopWearing": "Stop wearing this badge",
+  "badges.sheet.wearHint":
+    "Everyone in {name} sees the badge you wear beside your name.",
+  "badges.sheet.woreToast": "You're wearing {badge} in {name} now.",
+  "badges.sheet.stoppedToast": "You're no longer wearing a badge in {name}.",
+  "badges.entry.title": "Badges",
+  "badges.entry.body.member":
+    "See how you're doing and choose a badge to wear.",
+  "badges.entry.body.visitor": "See what members of {name} can earn here.",
+  "badges.entry.cta": "Open badges",
+  "badges.entry.heroAria": "Open badges for {name}",
+  "badges.shelf.lead":
+    "Only you see this shelf. A gift shows beside your name for 7 days unless you hide it.",
+  "badges.shelf.empty":
+    "No gifts yet. When this community's team sends you one, it lands here.",
+  "badges.shelf.from": "From {name}",
+  "badges.shelf.fromDeleted": "From a deleted member",
+  "badges.shelf.sentOn": "Sent {date}",
+  "badges.shelf.showingUntil": "Showing beside your name until {date}",
+  "badges.shelf.hiddenNote": "Hidden from beside your name",
+  "badges.shelf.hide": "Hide gift",
+  "badges.shelf.show": "Show gift",
+  "badges.shelf.hiddenToast":
+    "Gift hidden. It no longer shows beside your name.",
+  "badges.shelf.shownToast": "Gift visible again.",
+  "badges.shelf.report": "Report gift",
+  "badges.shelf.reportAria": "Report the {gift} gift from {name}",
+  "badges.shelf.reportSubject": "the {gift} gift from {name}",
+  "badges.shelf.reportSubjectDeleted": "the {gift} gift from a deleted member",
+  "badges.shelf.reportAriaDeleted":
+    "Report the {gift} gift from a deleted member",
+  "badges.shelf.loadMore": "Show more gifts",
+  "badges.giftMark.tooltip": "Recent gift",
+  "badges.giftMark.aria": "{name} got a gift recently. Show gifts",
+  "badges.giftMark.dialogTitle": "Recent gifts for {name}",
+  "badges.giftMark.empty": "These gifts are no longer showing.",
+  "badges.giftMark.remove": "Remove gift",
+  "badges.giftMark.removeConfirmTitle": "Remove this gift?",
+  "badges.giftMark.removeConfirmBody":
+    "It disappears for everyone, {name}'s shelf included.",
+  "badges.giftMark.removeCancel": "Keep gift",
+  "badges.giftMark.removedToast": "Gift removed.",
+  "badges.manage.title": "Badges",
+  "badges.manage.lead":
+    "Members earn these on their own when they reach the number you set. Each member picks one to wear beside their name, or none.",
+  "badges.manage.readOnly":
+    "Only the owner and co-owners can change badges. You can see how they're set up here.",
+  "badges.manage.count": "{count} of {limit} badges",
+  "badges.manage.create": "Create badge",
+  "badges.manage.limitReached":
+    "This community has {limit} badges, the most it can hold. Delete one to make space.",
+  "badges.manage.holders_one": "{count} member holds it",
+  "badges.manage.holders_other": "{count} members hold it",
+  "badges.manage.enabledAria": "Award and show {badge}",
+  "badges.manage.offNote": "Switched off: hidden everywhere and not awarded",
+  "badges.manage.edit": "Edit badge",
+  "badges.manage.editAria": "Edit badge: {badge}",
+  "badges.manage.delete": "Delete badge",
+  "badges.manage.deleteAria": "Delete badge: {badge}",
+  "badges.manage.switchedOnToast":
+    "{badge} is on. Members who already qualify get it quietly, with no notification.",
+  "badges.manage.switchedOffToast":
+    "{badge} is off and hidden everywhere. Members keep it for when you switch it back on.",
+  "badges.form.createTitle": "Create badge",
+  "badges.form.editTitle": "Edit {badge}",
+  "badges.form.name": "Name",
+  "badges.form.icon": "Icon",
+  "badges.form.tint": "Colour",
+  "badges.form.rule": "How members earn it",
+  "badges.form.ruleLocked":
+    "The way members earn a badge stays fixed once you create it. Create a new badge for a different rule.",
+  "badges.form.thresholdRange": "Between {min} and {max} {unit}",
+  "badges.form.lowerNote":
+    "Lowering the number awards it quietly to members who now qualify. Raising it takes it from nobody.",
+  "badges.form.enabled": "Switch it on now",
+  "badges.form.preview": "Preview",
+  "badges.form.previewNote": "This is how it looks beside a member's name.",
+  "badges.form.previewName": "Your name",
+  "badges.form.save": "Save badge",
+  "badges.form.cancel": "Cancel",
+  "badges.form.createdToast":
+    "{badge} created. Members who already qualify get it quietly, with no notification.",
+  "badges.form.savedToast": "{badge} saved.",
+  "badges.delete.title": "Delete {badge}?",
+  "badges.delete.body_one":
+    "{count} member holds this badge and loses it when you delete it. Anyone wearing it goes back to wearing none. You can't undo this.",
+  "badges.delete.body_other":
+    "{count} members hold this badge and lose it when you delete it. Anyone wearing it goes back to wearing none. You can't undo this.",
+  "badges.delete.bodyNone": "Nobody holds this badge yet. You can't undo this.",
+  "badges.delete.confirm": "Delete badge",
+  "badges.delete.cancel": "Keep badge",
+  "badges.delete.doneToastNone": "{badge} deleted.",
+  "badges.manage.empty":
+    "No badges here yet. Create one and members start earning it.",
+  "badges.delete.doneToast_one": "{badge} deleted. {count} member lost it.",
+  "badges.delete.doneToast_other": "{badge} deleted. {count} members lost it.",
+  "badges.sendGift": "Send a gift",
+  "badges.sendGiftAria": "Send a gift to {name}",
+  "badges.giftDialog.title": "Send a gift to {name}",
+  "badges.giftDialog.lead":
+    "A small thank-you from the team. {name} gets a notification, and the gift shows beside their name here for 7 days.",
+  "badges.giftDialog.pick": "Pick a gift",
+  "badges.giftDialog.note": "Note (optional)",
+  "badges.giftDialog.notePlaceholder": "Say what it's for",
+  "badges.giftDialog.allowance_one":
+    "You can send {count} more gift this week.",
+  "badges.giftDialog.allowance_other":
+    "You can send {count} more gifts this week.",
+  "badges.giftDialog.allowanceUsed":
+    "You've sent {limit} gifts here this week. You can send the next one on {date}.",
+  "badges.giftDialog.send": "Send gift",
+  "badges.giftDialog.cancel": "Cancel",
+  "badges.giftDialog.sentToast": "Gift sent to {name}.",
+  "badges.error.badge_limit_reached":
+    "This community already has {limit} badges, the most it can hold. Delete one before you create another.",
+  "badges.error.badge_threshold_out_of_range":
+    "Pick a whole number between {min} and {max} {unit}.",
+  "badges.error.badge_name_taken":
+    "This community already has a badge with that name. Pick another one.",
+  "badges.error.badge_name_required": "Give the badge a name.",
+  "badges.error.badge_name_too_long":
+    "A badge name fits {maxLength} characters at most.",
+  "badges.error.badge_icon_unknown":
+    "That icon is missing from the badge icons. Pick one from the list.",
+  "badges.error.badge_tint_unknown":
+    "That colour is missing from the badge colours. Pick one from the list.",
+  "badges.error.badge_rule_unknown":
+    "Pick how members earn this badge from the list.",
+  "badges.error.badge_rule_locked":
+    "The way members earn a badge stays fixed once it's created. Create a new badge for a different rule.",
+  "badges.error.badge_enabled_invalid":
+    "The on and off setting didn't come through. Switch it again.",
+  "badges.error.badge_not_found":
+    "This badge was deleted or belongs to another community. Refresh to see the current badges.",
+  "badges.error.badge_manage_owner_only":
+    "Only the owner and co-owners can change badges.",
+  "badges.error.badge_settings_staff_only":
+    "Only the owner, co-owners and mods can see badge settings.",
+  "badges.error.gift_sender_not_staff":
+    "Only the owner, co-owners and mods of this community can send gifts.",
+  "badges.error.gift_recipient_not_member":
+    "That person is no longer a member here, so they can't get a gift in this community.",
+  "badges.error.gift_recipient_unavailable":
+    "You can't send a gift to this person.",
+  "badges.error.gift_to_self": "You can't send a gift to yourself.",
+  "badges.error.gift_weekly_limit_reached":
+    "You've sent {limit} gifts here in the last 7 days, the most a week allows. You can send another on {resetsAt}.",
+  "badges.error.gift_unknown":
+    "That gift is missing from the gift list. Pick one from the list.",
+  "badges.error.gift_note_too_long":
+    "A gift note fits {maxLength} characters at most.",
+  "badges.error.gift_note_invalid":
+    "The gift note didn't come through as text. Write it again and send.",
+  "badges.error.gift_not_found":
+    "This gift was removed, so there is nothing to change.",
+  "badges.error.gift_remove_not_allowed":
+    "Only the person who sent this gift, the owner or a co-owner can remove it.",
+  "badges.error.gift_hidden_invalid":
+    "The hide setting didn't come through. Try hiding or showing the gift again.",
+  "badges.error.flair_badge_id_invalid":
+    "That badge couldn't be read. Refresh and pick it again.",
+  "badges.error.flair_badge_disabled":
+    "This badge is switched off, so you can't wear it right now.",
+  "badges.error.flair_badge_not_earned":
+    "You haven't earned this badge yet, so you can't wear it.",
+  "badges.error.spaces":
+    "Spaces have no badges or gifts. You'll find them in the main community.",
 
   // ── Join modal ─────────────────────────────────────────────────────────────
   "join.progress": "Step {step} of {total}",
@@ -2509,4 +2784,74 @@ export const communities: Catalog = {
 
   // Events tab: a gathering this community joined as a guest names its lead.
   "detail.events.withLead": "With {name}",
+  "error.ratifiedBarNeedsOwnerLevel":
+    "A second moderator signed this bar to make it permanent, so only the owner or a co-owner can lift it or give it an end date.",
+  "error.ownerPlacedBanNeedsOwnerLevel":
+    "The owner or a co-owner placed this bar, so only the owner or a co-owner can lift it or shorten it.",
+  "ownershipOffer.title": "Hand this community on",
+  "ownershipOffer.explainer":
+    "Choose a member to offer it to. They can accept or decline, ownership moves only when they accept, and the offer lapses after 14 days.",
+  "ownershipOffer.send": "Send offer",
+  "ownershipOffer.pending": "Offer sent to {name}. It lapses on {date}.",
+  "ownershipOffer.cancel": "Cancel offer",
+  "ownershipOffer.cancelled": "Offer cancelled.",
+  "ownershipOffer.inboxTitle": "Ownership offers",
+  "ownershipOffer.inboxItem": "{name} has offered you ownership.",
+  "ownershipOffer.accept": "Accept ownership",
+  "ownershipOffer.decline": "Decline offer",
+  "ownershipOffer.accepted": "You now own {communityName}.",
+  "ownershipOffer.declined": "Offer declined. Ownership stays where it was.",
+  "ownershipOffer.expiresOn": "Open until {date}",
+  "ownershipOffer.error.OWNERSHIP_OFFER_OPEN":
+    "This community already has an open offer. Cancel it to offer it to someone else.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_NOT_FOUND":
+    "We couldn't find that offer. It may have been cancelled.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_ANSWERED":
+    "This offer has already been answered.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_EXPIRED":
+    "This offer has expired. Ask the owner to send a new one.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_OWNER_CHANGED":
+    "This community has changed hands since the offer was made, so it can only be declined now.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_RECIPIENT_NOT_MEMBER":
+    "You've left this community, so the offer can only be declined now.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_SELF":
+    "You already own this community.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_ALREADY_OWNER":
+    "That member already owns this community.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_HOUSE_ACCOUNT":
+    "A community can't be offered to the QueerPulse house account.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_MEMBER_NOT_FOUND":
+    "That person isn't on this community's roster.",
+  "ownershipOffer.ownerFallback": "The owner",
+  "ownershipOffer.acceptAriaLabel": "Accept ownership of {communityName}",
+  "ownershipOffer.declineAriaLabel": "Decline offer of {communityName}",
+  "ownershipOffer.acceptConfirm.title": "Take on {communityName}?",
+  "ownershipOffer.acceptConfirm.body":
+    "You become its owner and {name} stays on as a moderator.",
+  "ownershipOffer.declineConfirm.title":
+    "Decline the offer of {communityName}?",
+  "ownershipOffer.declineConfirm.body":
+    "Ownership stays with {name}, and they'll see that you declined.",
+  "ownershipOffer.keepDeciding": "Not yet",
+  "ownershipOffer.badgeLabel_one": "{count} ownership offer waiting",
+  "ownershipOffer.badgeLabel_other": "{count} ownership offers waiting",
+  "hub.ownershipOffersLink_one": "{count} ownership offer waiting",
+  "hub.ownershipOffersLink_other": "{count} ownership offers waiting",
+  "ownershipOffer.offerCta": "Offer ownership",
+  "invites.listTitle": "Invitations",
+  "ownershipOffer.sendTo": "Send offer to {name}",
+  "invites.introWithOffers":
+    "Communities that have asked you in or offered you ownership. Every answer is yours to give.",
+  "ownershipOffer.error.OWNERSHIP_OFFER_CANCELLED":
+    "The owner withdrew this offer, so there's nothing left to answer.",
+  "ownershipOffer.ownerError.OWNERSHIP_OFFER_ANSWERED":
+    "They answered this offer before you cancelled it, so there's nothing left to cancel.",
+  "ownershipOffer.ownerError.OWNERSHIP_OFFER_OWNER_CHANGED":
+    "You no longer own this community, so you can't offer it to anyone.",
+  "error.staffPlacedBanNeedsOwnerLevel":
+    "Platform staff placed this ban, so only the owner or a co-owner can lift it or shorten it.",
+  "ownershipOffer.rosterLoading": "Loading the community's members",
+  "ownershipOffer.rosterErrorTitle": "We couldn't load the members",
+  "ownershipOffer.rosterErrorBody":
+    "The community's roster didn't load, so there's nobody to choose from yet. Try again to load it.",
 };

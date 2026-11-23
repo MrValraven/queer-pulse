@@ -207,6 +207,17 @@ describe("runEditorSaveChain on a moderation restriction (ENG-448)", () => {
 });
 
 describe("personaRefusalMessageKey", () => {
+  it("maps an Unlinked persona's owner credit refusal to its own copy", () => {
+    expect(
+      personaRefusalMessageKey(
+        new ApiError(400, "x", {
+          code: "UNLINKED_PERSONA_OWNER_CREDIT",
+          handle: "ana",
+        }),
+      ),
+    ).toBe("subprofiles:itemEditor.collaboratorsOwnerCreditRefused");
+  });
+
   it("maps ACCOUNT_RESTRICTED to the shared restriction copy", () => {
     expect(
       personaRefusalMessageKey(

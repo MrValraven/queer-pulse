@@ -55,6 +55,9 @@ export interface RecommendationDTO {
    * for a missing profile row. Both read the same way: the warning stands, the
    * byline is gone. */
   member: MemberRefDTO | null;
+  /** PRD-507. The author's account is paused, suspended or deleting: `name`
+   *  and `initials` arrive empty and the card shows the inactive label. */
+  isInactiveMember?: true;
   stars: number;
   text: string;
   createdAt: string;

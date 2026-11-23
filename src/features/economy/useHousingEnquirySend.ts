@@ -45,8 +45,11 @@ interface HousingEnquirySendState {
  *   open their own prompts and retry the send once passed;
  * - a coded first-contact refusal (a paused account) gets its shared copy;
  * - a restricted account gets the shared appeal copy;
- * - a 404 means the home or room is off the board (filled, expired, taken
- *   down or withdrawn) and says so;
+ * - a 404 means the home or room is not available (filled, expired, taken
+ *   down, withdrawn, or a lister with a block either way, which SEC-19
+ *   answers alike) and says so without naming a block;
+ * - the sender's own block (409 `UNBLOCK_TO_CONTACT`) asks them to unblock
+ *   first, through the first-contact key;
  * - any other 4xx with a real sentence (own listing, no lister left) repeats
  *   the backend's words, as the directory door does;
  * - everything else gets the housing generic.

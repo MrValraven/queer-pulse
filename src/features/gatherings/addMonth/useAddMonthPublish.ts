@@ -227,7 +227,9 @@ export function useAddMonthPublish(options: {
       const isTemplateCause =
         nextFailure.reason === "venueNotFound" ||
         nextFailure.reason === "templateNotFound" ||
-        nextFailure.reason === "communityOnly";
+        nextFailure.reason === "communityOnly" ||
+        nextFailure.reason === "houseMusicHostOnly" ||
+        nextFailure.reason === "networkHostOnly";
       pendingRevealRef.current = isTemplateCause
         ? {
             scrollId: ADD_MONTH_SECTION_IDS.template,

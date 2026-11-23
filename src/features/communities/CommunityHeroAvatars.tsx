@@ -29,11 +29,14 @@ export function CommunityHeroAvatars({
 }) {
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
-  const moreCount = memberNum - 5;
+  // An inactive member's stand-in has no face or name to show, so it stays
+  // out of the strip and counts toward "and N more".
+  const faces = avatars.filter((member) => !member.isInactiveMember);
+  const moreCount = memberNum - faces.length;
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
       <div className={styles.avStrip}>
-        {avatars.map((m, i) => {
+        {faces.map((m, i) => {
           const photo = photoOf(m, demoMode);
           const inner = (
             <>
@@ -59,7 +62,7 @@ export function CommunityHeroAvatars({
               key={i}
               to={`/members/${m.slug}`}
               className={styles.heroAv}
-              style={{ zIndex: avatars.length - i }}
+              style={{ zIndex: faces.length - i }}
             >
               {inner}
             </Link>
@@ -67,14 +70,14 @@ export function CommunityHeroAvatars({
             <span
               key={i}
               className={styles.heroAv}
-              style={{ zIndex: avatars.length - i }}
+              style={{ zIndex: faces.length - i }}
             >
               {inner}
             </span>
           );
         })}
       </div>
-      {hasCount && memberNum > 5 && (
+      {hasCount && moreCount > 0 && (
         <span className={styles.stripNote}>
           <Translation
             i18nKey="communities:detail.hero.andMore"

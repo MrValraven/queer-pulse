@@ -44,7 +44,9 @@ export interface AdminMemberCardDTO {
   pronouns: string | null;
   verified: boolean;
   role: MemberRole;
-  openReportCount: number;
+  /** Null on the viewer's own row: the backend withholds the count of
+   *  reports filed against the person reading the list. */
+  openReportCount: number | null;
   joinedAt: string;
   tagline: string | null;
   communities: string[];
@@ -104,7 +106,8 @@ export interface AdminMemberDetailDTO {
   vouchCount: number;
   outboundVouchCount: number;
   joinedAt: string;
-  openReportCount: number;
+  /** Null when the backend withholds it (the viewer's own detail). */
+  openReportCount: number | null;
   communities: { name: string; role: "owner" | "mod" | "member" }[];
   contributions: { kind: string; detail: string | null; at: string }[];
   moderationTimeline: AdminMemberModerationEntryDTO[];
@@ -211,13 +214,25 @@ export const patchAdminMemberInviteAccess = (
     { hasInviteAccess },
   );
 
+/** The `PATCH /mod/users/:userId/suspension` body. Mirrors the backend
+ *  `LiftSuspensionDto`: the route refuses any other key and requires both the
+ *  reason code and the note. `reportId` is sent whenever the lift answers a
+ *  report. */
+export interface LiftSuspensionInput {
+  reasonCode: string;
+  note: string;
+  reportId?: string;
+}
+
 /**
  * Lift a member's active suspension (reinstate them), consuming the backend's
  * moderator endpoint `PATCH /mod/users/:userId/suspension` (liftSuspension).
  * Moderator/admin-only; the backend enforces the guardrails and 403s otherwise.
  */
-export const liftUserSuspension = (userId: string) =>
-  apiPatch<void>(`/mod/users/${userId}/suspension`, { action: "lift" });
+export const liftUserSuspension = (
+  userId: string,
+  input: LiftSuspensionInput,
+) => apiPatch<void>(`/mod/users/${userId}/suspension`, input);
 
 /** The shape returned after verifying a member. Mirrors the backend
  *  `VerifiedMemberDTO`. */

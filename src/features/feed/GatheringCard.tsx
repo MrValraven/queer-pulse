@@ -9,7 +9,7 @@ import {
   PosterAwareImageSlot,
 } from "../../shared/components/ui";
 import { gatheringPath } from "../gatherings/data";
-import { tintForSlug } from "../../shared/api/refs";
+import { authorDisplayName, tintForSlug } from "../../shared/api/refs";
 import { initials, relativeTime } from "./api/feed.adapters";
 import type { FeedItem } from "./api/feed.api";
 import { FeedReasonLine } from "./FeedPostActions";
@@ -100,8 +100,9 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
   if (item) {
     const host = item.actor;
     const hostSlug = host?.handle ?? "";
-    const hostName =
-      host?.displayName ?? t("feed:card.gathering.anonymousHost");
+    const hostName = host
+      ? authorDisplayName(host, t)
+      : t("feed:card.gathering.anonymousHost");
     const hostTint = hostSlug ? tintForSlug(hostSlug) : "plum";
     const timestamp = whenLabel ? undefined : relativeTime(item.createdAt, fmt);
     const hostedBy = t("feed:gathering.hostedBy", { host: hostName });

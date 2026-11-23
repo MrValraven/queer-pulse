@@ -78,6 +78,8 @@ export function useAdminMediaUploaders(term: string) {
 
   const query = useQuery<AdminMediaUploaderResult[]>({
     queryKey: [ADMIN_MEDIA_KEY, "uploaders", trimmed],
+    // The key holds what the staff member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     enabled,
     queryFn: () => searchAdminMediaUploaders(trimmed),
     placeholderData: (previous) => previous,

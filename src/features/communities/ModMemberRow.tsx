@@ -1,4 +1,11 @@
-import { FiUserPlus, FiUserMinus, FiStar, FiX, FiShield } from "react-icons/fi";
+import {
+  FiUserPlus,
+  FiUserMinus,
+  FiStar,
+  FiX,
+  FiShield,
+  FiGift,
+} from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -8,6 +15,8 @@ import type { CommunityRole } from "./membership.types";
 import { photoOf } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
 import { ModMemberMenu, type ModMemberMenuAction } from "./ModMemberMenu";
+import { CommunityMemberAvatarRing } from "./badges/CommunityMemberAvatarRing";
+import { CommunityMemberFlair } from "./badges/CommunityMemberFlair";
 import styles from "./CommunityHubTabs.module.css";
 
 type RosterMember = LivingCommunity["roster"][number];
@@ -18,6 +27,7 @@ export interface ModMemberRowActions {
   onGrantCoOwner: (slug: string | undefined, name: string) => void;
   onRevokeCoOwner: (slug: string | undefined, name: string) => void;
   onRemove: (slug: string | undefined, name: string) => void;
+  onSendGift: (slug: string, name: string) => void;
 }
 
 /**
@@ -33,19 +43,28 @@ export interface ModMemberRowActions {
  *   owner).
  * - Changing or removing a *moderator* takes an owner-level actor, so a mod
  *   cannot dismantle the rest of the mod team.
- * - The owner's own row carries no controls: ownership moves through transfer.
+ * - The owner's own row carries no controls: ownership moves only when a
+ *   member accepts the owner's ownership offer.
+ * - Sending a gift is open to every staff seat, on another member's row
+ *   outside a space (`canSendGift`, decided by the list).
  */
 export function ModMemberRow({
   member,
+  communitySlug,
   role,
   viewerRole,
+  canSendGift,
   actions,
 }: {
   member: RosterMember;
+  /** The community the row belongs to, for its worn badge and gifts. */
+  communitySlug: string;
   /** The member's role including any not-yet-confirmed optimistic change. */
   role: CommunityRole;
   /** The signed-in moderator's own role in this community. */
   viewerRole: CommunityRole | null;
+  /** Whether the menu offers "Send a gift" for this member. */
+  canSendGift: boolean;
   actions: ModMemberRowActions;
 }) {
   const { t } = useTranslation();
@@ -63,7 +82,15 @@ export function ModMemberRow({
       ? isViewerOwnerLevel
       : true;
 
+  const memberSlug = member.slug;
   const possibleActions: (ModMemberMenuAction | false)[] = [
+    canSendGift &&
+      memberSlug !== undefined && {
+        key: "sendGift",
+        label: t("communities:badges.sendGift"),
+        icon: <FiGift />,
+        run: () => actions.onSendGift(memberSlug, member.name),
+      },
     !isOwner &&
       !isCoOwner &&
       !isMod &&
@@ -110,17 +137,20 @@ export function ModMemberRow({
 
   return (
     <div className={styles.modRow}>
-      <Avatar
-        initials={member.initials}
-        tint={member.tint}
-        src={photoOf(member, demoMode)}
-        size={38}
-        alt={member.name}
-      />
+      <CommunityMemberAvatarRing communitySlug={communitySlug} member={member}>
+        <Avatar
+          initials={member.initials}
+          tint={member.tint}
+          src={photoOf(member, demoMode)}
+          size={38}
+          alt={member.name}
+        />
+      </CommunityMemberAvatarRing>
       <div className={styles.modMain}>
         <div className={styles.modName}>
           {member.name} <RoleBadge role={role} />
           <MemberStaffBadge slug={member.slug} />
+          <CommunityMemberFlair communitySlug={communitySlug} member={member} />
         </div>
         {member.title && <div className={styles.modMeta}>{member.title}</div>}
       </div>

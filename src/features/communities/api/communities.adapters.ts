@@ -1,5 +1,10 @@
 import { communityPath } from "../../../app/routeMap";
-import { memberRefToPerson, type MemberRefDTO } from "../../../shared/api/refs";
+import {
+  authorDisplayName,
+  isInactiveMemberRef,
+  memberRefToPerson,
+  type MemberRefDTO,
+} from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
 import { activeLocale } from "../../../shared/i18n/locale";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -110,7 +115,7 @@ export function refToPerson(
   ref: MemberRefDTO | null | undefined,
   translate: TFunction,
 ): Person {
-  const p = memberRefToPerson(ref);
+  const p = memberRefToPerson(ref, translate);
   if (!p) {
     return {
       initials: "?",
@@ -118,6 +123,7 @@ export function refToPerson(
       tint: "plum",
     };
   }
+  if (isInactiveMemberRef(ref)) return inactiveCommunityPerson(p.name);
   return {
     initials: p.initials,
     name: p.name,
@@ -125,6 +131,12 @@ export function refToPerson(
     slug: p.slug,
     avatarUrl: p.avatarUrl,
   };
+}
+
+/** The inactive member's stand-in as a community `Person`: the label as its
+ *  name, and no slug, photo or initials. */
+function inactiveCommunityPerson(name: string): Person {
+  return { initials: "", name, tint: "plum", isInactiveMember: true };
 }
 
 /** GET /communities card → the discover-grid `Community` view-model. */
@@ -297,7 +309,11 @@ export function replyDtoToPostReply(
 ): PostReply {
   return {
     id: dto.id,
-    author: refToPerson(dto.author, translate),
+    author: {
+      ...refToPerson(dto.author, translate),
+      flair: dto.authorFlair ?? null,
+      hasRecentGift: dto.authorHasRecentGift ?? false,
+    },
     text: dto.text,
     createdAt: dto.createdAt,
     editedAt: dto.editedAt,
@@ -317,7 +333,11 @@ export function postDtoToPost(
 ): Post {
   return {
     id: dto.id,
-    author: refToPerson(dto.author, translate),
+    author: {
+      ...refToPerson(dto.author, translate),
+      flair: dto.authorFlair ?? null,
+      hasRecentGift: dto.authorHasRecentGift ?? false,
+    },
     body: dto.body,
     image: dto.image ?? undefined,
     kind: dto.kind,
@@ -354,7 +374,12 @@ export function rosterEntryToRosterMember(
   dto: RosterEntryDTO,
   translate: TFunction,
 ): RosterMember {
-  return { ...refToPerson(dto.member, translate), role: dto.role };
+  return {
+    ...refToPerson(dto.member, translate),
+    role: dto.role,
+    flair: dto.flair ?? null,
+    hasRecentGift: dto.hasRecentGift ?? false,
+  };
 }
 
 /** A pending join request → the mod-tools `ModRequest`. */
@@ -379,6 +404,9 @@ function reportAuthorPerson(
 ): Person | undefined {
   const person = memberRefToPerson(ref);
   if (!person) return undefined;
+  // No translator here, so the stand-in carries an empty name and the flag;
+  // the queue row resolves the label at render.
+  if (person.isInactiveMember) return inactiveCommunityPerson("");
   return {
     initials: person.initials,
     name: person.name,
@@ -449,6 +477,8 @@ function postReplyToThreadReply(reply: PostReply): Reply {
     name: reply.author.name,
     tint: reply.author.tint,
     authorSlug: reply.author.slug,
+    flair: reply.author.flair ?? null,
+    hasRecentGift: reply.author.hasRecentGift ?? false,
     text: reply.text,
     editedAt: reply.editedAt,
     deleted: reply.deleted,
@@ -746,12 +776,13 @@ export function pulseEventToCommunityEvent(
 /** `recentThreads` lane → the sidebar's compact thread row. */
 export function pulseThreadToCard(
   dto: CommunityPulseThreadDTO,
+  translate: TFunction,
 ): CommunityPulseThread {
   return {
     id: dto.id,
     slug: dto.slug,
     title: dto.title,
-    authorName: dto.author.displayName,
+    authorName: authorDisplayName(dto.author, translate),
     replyCount: dto.replyCount,
   };
 }

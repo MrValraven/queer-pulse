@@ -332,6 +332,33 @@ export function readLastRefreshSettlement(): RefreshSettlement | null {
   return lastRefreshSettlement;
 }
 
+/**
+ * Whether the server itself refused the session during an attempt that began
+ * at `attemptStartedAt` (a `Date.now()` taken just before it). Two answers
+ * count: a refresh in this attempt that the server answered 401, or a 401
+ * that came back with no refresh at all (recovery was off, so the server
+ * answered directly). The backend refuses a dead session on `/auth/refresh`
+ * with 401 alone. A 403 there comes from the CSRF guard (a token fetch that
+ * failed and left the retry headerless), so like a network fault, a lock
+ * timeout, a 5xx or a 429 it is no answer about the session, and the caller
+ * keeps what it holds.
+ *
+ * Pass the error the attempt threw, when it threw one: `request` turns every
+ * failed refresh into `ApiError(401)`, so the error alone cannot tell a
+ * refused session from a blip.
+ */
+export function isSessionRefusedByServer(
+  attemptStartedAt: number,
+  error?: unknown,
+): boolean {
+  const settlement = lastRefreshSettlement;
+  if (settlement && settlement.settledAt >= attemptStartedAt) {
+    const { outcome } = settlement;
+    return outcome.kind === "rejected" && outcome.status === 401;
+  }
+  return error instanceof ApiError && error.status === 401;
+}
+
 let refreshing: Promise<boolean> | null = null;
 /**
  * Coalesce refreshes into a single network call across two layers:
@@ -624,6 +651,7 @@ async function requestMeta<T>(
   timeoutMs = DEFAULT_TIMEOUT_MS,
   validate?: ResponseValidator<T>,
   externalSignal?: AbortSignal,
+  keepalive?: boolean,
 ): Promise<ApiResponseMeta<T>> {
   const headers: Record<string, string> = {};
   if (body !== undefined) headers["Content-Type"] = "application/json";
@@ -667,6 +695,7 @@ async function requestMeta<T>(
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
       signal: controller.signal,
+      ...(keepalive ? { keepalive: true } : {}),
     });
   } catch (error) {
     if (controller.signal.aborted) {
@@ -708,6 +737,7 @@ async function requestMeta<T>(
         timeoutMs,
         validate,
         externalSignal,
+        keepalive,
       );
     }
     onAuthLost?.();
@@ -747,6 +777,7 @@ async function requestMeta<T>(
         timeoutMs,
         validate,
         externalSignal,
+        keepalive,
       );
     }
 
@@ -797,6 +828,7 @@ async function request<T>(
   timeoutMs = DEFAULT_TIMEOUT_MS,
   validate?: ResponseValidator<T>,
   externalSignal?: AbortSignal,
+  keepalive?: boolean,
 ): Promise<T> {
   const { data } = await requestMeta<T>(
     method,
@@ -806,6 +838,7 @@ async function request<T>(
     timeoutMs,
     validate,
     externalSignal,
+    keepalive,
   );
   return data;
 }
@@ -860,13 +893,21 @@ export const apiGetNullable = async <T>(
     undefined,
     signal,
   )) ?? null;
+/**
+ * `keepalive` (optional, last) lets the request outlive the page, for a save
+ * fired from `pagehide`. The browser caps a keepalive body at 64 KiB and may
+ * refuse one it cannot send, which throws a TypeError before anything leaves;
+ * the caller decides whether to retry without it. Omitting it changes nothing.
+ */
 export const apiPost = <T>(
   path: string,
   body?: unknown,
   timeoutMs?: number,
   validate?: ResponseValidator<T>,
   signal?: AbortSignal,
-) => request<T>("POST", path, body, true, timeoutMs, validate, signal);
+  keepalive?: boolean,
+) =>
+  request<T>("POST", path, body, true, timeoutMs, validate, signal, keepalive);
 /**
  * ENG-222: the opt-in POST variant that also resolves the raw response
  * `Headers` alongside the body. An additive sibling of `apiPost` that keeps

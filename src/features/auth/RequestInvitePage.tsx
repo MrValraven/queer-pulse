@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiUserPlus } from "react-icons/fi";
+import { FiMail, FiUserPlus } from "react-icons/fi";
 import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
+import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
@@ -23,6 +24,7 @@ export function RequestInvitePage() {
   // the durable copy is written to storage by the mutation. Null on the 409
   // path, where no new request (and so no token) was created.
   const [statusToken, setStatusToken] = useState<string | null>(null);
+  const [isCodeStep, setIsCodeStep] = useState(false);
 
   // Pre-emptive closed state, read BEFORE the form is filled in. Fails open by
   // construction: outside demo mode there is no `initialData`, so while the
@@ -32,6 +34,10 @@ export function RequestInvitePage() {
   // a legitimate request.
   const { data: platformStatus } = usePlatformStatus();
   const joinRequestsClosed = platformStatus?.joinRequestsOpen === false;
+  // SEC-10: every request is confirmed with an emailed code, so while the
+  // email codes are switched off no request can be filed. Fails open the same
+  // way: only an explicit `false` from the backend shows the notice.
+  const emailCodesOff = platformStatus?.emailCodeSignIn === false;
 
   if (outcome) {
     return (
@@ -52,7 +58,18 @@ export function RequestInvitePage() {
           components={{ em: <em /> }}
         />
       </h1>
-      <p className={styles.sub}>{t("auth:requestInvite.sub")}</p>
+      {/* The code step names the address and what to do with the code, so
+          the intro folds away while it is open. With codes off the intro
+          points at the one way in that still works, a member's invite. */}
+      <Collapse isOpen={!isCodeStep}>
+        <p className={styles.sub}>
+          {t(
+            emailCodesOff && !joinRequestsClosed
+              ? "auth:requestInvite.codesOffSub"
+              : "auth:requestInvite.sub",
+          )}
+        </p>
+      </Collapse>
 
       {joinRequestsClosed ? (
         // There is no point collecting a submission that will be rejected —
@@ -65,10 +82,17 @@ export function RequestInvitePage() {
             t("auth:requestInvite.closed.body")
           }
         />
+      ) : emailCodesOff ? (
+        <PlatformClosedNotice
+          icon={FiMail}
+          title={t("auth:requestInvite.codesOff.title")}
+          body={t("auth:requestInvite.codesOff.body")}
+        />
       ) : (
         <RequestInviteForm
           first={first}
           setFirst={setFirst}
+          onCodeStepChange={setIsCodeStep}
           onSent={(nextOutcome, nextStatusToken) => {
             setStatusToken(nextStatusToken);
             setOutcome(nextOutcome);
@@ -88,8 +112,8 @@ export function RequestInvitePage() {
           {t("auth:requestInvite.checkStatusLink")}
         </Link>
         {/* PRD-306. The single most valuable place for this link: someone
-            already holding a code is one submit away from spending one of
-            their three requests an hour on an invite that already exists. */}
+            already holding a code is one submit away from asking for an
+            invite that already exists. */}
         <Link to={routes.enterInviteCode}>
           {t("auth:common.haveAnInviteCode")}
         </Link>

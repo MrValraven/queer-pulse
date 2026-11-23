@@ -165,7 +165,10 @@ export interface AccordionItem {
  *                  staffRoles
  *   messages       messages, reportedConversations, messageActivity
  *   posts          posts, communities, forumActivity, communityMemberships,
- *                  communityActivity, communityRequests, feedPreferences
+ *                  communityActivity, communityRequests, feedPreferences,
+ *                  communityBadges, communityEventsAttended,
+ *                  communityGiftsReceived, communityGiftsSent,
+ *                  communityOwnershipOffers
  *   gatherings     events, go-together, eventPreferences, eventParticipation
  *   connections    connections, connectionNotes, invitesSent
  *   safety         blocks, mutes, hiddenMembers, reportsFiled,
@@ -255,6 +258,8 @@ export const ACCORDION_ITEMS: AccordionItem[] = [
       "settings:dataExport.tag.votesAndFollows",
       "settings:dataExport.tag.communityRoles",
       "settings:dataExport.tag.feedChoices",
+      "settings:dataExport.tag.communityBadges",
+      "settings:dataExport.tag.communityOwnershipOffers",
     ],
   },
   {

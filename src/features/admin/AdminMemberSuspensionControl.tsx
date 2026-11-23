@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { useRef, useState, type RefObject } from "react";
+import { FiAlertCircle } from "react-icons/fi";
+import { Button, Collapse } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -11,15 +12,23 @@ import {
 } from "./api/useAdminMembers";
 import type { AdminMember, MemberDetail } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
+import noteStyles from "./AdminMemberSuspensionControl.module.css";
 
 const firstName = (full: string) => full.split(" ")[0];
 
 /**
- * The reason code a lift cites. A lift undoes a decision rather than making a
- * fresh accusation, so there is no taxonomy entry that fits better than the
- * catch-all, and the moderator's own words carry the meaning.
+ * The reason code a lift cites. A lift reverses an earlier decision and
+ * accuses nobody, so the catch-all is the entry that fits, and the moderator's
+ * own words carry the meaning.
  */
 const LIFT_REASON_CODE = "other";
+
+/** Focuses the note on the next frame, once React has committed
+ *  `aria-invalid` and the error line, so a screen reader lands on the field
+ *  already marked invalid and described by that line. */
+function focusAfterCommit(fieldRef: RefObject<HTMLTextAreaElement | null>) {
+  requestAnimationFrame(() => fieldRef.current?.focus());
+}
 
 /**
  * The drawer's "put this member back" controls: reinstate a suspended member,
@@ -49,7 +58,8 @@ export function AdminMemberSuspensionControl({
 /**
  * Reinstate a suspended member. Rendered only while `detail.suspended` is true
  * (and hidden again once lifted). The confirm modal reuses the shared
- * `AdminModal`; the mutation is demo/live dual-mode and invalidates the member
+ * `AdminModal` and asks for the note the route requires (the audit trail
+ * records it with the reason code); the mutation is demo/live dual-mode and invalidates the member
  * query in live mode (see `useLiftSuspension`).
  */
 function SuspensionSection({
@@ -63,13 +73,31 @@ function SuspensionSection({
   const { showToast } = useToast();
   const lift = useLiftSuspension();
   const [confirming, setConfirming] = useState(false);
+  const [note, setNote] = useState("");
+  const [isNoteMissing, setIsNoteMissing] = useState(false);
+  const noteRef = useRef<HTMLTextAreaElement>(null);
   const [lifted, setLifted] = useState(false);
 
   if (!detail.suspended || lifted) return null;
 
+  // Closing drops the missing-note line, so a reopened modal starts clean.
+  const closeConfirm = () => {
+    setConfirming(false);
+    setIsNoteMissing(false);
+  };
+
   const apply = () => {
+    const auditNote = note.trim();
+    if (!auditNote) {
+      setIsNoteMissing(true);
+      focusAfterCommit(noteRef);
+      return;
+    }
     lift.mutate(
-      { memberId: member.id },
+      {
+        memberId: member.id,
+        input: { reasonCode: LIFT_REASON_CODE, note: auditNote },
+      },
       {
         onSuccess: () => {
           setConfirming(false);
@@ -109,10 +137,10 @@ function SuspensionSection({
           title={t("admin:members.suspension.confirm.title", {
             name: member.name,
           })}
-          onClose={() => setConfirming(false)}
+          onClose={closeConfirm}
           footer={
             <>
-              <Button variant="ghost" onClick={() => setConfirming(false)}>
+              <Button variant="ghost" onClick={closeConfirm}>
                 {t("admin:common.cancel")}
               </Button>
               <Button variant="jade" disabled={lift.isPending} onClick={apply}>
@@ -124,6 +152,20 @@ function SuspensionSection({
           <p className={styles.roleConfirmBody}>
             {t("admin:members.suspension.confirm.body", { name: member.name })}
           </p>
+          <LiftNoteField
+            id="lift-suspension-note"
+            label={t("admin:members.suspension.confirm.noteLabel")}
+            placeholder={t("admin:members.suspension.confirm.notePlaceholder")}
+            missingText={t("admin:members.suspension.missingNoteToast")}
+            maxLength={2000}
+            value={note}
+            isMissing={isNoteMissing}
+            fieldRef={noteRef}
+            onChange={(value) => {
+              setNote(value);
+              if (value.trim()) setIsNoteMissing(false);
+            }}
+          />
         </AdminModal>
       )}
     </section>
@@ -151,6 +193,8 @@ function RestrictionSection({ member }: { member: AdminMember }) {
   const lift = useLiftRestriction();
   const [confirming, setConfirming] = useState(false);
   const [note, setNote] = useState("");
+  const [isNoteMissing, setIsNoteMissing] = useState(false);
+  const noteRef = useRef<HTMLTextAreaElement>(null);
   const [lifted, setLifted] = useState(false);
 
   if (!restriction?.restricted || lifted) return null;
@@ -160,10 +204,17 @@ function RestrictionSection({ member }: { member: AdminMember }) {
     ? fmt.date(new Date(restriction.restrictedUntil))
     : null;
 
+  // Closing drops the missing-note line, so a reopened modal starts clean.
+  const closeConfirm = () => {
+    setConfirming(false);
+    setIsNoteMissing(false);
+  };
+
   const apply = () => {
     const memberFacingNote = note.trim();
     if (!memberFacingNote) {
-      showToast(t("admin:members.restriction.missingNoteToast"), "error");
+      setIsNoteMissing(true);
+      focusAfterCommit(noteRef);
       return;
     }
     lift.mutate(
@@ -210,10 +261,10 @@ function RestrictionSection({ member }: { member: AdminMember }) {
           title={t("admin:members.restriction.confirm.title", {
             name: member.name,
           })}
-          onClose={() => setConfirming(false)}
+          onClose={closeConfirm}
           footer={
             <>
-              <Button variant="ghost" onClick={() => setConfirming(false)}>
+              <Button variant="ghost" onClick={closeConfirm}>
                 {t("admin:common.cancel")}
               </Button>
               <Button variant="jade" disabled={lift.isPending} onClick={apply}>
@@ -225,19 +276,79 @@ function RestrictionSection({ member }: { member: AdminMember }) {
           <p className={styles.roleConfirmBody}>
             {t("admin:members.restriction.confirm.body", { name: first })}
           </p>
-          <label className={styles.fieldLabel} htmlFor="lift-restriction-note">
-            {t("admin:members.restriction.confirm.noteLabel", { name: first })}
-          </label>
-          <textarea
+          <LiftNoteField
             id="lift-restriction-note"
-            className={styles.textarea}
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
+            label={t("admin:members.restriction.confirm.noteLabel", {
+              name: first,
+            })}
             placeholder={t("admin:members.restriction.confirm.notePlaceholder")}
-            rows={3}
+            missingText={t("admin:members.restriction.missingNoteToast")}
+            value={note}
+            isMissing={isNoteMissing}
+            fieldRef={noteRef}
+            onChange={(value) => {
+              setNote(value);
+              if (value.trim()) setIsNoteMissing(false);
+            }}
           />
         </AdminModal>
       )}
     </section>
+  );
+}
+
+/**
+ * The required note in a lift's confirm modal: its label, the textarea, and
+ * the line that names what is missing when the moderator confirms with the
+ * note empty. The caller focuses the field at that moment, and the line folds
+ * away as soon as the note has text.
+ */
+function LiftNoteField({
+  id,
+  label,
+  placeholder,
+  missingText,
+  maxLength,
+  value,
+  isMissing,
+  fieldRef,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  placeholder: string;
+  missingText: string;
+  maxLength?: number;
+  value: string;
+  isMissing: boolean;
+  fieldRef: RefObject<HTMLTextAreaElement | null>;
+  onChange: (value: string) => void;
+}) {
+  const errorId = `${id}-error`;
+  return (
+    <div className={noteStyles.noteGroup}>
+      <label className={styles.fieldLabel} htmlFor={id}>
+        {label}
+      </label>
+      <textarea
+        ref={fieldRef}
+        id={id}
+        className={styles.textarea}
+        maxLength={maxLength}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        rows={3}
+        required
+        aria-invalid={isMissing || undefined}
+        aria-describedby={isMissing ? errorId : undefined}
+      />
+      <Collapse isOpen={isMissing}>
+        <p id={errorId} role="alert" className={noteStyles.noteError}>
+          <FiAlertCircle aria-hidden className={noteStyles.noteErrorIcon} />
+          {missingText}
+        </p>
+      </Collapse>
+    </div>
   );
 }

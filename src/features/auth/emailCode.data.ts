@@ -18,7 +18,7 @@ import type {
 
 export const DEMO_LATENCY_MS = 400;
 export const DEMO_INCORRECT_CODE = "000000";
-export const DEMO_ATTEMPTS_LEFT = 4;
+export const DEMO_ATTEMPTS_LEFT = 2;
 
 /** The demo session's own address (`DEMO_USER.email` in AuthProvider). */
 const DEMO_ACCOUNT_EMAIL = "you@queerpulse.test";

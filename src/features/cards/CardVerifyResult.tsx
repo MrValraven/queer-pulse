@@ -42,30 +42,41 @@ export function CardVerifyResult({
         lead={t(`cards:verify.lead.${verification.status}`)}
       />
       <div className={styles.body}>
-        {/* The name owns its line. Pronouns follow on their own, below: they
-            qualify the name rather than continuing it, and a verifier reading
-            aloud needs to find them without picking them out of a bracket. */}
-        <p className={styles.holder}>
-          {cardHolderName(verification.holderName, t)}
-        </p>
-        {verification.holderPronouns ? (
-          <p className={styles.holderPronouns}>{verification.holderPronouns}</p>
+        {/* SEC-22. Only a card that is good right now names anyone. The server
+            sends no holder, issuer, role or pronouns for any other status, so
+            this page prints the verdict, the serial and the year alone. */}
+        {isGood ? (
+          <>
+            {/* The name owns its line. Pronouns follow on their own below it,
+                so a verifier reading aloud finds them without picking them
+                out of a bracket. */}
+            <p className={styles.holder}>
+              {cardHolderName(verification.holderName, t)}
+            </p>
+            {verification.holderPronouns ? (
+              <p className={styles.holderPronouns}>
+                {verification.holderPronouns}
+              </p>
+            ) : null}
+            <p className={styles.issuer}>
+              <span>{verification.issuerName}</span>
+            </p>
+          </>
         ) : null}
-        <p className={styles.issuer}>
-          <span>{verification.issuerName}</span>
-        </p>
 
         <dl className={styles.meta}>
-          <div>
-            <dt>{t("cards:verify.role")}</dt>
-            {/* Never interpolate the wire value into the key. The roster's
-                roles are snake_case on the wire (`co_owner`) and camelCase in
-                the catalog (`role.coOwner`), so building the key by hand
-                printed the literal `cards:role.co_owner` at the door.
-                `cardRoleLabelKey` owns that mapping for every card face and
-                falls back to `role.member` for a value it does not know. */}
-            <dd>{t(cardRoleLabelKey(verification.role))}</dd>
-          </div>
+          {isGood ? (
+            <div>
+              <dt>{t("cards:verify.role")}</dt>
+              {/* Never interpolate the wire value into the key. The roster's
+                  roles are snake_case on the wire (`co_owner`) and camelCase
+                  in the catalog (`role.coOwner`), so building the key by hand
+                  printed the literal `cards:role.co_owner` at the door.
+                  `cardRoleLabelKey` owns that mapping for every card face and
+                  falls back to `role.member` for a value it does not know. */}
+              <dd>{t(cardRoleLabelKey(verification.role))}</dd>
+            </div>
+          ) : null}
           <div>
             <dt>{t("cards:verify.serial")}</dt>
             <dd>{verification.serial}</dd>

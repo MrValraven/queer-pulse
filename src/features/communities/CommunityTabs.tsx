@@ -137,7 +137,7 @@ export function MembersTab({
                   as={Link}
                   to={MEMBER}
                   className={styles.mCard}
-                  key={member.slug ?? `${member.name}-${member.initials}`}
+                  key={member.slug || `${member.name}-${memberIndex}`}
                   delay={Math.min(memberIndex, 8) * 60}
                 >
                   <div

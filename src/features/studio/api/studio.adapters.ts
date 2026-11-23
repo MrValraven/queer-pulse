@@ -2,6 +2,10 @@ import type { ImageSlotTint } from "../../../shared/components/ui";
 import { personaPath, routes } from "../../../app/routeMap";
 import { initialsFromName } from "../../../shared/lib/initials";
 import {
+  inactiveMemberLabel,
+  isInactiveMemberRef,
+} from "../../../shared/api/refs";
+import {
   socialDisplayLabel,
   socialHref,
   socialPlatform,
@@ -1167,6 +1171,19 @@ export function toPlaylistCreditView(
     displayName: "",
     avatarUrl: null,
   };
+  // PRD-507. The inactive member's stand-in: the label, a blank face, and
+  // nothing to link to.
+  if (isInactiveMemberRef(member)) {
+    return {
+      kind: "member",
+      id: member.id,
+      name: inactiveMemberLabel(),
+      avatarUrl: null,
+      initials: "",
+      tint: tintForId(member.id),
+      href: null,
+    };
+  }
   return {
     kind: "member",
     id: member.id,
@@ -1314,6 +1331,18 @@ export interface StudioPlaylistInviteView {
 export function toPlaylistPersonView(
   dto: StudioPlaylistPersonDTO,
 ): StudioPlaylistPersonView {
+  // PRD-507. The inactive member's stand-in: the label, a blank face, and
+  // nothing to link to.
+  if (isInactiveMemberRef(dto)) {
+    return {
+      slug: "",
+      name: inactiveMemberLabel(),
+      avatarUrl: null,
+      initials: "",
+      tint: tintForId(""),
+      href: null,
+    };
+  }
   const name = dto.displayName.trim();
   return {
     slug: dto.slug,

@@ -13,6 +13,7 @@ import { AdminMemberInviteAccessLine } from "./AdminMemberInviteAccessLine";
 import { AdminAccessPanel } from "./AdminAccessRow";
 import { AdminMemberEarlyAccessSection } from "./earlyAccess/AdminMemberEarlyAccessSection";
 import {
+  REPORTS_AGAINST_GLANCE_KEY,
   SEALED_IDENTITY,
   type AdminMember,
   type MemberDetail,
@@ -71,13 +72,22 @@ export function RolesAndAccessSection({
 export function MemberOverviewSections({
   detail,
   memberName,
+  isReportCountWithheld = false,
   onOpenNetwork,
 }: {
   detail: MemberDetail;
   memberName: string;
+  /** The list withheld this member's open-report count (the viewer's own
+   *  drawer), so the "Reports against" stat is left out. */
+  isReportCountWithheld?: boolean;
   onOpenNetwork: () => void;
 }) {
   const { t } = useTranslation();
+  const glance = isReportCountWithheld
+    ? detail.glance.filter(
+        (glanceStat) => glanceStat.labelKey !== REPORTS_AGAINST_GLANCE_KEY,
+      )
+    : detail.glance;
   return (
     <>
       <section className={styles.dSection}>
@@ -85,7 +95,7 @@ export function MemberOverviewSections({
           {t("admin:members.drawer.glanceTitle")}
         </h3>
         <div className={styles.glanceGrid}>
-          {detail.glance.map((glanceStat) => (
+          {glance.map((glanceStat) => (
             <div key={glanceStat.labelKey} className={styles.glanceStat}>
               <div className={styles.glanceValue}>{glanceStat.value}</div>
               <div className={styles.glanceLabel}>{t(glanceStat.labelKey)}</div>

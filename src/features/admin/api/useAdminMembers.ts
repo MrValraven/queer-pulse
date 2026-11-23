@@ -59,6 +59,7 @@ import {
   type AdminStaffRolesDTO,
   type CitedMemberDTO,
   type LiftRestrictionInput,
+  type LiftSuspensionInput,
   type MemberRestrictionDTO,
   type MemberRole,
   type RestrictedMemberDTO,
@@ -410,7 +411,8 @@ export function useUpdateMemberRole() {
  * operator can walk the flow without mutating fixtures. Live mode calls
  * `PATCH /mod/users/:userId/suspension` (liftSuspension); the backend enforces
  * the guardrails and answers 403 with a specific reason, surfaced by the global
- * mutation-error toast. On success live mode invalidates the shared
+ * mutation-error toast. The input carries the reason code and note the route
+ * requires. On success live mode invalidates the shared
  * `["admin-members"]` prefix so the drawer re-reads the member as reinstated,
  * and refetches the staff roster on settle so `/admin/staff` drops the
  * suspended chip. Demo mode marks the cached staff roster row active.
@@ -418,13 +420,17 @@ export function useUpdateMemberRole() {
 export function useLiftSuspension() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<void, unknown, { memberId: string }>({
+  return useDemoAwareMutation<
+    void,
+    unknown,
+    { memberId: string; input: LiftSuspensionInput }
+  >({
     demoMode,
     demoLatencyMs: 0,
     mutationKey: ["admin-members", "lift-suspension"],
     demoResult: () => undefined,
-    live: async ({ memberId }) => {
-      await liftUserSuspension(memberId);
+    live: async ({ memberId, input }) => {
+      await liftUserSuspension(memberId, input);
     },
     onSuccess: (_data, { memberId }) => {
       if (!demoMode) return;

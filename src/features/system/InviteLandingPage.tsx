@@ -4,7 +4,7 @@ import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useInvite } from "../auth/api/useInvite";
+import { hasInviter, useInvite } from "../auth/api/useInvite";
 import { rememberInviteWelcome } from "../auth/api/pendingInvite";
 import { OnboardingPage } from "../auth/OnboardingPage";
 import { TermsModal } from "../marketing/TermsModal";
@@ -44,9 +44,13 @@ export function InviteLandingPage() {
   // hop into onboarding: the code (to redeem) and the welcome payload (inviter +
   // vouch), since the in-memory invite is gone after a full-page auth redirect.
   // An inviter who's no longer active never counts as joinable, even if the
-  // status is still `valid`, so we don't stash a join off a ghost.
+  // status is still `valid`, so we don't stash a join off a ghost. Only a
+  // usable invite names its inviter (SEC-13), so one without an inviter is
+  // never joinable either.
   const validInvite =
-    invite?.status === "valid" && invite.inviterActive !== false
+    invite?.status === "valid" &&
+    invite.inviterActive !== false &&
+    hasInviter(invite)
       ? invite
       : undefined;
   useEffect(() => {
@@ -66,9 +70,9 @@ export function InviteLandingPage() {
 
   // Decorative unsealing: advance the loader steps, then reveal the opened card.
   useEffect(() => {
-    if (phase !== "opening" || !invite) return;
+    if (phase !== "opening" || !validInvite) return;
     const stepMs = 800;
-    const total = buildLoaderSteps(t, invite.inviter.firstName).length;
+    const total = buildLoaderSteps(t, validInvite.inviter.firstName).length;
     const timers = Array.from({ length: total }, (_, i) =>
       window.setTimeout(() => setStep(i), i * stepMs),
     );
@@ -80,20 +84,16 @@ export function InviteLandingPage() {
       timers.forEach(clearTimeout);
       clearTimeout(done);
     };
-  }, [phase, invite, t]);
+  }, [phase, validInvite, t]);
 
   // While GET /invites/:code resolves the inviter.
   if (isLoading) return <InviteLoadingView />;
 
   // Bad, used, expired or revoked code, or a valid code whose inviter is no
   // longer active, routes to the tailored invite-state screen (reasonFromInvite
-  // picks the right copy, including the "inviter inactive" state).
-  if (
-    isError ||
-    !invite ||
-    invite.status !== "valid" ||
-    invite.inviterActive === false
-  )
+  // picks the right copy, including the "inviter inactive" state). The status
+  // and `inviterActive` name the state; the backend sends no inviter there.
+  if (isError || !invite || !validInvite)
     return <InviteExpiredPage invite={invite ?? undefined} />;
 
   if (joined) return <OnboardingPage />;
@@ -113,7 +113,7 @@ export function InviteLandingPage() {
     if (!is18) return;
     if (!demoMode) {
       signIn(INVITE_SIGNUP_REDIRECT, {
-        invite: invite!.code,
+        invite: validInvite!.code,
         ageAttested: true,
       });
       return;
@@ -126,14 +126,14 @@ export function InviteLandingPage() {
   }
 
   if (phase === "sealed")
-    return <InviteSealedView view={invite} onOpen={openInvitation} />;
+    return <InviteSealedView view={validInvite} onOpen={openInvitation} />;
   if (phase === "opening")
-    return <InviteOpeningView view={invite} step={step} />;
+    return <InviteOpeningView view={validInvite} step={step} />;
 
   return (
     <>
       <InviteCardView
-        view={invite}
+        view={validInvite}
         onGoogle={joinWithGoogle}
         onEmailJoined={() => setJoined(true)}
         is18={is18}

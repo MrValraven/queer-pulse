@@ -6,7 +6,8 @@ import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useCreateReport } from "./api/useCreateReport";
+import { isFilingOnOpenReport, useCreateReport } from "./api/useCreateReport";
+import type { ReportDTO } from "./api/reports.api";
 import { useReportSubmissionError } from "./api/reportSubmissionError";
 import type { ReasonCode } from "./reportReasons";
 import { CATEGORIES, subjectTypeForCategory } from "./reportCategories";
@@ -169,18 +170,19 @@ export function ReportFormSection() {
       showToast(t("safety:report.toast.chooseCategory"), "error");
       return;
     }
-    const done = () => {
-      // Two different truths, so two different confirmations: a member is told
-      // where the outcome lands (their notifications); a signed-out reporter is
-      // told plainly that this platform sends no follow-up to wait on.
-      showToast(
-        t(
-          loggedIn
-            ? "safety:report.toast.received"
-            : "safety:report.toast.receivedSignedOut",
-        ),
-        "success",
-      );
+    const done = (report: ReportDTO) => {
+      // Members learn where the outcome lands, signed-out reporters that none
+      // comes back. PRD-510: a repeat on an open report is named by the hook.
+      if (!isFilingOnOpenReport(report)) {
+        showToast(
+          t(
+            loggedIn
+              ? "safety:report.toast.received"
+              : "safety:report.toast.receivedSignedOut",
+          ),
+          "success",
+        );
+      }
       setCategory("");
       setInvolved("");
       setDetail("");

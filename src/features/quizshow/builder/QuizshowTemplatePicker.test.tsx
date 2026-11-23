@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
 import { ApiError } from "../../../shared/api/client";
 import type { QuizshowTemplateCard } from "../../../shared/contracts/quizshow";
@@ -69,6 +70,9 @@ function renderPicker(isAdultsAllowed: boolean) {
 
 async function adultsUseButton(): Promise<HTMLElement> {
   const dialog = await screen.findByRole("dialog");
+  // The row title is data and paints at once; the button labels come from
+  // the lazily loaded quizshow catalog.
+  await awaitCatalog("quizshow");
   const adultsTitle = within(dialog).getByText("After dark");
   const adultsRow = adultsTitle.closest("li");
   if (!adultsRow) throw new Error("no adults template row");

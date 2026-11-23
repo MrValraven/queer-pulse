@@ -66,7 +66,7 @@ export const auth: Catalog = {
     "This address is already on a QueerPulse account, so we can't open a second one for it. Sign in with an email code to this address, or with the Google account you first joined with.",
   "signIn.notice.oauthFailed.title": "Something went sideways",
   "signIn.notice.oauthFailed.body":
-    "Sign-in didn't complete on Google's side. Nothing was changed. Try again in a moment.",
+    "Sign-in stopped before it finished. Nothing was changed. Try again in a moment.",
   "signIn.notice.offline.title": "You're offline",
   "signIn.notice.offline.body":
     "We can't reach QueerPulse without a connection. Check your Wi-Fi or data and try again.",
@@ -329,7 +329,7 @@ export const auth: Catalog = {
   "emailCode.error.codeExpired":
     "This code has expired. Codes work for 10 minutes, so send a new one.",
   "emailCode.error.codeUsedUp":
-    "That was the fifth wrong try, so this code has stopped working. Send a new code to try again.",
+    "That was the third wrong try, so this code has stopped working. Send a new code to try again.",
   "emailCode.error.codeReplaced":
     "You asked for a newer code, so this one has stopped working. Use the code in the latest email.",
   "emailCode.error.codeAlreadyUsed":
@@ -417,12 +417,9 @@ export const auth: Catalog = {
     "I've read the <guidelines>community guidelines</guidelines> and I'm here in good faith.",
   "requestInvite.readHint":
     "Open the guidelines and read to the end to continue.",
-  "requestInvite.submit": "Send my request",
-  "requestInvite.sending": "Sending your request…",
-  "requestInvite.submitError": "Could not send your request. Please try again",
-  // 429: the public form throttles at 3 requests/hour per IP. An immediate
-  // retry can't succeed, so this sets the expectation plainly rather than
-  // inviting one.
+  // 429: the public form throttles at 10 requests/hour per IP. An immediate
+  // retry can't succeed, so this sets the expectation plainly and invites a
+  // wait.
   "requestInvite.rateLimitedError":
     "You've reached the limit for now. Please wait a while and try again.",
   "requestInvite.under18BackLabel": "Back to the form",
@@ -937,4 +934,33 @@ export const auth: Catalog = {
     "Now that you're settled in, here's what's still there to discover: a few more things to try, each with a badge or perk waiting at the end.",
   "gettingStarted.sideQuests.cta": "Get started",
   "gettingStarted.sideQuests.showMore": "Show {count} more",
+  "requestInvite.codeStep.lead":
+    "Before your request reaches our team, confirm this email address is yours.",
+  "requestInvite.codeStep.verifyCta": "Check code and send my request",
+  "requestInvite.codesOff.title": "Invite requests are paused for now",
+  "requestInvite.codesOff.body":
+    "We confirm every request with a code sent to your email, and we can't send those codes right now. Please check back soon.",
+  "requestInvite.codeError.emailCodeUnavailable":
+    "We can't send confirmation codes right now, so your request can't go through yet. Please try again a little later.",
+  "requestInvite.codeError.codeAlreadyUsed":
+    "This code has already been used. Ask for a new code to send your request.",
+  "requestInvite.codeError.networkBusy":
+    "Lots of codes have been asked for from this network. You can try again at {time}.",
+  "signIn.notice.invalidState.title": "This sign-in timed out",
+  "signIn.notice.invalidState.body":
+    "The sign-in started over 10 minutes ago or in another browser, so we stopped it to keep your account safe. Start again from this page.",
+  "signIn.notice.adminPolicy.title": "Your organisation blocks this app",
+  "signIn.notice.adminPolicy.body":
+    "Your Google Workspace admin doesn't allow QueerPulse on this account. Ask your admin to allow it, or sign in with a personal Google account.",
+  "signIn.notice.googleServerError.title": "Google hit an error",
+  "signIn.notice.googleServerError.body":
+    "Google reported a problem on its side while signing you in. Nothing was changed. Try again in a moment.",
+  "signIn.notice.googleUnavailable.title": "Google sign-in is busy",
+  "signIn.notice.googleUnavailable.body":
+    "Google asked us to try again later. Wait a few minutes, then try again.",
+  "signIn.notice.googleSetup.title": "Google sign-in needs a fix on our side",
+  "signIn.notice.googleSetup.body":
+    "Google refused the way we asked it to sign you in. That one's on us. Try again later.",
+  "requestInvite.codesOffSub":
+    "QueerPulse grows through trust. The surest way in is a member who'll vouch for you, so if you know someone here, ask them for an invite.",
 };

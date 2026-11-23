@@ -800,8 +800,11 @@ describe("VjScenesSheet active sequence feedback", () => {
     const refusalLine = await within(setlistRow("setlist-1")).findByText(
       "This sequence has no steps yet. Add steps first",
     );
-    // The dock's status line announces it; the row line stays quiet.
-    expect(refusalLine.closest("[role]")).toBeNull();
+    // The dock's status line announces it; the row line stays quiet: no live
+    // region around it inside the sheet (the sheet itself is a dialog).
+    expect(
+      refusalLine.closest('[role="status"], [role="alert"], [aria-live]'),
+    ).toBeNull();
   });
 
   it("an emptied sequence on stage holds its play button and says why", async () => {

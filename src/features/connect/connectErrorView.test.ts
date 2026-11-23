@@ -54,8 +54,49 @@ describe("describeConnectError: inline causes", () => {
   it("keeps the business panels", () => {
     expect(
       describeConnectError(
-        new ApiError(403, "This member is not accepting connections"),
+        new ApiError(
+          403,
+          "This member requires an introduction from a mutual connection",
+        ),
       ),
     ).toMatchObject({ mode: "panel" });
+  });
+});
+
+describe("describeConnectError: blocks and unavailable members", () => {
+  it("shows the not-available panel for a 404 without naming a block", () => {
+    expect(describeConnectError(new ApiError(404, "Member not found"))).toEqual(
+      {
+        mode: "panel",
+        titleKey: "connect:notice.cannotConnect.title",
+        bodyKey: "connect:notice.cannotConnect.body",
+        icon: "held",
+      },
+    );
+  });
+
+  it("names the requester's own block by its code", () => {
+    expect(
+      describeConnectError(
+        new ApiError(409, "x", { code: "UNBLOCK_TO_CONTACT" }),
+      ),
+    ).toMatchObject({
+      mode: "panel",
+      titleKey: "connect:notice.youBlocked.title",
+    });
+  });
+
+  it("keeps the message match for a backend that sends no code", () => {
+    expect(
+      describeConnectError(
+        new ApiError(409, "Unblock this member before sending a request"),
+      ),
+    ).toMatchObject({ titleKey: "connect:notice.youBlocked.title" });
+  });
+
+  it("keeps a decline hold masked as already pending", () => {
+    expect(
+      describeConnectError(new ApiError(409, "A request is already pending")),
+    ).toMatchObject({ titleKey: "connect:notice.alreadyPending.title" });
   });
 });

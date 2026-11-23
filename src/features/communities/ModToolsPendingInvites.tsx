@@ -10,7 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { memberRefToPerson } from "../../shared/api/refs";
+import { isInactiveMemberRef, memberRefToPerson } from "../../shared/api/refs";
 import { ModToolsPendingInviteRow } from "./ModToolsPendingInviteRow";
 import {
   useCommunityPendingInvites,
@@ -154,9 +154,10 @@ export function ModToolsPendingInvites({
             person={{
               slug: revoking.member.slug,
               name:
-                memberRefToPerson(revoking.member)?.name ||
+                memberRefToPerson(revoking.member, t)?.name ||
                 revoking.member.slug,
               avatarUrl: revoking.member.avatarUrl ?? undefined,
+              isInactiveMember: isInactiveMemberRef(revoking.member),
             }}
             size={36}
           />

@@ -92,6 +92,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
             <MemberOverviewSections
               detail={detail}
               memberName={member.name}
+              isReportCountWithheld={member.openReportsCount === null}
               onOpenNetwork={() => {
                 setHasOpenedNetwork(true);
                 trustNetworkUrl.open(member.slug);

@@ -418,10 +418,20 @@ export default defineConfig({
       // The manifest lives here rather than in public/manifest.json so it stays
       // in one place alongside the icon list. public/manifest.json is deleted.
       manifest: {
+        // The installed app's identity. Until this field existed, browsers
+        // derived the id from start_url (resolved against its origin, minus
+        // any fragment), so every install made so far is known to Chrome as
+        // "/?mode=standalone". Keeping that exact value here means those
+        // installs stay the same app; any other value would register as a
+        // second, separate app beside them. Keep it even if start_url
+        // changes.
+        id: "/?mode=standalone",
         name: "QueerPulse",
         short_name: "QueerPulse",
         description:
           "A quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon.",
+        lang: "en",
+        dir: "ltr",
         // The ?mode=standalone marker is read by src/app/providers/
         // standaloneLaunch.ts: DisplayModeProvider latches its sticky
         // "installed" fallback from it, and authGate uses it to send a
@@ -497,6 +507,56 @@ export default defineConfig({
             sizes: "512x512",
             type: "image/png",
             purpose: "monochrome",
+          },
+        ],
+        // The rich install dialog on Chrome for Android and desktop shows
+        // these: narrow ones on phones, wide ones on desktop. Captured from
+        // the demo app by scripts/capture-pwa-screenshots.mjs (keep the file
+        // names in step with its SHOTS). They stay out of the precache:
+        // injectManifest.globPatterns below only lists icons/*.png, and
+        // includeManifestIcons adds manifest icons and shortcut icons only.
+        screenshots: [
+          {
+            src: "/screenshots/home-narrow.png",
+            sizes: "1080x2340",
+            type: "image/png",
+            form_factor: "narrow",
+            label: "A queer network rooted in Lisbon",
+          },
+          {
+            src: "/screenshots/events-narrow.png",
+            sizes: "1080x2340",
+            type: "image/png",
+            form_factor: "narrow",
+            label: "Your events, with check-in and directions",
+          },
+          {
+            src: "/screenshots/directory-narrow.png",
+            sizes: "1080x2340",
+            type: "image/png",
+            form_factor: "narrow",
+            label: "Queer-owned places across Lisbon",
+          },
+          {
+            src: "/screenshots/home-wide.png",
+            sizes: "1920x1080",
+            type: "image/png",
+            form_factor: "wide",
+            label: "A queer network rooted in Lisbon",
+          },
+          {
+            src: "/screenshots/events-wide.png",
+            sizes: "1920x1080",
+            type: "image/png",
+            form_factor: "wide",
+            label: "Your events and calendar in one place",
+          },
+          {
+            src: "/screenshots/feed-wide.png",
+            sizes: "1920x1080",
+            type: "image/png",
+            form_factor: "wide",
+            label: "What your communities are sharing",
           },
         ],
       },

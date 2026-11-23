@@ -19,6 +19,7 @@ const template: EventBatchTemplateDTO = {
   timezone: "Europe/Lisbon",
   startTime: "19:30",
   endTime: "22:00",
+  endDayOffset: 0,
   coverImageUrl: "https://cdn.example/cover.jpg",
   gatheringFamily: null,
   eventType: null,

@@ -6,7 +6,7 @@ import { DatePicker } from "../../../shared/components/ui/DatePicker";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { Field } from "../CreateGatheringFields";
 import { addMonthRowFieldId } from "./addMonth.data";
-import { isEndNextDay } from "./addMonthDates";
+import { endDaysLater, type TemplateEndSpan } from "./addMonthDates";
 import type {
   AddMonthAction,
   AddMonthRow,
@@ -28,11 +28,14 @@ import styles from "./AddMonthRows.module.css";
 export function AddMonthRowTime({
   row,
   sharedTimes,
+  templateSpan,
   dispatch,
   issue,
 }: {
   row: AddMonthRow;
   sharedTimes: AddMonthTimes;
+  /** The starting event's end and its calendar span (PRD-518). */
+  templateSpan: TemplateEndSpan | null;
   dispatch: Dispatch<AddMonthAction>;
   issue: AddMonthRowIssue | null;
 }) {
@@ -53,9 +56,12 @@ export function AddMonthRowTime({
           start: times.startTime,
           end: times.endTime,
         });
-  const fullLine = isEndNextDay(times.startTime, times.endTime)
-    ? `${readLine}, ${t("gatherings:addMonth.row.time.nextDay")}`
-    : readLine;
+  const daysLater = endDaysLater(times.startTime, times.endTime, templateSpan);
+  const endDayText =
+    daysLater > 1
+      ? t("gatherings:addMonth.row.time.daysLater", { count: daysLater })
+      : t("gatherings:addMonth.row.time.nextDay");
+  const fullLine = daysLater > 0 ? `${readLine}, ${endDayText}` : readLine;
   const isEndInvalid = issue?.field === "endTime";
   const isStartInvalid = issue !== null && !isEndInvalid;
   // While the pair is closed the toggle stands in for the field the issue

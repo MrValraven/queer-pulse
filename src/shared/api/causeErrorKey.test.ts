@@ -302,3 +302,40 @@ describe("apiErrorCode", () => {
     expect(apiErrorCode(new Error("x"))).toBeNull();
   });
 });
+
+describe("causeErrorKey: upload refusals (SEC-43, SEC-44)", () => {
+  it.each([
+    [
+      429,
+      "UPLOAD_DAILY_QUOTA_REACHED",
+      SHARED_CAUSE_KEY.uploadDailyQuotaReached,
+    ],
+    [422, "UPLOAD_HAS_LOCATION_DATA", SHARED_CAUSE_KEY.uploadHasLocationData],
+    [422, "UPLOAD_CONTENT_MISMATCH", SHARED_CAUSE_KEY.uploadContentMismatch],
+    [404, "UPLOAD_NOT_FOUND", SHARED_CAUSE_KEY.uploadNotFound],
+    [503, "UPLOAD_CHECK_UNAVAILABLE", SHARED_CAUSE_KEY.uploadCheckUnavailable],
+    [
+      400,
+      "UPLOAD_KEY_NOT_CONFIRMABLE",
+      SHARED_CAUSE_KEY.uploadKeyNotConfirmable,
+    ],
+    [
+      400,
+      "UPLOAD_TOO_MANY_REFERENCES",
+      SHARED_CAUSE_KEY.uploadTooManyReferences,
+    ],
+  ])("names the %i %s refusal by its code", (status, code, key) => {
+    expect(causeErrorKey(new ApiError(status, "x", { code }))).toEqual({
+      key,
+    });
+  });
+
+  it("still lets a feature override an upload code", () => {
+    expect(
+      causeErrorKey(
+        new ApiError(429, "x", { code: "UPLOAD_DAILY_QUOTA_REACHED" }),
+        { UPLOAD_DAILY_QUOTA_REACHED: "forum:compose.error.uploadQuota" },
+      ),
+    ).toEqual({ key: "forum:compose.error.uploadQuota" });
+  });
+});

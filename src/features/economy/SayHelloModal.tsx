@@ -10,7 +10,7 @@ import { useMyFlatmateProfile } from "./api/useMyFlatmateProfile";
 import { useSayHello } from "./api/useSayHello";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import { DEMO_MY_PRONOUNS, type Profile } from "./flatmates.data";
-import { failureToast } from "./economyErrorCopy";
+import { FLATMATE_HELLO_OVERRIDES, failureToast } from "./economyErrorCopy";
 import styles from "./FlatmatesPage.module.css";
 
 /**
@@ -66,7 +66,12 @@ export function SayHelloModal({
         onError: (error) => {
           if (handlePledgeError(error, handleSend)) return;
           showToast(
-            failureToast(error, t, "economy:flatmates.card.sayHelloErrorTitle"),
+            failureToast(
+              error,
+              t,
+              "economy:flatmates.card.sayHelloErrorTitle",
+              FLATMATE_HELLO_OVERRIDES,
+            ),
             "error",
           );
         },

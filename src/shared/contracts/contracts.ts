@@ -18,7 +18,8 @@ export type ReportSubjectType =
   | "forum_post"
   | "message"
   | "gathering"
-  | "article";
+  | "article"
+  | "community_gift";
 
 export interface ReportResponse {
   id: string;
@@ -121,6 +122,11 @@ export interface AuthorSummary {
    *  erased their account. `handle` is empty and `avatarUrl` null; render a
    *  localized "Former member" with a neutral avatar and no profile link. */
   isFormerMember?: boolean;
+  /** PRD-507. The feed and forum author stand-in for a paused, suspended or
+   *  deleting account: `handle` and `displayName` arrive empty, and a byline
+   *  renders `common:member.inactiveLabel` with no avatar and no profile link
+   *  (`authorDisplayName` in `shared/api/refs.ts`). */
+  isInactiveMember?: true;
   /** Business mailboxes: the identity this summary was built for. Present on
    *  a sender, counterpart or claimant the server resolved through an
    *  identity; absent on the older profile-only summaries. */

@@ -48,8 +48,9 @@ export interface AdminMember {
    *  back to `useDemoPortrait()` — which yields a fixture face in demo mode
    *  and nothing in live mode — and then to initials. */
   avatarUrl?: string | null;
-  /** Open reports against this member, when not verified. */
-  openReportsCount?: number;
+  /** Open reports against this member, when not verified. Null when the
+   *  backend withholds it (the viewer's own row), so nothing shows a count. */
+  openReportsCount?: number | null;
   /** tone for the status chip */
   statusTone: "jade" | "amber" | "coral" | "violet" | "plum" | "ghost";
   /** used by the "New this week" filter */
@@ -93,6 +94,10 @@ export interface DrawerStat {
   labelKey: string;
   value: string;
 }
+
+/** The glance stat that shows a member's open-report count; left out when
+ *  the backend withholds that count (the viewer's own drawer). */
+export const REPORTS_AGAINST_GLANCE_KEY = "admin:members.glance.reportsAgainst";
 
 export interface ContributionItem {
   what: string;

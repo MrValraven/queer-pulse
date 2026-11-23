@@ -15,7 +15,7 @@ import {
   EVENT_BATCH_MAX_MONTHS_AHEAD,
   EVENT_BATCH_MAX_ROWS,
 } from "./addMonth.data";
-import { isEndNextDay, lastAllowedDate, wallClockNow } from "./addMonthDates";
+import { endDaysLater, lastAllowedDate, wallClockNow } from "./addMonthDates";
 import {
   DEMO_EVENT_BATCH_ONLINE_VENUE,
   DEMO_EVENT_BATCH_TEMPLATE_EXTRAS,
@@ -62,6 +62,8 @@ interface CreatedDemoEventSource {
   templateSlug: string;
   startTime: string;
   endTime: string | null;
+  /** Calendar days from its date to its end, null with no end (PRD-518). */
+  endDayOffset: number | null;
   placeAndCost: PlaceAndCostOverrides;
 }
 
@@ -90,10 +92,10 @@ function wallClockInstant(date: string, time: string, timezone: string): Date {
   return new Date(instant);
 }
 
-/** The day after a "YYYY-MM-DD" date. */
-function nextDate(date: string): string {
+/** The "YYYY-MM-DD" date `dayCount` days after `date`. */
+function dateDaysAfter(date: string, dayCount: number): string {
   const [year = 0, month = 1, day = 1] = date.split("-").map(Number);
-  return new Date(Date.UTC(year, month - 1, day + 1))
+  return new Date(Date.UTC(year, month - 1, day + dayCount))
     .toISOString()
     .slice(0, 10);
 }
@@ -129,6 +131,7 @@ function baseTemplateOf(detail: GatheringDetail): EventBatchTemplateDTO {
     timezone: DEMO_EVENT_BATCH_TIMEZONE,
     startTime: localTime(detail.date),
     endTime: null,
+    endDayOffset: null,
     coverImageUrl: detail.coverImageUrl ?? null,
     gatheringFamily: detail.gatheringFamily ?? null,
     eventType: detail.type || null,
@@ -181,10 +184,18 @@ export function demoEventBatchTemplate(slug: string): EventBatchTemplateDTO {
     throw templateNotFound();
   }
   const source = createdEventSources.get(slug);
-  const view: EventBatchTemplateDTO = {
+  const seededView: EventBatchTemplateDTO = {
     ...baseTemplateOf(detail),
     ...DEMO_EVENT_BATCH_TEMPLATE_EXTRAS[templateSlug],
     slug,
+  };
+  // A seeded event spans what its clock reads, as `batchTemplateSpanOf` would.
+  const view: EventBatchTemplateDTO = {
+    ...seededView,
+    endDayOffset:
+      seededView.endTime === null
+        ? null
+        : endDaysLater(seededView.startTime, seededView.endTime),
   };
   if (!source) return view;
   const { placeAndCost } = source;
@@ -195,6 +206,7 @@ export function demoEventBatchTemplate(slug: string): EventBatchTemplateDTO {
     ...("listingId" in placeAndCost ? { venueListing: null } : {}),
     startTime: source.startTime,
     endTime: source.endTime,
+    endDayOffset: source.endDayOffset,
   };
 }
 
@@ -272,17 +284,21 @@ interface PlannedRow {
   rowIndex: number;
   startTime: string;
   endTime: string | null;
+  /** Calendar days from the row's date to its end, 0 with no end. */
+  endDayCount: number;
   startAt: Date;
 }
 
 /** Checks every row in request order, the server's order for each row:
  *  a repeated date, then a date past the last allowed one, then a start
- *  already behind `now`. The first failure throws. */
+ *  already behind `now`. The first failure throws. An end still at the
+ *  starting event's own end keeps that event's span (PRD-518). */
 function planRows(
   dto: CreateEventBatchDto,
-  timezone: string,
+  template: EventBatchTemplateDTO,
   now: Date,
 ): PlannedRow[] {
+  const { timezone } = template;
   const lastDate = lastAllowedDate(wallClockNow(timezone, now).date);
   const seenDates = new Set<string>();
   return dto.rows.map((row, rowIndex) => {
@@ -316,7 +332,8 @@ function planRows(
         `The start time on ${date} has already passed.`,
       );
     }
-    return { row, rowIndex, startTime, endTime, startAt };
+    const endDayCount = endDaysLater(startTime, endTime, template);
+    return { row, rowIndex, startTime, endTime, endDayCount, startAt };
   });
 }
 
@@ -402,7 +419,7 @@ export async function createDemoEventBatch(
     ...createdEventSources.get(dto.templateSlug)?.placeAndCost,
     ...placeAndCostOf(dto.shared),
   };
-  const plannedRows = planRows(dto, template.timezone, now).sort(
+  const plannedRows = planRows(dto, template, now).sort(
     (first, second) =>
       first.startAt.getTime() - second.startAt.getTime() ||
       first.rowIndex - second.rowIndex,
@@ -412,7 +429,8 @@ export async function createDemoEventBatch(
   const coverCopies = await ownCoverCopies(dto);
   const ownCover = (url: string | undefined): string | undefined =>
     url === undefined ? undefined : (coverCopies.get(url) ?? url);
-  const events = plannedRows.map(({ row, startTime, endTime, startAt }) => {
+  const events = plannedRows.map((plannedRow) => {
+    const { row, startTime, endTime, endDayCount, startAt } = plannedRow;
     const slug = uniqueDemoSlug(`${sourceTemplateSlug}-${row.date}`);
     gatheringDetails[slug] = {
       ...templateDetail,
@@ -433,6 +451,7 @@ export async function createDemoEventBatch(
       templateSlug: sourceTemplateSlug,
       startTime,
       endTime,
+      endDayOffset: endTime === null ? null : endDayCount,
       placeAndCost,
     });
     createdHostingEvents.push({
@@ -443,8 +462,8 @@ export async function createDemoEventBatch(
       date: row.date,
       start: startTime,
       ...(endTime !== null ? { end: endTime } : {}),
-      ...(isEndNextDay(startTime, endTime)
-        ? { endDate: nextDate(row.date) }
+      ...(endDayCount > 0
+        ? { endDate: dateDaysAfter(row.date, endDayCount) }
         : {}),
       venue,
       ...(isOnline ? { online: true } : {}),

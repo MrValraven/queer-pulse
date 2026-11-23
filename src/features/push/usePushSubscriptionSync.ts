@@ -9,7 +9,7 @@ import {
   readPushEnabledMemberIds,
   writeLastSyncedSubscription,
 } from "../../pushSubStore";
-import { subscribePush } from "./push.api";
+import { rememberThisDevicePushEndpoint, subscribePush } from "./push.api";
 import {
   decidePushResync,
   shouldRestorePushSubscription,
@@ -138,12 +138,15 @@ export async function syncPushSubscriptionHealth(
     if (!resolved) {
       if (isCancelled()) return "inconclusive";
       const current = await registration.pushManager.getSubscription();
+      // Quick Exit reads this synchronously for its logout (see push.api).
+      rememberThisDevicePushEndpoint(current?.endpoint ?? null);
       return current ? "working" : "noSubscription";
     }
     hasResolvedSubscription = true;
     const { subscription, isNewlyCreated } = resolved;
 
     const { endpoint } = subscription;
+    rememberThisDevicePushEndpoint(endpoint);
     const json = subscription.toJSON();
     const p256dh = json.keys?.p256dh;
     const auth = json.keys?.auth;
@@ -244,6 +247,11 @@ export function usePushSubscriptionSync(): void {
 
     return () => {
       isCancelled = true;
+      // The session this pass synced for has ended (signed out, expired, or
+      // another member). Forgetting the page-load mark means a sign-in inside
+      // this same open page (an expired session, then an email-code sign-in)
+      // re-posts /push/subscribe and links the device to the new session.
+      memberIdsSyncedThisPageLoad.delete(syncingMemberId);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       navigator.serviceWorker.removeEventListener(
         "message",

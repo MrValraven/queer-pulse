@@ -29,7 +29,7 @@ function OriginalReportedContent({
   reportId: string | undefined;
 }) {
   const { t } = useTranslation();
-  const { detail, loading } = useOriginalReport(reportId);
+  const { detail, loading, isAboutViewer } = useOriginalReport(reportId);
 
   if (loading) {
     return (
@@ -51,7 +51,12 @@ function OriginalReportedContent({
         </h3>
         <p className={styles.dTransparency}>
           <FiInfo aria-hidden />{" "}
-          {t("admin:moderation.appealDrawer.originalContentUnavailable")}
+          {/* SEC-31: a report about this staff member stays with colleagues. */}
+          {t(
+            isAboutViewer
+              ? "admin:moderation.refusal.reportAboutYou"
+              : "admin:moderation.appealDrawer.originalContentUnavailable",
+          )}
         </p>
       </section>
     );

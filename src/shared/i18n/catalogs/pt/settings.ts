@@ -412,7 +412,8 @@ export const settings: Catalog = {
   "visibility.open.desc":
     "Qualquer pessoa na rede pode ver o teu perfil e dizer olá",
   "visibility.network.title": "Só a rede",
-  "visibility.network.desc": "Visível para pessoas a duas conexões de ti",
+  "visibility.network.desc":
+    "Só as pessoas com quem tens conexão direta te encontram na pesquisa e veem o teu perfil completo",
   "visibility.private.title": "Manter discreto por agora",
   "visibility.private.desc":
     "Contacto quando for a altura certa. Perfil não visível na pesquisa.",
@@ -1050,7 +1051,7 @@ export const settings: Catalog = {
   // ── dataExport.data.ts — shared accordion tag dictionary ─────────────────
   "dataExport.accordion.posts.title": "Publicações no fórum e nas comunidades",
   "dataExport.accordion.posts.body":
-    "Cada tópico que começaste no fórum e cada resposta que escreveste. Cada comunidade que geres, com o propósito, as regras e a mensagem de boas-vindas que escreveste para ela. Cada publicação e resposta que escreveste em qualquer comunidade, incluindo as que foram removidas depois, com a data em que foram removidas. Os teus votos em respostas e sondagens do fórum, os tópicos que segues, as versões anteriores das tuas publicações, os tópicos que co-escreveste, e as sondagens feitas nos tópicos que começaste. Cada comunidade a que pertences, com o teu papel, o nível de notificações e a data de entrada. As tuas reações a publicações de comunidades, os convites que enviaste e recebeste, os recursos que adicionaste, e as versões anteriores das tuas publicações e respostas em comunidades. Os pedidos que enviaste a uma comunidade ou à equipa da plataforma (para entrar, para ativar um espaço, uma nova etiqueta, ou uma proposta de clube de leitura, entre outros), as comunidades e os tópicos que afastaste do teu feed, e os tópicos que segues.",
+    "Cada tópico que começaste no fórum e cada resposta que escreveste. Cada comunidade que geres, com o propósito, as regras e a mensagem de boas-vindas que escreveste para ela. Cada publicação e resposta que escreveste em qualquer comunidade, incluindo as que foram removidas depois, com a data em que foram removidas. Os teus votos em respostas e sondagens do fórum, os tópicos que segues, as versões anteriores das tuas publicações, os tópicos que co-escreveste, e as sondagens feitas nos tópicos que começaste. Cada comunidade a que pertences, com o teu papel, o nível de notificações e a data de entrada. As tuas reações a publicações de comunidades, os convites que enviaste e recebeste, os recursos que adicionaste, e as versões anteriores das tuas publicações e respostas em comunidades. Os pedidos que enviaste a uma comunidade ou à equipa da plataforma (para entrar, para ativar um espaço, uma nova etiqueta, ou uma proposta de clube de leitura, entre outros), as comunidades e os tópicos que afastaste do teu feed, e os tópicos que segues. Os crachás que ganhaste em cada comunidade, o que usas, em quantos dos seus eventos estiveste, e os presentes que recebeste e enviaste, com as notas.",
   "dataExport.accordion.gatherings.title": "Eventos e Vamos juntes",
   "dataExport.accordion.gatherings.body":
     "Os eventos que organizaste, com os seus detalhes, e cada confirmação de presença que fizeste, com o estado e qualquer lugar na lista de espera. O teu questionário do Vamos juntes, os eventos em que te inscreveste, as respostas que deste sobre as pessoas e os grupos que conheceste, e as tuas escolhas privadas de Não é para mim. O que disseste a quem organiza em cada confirmação (acompanhantes, necessidades de acesso e alimentares, pronomes, e a tua resposta personalizada), os eventos que guardaste, que coorganizas ou em que apareces na escalação, os convites de eventos que enviaste e recebeste, os anúncios que enviaste como organizador, as legendas das fotos que carregaste, as séries recorrentes que organizas, e as tuas definições de eventos (antecedência do lembrete, visibilidade predefinida e emails de eventos).",
@@ -1133,6 +1134,7 @@ export const settings: Catalog = {
   "dataExport.tag.votesAndFollows": "votos e tópicos seguidos",
   "dataExport.tag.communityRoles": "papéis em comunidades",
   "dataExport.tag.feedChoices": "escolhas do feed",
+  "dataExport.tag.communityBadges": "crachás e presentes de comunidades",
   "dataExport.tag.rsvpDetails": "detalhes das confirmações",
   "dataExport.tag.eventSettings": "definições de eventos",
   "dataExport.tag.connectionNotes": "notas sobre as tuas conexões",
@@ -1469,4 +1471,26 @@ export const settings: Catalog = {
     "Não foi possível carregar as tuas comunidades escondidas",
   "hiddenCommunities.empty.error.desc":
     "Verifica a tua ligação e tenta outra vez.",
+  "dataExport.tag.communityOwnershipOffers":
+    "ofertas de gestão que fizeste ou recebeste",
+  "reauth.completion.cancelled":
+    "Cancelaste a verificação da Google. Nada foi alterado.",
+  "reauth.completion.timedOut":
+    "A verificação da Google expirou. Começa outra vez a partir desta página.",
+  "reauth.completion.sessionExpired":
+    "O teu início de sessão expirou enquanto estavas na Google. Começa a verificação outra vez a partir desta página.",
+  "reauth.completion.wrongAccount":
+    "Essa conta Google não é a da tua conta QueerPulse. Tenta outra vez com a conta Google ligada ao QueerPulse.",
+  "reauth.completion.adminPolicy":
+    "O administrador do teu Google Workspace bloqueia o QueerPulse nessa conta. Pede-lhe para o autorizar e tenta outra vez.",
+  "reauth.completion.googleServerError":
+    "A Google teve um erro do lado dela. Tenta outra vez daqui a pouco.",
+  "reauth.completion.googleUnavailable":
+    "A Google está ocupada neste momento. Tenta outra vez daqui a uns minutos.",
+  "reauth.completion.noEmail":
+    "A Google não partilhou o teu email, por isso não conseguimos confirmar que és tu.",
+  "reauth.completion.emailUnverified":
+    "O email dessa conta Google ainda não está verificado, por isso não conseguimos confirmar que és tu.",
+  "reauth.completion.googleSetup":
+    "A Google recusou a forma como pedimos. Isso é connosco. Tenta outra vez mais tarde.",
 };

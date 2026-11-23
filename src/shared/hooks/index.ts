@@ -24,11 +24,14 @@ export {
   detectPlatform,
   type InstallPromptApi,
   type InstallPlatform,
+  type InstallOutcome,
 } from "./useInstallPrompt";
 export {
   INSTALL_INSTRUCTIONS,
   INSTALL_TAB_LABEL_KEY,
+  getInstallStepKeys,
 } from "./installInstructions";
+export { detectInAppBrowser } from "./inAppBrowser";
 export { useUnsavedChangesGuard } from "./useUnsavedChangesGuard";
 export {
   useWizardForm,

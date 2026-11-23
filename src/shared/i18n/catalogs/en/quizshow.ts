@@ -921,4 +921,11 @@ export const quizshow: Catalog = {
   "stage.afterRoundEm": "After round <em>{number}</em> of {total}",
   "stage.roundsToGo_one": "{count} round to go",
   "stage.roundsToGo_other": "{count} rounds to go",
+  "errors.offline":
+    "This device is offline. Reconnect to the internet and try again",
+  "errors.server_unavailable":
+    "We couldn't reach the server. Try again in a moment",
+  "errors.refused_unknown":
+    "The live session turned this connection away without giving a reason. Reload the page to try again",
+  "errors.signed_out": "Your session ended. Sign in again to run this game",
 };

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { FormField } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -41,13 +42,16 @@ export interface RequestInviteFieldsProps {
   /** Non-empty but malformed email in the mutual field. */
   mutualError: boolean;
   onMutualBlur: () => void;
+  /** Focus the email field as the form mounts: set when the applicant comes
+   *  back from the code step to change the address (WCAG 2.4.3). */
+  shouldFocusEmail?: boolean;
 }
 
 /**
  * The request-invite form's inputs. Extracted from RequestInviteForm, which owns
- * the submit/error state (409 "already asked", 403 UNDER_18) and stayed over the
- * 200-line ceiling once those branches landed. Name, city and email are all
- * controlled here because all three are now actually sent to POST /join-requests.
+ * the submit state and the code step. Name and city are sent with the request;
+ * the email is where the confirmation code goes, and the request is filed
+ * under that address once the code checks out (SEC-10).
  */
 export function RequestInviteFields({
   first,
@@ -72,8 +76,15 @@ export function RequestInviteFields({
   setMutual,
   mutualError,
   onMutualBlur,
+  shouldFocusEmail = false,
 }: RequestInviteFieldsProps) {
   const { t } = useTranslation();
+  const emailRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (shouldFocusEmail) emailRef.current?.focus();
+    // Mount only: the step swap mounts a fresh form, then the applicant steers.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
       <div className={styles.twoCol}>
@@ -117,6 +128,7 @@ export function RequestInviteFields({
         }
       >
         <input
+          ref={emailRef}
           id="ri-email"
           type="email"
           placeholder={t("auth:requestInvite.field.email.placeholder")}

@@ -156,6 +156,8 @@ export function useSearchData(
   const searchQuery = useQuery({
     queryKey: ["search", demoMode, debounced, liveType],
     enabled: !demoMode && !checking && loggedIn && debounced.length >= 1,
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     // Forward react-query's own cancellation signal into the fetch — a fast
     // retype (new `debounced` → new queryKey) cancels the previous
     // keystroke's request at the network layer, not just in the query cache.

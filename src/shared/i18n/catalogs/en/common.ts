@@ -42,4 +42,5 @@ export const common: Catalog = {
   "cta.openModerationQueue": "Open in moderation queue",
   "toast.openedModerationQueue":
     "Opened {name}'s reports in the moderation queue.",
+  "member.inactiveLabel": "[deactivated member]",
 };

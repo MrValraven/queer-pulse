@@ -14,7 +14,12 @@ export interface InstallPromptApi {
   canInstall: boolean;
   /** Shows the browser's install dialog. Resolves true if the user accepted. */
   promptInstall: () => Promise<boolean>;
+  /** Shows the browser's install dialog and resolves with how it ended. */
+  requestInstall: () => Promise<InstallOutcome>;
 }
+
+/** How an install request ended; "failed" means no dialog reached the user. */
+export type InstallOutcome = "accepted" | "dismissed" | "failed";
 
 export type InstallPlatform = "ios" | "android" | "desktop";
 
@@ -94,14 +99,23 @@ function getServerSnapshot(): boolean {
   return false;
 }
 
-async function promptInstall(): Promise<boolean> {
+/**
+ * Shows the browser's install dialog and reports how it ended. "failed" covers
+ * every case where no dialog reached the user: no captured event, a prompt
+ * already in flight, or `prompt()` / `userChoice` rejecting (NotAllowedError
+ * outside a user gesture, InvalidStateError on a spent event). Callers route
+ * "failed" to the manual install steps.
+ */
+export async function requestInstall(): Promise<InstallOutcome> {
   const capturedEvent = deferredInstallEvent;
-  if (!capturedEvent || isInstallPromptInFlight) return false;
+  if (!capturedEvent || isInstallPromptInFlight) return "failed";
   isInstallPromptInFlight = true;
   try {
     await capturedEvent.prompt();
     const { outcome } = await capturedEvent.userChoice;
-    return outcome === "accepted";
+    return outcome;
+  } catch {
+    return "failed";
   } finally {
     isInstallPromptInFlight = false;
     // The event is single-use; Chrome fires a fresh one if still eligible. Only
@@ -111,6 +125,11 @@ async function promptInstall(): Promise<boolean> {
       notifyInstallPromptSubscribers();
     }
   }
+}
+
+/** The boolean form kept for existing callers: true only on an accepted install. */
+async function promptInstall(): Promise<boolean> {
+  return (await requestInstall()) === "accepted";
 }
 
 /**
@@ -130,5 +149,5 @@ export function useInstallPrompt(): InstallPromptApi {
     getSnapshot,
     getServerSnapshot,
   );
-  return { canInstall, promptInstall };
+  return { canInstall, promptInstall, requestInstall };
 }

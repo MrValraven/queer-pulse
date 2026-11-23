@@ -6,6 +6,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "../forum/PostActionsMenu";
+import { CommunityMemberAvatarRing } from "./badges/CommunityMemberAvatarRing";
+import { CommunityMemberFlair } from "./badges/CommunityMemberFlair";
 import type { Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
 import { useCommunityTime } from "./communityTime";
@@ -24,6 +26,7 @@ import styles from "./CommunityDetailPage.module.css";
 // toggles the thread now.
 export function CommunityThreadHead({
   data,
+  communitySlug,
   isOpen,
   onToggleOpen,
   voted,
@@ -45,6 +48,7 @@ export function CommunityThreadHead({
   onReportOp,
 }: {
   data: ThreadData;
+  communitySlug: string;
   isOpen: boolean;
   onToggleOpen: () => void;
   voted: boolean;
@@ -109,11 +113,22 @@ export function CommunityThreadHead({
           {opDeleted ? t("communities:detail.thread.tombstone") : data.title}
         </Button>
         <div className={styles.thMeta}>
-          <div className={[styles.thAv, AV_CLASS[data.author.tint]].join(" ")}>
-            {data.author.initials}
-          </div>
+          <CommunityMemberAvatarRing
+            communitySlug={communitySlug}
+            member={data.author}
+          >
+            <div
+              className={[styles.thAv, AV_CLASS[data.author.tint]].join(" ")}
+            >
+              {data.author.initials}
+            </div>
+          </CommunityMemberAvatarRing>
           <span className={styles.thName}>{data.author.name}</span>
           <MemberStaffBadge slug={data.author.slug} />
+          <CommunityMemberFlair
+            communitySlug={communitySlug}
+            member={data.author}
+          />
           <span>{communityTime.plain(data)}</span>
           {opEditedAt && (
             <span className={styles.editedMark}>

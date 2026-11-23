@@ -78,6 +78,8 @@ export function useMembers(
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<MembersPageVM>({
     queryKey: ["members", demoMode, params],
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     initialPageParam: 1,
     // Every facet travels in the query key, so each tick of a filter is a new
     // key and would otherwise drop to `isLoading` — blanking the sidebar's

@@ -1,13 +1,5 @@
 import { act, render, screen, waitFor, within } from "@testing-library/react";
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MotionProvider } from "../../../app/providers/MotionProvider";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
 import { TestProviders } from "../../../test/TestProviders";
@@ -506,14 +498,10 @@ function wheelStageOf(session: QuizshowPlayerState) {
   );
 }
 
+// The disc's pointer kicks call element.animate, which src/test/setup.ts
+// stands in for on HTMLElement and SVGElement. A stub on Element.prototype
+// would turn motion's heading fade onto WAAPI with no Animation behind it.
 describe("QuizshowPlayerStage wheel", () => {
-  beforeAll(() => {
-    // jsdom has no Element.animate; the disc's pointer kicks call it.
-    if (typeof Element.prototype.animate !== "function") {
-      Element.prototype.animate = vi.fn();
-    }
-  });
-
   it("announces wheel time", async () => {
     render(
       wheelStageOf(stateIn("wheel", "90", { wheel: wheelViewOf(false, 1) })),

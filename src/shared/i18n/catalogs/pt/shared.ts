@@ -199,6 +199,16 @@ export const shared: Catalog = {
   "installAppModal.title": "Instalar a app",
   "installAppModal.sub":
     "Adiciona a QueerPulse ao teu ecrã principal em poucos toques. A mesma app, sem loja de aplicações.",
+  "installAppModal.inAppNote":
+    "Apps como o Instagram abrem links no seu próprio navegador, e esse navegador não consegue instalar apps. Abre primeiro esta página no navegador do teu telemóvel.",
+  "installAppModal.copyLink": "Copiar link",
+  "installAppModal.installFailed":
+    "O teu navegador não abriu a janela de instalação. Segue estes passos.",
+  "installAppModal.linkCopied": "Link copiado",
+  "installAppModal.copyLinkUnsupported":
+    "Este navegador da app não deixa as páginas copiar links. Usa o menu dele para abrir esta página no teu navegador.",
+  "installAppModal.copyLinkBlocked":
+    "A app bloqueou o acesso desta página à tua área de transferência. Usa o menu dela para abrir esta página no teu navegador.",
   "accountMenu.ariaLabel": "Menu da conta",
   "accountMenu.header.subtitle": "Perfil e conta",
   "accountSheet.title": "A tua conta",
@@ -932,4 +942,20 @@ export const shared: Catalog = {
   "filterPage.appliedCount_one": "{count} aplicado",
   "filterPage.appliedCount_other": "{count} aplicados",
   "filterPage.removeChipLabel": "Remover {label}",
+  "apiError.uploadDailyQuotaReached":
+    "Já carregaste tudo o que a tua conta permite hoje. Tenta outra vez amanhã.",
+  "apiError.uploadHasLocationData":
+    "Esta foto ainda guarda o local onde foi tirada. Escolhe-a outra vez e a app remove o local antes de a carregar. Se voltares a ver isto, recarrega primeiro a página.",
+  "apiError.uploadContentMismatch":
+    "Este ficheiro não é do tipo que diz ser. Escolhe o ficheiro outra vez.",
+  "apiError.uploadNotFound":
+    "O teu carregamento não terminou. Escolhe o ficheiro outra vez.",
+  "apiError.uploadCheckUnavailable":
+    "Não conseguimos verificar o teu carregamento agora. Tenta outra vez daqui a pouco.",
+  "apiError.uploadKeyNotConfirmable":
+    "Este carregamento não pode ser verificado. Escolhe o ficheiro outra vez.",
+  "apiError.uploadTooManyReferences":
+    "Esta gravação inclui demasiadas fotos de uma vez. Tira algumas e tenta outra vez.",
+  "consent.storage.sharedDeviceSafety.purpose":
+    "Que membro entrou por último neste dispositivo, para que a próxima pessoa nunca herde os seus rascunhos ou pesquisas, e uma nota para apagar as mensagens guardadas no próximo arranque depois de uma saída rápida.",
 };

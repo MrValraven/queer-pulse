@@ -7,6 +7,7 @@ import {
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 import type { ReasonCode } from "../../safety/reportReasons";
+import type { CommunityFlairDTO } from "../badges/api/communityBadges.api";
 
 // ── Backend DTOs ─────────────────────────────────────────────────────────────
 // Shapes the NestJS communities domain returns. `MemberRef` (author / owner /
@@ -214,6 +215,8 @@ export interface CommunityReactionSummary {
 export interface CommunityReplyDTO {
   id: string;
   author: MemberRefDTO | null;
+  authorFlair: CommunityFlairDTO | null;
+  authorHasRecentGift: boolean;
   text: string;
   createdAt: string;
   editedAt: string | null;
@@ -226,6 +229,8 @@ export interface CommunityReplyDTO {
 export interface CommunityPostDTO {
   id: string;
   author: MemberRefDTO | null;
+  authorFlair: CommunityFlairDTO | null;
+  authorHasRecentGift: boolean;
   body: string;
   image: string | null;
   kind: "post" | "announcement";
@@ -266,6 +271,8 @@ export interface CommunityReplyHistoryResponse {
 export interface RosterEntryDTO {
   member: MemberRefDTO;
   role: RosterRole;
+  flair: CommunityFlairDTO | null;
+  hasRecentGift: boolean;
   joinedAt: string;
 }
 export interface CommunityJoinRequestDTO {
@@ -484,10 +491,7 @@ export const unfreezeCommunity = (slug: string) =>
 export const freezeCommunity = (slug: string) =>
   apiPost<CommunityDetailDTO>(`/communities/${slug}/freeze`, {});
 
-/** POST /communities/:slug/transfer — owner hands the community to another
- *  member (who becomes owner; the caller is demoted to mod). */
-export const transferCommunityOwnership = (slug: string, memberSlug: string) =>
-  apiPost<CommunityDetailDTO>(`/communities/${slug}/transfer`, { memberSlug });
+/* Ownership moves by offer since PRD-514: see `communityOwnershipOffers.api.ts`. */
 
 /** How severe the platform judged a report, derived server-side from its
  *  reason code (`reports/report-severity.ts`). Drives the queue badge and the
@@ -837,8 +841,8 @@ export const removeMember = (slug: string, memberSlug: string) =>
 /**
  * The roles the roster route may assign, mirroring the backend's
  * `UpdateMemberRoleDto`. `owner` is deliberately absent: ownership belongs to
- * the community (`Community.ownerId`) and moves through the transfer route,
- * never through a roster write. `co_owner` carries owner-level powers, so the
+ * the community (`Community.ownerId`) and moves only when a member accepts an
+ * ownership offer (PRD-514). `co_owner` carries owner-level powers, so the
  * server accepts it only from the owner.
  */
 export type AssignableRole = "member" | "mod" | "co_owner";
@@ -890,6 +894,8 @@ export interface CommunityPulseAuthorDTO {
   handle: string;
   displayName: string;
   avatarUrl: string | null;
+  /** The inactive member's stand-in: empty name and handle, label at render. */
+  isInactiveMember?: true;
 }
 
 export interface CommunityPulseThreadDTO {

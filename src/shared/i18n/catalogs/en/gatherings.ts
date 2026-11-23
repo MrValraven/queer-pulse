@@ -2716,4 +2716,10 @@ export const gatherings: Catalog = {
   "hiddenCommunities.notice.text_other":
     "Events from {count} communities you hid aren't shown here.",
   "hiddenCommunities.notice.manage": "Manage hidden communities",
+  "addMonth.error.networkHostOnly":
+    "This event is limited to the host's network, so only the host can copy it.",
+  "addMonth.error.houseMusicHostOnly":
+    "QueerPulse Music hosts this event, so only its host can copy it. Staff can add its dates from Music events in Admin.",
+  "addMonth.times.endsDaysLater": "Ends {count} days later",
+  "addMonth.row.time.daysLater": "ends {count} days later",
 };

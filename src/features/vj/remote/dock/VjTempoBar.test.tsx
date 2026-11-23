@@ -253,10 +253,16 @@ describe("VjTempoBar", () => {
       name: "Follow the lead screen's mic",
     });
     expect(follow.getAttribute("aria-disabled")).toBe("true");
-    const descriptionId = follow.getAttribute("aria-describedby") ?? "";
-    expect(document.getElementById(descriptionId)?.textContent).toBe(
+    // The option's own description comes first, then the mic note.
+    const descriptionTexts = (follow.getAttribute("aria-describedby") ?? "")
+      .split(" ")
+      .map(
+        (descriptionId) => document.getElementById(descriptionId)?.textContent,
+      );
+    expect(descriptionTexts).toEqual([
+      "The lead screen listens to the music and keeps the tempo",
       "Turn on the mic on the lead screen first",
-    );
+    ]);
     fireEvent.click(follow);
     expect(setTempo).not.toHaveBeenCalled();
   });

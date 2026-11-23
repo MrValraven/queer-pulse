@@ -75,6 +75,8 @@ export function useStrangerMemberSearch(
   const liveQuery = useQuery({
     queryKey: ["strangerMemberSearch", debounced, demoMode],
     enabled: enabled && !demoMode,
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     queryFn: ({ signal }) => searchApi(debounced, "member", signal),
   });
 

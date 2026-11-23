@@ -66,4 +66,7 @@ export const nav: Catalog = {
   messagesUnread_other: "Mensagens, {count} por ler",
   notificationsUnread_one: "Notificações, {count} por ler",
   notificationsUnread_other: "Notificações, {count} por ler",
+  quickExitLabel: "Saída rápida",
+  quickExitAria:
+    "Saída rápida: termina a sessão, apaga os teus dados do QueerPulse aqui e sai para um site neutro",
 };

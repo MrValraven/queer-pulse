@@ -9,7 +9,7 @@ import {
   MAX_TITLE_LENGTH,
 } from "../steps/whatChapter.data";
 import { addMonthRowAnchorId, addMonthRowFieldId } from "./addMonth.data";
-import { formatRowDate } from "./addMonthDates";
+import { formatRowDate, type TemplateEndSpan } from "./addMonthDates";
 import type {
   AddMonthAction,
   AddMonthRow,
@@ -23,6 +23,8 @@ import styles from "./AddMonthRows.module.css";
 /** What every card on the page reads from the page. */
 export interface AddMonthRowContext {
   sharedTimes: AddMonthTimes;
+  /** The starting event's end and its calendar span (PRD-518). */
+  templateSpan: TemplateEndSpan | null;
   /** The shared cover to show, or null when there is no picture to paint. */
   sharedCoverUrl: string | null;
   /** The starting event's description, for "Same as the starting event". */
@@ -184,6 +186,7 @@ export function AddMonthRowCard({
           <AddMonthRowTime
             row={row}
             sharedTimes={context.sharedTimes}
+            templateSpan={context.templateSpan}
             dispatch={dispatch}
             issue={timeIssue}
           />

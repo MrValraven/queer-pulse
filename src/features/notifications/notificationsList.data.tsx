@@ -26,6 +26,7 @@ import {
 import { Translation } from "../../shared/i18n/Translation";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
+import { buildCommunityBadgeNotifications } from "./communityBadgeNotifications.data";
 import { buildListingTeamNotifications } from "./listingTeamNotifications.data";
 import type { Notification } from "./notifications.types";
 import {
@@ -825,8 +826,8 @@ function buildReadNotifications(
 
 /**
  * Composes the demo feed from its builders, in this order: the unread rows
- * (ids 2-7, 13, 14, 15, 16, 18), the unread collaborative playlist rows (ids
- * 26 and 29), the Studio owner notices, the read collaborative playlist rows
+ * (ids 2-7, 13, 14, 15, 16, 18), the community badge rows (ids 40 and 41),
+ * the unread collaborative playlist rows (ids 26 and 29), the Studio owner notices, the read collaborative playlist rows
  * (ids 27 and 28), then the already-read rows (ids 8, 9, 11, 12, 20, 21).
  * Splitting the builders by read-state keeps each one small.
  * (Ids 1 and 10 were private-message rows, removed when the "messages"
@@ -839,6 +840,7 @@ export function buildNotifications(
 ): Notification[] {
   return [
     ...buildUnreadNotifications(t, fmt),
+    ...buildCommunityBadgeNotifications(t, fmt),
     ...buildUnreadStudioPlaylistEditorNotifications(t, fmt),
     ...buildListingTeamNotifications(t, fmt),
     ...buildStudioOwnerNotifications(t, fmt),
@@ -850,5 +852,5 @@ export function buildNotifications(
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
 export const DEMO_UNREAD_IDS = [
-  2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18, 26, 29, 32, 38,
+  2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18, 40, 26, 29, 32, 38,
 ];

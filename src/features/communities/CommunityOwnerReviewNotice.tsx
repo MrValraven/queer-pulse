@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { FiEyeOff } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { memberRefDisplayName } from "../../shared/api/refs";
 import type { CommunityOwnerReviewRequestDTO } from "./api/communityOwnerReview.api";
 import styles from "./CommunityDangerZone.module.css";
 
@@ -26,9 +27,8 @@ export function CommunityOwnerReviewNotice({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const filerName = request.requestedBy
-    ? `${request.requestedBy.firstName} ${request.requestedBy.lastName}`.trim()
-    : "";
+  // A filer whose account has since closed reads as the inactive-member label.
+  const filerName = memberRefDisplayName(request.requestedBy, t);
 
   return (
     <div className={styles.notice}>

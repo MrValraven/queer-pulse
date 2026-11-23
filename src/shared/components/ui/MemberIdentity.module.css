@@ -38,6 +38,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* The inactive member's stand-in reads quieter than a named person. */
+.inactiveName {
+  font-weight: 500;
+  color: var(--ink-60);
+}
 .nameLink {
   color: inherit;
   text-decoration: none;

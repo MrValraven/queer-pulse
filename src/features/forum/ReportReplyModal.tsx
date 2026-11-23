@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { FiCheck, FiAlertTriangle } from "react-icons/fi";
+import { FiAlertTriangle } from "react-icons/fi";
 import {
   Button,
   ModalSheet,
   RadioCardGroup,
   Sending,
 } from "../../shared/components/ui";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
@@ -16,6 +15,8 @@ import {
   type ReportSubjectType,
 } from "../safety/reportReasons";
 import { logError } from "../../shared/observability/logger";
+import { INACTIVE_MEMBER_LABEL_KEY } from "../../shared/api/refs";
+import { ReportReplyConfirmPanel } from "./ReportReplyConfirmPanel";
 import styles from "./ReportReplyModal.module.css";
 
 interface ReportReplyModalProps {
@@ -63,7 +64,12 @@ export function ReportReplyModal({
   const offeredReasons = useReportReasons(subjectType);
   const REASONS = withFundingScamFor(offeredReasons, isFundingThread);
 
-  const firstName = authorName.split(" ")[0] ?? authorName;
+  // The inactive member's label (PRD-507) is a phrase with no first name, so
+  // the copy addresses it whole.
+  const firstName =
+    authorName === t(INACTIVE_MEMBER_LABEL_KEY)
+      ? authorName
+      : (authorName.split(" ")[0] ?? authorName);
   // The opening post and a reply each get their own title and subtitle.
   const isPost = subjectType === "post";
   const titleKey = isPost
@@ -94,27 +100,11 @@ export function ReportReplyModal({
 
   if (status === "done") {
     return (
-      <ModalSheet onClose={onClose} success ariaLabel={t(titleKey)}>
-        <div className={styles.confirm}>
-          <span className={styles.confirmIcon} aria-hidden>
-            <FiCheck />
-          </span>
-          <h2 className={styles.confirmTitle}>
-            <Translation
-              i18nKey="forum:reportReply.confirmTitle"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.confirmBody}>
-            {t("forum:reportReply.confirmBody", { name: firstName })}
-          </p>
-          <div className={styles.confirmActions}>
-            <Button variant="ghost-dark" onClick={onClose}>
-              {t("forum:reportReply.done")}
-            </Button>
-          </div>
-        </div>
-      </ModalSheet>
+      <ReportReplyConfirmPanel
+        ariaLabel={t(titleKey)}
+        firstName={firstName}
+        onClose={onClose}
+      />
     );
   }
 

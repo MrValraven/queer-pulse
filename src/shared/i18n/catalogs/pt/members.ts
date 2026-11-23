@@ -199,7 +199,7 @@ export const members: Catalog = {
     "O resto deste perfil fica visível quando tiverem uma conexão.",
   "profile.limited.private.title": "{name} mantém o perfil privado",
   "profile.limited.private.body":
-    "Toda a gente vê só esta parte. Uma conexão permite trocarem mensagens, e o resto do perfil continua fechado.",
+    "É o que toda a gente vê. {name} fala com as pessoas quando estiver pronte, por isso os novos pedidos de ligação estão desligados neste perfil.",
   "profile.limited.generic.title": "Este perfil tem mais",
   "profile.limited.generic.body":
     "{name} partilha o resto com um círculo mais pequeno.",
@@ -2539,11 +2539,9 @@ export const members: Catalog = {
   "profile.accountData.stepAway.erase.title": "Apagar-me",
   "profile.accountData.stepAway.erase.body":
     "Elimina permanentemente a tua conta. Há um período de carência de 30 dias para mudares de ideias antes de a eliminação se tornar irreversível.",
-  "profile.accountData.stepAway.erase.blockedByDependencies":
-    "Há ainda algumas coisas que dependem de ti antes de podermos eliminar a tua conta:",
   "profile.accountData.stepAway.erase.cta": "Apagar-me",
   "profile.accountData.stepAway.erase.disabledHint":
-    "Transfere ou fecha tudo o que está listado acima e o botão Apagar-me fica disponível.",
+    "O botão Apagar-me fica disponível assim que verificarmos o que a tua conta passa a outras pessoas.",
   "profile.accountData.stepAway.erase.confirm.title":
     "Pedir a eliminação da conta?",
   "profile.accountData.stepAway.erase.confirm.body":
@@ -2553,7 +2551,6 @@ export const members: Catalog = {
     "Diz-nos porquê, se quiseres (opcional)",
   "profile.accountData.stepAway.erase.confirm.reasonPlaceholder":
     "Opcional, e ajuda-nos a melhorar",
-  "profile.accountData.stepAway.dependency.transferCta": "Transferir",
   "profile.accountData.stepAway.dependency.deleteCta": "Eliminar anúncio",
   "profile.accountData.stepAway.dependency.checkFailed":
     "Não conseguimos verificar se alguma das tuas comunidades ou anúncios ainda depende de ti. Podes pedir a eliminação na mesma, e tratamos de tudo o que é teu quando a tua conta for eliminada.",
@@ -2747,4 +2744,12 @@ export const members: Catalog = {
   "studioPlaylists.trackCount_one": "{count} faixa",
   "studioPlaylists.trackCount_other": "{count} faixas",
   "studioPlaylists.libraryCta": "Abrir a tua biblioteca do Studio",
+  "profile.accountData.stepAway.dependency.listingsStayLive":
+    "Os teus anúncios continuam publicados sem pessoa proprietária quando a tua conta for eliminada, e quem gere o espaço pode reivindicá-los. Podes eliminar um antes, se o quiseres fora do ar.",
+  "profile.hero.recognitionLimited":
+    "O nível e os emblemas fazem parte do perfil completo",
+  "profile.limited.private.incomingBody":
+    "É o que toda a gente vê. {name} pediu para se ligar a ti, por isso podes responder ao pedido aqui em baixo.",
+  "profile.accountData.stepAway.dependency.communitiesPassOn":
+    "A eliminação da tua conta não fica à espera destas comunidades. Quando a tua conta for eliminada, cada comunidade de que és responsável passa para quem é cotitular há mais tempo ou, se não houver, para quem modera há mais tempo. Um espaço sem nenhuma destas pessoas passa para quem é responsável pela comunidade-mãe, e uma comunidade que ninguém possa assumir fica sinalizada para a nossa equipa rever. Para escolheres quem fica com uma delas, oferece-lhe a gestão antes.",
 };

@@ -27,6 +27,7 @@ function contextWith(
 ): AddMonthRowContext {
   return {
     sharedTimes: { startTime: "19:00", endTime: "23:00" },
+    templateSpan: null,
     sharedCoverUrl: "https://cdn.example/cover.jpg",
     templateDescription: TEMPLATE_DESCRIPTION,
     shouldShowIssues: false,
@@ -198,6 +199,30 @@ describe("AddMonthRowCard", () => {
     });
     expect(
       screen.getByText("22:00 to 02:00, ends the next day"),
+    ).toBeInTheDocument();
+  });
+
+  it("reads back a weekend event's span while the end is the starting event's own (PRD-518)", async () => {
+    const templateSpan = { endTime: "02:00", endDayOffset: 2 };
+    const { unmount } = await renderCard({
+      context: {
+        sharedTimes: { startTime: "21:00", endTime: "02:00" },
+        templateSpan,
+      },
+    });
+    expect(
+      screen.getByText("21:00 to 02:00, ends 2 days later"),
+    ).toBeInTheDocument();
+    unmount();
+
+    await renderCard({
+      context: {
+        sharedTimes: { startTime: "21:00", endTime: "03:00" },
+        templateSpan,
+      },
+    });
+    expect(
+      screen.getByText("21:00 to 03:00, ends the next day"),
     ).toBeInTheDocument();
   });
 

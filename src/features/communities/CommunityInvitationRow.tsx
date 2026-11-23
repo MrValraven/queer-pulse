@@ -2,6 +2,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { communityPath } from "../../app/routeMap";
+import { memberRefDisplayName } from "../../shared/api/refs";
 import { cardDtoToCommunity } from "./api/communities.adapters";
 import type { MyCommunityInviteDTO } from "./api/communityInvites.api";
 import { CommunityCardShell } from "./CommunityCardShell";
@@ -34,9 +35,7 @@ export function CommunityInvitationRow({
   const { t } = useTranslation();
   const fmt = useFormat();
   const community = cardDtoToCommunity(invite.community, t);
-  const inviterName = invite.invitedBy
-    ? `${invite.invitedBy.firstName} ${invite.invitedBy.lastName}`.trim()
-    : "";
+  const inviterName = memberRefDisplayName(invite.invitedBy, t);
 
   return (
     <li className={styles.row}>

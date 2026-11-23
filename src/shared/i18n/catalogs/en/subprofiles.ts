@@ -3950,4 +3950,8 @@ export const subprofiles: Catalog = {
     "Our team took down a Studio release on this persona. Ask our team before changing its type.",
   "kindChange.error.studioTakenDown_other":
     "Our team took down {count} Studio releases on this persona. Ask our team before changing its type.",
+  "itemEditor.collaboratorsUnlinkedNote":
+    "This persona is Unlinked, so the people you credit here stay off its public page. Credited personas still show.",
+  "itemEditor.collaboratorsOwnerCreditRefused":
+    "An Unlinked persona can't credit you or a co-owner by your member handle. Remove that credit and save again.",
 };

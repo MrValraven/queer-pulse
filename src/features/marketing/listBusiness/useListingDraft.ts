@@ -8,7 +8,11 @@ import {
   type CauseErrorCopy,
 } from "../../../shared/api/causeErrorKey";
 import type { ListingDraft } from "./listBusiness.data";
-import { saveListingDraft, deleteListingDraft } from "./api/listingDrafts.api";
+import {
+  saveListingDraft,
+  saveListingDraftKeepalive,
+  deleteListingDraft,
+} from "./api/listingDrafts.api";
 import { LISTING_DRAFTS_KEY } from "./api/useListingDrafts";
 
 /** Demo-only single-draft slot. Live drafts live server-side (multiple), keyed
@@ -18,6 +22,11 @@ import { LISTING_DRAFTS_KEY } from "./api/useListingDrafts";
  *  exists in live, where we never touch localStorage at all. */
 const DEMO_KEY = "qp-listing-draft-v2";
 const AUTOSAVE_MS = 600;
+
+interface PersistOptions {
+  /** Send the live save so it outlives a closing page. */
+  keepalive?: boolean;
+}
 
 export interface StoredDraft {
   draft: ListingDraft;
@@ -133,74 +142,80 @@ export function useListingDraft(
    *  explicit `saveAndExit`. Returns whether the write succeeded, and why not.
    *  Best-effort in demo (storage may be blocked) and live (network may be
    *  down); both swallow their own failure so autosave never toasts. */
-  const persist = useCallback(async (): Promise<ListingDraftSaveResult> => {
-    if (hasSubmittedRef.current)
-      return { isSaved: false, cause: DRAFT_ALREADY_CLEARED };
-    const stamp = Date.now();
-    if (demoAutosaveOn) {
-      try {
-        localStorage.setItem(
-          DEMO_KEY,
-          JSON.stringify({ draft, step, savedAt: stamp }),
-        );
-        setSavedAt(stamp);
-        return { isSaved: true };
-      } catch {
-        return { isSaved: false, cause: DRAFT_STORAGE_BLOCKED };
-      }
-    }
-    if (liveAutosaveOn) {
-      const gen = generation.current;
-      try {
-        // Existing row (seeded resume, or an already-created draft) → plain upsert.
-        if (liveDraftId.current) {
-          await saveListingDraft({ draft, step }, liveDraftId.current);
-          setSavedAt(stamp);
-          return { isSaved: true };
-        }
-        // A create is already running → wait for its id, then upsert that row,
-        // so only one create ever runs.
-        if (createInFlight.current) {
-          const existingId = await createInFlight.current;
-          if (gen !== generation.current) {
-            return { isSaved: false, cause: DRAFT_ALREADY_CLEARED }; // cleared meanwhile
-          }
-          await saveListingDraft({ draft, step }, existingId);
-          setSavedAt(stamp);
-          return { isSaved: true };
-        }
-        // First create: single-flight it so concurrent saves reuse this id.
-        const createPromise = saveListingDraft({ draft, step }, undefined).then(
-          (result) => result.id,
-        );
-        createInFlight.current = createPromise;
-        let newId: string;
+  const persist = useCallback(
+    async (options: PersistOptions = {}): Promise<ListingDraftSaveResult> => {
+      const save = options.keepalive
+        ? saveListingDraftKeepalive
+        : saveListingDraft;
+      if (hasSubmittedRef.current)
+        return { isSaved: false, cause: DRAFT_ALREADY_CLEARED };
+      const stamp = Date.now();
+      if (demoAutosaveOn) {
         try {
-          newId = await createPromise;
-        } finally {
-          if (createInFlight.current === createPromise)
-            createInFlight.current = null;
+          localStorage.setItem(
+            DEMO_KEY,
+            JSON.stringify({ draft, step, savedAt: stamp }),
+          );
+          setSavedAt(stamp);
+          return { isSaved: true };
+        } catch {
+          return { isSaved: false, cause: DRAFT_STORAGE_BLOCKED };
         }
-        if (gen !== generation.current) {
-          // The draft was submitted/discarded while this create was in flight,
-          // so the orphaned row is deleted on the spot and never lingers.
-          void deleteListingDraft(newId).catch(() => {});
-          return { isSaved: false, cause: DRAFT_ALREADY_CLEARED };
-        }
-        liveDraftId.current = newId;
-        setSavedAt(stamp);
-        // A freshly-minted row belongs in the drafts list: mark it stale. The
-        // landing still observes it and refetches, but its Continue-or-wizard
-        // choice is latched, so the member stays in the wizard.
-        void queryClient.invalidateQueries({ queryKey: LISTING_DRAFTS_KEY });
-        return { isSaved: true };
-      } catch (error) {
-        return { isSaved: false, cause: causeErrorKey(error) };
       }
-    }
-    // Neither store is on: a signed-out visitor has nowhere to keep a draft.
-    return { isSaved: false, cause: DRAFT_SIGNED_OUT };
-  }, [demoAutosaveOn, liveAutosaveOn, draft, step, queryClient]);
+      if (liveAutosaveOn) {
+        const gen = generation.current;
+        try {
+          // Existing row (seeded resume, or an already-created draft) → plain upsert.
+          if (liveDraftId.current) {
+            await save({ draft, step }, liveDraftId.current);
+            setSavedAt(stamp);
+            return { isSaved: true };
+          }
+          // A create is already running → wait for its id, then upsert that row,
+          // so only one create ever runs.
+          if (createInFlight.current) {
+            const existingId = await createInFlight.current;
+            if (gen !== generation.current) {
+              return { isSaved: false, cause: DRAFT_ALREADY_CLEARED }; // cleared meanwhile
+            }
+            await save({ draft, step }, existingId);
+            setSavedAt(stamp);
+            return { isSaved: true };
+          }
+          // First create: single-flight it so concurrent saves reuse this id.
+          const createPromise = save({ draft, step }, undefined).then(
+            (result) => result.id,
+          );
+          createInFlight.current = createPromise;
+          let newId: string;
+          try {
+            newId = await createPromise;
+          } finally {
+            if (createInFlight.current === createPromise)
+              createInFlight.current = null;
+          }
+          if (gen !== generation.current) {
+            // The draft was submitted/discarded while this create was in flight,
+            // so the orphaned row is deleted on the spot and never lingers.
+            void deleteListingDraft(newId).catch(() => {});
+            return { isSaved: false, cause: DRAFT_ALREADY_CLEARED };
+          }
+          liveDraftId.current = newId;
+          setSavedAt(stamp);
+          // A freshly-minted row belongs in the drafts list: mark it stale. The
+          // landing still observes it and refetches, but its Continue-or-wizard
+          // choice is latched, so the member stays in the wizard.
+          void queryClient.invalidateQueries({ queryKey: LISTING_DRAFTS_KEY });
+          return { isSaved: true };
+        } catch (error) {
+          return { isSaved: false, cause: causeErrorKey(error) };
+        }
+      }
+      // Neither store is on: a signed-out visitor has nowhere to keep a draft.
+      return { isSaved: false, cause: DRAFT_SIGNED_OUT };
+    },
+    [demoAutosaveOn, liveAutosaveOn, draft, step, queryClient],
+  );
 
   // Listeners and the unmount cleanup call the newest `persist`. The one from
   // the render that registered them holds a stale `draft`.
@@ -212,11 +227,11 @@ export function useListingDraft(
   /** Writes the draft now, but only when a debounced save is still waiting.
    *  `clearDraft` and `saveAndExit` leave no pending save, so a submitted or
    *  discarded draft is never written back by a later flush. */
-  const flushPendingSave = useCallback(() => {
+  const flushPendingSave = useCallback((options: PersistOptions = {}) => {
     if (timer.current === null) return;
     clearTimeout(timer.current);
     timer.current = null;
-    void latestPersistRef.current();
+    void latestPersistRef.current(options);
   }, []);
 
   // Declared BEFORE the autosave effect on purpose: on unmount React runs
@@ -238,18 +253,20 @@ export function useListingDraft(
     };
   }, [persist, started, demoAutosaveOn, liveAutosaveOn]);
 
-  // Save a pending edit when the tab is hidden or closed. No `keepalive`:
-  // `apiPost` has no such option, and iOS keeps a just-hidden page alive long
-  // enough for a normal fetch.
+  // Save a pending edit when the tab is hidden or closed. The save goes out
+  // with `keepalive`, so a tab that is closed or killed right after still
+  // delivers it.
   useEffect(() => {
     if (!demoAutosaveOn && !liveAutosaveOn) return;
+    const handlePageHide = () => flushPendingSave({ keepalive: true });
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") flushPendingSave();
+      if (document.visibilityState === "hidden")
+        flushPendingSave({ keepalive: true });
     };
-    window.addEventListener("pagehide", flushPendingSave);
+    window.addEventListener("pagehide", handlePageHide);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
-      window.removeEventListener("pagehide", flushPendingSave);
+      window.removeEventListener("pagehide", handlePageHide);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [demoAutosaveOn, liveAutosaveOn, flushPendingSave]);

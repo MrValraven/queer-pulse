@@ -45,7 +45,10 @@ export function BlockReportMessagesStep({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const reasons = useReportReasons("message");
-  const createReport = useCreateReport();
+  // PRD-510: the per-filing outcome toast is off here, since one toast per
+  // message would stack up over a batch. A message already on an open report
+  // is still with the moderation team, and the step carries on to the block.
+  const createReport = useCreateReport({ announcesFilingOutcome: false });
   const describeReportError = useReportSubmissionError();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [reasonCode, setReasonCode] = useState<string | null>(null);

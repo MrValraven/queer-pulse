@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { AnimatePresence } from "motion/react";
 import { FiAlertTriangle } from "react-icons/fi";
 import {
   EmptyState,
@@ -6,6 +7,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useAuth } from "../../app/providers/authContext";
 import { CommunityGuidelinesNote } from "./CommunityGuidelinesNote";
 import type { LivingCommunity } from "./community.model";
 import { ModJoinRequestRow } from "./ModJoinRequestRow";
@@ -14,6 +16,8 @@ import type { JoinRequestDecision } from "./joinRequestReview.data";
 import { useCommunityBanEvasion } from "./api/useCommunityBanEvasion";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { ModMemberRow, type ModMemberRowActions } from "./ModMemberRow";
+import { canSendCommunityGifts } from "./badges/communityBadgeAccess";
+import { SendCommunityGiftDialog } from "./badges/SendCommunityGiftDialog";
 import type {
   AssignableRole,
   CommunityInheritedRules,
@@ -263,6 +267,8 @@ export function ModMemberManagement({
   memberKey,
   roleOverrides,
   viewerRole,
+  communitySlug,
+  isSpace,
   paging,
   ...actions
 }: {
@@ -275,13 +281,23 @@ export function ModMemberManagement({
   /** The signed-in moderator's own role — the row only offers what this
    *  viewer may actually do (co-owner in either direction is owner-only). */
   viewerRole: CommunityRole | null;
+  /** The community these rows belong to (worn badges, gifts). */
+  communitySlug: string;
+  /** Badges and gifts are absent in a space, so its rows offer no gift. */
+  isSpace: boolean;
   /** The roster's own pagination. Mod tools read the SAME loaded pages the
    *  Members tab does, so without a load-more here a mod simply could not
    *  reach anyone past page one to promote, demote or remove them (and the
-   *  owner could not transfer to them either). */
+   *  owner could not offer them ownership either). */
   paging: RosterPaging;
-} & ModMemberRowActions) {
+} & Omit<ModMemberRowActions, "onSendGift">) {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const viewerSlug = user?.profile.slug;
+  const [giftRecipient, setGiftRecipient] = useState<{
+    slug: string;
+    name: string;
+  } | null>(null);
   return (
     <>
       <div className={detail.secLbl}>
@@ -293,15 +309,26 @@ export function ModMemberManagement({
           {t("communities:detail.modtools.members.coOwnerNote")}
         </p>
       )}
-      {members.map((m) => {
+      {members.map((m, index) => {
         const key = memberKey(m.slug, m.name);
         return (
           <ModMemberRow
-            key={key}
+            // A row with no slug (an inactive member's stand-in) shares its
+            // name with any other stand-in, so the index keeps keys unique.
+            key={m.slug ? key : `${key}-${index}`}
             member={m}
             role={roleOverrides[key] ?? m.role}
             viewerRole={viewerRole}
-            actions={actions}
+            communitySlug={communitySlug}
+            canSendGift={
+              !isSpace &&
+              canSendCommunityGifts(viewerRole) &&
+              m.slug !== viewerSlug
+            }
+            actions={{
+              ...actions,
+              onSendGift: (slug, name) => setGiftRecipient({ slug, name }),
+            }}
           />
         );
       })}
@@ -316,6 +343,16 @@ export function ModMemberManagement({
           loadingLabel={t("communities:common.loading")}
         />
       )}
+      <AnimatePresence>
+        {giftRecipient && (
+          <SendCommunityGiftDialog
+            key={giftRecipient.slug}
+            slug={communitySlug}
+            recipient={giftRecipient}
+            onClose={() => setGiftRecipient(null)}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

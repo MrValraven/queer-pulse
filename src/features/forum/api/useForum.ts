@@ -88,6 +88,8 @@ export function useThreads(category: string, options?: GetThreadsOptions) {
       (eligibility ?? []).join(","),
       scope ?? null,
     ],
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       if (demoMode) return { items: THREADS, nextCursor: null };
@@ -191,6 +193,8 @@ export function useForumCounts(q?: string, tag?: string) {
 
   const query = useQuery<ForumThreadCountsResponse>({
     queryKey: ["forum-thread-counts", demoMode, q, tag],
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     enabled: !demoMode,
     queryFn: () => getThreadCounts(q, tag),
   });

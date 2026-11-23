@@ -26,6 +26,18 @@ export type FirstContactErrorReason = keyof typeof FIRST_CONTACT_ERROR_CODE;
  */
 export const IDENTITY_CANNOT_INITIATE_CODE = "IDENTITY_CANNOT_INITIATE";
 
+/**
+ * The requester blocked this member: a message request, a connection request
+ * or an enquiry answers with this 409 code until they unblock. Mirrors
+ * `UNBLOCK_TO_CONTACT` in queerpulse-backend. A block by the OTHER member is a
+ * plain 404, worded as "not available", so nothing tells the requester they
+ * were blocked.
+ */
+export const UNBLOCK_TO_CONTACT_CODE = "UNBLOCK_TO_CONTACT";
+
+/** The message-request line for the requester's own block. */
+export const UNBLOCK_FIRST_KEY = "messages:request.error.unblockFirst";
+
 function errorCodeOf(error: unknown): string | null {
   if (!(error instanceof ApiError)) return null;
   return (error.data as { code?: string } | null)?.code ?? null;
@@ -58,20 +70,25 @@ const MESSAGE_REQUEST_ERROR_KEY: Record<FirstContactErrorReason, string> = {
  * recipient's first name); the reply-only mailbox refusal ignores it.
  */
 export function messageRequestErrorKey(error: unknown): string | null {
-  if (errorCodeOf(error) === IDENTITY_CANNOT_INITIATE_CODE) {
+  const code = errorCodeOf(error);
+  if (code === IDENTITY_CANNOT_INITIATE_CODE) {
     return "messages:mailbox.failure.cannotStart";
   }
+  if (code === UNBLOCK_TO_CONTACT_CODE) return UNBLOCK_FIRST_KEY;
   const reason = firstContactErrorReason(error);
   return reason ? MESSAGE_REQUEST_ERROR_KEY[reason] : null;
 }
 
 /**
  * The lines a refused message request can say beyond the shared causes: the
- * coded first-contact refusals, the reply-only mailbox, and the two uncoded
- * statuses `POST /messages/request` sends (404 the recipient handle does not
- * exist, 429 the 15-per-minute burst throttle, which the daily and pending
- * caps above share a status with). A restricted account, an inactive
- * membership, an offline request and a server fault read as the shared lines.
+ * coded first-contact refusals, the reply-only mailbox, the requester's own
+ * block (`UNBLOCK_TO_CONTACT`), and the two uncoded statuses
+ * `POST /messages/request` sends: 404 the recipient is not available (a handle
+ * that does not exist, an inactive account, a takedown, a member hidden from
+ * the requester or one who blocked them, all worded alike), and 429 the
+ * 15-per-minute burst throttle, which the daily and pending caps above share
+ * a status with. A restricted account, an inactive membership, an offline
+ * request and a server fault read as the shared lines.
  */
 export const MESSAGE_REQUEST_CAUSE_OVERRIDES: CauseErrorOverrides = {
   [FIRST_CONTACT_ERROR_CODE.dailyLimit]: MESSAGE_REQUEST_ERROR_KEY.dailyLimit,
@@ -81,6 +98,7 @@ export const MESSAGE_REQUEST_CAUSE_OVERRIDES: CauseErrorOverrides = {
   [FIRST_CONTACT_ERROR_CODE.recipientConnectionsOnly]:
     MESSAGE_REQUEST_ERROR_KEY.recipientConnectionsOnly,
   [IDENTITY_CANNOT_INITIATE_CODE]: "messages:mailbox.failure.cannotStart",
+  [UNBLOCK_TO_CONTACT_CODE]: UNBLOCK_FIRST_KEY,
   404: "messages:request.error.notFound",
   429: "messages:request.error.rateLimited",
 };

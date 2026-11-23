@@ -3829,20 +3829,11 @@ export const admin: Catalog = {
   "modPanel.settings.archive.confirm.body":
     "This takes the community down for everyone. Members keep their history, but it disappears from discovery and no new posts can be made. Only you, as the owner, can do this.",
   "modPanel.settings.archive.confirm.cta": "Yes, archive it",
-  "modPanel.settings.transfer.title": "Transfer ownership",
-  "modPanel.settings.transfer.desc":
-    "Hand the community to another member. You'll step down to moderator.",
-  "modPanel.settings.transfer.cta": "Transfer",
-  "modPanel.settings.transfer.toast":
-    "Ownership transferred. You're now a moderator here.",
-  "modPanel.settings.transfer.modal.title": "Transfer ownership",
-  "modPanel.settings.transfer.modal.body":
-    "Choose the member to become the new owner. You'll stay on as a moderator.",
-  "modPanel.settings.transfer.modal.pickLabel": "Choose the new owner",
+  "modPanel.settings.transfer.modal.pickLabel":
+    "Choose who to offer ownership to",
   "modPanel.settings.transfer.modal.emptyTitle": "No one to hand it to yet",
   "modPanel.settings.transfer.modal.emptyDesc":
-    "You need at least one other member before you can transfer ownership.",
-  "modPanel.settings.transfer.modal.cta": "Transfer ownership",
+    "You need at least one other member before you can offer ownership.",
 
   // ── Vouch graph (trust-network visualisation) ─────────────────────────────
   "vouchGraph.modes.network": "Network",
@@ -10503,6 +10494,12 @@ export const admin: Catalog = {
   "culturalProduction.tasks.statusView.withCount": "{status} ({count})",
   "culturalProduction.tasks.count_one": "{count} task",
   "culturalProduction.tasks.count_other": "{count} tasks",
+  "culturalProduction.tasks.columns.task": "Task",
+  "culturalProduction.tasks.columns.due": "Due",
+  "culturalProduction.tasks.columns.status": "Status",
+  "culturalProduction.tasks.columns.assignees": "Assignees",
+  "culturalProduction.tasks.group.toggleAria_one": "{status}, {count} task",
+  "culturalProduction.tasks.group.toggleAria_other": "{status}, {count} tasks",
   "culturalProduction.tasks.truncated": "Showing the first 500 tasks",
   "culturalProduction.tasks.loadError.title": "We couldn't load the tasks",
   "culturalProduction.tasks.loadError.retryCta": "Load the tasks again",
@@ -10799,4 +10796,19 @@ export const admin: Catalog = {
     "You can't make changes while a moderation restriction is in effect on your account",
   "culturalProduction.failure.unknown":
     "This didn't go through and the server sent no reason. Try again",
+  "moderation.refusal.reportAboutYou":
+    "This report is about you or something you posted, so another staff member will open and decide it.",
+  "members.suspension.confirm.noteLabel": "Why you are lifting it",
+  "members.suspension.confirm.notePlaceholder":
+    "Say what changed. This goes into the audit trail with your name.",
+  "members.suspension.missingNoteToast":
+    "Write why you are lifting the suspension before you confirm.",
+  "listingClaims.errors.claim_reviewer_is_claimant":
+    "You filed this claim, so another reviewer has to decide it.",
+  "listingClaims.errors.reviewFailed": "The claim wasn't decided",
+  "members.row.ariaLabelNoReports": "Open {name}: {status}, {role}",
+  "governance.audit.actionType.housing_group_create": "Housing group created",
+  "governance.audit.actionType.housing_group_update": "Housing group edited",
+  "platformLog.kind.mod.housing_group_create": "created a housing group",
+  "platformLog.kind.mod.housing_group_update": "edited a housing group",
 };

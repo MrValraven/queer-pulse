@@ -1,0 +1,33 @@
+/* The required note in a lift's confirm modal. The label sits one small step
+   above its textarea, closer to its own field than to the body copy above. */
+.noteGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--admin-stat-gap);
+  margin-top: var(--gap-sm);
+}
+
+.noteGroup > label,
+.noteGroup > textarea {
+  margin: 0;
+}
+
+/* Names what is missing beside the field: colour, icon and text together. */
+.noteError {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--danger);
+}
+
+.noteErrorIcon {
+  flex: none;
+  margin-top: 0.2em;
+}
+
+.noteGroup > textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}

@@ -188,9 +188,10 @@ export const connect: Catalog = {
   "sent.close": "Close",
   "sent.autoClose": "Closing automatically in {seconds}s",
 
-  // Terminal notice panels (ConnectNoticePanel) — shown when a reach-out can't
-  // go through and retrying won't help. Copy stays warm and never reveals a
-  // block we weren't explicitly told about (see cannotConnect).
+  // Terminal notice panels (ConnectNoticePanel), shown when a reach-out can't
+  // go through and retrying won't help. Copy stays warm and names no block:
+  // cannotConnect answers every 404 the same way, since a hidden or blocked
+  // member and a member who left answer alike.
   // "They asked you first" panel (ConnectIncomingPanel, PRD-03). Reached from
   // the store's own `incoming` list, or from the 409 for a request that landed
   // between the page loading and the send. Two real answers, and the words the
@@ -221,15 +222,12 @@ export const connect: Catalog = {
   "notice.youBlocked.title": "You <em>blocked</em> {name}.",
   "notice.youBlocked.body":
     "You'll need to unblock them before you can say hello. You can do that from their profile.",
-  "notice.notAccepting.title":
-    "{name} isn't taking new <em>hellos</em> right now.",
-  "notice.notAccepting.body":
-    "They've paused new connection requests. You're welcome to try again another time.",
   "notice.needsIntro.title": "{name} connects through <em>introductions.</em>",
   "notice.needsIntro.body":
     "They reach out through people they already know. Ask a mutual connection to introduce you.",
   "notice.cannotConnect.title": "You can't reach {name} <em>right now.</em>",
-  "notice.cannotConnect.body": "This connection isn't available right now.",
+  "notice.cannotConnect.body":
+    "This member isn't available to connect with right now.",
   "notice.requestsPaused.title": "New requests are <em>paused</em> for now.",
   "notice.requestsPaused.body":
     "Our moderators are looking into something on your account. Your existing connections and conversations carry on as usual while they do.",

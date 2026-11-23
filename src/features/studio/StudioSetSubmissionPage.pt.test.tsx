@@ -24,7 +24,8 @@ describe("StudioSetSubmissionPage in Portuguese", () => {
     ).toBeInTheDocument();
     expect(await screen.findByText("white label: ID / ID")).toBeInTheDocument();
     expect(
-      await screen.findByText(/sonoridade −9\.2 LUFS/),
+      // pt-PT keeps the industry term "loudness" (catalog pass 2026-11-13).
+      await screen.findByText(/loudness −9\.2 LUFS/),
     ).toBeInTheDocument();
     expect(
       // Whitespace kept as typed, so the two spaces after the time count.
@@ -34,6 +35,5 @@ describe("StudioSetSubmissionPage in Portuguese", () => {
     ).toBeInTheDocument();
 
     expect(screen.queryByText("unknown bootleg edit")).toBeNull();
-    expect(screen.queryByText(/loudness/)).toBeNull();
   });
 });

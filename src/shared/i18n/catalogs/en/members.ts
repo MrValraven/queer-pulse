@@ -206,7 +206,7 @@ export const members: Catalog = {
     "The rest of this profile opens up once the two of you are connected.",
   "profile.limited.private.title": "{name} keeps their profile private",
   "profile.limited.private.body":
-    "This is what everyone sees. Connecting will not open the rest, though it does let the two of you message each other.",
+    "This is what everyone sees. {name} reaches out to people when they are ready, so new connection requests are switched off for this profile.",
   // Defensive fallback for an unexpected visibility value. Deliberately
   // vague, because in this branch the client does not know which boundary
   // applies.
@@ -2560,11 +2560,9 @@ export const members: Catalog = {
   "profile.accountData.stepAway.erase.title": "Erase me",
   "profile.accountData.stepAway.erase.body":
     "Permanently delete your account. There's a 30-day grace period to change your mind before erasure is irreversible.",
-  "profile.accountData.stepAway.erase.blockedByDependencies":
-    "A few things still depend on you before we can erase your account:",
   "profile.accountData.stepAway.erase.cta": "Erase me",
   "profile.accountData.stepAway.erase.disabledHint":
-    "Transfer or close everything listed above, then Erase me becomes available.",
+    "Erase me becomes available as soon as we've checked what your account hands on.",
   "profile.accountData.stepAway.erase.confirm.title":
     "Request account erasure?",
   "profile.accountData.stepAway.erase.confirm.body":
@@ -2574,7 +2572,6 @@ export const members: Catalog = {
     "Tell us why, if you'd like (optional)",
   "profile.accountData.stepAway.erase.confirm.reasonPlaceholder":
     "Optional, and it helps us do better",
-  "profile.accountData.stepAway.dependency.transferCta": "Transfer",
   "profile.accountData.stepAway.dependency.deleteCta": "Delete listing",
   "profile.accountData.stepAway.dependency.checkFailed":
     "We couldn't check whether any of your communities or listings still depend on you. You can still ask for erasure, and we'll sort out anything you own when your account is erased.",
@@ -2770,4 +2767,12 @@ export const members: Catalog = {
   "studioPlaylists.trackCount_one": "{count} track",
   "studioPlaylists.trackCount_other": "{count} tracks",
   "studioPlaylists.libraryCta": "Open your Studio library",
+  "profile.accountData.stepAway.dependency.listingsStayLive":
+    "Your listings stay live without an owner when your account is erased, and whoever runs the place can claim them. You can delete one first if you want it gone.",
+  "profile.hero.recognitionLimited":
+    "Their level and badges are part of the full profile",
+  "profile.limited.private.incomingBody":
+    "This is what everyone sees. {name} asked to connect with you, so you can answer their request below.",
+  "profile.accountData.stepAway.dependency.communitiesPassOn":
+    "Erasing your account doesn't wait on these. When your account is erased, each community you own passes to its longest-standing co-owner, or to its longest-standing mod if it has none. A space with neither passes to the owner of its parent community, and a community nobody can take on is flagged for our team to review. To choose who takes one on, offer them ownership first.",
 };

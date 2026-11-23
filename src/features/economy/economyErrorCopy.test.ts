@@ -8,6 +8,7 @@ import {
   REQUEST_VIEWING_OVERRIDES,
   COMPANY_REVIEW_REPLY_OVERRIDES,
   FLATMATE_DECISION_OVERRIDES,
+  FLATMATE_HELLO_OVERRIDES,
   HOUSING_REVIEW_REPLY_OVERRIDES,
   HOUSING_REVIEW_SUBMIT_OVERRIDES,
   HOUSING_SAVE_SEARCH_OVERRIDES,
@@ -97,6 +98,16 @@ describe("housingViewingActionCause", () => {
           400,
           "This viewing has not happened yet. You can mark it completed once the agreed time has passed",
         ),
+      ).key,
+    ).toBe("economy:housingViewing.cause.notYetHappened");
+  });
+
+  it("names a viewing that has not happened yet by its code, whatever the sentence says", () => {
+    expect(
+      housingViewingActionCause(
+        new ApiError(400, "Reworded by a later backend", {
+          code: "housing_viewing_not_happened_yet",
+        }),
       ).key,
     ).toBe("economy:housingViewing.cause.notYetHappened");
   });
@@ -288,5 +299,27 @@ describe("economy override maps", () => {
         HOUSING_SAVE_SEARCH_OVERRIDES,
       ),
     ).toBe("shared:apiError.notFound");
+  });
+});
+
+describe("FLATMATE_HELLO_OVERRIDES", () => {
+  it("reads a 404 as a member who is not available", () => {
+    expect(
+      causeLine(
+        new ApiError(404, "Member not found"),
+        echoTranslate,
+        FLATMATE_HELLO_OVERRIDES,
+      ),
+    ).toBe("economy:flatmates.card.sayHelloUnavailable");
+  });
+
+  it("asks the sender to unblock first for their own block", () => {
+    expect(
+      causeLine(
+        new ApiError(409, "x", { code: "UNBLOCK_TO_CONTACT" }),
+        echoTranslate,
+        FLATMATE_HELLO_OVERRIDES,
+      ),
+    ).toBe("economy:flatmates.card.sayHelloUnblockFirst");
   });
 });

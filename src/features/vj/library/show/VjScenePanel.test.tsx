@@ -255,7 +255,7 @@ describe("VjScenePanel (demo)", () => {
     const dialog = await screen.findByRole("dialog");
     expect(
       within(dialog).getByText(
-        "The scene leaves the library and 1 spot in a set list",
+        "The scene leaves the library and 1 step in a sequence",
       ),
     ).toBeInTheDocument();
     expect(

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SHARED_CAUSE_KEY } from "../../shared/api/causeErrorKey";
 import { ApiError } from "../../shared/api/client";
 import { StudioAudioUploadError } from "./api/studioAudioUpload";
 import { wavBytes } from "./upload/convert/studioPcmTestFiles";
@@ -60,6 +61,82 @@ describe("audio file validation", () => {
     expect(titleFromFileName("02_o_regresso.m4a")).toBe("o regresso");
     expect(titleFromFileName("Pier.mp3")).toBe("Pier");
     expect(titleFromFileName(".mp3")).toBe("Untitled");
+  });
+
+  // Open item A: the server's check of the stored bytes names its own cause.
+  it.each([
+    [
+      422,
+      "UPLOAD_CONTENT_MISMATCH",
+      SHARED_CAUSE_KEY.uploadContentMismatch,
+      false,
+    ],
+    [403, "UPLOAD_NOT_YOURS", "studio:errors.notPersonaOwner", false],
+    [404, "UPLOAD_NOT_FOUND", SHARED_CAUSE_KEY.uploadNotFound, true],
+    [
+      503,
+      "UPLOAD_CHECK_UNAVAILABLE",
+      SHARED_CAUSE_KEY.uploadCheckUnavailable,
+      true,
+    ],
+  ])(
+    "names a %i %s confirm refusal and says whether Retry can fix it",
+    (status, code, copyKey, isRetryable) => {
+      const refusal = new StudioAudioUploadError(
+        "confirm",
+        status,
+        false,
+        new ApiError(status, "refused", { code }),
+      );
+      expect(uploadErrorKeyOf(refusal)).toBe(copyKey);
+      expect(isRetryableUploadError(refusal)).toBe(isRetryable);
+    },
+  );
+
+  it.each([
+    ["studio_access_required", "studio:errors.accessRequired"],
+    ["studio_persona_kind_not_allowed", "studio:errors.personaKindNotAllowed"],
+  ])(
+    "names a confirm refused with the Studio code %s by its Studio line and offers no Retry",
+    (code, copyKey) => {
+      const refusal = new StudioAudioUploadError(
+        "confirm",
+        403,
+        false,
+        new ApiError(403, "refused", { statusCode: 403, code, message: code }),
+        "studio-audio/p1/abc.mp3",
+      );
+      expect(uploadErrorKeyOf(refusal)).toBe(copyKey);
+      expect(isRetryableUploadError(refusal)).toBe(false);
+    },
+  );
+
+  it("names a confirm the member cancelled as cancelled", () => {
+    expect(
+      uploadErrorKeyOf(new StudioAudioUploadError("confirm", null, true)),
+    ).toBe("studio:uploadFlow.files.cancelled");
+  });
+
+  it("treats a confirm refused under a restriction as final and names it", () => {
+    const refusal = new StudioAudioUploadError(
+      "confirm",
+      403,
+      false,
+      new ApiError(403, "restricted", { code: "ACCOUNT_RESTRICTED" }),
+    );
+    expect(uploadErrorKeyOf(refusal)).toBe(SHARED_CAUSE_KEY.accountRestricted);
+    expect(isRetryableUploadError(refusal)).toBe(false);
+  });
+
+  it("names a confirm that got no answer as a lost connection and lets Retry run", () => {
+    const lost = new StudioAudioUploadError(
+      "confirm",
+      null,
+      false,
+      new TypeError("Failed to fetch"),
+    );
+    expect(uploadErrorKeyOf(lost)).toBe(SHARED_CAUSE_KEY.noConnection);
+    expect(isRetryableUploadError(lost)).toBe(true);
   });
 
   it("names each upload failure and says whether Retry can fix it", () => {

@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ChatMessage } from "./data";
 import { studioSharePreviewText } from "./studioSharePreview";
 import styles from "./ForwardPickerModal.module.css";
+import { renderableGifUrl } from "./gifMediaHosts";
 
 /** Text excerpts longer than this are clamped with an ellipsis. Long enough
  *  to identify the message, short enough that the picker's preview stays
@@ -63,14 +64,21 @@ export function ForwardMessagePreview({ message }: { message: ChatMessage }) {
     message.attachment &&
     !isDocumentAttachment(message.attachment)
   ) {
+    // SEC-24: a GIF from a refused host previews with its text alone.
+    const thumbnailUrl = renderableGifUrl(
+      message.kind,
+      message.attachment.previewUrl || message.attachment.url,
+    );
     return (
       <div className={styles.preview}>
-        <img
-          className={styles.previewThumb}
-          src={message.attachment.previewUrl || message.attachment.url}
-          alt=""
-          aria-hidden="true"
-        />
+        {thumbnailUrl && (
+          <img
+            className={styles.previewThumb}
+            src={thumbnailUrl}
+            alt=""
+            aria-hidden="true"
+          />
+        )}
         {/* `message.text` already carries the localized "Photo"/"GIF"
          *  fallback (see data.ts's own doc on `ChatMessage.kind`), so this
          *  component doesn't repeat that label. */}

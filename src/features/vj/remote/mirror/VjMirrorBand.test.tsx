@@ -361,7 +361,8 @@ describe("VjMirrorBand sequence status", () => {
       onOpenSequence,
     });
     expect(screen.queryByText("Step 2 of 4: Pink tunnel")).toBeNull();
-    const statusButton = screen.getByRole("button", {
+    // The status line fades in once the catalog copy replaces the blank one.
+    const statusButton = await screen.findByRole("button", {
       name: "Paused, tap to open",
     });
     fireEvent.click(statusButton);
@@ -377,7 +378,9 @@ describe("VjMirrorBand sequence status", () => {
       onOpenSequence: vi.fn(),
     });
     expect(
-      screen.getByRole("button", { name: "Waiting: Strobe drop flashes" }),
+      await screen.findByRole("button", {
+        name: "Waiting: Strobe drop flashes",
+      }),
     ).toBeInTheDocument();
   });
 
@@ -388,7 +391,7 @@ describe("VjMirrorBand sequence status", () => {
       onOpenSequence: vi.fn(),
     });
     expect(
-      screen.getByRole("button", { name: "Sequence paused" }),
+      await screen.findByRole("button", { name: "Sequence paused" }),
     ).toBeInTheDocument();
     expect(
       document.querySelector('[data-vj-mirror-ring="setlist"]'),

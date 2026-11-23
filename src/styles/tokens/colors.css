@@ -193,6 +193,26 @@
   --rose-rgb: 176, 98, 143;
   --rose-ink: #8a4a6e;
 
+  /* Community badge tints: ground + ink pairs, each ink 5.7:1 or more on its ground, ring = ink */
+  --flair-jade-ground: #e3f1ea;
+  --flair-jade-ink: #2f5e49;
+  --ring-flair-jade: 0 0 0 2px var(--flair-jade-ink);
+  --flair-accent-ground: #fbe5dd;
+  --flair-accent-ink: #9a3a22;
+  --ring-flair-accent: 0 0 0 2px var(--flair-accent-ink);
+  --flair-plum-ground: #ece4f1;
+  --flair-plum-ink: #4a2d60;
+  --ring-flair-plum: 0 0 0 2px var(--flair-plum-ink);
+  --flair-rose-ground: #f6e3ee;
+  --flair-rose-ink: #7d3f62;
+  --ring-flair-rose: 0 0 0 2px var(--flair-rose-ink);
+  --flair-amber-ground: #f8edd2;
+  --flair-amber-ink: #6e4e0c;
+  --ring-flair-amber: 0 0 0 2px var(--flair-amber-ink);
+  --flair-violet-ground: #ebe4f6;
+  --flair-violet-ink: #553a8a;
+  --ring-flair-violet: 0 0 0 2px var(--flair-violet-ink);
+
   /* ── Local directory category colours (map pins + filter-chip legend) ──
      One fixed, theme-stable fill per unified category, each dark enough to
      carry a white icon (≥4.5:1 on white). Fixed values are intentional — like
@@ -569,4 +589,24 @@
   --quizshow-hexagon-ink: #160c24;
   --quizshow-heart-ink: #160c24;
   --quizshow-moon-ink: #160c24;
+
+  /* Community badge tints, dark pairs: ink 8.2:1 or more on its ground */
+  --flair-jade-ground: #173a2d;
+  --flair-jade-ink: #9be0bd;
+  --ring-flair-jade: 0 0 0 2px var(--flair-jade-ink);
+  --flair-accent-ground: #4a2219;
+  --flair-accent-ink: #ffc4af;
+  --ring-flair-accent: 0 0 0 2px var(--flair-accent-ink);
+  --flair-plum-ground: #33224a;
+  --flair-plum-ink: #e0cdee;
+  --ring-flair-plum: 0 0 0 2px var(--flair-plum-ink);
+  --flair-rose-ground: #45213a;
+  --flair-rose-ink: #f0bcd7;
+  --ring-flair-rose: 0 0 0 2px var(--flair-rose-ink);
+  --flair-amber-ground: #3f3014;
+  --flair-amber-ink: #f3d38a;
+  --ring-flair-amber: 0 0 0 2px var(--flair-amber-ink);
+  --flair-violet-ground: #2e2350;
+  --flair-violet-ink: #cdbdf2;
+  --ring-flair-violet: 0 0 0 2px var(--flair-violet-ink);
 }

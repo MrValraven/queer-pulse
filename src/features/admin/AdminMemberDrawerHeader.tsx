@@ -34,13 +34,17 @@ export function AdminMemberDrawerHeader({ member }: { member: AdminMember }) {
           {member.pronoun.trim() !== "" && (
             <AdminChip tone="plum">{member.pronoun}</AdminChip>
           )}
-          <AdminChip tone={member.verified ? "jade" : member.statusTone} dot>
-            {member.verified
-              ? t("admin:members.drawer.verifiedChip")
-              : t("admin:members.status.openReports", {
-                  count: member.openReportsCount ?? 0,
-                })}
-          </AdminChip>
+          {/* A withheld count (the viewer's own row) shows no chip: reading
+              it as "0 open reports" would state a number nobody sent. */}
+          {(member.verified || member.openReportsCount !== null) && (
+            <AdminChip tone={member.verified ? "jade" : member.statusTone} dot>
+              {member.verified
+                ? t("admin:members.drawer.verifiedChip")
+                : t("admin:members.status.openReports", {
+                    count: member.openReportsCount ?? 0,
+                  })}
+            </AdminChip>
+          )}
         </div>
       </div>
     </div>

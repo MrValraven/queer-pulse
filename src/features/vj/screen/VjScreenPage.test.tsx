@@ -656,7 +656,7 @@ describe("VjScreenPage renderer", () => {
     const { container } = renderPage();
     expect(
       await screen.findByText(
-        "Simple renderer: this browser has no WebGL2, so only the simple effects run",
+        "Backup renderer: this browser has no WebGL2, so only the lighter effects run",
       ),
     ).toBeInTheDocument();
     expect(container.querySelector("[data-vj-engine-canvas]")).toBeNull();
@@ -669,7 +669,7 @@ describe("VjScreenPage renderer", () => {
     const { container } = renderPage();
     expect(
       await screen.findByText(
-        "Simple renderer: the screen link asks for the simple renderer",
+        "Backup renderer: the screen link asks for the backup renderer",
       ),
     ).toBeInTheDocument();
     expect(container.querySelector("[data-vj-engine-stage]")).toBeNull();

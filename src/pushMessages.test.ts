@@ -200,6 +200,14 @@ describe("formatPushCopy: section 4 keys", () => {
       en: "Bo has offered you ownership of Casa Rosa.",
       pt: "Bo ofereceu-te a propriedade de Casa Rosa.",
     },
+    "push:communityOwnershipOffered.body": {
+      en: "Bo has offered you ownership of Lisbon Runners.",
+      pt: "Bo ofereceu-te a gestão de Lisbon Runners.",
+    },
+    "push:communityOwnershipOfferDeclined.body": {
+      en: "Bo declined your offer of Lisbon Runners.",
+      pt: "Bo recusou a tua oferta de Lisbon Runners.",
+    },
     "push:messages.staffTitle": {
       en: "Bo from Casa Rosa",
       pt: "Bo, de Casa Rosa",
@@ -207,6 +215,7 @@ describe("formatPushCopy: section 4 keys", () => {
   };
   const params = {
     business: "Casa Rosa",
+    communityName: "Lisbon Runners",
     count: "3",
     group: "Terrace crew",
     listingName: "Casa Rosa",

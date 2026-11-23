@@ -64,6 +64,7 @@ export function useRoster(slug: string | undefined): RosterResult {
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
+      isLoading: false,
       isError: false,
       isFetchNextPageError: false,
       refetch: () => {},
@@ -74,6 +75,9 @@ export function useRoster(slug: string | undefined): RosterResult {
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    // The first page is in flight. False while the query is disabled (no
+    // slug yet), so a caller that has not asked reads as settled.
+    isLoading: query.isLoading,
     // A failed roster read used to collapse to `[]`, which the detail page
     // then backfilled with the organiser alone — a community that looks like
     // it has one member (DES-22).
@@ -157,6 +161,8 @@ export function useRosterSearch(
 
   const query = useQuery<RosterMember[]>({
     queryKey: ["rosterSearch", slug, searchTerm, demoMode, language],
+    // The key holds what the member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     enabled: isEnabled,
     queryFn: async ({ signal }) => {
       const page = await fetchRosterSearch(slug!, searchTerm, signal);

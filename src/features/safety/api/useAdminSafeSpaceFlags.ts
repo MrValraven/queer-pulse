@@ -39,6 +39,8 @@ export function useAdminSafeSpaceFlags(query: AdminFlagsQueryInput) {
   const { demoMode } = useDemoMode();
   const result = useQuery<{ items: AdminSafeSpaceFlagDTO[]; total: number }>({
     queryKey: [ADMIN_SAFE_SPACE_FLAGS_KEY, query, demoMode],
+    // The key holds what the staff member typed: a failure reports "[private]".
+    meta: { isPrivateQueryKey: true },
     queryFn: async () => {
       if (demoMode) {
         const items = filterDemoFlags(query);
