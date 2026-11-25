@@ -1,4 +1,5 @@
 import { apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import type { QuizBadgeDetailsDTO } from "../../../shared/contracts/quizWinBadges";
 
 /** Current level + progress toward the next one. */
 export interface LevelDTO {
@@ -49,6 +50,8 @@ export interface BadgeDTO {
    *  how other people see them. Another member's read omits the badge itself,
    *  so this field never appears there. */
   hiddenFromProfile?: boolean;
+  /** Present only on an admin quiz badge (C7.1). */
+  quiz?: QuizBadgeDetailsDTO;
 }
 
 /** One dated row in the member's XP history. `[]` until the backend adds

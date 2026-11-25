@@ -88,6 +88,9 @@ function cursorAt(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     roundNumber: 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
     ...overrides,
   };
 }
@@ -274,6 +277,27 @@ describe("stageRoundLineCopy", () => {
       key: "quizshow:stage.roundOf",
       values: { number: 3, total: 6 },
     });
+  });
+
+  it("reads Warm-up on the round line of a warm-up round", () => {
+    expect(
+      stageRoundLineCopy(
+        cursorAt({ roundIndex: 0, roundNumber: 1, roundCount: 4 }),
+        null,
+        [{ kind: "quiz", isWarmUp: true }, { kind: "quiz" }],
+        "en",
+        translate,
+      ),
+    ).toEqual({ key: "quizshow:stage.warmUp", values: {} });
+    expect(
+      stageRoundLineCopy(
+        cursorAt({ roundIndex: 1, roundNumber: 2, roundCount: 4 }),
+        null,
+        [{ kind: "quiz", isWarmUp: true }, { kind: "quiz" }],
+        "en",
+        translate,
+      ).key,
+    ).toBe("quizshow:stage.roundOf");
   });
 
   it("reads the category pill for a pick-a-question wheel question", () => {

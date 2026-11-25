@@ -1659,6 +1659,10 @@
   background: var(--paper);
   margin-top: 16px;
 }
+/* A quiz badge's section opens on the strip, with no checklist above it. */
+.drStrip:first-child {
+  margin-top: 0;
+}
 .drStrip > div {
   padding: 14px 12px;
   text-align: center;

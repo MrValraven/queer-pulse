@@ -10,6 +10,23 @@ describe("useQuizshowFramelessPage", () => {
     document.documentElement.removeAttribute(QUIZSHOW_FRAMELESS_ATTRIBUTE);
   });
 
+  it("paints html and body with the stage base only on request, and restores them", () => {
+    const root = document.documentElement;
+    root.style.background = "rgb(1, 2, 3)";
+    const plainPage = renderHook(() => useQuizshowFramelessPage());
+    expect(root.style.background).toBe("rgb(1, 2, 3)");
+    plainPage.unmount();
+
+    const darkPage = renderHook(() =>
+      useQuizshowFramelessPage({ shouldPaintStageBase: true }),
+    );
+    expect(root.style.background).not.toBe("rgb(1, 2, 3)");
+    darkPage.unmount();
+    expect(root.style.background).toBe("rgb(1, 2, 3)");
+    expect(document.body.style.background).toBe("");
+    root.style.background = "";
+  });
+
   it("the frameless page attribute is set and removed", () => {
     const root = document.documentElement;
     expect(root.hasAttribute(QUIZSHOW_FRAMELESS_ATTRIBUTE)).toBe(false);

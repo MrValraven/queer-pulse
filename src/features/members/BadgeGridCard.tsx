@@ -1,11 +1,11 @@
 import { FiEyeOff } from "react-icons/fi";
 import type { Badge } from "./badges.data";
 import { progressPercent, RARITY_LABEL_KEY } from "./badgeSelectors";
-import {
-  badgeCategoryLabelKeyFor,
-  badgeDisplayMetaFor,
-} from "./badgeCatalog.data";
+import { badgeCategoryLabelKeyFor } from "./badgeCatalog.data";
+import { badgeCriteriaFor, badgeNameFor } from "./badgeDisplayText";
 import { BadgeMedallion } from "./BadgeMedallion";
+import { QuizBadgeCount } from "./QuizBadgeCount";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./BadgesPage.module.css";
 
@@ -26,14 +26,21 @@ export function BadgeGridCard({
   hero = false,
   onOpen,
 }: BadgeGridCardProps) {
-  const { t } = useTranslation();
-  // The catalogue ships a stable id beside its English display words, so the
-  // words resolve here rather than off the wire (see `badgeCatalog.data.ts`).
-  // An id or category this build has no entry for falls back to the server's
-  // own English, which is readable rather than a machine id.
-  const displayMeta = badgeDisplayMetaFor(badge.key);
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
+  // The name and "what it takes" line resolve in `badgeDisplayText.ts`: a quiz
+  // badge reads its own text, a catalogue badge its translated words by stable
+  // id, and an id this build has no entry for the server's own English.
   const categoryLabelKey = badgeCategoryLabelKeyFor(badge.category);
   const percent = progressPercent(badge);
+  // A quiz badge's `when` is its English description, so its earned line names
+  // the latest win the way a code badge names its moment: event, then day.
+  const latestQuizWin = badge.quiz?.wins[0];
+  const earnedLine = badge.quiz
+    ? latestQuizWin
+      ? `${latestQuizWin.eventName ?? t("members:badges.quiz.maskedEvent")} · ${fmt.date(new Date(latestQuizWin.wonAt))}`
+      : ""
+    : badge.when;
   const cardClass = [
     styles.bcard,
     earned ? styles.bcardEarned : styles.bcardLocked,
@@ -54,17 +61,16 @@ export function BadgeGridCard({
         <span className={styles.bcCat}>
           {categoryLabelKey ? t(categoryLabelKey) : badge.category}
         </span>
-        <h4>{displayMeta ? t(displayMeta.nameKey) : badge.name}</h4>
+        <h4>{badgeNameFor(badge, t, language)}</h4>
+        {badge.quiz && <QuizBadgeCount winCount={badge.quiz.winCount} />}
         <span className={styles.bcCrit}>
-          {displayMeta
-            ? t(displayMeta.lockedContextKey)
-            : (badge.criteria ?? badge.when)}
+          {badgeCriteriaFor(badge, t, language)}
         </span>
         {earned && story && <span className={styles.bcStory}>{story}</span>}
         <span className={styles.bcMeta}>
           {earned ? (
             <>
-              <span className={styles.bcDate}>{badge.when}</span>
+              <span className={styles.bcDate}>{earnedLine}</span>
               <span
                 className={`${styles.bcRare} ${badge.rarity === "legendary" ? styles.bcRareHot : ""}`}
               >

@@ -40,12 +40,21 @@ export type QuizshowStudioMenuEntry =
       to?: string;
       /** A toggle (`checkbox`) or one of a set (`radio`), with its state. */
       check?: { role: "checkbox" | "radio"; isChecked: boolean };
+      /** The item opens a submenu (`aria-haspopup="menu"`), such as "Move to round". */
+      hasPopup?: boolean;
     }
-  | { key: string; kind: "separator" };
+  | { key: string; kind: "separator" }
+  /**
+   * Additive. A quiet title over the entries below it, such as "Move to
+   * round" at the top of that submenu. Not an item: arrows and Home or End
+   * skip it, and the menu's own label already names it for screen readers.
+   */
+  | { key: string; kind: "heading"; label: string };
 
-type QuizshowStudioMenuAction = Exclude<
+/** Additive export. An entry someone can choose: neither a separator nor a heading. */
+export type QuizshowStudioMenuAction = Exclude<
   QuizshowStudioMenuEntry,
-  { kind: "separator" }
+  { kind: "separator" } | { kind: "heading" }
 >;
 
 const ENTRANCE_EASE = [0.16, 1, 0.3, 1] as const;
@@ -85,7 +94,9 @@ function QuizshowStudioMenuItem({
     "aria-checked": entry.check ? entry.check.isChecked : undefined,
     "aria-disabled": entry.isDisabled || undefined,
     "aria-describedby": note ? noteId : undefined,
+    "aria-haspopup": entry.hasPopup ? "menu" : undefined,
     "data-destructive": entry.isDestructive || undefined,
+    "data-menu-key": entry.key,
   } as const;
   const content = (
     <>
@@ -135,7 +146,23 @@ interface PanelProps {
   entries: readonly QuizshowStudioMenuEntry[];
   anchor: QuizshowStudioMenuAnchor;
   placement: QuizshowStudioMenuPlacement;
+  initialFocusKey: string | null;
   onClose: (shouldReturnFocus: boolean) => void;
+}
+
+/** The item to focus once the menu is placed: the one `initialFocusKey` names, else the first. */
+function initialItemOf(
+  panel: HTMLElement | null,
+  initialFocusKey: string | null,
+): HTMLElement | null {
+  const items = Array.from(
+    panel?.querySelectorAll<HTMLElement>('[role^="menuitem"]') ?? [],
+  );
+  const named =
+    initialFocusKey === null
+      ? undefined
+      : items.find((item) => item.dataset.menuKey === initialFocusKey);
+  return named ?? items[0] ?? null;
 }
 
 function QuizshowStudioMenuPanel({
@@ -143,6 +170,7 @@ function QuizshowStudioMenuPanel({
   entries,
   anchor,
   placement,
+  initialFocusKey,
   onClose,
 }: PanelProps) {
   const { reducedMotion } = useMotionPrefs();
@@ -157,10 +185,10 @@ function QuizshowStudioMenuPanel({
   const isPlaced = position !== null;
   useEffect(() => {
     if (!isPlaced) return;
-    panelRef.current
-      ?.querySelector<HTMLElement>('[role^="menuitem"]')
-      ?.focus({ preventScroll: true });
-  }, [isPlaced]);
+    initialItemOf(panelRef.current, initialFocusKey)?.focus({
+      preventScroll: true,
+    });
+  }, [isPlaced, initialFocusKey]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape") {
@@ -208,6 +236,15 @@ function QuizshowStudioMenuPanel({
       {entries.map((entry) =>
         entry.kind === "separator" ? (
           <div key={entry.key} role="separator" className={styles.separator} />
+        ) : entry.kind === "heading" ? (
+          <div
+            key={entry.key}
+            role="presentation"
+            aria-hidden="true"
+            className={styles.heading}
+          >
+            {entry.label}
+          </div>
         ) : (
           <QuizshowStudioMenuItem
             key={entry.key}
@@ -236,6 +273,7 @@ export function QuizshowStudioMenu({
   anchor,
   onClose,
   placement = "bottom-end",
+  initialFocusKey = null,
 }: {
   label: string;
   entries: readonly QuizshowStudioMenuEntry[];
@@ -243,6 +281,8 @@ export function QuizshowStudioMenu({
   anchor: QuizshowStudioMenuAnchor | null;
   onClose: (shouldReturnFocus: boolean) => void;
   placement?: QuizshowStudioMenuPlacement;
+  /** Additive. The key of the entry focused on open (Back lands on "Move to round"); the first entry when left out. */
+  initialFocusKey?: string | null;
 }) {
   const target = useQuizshowStudioPortal();
   if (target === null) return null;
@@ -255,6 +295,7 @@ export function QuizshowStudioMenu({
           entries={entries}
           anchor={anchor}
           placement={placement}
+          initialFocusKey={initialFocusKey}
           onClose={onClose}
         />
       )}

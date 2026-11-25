@@ -88,6 +88,7 @@ function gameWithoutLobby(): QuizshowGameResponse {
     isAdultsOnly: false,
     liveSession: null,
     hasResults: false,
+    lastOpenSettings: null,
   };
 }
 

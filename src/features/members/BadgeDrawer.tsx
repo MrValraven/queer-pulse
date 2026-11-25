@@ -3,12 +3,13 @@ import { FiCheck, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Button, SideSheet } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { Language, TFunction } from "../../shared/i18n/types";
 import type { Badge, BadgeDrawerEntry, BadgeVerification } from "./badges.data";
 import { progressPercent, RARITY_LABEL_KEY } from "./badgeSelectors";
-import {
-  badgeCategoryLabelKeyFor,
-  badgeDisplayMetaFor,
-} from "./badgeCatalog.data";
+import { badgeCategoryLabelKeyFor } from "./badgeCatalog.data";
+import { badgeCriteriaFor, badgeNameFor } from "./badgeDisplayText";
+import { BadgeDrawerQuizDetails } from "./BadgeDrawerQuizDetails";
+import { hasAdultsOnlyWin, isQuizBadge } from "./quizBadges";
 import { BadgeMedallion } from "./BadgeMedallion";
 import { useBadgeStoryNotes } from "./useBadgePreferences";
 import { useSetBadgeVisibility } from "./api/useRecognitionMutations";
@@ -55,19 +56,17 @@ interface BadgeDrawerProps {
  * The backend catalogue ships stable ids alongside English display words, so
  * the words are resolved here rather than rendered off the wire (see
  * `badgeCatalog.data.ts`). An id this build has no entry for falls back to the
- * server's own English, which is at least readable.
+ * server's own English, which is at least readable. A quiz badge reads its own
+ * name and description in the viewer's language.
  */
-function badgeDisplayText(badge: Badge, t: (key: string) => string) {
-  const displayMeta = badgeDisplayMetaFor(badge.key);
+function badgeDisplayText(badge: Badge, t: TFunction, language: Language) {
   const categoryLabelKey = badgeCategoryLabelKeyFor(badge.category);
   return {
-    badgeName: displayMeta ? t(displayMeta.nameKey) : badge.name,
+    badgeName: badgeNameFor(badge, t, language),
     categoryLabel: categoryLabelKey ? t(categoryLabelKey) : badge.category,
     // "What it takes" is the requirement, so it reads from the locked wording
     // whether or not the badge is already earned.
-    criteriaText: displayMeta
-      ? t(displayMeta.lockedContextKey)
-      : (badge.criteria ?? badge.when),
+    criteriaText: badgeCriteriaFor(badge, t, language),
   };
 }
 
@@ -107,7 +106,8 @@ function BadgeDrawerHero({
       <h3>{badgeName}</h3>
       <p className={styles.drStatus}>
         {earned
-          ? badge.when || t("members:badges.drawer.earnedThisWeek")
+          ? (isQuizBadge(badge) ? criteriaText : badge.when) ||
+            t("members:badges.drawer.earnedThisWeek")
           : badge.progress
             ? t("members:badges.drawer.progressCount", {
                 units: badge.progress.units,
@@ -128,7 +128,7 @@ export function BadgeDrawer({
   onNavigate,
   onClose,
 }: BadgeDrawerProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { showToast } = useToast();
   const { getStoryNote, setStoryNote } = useBadgeStoryNotes();
   const setVisibility = useSetBadgeVisibility();
@@ -143,7 +143,11 @@ export function BadgeDrawer({
   if (!current) return null;
   const { badge, earned } = current;
   const percent = progressPercent(badge);
-  const { badgeName, categoryLabel, criteriaText } = badgeDisplayText(badge, t);
+  const { badgeName, categoryLabel, criteriaText } = badgeDisplayText(
+    badge,
+    t,
+    language,
+  );
   const isHiddenFromProfile =
     pendingHiddenByKey[badge.key] ?? badge.hiddenFromProfile === true;
   const isVisibleOnProfile = !isHiddenFromProfile;
@@ -212,15 +216,21 @@ export function BadgeDrawer({
         />
 
         <div className={styles.drSec}>
-          <h5>{t("members:badges.drawer.whatItTakes")}</h5>
-          <div
-            className={`${styles.critRow} ${earned ? styles.critRowOn : ""}`}
-          >
-            <span className={styles.critIcon}>
-              {earned && <FiCheck aria-hidden />}
-            </span>
-            <span>{criteriaText}</span>
-          </div>
+          {/* A quiz badge says what it takes in the hero line and in "How it's
+              checked", so its section keeps the rarity strip only. */}
+          {!isQuizBadge(badge) && (
+            <>
+              <h5>{t("members:badges.drawer.whatItTakes")}</h5>
+              <div
+                className={`${styles.critRow} ${earned ? styles.critRowOn : ""}`}
+              >
+                <span className={styles.critIcon}>
+                  {earned && <FiCheck aria-hidden />}
+                </span>
+                <span>{criteriaText}</span>
+              </div>
+            </>
+          )}
           <div className={styles.drStrip}>
             <div>
               <div className={styles.drStripKey}>
@@ -263,6 +273,8 @@ export function BadgeDrawer({
           </div>
         )}
 
+        {isQuizBadge(badge) && <BadgeDrawerQuizDetails quiz={badge.quiz} />}
+
         {earned && (
           <div className={styles.drSec}>
             <h5>{t("members:badges.drawer.noteHeading")}</h5>
@@ -288,6 +300,11 @@ export function BadgeDrawer({
                 <span className={styles.drPrivNote}>
                   {t("members:badges.drawer.visibilityNote")}
                 </span>
+                {isQuizBadge(badge) && hasAdultsOnlyWin(badge.quiz) && (
+                  <span className={styles.drPrivNote}>
+                    {t("members:badges.quiz.adultsDefaultHidden")}
+                  </span>
+                )}
               </span>
               <button
                 type="button"

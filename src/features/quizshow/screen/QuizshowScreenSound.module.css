@@ -1,0 +1,69 @@
+/* The TV's sound pieces: the level button inside the toolbar pill and the
+   "Turn on sound" chip, bottom left, until the audio context runs (item 39). */
+
+/* "Sound: Normal": an icon button grown to hold its words, as tall as its
+   44px neighbours (the stage's --screen-toolbar-clearance counts on it). The
+   width holds still as the level changes. `button.` outranks the shared
+   icon button's square width. */
+button.levelButton {
+  width: auto;
+  min-inline-size: 8rem;
+  padding: 0 var(--gap-sm);
+  font-size: var(--text-13);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* A narrow window leaves the level out, so the toolbar fits beside the
+   sound chip; the level stays as set. */
+@media (max-width: 48rem) {
+  button.levelButton {
+    display: none;
+  }
+}
+
+.chipDock {
+  position: fixed;
+  bottom: max(var(--gap-sm), env(safe-area-inset-bottom));
+  inset-inline-start: max(var(--gap-sm), env(safe-area-inset-left));
+  z-index: var(--z-sticky);
+}
+
+/* A phone-width window has no space for the chip beside the toolbar: the
+   chip stands above the toolbar's row (its 44px buttons, the pill's padding
+   and border, and a gap). */
+@media (max-width: 30.5rem) {
+  .chipDock {
+    bottom: calc(
+      max(var(--gap-sm), env(safe-area-inset-bottom)) + 44px + 2px +
+        var(--gap-xs) * 3
+    );
+  }
+
+  /* The stacked lobby fills a phone-width window from the top, where the
+     chip above the toolbar would cover the join code or the heading: there
+     the chip docks at the top, over the room the lobby leaves for it
+     (QuizshowScreen.module.css). */
+  :global(html:has([data-view="lobby"])) .chipDock {
+    top: max(var(--gap-sm), env(safe-area-inset-top));
+    bottom: auto;
+  }
+
+  /* A practice lobby keeps its badge at the top: the chip docks under it. */
+  :global(html:has([data-view="lobby"][data-practice="true"])) .chipDock {
+    top: calc(
+      max(var(--gap-sm), env(safe-area-inset-top)) + 44px + var(--gap-xs)
+    );
+  }
+}
+
+.chipIcon {
+  display: inline-flex;
+  margin-inline-end: var(--gap-xs);
+}
+
+/* The pointer hides over the chip too once it is still (item 40). */
+:global(html[data-quizshow-pointer-still="true"]) .chipDock,
+:global(html[data-quizshow-pointer-still="true"]) .chipDock * {
+  cursor: none;
+}

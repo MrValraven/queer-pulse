@@ -1,6 +1,7 @@
 import {
   QUIZSHOW_LIMITS,
   QUIZSHOW_PARTY_ROUND_KINDS,
+  type QuizshowClosestTolerance,
   type QuizshowLanguage,
   type QuizshowLanguageMode,
   type QuizshowOption,
@@ -11,10 +12,12 @@ import {
   type QuizshowRoundKind,
 } from "../../../shared/contracts/quizshow";
 import {
+  isInWheelRange,
   isWheelRoundKind,
   playableRoundCount,
   wheelSliceRoundIndexes,
 } from "../quizshowWheel";
+import { draftToInput, type QuizshowDraft } from "./quizshowDraft";
 
 export type QuizshowLocalProblemCode =
   QuizshowQuizProblemCode | "adults_round_needs_adults_event";
@@ -37,6 +40,11 @@ const STRUCTURAL_CODES: readonly QuizshowLocalProblemCode[] = [
   "answer_out_of_range",
   "order_answer_not_permutation",
   "answer_not_allowed",
+  "too_many_correct_options",
+  "tolerance_out_of_range",
+  "poll_in_party_round",
+  "slow_reveal_needs_picture",
+  "warm_up_not_first",
   "adults_round_needs_adults_event",
 ];
 
@@ -73,7 +81,8 @@ function isBlank(text: string | null | undefined): boolean {
 
 function isOptionCountValid(question: QuizshowQuestionInput): boolean {
   const optionCount = question.options.length;
-  if (question.type === "multiple_choice") {
+  // A poll takes the multiple choice option rules (contract 6.22).
+  if (question.type === "multiple_choice" || question.type === "poll") {
     return (
       optionCount >= QUIZSHOW_LIMITS.multipleChoiceOptionsMin &&
       optionCount <= QUIZSHOW_LIMITS.multipleChoiceOptionsMax
@@ -94,6 +103,7 @@ function hasUniqueWellFormedOptionIds(
   const seenIds = new Set<string>();
   for (const option of options) {
     if (
+      typeof option.id !== "string" ||
       !QUIZSHOW_LIMITS.optionIdPattern.test(option.id) ||
       seenIds.has(option.id)
     ) {
@@ -106,11 +116,20 @@ function hasUniqueWellFormedOptionIds(
 
 function isAnswerInRange(question: QuizshowQuestionInput): boolean {
   if (question.type === "multiple_choice" && question.answer !== null) {
-    const { correctIndex } = question.answer;
+    // An index outside the options or a repeated one has no code of its own,
+    // so it stays this answer problem (as on the server).
+    const { correctIndexes } = question.answer;
+    if (!Array.isArray(correctIndexes)) {
+      return false;
+    }
     return (
-      Number.isInteger(correctIndex) &&
-      correctIndex >= 0 &&
-      correctIndex < question.options.length
+      new Set(correctIndexes).size === correctIndexes.length &&
+      correctIndexes.every(
+        (optionIndex) =>
+          Number.isInteger(optionIndex) &&
+          optionIndex >= 0 &&
+          optionIndex < question.options.length,
+      )
     );
   }
   if (question.type === "closest_number" && question.answer !== null) {
@@ -120,6 +139,56 @@ function isAnswerInRange(question: QuizshowQuestionInput): boolean {
     );
   }
   return true;
+}
+
+/** At least one option stays wrong, or the question gives every answer away. */
+function hasTooManyCorrectOptions(question: QuizshowQuestionInput): boolean {
+  if (question.type !== "multiple_choice" || question.answer === null) {
+    return false;
+  }
+  const { correctIndexes } = question.answer;
+  // An empty list is the completeness problem `correct_option_missing`.
+  return (
+    Array.isArray(correctIndexes) &&
+    correctIndexes.length > 0 &&
+    correctIndexes.length >= question.options.length
+  );
+}
+
+/** Contract 6.1: the amount each tolerance mode allows. */
+function isToleranceInRange(question: QuizshowQuestionInput): boolean {
+  if (question.type !== "closest_number" || question.answer === null) {
+    return true;
+  }
+  const tolerance = question.answer.tolerance as
+    QuizshowClosestTolerance | null | undefined;
+  if (tolerance === null || typeof tolerance !== "object") {
+    return false;
+  }
+  const { mode, amount } = tolerance;
+  switch (mode) {
+    case "exact":
+      return amount === 0;
+    case "absolute":
+      return (
+        Number.isFinite(amount) &&
+        amount > 0 &&
+        amount <= QUIZSHOW_LIMITS.numberAbsMax
+      );
+    case "percent":
+      return (
+        Number.isInteger(amount) &&
+        amount >= QUIZSHOW_LIMITS.closestPercentMin &&
+        amount <= QUIZSHOW_LIMITS.closestPercentMax
+      );
+    default:
+      return false;
+  }
+}
+
+/** Contract 6.23: a slow reveal blurs a picture in, so it needs one. */
+function isSlowRevealMissingPicture(question: QuizshowQuestionInput): boolean {
+  return question.mediaReveal === "slow" && question.mediaRef === null;
 }
 
 function isOrderAnswerPermutation(question: QuizshowQuestionInput): boolean {
@@ -147,6 +216,10 @@ function isAnswerAllowed(
       return false;
     }
   }
+  // A poll has no right answer to store (contract 2.4).
+  if (question.type === "poll" && question.answer !== null) {
+    return false;
+  }
   return (
     question.type === "type_answer" || question.acceptedAnswers.length === 0
   );
@@ -161,14 +234,24 @@ function questionStructuralProblems(
   const isPartyRound = (
     QUIZSHOW_PARTY_ROUND_KINDS as readonly string[]
   ).includes(roundKind);
+  // A poll in a party round names its own problem, so the studio can say why.
+  const isPollInPartyRound = isPartyRound && question.type === "poll";
   const isTypeAllowed = isPartyRound
     ? question.type === "prompt"
     : question.type !== "prompt";
   const checks: Array<[QuizshowLocalProblemCode, boolean]> = [
-    ["question_type_not_allowed", !isTypeAllowed],
+    ["poll_in_party_round", isPollInPartyRound],
+    ["question_type_not_allowed", !isPollInPartyRound && !isTypeAllowed],
     ["option_count", !isOptionCountValid(question)],
     ["option_ids_not_unique", !hasUniqueWellFormedOptionIds(question.options)],
     ["answer_out_of_range", !isAnswerInRange(question)],
+    ["too_many_correct_options", hasTooManyCorrectOptions(question)],
+    ["tolerance_out_of_range", !isToleranceInRange(question)],
+    // Save stores 'instant' on party rows, so only a quiz round can hold 'slow'.
+    [
+      "slow_reveal_needs_picture",
+      !isPartyRound && isSlowRevealMissingPicture(question),
+    ],
     ["order_answer_not_permutation", !isOrderAnswerPermutation(question)],
     ["answer_not_allowed", !isAnswerAllowed(question, roundKind)],
   ];
@@ -195,9 +278,21 @@ function structuralProblems(input: ProblemInput): QuizshowLocalProblem[] {
   if (totalQuestions > QUIZSHOW_LIMITS.questionsPerQuizMax) {
     problems.push(problem("too_many_questions", null, null));
   }
+  const firstPlayableRoundIndex = input.rounds.findIndex(
+    (round) => !isWheelRoundKind(round.kind),
+  );
   input.rounds.forEach((round, roundIndex) => {
     if (round.questions.length > QUIZSHOW_LIMITS.questionsPerRoundMax) {
       problems.push(problem("too_many_questions_in_round", roundIndex, null));
+    }
+    // Contract 6.19: the warm-up opens the night (decision A29). A wheel slice
+    // plays only when the wheel draws it, so a warm-up on one never opens the night.
+    if (
+      round.settings.isWarmUp === true &&
+      (roundIndex !== firstPlayableRoundIndex ||
+        isInWheelRange(input.rounds, roundIndex))
+    ) {
+      problems.push(problem("warm_up_not_first", roundIndex, null));
     }
     round.questions.forEach((question, questionIndex) => {
       if (isWheelRoundKind(round.kind)) {
@@ -237,8 +332,21 @@ function answerProblems(
         problem("answer_missing", roundIndex, questionIndex, language),
       );
   }
-  if (question.type !== "prompt" && question.answer === null) {
+  // A prompt and a poll have no right answer to miss.
+  if (
+    question.type !== "prompt" &&
+    question.type !== "poll" &&
+    question.answer === null
+  ) {
     return [problem("answer_missing", roundIndex, questionIndex)];
+  }
+  if (
+    question.type === "multiple_choice" &&
+    question.answer !== null &&
+    Array.isArray(question.answer.correctIndexes) &&
+    question.answer.correctIndexes.length === 0
+  ) {
+    return [problem("correct_option_missing", roundIndex, questionIndex)];
   }
   return [];
 }
@@ -341,4 +449,19 @@ export function quizshowProblemsFor(
     ...adultsProblems,
     ...completenessProblems(input),
   ];
+}
+
+/**
+ * The problems of one row of the draft, checked against the whole quiz (a
+ * warm-up or a wheel's slices depend on the rows around it). The 18+ rule is
+ * left out unless `options` says the event is not 18+.
+ */
+export function problemsOfRound(
+  draft: QuizshowDraft,
+  roundIndex: number,
+  options: { isAdultsEvent: boolean } = { isAdultsEvent: true },
+): QuizshowLocalProblem[] {
+  return quizshowProblemsFor(draftToInput(draft, null), options).filter(
+    (found) => found.roundIndex === roundIndex,
+  );
 }

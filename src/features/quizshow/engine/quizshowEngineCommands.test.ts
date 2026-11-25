@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  QUIZSHOW_CLOSEST_TOLERANCE_DEFAULT,
   QUIZSHOW_LIMITS,
   QUIZSHOW_TEAM_COLOR_KEYS,
   type QuizshowAnswerPayload,
@@ -44,9 +45,13 @@ function bilingual(english: string): QuizshowText {
 const QUESTION_SHARED = {
   mediaRef: null,
   mediaUrl: null,
+  mediaAlt: bilingual(""),
+  mediaReveal: "instant",
+  revealNote: bilingual(""),
+  numberUnit: bilingual(""),
   timeLimitSeconds: null,
   points: 1000,
-};
+} as const;
 
 const CHOICE_QUESTION: QuizshowQuestion = {
   ...QUESTION_SHARED,
@@ -59,7 +64,7 @@ const CHOICE_QUESTION: QuizshowQuestion = {
     { id: "c", text: bilingual("Third") },
     { id: "d", text: bilingual("Fourth") },
   ],
-  answer: { correctIndex: 1 },
+  answer: { correctIndexes: [1] },
   acceptedAnswers: [],
 };
 
@@ -69,7 +74,7 @@ const NUMBER_QUESTION: QuizshowQuestion = {
   type: "closest_number",
   prompt: bilingual("How many glitter cannons fired?"),
   options: [],
-  answer: { value: 100 },
+  answer: { value: 100, tolerance: { ...QUIZSHOW_CLOSEST_TOLERANCE_DEFAULT } },
   acceptedAnswers: [],
 };
 
@@ -104,6 +109,7 @@ function quizOf(rounds: QuizshowRound[]): QuizshowQuiz {
     languages: "both",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt: "2026-10-19T00:00:00.000Z",
     rounds,
   };
@@ -218,7 +224,7 @@ function skipStep(state: QuizshowEngineState, now: number): QuizshowEngineStep {
   return hostStep(state, "host:skip", { phaseId: state.cursor.phaseId }, now);
 }
 
-/** Started at 0, then the first question's `read` (phase id 2, deadline 4000). */
+/** Started at 0, then the first question's `read` (phase id 2; the scaled read ends by 4000). */
 function toRead(state: QuizshowEngineState): QuizshowEngineState {
   const started = hostStep(state, "host:start", { phaseId: "0" }, 0).state;
   return nextStep(started, 0).state;
@@ -292,6 +298,10 @@ function voteStep(
 
 function screenFrames(result: QuizshowEngineStep): QuizshowServerFrame[] {
   return framesForViewer(result.frames, { role: "screen", playerId: null });
+}
+
+function hostFrames(result: QuizshowEngineStep): QuizshowServerFrame[] {
+  return framesForViewer(result.frames, { role: "host", playerId: null });
 }
 
 type QuizshowServerFrameName = QuizshowServerFrame["event"];
@@ -596,7 +606,7 @@ describe("demo engine submissions", () => {
     expect(second.state.cursor.deadline).toBe(39_000);
   });
 
-  it("refuses added time that is not a whole number from 5 to 60 seconds", () => {
+  it("ignores added time that is not a whole number from 5 to 60 seconds", () => {
     const opened = toOpen(joinedEngine());
     for (const seconds of [4, 61, 7.5, Number.NaN, undefined]) {
       const result = hostStep(
@@ -605,11 +615,7 @@ describe("demo engine submissions", () => {
         { phaseId: opened.cursor.phaseId, seconds, expectedDeadline: 24_000 },
         5_000,
       );
-      expect(result.ack).toMatchObject({
-        ok: false,
-        code: "quizshow_command_not_allowed",
-        cursor: { deadline: 24_000 },
-      });
+      expect(result.ack).toEqual({ ok: true, isNoop: true });
       expect(result.state.cursor.deadline).toBe(24_000);
     }
   });
@@ -854,8 +860,9 @@ describe("demo engine hides while scores are on show", () => {
     expect(podiumState.scoresAtLastFrame[podiumRitaId]).toBe(500);
     const hiddenOnPodium = hideRita(podiumState);
     expect(hiddenOnPodium.state.scoresAtLastFrame[podiumRitaId]).toBe(0);
+    // The podium opens with every place hidden, so only the hosts' scores still list Rita (contract 6.7).
     const podiumScores = at(
-      payloadsOf(screenFrames(hiddenOnPodium), "scores"),
+      payloadsOf(hostFrames(hiddenOnPodium), "scores"),
       0,
     );
     expect(podiumScores.scope).toBe("final");
@@ -1024,7 +1031,7 @@ describe("demo engine hiding and removal", () => {
       ).ack,
     ).toMatchObject({
       ok: false,
-      code: "quizshow_command_not_allowed",
+      code: "quizshow_unhide_review_only",
       cursor: { phase: "vote" },
     });
   });
@@ -1178,6 +1185,39 @@ describe("demo engine double taps", () => {
         100,
       ).ack,
     ).toMatchObject({ ok: false, code: "quizshow_team_name_taken" });
+  });
+});
+
+describe("demo engine host:renameTeam names (contract 6.13)", () => {
+  it("refuses a name another team holds by the fold key: accents, case and repeated spaces", () => {
+    let state = engineWith({ playMode: "teams" });
+    state = joinTeamed(state, RITA, "Rita", {
+      newTeam: { name: "Quizzly Bears", colorKey: "circle" },
+    }).state;
+    state = joinTeamed(state, NUNO, "Nuno", {
+      newTeam: { name: "Spill the Tea", colorKey: "triangle" },
+    }).state;
+    const teaId = at(state.teams, 1).teamId;
+    expect(
+      hostStep(
+        state,
+        "host:renameTeam",
+        { teamId: teaId, name: "Quízzly   BEARS" },
+        100,
+      ).ack,
+    ).toMatchObject({ ok: false, code: "quizshow_team_name_taken" });
+    expect(
+      hostStep(state, "host:renameTeam", { teamId: teaId, name: "   " }, 100)
+        .ack,
+    ).toMatchObject({ ok: false, code: "quizshow_text_blank" });
+    const renamed = hostStep(
+      state,
+      "host:renameTeam",
+      { teamId: teaId, name: "Tea Time" },
+      100,
+    );
+    expect(renamed.ack).toMatchObject({ ok: true, isNoop: false });
+    expect(at(renamed.state.teams, 1).name).toBe("Tea Time");
   });
 });
 
@@ -1985,7 +2025,7 @@ describe("wheel host commands", () => {
     ]) {
       expect(refused.ack).toMatchObject({
         ok: false,
-        code: "quizshow_command_not_allowed",
+        code: "quizshow_session_paused",
         cursor: { phase: "wheel", status: "paused" },
       });
     }
@@ -2009,7 +2049,7 @@ describe("wheel host commands", () => {
     const result = skipStep(toWheelPhase(PICK_ROUND_NIGHT), WHEEL_SPIN_START);
     expect(result.ack).toMatchObject({
       ok: false,
-      code: "quizshow_command_not_allowed",
+      code: "quizshow_nothing_to_skip",
       cursor: { phase: "wheel" },
     });
   });
@@ -2099,7 +2139,7 @@ describe("wheel host commands for the next round and for finishing", () => {
     );
     expect(result.ack).toMatchObject({
       ok: false,
-      code: "quizshow_command_not_allowed",
+      code: "quizshow_no_wheel_open",
       cursor: { phase: "leaderboard" },
     });
   });
@@ -2174,6 +2214,757 @@ describe("wheel joker rule", () => {
     expect(jokerAck(spunWheel(PICK_ROUND_NIGHT), 3)).toMatchObject({
       ok: false,
       code: "quizshow_joker_not_allowed",
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Pulse Live v2: refusal causes, names, leave and rejoin, podium steps,
+// warm-up and poll flow, pause shifts and auto-advance (contract 3.2, 6.3,
+// 6.7, 6.13 to 6.16, 6.19, 6.20, 6.22)
+// ---------------------------------------------------------------------------
+
+function expectRefused(
+  result: QuizshowEngineStep,
+  code: string,
+  phase: string,
+): void {
+  expect(result.ack).toMatchObject({ ok: false, code, cursor: { phase } });
+}
+
+/** The first question's `reveal` at 6500: Rita right at 5000, Nuno right at 6000, Bea wrong at 6500. */
+function toRevealOfFirst(state: QuizshowEngineState): QuizshowEngineState {
+  let walked = toOpen(state);
+  walked = answerStep(
+    walked,
+    RITA,
+    { type: "multiple_choice", optionIndex: 1 },
+    5_000,
+  ).state;
+  walked = answerStep(
+    walked,
+    NUNO,
+    { type: "multiple_choice", optionIndex: 1 },
+    6_000,
+  ).state;
+  walked = answerStep(
+    walked,
+    BEA,
+    { type: "multiple_choice", optionIndex: 0 },
+    6_500,
+  ).state;
+  expect(walked.cursor.phase).toBe("reveal");
+  return walked;
+}
+
+function endStep(state: QuizshowEngineState, now: number): QuizshowEngineStep {
+  return hostStep(state, "host:end", { phaseId: state.cursor.phaseId }, now);
+}
+
+/** A night that scored a question, ended from the podium: status `finished`. */
+function toFinished(): QuizshowEngineState {
+  const podium = endStep(toRevealOfFirst(joinedEngine()), 7_000).state;
+  const finished = endStep(podium, 7_100).state;
+  expect(finished.cursor.status).toBe("finished");
+  return finished;
+}
+
+function leaveStep(
+  state: QuizshowEngineState,
+  memberKey: string,
+  now: number,
+): QuizshowEngineStep {
+  return playerStep(state, memberKey, "lobby:leave", {}, now);
+}
+
+function playerOf(state: QuizshowEngineState, memberKey: string) {
+  const player = state.players.find(
+    (candidate) => candidate.memberKey === memberKey,
+  );
+  if (player === undefined) throw new Error(`${memberKey} has no row.`);
+  return player;
+}
+
+const FIRST_COLOR = at(QUIZSHOW_TEAM_COLOR_KEYS, 0);
+const SECOND_COLOR = at(QUIZSHOW_TEAM_COLOR_KEYS, 1);
+
+/** Teams play: Rita founds Glitter, Nuno joins it, Bea founds Sequins. */
+function teamsLobby(
+  overrides: Partial<QuizshowEngineOptions> = {},
+): QuizshowEngineState {
+  let state = engineWith({ playMode: "teams", ...overrides });
+  state = joinTeamed(state, RITA, "Rita", {
+    newTeam: { name: "Glitter", colorKey: FIRST_COLOR },
+  }).state;
+  const glitterId = at(state.teams, 0).teamId;
+  state = joinTeamed(state, NUNO, "Nuno", { teamId: glitterId }).state;
+  return joinTeamed(state, BEA, "Bea", {
+    newTeam: { name: "Sequins", colorKey: SECOND_COLOR },
+  }).state;
+}
+
+const POLL_QUESTION: QuizshowQuestion = {
+  ...QUESTION_SHARED,
+  id: "question-poll",
+  type: "poll",
+  prompt: bilingual("Which snack wins the night?"),
+  options: [
+    { id: "a", text: bilingual("Chips") },
+    { id: "b", text: bilingual("Olives") },
+    { id: "c", text: bilingual("Cake") },
+  ],
+  answer: null,
+  acceptedAnswers: [],
+};
+
+describe("demo engine refusal causes (contract 3.2)", () => {
+  it("names the status behind a refused host:start, host:next, host:pause and host:resume", () => {
+    const lobby = joinedEngine();
+    const read = toRead(lobby);
+    expectRefused(
+      hostStep(read, "host:start", { phaseId: read.cursor.phaseId }, 0),
+      "quizshow_already_started",
+      "read",
+    );
+    expectRefused(nextStep(lobby, 0), "quizshow_session_not_started", "lobby");
+    expectRefused(
+      hostStep(lobby, "host:pause", { phaseId: lobby.cursor.phaseId }, 0),
+      "quizshow_session_not_started",
+      "lobby",
+    );
+    expectRefused(
+      hostStep(lobby, "host:resume", { phaseId: lobby.cursor.phaseId }, 0),
+      "quizshow_session_not_started",
+      "lobby",
+    );
+    const paused = hostStep(
+      read,
+      "host:pause",
+      { phaseId: read.cursor.phaseId },
+      1_000,
+    ).state;
+    expectRefused(nextStep(paused, 1_100), "quizshow_session_paused", "read");
+    const pausedPhaseId = paused.cursor.phaseId;
+    const pausedAttempts: Array<[QuizshowHostFrameName, unknown]> = [
+      [
+        "host:addTime",
+        { phaseId: pausedPhaseId, seconds: 10, expectedDeadline: 0 },
+      ],
+      ["host:reveal", { phaseId: pausedPhaseId }],
+      ["host:skip", { phaseId: pausedPhaseId }],
+      ["host:showAnswers", { phaseId: pausedPhaseId }],
+      ["host:spin", { phaseId: pausedPhaseId }],
+      ["host:finishWheel", { phaseId: pausedPhaseId }],
+      [
+        "host:pickFavourite",
+        {
+          phaseId: pausedPhaseId,
+          questionId: currentQuestionId(paused),
+          optionId: "a",
+        },
+      ],
+    ];
+    for (const [name, attemptPayload] of pausedAttempts) {
+      expectRefused(
+        hostStep(paused, name, attemptPayload, 1_200),
+        "quizshow_session_paused",
+        "read",
+      );
+    }
+    expect(
+      hostStep(read, "host:resume", { phaseId: read.cursor.phaseId }, 1_000)
+        .ack,
+    ).toEqual({ ok: true, isNoop: true });
+  });
+
+  it("names the phase behind a refused host:addTime, host:reveal, host:skip, host:showAnswers and host:spin", () => {
+    const read = toRead(joinedEngine());
+    expectRefused(
+      hostStep(read, "host:reveal", { phaseId: read.cursor.phaseId }, 1_000),
+      "quizshow_nothing_to_reveal",
+      "read",
+    );
+    expectRefused(
+      hostStep(
+        read,
+        "host:showAnswers",
+        { phaseId: read.cursor.phaseId },
+        1_000,
+      ),
+      "quizshow_review_not_open",
+      "read",
+    );
+    expectRefused(
+      hostStep(read, "host:spin", { phaseId: read.cursor.phaseId }, 1_000),
+      "quizshow_spin_not_available",
+      "read",
+    );
+    const reveal = toRevealOfFirst(joinedEngine());
+    expectRefused(
+      hostStep(
+        reveal,
+        "host:reveal",
+        { phaseId: reveal.cursor.phaseId },
+        7_000,
+      ),
+      "quizshow_already_revealed",
+      "reveal",
+    );
+    expectRefused(
+      hostStep(
+        reveal,
+        "host:addTime",
+        {
+          phaseId: reveal.cursor.phaseId,
+          seconds: 10,
+          expectedDeadline: 0,
+        },
+        7_000,
+      ),
+      "quizshow_no_timer_running",
+      "reveal",
+    );
+    expectRefused(
+      hostStep(
+        reveal,
+        "host:pickFavourite",
+        {
+          phaseId: reveal.cursor.phaseId,
+          questionId: currentQuestionId(reveal),
+          optionId: "a",
+        },
+        7_000,
+      ),
+      "quizshow_favourite_not_available",
+      "reveal",
+    );
+    const leaderboard = toFirstLeaderboard(PICK_ROUND_NIGHT);
+    expectRefused(
+      skipStep(leaderboard, WHEEL_SPIN_START),
+      "quizshow_nothing_to_skip",
+      "leaderboard",
+    );
+  });
+});
+
+describe("demo engine refusal causes after the end and in solo play (contract 3.2)", () => {
+  it("refuses every host command after the end as quizshow_session_ended", () => {
+    const finished = toFinished();
+    const team = { teamId: "team-none", name: "Glitter" };
+    const attempts: Array<[QuizshowHostFrameName, unknown]> = [
+      ["host:next", { phaseId: finished.cursor.phaseId }],
+      ["host:hideAnswer", { answerId: "answer-none", isHidden: true }],
+      ["host:removePlayer", { playerId: playerIdFor(finished, RITA) }],
+      ["host:end", { phaseId: finished.cursor.phaseId }],
+      ["host:setScreenMuted", { isMuted: true }],
+    ];
+    for (const [name, payload] of attempts) {
+      expectRefused(
+        hostStep(finished, name, payload, 8_000),
+        "quizshow_session_ended",
+        "ended",
+      );
+    }
+    // A missing team is named before the status, as on the server.
+    expect(
+      hostStep(finished, "host:renameTeam", team, 8_000).ack,
+    ).toMatchObject({ ok: false, code: "quizshow_team_not_found" });
+  });
+
+  it("refuses team choices in solo play as quizshow_teams_off", () => {
+    const lobby = joinedEngine();
+    expectRefused(
+      playerStep(
+        lobby,
+        KIKO,
+        "lobby:join",
+        joinPayload("Kiko", {
+          team: { newTeam: { name: "Glitter", colorKey: FIRST_COLOR } },
+        }),
+        0,
+      ),
+      "quizshow_teams_off",
+      "lobby",
+    );
+    expectRefused(
+      playerStep(lobby, RITA, "lobby:pickTeam", { teamId: "team-none" }, 0),
+      "quizshow_teams_off",
+      "lobby",
+    );
+    expectRefused(
+      playerStep(
+        lobby,
+        RITA,
+        "lobby:createTeam",
+        { name: "Glitter", colorKey: FIRST_COLOR },
+        0,
+      ),
+      "quizshow_teams_off",
+      "lobby",
+    );
+  });
+
+  it("refuses un-hiding an answer whose author left as quizshow_author_removed", () => {
+    let state = toLieWrite(joinedEngine());
+    for (const { memberKey, text } of LIE_TEXTS) {
+      state = answerStep(
+        state,
+        memberKey,
+        { type: "prompt", text },
+        1_000,
+      ).state;
+    }
+    expect(state.cursor.phase).toBe("review");
+    const ritaAnswerId = answerIdOf(state, RITA);
+    state = hostStep(
+      state,
+      "host:hideAnswer",
+      { answerId: ritaAnswerId, isHidden: true },
+      2_000,
+    ).state;
+    state = hostStep(
+      state,
+      "host:removePlayer",
+      { playerId: playerIdFor(state, RITA), canRejoin: true },
+      2_100,
+    ).state;
+    expectRefused(
+      hostStep(
+        state,
+        "host:hideAnswer",
+        { answerId: ritaAnswerId, isHidden: false },
+        2_200,
+      ),
+      "quizshow_author_removed",
+      "review",
+    );
+  });
+});
+
+describe("demo engine screen names (contract 6.13)", () => {
+  it("refuses a join under a name another player holds and suggests the first free one", () => {
+    const lobby = joinedEngine();
+    const taken = playerStep(
+      lobby,
+      KIKO,
+      "lobby:join",
+      joinPayload("  RÍTA "),
+      0,
+    );
+    expect(taken.ack).toEqual({
+      ok: false,
+      code: "quizshow_screen_name_taken",
+      message: "quizshow_screen_name_taken",
+      suggestedScreenName: "RÍTA 2",
+    });
+    expect(taken.state.players).toHaveLength(3);
+  });
+
+  it("refuses lobby:setName to a taken name, and keeps a player's own name as a no-op", () => {
+    const lobby = joinedEngine();
+    expect(
+      playerStep(lobby, NUNO, "lobby:setName", { screenName: "rita" }, 0).ack,
+    ).toMatchObject({
+      ok: false,
+      code: "quizshow_screen_name_taken",
+      suggestedScreenName: "rita 2",
+    });
+    expect(
+      playerStep(lobby, NUNO, "lobby:setName", { screenName: "Nuno" }, 0).ack,
+    ).toMatchObject({ ok: true });
+  });
+});
+
+describe("demo engine leave, rejoin and the join lock (contract 6.14, 6.15)", () => {
+  it("refuses a new row while joining is closed and lets a player who left come back", () => {
+    let state = engineWith();
+    for (const member of MEMBERS.slice(0, 2)) {
+      state = playerStep(
+        state,
+        member.memberKey,
+        "lobby:join",
+        joinPayload(member.screenName),
+        0,
+      ).state;
+    }
+    state = hostStep(state, "host:setJoinLock", { isLocked: true }, 0).state;
+    expect(
+      playerStep(state, BEA, "lobby:join", joinPayload("Bea"), 100).ack,
+    ).toMatchObject({ ok: false, code: "quizshow_joining_locked" });
+    state = leaveStep(state, RITA, 200).state;
+    expect(playerOf(state, RITA).leftAt).toBe(200);
+    expect(
+      playerStep(state, RITA, "lobby:setName", { screenName: "Rita" }, 250).ack,
+    ).toMatchObject({ ok: false, code: "quizshow_not_joined" });
+    const rejoined = playerStep(
+      state,
+      RITA,
+      "lobby:join",
+      joinPayload("Rita"),
+      300,
+    );
+    expect(rejoined.ack).toMatchObject({ ok: true });
+    expect(playerOf(rejoined.state, RITA).leftAt).toBeNull();
+  });
+
+  it("brings a player back with their score and their team", () => {
+    let state = toRevealOfFirst(teamsLobby());
+    const glitterId = playerOf(state, RITA).teamId;
+    const scoreBefore = playerOf(state, RITA).score;
+    expect(scoreBefore).toBeGreaterThan(0);
+    state = leaveStep(state, RITA, 7_000).state;
+    const rejoined = playerStep(
+      state,
+      RITA,
+      "lobby:join",
+      joinPayload("Rita"),
+      7_500,
+    );
+    expect(rejoined.ack).toMatchObject({
+      ok: true,
+      me: { teamId: glitterId },
+    });
+    expect(playerOf(rejoined.state, RITA)).toMatchObject({
+      leftAt: null,
+      score: scoreBefore,
+      teamId: glitterId,
+    });
+  });
+
+  it("gives a player who left before the question a place in it when they come back during read", () => {
+    let state = leaveStep(joinedEngine(), RITA, 0).state;
+    state = toRead(state);
+    const ritaId = playerIdFor(state, RITA);
+    expect(state.current?.eligiblePlayerIds).not.toContain(ritaId);
+    state = playerStep(
+      state,
+      RITA,
+      "lobby:join",
+      joinPayload("Rita"),
+      1_000,
+    ).state;
+    expect(state.current?.eligiblePlayerIds).toContain(ritaId);
+    state = tickStep(state, 4_000).state;
+    expect(
+      answerStep(
+        state,
+        RITA,
+        { type: "multiple_choice", optionIndex: 1 },
+        5_000,
+      ).ack,
+    ).toMatchObject({ ok: true, isDuplicate: false });
+  });
+
+  it("removes a player with rejoin: their answer stays and they may join again", () => {
+    let state = toLieWrite(joinedEngine());
+    state = answerStep(
+      state,
+      RITA,
+      { type: "prompt", text: "a basement" },
+      1_000,
+    ).state;
+    const removed = hostStep(
+      state,
+      "host:removePlayer",
+      { playerId: playerIdFor(state, RITA), canRejoin: true },
+      1_500,
+    );
+    expect(removed.ack).toEqual({ ok: true, isNoop: false });
+    expect(playerOf(removed.state, RITA)).toMatchObject({
+      isRemoved: false,
+      leftAt: 1_500,
+    });
+    const ritaAnswer = (removed.state.current?.answers ?? []).find(
+      (answer) => answer.playerId === playerIdFor(removed.state, RITA),
+    );
+    expect(ritaAnswer?.isHidden).toBe(false);
+    expect(
+      hostStep(
+        removed.state,
+        "host:removePlayer",
+        { playerId: playerIdFor(removed.state, RITA), canRejoin: true },
+        1_600,
+      ).ack,
+    ).toEqual({ ok: true, isNoop: true });
+    expect(
+      playerStep(removed.state, RITA, "lobby:join", joinPayload("Rita"), 2_000)
+        .ack,
+    ).toMatchObject({ ok: true });
+  });
+});
+
+describe("demo engine removal after a leave and rejoin edges (contract 6.13, 6.14)", () => {
+  it("removes a player who left for good when the host gives no rejoin, and treats a second removal with rejoin as a no-op", () => {
+    const left = leaveStep(joinedEngine(), RITA, 100).state;
+    const ritaId = playerIdFor(left, RITA);
+    const sentOutAgain = hostStep(
+      left,
+      "host:removePlayer",
+      { playerId: ritaId, canRejoin: true },
+      200,
+    );
+    expect(sentOutAgain.ack).toEqual({ ok: true, isNoop: true });
+    const removed = hostStep(
+      left,
+      "host:removePlayer",
+      { playerId: ritaId },
+      300,
+    );
+    expect(removed.ack).toEqual({ ok: true, isNoop: false });
+    expect(playerOf(removed.state, RITA).isRemoved).toBe(true);
+    expect(
+      playerStep(removed.state, RITA, "lobby:join", joinPayload("Rita"), 400)
+        .ack,
+    ).toMatchObject({ ok: false, code: "quizshow_player_removed" });
+  });
+
+  it("asks a player whose old team is gone for a team when they come back", () => {
+    let state = leaveStep(teamsLobby(), BEA, 100).state;
+    expect(state.teams.map((team) => team.name)).toEqual(["Glitter"]);
+    expect(
+      playerStep(state, BEA, "lobby:join", joinPayload("Bea"), 200).ack,
+    ).toMatchObject({ ok: false, code: "quizshow_team_required" });
+    const glitterId = at(state.teams, 0).teamId;
+    const rejoined = joinTeamed(state, BEA, "Bea", { teamId: glitterId }, 300);
+    expect(rejoined.ack).toMatchObject({ ok: true, me: { teamId: glitterId } });
+    state = rejoined.state;
+    expect(playerOf(state, BEA).teamId).toBe(glitterId);
+  });
+
+  it("moves a player whose old team filled up while they were away into the team they ask for", () => {
+    let state = teamsLobby({ maxTeamSize: 2 });
+    const glitterId = playerOf(state, RITA).teamId;
+    const sequinsId = playerOf(state, BEA).teamId;
+    state = leaveStep(state, RITA, 100).state;
+    state = joinTeamed(
+      state,
+      KIKO,
+      "Kiko",
+      { teamId: glitterId ?? "" },
+      200,
+    ).state;
+    expect(
+      playerStep(state, RITA, "lobby:join", joinPayload("Rita"), 300).ack,
+    ).toMatchObject({ ok: false, code: "quizshow_team_required" });
+    const rejoined = joinTeamed(
+      state,
+      RITA,
+      "Rita",
+      { teamId: sequinsId ?? "" },
+      400,
+    );
+    expect(rejoined.ack).toMatchObject({ ok: true, me: { teamId: sequinsId } });
+  });
+
+  it("refuses a rejoin under a name another player holds, with a suggestion", () => {
+    const left = leaveStep(joinedEngine(), RITA, 100).state;
+    expect(
+      playerStep(left, RITA, "lobby:join", joinPayload("nuno"), 200).ack,
+    ).toMatchObject({
+      ok: false,
+      code: "quizshow_screen_name_taken",
+      suggestedScreenName: "nuno 2",
+    });
+  });
+
+  it("leaves the suggestion out when every name from 2 to 99 is taken", () => {
+    let state = engineWith();
+    const takenNames = [
+      "Kiko",
+      ...Array.from({ length: 98 }, (_unused, index) => `Kiko ${index + 2}`),
+    ];
+    for (const [nameIndex, screenName] of takenNames.entries()) {
+      state = playerStep(
+        state,
+        `member-kiko-${nameIndex}`,
+        "lobby:join",
+        joinPayload(screenName),
+        0,
+      ).state;
+    }
+    expect(state.players).toHaveLength(99);
+    expect(
+      playerStep(state, RITA, "lobby:join", joinPayload("kiko"), 0).ack,
+    ).toEqual({
+      ok: false,
+      code: "quizshow_screen_name_taken",
+      message: "quizshow_screen_name_taken",
+    });
+  });
+});
+
+describe("demo engine host-paced podium (contract 6.7)", () => {
+  it("shows the places one host:next at a time, each on a new phase id, then finishes", () => {
+    let state = endStep(toRevealOfFirst(joinedEngine()), 7_000).state;
+    expect(state.cursor).toMatchObject({
+      phase: "podium",
+      podiumRevealedCount: 0,
+    });
+    const phaseIds = new Set([state.cursor.phaseId]);
+    for (const revealedCount of [1, 2, 3]) {
+      const step = nextStep(state, 7_000 + revealedCount * 100);
+      expect(step.ack).toEqual({ ok: true, isNoop: false });
+      state = step.state;
+      expect(state.cursor).toMatchObject({
+        phase: "podium",
+        status: "running",
+        podiumRevealedCount: revealedCount,
+      });
+      phaseIds.add(state.cursor.phaseId);
+    }
+    expect(phaseIds.size).toBe(4);
+    const finished = nextStep(state, 8_000).state;
+    expect(finished.cursor).toMatchObject({
+      phase: "ended",
+      status: "finished",
+    });
+  });
+});
+
+describe("demo engine warm-up and poll flow (contract 6.19, 6.22)", () => {
+  it("skips the scores after a warm-up question and the leaderboard after the warm-up round", () => {
+    const warmUpRound: QuizshowRound = {
+      ...roundOf("warm", "quiz", [CHOICE_QUESTION]),
+      settings: {
+        ...WHEEL_TEST_SETTINGS,
+        isWarmUp: true,
+        isJokerAllowed: false,
+      },
+    };
+    const quiz = quizOf([
+      warmUpRound,
+      roundOf("main", "quiz", [{ ...CHOICE_QUESTION, id: "question-main" }]),
+    ]);
+    const reveal = toRevealOfFirst(joinedEngine({ quiz }));
+    expect(scoreOf(reveal, RITA)).toBe(0);
+    const next = nextStep(reveal, 7_000);
+    expect(next.state.cursor).toMatchObject({
+      phase: "round_intro",
+      roundIndex: 1,
+    });
+  });
+
+  it("takes a poll answer by shown index, skips the scores after its reveal and refuses an index outside the options", () => {
+    const quiz = quizOf([
+      roundOf("quiz", "quiz", [POLL_QUESTION, CHOICE_QUESTION]),
+    ]);
+    const opened = toOpen(joinedEngine({ quiz }));
+    expect(
+      answerStep(opened, RITA, { type: "poll", optionIndex: 3 }, 5_000).ack,
+    ).toMatchObject({ ok: false, code: "quizshow_invalid_answer" });
+    let state = answerStep(
+      opened,
+      RITA,
+      { type: "poll", optionIndex: 2 },
+      5_000,
+    ).state;
+    const ritaAnswer = at(state.current?.answers ?? [], 0);
+    expect(ritaAnswer.payload).toEqual({ type: "poll", optionIndex: 2 });
+    expect(ritaAnswer.elapsedMs).toBe(1_000);
+    state = answerStep(
+      state,
+      NUNO,
+      { type: "poll", optionIndex: 0 },
+      5_100,
+    ).state;
+    state = answerStep(
+      state,
+      BEA,
+      { type: "poll", optionIndex: 1 },
+      5_200,
+    ).state;
+    expect(state.cursor.phase).toBe("reveal");
+    const next = nextStep(state, 6_000);
+    expect(next.state.cursor).toMatchObject({
+      phase: "read",
+      roundIndex: 0,
+      questionIndex: 1,
+    });
+  });
+});
+
+describe("demo engine pause, talk beat and auto-advance (contract 6.16, 6.20)", () => {
+  it("moves the talk beat with a pause in read", () => {
+    const talkRound: QuizshowRound = {
+      ...roundOf("talk", "quiz", [CHOICE_QUESTION]),
+      settings: { ...WHEEL_TEST_SETTINGS, talkSeconds: 20 },
+    };
+    const lobby = teamsLobby({ quiz: quizOf([talkRound]) });
+    const read = toRead(lobby);
+    const talkStartsAt = read.cursor.talkStartsAt;
+    if (talkStartsAt === null) throw new Error("No talk beat in read.");
+    const paused = hostStep(
+      read,
+      "host:pause",
+      { phaseId: read.cursor.phaseId },
+      1_000,
+    ).state;
+    const resumed = hostStep(
+      paused,
+      "host:resume",
+      { phaseId: paused.cursor.phaseId },
+      4_000,
+    ).state;
+    expect(resumed.cursor.talkStartsAt).toBe(talkStartsAt + 3_000);
+    expect(resumed.cursor.phaseStartedAt).toBe(3_000);
+  });
+
+  it("clears auto-advance on pause and re-arms the full wait from the resume", () => {
+    const lobby = hostStep(
+      joinedEngine(),
+      "host:setAutoAdvance",
+      { isOn: true },
+      0,
+    ).state;
+    const intro = hostStep(lobby, "host:start", { phaseId: "0" }, 0).state;
+    expect(intro.cursor).toMatchObject({
+      phase: "round_intro",
+      autoAdvanceAt: QUIZSHOW_LIMITS.autoAdvanceRoundIntroMs,
+    });
+    const paused = hostStep(
+      intro,
+      "host:pause",
+      { phaseId: intro.cursor.phaseId },
+      1_000,
+    ).state;
+    expect(paused.cursor.autoAdvanceAt).toBeNull();
+    expect(tickStep(paused, 60_000).state.cursor.phase).toBe("round_intro");
+    const resumed = hostStep(
+      paused,
+      "host:resume",
+      { phaseId: paused.cursor.phaseId },
+      2_000,
+    ).state;
+    const rearmedAt = 2_000 + QUIZSHOW_LIMITS.autoAdvanceRoundIntroMs;
+    expect(resumed.cursor.autoAdvanceAt).toBe(rearmedAt);
+    expect(tickStep(resumed, rearmedAt - 1).state.cursor.phase).toBe(
+      "round_intro",
+    );
+    expect(tickStep(resumed, rearmedAt).state.cursor.phase).toBe("read");
+  });
+
+  it("moves on by itself from a quiz reveal and from the scores once their time passes", () => {
+    const lobby = hostStep(
+      joinedEngine(),
+      "host:setAutoAdvance",
+      { isOn: true },
+      0,
+    ).state;
+    const reveal = toRevealOfFirst(lobby);
+    const revealAdvanceAt = 6_500 + QUIZSHOW_LIMITS.autoAdvanceRevealMs;
+    expect(reveal.cursor.autoAdvanceAt).toBe(revealAdvanceAt);
+    expect(tickStep(reveal, revealAdvanceAt - 1).state.cursor.phase).toBe(
+      "reveal",
+    );
+    const scores = tickStep(reveal, revealAdvanceAt);
+    expect(scores.ack).toBeNull();
+    expect(scores.state.cursor.phase).toBe("scores");
+    const scoresAdvanceAt =
+      revealAdvanceAt + QUIZSHOW_LIMITS.autoAdvanceScoresMs;
+    expect(scores.state.cursor.autoAdvanceAt).toBe(scoresAdvanceAt);
+    expect(tickStep(scores.state, scoresAdvanceAt).state.cursor).toMatchObject({
+      phase: "read",
+      questionIndex: 1,
     });
   });
 });

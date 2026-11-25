@@ -99,6 +99,12 @@ function questionPlay(
     pointsByPlayer,
     teamPoints,
     myReveals: {},
+    awayPlayerIds: [],
+    readMs: 4_000,
+    streakBeforeByPlayer: {},
+    keyOverride: null,
+    acceptedTexts: [],
+    wasCorrected: false,
   };
 }
 

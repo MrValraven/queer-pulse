@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type {
   QuizshowPhase,
+  QuizshowPodiumEntry,
   QuizshowWheelSpin,
 } from "../../../shared/contracts/quizshow";
 import { createWheelState, emptyWheelProgress } from "../quizshowWheel";
@@ -18,6 +19,7 @@ const baseEngine = createQuizshowEngine({
     languages: "en",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt: "2026-10-19T00:00:00.000Z",
     rounds: [],
   },
@@ -59,6 +61,8 @@ function withPlayers(
       jokerRoundIndex: null,
       joinedAt,
       isRemoved: false,
+      leftAt: null,
+      disconnectedAt: null,
     })),
   };
 }
@@ -149,6 +153,62 @@ describe("auto host", () => {
   });
 });
 
+const PODIUM_ENTRIES: QuizshowPodiumEntry[] = ([1, 2, 3] as const).map(
+  (place): QuizshowPodiumEntry => ({
+    place,
+    kind: "player",
+    entrantId: `player-${place}`,
+    name: `Player ${place}`,
+    colorKey: null,
+    score: 1_000 - place * 100,
+  }),
+);
+
+function podiumEngine(
+  phaseStartedAt: number,
+  podiumRevealedCount: number,
+): QuizshowEngineState {
+  const engine = engineIn("podium", phaseStartedAt);
+  return {
+    ...engine,
+    podium: PODIUM_ENTRIES,
+    cursor: { ...engine.cursor, podiumRevealedCount },
+  };
+}
+
+describe("auto host on the podium", () => {
+  it("reveals each hidden place 2.5 seconds after the last one", () => {
+    for (const revealedCount of [0, 1, 2]) {
+      const engine = podiumEngine(1_000, revealedCount);
+      expect(planAutoHostAction(engine, 3_499, expected)).toBeNull();
+      expect(planAutoHostAction(engine, 3_500, expected)).toMatchObject({
+        type: "host",
+        name: "host:next",
+        payload: { phaseId: "42" },
+      });
+    }
+  });
+
+  it("finishes after the podium delay once every place is shown", () => {
+    const engine = podiumEngine(1_000, 3);
+    const delay = QUIZSHOW_AUTO_HOST_DELAYS_MS.podium;
+    expect(planAutoHostAction(engine, 3_500, expected)).toBeNull();
+    expect(planAutoHostAction(engine, 1_000 + delay - 1, expected)).toBeNull();
+    expect(planAutoHostAction(engine, 1_000 + delay, expected)).toMatchObject({
+      type: "host",
+      name: "host:next",
+    });
+  });
+
+  it("counts steps only for the places the podium holds", () => {
+    const tiedForFirst = {
+      ...podiumEngine(1_000, 1),
+      podium: PODIUM_ENTRIES.map((entry) => ({ ...entry, place: 1 as const })),
+    };
+    expect(planAutoHostAction(tiedForFirst, 3_500, expected)).toBeNull();
+  });
+});
+
 describe("auto host on the wheel", () => {
   it("spins 2.5 seconds after the wheel opens", () => {
     const engine = wheelEngine(0, null);
@@ -175,7 +235,7 @@ describe("auto host on the wheel", () => {
     expect(planAutoHostAction(engine, 600_000, expected)).toBeNull();
   });
 
-  it("only ever presses spin and next, never finish the wheel", () => {
+  it("only ever presses spin and next on the wheel", () => {
     const engines = [wheelEngine(0, null), wheelEngine(0, WHEEL_TEST_SPIN)];
     const pressedNames = new Set<string>();
     for (const engine of engines) {

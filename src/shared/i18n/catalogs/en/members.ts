@@ -2201,6 +2201,17 @@ export const members: Catalog = {
   "badges.category.hosting": "Hosting",
   "badges.category.milestones": "Milestones",
   "badges.category.platform": "Platform",
+  "badges.category.quizNights": "Quiz nights",
+  "badges.quiz.count": "×{count}",
+  "badges.quiz.countLabel_one": "Won once",
+  "badges.quiz.countLabel_other": "Won {count} times",
+  "badges.quiz.winsHeading": "Wins",
+  "badges.quiz.maskedEvent": "QueerPulse quiz night",
+  "badges.quiz.winLine": "{event}, game {number}",
+  "badges.quiz.howChecked":
+    "Given to the winner of a game at an official QueerPulse quiz night",
+  "badges.quiz.adultsDefaultHidden":
+    "Wins at 18+ events start hidden from your profile",
   "badges.catalog.localScout.name": "Local Scout",
   "badges.catalog.localScout.locked": "Save 3 places in the Local directory",
   "badges.catalog.localScout.earned": "Saved 3 places in the Local directory",

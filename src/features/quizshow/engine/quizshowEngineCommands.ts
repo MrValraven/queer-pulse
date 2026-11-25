@@ -3,7 +3,10 @@
  * settings, the joker, answers and votes) and every host frame, with the
  * contract's refusals in the backend's order. Ports of the backend's
  * quizshow-engine-players.ts and the host commands of quizshow-engine-phases.ts.
- * The demo leaves out the blocked-term filter, rate limits and avatars.
+ * The demo leaves out the blocked-term filter, rate limits and avatars. The
+ * roster commands (leave, reactions, host roster tools) live in
+ * quizshowEngineRoster.ts and the rescoring tools in
+ * quizshowEngineHostTools.ts; both maps are spread into the handlers here.
  */
 import {
   QUIZSHOW_LIMITS,
@@ -15,6 +18,7 @@ import {
   type QuizshowRound,
   type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
+import { foldNameKey, suggestedScreenNameFor } from "../quizshowNormalise";
 import type { QuizshowClientPayload } from "../realtime/quizshowFrames";
 import { isWheelRoundKind, nextQuizshowStep } from "../quizshowWheel";
 import { isFakeTooClose } from "./quizshowScoring";
@@ -24,6 +28,7 @@ import {
   currentPlayContext,
   findPlayer,
   findTeam,
+  isActivePlayer,
   isEligible,
   isOpenStatus,
   isTimedPhase,
@@ -32,9 +37,15 @@ import {
   roundAt,
   setSessionStatus,
   shownOptionsOf,
+  statusRefusalCode,
   toMe,
   type QuizshowEngineContext,
 } from "./quizshowEngineSetup";
+import { QUIZSHOW_HOST_TOOL_HANDLERS } from "./quizshowEngineHostTools";
+import {
+  QUIZSHOW_ROSTER_HOST_HANDLERS,
+  QUIZSHOW_ROSTER_PLAYER_HANDLERS,
+} from "./quizshowEngineRoster";
 import {
   answerById,
   answerOf,
@@ -45,17 +56,22 @@ import {
 import {
   QUIZSHOW_ENGINE_QUESTION_PHASES,
   abandonSession,
+  armAutoAdvance,
   checkMovingCommand,
   closeIfEveryoneDone,
   closeTimedPhase,
   finishSession,
+  isAutoAdvanceDue,
   isQuizRoundInPlay,
   openAnswers,
   openQuestion,
   refreshPodiumIfShown,
   refreshScoresIfShown,
+  returnAwayPlayer,
+  revealNextPodiumStep,
   showPodium,
   showScores,
+  skipsScoresAfterReveal,
   startVote,
 } from "./quizshowEngineTransitions";
 import {
@@ -76,11 +92,19 @@ import type {
   QuizshowEngineQuestionPlay,
   QuizshowEngineState,
   QuizshowHostFrameName,
+  QuizshowHostHandler,
   QuizshowPlayerFrameName,
+  QuizshowPlayerHandler,
 } from "./quizshowEngineTypes";
+
+/** Contract 6.13 lives in the pure normaliser; re-exported so the backend twin's name and file stay findable. */
+export { foldNameKey };
 
 /** Too-close fakes a player may try per Lie Detector question; after these the question takes no more fakes from them. */
 export const QUIZSHOW_TOO_CLOSE_FAKES_MAX = 3;
+
+/** The browser has no round trip to measure, so speed points count from the phase start (contract 6.3). */
+const QUIZSHOW_ENGINE_LATENCY_ALLOWANCE_MS = 0;
 
 function succeed(
   success: object,
@@ -89,11 +113,27 @@ function succeed(
   return { ack: { ok: true, ...success }, effects };
 }
 
+/**
+ * A refusal; `isWithCursor` adds the current cursor, as every phase or status
+ * refusal of contract 3.2 does (Setup's code list adds it for those anyway).
+ */
 function refuse(
   code: QuizshowErrorCode,
   state: QuizshowEngineState,
+  isWithCursor = false,
 ): QuizshowCommandResult {
-  return { ack: ackFailure(code, state), effects: [] };
+  return {
+    ack: ackFailure(code, state, isWithCursor ? { withCursor: true } : {}),
+    effects: [],
+  };
+}
+
+/** The status refusal of a command that needs `required` (contract 3.1), with the cursor. */
+function refuseForStatus(
+  state: QuizshowEngineState,
+  required: "lobby" | "running" | "open",
+): QuizshowCommandResult {
+  return refuse(statusRefusalCode(state.cursor.status, required), state, true);
 }
 
 function payloadAs<
@@ -106,8 +146,39 @@ function textOf(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
-function teamNameKey(name: string): string {
-  return name.trim().toLowerCase();
+/**
+ * The backend's `textRefusal` twin: a blank text is refused. The demo leaves
+ * out the blocked-term filter, so blank is the only refusal here.
+ */
+function textRefusal(trimmedText: string): QuizshowErrorCode | null {
+  return trimmedText === "" ? "quizshow_text_blank" : null;
+}
+
+/**
+ * `quizshow_screen_name_taken` when another player not removed by a host
+ * (active or left, since they may come back) holds the name's key, with the
+ * first free "<name> 2".."<name> 99" when one is free (contract 6.13); null
+ * when the name is free.
+ */
+function screenNameTakenRefusal(
+  state: QuizshowEngineState,
+  screenName: string,
+  exceptPlayerId: string | null,
+): QuizshowCommandResult | null {
+  const takenNames = state.players
+    .filter((player) => !player.isRemoved && player.playerId !== exceptPlayerId)
+    .map((player) => player.screenName);
+  const nameKey = foldNameKey(screenName);
+  const isTaken = takenNames.some(
+    (takenName) => foldNameKey(takenName) === nameKey,
+  );
+  if (!isTaken) return null;
+  return {
+    ack: ackFailure("quizshow_screen_name_taken", state, {
+      suggestedScreenName: suggestedScreenNameFor(screenName, takenNames),
+    }),
+    effects: [],
+  };
 }
 
 function isTeamFull(state: QuizshowEngineState, teamId: string): boolean {
@@ -136,8 +207,8 @@ function newTeamRefusal(
   if (countedTeams.length >= QUIZSHOW_LIMITS.teamsPerSessionMax) {
     return "quizshow_team_limit";
   }
-  const nameKey = teamNameKey(trimmedName);
-  if (countedTeams.some((team) => teamNameKey(team.name) === nameKey)) {
+  const nameKey = foldNameKey(trimmedName);
+  if (countedTeams.some((team) => foldNameKey(team.name) === nameKey)) {
     return "quizshow_team_name_taken";
   }
   if (countedTeams.some((team) => team.colorKey === colorKey)) {
@@ -146,12 +217,17 @@ function newTeamRefusal(
   return null;
 }
 
-/** The player's team when they are its only active player in the lobby, so leaving it deletes it; otherwise null. */
+/**
+ * The player's team when they are its only active player in the lobby, so
+ * leaving it deletes it; otherwise null. A host-made team stays when empty
+ * (contract 6.11), so it never counts as free.
+ */
 function teamLeftEmptyBy(
   state: QuizshowEngineState,
   player: QuizshowEnginePlayer,
 ): string | null {
   if (player.teamId === null || state.cursor.status !== "lobby") return null;
+  if (findTeam(state, player.teamId)?.isHostMade === true) return null;
   const hasOtherActiveMember = activePlayers(state).some(
     (otherPlayer) =>
       otherPlayer.playerId !== player.playerId &&
@@ -173,6 +249,7 @@ function addTeam(
     score: 0,
     hasUsedJoker: false,
     jokerRoundIndex: null,
+    isHostMade: false,
   });
   return teamId;
 }
@@ -180,14 +257,16 @@ function addTeam(
 /**
  * In the lobby, deletes a team a player just left once it has no active
  * player, so its name and colour are free again and it stops counting toward
- * the team limit. Once the game runs, teams stay. The caller's result already
- * carries `lobby_changed`.
+ * the team limit. A host-made team waits empty for its table, so it stays.
+ * Once the game runs, teams stay. The caller's result already carries
+ * `lobby_changed`.
  */
 function deleteTeamIfEmptyInLobby(
   state: QuizshowEngineState,
   leftTeamId: string | null,
 ): void {
   if (leftTeamId === null || state.cursor.status !== "lobby") return;
+  if (findTeam(state, leftTeamId)?.isHostMade === true) return;
   const hasActiveMember = activePlayers(state).some(
     (player) => player.teamId === leftTeamId,
   );
@@ -195,16 +274,26 @@ function deleteTeamIfEmptyInLobby(
   state.teams = state.teams.filter((team) => team.teamId !== leftTeamId);
 }
 
-/** The team a joiner lands in, or the refusal; teams play only. */
+type JoinTeamChoice = QuizshowClientPayload<"lobby:join">["team"] | undefined;
+
+/** A team choice in solo play (contract 3.2). */
+function isTeamChoiceInSolo(
+  state: QuizshowEngineState,
+  team: JoinTeamChoice,
+): boolean {
+  return state.playMode === "solo" && team !== null && team !== undefined;
+}
+
+/**
+ * The team a joiner lands in, or the refusal; teams play only (solo joins
+ * have no team). Runs after every other join check, as founding a team
+ * changes the state.
+ */
 function joinTeamOf(
   state: QuizshowEngineState,
-  team: QuizshowClientPayload<"lobby:join">["team"] | undefined,
+  team: JoinTeamChoice,
 ): { teamId: string | null; refusal: QuizshowErrorCode | null } {
-  if (state.playMode === "solo") {
-    return team === null || team === undefined
-      ? { teamId: null, refusal: null }
-      : { teamId: null, refusal: "quizshow_command_not_allowed" };
-  }
+  if (state.playMode === "solo") return { teamId: null, refusal: null };
   if (team === null || team === undefined) {
     return { teamId: null, refusal: "quizshow_team_required" };
   }
@@ -231,11 +320,59 @@ function joinTeamOf(
 }
 
 /**
- * `lobby:join`. A member who already has a row gets its `me` back unchanged;
- * a late joiner enters with `joinedAt = now` and plays from the next question.
- * A first join to an 18+ session needs `hasAcceptedAdultContent: true`; a
- * rejoin skips that check, as on the server.
- * The player's own room then gets a fresh `session:state`.
+ * `lobby:join` from a member whose row says they left (contract 6.14): the
+ * row comes back with its score, streak and joker. The join lock lets them
+ * in; the seat count and the name checks still apply. In teams play they keep
+ * their old team while it exists and has room, else the payload's choice
+ * applies. Their own room then gets a fresh `session:state`.
+ */
+function rejoinLobby(
+  { state }: QuizshowEngineContext,
+  player: QuizshowEnginePlayer,
+  input: Partial<QuizshowClientPayload<"lobby:join">>,
+  now: number,
+): QuizshowCommandResult {
+  if (!isOpenStatus(state.cursor.status)) {
+    return refuse("quizshow_session_finished", state);
+  }
+  if (activePlayers(state).length >= QUIZSHOW_LIMITS.playersPerSessionMax) {
+    return refuse("quizshow_session_full", state);
+  }
+  if (isTeamChoiceInSolo(state, input.team)) {
+    return refuse("quizshow_teams_off", state, true);
+  }
+  const screenName = textOf(input.screenName).trim();
+  if (screenName === "") return refuse("quizshow_text_blank", state);
+  const nameTaken = screenNameTakenRefusal(state, screenName, player.playerId);
+  if (nameTaken !== null) return nameTaken;
+  let teamId = player.teamId;
+  if (state.playMode === "teams") {
+    const heldTeam = teamId === null ? undefined : findTeam(state, teamId);
+    if (heldTeam === undefined || isTeamFull(state, heldTeam.teamId)) {
+      const teamChoice = joinTeamOf(state, input.team);
+      if (teamChoice.refusal !== null) {
+        return refuse(teamChoice.refusal, state);
+      }
+      teamId = teamChoice.teamId;
+    }
+  }
+  player.leftAt = null;
+  player.screenName = screenName;
+  player.teamId = teamId;
+  return succeed({ me: toMe(state, player.playerId) }, [
+    { kind: "lobby_changed" },
+    { kind: "session_state", playerId: player.playerId },
+    // During `read`, `open` or `write` they join the question in play (contract 6.14); else the next one.
+    ...returnAwayPlayer(state, player.playerId, now, true),
+  ]);
+}
+
+/**
+ * `lobby:join`. A member who already has an active row gets its `me` back
+ * unchanged and a member who left joins again; a late joiner enters with
+ * `joinedAt = now` and plays from the next question. A first join to an 18+
+ * session needs `hasAcceptedAdultContent: true`; a rejoin skips that check,
+ * as on the server. The player's own room then gets a fresh `session:state`.
  */
 function joinLobby(
   context: QuizshowEngineContext,
@@ -251,6 +388,9 @@ function joinLobby(
   if (existingPlayer !== undefined) {
     if (existingPlayer.isRemoved)
       return refuse("quizshow_player_removed", state);
+    if (existingPlayer.leftAt !== null) {
+      return rejoinLobby(context, existingPlayer, input, now);
+    }
     return succeed({ me: toMe(state, existingPlayer.playerId) }, [
       { kind: "session_state", playerId: existingPlayer.playerId },
     ]);
@@ -264,8 +404,14 @@ function joinLobby(
   if (activePlayers(state).length >= QUIZSHOW_LIMITS.playersPerSessionMax) {
     return refuse("quizshow_session_full", state);
   }
+  if (state.isJoinLocked) return refuse("quizshow_joining_locked", state);
+  if (isTeamChoiceInSolo(state, input.team)) {
+    return refuse("quizshow_teams_off", state, true);
+  }
   const screenName = textOf(input.screenName).trim();
   if (screenName === "") return refuse("quizshow_text_blank", state);
+  const nameTaken = screenNameTakenRefusal(state, screenName, null);
+  if (nameTaken !== null) return nameTaken;
   const teamChoice = joinTeamOf(state, input.team);
   if (teamChoice.refusal !== null) return refuse(teamChoice.refusal, state);
   const player: QuizshowEnginePlayer = {
@@ -282,6 +428,8 @@ function joinLobby(
     jokerRoundIndex: null,
     joinedAt: now,
     isRemoved: false,
+    leftAt: null,
+    disconnectedAt: null,
   };
   state.players.push(player);
   return succeed({ me: toMe(state, player.playerId) }, [
@@ -320,6 +468,8 @@ function setScreenName(
     payloadAs<"lobby:setName">(payload).screenName,
   ).trim();
   if (screenName === "") return refuse("quizshow_text_blank", state);
+  const nameTaken = screenNameTakenRefusal(state, screenName, player.playerId);
+  if (nameTaken !== null) return nameTaken;
   if (screenName === player.screenName)
     return unchanged(state, player.playerId);
   player.screenName = screenName;
@@ -332,7 +482,7 @@ function pickTeam(
   payload: unknown,
 ): QuizshowCommandResult {
   if (state.playMode === "solo") {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_teams_off", state, true);
   }
   if (state.cursor.status !== "lobby") {
     return refuse("quizshow_team_change_closed", state);
@@ -357,7 +507,7 @@ function createTeam(
   payload: unknown,
 ): QuizshowCommandResult {
   if (state.playMode === "solo") {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_teams_off", state, true);
   }
   if (state.cursor.status !== "lobby") {
     return refuse("quizshow_team_change_closed", state);
@@ -371,7 +521,7 @@ function createTeam(
   if (
     heldTeam !== undefined &&
     heldTeam.colorKey === colorKey &&
-    teamNameKey(heldTeam.name) === teamNameKey(teamName)
+    foldNameKey(heldTeam.name) === foldNameKey(teamName)
   ) {
     return succeed(
       { me: toMe(state, player.playerId), teamId: heldTeam.teamId },
@@ -600,13 +750,15 @@ function checkAnswerPayload(
   if (candidate.type !== question.type) return INVALID_ANSWER;
   const shownOptions = shownOptionsOf(state, question) ?? [];
   switch (question.type) {
-    case "multiple_choice": {
+    case "multiple_choice":
+    case "poll": {
+      // A poll index points into the shown options, which keep the authored order (contract 6.22).
       const optionIndex = candidate.optionIndex;
       return typeof optionIndex === "number" &&
         Number.isInteger(optionIndex) &&
         optionIndex >= 0 &&
         optionIndex < shownOptions.length
-        ? { payload: { type: "multiple_choice", optionIndex }, refusal: null }
+        ? { payload: { type: question.type, optionIndex }, refusal: null }
         : INVALID_ANSWER;
     }
     case "true_false":
@@ -700,7 +852,12 @@ function submitAnswer(
     elapsedMs:
       question.type === "prompt"
         ? null
-        : now - (state.cursor.phaseStartedAt ?? now),
+        : Math.max(
+            0,
+            now -
+              (state.cursor.phaseStartedAt ?? now) -
+              QUIZSHOW_ENGINE_LATENCY_ALLOWANCE_MS,
+          ),
     isHidden: false,
     pointsAwarded: 0,
   };
@@ -776,16 +933,9 @@ function submitVote(
   );
 }
 
-type PlayerHandler = (
-  context: QuizshowEngineContext,
-  player: QuizshowEnginePlayer,
-  payload: unknown,
-  now: number,
-) => QuizshowCommandResult;
-
 const PLAYER_HANDLERS: Record<
   Exclude<QuizshowPlayerFrameName, "lobby:join">,
-  PlayerHandler
+  QuizshowPlayerHandler
 > = {
   "lobby:setName": setScreenName,
   "lobby:pickTeam": pickTeam,
@@ -795,9 +945,14 @@ const PLAYER_HANDLERS: Record<
   "answer:submit": submitAnswer,
   "vote:submit": submitVote,
   "joker:play": playJoker,
+  ...QUIZSHOW_ROSTER_PLAYER_HANDLERS,
 };
 
-/** A player frame from the member behind `memberKey`: unknown members have not joined, removed ones stay out. */
+/**
+ * A player frame from the member behind `memberKey`: unknown members have not
+ * joined, removed ones stay out, and one who left answers as not joined until
+ * they join again (contract 6.14).
+ */
 export function runPlayerCommand(
   context: QuizshowEngineContext,
   memberKey: string,
@@ -812,6 +967,7 @@ export function runPlayerCommand(
   );
   if (player === undefined) return refuse("quizshow_not_joined", state);
   if (player.isRemoved) return refuse("quizshow_player_removed", state);
+  if (!isActivePlayer(player)) return refuse("quizshow_not_joined", state);
   return PLAYER_HANDLERS[name](context, player, payload, now);
 }
 
@@ -836,7 +992,9 @@ function movingRefusal(
     state,
     textOf(payloadAs<"host:next">(payload).phaseId),
   );
-  if (movingCheck === "stale") return refuse("quizshow_stale_phase", state);
+  if (movingCheck === "stale") {
+    return refuse("quizshow_stale_phase", state, true);
+  }
   if (movingCheck === "noop") return hostActed(state, now, [], true);
   return null;
 }
@@ -849,12 +1007,11 @@ function hostStart(
   const { state } = context;
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
-  if (state.cursor.status !== "lobby") {
-    return refuse("quizshow_command_not_allowed", state);
-  }
+  if (state.cursor.status !== "lobby") return refuseForStatus(state, "lobby");
   const players = activePlayers(state);
   if (players.length === 0) return refuse("quizshow_no_players", state);
   const effects: QuizshowEngineEffect[] = [];
+  // Host-made teams wait empty in the lobby, but the game starts with only the teams someone plays in (contract 6.11).
   const keptTeams = state.teams.filter((team) =>
     players.some((player) => player.teamId === team.teamId),
   );
@@ -873,7 +1030,11 @@ function hostStart(
   return hostActed(state, now, effects, false);
 }
 
-/** What `host:next` does in the current phase; null where it is not allowed. */
+/**
+ * What `host:next` does in the current phase; null where it is not allowed.
+ * A warm-up question or a poll scores nobody, so its reveal moves on with no
+ * scores frame (contract 6.19, 6.22).
+ */
 function nextEffects(
   context: QuizshowEngineContext,
   now: number,
@@ -894,7 +1055,7 @@ function nextEffects(
     case "review":
       return startVote(context, now);
     case "reveal":
-      return isQuizRoundInPlay(state)
+      return isQuizRoundInPlay(state) && !skipsScoresAfterReveal(state)
         ? showScores(state, "scores", "question", now)
         : afterQuestion(state, now);
     case "scores":
@@ -908,7 +1069,8 @@ function nextEffects(
     case "wheel":
       return startWheelPick(state, now);
     case "podium":
-      return finishSession(state, now);
+      // The next place while one is still hidden (contract 6.7), then the end of the night.
+      return revealNextPodiumStep(state, now) ?? finishSession(state, now);
     default:
       return null;
   }
@@ -923,15 +1085,34 @@ function hostNext(
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
   if (state.cursor.status !== "running") {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuseForStatus(state, "running");
   }
   if (state.cursor.phase === "wheel") {
     const wheelRefusal = wheelNextRefusal(state, now);
     if (wheelRefusal !== null) return refuse(wheelRefusal, state);
   }
   const effects = nextEffects(context, now);
-  if (effects === null) return refuse("quizshow_command_not_allowed", state);
+  if (effects === null) {
+    const code =
+      state.cursor.phase === "lobby"
+        ? "quizshow_session_not_started"
+        : "quizshow_session_ended";
+    return refuse(code, state, true);
+  }
   return hostActed(state, now, effects, false);
+}
+
+/**
+ * The timer side of auto-advance (contract 6.16): once `autoAdvanceAt` has
+ * passed in a phase that moves on by itself, the same path as `host:next`
+ * runs. The engine's tick calls it after the phase clock.
+ */
+export function autoAdvance(
+  context: QuizshowEngineContext,
+  now: number,
+): QuizshowEngineEffect[] {
+  if (!isAutoAdvanceDue(context.state, now)) return [];
+  return nextEffects(context, now) ?? [];
 }
 
 /** `host:spin`: spins the open wheel, spins again after a landing, or opens and spins an unplanned wheel from an eligible leaderboard. */
@@ -944,10 +1125,16 @@ function hostSpin(
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
   if (state.cursor.status !== "running") {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuseForStatus(state, "running");
   }
   const spinRefusal = wheelSpinRefusal(state, now);
-  if (spinRefusal !== null) return refuse(spinRefusal, state);
+  if (spinRefusal !== null) {
+    return refuse(
+      spinRefusal,
+      state,
+      spinRefusal === "quizshow_spin_not_available",
+    );
+  }
   const effects =
     state.cursor.phase === "wheel"
       ? spinWheel(context, now)
@@ -963,12 +1150,16 @@ function hostFinishWheel(
 ): QuizshowCommandResult {
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
-  if (state.cursor.status !== "running" || state.cursor.phase !== "wheel") {
-    return refuse("quizshow_command_not_allowed", state);
+  if (state.cursor.status !== "running") {
+    return refuseForStatus(state, "running");
+  }
+  if (state.cursor.phase !== "wheel") {
+    return refuse("quizshow_no_wheel_open", state, true);
   }
   return hostActed(state, now, finishWheel(state, now), false);
 }
 
+/** Freezes the phase clock; auto-advance stops with it (contract 6.16). */
 function hostPause(
   { state }: QuizshowEngineContext,
   payload: unknown,
@@ -976,7 +1167,7 @@ function hostPause(
 ): QuizshowCommandResult {
   const { cursor } = state;
   if (payloadAs<"host:pause">(payload).phaseId !== cursor.phaseId) {
-    return refuse("quizshow_stale_phase", state);
+    return refuse("quizshow_stale_phase", state, true);
   }
   if (cursor.status === "paused") return hostActed(state, now, [], true);
   if (
@@ -984,7 +1175,7 @@ function hostPause(
     cursor.phase === "lobby" ||
     cursor.phase === "ended"
   ) {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuseForStatus(state, "running");
   }
   state.pausedAt = now;
   if (isTimedPhase(cursor.phase) && cursor.deadline !== null) {
@@ -995,11 +1186,16 @@ function hostPause(
     cursor.deadline = null;
     cursor.extraTimeDeadline = null;
   }
+  cursor.autoAdvanceAt = null;
   setSessionStatus(state, "paused");
   return hostActed(state, now, [{ kind: "phase_changed" }], false);
 }
 
-/** Restores the frozen time; `phaseStartedAt` moves forward by the paused span so speed points count unpaused time. */
+/**
+ * Restores the frozen time; `phaseStartedAt` and the talk beat move forward by
+ * the paused span so speed points count unpaused time (contract 6.20), and
+ * auto-advance re-arms with its full duration from now (contract 6.16).
+ */
 function hostResume(
   { state }: QuizshowEngineContext,
   payload: unknown,
@@ -1007,14 +1203,13 @@ function hostResume(
 ): QuizshowCommandResult {
   const { cursor } = state;
   if (payloadAs<"host:resume">(payload).phaseId !== cursor.phaseId) {
-    return refuse("quizshow_stale_phase", state);
+    return refuse("quizshow_stale_phase", state, true);
   }
   if (cursor.status === "running") return hostActed(state, now, [], true);
-  if (cursor.status !== "paused") {
-    return refuse("quizshow_command_not_allowed", state);
-  }
-  const pausedAt = state.pausedAt ?? now;
-  if (cursor.phaseStartedAt !== null) cursor.phaseStartedAt += now - pausedAt;
+  if (cursor.status !== "paused") return refuseForStatus(state, "running");
+  const pausedForMs = now - (state.pausedAt ?? now);
+  if (cursor.phaseStartedAt !== null) cursor.phaseStartedAt += pausedForMs;
+  if (cursor.talkStartsAt !== null) cursor.talkStartsAt += pausedForMs;
   if (cursor.pausedRemainingMs !== null) {
     cursor.deadline = now + cursor.pausedRemainingMs;
     cursor.extraTimeDeadline =
@@ -1027,10 +1222,25 @@ function hostResume(
   cursor.isRestartRecovery = false;
   state.pausedAt = null;
   setSessionStatus(state, "running");
+  armAutoAdvance(state, now);
   return hostActed(state, now, [{ kind: "phase_changed" }], false);
 }
 
-/** Adds time once: only a command naming the current deadline acts, so a double tap or a second remote is a no-op. */
+function isAddedSecondsAllowed(seconds: unknown): seconds is number {
+  return (
+    typeof seconds === "number" &&
+    Number.isInteger(seconds) &&
+    seconds >= QUIZSHOW_LIMITS.addTimeSecondsMin &&
+    seconds <= QUIZSHOW_LIMITS.addTimeSecondsMax
+  );
+}
+
+/**
+ * Adds time once: only a command naming the current deadline acts, so a
+ * double tap or a second remote is a no-op. Seconds outside 5 to 60 never
+ * reach the server's engine (its payload check drops the frame), so here
+ * they change nothing either.
+ */
 function hostAddTime(
   { state }: QuizshowEngineContext,
   payload: unknown,
@@ -1039,22 +1249,18 @@ function hostAddTime(
   const { cursor } = state;
   const input = payloadAs<"host:addTime">(payload);
   if (input.phaseId !== cursor.phaseId) {
-    return refuse("quizshow_stale_phase", state);
+    return refuse("quizshow_stale_phase", state, true);
+  }
+  if (cursor.status !== "running") return refuseForStatus(state, "running");
+  if (!isTimedPhase(cursor.phase)) {
+    return refuse("quizshow_no_timer_running", state, true);
   }
   const { seconds } = input;
-  const isSecondsAllowed =
-    typeof seconds === "number" &&
-    Number.isInteger(seconds) &&
-    seconds >= QUIZSHOW_LIMITS.addTimeSecondsMin &&
-    seconds <= QUIZSHOW_LIMITS.addTimeSecondsMax;
   if (
-    cursor.status !== "running" ||
-    !isTimedPhase(cursor.phase) ||
-    !isSecondsAllowed
+    !isAddedSecondsAllowed(seconds) ||
+    cursor.deadline === null ||
+    input.expectedDeadline !== cursor.deadline
   ) {
-    return refuse("quizshow_command_not_allowed", state);
-  }
-  if (cursor.deadline === null || input.expectedDeadline !== cursor.deadline) {
     return hostActed(state, now, [], true);
   }
   const addedMs = seconds * 1000;
@@ -1071,9 +1277,15 @@ function hostReveal(
   const { state } = context;
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
-  const { phase, status } = state.cursor;
-  if (status !== "running" || (phase !== "open" && phase !== "vote")) {
-    return refuse("quizshow_command_not_allowed", state);
+  if (state.cursor.status !== "running") {
+    return refuseForStatus(state, "running");
+  }
+  const { phase } = state.cursor;
+  if (phase === "reveal" || phase === "scores") {
+    return refuse("quizshow_already_revealed", state, true);
+  }
+  if (phase !== "open" && phase !== "vote") {
+    return refuse("quizshow_nothing_to_reveal", state, true);
   }
   return hostActed(state, now, closeTimedPhase(context, now, false), false);
 }
@@ -1088,7 +1300,7 @@ function hostSkip(
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
   if (state.cursor.status !== "running") {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuseForStatus(state, "running");
   }
   const { phase } = state.cursor;
   const play = state.current;
@@ -1099,7 +1311,7 @@ function hostSkip(
   if (phase === "reveal" && isQuizRoundInPlay(state)) {
     return hostActed(state, now, afterQuestion(state, now), false);
   }
-  return refuse("quizshow_command_not_allowed", state);
+  return refuse("quizshow_nothing_to_skip", state, true);
 }
 
 function hostShowAnswers(
@@ -1110,8 +1322,11 @@ function hostShowAnswers(
   const { state } = context;
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
-  if (state.cursor.status !== "running" || state.cursor.phase !== "review") {
-    return refuse("quizshow_command_not_allowed", state);
+  if (state.cursor.status !== "running") {
+    return refuseForStatus(state, "running");
+  }
+  if (state.cursor.phase !== "review") {
+    return refuse("quizshow_review_not_open", state, true);
   }
   return hostActed(state, now, startVote(context, now), false);
 }
@@ -1163,8 +1378,8 @@ function hideAnswerInPlay(
   ];
   if (!play.isScored) return effects;
   withdrawAnswerPoints(state, play, answer);
-  // The backend re-sends only `reveal` after a hide, so no `reveal:mine` goes out.
-  effects.push({ kind: "reveal_updated", playerIds: [] });
+  // The favourite path with no author: the backend re-sends only `reveal` after a hide, so no `reveal:mine` goes out.
+  effects.push({ kind: "reveal_updated", playerIds: [], scope: "favourite" });
   effects.push(...refreshScoresIfShown(state));
   return effects;
 }
@@ -1175,7 +1390,7 @@ function hostHideAnswer(
   now: number,
 ): QuizshowCommandResult {
   if (!isOpenStatus(state.cursor.status)) {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_session_ended", state, true);
   }
   const input = payloadAs<"host:hideAnswer">(payload);
   const play = state.current;
@@ -1189,10 +1404,13 @@ function hostHideAnswer(
     return refuse("quizshow_answer_not_found", state);
   }
   const isHidden = input.isHidden === true;
-  const isAuthorRemoved =
-    findPlayer(state, answer.playerId)?.isRemoved === true;
-  if (!isHidden && (state.cursor.phase !== "review" || isAuthorRemoved)) {
-    return refuse("quizshow_command_not_allowed", state);
+  if (!isHidden && state.cursor.phase !== "review") {
+    return refuse("quizshow_unhide_review_only", state, true);
+  }
+  const author = findPlayer(state, answer.playerId);
+  // A removed or departed author's answers stay hidden: un-hiding would bring back a voice that left.
+  if (!isHidden && author !== undefined && !isActivePlayer(author)) {
+    return refuse("quizshow_author_removed", state, true);
   }
   if (answer.isHidden === isHidden) return hostActed(state, now, [], true);
   if (!isHidden) {
@@ -1215,18 +1433,20 @@ function hostPickFavourite(
 ): QuizshowCommandResult {
   const input = payloadAs<"host:pickFavourite">(payload);
   if (input.phaseId !== state.cursor.phaseId) {
-    return refuse("quizshow_stale_phase", state);
+    return refuse("quizshow_stale_phase", state, true);
+  }
+  if (state.cursor.status !== "running") {
+    return refuseForStatus(state, "running");
   }
   const play = state.current;
   const round = play === null ? null : roundAt(state, play.roundIndex);
   if (
-    state.cursor.status !== "running" ||
     state.cursor.phase !== "reveal" ||
     play === null ||
     round === null ||
     (round.kind !== "caption_this" && round.kind !== "drag_name")
   ) {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_favourite_not_available", state, true);
   }
   if (input.questionId !== play.questionId) {
     return refuse("quizshow_wrong_question", state);
@@ -1252,25 +1472,67 @@ function hostPickFavourite(
   return hostActed(
     state,
     now,
-    [{ kind: "reveal_updated", playerIds: [answer.playerId] }],
+    [
+      {
+        kind: "reveal_updated",
+        playerIds: [answer.playerId],
+        scope: "favourite",
+      },
+    ],
     false,
   );
 }
 
-/** Removes a player for the rest of the session, hides their party answer in play and closes the phase when they were the last to submit. */
+/**
+ * `host:removePlayer` with `canRejoin: true` (contract 6.14): a leave done by
+ * the host. The player's answers stay visible and they may join again. The
+ * caller has already answered a player who left as a no-op.
+ */
+function sendPlayerOut(
+  context: QuizshowEngineContext,
+  player: QuizshowEnginePlayer,
+  now: number,
+): QuizshowCommandResult {
+  const { state } = context;
+  player.leftAt = now;
+  deleteTeamIfEmptyInLobby(state, player.teamId);
+  return hostActed(
+    state,
+    now,
+    [
+      { kind: "lobby_changed" },
+      { kind: "player_removed", playerId: player.playerId, canRejoin: true },
+      ...refreshPodiumIfShown(state),
+      ...closeIfEveryoneDone(context, now),
+    ],
+    false,
+  );
+}
+
+/**
+ * Removes a player for the rest of the session, hides their party answer in
+ * play and closes the phase when they were the last to submit. With
+ * `canRejoin: true` the player goes out the way a leave does instead.
+ */
 function hostRemovePlayer(
   context: QuizshowEngineContext,
   payload: unknown,
   now: number,
 ): QuizshowCommandResult {
   const { state } = context;
-  const playerId = textOf(payloadAs<"host:removePlayer">(payload).playerId);
+  const input = payloadAs<"host:removePlayer">(payload);
+  const playerId = textOf(input.playerId);
   const player = findPlayer(state, playerId);
   if (player === undefined) return refuse("quizshow_player_not_found", state);
   if (!isOpenStatus(state.cursor.status)) {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_session_ended", state, true);
   }
-  if (player.isRemoved) return hostActed(state, now, [], true);
+  // Already removed, or already out with rejoin asked again: nothing more to do. A left row without rejoin is removed for good.
+  const isCanRejoin = input.canRejoin === true;
+  if (player.isRemoved || (isCanRejoin && player.leftAt !== null)) {
+    return hostActed(state, now, [], true);
+  }
+  if (isCanRejoin) return sendPlayerOut(context, player, now);
   player.isRemoved = true;
   deleteTeamIfEmptyInLobby(state, player.teamId);
   const effects: QuizshowEngineEffect[] = [];
@@ -1285,7 +1547,7 @@ function hostRemovePlayer(
     effects.push(...hideAnswerInPlay(state, play, answer));
   }
   effects.push(
-    { kind: "player_removed", playerId },
+    { kind: "player_removed", playerId, canRejoin: false },
     { kind: "lobby_changed" },
     ...refreshPodiumIfShown(state),
     ...closeIfEveryoneDone(context, now),
@@ -1302,14 +1564,17 @@ function hostRenameTeam(
   const team = findTeam(state, textOf(input.teamId));
   if (team === undefined) return refuse("quizshow_team_not_found", state);
   if (!isOpenStatus(state.cursor.status)) {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_session_ended", state, true);
   }
   const name = textOf(input.name).trim();
-  if (name === "") return refuse("quizshow_text_blank", state);
+  const nameRefusal = textRefusal(name);
+  if (nameRefusal !== null) return refuse(nameRefusal, state);
+  // Team names clash by the same fold as host:createTeams (contract 6.13): accents, case and repeated spaces.
+  const nameKey = foldNameKey(name);
   const isNameTaken = state.teams.some(
     (otherTeam) =>
       otherTeam.teamId !== team.teamId &&
-      teamNameKey(otherTeam.name) === teamNameKey(name),
+      foldNameKey(otherTeam.name) === nameKey,
   );
   if (isNameTaken) return refuse("quizshow_team_name_taken", state);
   if (name === team.name) return hostActed(state, now, [], true);
@@ -1325,7 +1590,7 @@ function hostRenameTeam(
   );
 }
 
-/** From the podium the night finishes; with no scored question it is abandoned; otherwise it jumps to the podium. */
+/** From the podium the night finishes; with no scored question it is abandoned; otherwise it jumps to the podium's first step. */
 function hostEnd(
   { state }: QuizshowEngineContext,
   payload: unknown,
@@ -1334,7 +1599,7 @@ function hostEnd(
   const earlyAnswer = movingRefusal(state, payload, now);
   if (earlyAnswer !== null) return earlyAnswer;
   if (!isOpenStatus(state.cursor.status)) {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_session_ended", state, true);
   }
   if (state.cursor.phase === "podium") {
     return hostActed(state, now, finishSession(state, now), false);
@@ -1352,7 +1617,7 @@ function hostSetScreenMuted(
   now: number,
 ): QuizshowCommandResult {
   if (!isOpenStatus(state.cursor.status)) {
-    return refuse("quizshow_command_not_allowed", state);
+    return refuse("quizshow_session_ended", state, true);
   }
   const isMuted = payloadAs<"host:setScreenMuted">(payload).isMuted === true;
   if (state.isScreenMuted === isMuted) return hostActed(state, now, [], true);
@@ -1360,13 +1625,7 @@ function hostSetScreenMuted(
   return hostActed(state, now, [{ kind: "screen_muted" }], false);
 }
 
-type HostHandler = (
-  context: QuizshowEngineContext,
-  payload: unknown,
-  now: number,
-) => QuizshowCommandResult;
-
-const HOST_HANDLERS: Record<QuizshowHostFrameName, HostHandler> = {
+const HOST_HANDLERS: Record<QuizshowHostFrameName, QuizshowHostHandler> = {
   "host:start": hostStart,
   "host:next": hostNext,
   "host:spin": hostSpin,
@@ -1383,6 +1642,8 @@ const HOST_HANDLERS: Record<QuizshowHostFrameName, HostHandler> = {
   "host:renameTeam": hostRenameTeam,
   "host:end": hostEnd,
   "host:setScreenMuted": hostSetScreenMuted,
+  ...QUIZSHOW_ROSTER_HOST_HANDLERS,
+  ...QUIZSHOW_HOST_TOOL_HANDLERS,
 };
 
 export function runHostCommand(

@@ -74,11 +74,11 @@ export function QuizshowTimerRing({
     const secondsLeft = Math.ceil(remainingMs / 1000);
     if (secondsLeft <= SECOND_ANNOUNCEMENT_SECONDS) {
       spokenLine = t("quizshow:stage.secondsLeft", {
-        seconds: SECOND_ANNOUNCEMENT_SECONDS,
+        count: SECOND_ANNOUNCEMENT_SECONDS,
       });
     } else if (secondsLeft <= FIRST_ANNOUNCEMENT_SECONDS) {
       spokenLine = t("quizshow:stage.secondsLeft", {
-        seconds: FIRST_ANNOUNCEMENT_SECONDS,
+        count: FIRST_ANNOUNCEMENT_SECONDS,
       });
     }
   }

@@ -25,7 +25,11 @@ export interface QuizshowCopy {
 export type QuizshowTranslate = TFunction;
 
 /** The round rows a surface knows (`session.rounds`, or the studio's draft rows): only their kinds are read. */
-export type QuizshowRoundKindRows = ReadonlyArray<{ kind: QuizshowRoundKind }>;
+export type QuizshowRoundKindRows = ReadonlyArray<{
+  kind: QuizshowRoundKind;
+  /** Read by the round line only: a warm-up reads by its name. */
+  isWarmUp?: boolean;
+}>;
 
 const PREFIX = "quizshow:";
 /** At or above this many winners the award names a count instead of the names. */
@@ -147,7 +151,11 @@ export function wheelBonusAwardCopy(
   );
 }
 
-/** The stage's round line: the category pill for a pick-a-question wheel question, else "Round N of M". */
+/**
+ * The stage's round line: the category pill for a pick-a-question wheel
+ * question, "Warm-up" for a warm-up round (the server still counts it as
+ * round 1; the stage shows its name), else "Round N of M".
+ */
 export function stageRoundLineCopy(
   cursor: QuizshowCursor,
   wheel: QuizshowWheelView | null,
@@ -170,6 +178,9 @@ export function stageRoundLineCopy(
       });
     }
   }
+  const playingRound =
+    cursor.roundIndex === null ? undefined : rounds[cursor.roundIndex];
+  if (playingRound?.isWarmUp === true) return copyOf("stage.warmUp");
   return copyOf("stage.roundOf", {
     number: cursor.roundNumber,
     total: cursor.roundCount,

@@ -4,6 +4,7 @@ import {
   FiAward,
   FiBarChart2,
   FiBookOpen,
+  FiCalendar,
   FiClock,
   FiCheckSquare,
   FiClipboard,
@@ -567,6 +568,26 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "shared:adminNav.items.quizTemplates",
         to: routes.adminQuizshowTemplates,
         icon: FiLayers,
+        feature: "quizshow",
+      },
+      {
+        // Pulse Live win badges (/admin/quizshow/badges): the badge library.
+        // The badge controller is `@Roles(Moderator, Admin)` plus
+        // `@Feature('quizshow')`, so the item carries no `capabilities` and no
+        // `isAdminOnly`.
+        labelKey: "shared:adminNav.items.quizBadges",
+        to: routes.adminQuizshowBadges,
+        icon: FiAward,
+        feature: "quizshow",
+      },
+      {
+        // Pulse Live events (/admin/quizshow/events): the events that can
+        // carry win badges. Same guard as the badge library,
+        // `@Roles(Moderator, Admin)` plus `@Feature('quizshow')`, with no
+        // `capabilities` and no `isAdminOnly`.
+        labelKey: "shared:adminNav.items.quizEvents",
+        to: routes.adminQuizshowEvents,
+        icon: FiCalendar,
         feature: "quizshow",
       },
     ],

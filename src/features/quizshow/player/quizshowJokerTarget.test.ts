@@ -19,6 +19,8 @@ function roundCard(
     questionCount: 5,
     isJokerAllowed: true,
     isSpeedBonusOn: false,
+    isWarmUp: false,
+    talkSeconds: 0,
     ...overrides,
   };
 }
@@ -43,6 +45,9 @@ function cursorOf(
     roundNumber: 0,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
     ...overrides,
   };
 }

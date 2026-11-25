@@ -1,0 +1,58 @@
+/* The phone's reactions between questions (C6.19): six round stage-ghost
+   buttons in one row at the foot of the stage, in the thumb's reach. The
+   shared Button draws the glass, the focus halo, the press and the dimmed
+   rest after a burst; this module only makes each one a round icon button. */
+.bar {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  /* Six 44px targets and five gaps fit a 288px phone content width. */
+  gap: clamp(4px, 1.5vw, var(--gap-xs));
+  padding-block: var(--gap-xs);
+}
+
+.icon,
+.iconSent {
+  display: inline-flex;
+}
+
+/* The tapped icon pops once (transform only) to show the tap was sent. */
+.iconSent {
+  animation: reaction-sent-pop var(--dur-base) var(--ease);
+}
+
+@keyframes reaction-sent-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* The element in the selector outranks the Button's own padding and size,
+   whatever the module order. */
+button.reaction {
+  box-sizing: border-box;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  padding: 0;
+  font-size: var(--text-20);
+}
+
+/* Reduced motion: the dim swaps at once and a tap does not squeeze. */
+.bar[data-reduced-motion="true"] button.reaction {
+  transition-duration: 0ms;
+}
+
+.bar[data-reduced-motion="true"] .iconSent {
+  animation: none;
+}
+
+.bar[data-reduced-motion="true"] button.reaction:active {
+  transform: none;
+}

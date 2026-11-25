@@ -3,7 +3,11 @@ import {
   isAmbassadorFocusArea,
 } from "../../../shared/ambassadors/ambassadorFocusAreas.data";
 import type { Formatters } from "../../../shared/i18n/format";
-import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
+import type {
+  Language,
+  TFunction,
+  TranslateOptions,
+} from "../../../shared/i18n/types";
 import type { NotifType } from "../notifications.types";
 import { ADMIN_QUEUE_ROUTES } from "./adminQueueRoutes";
 import {
@@ -21,6 +25,7 @@ import { communityBadgeDisplayName } from "../../communities/badges/communityBad
 import { communityGiftNameKey } from "../../communities/badges/communityBadgeCopy.data";
 import { collabResponseKey } from "./communityCollabNotifications";
 import { notificationReasonOf } from "./notificationReason";
+import { quizBadgeEarnedText } from "./quizBadgeNotification";
 import {
   isLegacySafeSpaceOutcome,
   safeSpacePlaceNameToken,
@@ -1955,6 +1960,37 @@ function mirrorPluralCount(
 }
 
 /**
+ * The magazine kinds' defensively resolved tokens. Split out of
+ * `formatNotification` so that function stays inside its line budget.
+ */
+function applyMagazineTokens(
+  type: string,
+  payload: unknown,
+  tokens: TranslateOptions,
+  t: TFunction,
+): void {
+  if (
+    type === "magazine_piece_commissioned" ||
+    type === "magazine_piece_stage_changed" ||
+    type === "magazine_piece_published" ||
+    type === "magazine_pitch_passed"
+  ) {
+    // Overrides the raw `title` `interpolationTokens` already copied through
+    // with the same value, defensively re-resolved so a row missing it still
+    // reads as a whole sentence. `magazine_piece_message` is absent because it
+    // carries no title at all: the backend's payload allowlist has no entry for
+    // it, so its copy names no piece and interpolates nothing.
+    tokens.title = pieceTitleToken(payload, t);
+  }
+  if (type === "magazine_piece_stage_changed") {
+    // Overrides the raw machine value (`sensitivity_read`) that
+    // `interpolationTokens` copied through verbatim with the translated,
+    // writer-facing label the catalog string's `{stage}` expects.
+    tokens.stage = pieceStageToken(payload, t);
+  }
+}
+
+/**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
  * formatting lives on the frontend at all: it keeps the API language-neutral
@@ -1989,6 +2025,8 @@ export function formatNotification(
    * rides the token path instead. Optional, like the two arguments above.
    */
   actorDisplayName?: string,
+  /** The viewer's language; only a `badge_earned` quiz win reads it. */
+  language?: Language,
 ): FormattedNotification {
   const known = isKnownKind(type);
   // TS-04 is the ONE type whose copy lives outside the `notifications:`
@@ -2206,25 +2244,7 @@ export function formatNotification(
     // slot, so a row missing it must still name something readable.
     tokens.subjectLabel = reviewSubjectToken(payload, t);
   }
-  if (
-    type === "magazine_piece_commissioned" ||
-    type === "magazine_piece_stage_changed" ||
-    type === "magazine_piece_published" ||
-    type === "magazine_pitch_passed"
-  ) {
-    // Overrides the raw `title` `interpolationTokens` already copied through
-    // with the same value, defensively re-resolved so a row missing it still
-    // reads as a whole sentence. `magazine_piece_message` is absent because it
-    // carries no title at all: the backend's payload allowlist has no entry for
-    // it, so its copy names no piece and interpolates nothing.
-    tokens.title = pieceTitleToken(payload, t);
-  }
-  if (type === "magazine_piece_stage_changed") {
-    // Overrides the raw machine value (`sensitivity_read`) that
-    // `interpolationTokens` copied through verbatim with the translated,
-    // writer-facing label the catalog string's `{stage}` expects.
-    tokens.stage = pieceStageToken(payload, t);
-  }
+  applyMagazineTokens(type, payload, tokens, t);
   if (type === "barter_proposal_received") {
     // Overrides the raw `listingOffer` `interpolationTokens` already copied
     // through, so a listing that only asks for something reads as a phrase
@@ -2257,7 +2277,12 @@ export function formatNotification(
   }
   applyOwnershipOfferNameToken(type, tokens, t, actorDisplayName);
   return {
-    text: t(`notifications:type.${key}.${textVariantOf(type, tokens)}`, tokens),
+    // A quiz win names the badge and the event; a platform badge keeps its own.
+    text:
+      (type === "badge_earned"
+        ? quizBadgeEarnedText(payload, t, language)
+        : null) ??
+      t(`notifications:type.${key}.${textVariantOf(type, tokens)}`, tokens),
     // `ambassador_granted` is the one kind whose meta line is resolved as a
     // whole string rather than through the shared `key`/`tokens` templating
     // above: see `ambassadorGrantedMeta`. Every other kind keeps the ordinary

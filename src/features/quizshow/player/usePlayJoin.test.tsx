@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { QuizshowJoinResponse } from "../../../shared/contracts/quizshow";
-import { usePlayJoin } from "./usePlayJoin";
+import { sendFailureKeyOf, usePlayJoin } from "./usePlayJoin";
 
 /** The hook's two inputs; the code goes null when the player is back on the code form. */
 interface JoinProps {
@@ -81,5 +81,16 @@ describe("usePlayJoin", () => {
     });
     expect(result.current.join?.sessionId).toBe("session-NEWER2");
     expect(result.current.isPending).toBe(false);
+  });
+});
+
+describe("sendFailureKeyOf", () => {
+  it("names a frame that got no ack, and keeps each code's own line", () => {
+    expect(sendFailureKeyOf("transport_timeout")).toBe(
+      "quizshow:errors.transport_timeout",
+    );
+    expect(sendFailureKeyOf("quizshow_team_full")).toBe(
+      "quizshow:errors.team_full",
+    );
   });
 });

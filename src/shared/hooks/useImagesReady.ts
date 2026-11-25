@@ -2,16 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 
 /**
  * Failsafe. However slow or broken the image host is, the page is revealed once
- * this elapses — a dead CDN degrades to "the photos fill in late", which is the
- * behaviour we had before this hook, rather than trapping the visitor behind an
- * overlay that never lifts.
+ * this elapses. A dead CDN degrades to "the photos fill in late", the behaviour
+ * from before this hook, and the visitor always gets the page.
  */
 const HARD_CAP_MS = 6000;
 
 export interface ImagesReady {
   /** Every image has decoded, failed, or the hard cap fired. */
   isReady: boolean;
-  /** How many have settled so far — for a "3 of 4" style progress line. */
+  /** How many have settled so far, for a "3 of 4" style progress line. */
   loadedCount: number;
   totalCount: number;
 }
@@ -36,7 +35,7 @@ interface Progress {
  * byte-identical to the ones the `<img>` tags fire, the browser serves the real
  * elements from cache the moment they mount.
  *
- * Pass the FINAL resolved `src` strings — the same values the `<img>` will
+ * Pass the FINAL resolved `src` strings: the same values the `<img>` will
  * carry, `resolveAvatarSrc()` sizing included. Warming a differently-sized URL
  * warms a request nothing else makes, and the gate then measures nothing.
  *
@@ -102,8 +101,8 @@ export function useImagesReady(
         // signal minus the guarantee that the bitmap is ready to paint.
         image.onload = settleThisImage;
         image.onerror = settleThisImage;
-        // An image that is already `complete` — a cache hit, or jsdom, which
-        // never fetches — will fire neither event, so nothing would ever settle
+        // An image that is already `complete` (a cache hit, or jsdom, which
+        // never fetches) will fire neither event, so nothing would ever settle
         // it. Deferred by a tick so this stays out of the effect's render pass.
         if (image.complete) window.setTimeout(settleThisImage, 0);
       }
@@ -114,7 +113,7 @@ export function useImagesReady(
       window.clearTimeout(capTimer);
       // Deliberately no abort. These requests are already in flight and land in
       // the browser cache, which is exactly where we want them if the visitor
-      // comes back — and there are at most a handful of them.
+      // comes back, and there are at most a handful of them.
     };
   }, [key]);
 

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { QuizBadgeDetailsDTO } from "../../shared/contracts/quizWinBadges";
 import { currentUser, fullName } from "./data/members";
 
 export type BadgeRarity = "common" | "rare" | "legendary";
@@ -15,6 +16,10 @@ export interface BadgeProgress {
 /** How a badge is checked, shown in the drawer's "how it's checked" copy.
  *  Omitted rather than defaulted when the backend hasn't classified it. */
 export type BadgeVerification = "auto" | "host" | "review" | "peer";
+
+/** What a quiz badge adds to the badge model: its text in both languages,
+ *  its icon key and the wins that earned it. */
+export type QuizBadgeDetails = QuizBadgeDetailsDTO;
 
 export interface Badge {
   key: string;
@@ -36,6 +41,8 @@ export interface Badge {
    *  people see them. Server-backed since SUS-04 (`recognition_awards`), so
    *  another member's read of this profile omits the badge entirely. */
   hiddenFromProfile?: boolean;
+  /** Present only on an admin quiz badge. */
+  quiz?: QuizBadgeDetails;
 }
 
 /** One dated entry in a member's XP history — see `XpLedgerEntryDTO`. `createdAt`

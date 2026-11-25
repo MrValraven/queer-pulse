@@ -6,7 +6,7 @@ import {
   recognitionToModel,
   type Recognition,
 } from "./recognition.adapters";
-import { demoRecognition } from "../recognition.demo";
+import { buildDemoRecognition } from "../recognition.demo";
 
 export interface RecognitionState extends Recognition {
   /** True while the live query is in flight; always false in demo mode. */
@@ -70,13 +70,18 @@ export function useRecognition(
       force,
     ],
     queryFn: async () => {
-      if (demoMode) return demoRecognition;
+      if (demoMode) {
+        return buildDemoRecognition({ isOwnerView: slug === undefined });
+      }
       return recognitionToModel(await getRecognition(slug, force));
     },
   });
-  // Demo mode always renders the mock model. Live mode renders real data once it
+  // Demo mode renders the mock model, with the demo member's quiz badges, seen
+  // as the owner or as another viewer. Live mode renders real data once it
   // lands, and a zeroed placeholder (guarded by the flags below) meanwhile.
-  const model = demoMode ? demoRecognition : (data ?? emptyRecognition);
+  const model = demoMode
+    ? (data ?? buildDemoRecognition({ isOwnerView: slug === undefined }))
+    : (data ?? emptyRecognition);
   return {
     ...model,
     isLoading: !demoMode && isPending,

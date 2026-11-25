@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { m } from "motion/react";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Button, Collapse, FormField } from "../../../shared/components/ui";
@@ -7,14 +7,23 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   QUIZSHOW_LIMITS,
   type QuizshowAnswerPayload,
+  type QuizshowCursor,
   type QuizshowLanguage,
   type QuizshowQuestionView,
+  type QuizshowText,
 } from "../../../shared/contracts/quizshow";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowAnswerTile } from "../stage/QuizshowAnswerTile";
 import { QuizshowCountdownBar } from "../stage/QuizshowCountdownBar";
-import { optionLetter, pickQuizshowText } from "../stage/quizshowText";
+import { QuizshowStagePicture } from "../stage/QuizshowStagePicture";
+import { frozenRevealProgressOf } from "../stage/quizshowFrozenReveal";
+import { useHeldSlowReveal } from "../stage/useHeldSlowReveal";
+import { QuizshowStageText } from "../stage/QuizshowStageText";
+import {
+  optionLetter,
+  pickQuizshowTextWithLanguage,
+} from "../stage/quizshowText";
 import {
   answerSwatchFor,
   trueFalseSwatchFor,
@@ -25,6 +34,7 @@ import {
   QuizshowLockedStatus,
 } from "./QuizshowLockedPanel";
 import { QuizshowOrderAnswer } from "./QuizshowOrderAnswer";
+import { answeredLineOf } from "./quizshowAnsweredLine";
 import { useAnswerSender } from "./useQuizshowAnswerSender";
 import { useIsAnswerHeld } from "./useIsAnswerHeld";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
@@ -41,6 +51,9 @@ function parseNumber(rawText: string): number | null {
 
 interface TextAnswerProps {
   kind: "text" | "number";
+  /** The closest-number unit (C6.1), shown beside the field when set. */
+  unit: QuizshowText | null;
+  language: QuizshowLanguage;
   lockedPayload: QuizshowAnswerPayload | null;
   isLocked: boolean;
   /** Paused or past the player's own deadline: the draft stays editable, sending waits. */
@@ -50,12 +63,19 @@ interface TextAnswerProps {
 
 function TextAnswer({
   kind,
+  unit,
+  language,
   lockedPayload,
   isLocked,
   isHeld,
   onSend,
 }: TextAnswerProps) {
   const { t } = useTranslation();
+  const unitId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const pickedUnit =
+    unit === null ? null : pickQuizshowTextWithLanguage(unit, language);
+  const unitText = pickedUnit?.text.trim() ?? "";
   const [draft, setDraft] = useState(() => {
     if (lockedPayload?.type === "type_answer") return lockedPayload.text;
     if (lockedPayload?.type === "closest_number") {
@@ -66,6 +86,11 @@ function TextAnswer({
   const parsedNumber = kind === "number" ? parseNumber(draft) : null;
   const isReady =
     kind === "number" ? parsedNumber !== null : draft.trim().length > 0;
+  // Locking the answer lets go of the field, so its focus ring and the phone's
+  // keyboard leave with it.
+  useEffect(() => {
+    if (isLocked) inputRef.current?.blur();
+  }, [isLocked]);
   const submit = (event: FormEvent) => {
     event.preventDefault();
     if (isLocked || isHeld || !isReady) return;
@@ -77,33 +102,46 @@ function TextAnswer({
   };
   return (
     <form className={`${styles.form} ${styles.answerSheet}`} onSubmit={submit}>
-      <FormField
-        label={t(
-          kind === "number"
-            ? "quizshow:player.numberLabel"
-            : "quizshow:player.typeLabel",
+      <div className={unitText === "" ? undefined : styles.unitRow}>
+        <FormField
+          className={unitText === "" ? undefined : styles.unitField}
+          label={t(
+            kind === "number"
+              ? "quizshow:player.numberLabel"
+              : "quizshow:player.typeLabel",
+          )}
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            value={draft}
+            maxLength={QUIZSHOW_LIMITS.typedAnswerMax}
+            inputMode={kind === "number" ? "decimal" : "text"}
+            enterKeyHint="send"
+            autoComplete="off"
+            aria-disabled={isLocked}
+            aria-describedby={unitText === "" ? undefined : unitId}
+            readOnly={isLocked}
+            onChange={(event) => setDraft(event.target.value)}
+          />
+        </FormField>
+        {unitText !== "" && (
+          <span id={unitId} className={styles.unit} lang={pickedUnit?.language}>
+            {unitText}
+          </span>
         )}
-      >
-        <input
-          type="text"
-          value={draft}
-          maxLength={QUIZSHOW_LIMITS.typedAnswerMax}
-          inputMode={kind === "number" ? "decimal" : "text"}
-          enterKeyHint="send"
-          autoComplete="off"
-          aria-disabled={isLocked}
-          readOnly={isLocked}
-          onChange={(event) => setDraft(event.target.value)}
-        />
-      </FormField>
-      <Button
-        type="submit"
-        variant="stage"
-        size="lg"
-        aria-disabled={isLocked || isHeld || !isReady}
-      >
-        {t("quizshow:player.submit")}
-      </Button>
+      </div>
+      <Collapse isOpen={!isLocked}>
+        <Button
+          type="submit"
+          variant="stage"
+          size="lg"
+          className={styles.submitButton}
+          aria-disabled={isHeld || !isReady}
+        >
+          {t("quizshow:player.submit")}
+        </Button>
+      </Collapse>
     </form>
   );
 }
@@ -139,6 +177,8 @@ function TileChoices({
     key: string;
     swatch: QuizshowSwatch;
     text: string;
+    /** Set when the option text fell back to the other language. */
+    textLanguage?: QuizshowLanguage;
     isChosen: boolean;
     payload: QuizshowAnswerPayload;
   }> =
@@ -156,15 +196,26 @@ function TileChoices({
             lockedPayload.isTrue === isTrue,
           payload: { type: "true_false", isTrue },
         }))
-      : (question.options ?? []).map((option, optionIndex) => ({
-          key: option.id,
-          swatch: answerSwatchFor(optionIndex),
-          text: pickQuizshowText(option.text, language),
-          isChosen:
-            lockedPayload?.type === "multiple_choice" &&
-            lockedPayload.optionIndex === optionIndex,
-          payload: { type: "multiple_choice", optionIndex },
-        }));
+      : (question.options ?? []).map((option, optionIndex) => {
+          const picked = pickQuizshowTextWithLanguage(option.text, language);
+          // A poll answers like a multiple choice, with its own payload type (C6.22).
+          const payload: QuizshowAnswerPayload =
+            question.type === "poll"
+              ? { type: "poll", optionIndex }
+              : { type: "multiple_choice", optionIndex };
+          return {
+            key: option.id,
+            swatch: answerSwatchFor(optionIndex),
+            text: picked.text,
+            textLanguage:
+              picked.language === language ? undefined : picked.language,
+            isChosen:
+              (lockedPayload?.type === "multiple_choice" ||
+                lockedPayload?.type === "poll") &&
+              lockedPayload.optionIndex === optionIndex,
+            payload,
+          };
+        });
   return (
     <ul className={styles.tiles} data-count={choices.length}>
       {choices.map((choice, choiceIndex) => (
@@ -172,6 +223,7 @@ function TileChoices({
         <m.li
           key={choice.key}
           className={styles.tileSlot}
+          lang={choice.textLanguage}
           whileTap={isTappable && !reducedMotion ? { scale: 0.96 } : undefined}
           animate={
             choice.isChosen && !reducedMotion
@@ -202,6 +254,43 @@ function TileChoices({
         </m.li>
       ))}
     </ul>
+  );
+}
+
+/** The question picture on the phone (read and open), alt from `mediaAlt`, with the slow
+ *  reveal on the TV's window. Mounted only when the question has a picture. */
+export function QuizshowQuestionPicture({
+  question,
+  mediaUrl,
+  cursor,
+  talkSeconds,
+  language,
+  clockOffsetMs,
+}: {
+  question: QuizshowQuestionView;
+  mediaUrl: string;
+  /** null (no session yet) shows the picture clear. */
+  cursor: QuizshowCursor | null;
+  /** The round card's talk seconds (0 in solo, C6.20). */
+  talkSeconds: number;
+  language: QuizshowLanguage;
+  clockOffsetMs: number;
+}) {
+  const slowReveal = useHeldSlowReveal(question, cursor, talkSeconds * 1000);
+  return (
+    <QuizshowStagePicture
+      className={styles.picture}
+      mediaUrl={mediaUrl}
+      alt={question.mediaAlt}
+      language={language}
+      slowReveal={slowReveal}
+      clockOffsetMs={clockOffsetMs}
+      frozenProgress={frozenRevealProgressOf(
+        slowReveal,
+        cursor,
+        question.timeLimitSeconds * 1000,
+      )}
+    />
   );
 }
 
@@ -237,6 +326,10 @@ export function QuizshowPlayerQuestion({
     controller.clockOffsetMs,
     hasExtraTime,
   );
+  const isTileQuestion =
+    question.type === "multiple_choice" ||
+    question.type === "true_false" ||
+    question.type === "poll";
 
   return (
     <div
@@ -253,10 +346,17 @@ export function QuizshowPlayerQuestion({
       {/* The prompt sits in the middle of the free space above the answers. */}
       <div className={styles.promptArea}>
         <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
-          {pickQuizshowText(question.prompt, language)}
+          <QuizshowStageText text={question.prompt} language={language} />
         </h1>
         {question.mediaUrl !== null && (
-          <img className={styles.media} src={question.mediaUrl} alt="" />
+          <QuizshowQuestionPicture
+            question={question}
+            mediaUrl={question.mediaUrl}
+            cursor={player?.cursor ?? null}
+            talkSeconds={player?.round?.talkSeconds ?? 0}
+            language={language}
+            clockOffsetMs={controller.clockOffsetMs}
+          />
         )}
         <Collapse isOpen={hasExtraTime}>
           <p className={styles.note}>{t("quizshow:player.extraTimeOn")}</p>
@@ -273,6 +373,7 @@ export function QuizshowPlayerQuestion({
             <QuizshowLockedPanel
               title={t("quizshow:player.answerLocked")}
               body={t("quizshow:player.lockedInBody")}
+              answeredLine={answeredLineOf(player, question.questionId, t)}
             />
           </Collapse>
           <Collapse isOpen={errorKey !== null}>
@@ -280,8 +381,7 @@ export function QuizshowPlayerQuestion({
               {errorKey === null ? "" : t(errorKey)}
             </p>
           </Collapse>
-          {(question.type === "multiple_choice" ||
-            question.type === "true_false") && (
+          {isTileQuestion && (
             <TileChoices
               question={question}
               language={language}
@@ -290,18 +390,15 @@ export function QuizshowPlayerQuestion({
               onSend={send}
             />
           )}
-          {question.type === "type_answer" && (
+          {(question.type === "type_answer" ||
+            question.type === "closest_number") && (
             <TextAnswer
-              kind="text"
-              lockedPayload={lockedPayload}
-              isLocked={isLocked}
-              isHeld={isHeld}
-              onSend={send}
-            />
-          )}
-          {question.type === "closest_number" && (
-            <TextAnswer
-              kind="number"
+              key={question.type}
+              kind={question.type === "closest_number" ? "number" : "text"}
+              unit={
+                question.type === "closest_number" ? question.numberUnit : null
+              }
+              language={language}
               lockedPayload={lockedPayload}
               isLocked={isLocked}
               isHeld={isHeld}

@@ -6,14 +6,161 @@ import {
   type QuizshowLanguage,
   type QuizshowLanguageMode,
   type QuizshowTemplateCardField,
+  type QuizshowText,
 } from "../../../shared/contracts/quizshow";
+import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowBilingualInput } from "../builder/QuizshowBilingualInput";
+import { usedLanguagesOf } from "../builder/quizshowValidation";
+import editorStyles from "../builder/QuizshowQuestionEditor.module.css";
 import type { QuizshowTemplateMeta } from "./quizshowTemplateResponse";
 import { QuizshowTemplateStatusLine } from "./QuizshowTemplateStatusLine";
 import type { QuizshowTemplateDraft } from "./useQuizshowTemplateDraft";
 import type { QuizshowTemplatePublishing } from "./useQuizshowTemplatePublish";
+import { STUDIO_NATIVE_UNDO_ATTRIBUTE } from "../shared/quizshowNativeUndo";
 import styles from "./QuizshowTemplateDetails.module.css";
+
+/** The card and staff notes are outside the draft history, so Cmd/Ctrl+Z keeps the browser's own undo here. */
+const NATIVE_UNDO_PROPS = { [STUDIO_NATIVE_UNDO_ATTRIBUTE]: "" };
+
+/**
+ * C2.5: each language of the "What changed" note holds 0 to 300 characters
+ * once trimmed, counted in code points as the server counts them. The
+ * contract mirror has no limit constant for it.
+ */
+const TEMPLATE_CHANGE_NOTE_MAX = 300;
+
+/** Code points, as the server's limit counts them (an emoji is one). */
+function codePointCountOf(text: string): number {
+  return Array.from(text).length;
+}
+
+/** The text cut to the change note's limit in code points; as typed when it fits. */
+function clippedToChangeNoteMax(text: string): string {
+  const codePoints = Array.from(text);
+  if (codePoints.length <= TEMPLATE_CHANGE_NOTE_MAX) return text;
+  return codePoints.slice(0, TEMPLATE_CHANGE_NOTE_MAX).join("");
+}
+
+/**
+ * One language of the "What changed" note. The textarea's maxLength is
+ * recomputed from the code points left, so the browser itself blocks typing
+ * at the limit (caret and IME stay where they are) and cuts only a pasted
+ * text. A value arriving over the limit is cut as a safety net. After a cut,
+ * a polite line says why, until the note changes again.
+ */
+function QuizshowChangeNoteField({
+  language,
+  text,
+  hintId,
+  onChange,
+}: {
+  language: QuizshowLanguage;
+  text: string;
+  hintId: string;
+  onChange: (text: string) => void;
+}) {
+  const { t } = useTranslation();
+  const noticeId = useId();
+  // The note as it stood after the last cut; the line shows while it still does.
+  const [cutAtText, setCutAtText] = useState<string | null>(null);
+  // Set by a paste the limit cuts, read by the change event that follows it.
+  const isPasteCutRef = useRef(false);
+  const count = codePointCountOf(text);
+  const remainingCodePoints = Math.max(0, TEMPLATE_CHANGE_NOTE_MAX - count);
+  const isCutShown = cutAtText === text;
+  return (
+    <div>
+      <FormField
+        className={editorStyles.languageField}
+        label={t(`quizshow:language.tag.${language}`)}
+        labelAside={`${count}/${TEMPLATE_CHANGE_NOTE_MAX}`}
+      >
+        <textarea
+          rows={3}
+          value={text}
+          // UTF-16 units: each code point left takes at least one.
+          maxLength={text.length + remainingCodePoints}
+          aria-describedby={isCutShown ? `${hintId} ${noticeId}` : hintId}
+          onKeyDown={() => {
+            isPasteCutRef.current = false;
+          }}
+          onPaste={(event) => {
+            const field = event.currentTarget;
+            const pasted = event.clipboardData.getData("text");
+            const pastedResult =
+              text.slice(0, field.selectionStart) +
+              pasted +
+              text.slice(field.selectionEnd);
+            const isCut =
+              codePointCountOf(pastedResult) > TEMPLATE_CHANGE_NOTE_MAX;
+            isPasteCutRef.current = isCut;
+            // A paste the limit blocks whole fires no change of its own.
+            if (isCut) setCutAtText(text);
+          }}
+          onChange={(event) => {
+            const typed = event.target.value;
+            const kept = clippedToChangeNoteMax(typed);
+            if (isPasteCutRef.current || kept !== typed) setCutAtText(kept);
+            isPasteCutRef.current = false;
+            onChange(kept);
+          }}
+        />
+      </FormField>
+      <div aria-live="polite">
+        <Collapse isOpen={isCutShown}>
+          <p id={noticeId} className={styles.changeNoteCut}>
+            {t("quizshow:templates.changeNote.tooLong", {
+              max: TEMPLATE_CHANGE_NOTE_MAX,
+            })}
+          </p>
+        </Collapse>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * "What changed" (C6.25): one field per language the quiz uses, laid out as
+ * QuizshowBilingualInput lays its fields. That input counts UTF-16 units, so
+ * this one counts code points, as the server does.
+ */
+function QuizshowChangeNoteInput({
+  value,
+  languages,
+  onChange,
+}: {
+  value: QuizshowText;
+  languages: QuizshowLanguageMode;
+  onChange: (value: QuizshowText) => void;
+}) {
+  const { t } = useTranslation();
+  const labelId = useId();
+  const hintId = useId();
+  return (
+    <div
+      role="group"
+      aria-labelledby={labelId}
+      className={editorStyles.bilingual}
+    >
+      <span id={labelId} className={editorStyles.groupLabel}>
+        {t("quizshow:templates.changeNote.label")}
+      </span>
+      <span id={hintId} className={editorStyles.hint}>
+        {t("quizshow:templates.changeNote.hint")}
+      </span>
+      {usedLanguagesOf(languages).map((language) => (
+        <QuizshowChangeNoteField
+          key={language}
+          language={language}
+          text={value[language]}
+          hintId={hintId}
+          onChange={(text) => onChange({ ...value, [language]: text })}
+        />
+      ))}
+    </div>
+  );
+}
 
 /** The languages a card part is shown missing in, from the shown fields. */
 function missingLanguagesOf(
@@ -141,7 +288,39 @@ function QuizshowTemplatePublishAlert({
   );
 }
 
-/** The template's host card, staff notes, status and publish controls, above the quiz. */
+/**
+ * "Last published {date}" under the status line. It shows once a save while
+ * published moved the latest publish to a later day than the status line
+ * names; on the same day it would only repeat that date.
+ */
+function QuizshowTemplateLastPublished({
+  meta,
+}: {
+  meta: QuizshowTemplateMeta;
+}) {
+  const { t } = useTranslation();
+  const format = useFormat();
+  const dayOf = (timestamp: string | null) =>
+    timestamp === null
+      ? null
+      : format.date(new Date(timestamp), { dateStyle: "medium" });
+  const lastPublishedDay = dayOf(meta.lastPublishedAt);
+  const isShown =
+    meta.status === "published" &&
+    lastPublishedDay !== null &&
+    lastPublishedDay !== dayOf(meta.publishedAt);
+  const shownDay = useLastKey(isShown ? lastPublishedDay : null);
+  return (
+    <Collapse isOpen={isShown}>
+      <p className={styles.lastPublished}>
+        {shownDay !== null &&
+          t("quizshow:templates.lastPublished", { date: shownDay })}
+      </p>
+    </Collapse>
+  );
+}
+
+/** The template's host card, staff notes, change note, status and publish controls, above the quiz. */
 export function QuizshowTemplateDetails({
   templateDraft,
   meta,
@@ -202,8 +381,16 @@ export function QuizshowTemplateDetails({
           onChange={(event) => templateDraft.setStaffNotes(event.target.value)}
         />
       </FormField>
+      <QuizshowChangeNoteInput
+        value={templateDraft.changeNote}
+        languages={languages}
+        onChange={templateDraft.setChangeNote}
+      />
       <div className={styles.statusRow}>
-        <QuizshowTemplateStatusLine meta={meta} />
+        <div className={styles.statusStack}>
+          <QuizshowTemplateStatusLine meta={meta} />
+          <QuizshowTemplateLastPublished meta={meta} />
+        </div>
         {/* The studio's top bar holds Publish and its reason, so the flat group keeps the status and the last refusal. */}
         {isFlat ? (
           <QuizshowTemplatePublishAlert errorKey={publishing.errorKey} />
@@ -224,6 +411,7 @@ export function QuizshowTemplateDetails({
           panelRef.current = node;
         }}
         className={styles.flat}
+        {...NATIVE_UNDO_PROPS}
       >
         {content}
       </div>
@@ -234,6 +422,7 @@ export function QuizshowTemplateDetails({
       ref={panelRef}
       aria-labelledby={headingId}
       className={styles.panel}
+      {...NATIVE_UNDO_PROPS}
     >
       <header className={styles.header}>
         <h3 id={headingId} className={styles.heading}>

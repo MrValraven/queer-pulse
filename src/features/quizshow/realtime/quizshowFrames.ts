@@ -1,10 +1,11 @@
 import type {
   QuizshowAck,
-  QuizshowAnswerCount,
+  QuizshowAnswerCountFrame,
   QuizshowAnswerHiddenFrame,
   QuizshowAnswerPayload,
   QuizshowAttachRole,
   QuizshowHostLobby,
+  QuizshowHostTypedAnswers,
   QuizshowHostVoteOptions,
   QuizshowLobby,
   QuizshowLobbyJoinInput,
@@ -13,8 +14,13 @@ import type {
   QuizshowMyReveal,
   QuizshowMyScores,
   QuizshowMyVote,
+  QuizshowPairedDevice,
   QuizshowPhaseChangeFrame,
+  QuizshowPlayerLobby,
   QuizshowPodiumFrame,
+  QuizshowReactionId,
+  QuizshowReactionsFrame,
+  QuizshowRematch,
   QuizshowReveal,
   QuizshowReviewList,
   QuizshowScores,
@@ -29,9 +35,24 @@ interface HostPhaseCommand {
   success: { isNoop: boolean };
 }
 
+interface HostCommand<Payload> {
+  payload: Payload;
+  success: { isNoop: boolean };
+}
+
+/** `host:changeCorrectAnswer`: the new key, choice questions only (contract 4.3). */
+export type QuizshowCorrectAnswerChange =
+  | { type: "multiple_choice"; correctIndexes: number[] }
+  | { type: "true_false"; isTrue: boolean };
+
 export interface QuizshowClientFrameMap {
   "quizshow:attach": {
-    payload: { sessionId: string; as: QuizshowAttachRole };
+    payload: {
+      sessionId: string;
+      as: QuizshowAttachRole;
+      /** A paired helper's ticket on `as: "host"` (contract 4.4). */
+      deviceTicket?: string;
+    };
     success: { role: QuizshowAttachRole; connectionExpiresAt: number };
   };
   "session:reauth": { payload: { ticket: string }; success: { exp: number } };
@@ -75,6 +96,19 @@ export interface QuizshowClientFrameMap {
     payload: { roundIndex: number };
     success: { me: QuizshowMe };
   };
+  "lobby:leave": {
+    payload: Record<string, never>;
+    success: Record<string, never>;
+  };
+  "reaction:send": {
+    payload: { reactionId: QuizshowReactionId };
+    success: Record<string, never>;
+  };
+  /** Any role, attached or not; an unadmitted socket gets no ack (contract 4.2). */
+  "session:ping": {
+    payload: Record<string, never>;
+    success: { serverNow: number; phaseId: string | null };
+  };
   "host:start": HostPhaseCommand;
   "host:next": HostPhaseCommand;
   "host:spin": HostPhaseCommand;
@@ -97,7 +131,8 @@ export interface QuizshowClientFrameMap {
     success: { isNoop: boolean };
   };
   "host:removePlayer": {
-    payload: { playerId: string };
+    /** `canRejoin` missing reads false. */
+    payload: { playerId: string; canRejoin?: boolean };
     success: { isNoop: boolean };
   };
   "host:renameTeam": {
@@ -109,6 +144,35 @@ export interface QuizshowClientFrameMap {
     payload: { isMuted: boolean };
     success: { isNoop: boolean };
   };
+  "host:acceptAnswer": HostCommand<{
+    phaseId: string;
+    questionId: string;
+    normalisedText: string;
+  }>;
+  "host:changeCorrectAnswer": HostCommand<{
+    phaseId: string;
+    questionId: string;
+    answer: QuizshowCorrectAnswerChange;
+  }>;
+  "host:adjustPoints": HostCommand<{
+    entrantId: string;
+    delta: number;
+    requestId: string;
+  }>;
+  "host:pairDevice": {
+    payload: { pairingCode: string };
+    success: { isNoop: boolean; device: QuizshowPairedDevice };
+  };
+  "host:unpairDevice": HostCommand<{ pairingId: string }>;
+  "host:notifyGuests": HostCommand<Record<string, never>>;
+  "host:createTeams": {
+    payload: { names: string[] };
+    success: { isNoop: boolean; teamIds: string[] };
+  };
+  "host:renamePlayer": HostCommand<{ playerId: string; screenName: string }>;
+  "host:movePlayer": HostCommand<{ playerId: string; teamId: string }>;
+  "host:setJoinLock": HostCommand<{ isLocked: boolean }>;
+  "host:setAutoAdvance": HostCommand<{ isOn: boolean }>;
 }
 
 export type QuizshowClientFrameName = keyof QuizshowClientFrameMap;
@@ -120,10 +184,14 @@ export type QuizshowAckFor<Name extends QuizshowClientFrameName> = QuizshowAck<
 
 export type QuizshowServerFrame =
   | { event: "session:state"; payload: QuizshowSessionState }
-  | { event: "lobby:update"; payload: QuizshowLobby | QuizshowHostLobby }
+  | {
+      event: "lobby:update";
+      /** Screen: the roster. Players: teams and a count only (W2). Hosts: the host lobby. */
+      payload: QuizshowLobby | QuizshowPlayerLobby | QuizshowHostLobby;
+    }
   | { event: "me:update"; payload: { me: QuizshowMe } }
   | { event: "phase:change"; payload: QuizshowPhaseChangeFrame }
-  | { event: "answer:count"; payload: QuizshowAnswerCount }
+  | { event: "answer:count"; payload: QuizshowAnswerCountFrame }
   | { event: "answer:ack"; payload: QuizshowMyAnswer }
   | { event: "review:list"; payload: QuizshowReviewList }
   | {
@@ -136,9 +204,22 @@ export type QuizshowServerFrame =
   | { event: "scores"; payload: QuizshowScores }
   | { event: "scores:mine"; payload: QuizshowMyScores }
   | { event: "podium"; payload: QuizshowPodiumFrame }
-  | { event: "player:removed"; payload: { sessionId: string } }
+  | {
+      event: "player:removed";
+      payload: { sessionId: string; canRejoin: boolean };
+    }
   | { event: "session:end"; payload: QuizshowSessionEnd }
-  | { event: "screen:muted"; payload: { isMuted: boolean } };
+  | { event: "screen:muted"; payload: { isMuted: boolean } }
+  | { event: "typed:answers"; payload: QuizshowHostTypedAnswers }
+  | { event: "reactions"; payload: QuizshowReactionsFrame }
+  | { event: "devices:update"; payload: { devices: QuizshowPairedDevice[] } }
+  | { event: "device:unpaired"; payload: { pairingId: string } }
+  | { event: "session:rematch"; payload: QuizshowRematch }
+  | {
+      event: "session:flags";
+      payload: { isJoinLocked: boolean; isAutoAdvanceOn: boolean };
+    };
+// `time:probe` (a server emit with an ack) is answered in the socket and never reaches the store.
 
 export const QUIZSHOW_SERVER_FRAME_NAMES: readonly QuizshowServerFrame["event"][] =
   [
@@ -159,4 +240,10 @@ export const QUIZSHOW_SERVER_FRAME_NAMES: readonly QuizshowServerFrame["event"][
     "player:removed",
     "session:end",
     "screen:muted",
+    "typed:answers",
+    "reactions",
+    "devices:update",
+    "device:unpaired",
+    "session:rematch",
+    "session:flags",
   ];

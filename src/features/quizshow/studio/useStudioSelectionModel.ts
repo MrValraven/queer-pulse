@@ -45,9 +45,14 @@ export function useStudioSelectionModel(controller: QuizshowDraftController): {
       return;
     const questionCount = round.questions.length;
     const targetIndex = insertAt ?? questionCount;
-    controller.addQuestion(roundIndex);
-    if (targetIndex !== questionCount) {
-      controller.moveQuestion(roundIndex, questionCount, targetIndex);
+    if (controller.addQuestionAt !== undefined) {
+      // One edit, so one undo step takes the new question away again.
+      controller.addQuestionAt(roundIndex, targetIndex);
+    } else {
+      controller.addQuestion(roundIndex);
+      if (targetIndex !== questionCount) {
+        controller.moveQuestion(roundIndex, questionCount, targetIndex);
+      }
     }
     setStoredSelection({
       kind: "question",

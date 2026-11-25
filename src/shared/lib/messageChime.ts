@@ -85,7 +85,15 @@ function ensureContext(): AudioContext | null {
   return sharedContext;
 }
 
-function buildOutputChain(context: AudioContext): OutputChain {
+/**
+ * The output chain: master gain, compressor and lowpass, with the echo send.
+ * The lowpass feeds `destination`: the speakers for the message chime, or a
+ * caller's tail node for `runningChimeCueOutput`.
+ */
+function buildOutputChain(
+  context: AudioContext,
+  destination: AudioNode = context.destination,
+): OutputChain {
   const master = context.createGain();
   master.gain.value = MASTER_GAIN;
   const compressor = context.createDynamicsCompressor();
@@ -94,7 +102,7 @@ function buildOutputChain(context: AudioContext): OutputChain {
   lowpass.frequency.value = OUTPUT_LOWPASS_HZ;
   master.connect(compressor);
   compressor.connect(lowpass);
-  lowpass.connect(context.destination);
+  lowpass.connect(destination);
 
   const echoDelay = context.createDelay(0.5);
   echoDelay.delayTime.value = ECHO_DELAY_SECONDS;
@@ -325,4 +333,42 @@ export function playChimeNote(
 /** Equal-temperament frequency for a semitone offset from A4 (440 Hz). */
 export function chimeNoteFrequency(semitonesFromA4: number): number {
   return noteFrequency(semitonesFromA4);
+}
+
+/** A second output chain for other cues: the chime's voice, ending in a tail node. */
+export interface ChimeCueOutput {
+  context: AudioContext;
+  /** Where every cue note connects, as `runningChimeOutput().input`. */
+  input: AudioNode;
+  /**
+   * A unity gain after this chain's compressor and lowpass, connected to
+   * nothing: the caller connects it through its own stage (a level gain and a
+   * limiter, say) to `context.destination`, so the stage acts on what the
+   * compressor already shaped.
+   */
+  tail: GainNode;
+}
+
+let cueOutput: ChimeCueOutput | null = null;
+
+/**
+ * The shared context with a chain of its own for other cues (the quiz show's
+ * cues and their sound level), built like the message chime's but ending in
+ * `tail`. The message chime keeps its own chain to the speakers, unchanged.
+ * Built once per context; null until a gesture made the context, or while it
+ * is not running. Never creates or resumes the context.
+ */
+export function runningChimeCueOutput(): ChimeCueOutput | null {
+  try {
+    const context = sharedContext;
+    if (!context || context.state !== "running") return null;
+    if (cueOutput === null || cueOutput.context !== context) {
+      const tail = context.createGain();
+      const chain = buildOutputChain(context, tail);
+      cueOutput = { context, input: chain.input, tail };
+    }
+    return cueOutput;
+  } catch {
+    return null;
+  }
 }

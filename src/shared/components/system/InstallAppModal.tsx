@@ -4,6 +4,7 @@ import { Modal, Button, Collapse } from "../ui";
 import { Translation } from "../../i18n/Translation";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useToast } from "../feedback/useToast";
+import { InstallStepImage } from "./InstallStepImage";
 import {
   detectInAppBrowser,
   detectPlatform,
@@ -116,12 +117,13 @@ export function InstallAppModal({ onClose }: { onClose: () => void }) {
               <span className={styles.stepNumber} aria-hidden>
                 {stepIndex + 1}
               </span>
-              <span>
+              <div>
                 <Translation
                   i18nKey={stepKey}
                   components={{ b: <b />, em: <em /> }}
                 />
-              </span>
+                <InstallStepImage stepKey={stepKey} />
+              </div>
             </li>
           ))}
         </ol>

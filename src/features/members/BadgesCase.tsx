@@ -3,10 +3,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Badge, BadgeDrawerEntry } from "./badges.data";
 import { progressPercent, rarestBadge } from "./badgeSelectors";
-import {
-  badgeCategoryLabelKeyFor,
-  badgeDisplayMetaFor,
-} from "./badgeCatalog.data";
+import { badgeCategoryLabelKeyFor } from "./badgeCatalog.data";
+import { badgeNameFor } from "./badgeDisplayText";
 import { BadgeGridCard } from "./BadgeGridCard";
 import { BadgeMedallion } from "./BadgeMedallion";
 import { BadgesCaseControls, type BadgeSortMode } from "./BadgesCaseControls";
@@ -227,16 +225,15 @@ export function BadgesCase({
 }
 
 /** One of the three teaser medallions shown to a member with nothing earned
- *  yet. The catalogue ships a stable id beside its English display words, so
- *  the name resolves here rather than off the wire (see
- *  `badgeCatalog.data.ts`); an unmapped id keeps the server's own English. */
+ *  yet. The name resolves in `badgeDisplayText.ts`: a quiz badge reads its own
+ *  text, a catalogue badge its translated name by stable id, and an unmapped
+ *  id the server's own English. */
 function CaseEmptyMedallion({ badge }: { badge: Badge }) {
-  const { t } = useTranslation();
-  const displayMeta = badgeDisplayMetaFor(badge.key);
+  const { t, language } = useTranslation();
   return (
     <div className={styles.caseEmptyMed}>
       <BadgeMedallion badge={badge} earned={false} size="sm" />
-      <span>{displayMeta ? t(displayMeta.nameKey) : badge.name}</span>
+      <span>{badgeNameFor(badge, t, language)}</span>
     </div>
   );
 }

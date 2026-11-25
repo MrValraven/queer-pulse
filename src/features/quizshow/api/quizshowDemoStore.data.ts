@@ -1,40 +1,63 @@
 import type {
-  QuizshowImportSource,
   QuizshowQuestionType,
   QuizshowRecapQuestion,
+  QuizshowRecapStanding,
   QuizshowResultsResponse,
   QuizshowRoundKind,
 } from "../../../shared/contracts/quizshow";
+import { QUIZSHOW_DEMO_TEMPLATE_IDS } from "../demo/quizshowTemplates.data";
 
 export const QUIZSHOW_DEMO_LIVE_SLUG = "pride-brunch-jun"; // DEMO_GATHERING_SLUGS.manage
 export const QUIZSHOW_DEMO_RESULTS_SLUG = "coop-info-night"; // a past demo event
+export const QUIZSHOW_DEMO_TEMPLATE_COPY_SLUG = "open-clinic-night"; // a demo event whose quiz copies a template
 
-export const QUIZSHOW_DEMO_IMPORT_SOURCES: QuizshowImportSource[] = [
-  {
-    eventSlug: "coop-info-night",
-    eventTitle: "Co-op info night",
-    startAt: "2026-09-12T18:30:00.000Z",
-    quizTitle: "Co-op quiz night",
-    roundCount: 3,
-    questionCount: 15,
-    hasAdultsRounds: false,
-    isSameSeries: true,
-    kind: "event",
-    gameId: null,
-  },
-  {
-    eventSlug: "open-clinic-night",
-    eventTitle: "Open clinic night",
-    startAt: "2026-08-22T19:00:00.000Z",
-    quizTitle: "Health myths round",
-    roundCount: 2,
-    questionCount: 8,
-    hasAdultsRounds: false,
-    isSameSeries: false,
-    kind: "event",
-    gameId: null,
-  },
-];
+/** A demo event offered as an import source. Counts and rounds are read from the quiz it would copy. */
+export interface QuizshowDemoEventSource {
+  eventSlug: string;
+  eventTitle: string;
+  startAt: string;
+  /** The title of the quiz copied when the event has none saved in this tab. */
+  quizTitle: string;
+  isSameSeries: boolean;
+}
+
+export const QUIZSHOW_DEMO_IMPORT_SOURCES: readonly QuizshowDemoEventSource[] =
+  [
+    {
+      eventSlug: "coop-info-night",
+      eventTitle: "Co-op info night",
+      startAt: "2026-09-12T18:30:00.000Z",
+      quizTitle: "Co-op quiz night",
+      isSameSeries: true,
+    },
+    {
+      eventSlug: "open-clinic-night",
+      eventTitle: "Open clinic night",
+      startAt: "2026-08-22T19:00:00.000Z",
+      quizTitle: "Eurovision night",
+      isSameSeries: false,
+    },
+  ];
+
+/** A demo event quiz copied from a template before the template's latest publish, so the studio shows "Updated since you copied it" (C6.25). */
+export interface QuizshowDemoEventQuizSeed {
+  eventSlug: string;
+  title: string;
+  templateId: string;
+  copiedAt: string;
+  updatedAt: string;
+}
+
+export const QUIZSHOW_DEMO_EVENT_QUIZ_SEEDS: readonly QuizshowDemoEventQuizSeed[] =
+  [
+    {
+      eventSlug: QUIZSHOW_DEMO_TEMPLATE_COPY_SLUG,
+      title: "Eurovision night",
+      templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+      copiedAt: "2026-10-25T00:00:00.000Z",
+      updatedAt: "2026-10-25T00:00:00.000Z",
+    },
+  ];
 
 interface RecapRow {
   roundIndex: number;
@@ -46,126 +69,170 @@ interface RecapRow {
   answerCount: number;
   percentCorrect: number | null;
   averageAnswerMs: number | null;
+  /** The host accepted another answer or changed the correct one (item 5). */
+  wasCorrected?: boolean;
 }
 
+/**
+ * The demo night played the Eurovision template, the quiz the demo game
+ * "Friday flat quiz" holds, so each row keeps that quiz's round and question
+ * indices and EN prompt and "Edit this question" shows in demo (item 59).
+ */
 const RECAP_ROWS: RecapRow[] = [
   {
     roundIndex: 0,
     questionIndex: 0,
     roundKind: "quiz",
     type: "multiple_choice",
-    promptEn: "Which year did the first Pride march in Lisbon take place?",
-    promptPt: "Em que ano foi a primeira Marcha do Orgulho em Lisboa?",
+    promptEn: "With which song did ABBA win Eurovision in 1974?",
+    promptPt: "Com que canção é que os ABBA venceram a Eurovisão em 1974?",
     answerCount: 12,
-    percentCorrect: 83,
-    averageAnswerMs: 5200,
+    percentCorrect: 92,
+    averageAnswerMs: 4300,
   },
   {
     roundIndex: 0,
     questionIndex: 1,
     roundKind: "quiz",
-    type: "true_false",
-    promptEn: "The rainbow flag first had eight stripes",
-    promptPt: "A bandeira arco-íris teve oito riscas no início",
+    type: "multiple_choice",
+    promptEn:
+      "Which country did Dana International represent when she won Eurovision in 1998?",
+    promptPt:
+      "Que país representava Dana International quando venceu a Eurovisão em 1998?",
     answerCount: 12,
     percentCorrect: 67,
-    averageAnswerMs: 4100,
+    averageAnswerMs: 5800,
   },
   {
     roundIndex: 0,
     questionIndex: 2,
     roundKind: "quiz",
     type: "multiple_choice",
-    promptEn: "Who designed the original rainbow flag?",
-    promptPt: "Quem desenhou a bandeira arco-íris original?",
+    promptEn: "With which song did Conchita Wurst win Eurovision in 2014?",
+    promptPt: "Com que canção é que Conchita Wurst venceu a Eurovisão em 2014?",
     answerCount: 12,
-    percentCorrect: 75,
-    averageAnswerMs: 6300,
+    percentCorrect: 83,
+    averageAnswerMs: 5100,
   },
   {
     roundIndex: 0,
     questionIndex: 3,
     roundKind: "quiz",
-    type: "type_answer",
-    promptEn: "Which city hosted the first Pride parade in 1970?",
-    promptPt: "Que cidade teve a primeira parada do Orgulho em 1970?",
-    answerCount: 11,
-    percentCorrect: 42,
-    averageAnswerMs: 11800,
+    type: "multiple_choice",
+    promptEn:
+      "After Salvador Sobral's 2017 win, which city hosted Eurovision 2018?",
+    promptPt:
+      "Depois da vitória de Salvador Sobral em 2017, que cidade recebeu a Eurovisão de 2018?",
+    answerCount: 12,
+    percentCorrect: 100,
+    averageAnswerMs: 3600,
   },
   {
     roundIndex: 0,
     questionIndex: 4,
     roundKind: "quiz",
-    type: "closest_number",
-    promptEn: "How many countries have marriage equality today?",
-    promptPt: "Quantos países têm igualdade no casamento hoje?",
+    type: "true_false",
+    promptEn: "Nemo won Eurovision 2024 for Switzerland with the song The Code",
+    promptPt:
+      "Nemo venceu a Eurovisão de 2024 pela Suíça com a canção The Code",
     answerCount: 12,
-    percentCorrect: 25,
-    averageAnswerMs: 9700,
+    percentCorrect: 75,
+    averageAnswerMs: 4400,
+  },
+  {
+    roundIndex: 0,
+    questionIndex: 5,
+    roundKind: "quiz",
+    type: "true_false",
+    promptEn:
+      "Salvador Sobral sang his winning song Amar pelos dois in English",
+    promptPt:
+      "Salvador Sobral cantou a canção vencedora, Amar pelos dois, em inglês",
+    answerCount: 12,
+    percentCorrect: 92,
+    averageAnswerMs: 3900,
   },
   {
     roundIndex: 1,
     questionIndex: 0,
     roundKind: "quiz",
-    type: "order",
-    promptEn: "Put these Eurovision winners in order of year",
-    promptPt: "Ordena estes vencedores da Eurovisão por ano",
-    answerCount: 10,
-    percentCorrect: 30,
-    averageAnswerMs: 14200,
+    type: "type_answer",
+    promptEn: "Which country hosted the very first Eurovision Song Contest?",
+    promptPt: "Que país recebeu o primeiro Festival Eurovisão da Canção?",
+    answerCount: 12,
+    percentCorrect: 42,
+    averageAnswerMs: 9800,
+    wasCorrected: true,
   },
   {
     roundIndex: 1,
     questionIndex: 1,
     roundKind: "quiz",
-    type: "multiple_choice",
-    promptEn: "Which song won Eurovision for Portugal in 2017?",
-    promptPt: "Que canção deu a vitória a Portugal na Eurovisão em 2017?",
-    answerCount: 12,
-    percentCorrect: 92,
-    averageAnswerMs: 3800,
+    type: "type_answer",
+    promptEn:
+      "In 2023 Loreen became the first woman to win Eurovision twice, with which song?",
+    promptPt:
+      "Em 2023, Loreen tornou-se a primeira mulher a vencer a Eurovisão duas vezes, com que canção?",
+    answerCount: 11,
+    percentCorrect: 64,
+    averageAnswerMs: 8700,
   },
   {
     roundIndex: 1,
     questionIndex: 2,
     roundKind: "quiz",
-    type: "true_false",
-    promptEn: "Conchita Wurst won Eurovision in 2014",
-    promptPt: "A Conchita Wurst ganhou a Eurovisão em 2014",
+    type: "order",
+    promptEn: "Put these winners in order, earliest first",
+    promptPt:
+      "Põe estas vitórias por ordem, da mais antiga para a mais recente",
     answerCount: 12,
-    percentCorrect: 88,
-    averageAnswerMs: 3500,
+    percentCorrect: 33,
+    averageAnswerMs: 11200,
   },
   {
     roundIndex: 1,
     questionIndex: 3,
     roundKind: "quiz",
-    type: "type_answer",
-    promptEn: "Name the host city of Eurovision 2024",
-    promptPt: "Diz a cidade anfitriã da Eurovisão 2024",
-    answerCount: 9,
-    percentCorrect: 56,
-    averageAnswerMs: 10400,
+    type: "order",
+    promptEn:
+      "Put these host cities in the order of their most recent contest, earliest first",
+    promptPt:
+      "Põe estas cidades anfitriãs pela ordem do festival mais recente que cada uma recebeu, da primeira para a última",
+    answerCount: 12,
+    percentCorrect: 25,
+    averageAnswerMs: 12600,
   },
   {
     roundIndex: 1,
     questionIndex: 4,
     roundKind: "quiz",
-    type: "multiple_choice",
-    promptEn: "Which country has the most Eurovision wins?",
-    promptPt: "Que país tem mais vitórias na Eurovisão?",
+    type: "closest_number",
+    promptEn: "In which year was the first Eurovision Song Contest held?",
+    promptPt: "Em que ano se realizou o primeiro Festival Eurovisão da Canção?",
     answerCount: 12,
     percentCorrect: 58,
     averageAnswerMs: 7600,
   },
   {
+    roundIndex: 1,
+    questionIndex: 5,
+    roundKind: "quiz",
+    type: "closest_number",
+    promptEn: "How many points did Amar pelos dois score when it won in 2017?",
+    promptPt: "Quantos pontos fez Amar pelos dois quando venceu em 2017?",
+    answerCount: 12,
+    percentCorrect: 17,
+    averageAnswerMs: 8200,
+  },
+  {
     roundIndex: 2,
     questionIndex: 0,
     roundKind: "lie_detector",
     type: "prompt",
-    promptEn: "Which of these is the real drag history fact?",
-    promptPt: "Qual destes é o facto verdadeiro da história drag?",
+    promptEn:
+      "What was the title of Dana International's winning song in 1998?",
+    promptPt:
+      "Qual era o título da canção vencedora de Dana International em 1998?",
     answerCount: 12,
     percentCorrect: null,
     averageAnswerMs: null,
@@ -175,8 +242,10 @@ const RECAP_ROWS: RecapRow[] = [
     questionIndex: 1,
     roundKind: "lie_detector",
     type: "prompt",
-    promptEn: "Which of these is the real Pride fact?",
-    promptPt: "Qual destes é o facto verdadeiro do Orgulho?",
+    promptEn:
+      "What was the last word of Conchita Wurst's 2014 winner's speech, after 'We are unity and we are'?",
+    promptPt:
+      "Qual foi a última palavra, em inglês, do discurso de vitória de Conchita Wurst em 2014, depois de 'We are unity and we are'?",
     answerCount: 11,
     percentCorrect: null,
     averageAnswerMs: null,
@@ -186,33 +255,12 @@ const RECAP_ROWS: RecapRow[] = [
     questionIndex: 2,
     roundKind: "lie_detector",
     type: "prompt",
-    promptEn: "Which of these is the real film fact?",
-    promptPt: "Qual destes é o facto verdadeiro do cinema?",
+    promptEn:
+      "Since 2008, what has the Eurovision winner's trophy looked like?",
+    promptPt: "Desde 2008, qual é a forma do troféu de quem vence a Eurovisão?",
     answerCount: 12,
     percentCorrect: null,
     averageAnswerMs: null,
-  },
-  {
-    roundIndex: 0,
-    questionIndex: 5,
-    roundKind: "quiz",
-    type: "multiple_choice",
-    promptEn: "Which colour stands for healing on the original flag?",
-    promptPt: "Que cor representava a cura na bandeira original?",
-    answerCount: 12,
-    percentCorrect: 50,
-    averageAnswerMs: 6900,
-  },
-  {
-    roundIndex: 1,
-    questionIndex: 5,
-    roundKind: "quiz",
-    type: "true_false",
-    promptEn: "Eurovision started in 1956",
-    promptPt: "A Eurovisão começou em 1956",
-    answerCount: 12,
-    percentCorrect: 75,
-    averageAnswerMs: 4400,
   },
 ];
 
@@ -232,7 +280,37 @@ const RECAP_QUESTIONS: QuizshowRecapQuestion[] = [...RECAP_ROWS]
     percentCorrect: row.percentCorrect,
     averageAnswerMs: row.averageAnswerMs,
     wasSkipped: false,
+    isWarmUp: false,
+    wasCorrected: row.wasCorrected ?? false,
   }));
+
+/** Every player of the demo night by score; the top three match the podium and fifth matches `me`. */
+const STANDING_ROWS: ReadonlyArray<{ name: string; score: number }> = [
+  { name: "Rita", score: 9180 },
+  { name: "Nuno", score: 8740 },
+  { name: "Bea", score: 8210 },
+  { name: "Joana", score: 7650 },
+  { name: "Sam", score: 6420 },
+  { name: "Marta", score: 5980 },
+  { name: "Leo", score: 5980 },
+  { name: "Duda", score: 5310 },
+  { name: "Kai", score: 4870 },
+  { name: "Filipa", score: 4200 },
+  { name: "Vasco", score: 3650 },
+  { name: "Tomás", score: 2900 },
+];
+
+/** Competition ranks (ties share a rank), rank ascending then name, as the recap sends them (item 59). */
+const RECAP_STANDINGS: QuizshowRecapStanding[] = STANDING_ROWS.map((row) => ({
+  rank: 1 + STANDING_ROWS.filter((other) => other.score > row.score).length,
+  kind: "player" as const,
+  name: row.name,
+  colorKey: null,
+  score: row.score,
+})).sort(
+  (first, second) =>
+    first.rank - second.rank || first.name.localeCompare(second.name),
+);
 
 export const QUIZSHOW_DEMO_RESULTS: QuizshowResultsResponse = {
   sessionId: "demo-quizshow-results-session",
@@ -275,5 +353,7 @@ export const QUIZSHOW_DEMO_RESULTS: QuizshowResultsResponse = {
       0,
     ),
     questions: RECAP_QUESTIONS,
+    standings: RECAP_STANDINGS,
   },
+  winBadges: null,
 };

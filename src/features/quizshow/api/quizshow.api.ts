@@ -7,6 +7,7 @@ import type {
   QuizshowImportInput,
   QuizshowImportSource,
   QuizshowJoinInput,
+  QuizshowJoinPreview,
   QuizshowJoinResponse,
   QuizshowOpenSessionInput,
   QuizshowOpenSessionResponse,
@@ -50,6 +51,25 @@ export const joinQuizshow = (
   body: QuizshowJoinInput,
 ): Promise<QuizshowJoinResponse> =>
   apiPost<QuizshowJoinResponse>("/quizshow/join", body);
+
+/** C6.10: loads the event's latest saved quiz into its open lobby. */
+export const refreshQuizshowLobby = (
+  slug: string,
+): Promise<{ isNoop: boolean }> =>
+  apiPost<{ isNoop: boolean }>(`${eventPath(slug)}/sessions/refresh`);
+
+/** C5.1: the quiz title and status behind a join code, for the signed-out join card.
+ *  Public and answered with `no-store`, so every read goes to the server. */
+export const getQuizshowJoinPreview = (
+  code: string,
+  signal?: AbortSignal,
+): Promise<QuizshowJoinPreview> =>
+  apiGet<QuizshowJoinPreview>(
+    `/quizshow/join-preview/${encodeURIComponent(code)}`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 export const getQuizshowResults = (
   slug: string,
@@ -109,6 +129,12 @@ export const openQuizshowGameSession = (
   body: QuizshowOpenSessionInput,
 ): Promise<QuizshowOpenSessionResponse> =>
   apiPost<QuizshowOpenSessionResponse>(`${gamePath(gameId)}/sessions`, body);
+
+/** C6.10: loads the game's latest saved quiz into its open lobby. */
+export const refreshQuizshowGameLobby = (
+  gameId: string,
+): Promise<{ isNoop: boolean }> =>
+  apiPost<{ isNoop: boolean }>(`${gamePath(gameId)}/sessions/refresh`);
 
 export const getQuizshowGameResults = (
   gameId: string,

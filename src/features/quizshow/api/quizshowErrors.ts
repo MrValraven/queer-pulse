@@ -6,6 +6,7 @@ import {
 import {
   QUIZSHOW_ERROR_CODES,
   type QuizshowErrorCode,
+  type QuizshowQuizChangedDetails,
   type QuizshowQuizProblem,
 } from "../../../shared/contracts/quizshow";
 
@@ -42,6 +43,44 @@ export function quizshowOpenSessionRefOf(
     return null;
   }
   return { sessionId, joinCode };
+}
+
+function isNullableString(value: unknown): value is string | null {
+  return value === null || typeof value === "string";
+}
+
+/**
+ * Who saved the quiz this save collided with, and when (C6.29, item 54). The
+ * server puts both fields on the `quizshow_quiz_changed` 409 body; `updatedAt`
+ * is null when the target has no quiz and `updatedByName` is null when the
+ * account is gone. Null for any other error, or when either field is missing
+ * or has the wrong type.
+ */
+export function quizshowQuizChangedDetailsOf(
+  error: unknown,
+): QuizshowQuizChangedDetails | null {
+  if (quizshowErrorCodeOf(error) !== "quizshow_quiz_changed") return null;
+  const body = bodyOf(error);
+  const updatedAt = body?.updatedAt;
+  const updatedByName = body?.updatedByName;
+  if (!isNullableString(updatedAt) || !isNullableString(updatedByName)) {
+    return null;
+  }
+  return { updatedAt, updatedByName };
+}
+
+/**
+ * The free screen name a `quizshow_screen_name_taken` ack suggests, such as
+ * "Alex 2" (C4.2, C6.13), trimmed. Null for any other code, and when the
+ * server found no free name.
+ */
+export function quizshowSuggestedScreenNameOf(failure: {
+  code: string;
+  suggestedScreenName?: string;
+}): string | null {
+  if (failure.code !== "quizshow_screen_name_taken") return null;
+  const suggestion = failure.suggestedScreenName?.trim() ?? "";
+  return suggestion === "" ? null : suggestion;
 }
 
 export function quizshowErrorKeyOf(code: QuizshowErrorCode | null): string {
@@ -115,15 +154,67 @@ export function quizshowLoadFailureKeyOf(error?: unknown): string {
 
 const KNOWN_CODES: ReadonlySet<string> = new Set(QUIZSHOW_ERROR_CODES);
 
+/** The transport codes a refused connection names on its own line (contract 6.1). */
+const TRANSPORT_REFUSAL_KEYS: ReadonlyMap<string, string> = new Map([
+  ["UNAUTHORIZED", "quizshow:errors.refused_signed_out"],
+  ["TOKEN_EXPIRED", "quizshow:errors.refused_signed_out"],
+  ["SESSION_REVOKED", "quizshow:errors.refused_session_revoked"],
+  ["PLATFORM_LOCKED", "quizshow:errors.refused_platform_locked"],
+  // The gateway answers NOT_FOUND while Pulse Live is hidden from the account.
+  ["NOT_FOUND", "quizshow:errors.refused_feature_hidden"],
+  ["FORBIDDEN", "quizshow:errors.refused_forbidden"],
+]);
+
 /**
  * The line for a live connection the server refused. A code this build knows
- * gets its own line; an offline device says so; a refusal that names no known
- * code says the session turned the connection away without a reason.
+ * gets its own line, and so does a transport code that names the cause (a
+ * lapsed or revoked sign-in, a platform pause, missing access to Pulse Live). An
+ * offline device says so; a server fault asks for a reload; a refusal that
+ * names no known code says the session turned the connection away without a
+ * reason.
  */
 export function quizshowRefusalKeyOf(refusalCode: string | null): string {
   if (refusalCode !== null && KNOWN_CODES.has(refusalCode)) {
     return quizshowErrorKeyOf(refusalCode as QuizshowErrorCode);
   }
+  const transportKey =
+    refusalCode === null ? undefined : TRANSPORT_REFUSAL_KEYS.get(refusalCode);
+  if (transportKey !== undefined) return transportKey;
   if (isDeviceOffline()) return "quizshow:errors.offline";
+  if (refusalCode === "SERVER_ERROR") {
+    return "quizshow:errors.refused_server_error";
+  }
   return "quizshow:errors.refused_unknown";
 }
+
+/** What a refused screen offers: sign in again, reload the page, or go back to the code entry. */
+export type QuizshowRefusalAction = "signIn" | "reload" | "enterCode";
+
+const SIGN_IN_REFUSAL_CODES: ReadonlySet<string> = new Set([
+  "UNAUTHORIZED",
+  "TOKEN_EXPIRED",
+  "SESSION_REVOKED",
+]);
+
+/**
+ * The action that fits a refusal's cause: a lapsed or revoked sign-in signs
+ * in again; a server fault, an offline device or a refusal with no known
+ * reason reloads; every named refusal (a quiz code, a platform pause,
+ * missing access) goes back to the code entry.
+ */
+export function quizshowRefusalActionOf(
+  refusalCode: string | null,
+): QuizshowRefusalAction {
+  if (refusalCode !== null && SIGN_IN_REFUSAL_CODES.has(refusalCode)) {
+    return "signIn";
+  }
+  if (refusalCode !== null && KNOWN_CODES.has(refusalCode)) return "enterCode";
+  if (refusalCode !== null && TRANSPORT_REFUSAL_KEYS.has(refusalCode)) {
+    return "enterCode";
+  }
+  return "reload";
+}
+
+/** The line for a frame whose ack never came back: the game did not answer in time. */
+export const QUIZSHOW_TRANSPORT_TIMEOUT_KEY =
+  "quizshow:errors.transport_timeout";

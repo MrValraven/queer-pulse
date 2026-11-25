@@ -257,14 +257,22 @@
 
 /* ── Wheel card ── */
 /* A slim divider card above the rounds a wheel spins between. In the
-   filmstrip it is a narrow tile level with the round headers; in the wide
-   column a single row like a round header. */
+   filmstrip it is a tile as tall as the slides and level with them, like the
+   settings tile, its one line never wrapping; in the wide column a single
+   row like a round header. */
+.rounds > li:has(> .wheel) {
+  align-self: flex-end;
+  /* The round's empty note row and the list's own padding sit under the slides. */
+  margin-block-end: 0.6rem;
+}
+
 .wheel {
   position: relative;
   display: flex;
   align-items: stretch;
-  inline-size: 8.5rem;
-  min-inline-size: 0;
+  inline-size: max-content;
+  min-inline-size: 8.5rem;
+  min-block-size: 5.35rem;
   border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: var(--radius-10);
   transition: background-color var(--dur-fast) var(--ease);
@@ -284,6 +292,7 @@
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
   gap: var(--gap-xs);
   min-inline-size: 0;
@@ -317,8 +326,8 @@
 }
 
 .wheelLine {
-  flex: 1 1 auto;
   min-inline-size: 0;
+  white-space: nowrap;
 }
 
 .wheel .roundMore.roundMore {
@@ -757,13 +766,27 @@
     gap: 0.45rem;
   }
 
+  .rounds > li:has(> .wheel) {
+    align-self: auto;
+    margin-block-end: 0;
+  }
+
   .wheel {
     inline-size: auto;
+    min-inline-size: 0;
+    min-block-size: 0;
   }
 
   .wheelButton {
     flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
+  }
+
+  /* The column is narrow and fixed: the line may wrap here, between words. */
+  .wheelLine {
+    flex: 1 1 auto;
+    white-space: normal;
   }
 
   .wheel .roundMore.roundMore {

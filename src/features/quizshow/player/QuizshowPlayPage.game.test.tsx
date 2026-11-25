@@ -16,7 +16,10 @@ import {
   QUIZSHOW_DEMO_GAME_JOIN_CODE,
   QUIZSHOW_DEMO_GAME_SESSION_PREFIX,
 } from "../quizshow.constants";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import {
+  createQuizshowClientState,
+  type QuizshowClientState,
+} from "../realtime/quizshowClientStore";
 import { QuizshowPlayPage } from "./QuizshowPlayPage";
 
 const fakeSession = vi.hoisted(() => ({
@@ -106,6 +109,11 @@ function gameSessionOf(
 ): QuizshowPlayerState {
   return {
     sessionId: AFTER_DARK_SESSION_ID,
+    answerCount: null,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     eventSlug: null,
     eventTitle: null,
     kind: "game",
@@ -135,6 +143,9 @@ function gameSessionOf(
       roundNumber: 0,
       upNext: null,
       canSpinForNextRound: false,
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
     },
     rounds: [],
     round: null,
@@ -145,7 +156,7 @@ function gameSessionOf(
     wheel: null,
     wheelBonus: null,
     role: "player",
-    lobby: { players: [], teams: [], playerCount: 6 },
+    lobby: { teams: [], playerCount: 6 },
     question: null,
     voteOptions: null,
     me: null,
@@ -164,13 +175,10 @@ function stateOf(
   overrides: Partial<QuizshowClientState> = {},
 ): QuizshowClientState {
   return {
-    role: "player",
+    ...createQuizshowClientState("player"),
     status: "attached",
-    refusalCode: null,
+    hasAttached: true,
     session,
-    sessionEnd: null,
-    isRemoved: false,
-    pendingAnswer: null,
     ...overrides,
   };
 }
@@ -368,6 +376,8 @@ describe("QuizshowPlayPage on a game", () => {
             startAt: "2026-11-01T12:00:00.000Z",
           },
           hasResults: true,
+          isPractice: false,
+          giving: null,
         },
       },
     );

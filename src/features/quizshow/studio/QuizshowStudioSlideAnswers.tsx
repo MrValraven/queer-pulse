@@ -1,20 +1,35 @@
-import { useId, useState } from "react";
+import { Fragment, useId, useMemo } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiCheck, FiPlus, FiX } from "react-icons/fi";
+import { FiPlus, FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
-import { Button, IconButton } from "../../../shared/components/ui";
+import { Button, Collapse, IconButton } from "../../../shared/components/ui";
 import {
   QUIZSHOW_LIMITS,
   type QuizshowLanguage,
   type QuizshowQuestionInput,
 } from "../../../shared/contracts/quizshow";
+import { intlLocale } from "../../../shared/i18n/locale";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { mintOptionId } from "../builder/quizshowDraft";
+import {
+  correctIndexesOf,
+  isLastWrongOption,
+  mintOptionId,
+  withCorrectOptionToggled,
+  withOptionRemoved,
+  type QuizshowOptionListQuestion,
+} from "../builder/quizshowDraft";
 import { QuizshowShape } from "../QuizshowShape";
 import { answerSwatchFor, trueFalseSwatchFor } from "../quizshowSwatches";
 import { optionLetter } from "../stage/quizshowText";
-import { QuizshowStudioSlideField } from "./QuizshowStudioSlideParts";
+import {
+  QuizshowStudioSlideClosestNumber,
+  QuizshowStudioSlideTypedAnswer,
+} from "./QuizshowStudioSlideAnswerBoxes";
+import {
+  QuizshowStudioSlideField,
+  QuizshowStudioSlideRightMark,
+} from "./QuizshowStudioSlideParts";
 import {
   swatchStyleOf,
   useSlideProblemLine,
@@ -36,65 +51,171 @@ interface AnswersProps<Question extends QuizshowQuestionInput> {
 
 const TILE_EASE = [0.22, 0.68, 0.16, 1] as const;
 
-/** The circle that marks the right answer: a native radio, jade with a check once picked. */
-function RightMark({
-  name,
-  label,
-  isChecked,
-  onCheck,
-}: {
-  name: string;
-  label?: string;
-  isChecked: boolean;
-  onCheck: () => void;
-}) {
+interface ChoiceTileProps extends AnswersProps<QuizshowOptionListQuestion> {
+  optionIndex: number;
+  /** Names the "Leave at least one option wrong" line a blocked mark points at. */
+  keepOneWrongId: string;
+}
+
+/**
+ * One option tile, typed on: its shape and letter, its text, and for
+ * multiple choice the toggle that marks it correct. A poll draws no mark.
+ */
+function ChoiceTile({
+  question,
+  language,
+  optionIndex,
+  keepOneWrongId,
+  onChange,
+}: ChoiceTileProps) {
+  const { t } = useTranslation();
+  const optionProblem = useSlideProblemLine("option_text_missing");
+  const { options } = question;
+  const option = options[optionIndex];
+  const markable = question.type === "multiple_choice" ? question : null;
+  const isMarked =
+    markable !== null && correctIndexesOf(markable).includes(optionIndex);
+  // Marking or removing this option would leave none wrong (contract 6.22).
+  const isLastWrong =
+    markable !== null && isLastWrongOption(markable, optionIndex);
+  const isRemoveAllowed =
+    options.length > QUIZSHOW_LIMITS.multipleChoiceOptionsMin && !isLastWrong;
+  if (option === undefined) return null;
+  const number = optionIndex + 1;
+  const swatch = answerSwatchFor(optionIndex);
   return (
-    <span className={styles.markWrap}>
-      <input
-        type="radio"
-        name={name}
-        className={styles.mark}
-        checked={isChecked}
-        aria-label={label}
-        onChange={onCheck}
+    <div
+      className={styles.tile}
+      data-right={isMarked}
+      style={swatchStyleOf(swatch)}
+    >
+      <QuizshowShape
+        colorKey={swatch.colorKey}
+        size="screen"
+        label={null}
+        isGlowing
       />
-      <FiCheck
-        className={styles.markCheck}
-        aria-hidden="true"
-        focusable="false"
+      <span className={styles.letter} aria-hidden="true">
+        {optionLetter(optionIndex)}
+      </span>
+      <QuizshowStudioSlideField
+        label={t("quizshow:questions.options.item", { number })}
+        value={option.text[language]}
+        placeholder={t("quizshow:studio.slide.answerPlaceholder")}
+        maxLength={QUIZSHOW_LIMITS.optionTextMax}
+        className={styles.tileField}
+        lang={language}
+        problemText={
+          option.text[language].trim() === "" ? optionProblem : undefined
+        }
+        onChange={(value) =>
+          onChange({
+            ...question,
+            options: options.map((existing, index) =>
+              index === optionIndex
+                ? {
+                    ...existing,
+                    text: withLanguageText(existing.text, language, value),
+                  }
+                : existing,
+            ),
+          })
+        }
+      />
+      {markable !== null && (
+        <QuizshowStudioSlideRightMark
+          type="checkbox"
+          label={t("quizshow:questions.options.markCorrect", { number })}
+          isChecked={isMarked}
+          isBlocked={isLastWrong}
+          describedBy={isLastWrong ? keepOneWrongId : undefined}
+          onCheck={() =>
+            onChange(withCorrectOptionToggled(markable, optionIndex))
+          }
+        />
+      )}
+      <span className={styles.tileRemove} data-hidden={!isRemoveAllowed}>
+        <IconButton
+          size="sm"
+          tone="dark"
+          aria-label={t("quizshow:questions.options.remove", { number })}
+          onClick={() => onChange(withOptionRemoved(question, optionIndex))}
+        >
+          <FiX aria-hidden />
+        </IconButton>
+      </span>
+    </div>
+  );
+}
+
+/** "1970 is the right answer", or every marked option ("Lilac and Teal") when several are right. */
+function RightAnswersLine({
+  question,
+  language,
+}: {
+  question: QuestionOf<"multiple_choice">;
+  language: QuizshowLanguage;
+}) {
+  const { t } = useTranslation();
+  const listFormat = useMemo(
+    () => new Intl.ListFormat(intlLocale(language), { type: "conjunction" }),
+    [language],
+  );
+  const marked = correctIndexesOf(question);
+  if (marked.length === 0) return <>{t("quizshow:studio.slide.markHint")}</>;
+  const names = marked.map((optionIndex) => {
+    const text = question.options[optionIndex]?.text[language].trim() ?? "";
+    return text === "" ? (
+      <strong key={optionIndex}>
+        {t("quizshow:questions.options.item", { number: optionIndex + 1 })}
+      </strong>
+    ) : (
+      <strong key={optionIndex} lang={language}>
+        {text}
+      </strong>
+    );
+  });
+  // The list format joins stand-in tokens (each name's index as text); each
+  // token part comes back as the name it stands for.
+  const joinedNames = listFormat
+    .formatToParts(names.map((_name, index) => String(index)))
+    .map((part, partIndex) => (
+      <Fragment key={`${part.type}-${partIndex}`}>
+        {part.type === "element" ? names[Number(part.value)] : part.value}
+      </Fragment>
+    ));
+  return (
+    // One span, so the foot's gap never opens beside the names.
+    <span>
+      <Translation
+        i18nKey={
+          marked.length === 1
+            ? "quizshow:studio.slide.rightIs"
+            : "quizshow:studio.slide.rightAre"
+        }
+        values={{ answer: "", answers: "" }}
+        slots={{ answer: joinedNames, answers: joinedNames }}
       />
     </span>
   );
 }
 
-/** The right answer is no longer the one at `removedIndex`; the ones after it shift up. */
-function correctIndexAfterRemoving(
-  correctIndex: number | undefined,
-  removedIndex: number,
-): { correctIndex: number } | null {
-  if (correctIndex === undefined || correctIndex === removedIndex) return null;
-  return {
-    correctIndex: correctIndex > removedIndex ? correctIndex - 1 : correctIndex,
-  };
-}
-
-/** Multiple choice: two to four glass tiles, each typed on, one circle marked right. */
+/** Multiple choice and poll: two to four glass tiles, each typed on; multiple choice marks every right one. */
 function ChoiceTiles({
   question,
   language,
   onChange,
-}: AnswersProps<QuestionOf<"multiple_choice">>) {
+}: AnswersProps<QuizshowOptionListQuestion>) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const radioName = useId();
-  const { options, answer } = question;
+  const keepOneWrongId = useId();
+  const { options } = question;
   const isAddAllowed =
     options.length < QUIZSHOW_LIMITS.multipleChoiceOptionsMax;
-  const isRemoveAllowed =
-    options.length > QUIZSHOW_LIMITS.multipleChoiceOptionsMin;
-  const correctIndex = answer?.correctIndex ?? null;
-  const rightOption = correctIndex === null ? undefined : options[correctIndex];
-  const optionProblem = useSlideProblemLine("option_text_missing");
+  const markable = question.type === "multiple_choice" ? question : null;
+  const isEveryMarkTaken =
+    markable !== null &&
+    options.some((_option, index) => isLastWrongOption(markable, index));
   const tileMotion = {
     initial: { opacity: 0, scale: 0.96 },
     animate: { opacity: 1, scale: 1 },
@@ -109,102 +230,22 @@ function ChoiceTiles({
         </legend>
         <ul className={styles.answerGrid}>
           <AnimatePresence initial={false} mode="popLayout">
-            {options.map((option, optionIndex) => {
-              const number = optionIndex + 1;
-              const swatch = answerSwatchFor(optionIndex);
-              return (
-                <m.li
-                  key={option.id}
-                  className={styles.tileCell}
-                  layout={reducedMotion ? false : "position"}
-                  {...tileMotion}
-                >
-                  <div
-                    className={styles.tile}
-                    data-right={correctIndex === optionIndex}
-                    style={swatchStyleOf(swatch)}
-                  >
-                    <QuizshowShape
-                      colorKey={swatch.colorKey}
-                      size="screen"
-                      label={null}
-                      isGlowing
-                    />
-                    <span className={styles.letter} aria-hidden="true">
-                      {optionLetter(optionIndex)}
-                    </span>
-                    <QuizshowStudioSlideField
-                      label={t("quizshow:questions.options.item", { number })}
-                      value={option.text[language]}
-                      placeholder={t("quizshow:studio.slide.answerPlaceholder")}
-                      maxLength={QUIZSHOW_LIMITS.optionTextMax}
-                      className={styles.tileField}
-                      problemText={
-                        option.text[language].trim() === ""
-                          ? optionProblem
-                          : undefined
-                      }
-                      onChange={(value) =>
-                        onChange({
-                          ...question,
-                          options: options.map((existing, index) =>
-                            index === optionIndex
-                              ? {
-                                  ...existing,
-                                  text: withLanguageText(
-                                    existing.text,
-                                    language,
-                                    value,
-                                  ),
-                                }
-                              : existing,
-                          ),
-                        })
-                      }
-                    />
-                    <RightMark
-                      name={radioName}
-                      label={t("quizshow:questions.options.markCorrect", {
-                        number,
-                      })}
-                      isChecked={correctIndex === optionIndex}
-                      onCheck={() =>
-                        onChange({
-                          ...question,
-                          answer: { correctIndex: optionIndex },
-                        })
-                      }
-                    />
-                    <span
-                      className={styles.tileRemove}
-                      data-hidden={!isRemoveAllowed}
-                    >
-                      <IconButton
-                        size="sm"
-                        tone="dark"
-                        aria-label={t("quizshow:questions.options.remove", {
-                          number,
-                        })}
-                        onClick={() =>
-                          onChange({
-                            ...question,
-                            options: options.filter(
-                              (_existing, index) => index !== optionIndex,
-                            ),
-                            answer: correctIndexAfterRemoving(
-                              answer?.correctIndex,
-                              optionIndex,
-                            ),
-                          })
-                        }
-                      >
-                        <FiX aria-hidden />
-                      </IconButton>
-                    </span>
-                  </div>
-                </m.li>
-              );
-            })}
+            {options.map((option, optionIndex) => (
+              <m.li
+                key={option.id}
+                className={styles.tileCell}
+                layout={reducedMotion ? false : "position"}
+                {...tileMotion}
+              >
+                <ChoiceTile
+                  question={question}
+                  language={language}
+                  optionIndex={optionIndex}
+                  keepOneWrongId={keepOneWrongId}
+                  onChange={onChange}
+                />
+              </m.li>
+            ))}
             {isAddAllowed && (
               <m.li key="add" className={styles.tileCell} {...tileMotion}>
                 <Button
@@ -229,28 +270,22 @@ function ChoiceTiles({
         </ul>
       </fieldset>
       <p className={styles.foot}>
-        {rightOption === undefined || correctIndex === null ? (
-          t("quizshow:studio.slide.markHint")
+        {question.type === "poll" ? (
+          <>
+            <span className={styles.pill}>{t("quizshow:studio.pollTag")}</span>
+            <span>{t("quizshow:type.pollHint")}</span>
+          </>
         ) : (
-          // One span, so the foot's gap never opens beside the name.
-          <span>
-            <Translation
-              i18nKey="quizshow:studio.slide.rightIs"
-              values={{ answer: "" }}
-              slots={{
-                answer: (
-                  <strong>
-                    {rightOption.text[language].trim() ||
-                      t("quizshow:questions.options.item", {
-                        number: correctIndex + 1,
-                      })}
-                  </strong>
-                ),
-              }}
-            />
-          </span>
+          <RightAnswersLine question={question} language={language} />
         )}
       </p>
+      {markable !== null && (
+        <Collapse isOpen={isEveryMarkTaken}>
+          <p id={keepOneWrongId} className={styles.foot}>
+            {t("quizshow:questions.options.keepOneWrong")}
+          </p>
+        </Collapse>
+      )}
     </>
   );
 }
@@ -295,7 +330,8 @@ function TrueFalseTiles({
                     {optionLetter(optionIndex)}
                   </span>
                   <span className={styles.tileText}>{text}</span>
-                  <RightMark
+                  <QuizshowStudioSlideRightMark
+                    type="radio"
                     name={radioName}
                     isChecked={isTrueAnswer === isTrue}
                     onCheck={() =>
@@ -324,132 +360,6 @@ function TrueFalseTiles({
   );
 }
 
-/** Reads typed text as a finite number within the limit, or null ("1,000" reads as a thousands mark). */
-function parseNumberText(text: string): number | null {
-  const trimmed = text.trim();
-  if (
-    !/^-?(\d+[.,]?\d*|[.,]\d+)$/.test(trimmed) ||
-    /^-?\d{1,3}(,\d{3})+$/.test(trimmed)
-  ) {
-    return null;
-  }
-  const parsed = Number(trimmed.replace(",", "."));
-  const isInRange =
-    Number.isFinite(parsed) && Math.abs(parsed) <= QUIZSHOW_LIMITS.numberAbsMax;
-  return isInRange ? parsed : null;
-}
-
-/** The stage's "Answer on your phone" box, with the right answer typed into it. */
-function TypedAnswerBox({
-  question,
-  language,
-  onChange,
-}: AnswersProps<QuestionOf<"type_answer"> | QuestionOf<"closest_number">>) {
-  const { t } = useTranslation();
-  const hintId = useId();
-  const savedNumber =
-    question.type === "closest_number" && question.answer !== null
-      ? question.answer.value
-      : null;
-  const [numberText, setNumberText] = useState(() =>
-    savedNumber === null ? "" : String(savedNumber),
-  );
-  // The typed text stays while it reads as the saved number; an edit made
-  // elsewhere (the inspector) shows through.
-  const parsedNumber = parseNumberText(numberText);
-  const shownNumberText =
-    parsedNumber === savedNumber ||
-    (savedNumber === null && parsedNumber === null)
-      ? numberText
-      : String(savedNumber);
-  const isUnreadable =
-    question.type === "closest_number" &&
-    shownNumberText.trim() !== "" &&
-    parseNumberText(shownNumberText) === null;
-  const acceptedAnswers =
-    question.type === "type_answer" ? question.acceptedAnswers : [];
-  const answerProblem = useSlideProblemLine("answer_missing");
-  const isNumberInvalid = isUnreadable || answerProblem !== undefined;
-  return (
-    <>
-      <div className={styles.answerBox}>
-        <p className={styles.answerBoxNote}>
-          {t("quizshow:stage.answerOnPhone")}
-        </p>
-        <span className={styles.answerBoxLabel} aria-hidden="true">
-          {t("quizshow:stage.correctAnswer")}
-        </span>
-        {question.type === "type_answer" ? (
-          <QuizshowStudioSlideField
-            label={t("quizshow:questions.typeAnswer.answer")}
-            value={question.answer?.text[language] ?? ""}
-            placeholder={t("quizshow:studio.slide.typedPlaceholder")}
-            maxLength={QUIZSHOW_LIMITS.answerTextMax}
-            className={styles.answerBoxField}
-            problemText={answerProblem}
-            onChange={(value) =>
-              onChange({
-                ...question,
-                answer: {
-                  text: withLanguageText(
-                    question.answer?.text ?? { en: "", pt: "" },
-                    language,
-                    value,
-                  ),
-                },
-              })
-            }
-          />
-        ) : (
-          <>
-            <label
-              htmlFor={hintId + "-number"}
-              className={styles.visuallyHidden}
-            >
-              {t("quizshow:questions.closest.label")}
-            </label>
-            <input
-              id={hintId + "-number"}
-              type="text"
-              inputMode="decimal"
-              className={`${styles.field} ${styles.answerBoxField}`}
-              value={shownNumberText}
-              placeholder={t("quizshow:studio.slide.numberPlaceholder")}
-              aria-invalid={isNumberInvalid || undefined}
-              aria-describedby={hintId}
-              onChange={(event) => {
-                const nextText = event.target.value;
-                setNumberText(nextText);
-                const parsed = parseNumberText(nextText);
-                onChange({
-                  ...question,
-                  answer: parsed === null ? null : { value: parsed },
-                });
-              }}
-            />
-          </>
-        )}
-      </div>
-      <p
-        id={hintId}
-        className={styles.foot}
-        data-tone={isNumberInvalid ? "problem" : undefined}
-      >
-        {question.type === "closest_number" &&
-          (isUnreadable
-            ? t("quizshow:questions.closest.invalid")
-            : (answerProblem ?? t("quizshow:questions.closest.hint")))}
-        {question.type === "type_answer" && acceptedAnswers.length > 0 && (
-          <>
-            <span>{t("quizshow:questions.typeAnswer.accepted")}</span>
-            <strong>{acceptedAnswers.join(", ")}</strong>
-          </>
-        )}
-      </p>
-    </>
-  );
-}
-
 /** The answers of a quiz question, drawn as the stage draws them and typed on in place. */
 export function QuizshowStudioSlideAnswers({
   question,
@@ -458,6 +368,7 @@ export function QuizshowStudioSlideAnswers({
 }: AnswersProps<QuizshowQuestionInput>) {
   switch (question.type) {
     case "multiple_choice":
+    case "poll":
       return (
         <ChoiceTiles
           question={question}
@@ -482,9 +393,16 @@ export function QuizshowStudioSlideAnswers({
         />
       );
     case "type_answer":
+      return (
+        <QuizshowStudioSlideTypedAnswer
+          question={question}
+          language={language}
+          onChange={onChange}
+        />
+      );
     case "closest_number":
       return (
-        <TypedAnswerBox
+        <QuizshowStudioSlideClosestNumber
           question={question}
           language={language}
           onChange={onChange}

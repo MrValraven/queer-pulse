@@ -1,0 +1,19 @@
+/* The question picture's frame. The caller's class sizes it (max sizes,
+   radius, shadow); the frame clips the slow reveal's zoom and blur halo and
+   stacks the reduced-motion step copies in one cell. */
+.frame {
+  display: grid;
+  max-inline-size: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.image {
+  grid-area: 1 / 1;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  max-block-size: inherit;
+  object-fit: contain;
+  transform-origin: center;
+}

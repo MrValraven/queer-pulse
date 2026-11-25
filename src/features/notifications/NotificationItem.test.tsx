@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { routes } from "../../app/routeMap";
 import { TestProviders } from "../../test/TestProviders";
 import {
   NotificationItem,
@@ -271,5 +272,25 @@ describe("NotificationItem: compact avatar size (design N2)", () => {
       .map((element) => element.style.getPropertyValue("--avatar-size"))
       .filter(Boolean);
     expect(avatarSizes).toEqual(["36px"]);
+  });
+});
+
+describe("NotificationItem: a Badges page row", () => {
+  it("names Open badges on a quiz badge row with one full stop", async () => {
+    renderItem(
+      makeNotification({
+        type: "platform",
+        text: "You earned Trivia Sharpshooter at Pride Brunch: June Edition.",
+        sourceHref: `${routes.badges}?badge=${encodeURIComponent("quiz:demo-quiz-badge-sharpshooter")}`,
+      }),
+      { isUnread: false },
+    );
+    const rowLink = await screen.findByRole("link", {
+      name: "You earned Trivia Sharpshooter at Pride Brunch: June Edition. Open badges",
+    });
+    expect(rowLink).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /View thread/ }),
+    ).not.toBeInTheDocument();
   });
 });

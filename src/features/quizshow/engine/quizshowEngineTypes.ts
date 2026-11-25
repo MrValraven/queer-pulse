@@ -6,14 +6,18 @@
 import type {
   QuizshowAck,
   QuizshowAnswerHiddenFrame,
+  QuizshowAnswerKeyView,
   QuizshowAnswerPayload,
   QuizshowCursor,
+  QuizshowGivingLink,
   QuizshowMyAnswer,
   QuizshowMyReveal,
   QuizshowOption,
+  QuizshowPairedDevice,
   QuizshowPlayMode,
   QuizshowPodiumEntry,
   QuizshowQuiz,
+  QuizshowReactionId,
   QuizshowScoresScope,
   QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
@@ -22,6 +26,7 @@ import type {
   QuizshowClientFrameName,
   QuizshowServerFrame,
 } from "../realtime/quizshowFrames";
+import type { QuizshowEngineContext } from "./quizshowEngineSetup";
 
 export interface QuizshowEnginePlayer {
   playerId: string;
@@ -36,7 +41,12 @@ export interface QuizshowEnginePlayer {
   hasUsedJoker: boolean;
   jokerRoundIndex: number | null;
   joinedAt: number;
+  /** Removed by a host: contract 6.14's `removedAt !== null`. */
   isRemoved: boolean;
+  /** Set by `lobby:leave` or a host removal with rejoin (contract 6.14); null while playing. */
+  leftAt: number | null;
+  /** When the last socket left (contract 6.2); the browser never sets it, so demo players never go away. */
+  disconnectedAt: number | null;
 }
 
 export interface QuizshowEngineTeam {
@@ -46,6 +56,8 @@ export interface QuizshowEngineTeam {
   score: number;
   hasUsedJoker: boolean;
   jokerRoundIndex: number | null;
+  /** Made by a host (contract 6.11): waits empty in the lobby. */
+  isHostMade: boolean;
 }
 
 export interface QuizshowEngineAnswer {
@@ -91,6 +103,18 @@ export interface QuizshowEngineQuestionPlay {
       "phaseId" | "ownAnswerId" | "rank" | "score" | "teamScore"
     >
   >;
+  /** Active players left out at the question's open because they were away (contract 6.2). */
+  awayPlayerIds: string[];
+  /** The `read` length from `readPhaseMsFor` (contract 6.12); 0 on party rounds. */
+  readMs: number;
+  /** Each player's streak before the first scoring, for a host rescore (contract 6.4); empty until scored. */
+  streakBeforeByPlayer: Record<string, number>;
+  /** The host's changed answer key (contract 6.4); null keeps the question's own. */
+  keyOverride: QuizshowAnswerKeyView | null;
+  /** Typed answers a host accepted, normalised, in insertion order (contract 6.4). */
+  acceptedTexts: string[];
+  /** A host changed the key or accepted an answer after the reveal. */
+  wasCorrected: boolean;
 }
 
 export interface QuizshowEngineState {
@@ -135,6 +159,26 @@ export interface QuizshowEngineState {
   podium: QuizshowPodiumEntry[] | null;
   idCounter: number;
   randomState: number;
+  /** A practice session keeps no results (contract 6.9). */
+  isPractice: boolean;
+  /** New players are refused while set (contract 6.15). */
+  isJoinLocked: boolean;
+  /** The engine moves on by itself while set (contract 6.16). */
+  isAutoAdvanceOn: boolean;
+  /** When `host:notifyGuests` ran; null before it. */
+  guestPushSentAt: number | null;
+  /** Always [] in demo: the demo has no pairing. */
+  pairedDevices: QuizshowPairedDevice[];
+  /** Reactions since the last `reactions` frame (contract 6.19). */
+  reactionCounts: Partial<Record<QuizshowReactionId, number>>;
+  /** Reaction token buckets by playerId (contract 6.19). */
+  reactionBuckets: Record<string, { tokens: number; refilledAt: number }>;
+  /** The last 50 `host:adjustPoints` request ids, so a retry applies once. */
+  adjustRequestIds: string[];
+  /** The quiz `updatedAt` this session was built from (contract 6.10). */
+  sourceUpdatedAt: string;
+  /** Null in demo unless the demo event data seeds one. */
+  giving: QuizshowGivingLink | null;
 }
 
 export type QuizshowEngineAudience =
@@ -154,7 +198,9 @@ export type QuizshowPlayerFrameName =
   | "settings:avatar"
   | "answer:submit"
   | "vote:submit"
-  | "joker:play";
+  | "joker:play"
+  | "lobby:leave"
+  | "reaction:send";
 
 export type QuizshowHostFrameName = Extract<
   QuizshowClientFrameName,
@@ -174,6 +220,12 @@ export type QuizshowEngineAction =
       type: "host";
       name: QuizshowHostFrameName;
       payload: unknown;
+      now: number;
+    }
+  | {
+      type: "refreshQuiz";
+      quiz: QuizshowQuiz;
+      sourceUpdatedAt: string;
       now: number;
     };
 
@@ -198,6 +250,14 @@ export interface QuizshowEngineOptions {
   sessionId: string;
   seed: number;
   now: number;
+  /** Default false. */
+  isPractice?: boolean;
+  /** Default `quiz.updatedAt`. */
+  sourceUpdatedAt?: string;
+  /** Rematch: teams the new session starts with (contract 6.17), each host-made. */
+  initialTeams?: Array<{ name: string; colorKey: QuizshowTeamColorKey }>;
+  /** Default null. */
+  giving?: QuizshowGivingLink | null;
 }
 
 /**
@@ -213,7 +273,11 @@ export type QuizshowEngineEffect =
   | { kind: "review_list_changed" }
   | { kind: "vote_options_shown" }
   | { kind: "revealed" }
-  | { kind: "reveal_updated"; playerIds: string[] }
+  | {
+      kind: "reveal_updated";
+      playerIds: string[];
+      scope: "everyone" | "favourite";
+    }
   | {
       kind: "answer_hidden";
       hidden: QuizshowAnswerHiddenFrame;
@@ -221,13 +285,34 @@ export type QuizshowEngineEffect =
     }
   | { kind: "scores_shown" }
   | { kind: "podium_shown" }
-  | { kind: "player_removed"; playerId: string }
+  | { kind: "player_removed"; playerId: string; canRejoin: boolean }
   | { kind: "session_ended" }
   | { kind: "screen_muted" }
-  | { kind: "session_state"; playerId: string };
+  | { kind: "session_state"; playerId: string }
+  | { kind: "flags_changed" }
+  /** A fresh `session:state` per role (contract 6.10); "hosts" after a guest push, every role when left out. */
+  | { kind: "state_reset"; scope?: "everyone" | "hosts" }
+  | { kind: "typed_answers_changed" }
+  | { kind: "reactions_changed" }
+  | { kind: "player_left"; playerId: string };
 
 /** A command's ack and what it changed; a refusal changes nothing. */
 export interface QuizshowCommandResult {
   ack: QuizshowAck<object>;
   effects: QuizshowEngineEffect[];
 }
+
+/** A player command handler, shared so the commands module and the roster modules type their maps alike. */
+export type QuizshowPlayerHandler = (
+  context: QuizshowEngineContext,
+  player: QuizshowEnginePlayer,
+  payload: unknown,
+  now: number,
+) => QuizshowCommandResult;
+
+/** A host command handler, shared like `QuizshowPlayerHandler`. */
+export type QuizshowHostHandler = (
+  context: QuizshowEngineContext,
+  payload: unknown,
+  now: number,
+) => QuizshowCommandResult;

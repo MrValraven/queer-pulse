@@ -1,5 +1,5 @@
 import { AnimatePresence, m } from "motion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
@@ -12,18 +12,28 @@ import {
   type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { quizshowSuggestedScreenNameOf } from "../api/quizshowErrors";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
+import { QuizshowPracticeBadge } from "../stage/QuizshowPracticeBadge";
+import { QuizshowLobbyWinToEarn } from "../winBadges/QuizshowLobbyWinToEarn";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowChangeTeam } from "./QuizshowChangeTeam";
 import { QuizshowJokerButton } from "./QuizshowJokerButton";
 import { QuizshowJokerWheelHint } from "./QuizshowJokerWheelHint";
 import { QuizshowErrorLine, QuizshowToggleRow } from "./QuizshowJoinForm";
+import { QuizshowLeaveGame } from "./QuizshowLeaveGame";
 import { QuizshowLobbyChip, QuizshowLobbyCount } from "./QuizshowLobbyChip";
+import { QuizshowReactionBar } from "./QuizshowReactionBar";
 import { lobbyJokerTargetOf } from "./quizshowJokerTarget";
+import { isVibrationOn, setVibrationOn } from "./quizshowVibrate";
 import { sendFailureKeyOf } from "./usePlayJoin";
+import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
 import styles from "./QuizshowPlay.module.css";
 import lobbyStyles from "./QuizshowPlayerLobby.module.css";
+
+/** The name copy when every "<name> 2".."<name> 99" is taken too (C6.13 omits the suggestion), as the join form says it. */
+const NAME_TAKEN_NO_SUGGESTION_KEY = "quizshow:player.nameTakenNoSuggestion";
 
 type SettingResult =
   { ok: true } | { ok: false; code: QuizshowErrorCode | "transport_timeout" };
@@ -64,6 +74,8 @@ function LobbySettings({
   const avatar = useLiveSetting(me.isAvatarShown, (isAvatarShown) =>
     controller.send("settings:avatar", { isAvatarShown }),
   );
+  // Kept on this device only and apart from reduced motion (C9.2 item 43).
+  const [isVibrating, setIsVibrating] = useState(isVibrationOn);
   return (
     <div className={`${styles.group} ${lobbyStyles.sheet}`}>
       <QuizshowToggleRow
@@ -79,6 +91,15 @@ function LobbySettings({
         onChange={extraTime.change}
       />
       <QuizshowErrorLine errorKey={extraTime.errorKey} />
+      <QuizshowToggleRow
+        label={t("quizshow:player.vibration.label")}
+        hint={t("quizshow:player.vibration.hint")}
+        isOn={isVibrating}
+        onChange={(isOn) => {
+          setVibrationOn(isOn);
+          setIsVibrating(isOn);
+        }}
+      />
     </div>
   );
 }
@@ -97,12 +118,20 @@ function NameEditor({
   const [draftName, setDraftName] = useState(me.screenName);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
+  // The "Use Sam 2" offer after a taken name (C6.13); it keeps its words while it folds away.
+  const [suggestion, setSuggestion] = useState<string | null>(null);
+  const [shownSuggestion, setShownSuggestion] = useState<string | null>(null);
+  if (suggestion !== null && suggestion !== shownSuggestion) {
+    setShownSuggestion(suggestion);
+  }
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
 
   async function saveName() {
     if (isSending) return;
     const trimmedName = draftName.trim();
     if (trimmedName === "") {
       setErrorKey("quizshow:errors.text_blank");
+      setSuggestion(null);
       return;
     }
     setIsSending(true);
@@ -112,9 +141,16 @@ function NameEditor({
     setIsSending(false);
     if (result.ok) {
       setErrorKey(null);
+      setSuggestion(null);
       setIsEditing(false);
     } else {
-      setErrorKey(sendFailureKeyOf(result.code));
+      const nextSuggestion = quizshowSuggestedScreenNameOf(result);
+      setSuggestion(nextSuggestion);
+      setErrorKey(
+        result.code === "quizshow_screen_name_taken" && nextSuggestion === null
+          ? NAME_TAKEN_NO_SUGGESTION_KEY
+          : sendFailureKeyOf(result.code),
+      );
     }
   }
 
@@ -132,6 +168,7 @@ function NameEditor({
           onClick={() => {
             setDraftName(me.screenName);
             setErrorKey(null);
+            setSuggestion(null);
             setIsEditing(!isEditing);
           }}
         >
@@ -149,7 +186,11 @@ function NameEditor({
         >
           <FormField
             label={t("quizshow:player.nameLabel")}
-            error={errorKey === null ? undefined : t(errorKey)}
+            error={
+              errorKey === null
+                ? undefined
+                : t(errorKey, { suggestion: shownSuggestion ?? "" })
+            }
           >
             <input
               type="text"
@@ -160,7 +201,31 @@ function NameEditor({
               onChange={(event) => setDraftName(event.target.value)}
             />
           </FormField>
-          <Button type="submit" variant="stage" aria-disabled={isSending}>
+          <Collapse isOpen={suggestion !== null}>
+            <div className={lobbyStyles.nameSuggestion}>
+              <Button
+                variant="stage-ghost"
+                size="sm"
+                onClick={() => {
+                  if (suggestion === null) return;
+                  setDraftName(suggestion);
+                  setErrorKey(null);
+                  setSuggestion(null);
+                  saveButtonRef.current?.focus();
+                }}
+              >
+                {t("quizshow:player.useSuggestion", {
+                  suggestion: shownSuggestion ?? "",
+                })}
+              </Button>
+            </div>
+          </Collapse>
+          <Button
+            ref={saveButtonRef}
+            type="submit"
+            variant="stage"
+            aria-disabled={isSending}
+          >
             {t("quizshow:player.saveName")}
           </Button>
         </form>
@@ -180,6 +245,9 @@ function LobbyBody({
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  // Coming from the join form, focus lands on the lobby's heading (item M1).
+  // The key stays put, so the first round's title card keeps the focus where it is.
+  const headingRef = useQuizshowHeadingFocus(session.sessionId);
   const team = session.lobby.teams.find(
     (candidate) => candidate.teamId === me.teamId,
   );
@@ -194,7 +262,15 @@ function LobbyBody({
     : "quizshow:player.lobbyBody";
   return (
     <div className={styles.column}>
-      <h1 className={styles.title}>{t("quizshow:player.lobbyTitle")}</h1>
+      {session.isPractice && (
+        <QuizshowPracticeBadge
+          tone="phone"
+          className={lobbyStyles.practiceBadge}
+        />
+      )}
+      <h1 ref={headingRef} tabIndex={-1} className={styles.title}>
+        {t("quizshow:player.lobbyTitle")}
+      </h1>
       <p className={styles.lead} role="status">
         <AnimatePresence mode="wait" initial={false}>
           <m.span
@@ -246,6 +322,7 @@ function LobbyBody({
         )}
         <QuizshowLobbyCount playerCount={session.lobby.playerCount} />
       </section>
+      <QuizshowLobbyWinToEarn session={session} />
       <QuizshowChangeTeam controller={controller} session={session} me={me} />
       <LobbySettings controller={controller} me={me} />
       <Collapse isOpen={jokerTarget.kind === "round"}>
@@ -259,6 +336,8 @@ function LobbyBody({
       <QuizshowJokerWheelHint
         isOpen={jokerTarget.kind === "wheel" && !me.hasUsedJoker}
       />
+      <QuizshowReactionBar controller={controller} />
+      <QuizshowLeaveGame controller={controller} />
     </div>
   );
 }

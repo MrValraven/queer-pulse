@@ -1,6 +1,7 @@
 import type { Socket } from "socket.io-client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { API_BASE_URL } from "../../../shared/api/config";
+import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
 import {
   QUIZSHOW_ACK_TIMEOUT_MS,
   QUIZSHOW_REAUTH_ACK_TIMEOUT_MS,
@@ -12,11 +13,13 @@ import { QUIZSHOW_SERVER_FRAME_NAMES } from "./quizshowFrames";
 import {
   QuizshowSendTimeoutError,
   QuizshowSocketClient,
+  type QuizshowSocketClientOptions,
 } from "./quizshowSocket";
 
 const apiClientMock = vi.hoisted(() => ({
   mintSocketTicket: vi.fn(),
   refreshSession: vi.fn(),
+  readLastRefreshSettlement: vi.fn(),
 }));
 const loggerMock = vi.hoisted(() => ({
   logWarn: vi.fn(),
@@ -104,7 +107,13 @@ async function flushPromises(): Promise<void> {
   for (let tick = 0; tick < 20; tick += 1) await Promise.resolve();
 }
 
-function setup() {
+const createdClients: QuizshowSocketClient[] = [];
+
+type SetupOverrides = Partial<
+  Pick<QuizshowSocketClientOptions, "role" | "deviceTicket" | "currentPhaseId">
+>;
+
+function setup(overrides: SetupOverrides = {}) {
   const fakeSocket = createFakeSocket();
   const ioFactory = vi.fn(
     (_url: string, _options: object) => fakeSocket as unknown as Socket,
@@ -117,7 +126,10 @@ function setup() {
     onAction: (action) => actions.push(action),
     onClockOffset: (offsetMs) => offsets.push(offsetMs),
     loadIo: () => Promise.resolve(ioFactory),
+    ...overrides,
   });
+  // Disposed after each test, so no client keeps its wake listeners on the shared document.
+  createdClients.push(client);
   return { fakeSocket, ioFactory, actions, offsets, client };
 }
 
@@ -152,12 +164,60 @@ beforeEach(() => {
   });
   apiClientMock.refreshSession.mockReset();
   apiClientMock.refreshSession.mockResolvedValue(true);
+  apiClientMock.readLastRefreshSettlement.mockReset();
+  apiClientMock.readLastRefreshSettlement.mockReturnValue(null);
   loggerMock.logWarn.mockReset();
 });
 
+/** The next refresh resolves false and records `outcome` as settled when it runs. */
+function failNextRefreshWith(
+  outcome:
+    | { kind: "rejected"; status: number }
+    | { kind: "networkFailed" }
+    | { kind: "lockTimedOut" },
+) {
+  apiClientMock.refreshSession.mockImplementationOnce(() => {
+    apiClientMock.readLastRefreshSettlement.mockReturnValue({
+      outcome,
+      settledAt: Date.now(),
+    });
+    return Promise.resolve(false);
+  });
+}
+
+/** A server drop right after an `exception` carrying `code`. */
+function dropWithCode(
+  fakeSocket: ReturnType<typeof createFakeSocket>,
+  code: string,
+) {
+  fakeSocket.trigger("exception", { status: "error", code, message: code });
+  fakeSocket.serverDrop("io server disconnect");
+}
+
+/** Getter spies a test installs (navigator.onLine, document.visibilityState); undone after each test. */
+const spyRestorers: Array<() => void> = [];
+
 afterEach(() => {
+  for (const createdClient of createdClients.splice(0)) createdClient.dispose();
+  for (const restore of spyRestorers.splice(0)) restore();
   vi.useRealTimers();
 });
+
+function setOnline(isOnline: boolean) {
+  const spy = vi.spyOn(navigator, "onLine", "get").mockReturnValue(isOnline);
+  spyRestorers.push(() => spy.mockRestore());
+}
+
+function setPageVisible() {
+  const spy = vi
+    .spyOn(document, "visibilityState", "get")
+    .mockReturnValue("visible");
+  spyRestorers.push(() => spy.mockRestore());
+}
+
+function sessionPingsOf(fakeSocket: ReturnType<typeof createFakeSocket>) {
+  return fakeSocket.ackCalls.filter((call) => call.name === "session:ping");
+}
 
 describe("QuizshowSocketClient connection", () => {
   it("opens a websocket to /quizshow with credentials", async () => {
@@ -173,6 +233,7 @@ describe("QuizshowSocketClient connection", () => {
     expect(statusesOf(harness.actions)[0]).toEqual({
       status: "connecting",
       refusalCode: null,
+      retryCause: null,
     });
   });
 
@@ -192,6 +253,7 @@ describe("QuizshowSocketClient connection", () => {
     expect(statusesOf(harness.actions).at(-1)).toEqual({
       status: "reconnecting",
       refusalCode: null,
+      retryCause: null,
     });
     harness.fakeSocket.serverConnect();
     await flushPromises();
@@ -216,6 +278,7 @@ describe("QuizshowSocketClient connection", () => {
     expect(statusesOf(harness.actions).at(-1)).toEqual({
       status: "refused",
       refusalCode: "quizshow_player_removed",
+      retryCause: null,
     });
     expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
 
@@ -226,37 +289,55 @@ describe("QuizshowSocketClient connection", () => {
     expect(statusesOf(harness.actions).at(-1)?.status).toBe("refused");
   });
 
-  it("refreshes the session and reconnects after a server drop, backing off", async () => {
+  it("reconnects after a server drop with backoff and no refresh", async () => {
     const harness = setup();
     await connectAndAttach(harness);
 
     harness.fakeSocket.serverDrop("io server disconnect");
     expect(statusesOf(harness.actions).at(-1)?.status).toBe("reconnecting");
     await vi.advanceTimersByTimeAsync(1_999);
-    expect(apiClientMock.refreshSession).not.toHaveBeenCalled();
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(1);
     await flushPromises();
-    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(1);
     expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
 
     harness.fakeSocket.serverDrop("io server disconnect");
     await vi.advanceTimersByTimeAsync(3_999);
-    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(1);
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
     await vi.advanceTimersByTimeAsync(1);
     await flushPromises();
-    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(2);
     expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(2);
+    expect(apiClientMock.refreshSession).not.toHaveBeenCalled();
+  });
 
-    apiClientMock.refreshSession.mockResolvedValue(false);
-    harness.fakeSocket.serverDrop("io server disconnect");
-    await vi.advanceTimersByTimeAsync(8_000);
-    await flushPromises();
-    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(3);
-    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(2);
+  it("refreshes the session before reconnecting after a TOKEN_EXPIRED drop", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    dropWithCode(harness.fakeSocket, "TOKEN_EXPIRED");
     expect(statusesOf(harness.actions).at(-1)).toEqual({
-      status: "refused",
-      refusalCode: "UNAUTHORIZED",
+      status: "reconnecting",
+      refusalCode: null,
+      retryCause: "UNAUTHORIZED",
     });
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+
+    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(1);
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("reconnects without a refresh after a SERVER_ERROR drop", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    dropWithCode(harness.fakeSocket, "SERVER_ERROR");
+    expect(statusesOf(harness.actions).at(-1)?.retryCause).toBe("SERVER_ERROR");
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+
+    expect(apiClientMock.refreshSession).not.toHaveBeenCalled();
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
   });
 
   it("refreshes and reconnects after an UNAUTHORIZED handshake", async () => {
@@ -274,6 +355,7 @@ describe("QuizshowSocketClient connection", () => {
     expect(statusesOf(harness.actions).at(-1)).toEqual({
       status: "reconnecting",
       refusalCode: null,
+      retryCause: "UNAUTHORIZED",
     });
 
     await vi.advanceTimersByTimeAsync(2_000);
@@ -291,9 +373,9 @@ describe("QuizshowSocketClient connection", () => {
     ).toBe(false);
   });
 
-  it("ends refused when the refresh fails", async () => {
+  it("ends refused when the server rejects the refresh", async () => {
     const harness = setup();
-    apiClientMock.refreshSession.mockResolvedValue(false);
+    failNextRefreshWith({ kind: "rejected", status: 401 });
     harness.client.connect();
     await flushPromises();
 
@@ -312,55 +394,11 @@ describe("QuizshowSocketClient connection", () => {
     expect(statusesOf(harness.actions).at(-1)).toEqual({
       status: "refused",
       refusalCode: "UNAUTHORIZED",
+      retryCause: null,
     });
     await vi.advanceTimersByTimeAsync(5 * MINUTE_MS);
     expect(vi.getTimerCount()).toBe(0);
     expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(1);
-  });
-
-  it("stops for good after the session ends", async () => {
-    const harness = setup();
-    await connectAndAttach(harness);
-
-    harness.fakeSocket.trigger("session:end", { status: "finished" });
-    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
-    harness.fakeSocket.serverDrop("transport close");
-    harness.fakeSocket.serverConnect();
-    await flushPromises();
-
-    expect(attachCallsOf(harness.fakeSocket)).toHaveLength(1);
-    expect(
-      statusesOf(harness.actions).some(
-        (statusPayload) =>
-          statusPayload.status === "refused" ||
-          statusPayload.status === "reconnecting",
-      ),
-    ).toBe(false);
-    expect(vi.getTimerCount()).toBe(0);
-  });
-
-  it("ignores socket exceptions after the session has ended", async () => {
-    const harness = setup();
-    await connectAndAttach(harness);
-
-    harness.fakeSocket.trigger("session:end", { status: "finished" });
-    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
-    harness.fakeSocket.trigger("exception", {
-      status: "error",
-      code: "FORBIDDEN",
-      message: "Forbidden",
-    });
-
-    expect(
-      statusesOf(harness.actions).some(
-        (statusPayload) => statusPayload.status === "refused",
-      ),
-    ).toBe(false);
-    expect(loggerMock.logWarn).not.toHaveBeenCalledWith(
-      "quizshow: gateway exception",
-      expect.anything(),
-    );
-    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
   });
 
   it("shows a failed connect as reconnecting", async () => {
@@ -373,6 +411,7 @@ describe("QuizshowSocketClient connection", () => {
     expect(statusesOf(harness.actions).at(-1)).toEqual({
       status: "reconnecting",
       refusalCode: null,
+      retryCause: null,
     });
     expect(apiClientMock.refreshSession).not.toHaveBeenCalled();
   });
@@ -387,6 +426,104 @@ describe("QuizshowSocketClient connection", () => {
     expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
     expect(pingsOf(harness.fakeSocket)).toHaveLength(0);
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe("QuizshowSocketClient refresh outcomes", () => {
+  async function dropForRefresh(harness: ReturnType<typeof setup>) {
+    await connectAndAttach(harness);
+    dropWithCode(harness.fakeSocket, "UNAUTHORIZED");
+  }
+
+  it("ends refused when the refresh is rejected with 403", async () => {
+    const harness = setup();
+    failNextRefreshWith({ kind: "rejected", status: 403 });
+    await dropForRefresh(harness);
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+
+    expect(statusesOf(harness.actions).at(-1)).toEqual({
+      status: "refused",
+      refusalCode: "UNAUTHORIZED",
+      retryCause: null,
+    });
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+  });
+
+  it("tries the refresh again with backoff after a network failure", async () => {
+    const harness = setup();
+    failNextRefreshWith({ kind: "networkFailed" });
+    await dropForRefresh(harness);
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+
+    expect(statusesOf(harness.actions).at(-1)).toEqual({
+      status: "reconnecting",
+      refusalCode: null,
+      retryCause: "UNAUTHORIZED",
+    });
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(3_999);
+    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(1);
+    await flushPromises();
+    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(2);
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("names the server or the rate limit while it retries a 5xx or 429 refresh", async () => {
+    const serverHarness = setup();
+    failNextRefreshWith({ kind: "rejected", status: 503 });
+    await dropForRefresh(serverHarness);
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+    expect(statusesOf(serverHarness.actions).at(-1)?.retryCause).toBe(
+      "SERVER_ERROR",
+    );
+
+    const limitedHarness = setup();
+    failNextRefreshWith({ kind: "rejected", status: 429 });
+    await dropForRefresh(limitedHarness);
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+    expect(statusesOf(limitedHarness.actions).at(-1)?.retryCause).toBe(
+      "RATE_LIMITED",
+    );
+    for (const harness of [serverHarness, limitedHarness]) {
+      expect(
+        statusesOf(harness.actions).some(
+          (statusPayload) => statusPayload.status === "refused",
+        ),
+      ).toBe(false);
+    }
+  });
+
+  it("tries again when the cross-tab lock wait was abandoned", async () => {
+    const harness = setup();
+    failNextRefreshWith({ kind: "lockTimedOut" });
+    await dropForRefresh(harness);
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+
+    expect(statusesOf(harness.actions).at(-1)).toEqual({
+      status: "reconnecting",
+      refusalCode: null,
+      retryCause: "UNAUTHORIZED",
+    });
+  });
+
+  it("reads a rejection settled before this refresh as no answer", async () => {
+    const harness = setup();
+    apiClientMock.refreshSession.mockResolvedValueOnce(false);
+    apiClientMock.readLastRefreshSettlement.mockReturnValue({
+      outcome: { kind: "rejected", status: 401 },
+      settledAt: START_TIME.getTime() - MINUTE_MS,
+    });
+    await dropForRefresh(harness);
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+
+    expect(statusesOf(harness.actions).at(-1)?.status).toBe("reconnecting");
   });
 });
 
@@ -612,6 +749,33 @@ describe("QuizshowSocketClient reauth", () => {
     await flushPromises();
     expect(reauthCallsOf(harness.fakeSocket)).toHaveLength(2);
   });
+
+  it("stops rescheduling when a helper's reauth cannot move the expiry later", async () => {
+    const ceilingMs = START_TIME.getTime() + 15 * MINUTE_MS;
+    const harness = setup({ role: "host", deviceTicket: "helper-ticket-1" });
+    harness.fakeSocket.ackResponder = (name) => {
+      if (name === "quizshow:attach") {
+        return Promise.resolve({
+          ok: true,
+          role: "host",
+          connectionExpiresAt: ceilingMs,
+        });
+      }
+      if (name === "session:reauth") {
+        return Promise.resolve({ ok: true, exp: ceilingMs / 1000 });
+      }
+      return defaultAckResponder(name);
+    };
+    await connectAndAttach(harness);
+
+    await vi.advanceTimersByTimeAsync(14 * MINUTE_MS);
+    await flushPromises();
+    expect(reauthCallsOf(harness.fakeSocket)).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(MINUTE_MS - 1);
+    await flushPromises();
+    expect(reauthCallsOf(harness.fakeSocket)).toHaveLength(1);
+    expect(apiClientMock.mintSocketTicket).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe("QuizshowSocketClient frames and sends", () => {
@@ -693,5 +857,468 @@ describe("QuizshowSocketClient frames and sends", () => {
     expect(harness.actions).toHaveLength(actionCount);
     expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe("QuizshowSocketClient time probe", () => {
+  it("acks a time:probe at once and keeps it out of the store", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+    const actionCount = harness.actions.length;
+    const ack = vi.fn();
+
+    harness.fakeSocket.trigger("time:probe", { sentAt: Date.now() }, ack);
+
+    expect(ack).toHaveBeenCalledTimes(1);
+    expect(ack).toHaveBeenCalledWith({});
+    expect(harness.actions).toHaveLength(actionCount);
+  });
+});
+
+describe("QuizshowSocketClient wake resync", () => {
+  it("forces a reconnect when the wake ping times out", async () => {
+    const harness = setup({ currentPhaseId: () => "phase-1" });
+    await connectAndAttach(harness);
+    harness.fakeSocket.ackResponder = (name) =>
+      name === "session:ping"
+        ? Promise.reject(new Error("operation has timed out"))
+        : defaultAckResponder(name);
+    setPageVisible();
+
+    document.dispatchEvent(new Event("visibilitychange"));
+    await flushPromises();
+
+    expect(sessionPingsOf(harness.fakeSocket)).toEqual([
+      {
+        name: "session:ping",
+        payload: {},
+        timeoutMs: QUIZSHOW_LIMITS.sessionPingTimeoutMs,
+      },
+    ]);
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("forces a reconnect when the ping's phase differs from the store's", async () => {
+    const harness = setup({ currentPhaseId: () => "phase-1" });
+    await connectAndAttach(harness);
+    harness.fakeSocket.ackResponder = (name) =>
+      name === "session:ping"
+        ? Promise.resolve({ ok: true, serverNow: Date.now(), phaseId: "p-2" })
+        : defaultAckResponder(name);
+
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+
+    expect(sessionPingsOf(harness.fakeSocket)).toHaveLength(1);
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("stays connected when the ping's phase matches the store's", async () => {
+    const harness = setup({ currentPhaseId: () => "phase-1" });
+    await connectAndAttach(harness);
+    harness.fakeSocket.ackResponder = (name) =>
+      name === "session:ping"
+        ? Promise.resolve({
+            ok: true,
+            serverNow: Date.now(),
+            phaseId: "phase-1",
+          })
+        : defaultAckResponder(name);
+
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+
+    expect(sessionPingsOf(harness.fakeSocket)).toHaveLength(1);
+    expect(harness.fakeSocket.disconnect).not.toHaveBeenCalled();
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+  });
+
+  it("connects at once when the device wakes while down", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+    harness.fakeSocket.serverDrop("transport close");
+
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+
+    expect(sessionPingsOf(harness.fakeSocket)).toHaveLength(0);
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("removes the same wake listeners it added on dispose", async () => {
+    const documentAddSpy = vi.spyOn(document, "addEventListener");
+    const documentRemoveSpy = vi.spyOn(document, "removeEventListener");
+    const windowAddSpy = vi.spyOn(window, "addEventListener");
+    const windowRemoveSpy = vi.spyOn(window, "removeEventListener");
+    spyRestorers.push(() => {
+      documentAddSpy.mockRestore();
+      documentRemoveSpy.mockRestore();
+      windowAddSpy.mockRestore();
+      windowRemoveSpy.mockRestore();
+    });
+    const harness = setup();
+    await connectAndAttach(harness);
+    const visibilityHandler = documentAddSpy.mock.calls.find(
+      ([eventName]) => eventName === "visibilitychange",
+    )?.[1];
+    const onlineHandler = windowAddSpy.mock.calls.find(
+      ([eventName]) => eventName === "online",
+    )?.[1];
+    expect(visibilityHandler).toBeTypeOf("function");
+    expect(onlineHandler).toBeTypeOf("function");
+
+    harness.client.dispose();
+    expect(documentRemoveSpy).toHaveBeenCalledWith(
+      "visibilitychange",
+      visibilityHandler,
+    );
+    expect(windowRemoveSpy).toHaveBeenCalledWith("online", onlineHandler);
+    setPageVisible();
+    document.dispatchEvent(new Event("visibilitychange"));
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+
+    expect(sessionPingsOf(harness.fakeSocket)).toHaveLength(0);
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+  });
+});
+
+describe("QuizshowSocketClient device tickets", () => {
+  it("sends a TV's ticket in the handshake and runs no member reauth", async () => {
+    const harness = setup({ role: "screen", deviceTicket: "device-ticket-1" });
+    await connectAndAttach(harness);
+
+    expect(harness.ioFactory).toHaveBeenCalledWith(`${API_BASE_URL}/quizshow`, {
+      withCredentials: true,
+      transports: ["websocket"],
+      auth: { deviceTicket: "device-ticket-1" },
+    });
+    expect(attachCallsOf(harness.fakeSocket)[0]?.payload).toEqual({
+      sessionId: "session-1",
+      as: "screen",
+    });
+
+    await vi.advanceTimersByTimeAsync(30 * MINUTE_MS);
+    expect(apiClientMock.mintSocketTicket).not.toHaveBeenCalled();
+    expect(
+      harness.fakeSocket.ackCalls.some(
+        (call) => call.name === "session:reauth",
+      ),
+    ).toBe(false);
+  });
+
+  it("refuses with the ticket expired code when the TV's ticket expires", async () => {
+    const harness = setup({ role: "screen", deviceTicket: "device-ticket-1" });
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("exception", {
+      status: "error",
+      code: "TOKEN_EXPIRED",
+      message: "Token expired",
+    });
+
+    expect(statusesOf(harness.actions).at(-1)).toEqual({
+      status: "refused",
+      refusalCode: "quizshow_device_ticket_expired",
+      retryCause: null,
+    });
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(5 * MINUTE_MS);
+    expect(apiClientMock.refreshSession).not.toHaveBeenCalled();
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+  });
+
+  it("sends a helper's ticket in the attach payload and keeps the member reauth", async () => {
+    const harness = setup({ role: "host", deviceTicket: "helper-ticket-1" });
+    await connectAndAttach(harness);
+
+    expect(harness.ioFactory).toHaveBeenCalledWith(`${API_BASE_URL}/quizshow`, {
+      withCredentials: true,
+      transports: ["websocket"],
+    });
+    expect(attachCallsOf(harness.fakeSocket)[0]?.payload).toEqual({
+      sessionId: "session-1",
+      as: "host",
+      deviceTicket: "helper-ticket-1",
+    });
+
+    await vi.advanceTimersByTimeAsync(14 * MINUTE_MS);
+    await flushPromises();
+    expect(apiClientMock.mintSocketTicket).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("QuizshowSocketClient session end", () => {
+  it("stops for good after an abandoned session ends", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("session:end", { status: "abandoned" });
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    harness.fakeSocket.serverDrop("transport close");
+    harness.fakeSocket.serverConnect();
+    await flushPromises();
+
+    expect(attachCallsOf(harness.fakeSocket)).toHaveLength(1);
+    expect(
+      statusesOf(harness.actions).some(
+        (statusPayload) =>
+          statusPayload.status === "refused" ||
+          statusPayload.status === "reconnecting",
+      ),
+    ).toBe(false);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("ignores socket exceptions after the session has ended", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("session:end", { status: "abandoned" });
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    harness.fakeSocket.trigger("exception", {
+      status: "error",
+      code: "FORBIDDEN",
+      message: "Forbidden",
+    });
+
+    expect(
+      statusesOf(harness.actions).some(
+        (statusPayload) => statusPayload.status === "refused",
+      ),
+    ).toBe(false);
+    expect(loggerMock.logWarn).not.toHaveBeenCalledWith(
+      "quizshow: gateway exception",
+      expect.anything(),
+    );
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the socket after a finished end until the rematch", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("session:end", { status: "finished" });
+    expect(harness.fakeSocket.disconnect).not.toHaveBeenCalled();
+    // The rematch window and the reauth schedule.
+    expect(vi.getTimerCount()).toBe(2);
+    await vi.advanceTimersByTimeAsync(20 * MINUTE_MS);
+    await flushPromises();
+    // The held socket still reauthenticates before its access token expires.
+    expect(apiClientMock.mintSocketTicket).toHaveBeenCalledTimes(1);
+    expect(
+      harness.fakeSocket.ackCalls.filter(
+        (call) => call.name === "session:reauth",
+      ),
+    ).toHaveLength(1);
+    expect(pingsOf(harness.fakeSocket)).toHaveLength(0);
+
+    harness.fakeSocket.trigger("session:rematch", {
+      fromSessionId: "session-1",
+    });
+    expect(harness.actions.at(-1)).toEqual({
+      event: "session:rematch",
+      payload: { fromSessionId: "session-1" },
+    });
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(
+      statusesOf(harness.actions).some(
+        (statusPayload) => statusPayload.status === "reconnecting",
+      ),
+    ).toBe(false);
+  });
+
+  it("closes the kept socket when the rematch window passes", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("session:end", { status: "finished" });
+    await vi.advanceTimersByTimeAsync(QUIZSHOW_LIMITS.rematchWindowMs - 1);
+    expect(harness.fakeSocket.disconnect).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("stays down after the server drops a kept socket", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("session:end", { status: "finished" });
+    harness.fakeSocket.serverDrop("io server disconnect");
+    await vi.advanceTimersByTimeAsync(5 * MINUTE_MS);
+
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+    expect(apiClientMock.refreshSession).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("keeps a held socket down after a transport close", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("session:end", { status: "finished" });
+    harness.fakeSocket.serverDrop("transport close");
+    harness.fakeSocket.serverConnect();
+    await vi.advanceTimersByTimeAsync(5 * MINUTE_MS);
+    await flushPromises();
+
+    // The disconnect stops socket.io's own reconnect.
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+    expect(attachCallsOf(harness.fakeSocket)).toHaveLength(1);
+    expect(apiClientMock.mintSocketTicket).not.toHaveBeenCalled();
+    expect(
+      statusesOf(harness.actions).some(
+        (statusPayload) => statusPayload.status === "reconnecting",
+      ),
+    ).toBe(false);
+  });
+
+  it("disconnects a paired TV at a finished end", async () => {
+    const harness = setup({ role: "screen", deviceTicket: "device-ticket-1" });
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("session:end", { status: "finished" });
+
+    expect(harness.fakeSocket.disconnect).toHaveBeenCalledTimes(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe("QuizshowSocketClient retry cause", () => {
+  it("names offline as the cause when the device is offline", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+    setOnline(false);
+
+    harness.fakeSocket.serverDrop("transport close");
+
+    expect(statusesOf(harness.actions).at(-1)).toEqual({
+      status: "reconnecting",
+      refusalCode: null,
+      retryCause: "offline",
+    });
+  });
+
+  it("names the transport code a failed connect carries", async () => {
+    const harness = setup();
+    harness.client.connect();
+    await flushPromises();
+
+    harness.fakeSocket.trigger(
+      "connect_error",
+      Object.assign(new Error("rate limited"), {
+        data: { code: "RATE_LIMITED" },
+      }),
+    );
+
+    expect(statusesOf(harness.actions).at(-1)).toEqual({
+      status: "reconnecting",
+      refusalCode: null,
+      retryCause: "RATE_LIMITED",
+    });
+  });
+
+  it("names an exception's code only for the server drop right after it", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+
+    harness.fakeSocket.trigger("exception", {
+      status: "error",
+      code: "SERVER_ERROR",
+      message: "Internal server error",
+    });
+    harness.fakeSocket.serverDrop("transport close");
+    expect(statusesOf(harness.actions).at(-1)?.retryCause).toBeNull();
+
+    harness.fakeSocket.serverConnect();
+    await flushPromises();
+    harness.fakeSocket.serverDrop("io server disconnect");
+    expect(statusesOf(harness.actions).at(-1)?.retryCause).toBeNull();
+  });
+
+  it("names offline after an exception when the device is offline", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+    setOnline(false);
+
+    harness.fakeSocket.trigger("exception", {
+      status: "error",
+      code: "SERVER_ERROR",
+      message: "Internal server error",
+    });
+    harness.fakeSocket.serverDrop("transport close");
+
+    expect(statusesOf(harness.actions).at(-1)?.retryCause).toBe("offline");
+  });
+});
+
+describe("QuizshowSocketClient wake resync skips", () => {
+  it("sends no wake ping after a refusal", async () => {
+    const harness = setup();
+    harness.fakeSocket.ackResponder = () =>
+      Promise.resolve({
+        ok: false,
+        code: "quizshow_player_removed",
+        message: "removed",
+      });
+    await connectAndAttach(harness);
+
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+
+    expect(sessionPingsOf(harness.fakeSocket)).toHaveLength(0);
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+  });
+
+  it("sends no wake ping after an end, held or closed", async () => {
+    const heldHarness = setup();
+    await connectAndAttach(heldHarness);
+    heldHarness.fakeSocket.trigger("session:end", { status: "finished" });
+    const closedHarness = setup();
+    await connectAndAttach(closedHarness);
+    closedHarness.fakeSocket.trigger("session:end", { status: "abandoned" });
+
+    setPageVisible();
+    document.dispatchEvent(new Event("visibilitychange"));
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+
+    for (const harness of [heldHarness, closedHarness]) {
+      expect(sessionPingsOf(harness.fakeSocket)).toHaveLength(0);
+      expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+    }
+  });
+
+  it("sends no wake ping before the attach ack", async () => {
+    const harness = setup();
+    harness.fakeSocket.ackResponder = () => new Promise(() => undefined);
+    await connectAndAttach(harness);
+
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+
+    expect(sessionPingsOf(harness.fakeSocket)).toHaveLength(0);
+    expect(harness.fakeSocket.disconnect).not.toHaveBeenCalled();
+  });
+
+  it("waits for a pending reconnect when the device wakes while down", async () => {
+    const harness = setup();
+    await connectAndAttach(harness);
+    dropWithCode(harness.fakeSocket, "TOKEN_EXPIRED");
+
+    window.dispatchEvent(new Event("online"));
+    await flushPromises();
+    expect(harness.fakeSocket.connect).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(2_000);
+    await flushPromises();
+    expect(apiClientMock.refreshSession).toHaveBeenCalledTimes(1);
+    expect(harness.fakeSocket.connect).toHaveBeenCalledTimes(1);
   });
 });

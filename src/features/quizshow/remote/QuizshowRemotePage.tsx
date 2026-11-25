@@ -1,10 +1,17 @@
 import { AnimatePresence, m } from "motion/react";
-import { useEffect, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type CSSProperties,
+} from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { FiUsers, FiVolume2, FiVolumeX } from "react-icons/fi";
+import { FiLock, FiUsers, FiVolume2, FiVolumeX } from "react-icons/fi";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContentLink";
+import { useScreenWakeLock } from "../../../shared/hooks/useScreenWakeLock";
 import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { IconButton } from "../../../shared/components/ui/IconButton";
@@ -13,6 +20,7 @@ import { primeMessageChime } from "../../../shared/lib/messageChime";
 import { PageMeta } from "../../../shared/seo/PageMeta";
 import {
   QUIZSHOW_LIMITS,
+  QUIZSHOW_OPEN_SESSION_STATUSES,
   type QuizshowHostState,
   type QuizshowPlayMode,
 } from "../../../shared/contracts/quizshow";
@@ -21,7 +29,14 @@ import {
   quizshowLoadFailureKeyOf,
   quizshowRefusalKeyOf,
 } from "../api/quizshowErrors";
-import { isHostState } from "../realtime/quizshowClientStore";
+import {
+  isHostState,
+  type QuizshowClientState,
+} from "../realtime/quizshowClientStore";
+import type {
+  QuizshowClientFrameName,
+  QuizshowClientPayload,
+} from "../realtime/quizshowFrames";
 import {
   useQuizshowSession,
   type QuizshowSessionController,
@@ -37,19 +52,32 @@ import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
 import { QuizshowConnectionBanner } from "../stage/QuizshowConnectionBanner";
 import { QuizshowCountdownBar } from "../stage/QuizshowCountdownBar";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
+import { QuizshowPracticeBadge } from "../stage/QuizshowPracticeBadge";
 import { QuizshowTimerRing } from "../stage/QuizshowTimerRing";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
+import { QuizshowOpenLobbyButton } from "../builder/QuizshowOpenLobbyButton";
+import { quizshowHelperPairPath } from "../quizshowPaths";
+import {
+  quizshowScopeRemotePath,
+  type QuizshowSessionScope,
+} from "../quizshowScope";
+import { QuizshowRemoteAdjustPoints } from "./QuizshowRemoteAdjustPoints";
 import { QuizshowRemoteAnswerKey } from "./QuizshowRemoteAnswerKey";
 import {
   QuizshowRemoteControls,
   QuizshowRemoteErrorLine,
 } from "./QuizshowRemoteControls";
 import { QuizshowRemoteRoundLine } from "./QuizshowRemoteMetaLine";
+import { QuizshowRemotePairing } from "./QuizshowRemotePairing";
 import { QuizshowRemotePlayers } from "./QuizshowRemotePlayers";
 import { QuizshowRemotePreview } from "./QuizshowRemotePreview";
+import { QuizshowRemoteRescore } from "./QuizshowRemoteRescore";
 import { QuizshowRemoteReview } from "./QuizshowRemoteReview";
+import { screenStateFromHost } from "./quizshowScreenStateFromHost";
 import { useQuizshowHostCommand } from "./useQuizshowHostCommand";
+import { useRemotePairAgain } from "./useRemotePairAgain";
 import styles from "./QuizshowRemote.module.css";
+import rescoreStyles from "./QuizshowRemoteRescore.module.css";
 
 /** The remote plays its cues quietly and locally: the last seconds and the reveal. */
 const REMOTE_CUES: readonly QuizshowCue[] = ["timeAlmostUp", "reveal"];
@@ -58,7 +86,8 @@ const PLAYERS_PANEL_ID = "quizshow-remote-players-panel";
 
 /**
  * The phase's standard limit in ms, so a countdown bar that mounts during a
- * pause sits at the frozen place. Read is fixed; open and write use the
+ * pause sits at the frozen place. Read is the question's own read length
+ * (item 30) plus the round's talk time (0 in solo); open and write use the
  * question's effective limit. The wire carries no per-round vote limit, so
  * vote uses the default vote time, as the phone and the screen do. Untimed
  * phases give null.
@@ -66,13 +95,56 @@ const PLAYERS_PANEL_ID = "quizshow-remote-players-panel";
 function standardLimitMsOf(
   phase: QuizshowHostState["cursor"]["phase"],
   question: QuizshowHostState["question"],
+  round: QuizshowHostState["round"],
 ): number | null {
-  if (phase === "read") return QUIZSHOW_LIMITS.readPhaseMs;
+  if (phase === "read") {
+    if (question === null) return null;
+    return question.readMs + (round?.talkSeconds ?? 0) * 1000;
+  }
   if ((phase === "open" || phase === "write") && question !== null) {
     return question.timeLimitSeconds * 1000;
   }
   if (phase === "vote") return QUIZSHOW_LIMITS.voteSecondsDefault * 1000;
   return null;
+}
+
+/** The question types a host can fix after the reveal (C6.4): accept a spelling or change the key. */
+const RESCORABLE_QUESTION_TYPES: ReadonlySet<string> = new Set([
+  "type_answer",
+  "multiple_choice",
+  "true_false",
+]);
+
+function isGameRunning(session: QuizshowHostState): boolean {
+  const { status } = session.cursor;
+  return status === "running" || status === "paused";
+}
+
+/** "Fix answers" (item 5): `reveal` and `scores` of a typed or choice question in a quiz round; never a party round or a poll. */
+function isRescoreShown(session: QuizshowHostState): boolean {
+  const { phase } = session.cursor;
+  const { question } = session;
+  return (
+    isGameRunning(session) &&
+    (phase === "reveal" || phase === "scores") &&
+    question !== null &&
+    question.roundKind === "quiz" &&
+    RESCORABLE_QUESTION_TYPES.has(question.type)
+  );
+}
+
+/** Give or take points: while the game runs or is paused, before the podium (C6.4). */
+function isAdjustShown(session: QuizshowHostState): boolean {
+  return isGameRunning(session) && session.cursor.phase !== "podium";
+}
+
+/** The reveal on show was corrected by a host (item 5). */
+function isRevealCorrected(session: QuizshowHostState): boolean {
+  const { phase } = session.cursor;
+  return (
+    (phase === "reveal" || phase === "scores") &&
+    session.reveal?.wasCorrected === true
+  );
 }
 
 function answerCountKeyOf(phase: QuizshowHostState["cursor"]["phase"]) {
@@ -116,13 +188,17 @@ function RemoteHeader({
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const { run, isPending, lastErrorKey } = useQuizshowHostCommand(controller);
-  const { cursor, question, answerCount, isScreenMuted, lobby } = session;
+  const { cursor, question, round, isScreenMuted, lobby, isJoinLocked } =
+    session;
+  // Reading has no answers to count yet, so the count waits for the answers to open.
+  const answerCount = cursor.phase === "read" ? null : session.answerCount;
   const isMuteBusy = isPending("host:setScreenMuted");
   const fade = { duration: reducedMotion ? 0 : 0.2 };
   const isPaused = cursor.status === "paused";
   const isLobby = cursor.phase === "lobby";
-  const isTimed = standardLimitMsOf(cursor.phase, question) !== null;
-  const metaKey = `${cursor.phaseId}:${answerCount === null ? "none" : "count"}`;
+  const isTimed = standardLimitMsOf(cursor.phase, question, round) !== null;
+  const isCorrected = isRevealCorrected(session);
+  const metaKey = `${cursor.phaseId}:${answerCount === null ? "none" : "count"}:${isCorrected ? "corrected" : "as-revealed"}:${isLobby && isJoinLocked ? "closed" : "open"}`;
   // The polite line a screen reader hears on every phase change and on pause.
   const spokenPhase = [
     t(`quizshow:remote.phase.${cursor.phase}`),
@@ -142,6 +218,14 @@ function RemoteHeader({
     <header className={styles.header}>
       <div className={styles.headerRow}>
         <div className={styles.headerText}>
+          {/* An eyebrow above the title at every width, fixed for the session's
+              life, so the title never shares a line with it and the header
+              keeps one height. */}
+          {session.isPractice && (
+            <div className={styles.eyebrow}>
+              <QuizshowPracticeBadge tone="phone" />
+            </div>
+          )}
           <AnimatePresence mode="wait" initial={false}>
             <m.h1
               key={cursor.phase}
@@ -170,12 +254,24 @@ function RemoteHeader({
               <span className={styles.metaLine}>
                 {isLobby && (
                   <span className={styles.joinCode}>
-                    {t("quizshow:live.code", { code: session.joinCode })}
+                    {isJoinLocked ? (
+                      <>
+                        <FiLock aria-hidden="true" fill="none" />
+                        {t("quizshow:screen.joiningClosed")}
+                      </>
+                    ) : (
+                      t("quizshow:live.code", { code: session.joinCode })
+                    )}
                   </span>
                 )}
                 {answerCount !== null && (
                   <span className={styles.count}>
                     {t(answerCountKeyOf(cursor.phase), answerCount)}
+                  </span>
+                )}
+                {isCorrected && (
+                  <span className={rescoreStyles.correctedTag}>
+                    {t("quizshow:remote.rescore.corrected")}
                   </span>
                 )}
               </span>
@@ -194,7 +290,7 @@ function RemoteHeader({
             clockOffsetMs={controller.clockOffsetMs}
             hasExtraTime={false}
             size="phone"
-            standardLimitMs={standardLimitMsOf(cursor.phase, question)}
+            standardLimitMs={standardLimitMsOf(cursor.phase, question, round)}
           />
         </div>
       </div>
@@ -241,7 +337,7 @@ function RemoteHeader({
           clockOffsetMs={controller.clockOffsetMs}
           hasExtraTime={false}
           size="phone"
-          standardLimitMs={standardLimitMsOf(cursor.phase, question)}
+          standardLimitMs={standardLimitMsOf(cursor.phase, question, round)}
         />
       </div>
       <QuizshowPausedNote isPaused={isPaused} />
@@ -253,28 +349,69 @@ function RemoteHeader({
   );
 }
 
+/**
+ * What the preview draws (item 50, D23): the demo engine's own screen state
+ * in demo, else this host state with its host-only fields stripped, so the
+ * preview shows what the TV shows.
+ */
+function useRemotePreviewState(
+  controller: QuizshowSessionController,
+  session: QuizshowHostState,
+): QuizshowClientState | null {
+  const { isDemo, demoScreenState, state } = controller;
+  return useMemo<QuizshowClientState | null>(
+    () =>
+      isDemo
+        ? demoScreenState
+        : { ...state, role: "screen", session: screenStateFromHost(session) },
+    [isDemo, demoScreenState, state, session],
+  );
+}
+
 function RemoteConsole({
   controller,
   session,
   backPath,
   backLabelKey,
+  rematchScope,
+  isPairingAllowed,
+  isHelperRemote,
   onBarHeightChange,
 }: {
   controller: QuizshowSessionController;
   session: QuizshowHostState;
   backPath: string;
   backLabelKey: string;
+  /** The scope a rematch opens in; null on the helper remote, which cannot open lobbies. */
+  rematchScope: QuizshowSessionScope | null;
+  /** Pair a screen (C6.5): true on the host's own remote in live mode. */
+  isPairingAllowed: boolean;
+  /** A paired helper's remote: its pairing ends with the game, so the end offers a new code. */
+  isHelperRemote: boolean;
   onBarHeightChange: (height: number) => void;
 }) {
   const { t, language } = useTranslation();
-  const { reducedMotion } = useMotionPrefs();
   const [isPlayersOpen, setIsPlayersOpen] = useState(false);
+  const previewState = useRemotePreviewState(controller, session);
+  const pairAgain = useRemotePairAgain(
+    isPairingAllowed ? rematchScope : null,
+    session,
+  );
   const { cursor, question, reveal } = session;
   const { phase } = cursor;
   const isReviewShown =
     phase === "review" ||
     phase === "vote" ||
     (phase === "reveal" && reveal?.distribution.kind === "votes");
+  // Item 38: the rematch shows after a finished game only.
+  const isRematchShown =
+    rematchScope !== null && phase === "ended" && cursor.status === "finished";
+  // A ticket dies with the open status, so pairing shows only while the session is open.
+  const isPairingShown =
+    isPairingAllowed &&
+    (QUIZSHOW_OPEN_SESSION_STATUSES as readonly string[]).includes(
+      cursor.status,
+    );
 
   return (
     <>
@@ -296,34 +433,63 @@ function RemoteConsole({
         </Collapse>
       </div>
       <QuizshowRemotePreview
-        state={controller.demoScreenState}
+        state={previewState}
         clockOffsetMs={controller.clockOffsetMs}
       />
-      <Collapse isOpen={question !== null && question.answerKey !== null}>
-        <AnimatePresence mode="wait" initial={false}>
-          <m.div
-            key={question?.questionId ?? "none"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 0.2 }}
-          >
-            {question !== null && (
-              <QuizshowRemoteAnswerKey
-                question={question}
-                language={language}
-              />
-            )}
-          </m.div>
-        </AnimatePresence>
-      </Collapse>
+      <QuizshowRemoteAnswerKey
+        question={question}
+        language={language}
+        isNoteOnScreen={reveal !== null}
+        reveal={reveal}
+      />
       <Collapse isOpen={isReviewShown}>
         <QuizshowRemoteReview controller={controller} state={session} />
       </Collapse>
+      <Collapse isOpen={isRescoreShown(session)}>
+        <QuizshowRemoteRescore controller={controller} session={session} />
+      </Collapse>
+      <Collapse isOpen={isAdjustShown(session)}>
+        <QuizshowRemoteAdjustPoints controller={controller} session={session} />
+      </Collapse>
       <Collapse isOpen={phase === "ended"}>
-        <Button to={backPath} variant="stage-ghost">
-          {t(backLabelKey)}
-        </Button>
+        <Collapse isOpen={pairAgain.isEndedLineShown}>
+          <p className={styles.hint}>{t("quizshow:remote.pairAgain.ended")}</p>
+        </Collapse>
+        <div className={rescoreStyles.endActions}>
+          <Collapse isOpen={isRematchShown}>
+            {rematchScope !== null && (
+              <QuizshowOpenLobbyButton
+                scope={rematchScope}
+                rounds={session.rounds}
+                isBlocked={false}
+                blockedReason={null}
+                appearance="studio"
+                // The remote picks the new session up itself, so the host stays here.
+                afterOpenPath={quizshowScopeRemotePath}
+                rematchOf={{
+                  sessionId: session.sessionId,
+                  isPractice: session.isPractice,
+                }}
+              />
+            )}
+          </Collapse>
+          {isHelperRemote && (
+            <Button to={quizshowHelperPairPath()} variant="stage">
+              {t("quizshow:helper.pairAgain")}
+            </Button>
+          )}
+          <Button to={backPath} variant="stage-ghost">
+            {t(backLabelKey)}
+          </Button>
+        </div>
+      </Collapse>
+      <Collapse isOpen={isPairingShown && pairAgain.isLobbyLineShown}>
+        <p className={styles.hint} role="status">
+          {t("quizshow:remote.pairAgain.lobby")}
+        </p>
+      </Collapse>
+      <Collapse isOpen={isPairingShown}>
+        <QuizshowRemotePairing controller={controller} session={session} />
       </Collapse>
       <QuizshowRemoteControls
         controller={controller}
@@ -331,6 +497,36 @@ function RemoteConsole({
         onBarHeightChange={onBarHeightChange}
       />
     </>
+  );
+}
+
+/**
+ * The controller the console sends through: with `onRefused`, every refused
+ * command also reports its code, so the helper remote hears a ticket whose
+ * time ran out (contract 13: a helper's ticket exp is a ceiling).
+ */
+function useRefusalReportingController(
+  controller: QuizshowSessionController,
+  onRefused: ((refusalCode: string) => void) | undefined,
+): QuizshowSessionController {
+  const { send } = controller;
+  const reportingSend = useCallback(
+    async <Name extends QuizshowClientFrameName>(
+      name: Name,
+      payload: QuizshowClientPayload<Name>,
+    ) => {
+      const result = await send(name, payload);
+      if (!result.ok) onRefused?.(result.code);
+      return result;
+    },
+    [send, onRefused],
+  );
+  return useMemo(
+    () =>
+      onRefused === undefined
+        ? controller
+        : { ...controller, send: reportingSend },
+    [controller, onRefused, reportingSend],
   );
 }
 
@@ -342,8 +538,12 @@ type RemoteView =
 /** The remote of one hosted session, an event's or a game's. */
 export function QuizshowRemoteView({
   hostSession,
+  onSessionRefused,
 }: {
   hostSession: QuizshowHostSession;
+  /** Hears each refusal of the session (an attach refusal, or a refused command), so the
+   *  helper remote can end its pairing; the remote still shows its own line meanwhile. */
+  onSessionRefused?: (refusalCode: string) => void;
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -368,6 +568,8 @@ export function QuizshowRemoteView({
   const controller = useQuizshowSession({
     sessionId: isOrganizer ? sessionId : null,
     role: "host",
+    // The helper remote reuses this view with its pairing ticket (C6.5).
+    deviceTicket: hostSession.deviceTicket ?? null,
     gameId: scopeOptions.gameId,
     isAdultsOnly: scopeOptions.isAdultsOnly,
     demo: {
@@ -379,8 +581,17 @@ export function QuizshowRemoteView({
       shouldLoop: false,
     },
   });
+  const consoleController = useRefusalReportingController(
+    controller,
+    onSessionRefused,
+  );
   const { state, clockOffsetMs } = controller;
   const session = isHostState(state.session) ? state.session : null;
+  const sessionRefusalCode =
+    state.status === "refused" ? state.refusalCode : null;
+  useEffect(() => {
+    if (sessionRefusalCode !== null) onSessionRefused?.(sessionRefusalCode);
+  }, [sessionRefusalCode, onSessionRefused]);
   useQuizshowCues(state, {
     isMuted: session?.isScreenMuted ?? false,
     clockOffsetMs,
@@ -413,6 +624,13 @@ export function QuizshowRemoteView({
     };
   else if (session !== null) view = { kind: "console", session };
   const viewKey = view.kind === "message" ? view.messageKey : view.kind;
+  // The phone stays awake while the console drives an open session (item 2).
+  const isSessionOpen =
+    view.kind === "console" &&
+    (QUIZSHOW_OPEN_SESSION_STATUSES as readonly string[]).includes(
+      view.session.cursor.status,
+    );
+  useScreenWakeLock(isSessionOpen);
   // The measured control bar, so the last section always clears it; 0 keeps the CSS fallback.
   const pageStyle =
     barHeight > 0
@@ -427,7 +645,11 @@ export function QuizshowRemoteView({
         <QuizshowBackdrop variant="phone" />
       </div>
       <PageMeta title={t("quizshow:remote.metaTitle")} noIndex />
-      <QuizshowConnectionBanner status={state.status} />
+      <QuizshowConnectionBanner
+        status={state.status}
+        hasAttached={state.hasAttached}
+        retryCause={state.retryCause}
+      />
       <main
         id={MAIN_CONTENT_ID}
         tabIndex={-1}
@@ -452,10 +674,18 @@ export function QuizshowRemoteView({
             )}
             {view.kind === "console" && (
               <RemoteConsole
-                controller={controller}
+                controller={consoleController}
                 session={view.session}
                 backPath={hostSession.backPath}
                 backLabelKey={hostSession.backLabelKey}
+                rematchScope={
+                  // A paired helper's remote carries a device ticket (C6.5).
+                  hostSession.deviceTicket ? null : hostSession.scope
+                }
+                isPairingAllowed={
+                  !controller.isDemo && !hostSession.deviceTicket
+                }
+                isHelperRemote={Boolean(hostSession.deviceTicket)}
                 onBarHeightChange={setBarHeight}
               />
             )}

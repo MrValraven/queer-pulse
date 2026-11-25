@@ -10,6 +10,8 @@ import {
   seasonalBadges,
 } from "./badges.data";
 import { availableCount, perkGroups } from "./perks.data";
+import { demoQuizBadgeDtos } from "../quizshow/winBadges/quizWinBadgesDemoStore";
+import { badgeFromDto } from "./api/recognition.adapters";
 
 // Illustrative only — a fresh, independently-computed breakdown, so it
 // doesn't need to sum exactly to `levelInfo.xp` (the live backend has the
@@ -133,3 +135,24 @@ export const demoRecognition: Recognition = {
   xpBreakdown: demoXpBreakdown,
   xpLedger: demoXpLedger,
 };
+
+/**
+ * The demo Recognition with the demo member's quiz badges added. `isOwnerView`
+ * is true for the member's own read (hidden badges stay, flagged, and every
+ * event is named) and false for another viewer's read (hidden badges drop and
+ * private events are masked). Level, discover count and XP breakdown are the
+ * platform-only values of `demoRecognition`.
+ */
+export function buildDemoRecognition(options: {
+  isOwnerView: boolean;
+}): Recognition {
+  const quizBadges = demoQuizBadgeDtos(options).map(badgeFromDto);
+  return {
+    ...demoRecognition,
+    badges: {
+      ...demoRecognition.badges,
+      earned: [...demoRecognition.badges.earned, ...quizBadges],
+      earnedCount: demoRecognition.badges.earnedCount + quizBadges.length,
+    },
+  };
+}

@@ -10,14 +10,18 @@ import {
   isWheelRoundKind,
   playableRoundCount,
 } from "../quizshowWheel";
-import { pickQuizshowText } from "../stage/quizshowText";
+import { QuizshowStageText } from "../stage/QuizshowStageText";
 import { useQuizshowStudio } from "./QuizshowStudioContext";
 import { clampStudioSelection } from "./quizshowStudioSelection";
-import { isPartyRoundKind } from "./quizshowStudioRailView";
+import {
+  isPartyRoundKind,
+  slideTextLanguageOf,
+} from "./quizshowStudioRailView";
 import { QuizshowStudioSlideAnswers } from "./QuizshowStudioSlideAnswers";
 import { QuizshowStudioSlideParty } from "./QuizshowStudioSlideParty";
 import {
   QuizshowStudioSlideField,
+  QuizshowStudioSlideNote,
   QuizshowStudioSlidePicture,
   QuizshowStudioSlideSeconds,
 } from "./QuizshowStudioSlideParts";
@@ -69,6 +73,7 @@ function TitleSlide() {
           placeholder={t("quizshow:studio.titlePlaceholder")}
           maxLength={QUIZSHOW_LIMITS.quizTitleMax}
           className={styles.titleField}
+          lang={null}
           length={slideLengthOf(draft.title, TITLE_LONG_FROM, TITLE_LONG_FROM)}
           onChange={(title) => controller.setQuizField("title", title)}
         />
@@ -125,7 +130,14 @@ function QuestionSlide({
   const promptProblem = useSlideProblemLine("prompt_missing");
   const { question } = draftQuestion;
   const prompt = question.prompt[viewLanguage];
-  const roundTitle = pickQuizshowText(round.title, viewLanguage).trim();
+  const hasRoundTitle =
+    round.title.en.trim() !== "" || round.title.pt.trim() !== "";
+  // Read-only quiz text: both lines when the TV shows both (C6.26).
+  const textLanguage = slideTextLanguageOf(
+    controller.draft.screenLanguage,
+    viewLanguage,
+  );
+  const hasNote = isQuizRoundKind(round.kind) && question.type !== "prompt";
   const seconds = question.timeLimitSeconds ?? round.settings.timeLimitSeconds;
   const hasPicture = question.mediaRef !== null;
   return (
@@ -144,7 +156,11 @@ function QuestionSlide({
               total: playableRoundCount(controller.draft.rounds),
             })}
           </strong>
-          {roundTitle !== "" && <span>{roundTitle}</span>}
+          {hasRoundTitle && (
+            <span className={styles.pillTitle}>
+              <QuizshowStageText text={round.title} language={textLanguage} />
+            </span>
+          )}
           <span>
             {t("quizshow:stage.questionOf", {
               number: questionIndex + 1,
@@ -186,6 +202,7 @@ function QuestionSlide({
           controller.updateQuestion(roundIndex, questionIndex, next)
         }
       />
+      {hasNote && <QuizshowStudioSlideNote note={question.revealNote} />}
     </div>
   );
 }

@@ -1,0 +1,109 @@
+/* Pair a screen and the paired devices on the remote, and the two helper
+   pages (/play/remote and /play/remote/:sessionId). Everything sits on the
+   always-dark Pulse Live page, so every colour is a --qs-* token. */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+.pairBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-xs);
+}
+
+.pairForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--gap-xs);
+}
+
+/* Six digits read best spaced out and in even columns. */
+.codeInput {
+  max-width: 12rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2em;
+}
+
+.pairedLine {
+  margin: 0;
+  padding: var(--gap-xs) var(--gap-sm);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-12);
+  background: var(--qs-glass-top);
+  font-size: var(--text-14);
+  line-height: 1.4;
+  color: var(--qs-text);
+}
+
+.keyHint {
+  padding-block-start: var(--gap-xs);
+}
+
+/* The helper pages: one centred panel over the velvet backdrop. */
+.helperMain {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+  padding: max(var(--gap-grid), env(safe-area-inset-top, 0px)) var(--gap-sm)
+    max(var(--gap-grid), env(safe-area-inset-bottom, 0px));
+}
+
+.helperMain:focus {
+  outline: none;
+}
+
+.note,
+.failure {
+  max-width: 40ch;
+  margin: 0;
+  padding-top: var(--gap-xs);
+  font-size: var(--text-16);
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.note {
+  color: var(--qs-text-mute);
+}
+
+.failure {
+  color: var(--qs-low);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--gap-sm);
+}
+
+/* A helper's ended pairing: the reason and the way back to a new code. */
+.helperMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  max-width: 32rem;
+  text-align: center;
+}
+
+.helperMessageTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--qs-text);
+  text-wrap: balance;
+}

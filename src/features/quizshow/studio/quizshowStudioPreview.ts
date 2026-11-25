@@ -2,6 +2,7 @@ import type {
   QuizshowCursor,
   QuizshowDistribution,
   QuizshowLanguage,
+  QuizshowLanguageMode,
   QuizshowPhase,
   QuizshowPlayerState,
   QuizshowQuiz,
@@ -11,10 +12,12 @@ import type {
   QuizshowRound,
   QuizshowScreenState,
   QuizshowStateBase,
+  QuizshowText,
   QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowDraft } from "../builder/quizshowDraft";
 import { dryRunQuizOf } from "../builder/quizshowDryRunQuiz";
+import { readPhaseMsFor } from "../engine/quizshowEngineSetup";
 import { toAnswerKeyView, toRoundCard } from "../engine/quizshowEngineViews";
 import {
   createWheelState,
@@ -39,14 +42,20 @@ import {
 /**
  * Draft-to-view adapters for the studio canvas: the selected slide as the
  * real big screen and phone renderers expect it. Nobody plays a preview, so
- * every count is zero, no deadline runs, and the answer key shows only in
- * `reveal`. Ids are minted by position, so a keystroke never swaps the view.
+ * every count is zero, the clock stands still, and the answer key and the
+ * reveal note show only in `reveal`. Ids are minted by position, so a
+ * keystroke never swaps the view. Every field a live night adds and a preview has no
+ * use for carries its neutral value: practice, the join lock and
+ * auto-advance off, the talk beat and the giving link unset.
  */
 
 export type QuizshowStudioPreviewPhase = "open" | "reveal" | "round_intro";
 
 export interface QuizshowStudioPreviewOptions {
-  /** The studio's view language; the stage draws in it. */
+  /**
+   * The studio's view language: the phone draws in it. The big screen draws
+   * in the draft's own screen language.
+   */
   language: QuizshowLanguage;
   phase: QuizshowStudioPreviewPhase;
   pickedPreviewUrls: ReadonlyMap<string, string>;
@@ -62,36 +71,45 @@ export interface QuizshowStudioPlayerQuestionProps {
 const PREVIEW_ID = "studio-preview";
 
 /**
- * Options as the screen shows them while players answer. An order question's
- * draft holds its items in the right order, and the stage never opens on the
- * right order, so the preview rotates them by one (stable while typing).
+ * Options as the screen shows them while players answer: multiple choice and
+ * poll in authored order. An order question's draft holds its items in the
+ * right order, and the stage never opens on the right order, so the preview
+ * rotates them by one (stable while typing).
  */
 function shownOptionsOf(question: QuizshowQuestion) {
-  if (question.type === "multiple_choice") return [...question.options];
+  if (question.type === "multiple_choice" || question.type === "poll") {
+    return [...question.options];
+  }
   if (question.type !== "order") return null;
   const [first, ...rest] = question.options;
   return first === undefined ? [] : [...rest, first];
 }
 
+/** The question view a live night sends: the `read` length from contract 6.12 in a quiz round, 0 in a party round (it opens on `write`). */
 function questionViewOf(
-  round: QuizshowRound,
-  question: QuizshowQuestion,
-  roundIndex: number,
-  questionIndex: number,
+  shown: ShownQuestion,
+  languages: QuizshowLanguageMode,
 ): QuizshowQuestionView {
+  const { round, question } = shown;
+  const isQuizRound = isQuizRoundKind(round.kind);
+  const options = shownOptionsOf(question);
   return {
     questionId: question.id,
-    roundIndex,
-    questionIndex,
+    roundIndex: shown.roundIndex,
+    questionIndex: shown.questionIndex,
     roundKind: round.kind,
     type: question.type,
     prompt: { ...question.prompt },
     mediaUrl: question.mediaUrl,
+    mediaAlt: { ...question.mediaAlt },
+    mediaReveal: question.mediaReveal,
+    numberUnit: { ...question.numberUnit },
     points: question.points,
-    timeLimitSeconds: isQuizRoundKind(round.kind)
+    timeLimitSeconds: isQuizRound
       ? (question.timeLimitSeconds ?? round.settings.timeLimitSeconds)
       : round.settings.writeSeconds,
-    options: shownOptionsOf(question),
+    readMs: isQuizRound ? readPhaseMsFor(question, languages, options) : 0,
+    options,
   };
 }
 
@@ -103,6 +121,7 @@ function emptyDistributionOf(
 ): QuizshowDistribution {
   switch (question.type) {
     case "multiple_choice":
+    case "poll":
       return { kind: "options", counts: question.options.map(() => 0) };
     case "true_false":
       return { kind: "true_false", trueCount: 0, falseCount: 0 };
@@ -141,6 +160,12 @@ function emptyDistributionOf(
   }
 }
 
+/** The reveal note while either language holds text, as the engine sends it. */
+function revealNoteOf(question: QuizshowQuestion): QuizshowText | null {
+  const note = question.revealNote;
+  return note.en === "" && note.pt === "" ? null : { ...note };
+}
+
 function revealOf(
   round: QuizshowRound,
   question: QuizshowQuestion,
@@ -153,6 +178,8 @@ function revealOf(
     answeredCount: 0,
     eligibleCount: 0,
     distribution: emptyDistributionOf(round, question, language),
+    note: revealNoteOf(question),
+    wasCorrected: false,
   };
 }
 
@@ -187,6 +214,9 @@ function cursorOf(
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
   };
 }
 
@@ -253,15 +283,23 @@ function previewFrameOf(
     joinCode: "",
     quizTitle: quiz.title,
     languages: quiz.languages,
-    screenLanguage: options.language,
+    // The quiz's own screen language, whatever language the host types in:
+    // the preview shows what the TV will (both lines under "both", C6.26).
+    screenLanguage: draft.screenLanguage,
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: false,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: true,
     cursor: cursorOf(phase, roundIndex, shown?.questionIndex ?? null, {
       roundNumber: previewRoundNumberOf(quiz.rounds, roundIndex),
       roundCount: quizshowRoundTotal(quiz.rounds, emptyWheelProgress()),
     }),
+    // Round cards as authored, warm-up and talk seconds included: the
+    // default teams reading keeps a round's talk beat on its intro card.
     rounds: quiz.rounds.map((eachRound, eachIndex) =>
       toRoundCard(eachRound, eachIndex),
     ),
@@ -284,28 +322,22 @@ function previewFrameOf(
   };
   return {
     base,
-    question:
-      shown === null
-        ? null
-        : questionViewOf(
-            shown.round,
-            shown.question,
-            shown.roundIndex,
-            shown.questionIndex,
-          ),
+    question: shown === null ? null : questionViewOf(shown, quiz.languages),
   };
+}
+
+interface ShownQuestion {
+  round: QuizshowRound;
+  question: QuizshowQuestion;
+  roundIndex: number;
+  questionIndex: number;
 }
 
 /** The selected question with its round, or null when a question is not selected. */
 function shownQuestionOf(
   round: QuizshowRound | undefined,
   fitted: QuizshowStudioSelection,
-): {
-  round: QuizshowRound;
-  question: QuizshowQuestion;
-  roundIndex: number;
-  questionIndex: number;
-} | null {
+): ShownQuestion | null {
   if (round === undefined || fitted.kind !== "question") return null;
   const question = round.questions[fitted.questionIndex];
   if (question === undefined) return null;
@@ -391,7 +423,8 @@ export function studioPlayerQuestionPropsFor(
     ...base,
     reveal: null,
     role: "player",
-    lobby: { players: [], teams: [], playerCount: 0 },
+    lobby: { teams: [], playerCount: 0 },
+    answerCount: null,
     question,
     voteOptions: null,
     me: null,

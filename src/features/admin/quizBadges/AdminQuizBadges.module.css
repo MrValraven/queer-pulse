@@ -1,0 +1,268 @@
+/* The quiz badge library (AdminQuizBadgesPage, its rows, and the form
+   dialog with its preview), laid out on the admin kit's panel and table row. */
+
+/* The rows sit in one flush AdminPanel. The hairline between two rows is on
+   the list item, because CollapseListItem wraps each card and a row that
+   leaves folds its divider away with it. */
+.rowsPanel {
+  margin-block-start: var(--gap-sm);
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rows > li:not(:last-child) {
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The empty and error panels sit where the rows would start. */
+.panel {
+  margin-block-start: var(--gap-sm);
+}
+
+.skeletonRows {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-block-start: var(--gap-sm);
+}
+
+/* Sits on the kit's table row (hover tint, minimum height). The doubled
+   selector out-specifies the kit's `.row` in any bundle order. */
+.card.card {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--gap-xs);
+  padding: var(--admin-row-pad);
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* The badge icon on its colour, the ground and ink pair the chip uses, so
+   it reads in light and dark alike. */
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  border: 1px solid;
+  border-radius: var(--radius-badge);
+  font-size: var(--text-20);
+}
+
+.iconJade {
+  background: var(--flair-jade-ground);
+  border-color: var(--flair-jade-ink);
+  color: var(--flair-jade-ink);
+}
+
+.iconAccent {
+  background: var(--flair-accent-ground);
+  border-color: var(--flair-accent-ink);
+  color: var(--flair-accent-ink);
+}
+
+.iconPlum {
+  background: var(--flair-plum-ground);
+  border-color: var(--flair-plum-ink);
+  color: var(--flair-plum-ink);
+}
+
+.cardHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--icon-gap-inline) var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.metaItem {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.archivedTag {
+  display: flex;
+  padding-block-start: 2px;
+}
+
+/* The kit's AdminRowActions lays the buttons out from the leading edge and
+   wraps them onto a second line at phone width; no action ever hides. */
+.actions.actions {
+  justify-content: flex-start;
+  padding-block-start: var(--icon-gap-inline);
+}
+
+/* The form dialog */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+}
+
+/* English and Portuguese side by side; the pickers span both columns. */
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-grid) var(--gap-sm);
+  align-items: start;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* A text field is the shared field scaffold inside its own column; the grid
+   gap spaces the rows, so the scaffold's own bottom margin goes. */
+.fields > :not(.fieldWide) > :first-child {
+  margin-block-end: 0;
+}
+
+.fieldLabel {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rarity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.rarityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--icon-gap-inline);
+}
+
+.rarityOption {
+  min-block-size: var(--tap-min);
+  padding: 10px var(--gap-sm);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-14);
+  cursor: pointer;
+}
+
+/* The same selected look as the icon and colour pickers: ink and paper swap
+   places, so the choice never rests on colour alone. */
+.rarityOption.rarityChecked {
+  border-color: var(--text-strong);
+  background: var(--text-strong);
+  color: var(--paper);
+}
+
+.rarityGrid .rarityOption:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The preview: the badge as members see it, on the soft wash. */
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm);
+  border-radius: var(--radius-badge);
+  background: var(--wash);
+}
+
+.previewBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.previewText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.previewName {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.previewDescription {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.previewChip {
+  display: flex;
+  min-width: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rarityOption:not(.rarityChecked):hover {
+    border-color: var(--line-2);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rarityOption {
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+}
+
+/* One column on a phone: each field takes the full width. */
+@media (--mobile) {
+  .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

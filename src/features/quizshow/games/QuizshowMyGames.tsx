@@ -10,7 +10,7 @@ import {
 import type { QuizshowGameListResponse } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useQuizshowGames } from "../api/useQuizshowGames";
-import { QuizshowPickerFade } from "../builder/QuizshowTemplatePicker";
+import { QuizshowPickerFade } from "../builder/QuizshowPickerFade";
 import { QuizshowGameRow } from "./QuizshowGameRow";
 import {
   QuizshowGamesEmptyState,

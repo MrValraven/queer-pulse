@@ -1,7 +1,10 @@
 import { useCallback, useRef, useState } from "react";
 import type { QuizshowErrorCode } from "../../../shared/contracts/quizshow";
 import type { QuizshowHostFrameName } from "../engine/quizshowEngineTypes";
-import { quizshowErrorKeyOf } from "../api/quizshowErrors";
+import {
+  QUIZSHOW_TRANSPORT_TIMEOUT_KEY,
+  quizshowErrorKeyOf,
+} from "../api/quizshowErrors";
 import type { QuizshowClientPayload } from "../realtime/quizshowFrames";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 
@@ -24,7 +27,8 @@ function errorKeyOfResult(
 ): string | null {
   if (result.ok) return null;
   if (result.code === "quizshow_stale_phase") return null;
-  if (result.code === "transport_timeout") return GENERIC_ERROR_KEY;
+  if (result.code === "transport_timeout")
+    return QUIZSHOW_TRANSPORT_TIMEOUT_KEY;
   return quizshowErrorKeyOf(result.code);
 }
 

@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
+  QUIZSHOW_REACTION_IDS,
+  QUIZSHOW_TEAM_COLOR_KEYS,
   QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
+  type QuizshowClosestTolerance,
   type QuizshowCursor,
   type QuizshowPhase,
   type QuizshowQuestion,
   type QuizshowQuiz,
   type QuizshowRound,
 } from "../../../shared/contracts/quizshow";
+import { foldNameKey } from "../quizshowNormalise";
 import { createBotState, planBotActions } from "./quizshowBots";
 import { createQuizshowEngine, reduceQuizshowEngine } from "./quizshowEngine";
 import type {
@@ -14,7 +18,9 @@ import type {
   QuizshowEnginePlayer,
   QuizshowEngineQuestionPlay,
   QuizshowEngineState,
+  QuizshowEngineTeam,
 } from "./quizshowEngineTypes";
+import { closestNumberOutcomes } from "./quizshowScoring";
 import {
   QUIZSHOW_SIMULATED_PLAYERS,
   QUIZSHOW_SIMULATED_TEXTS,
@@ -24,6 +30,10 @@ const questionShared = {
   prompt: { en: "Which one?", pt: "Qual?" },
   mediaRef: null,
   mediaUrl: null,
+  mediaAlt: { en: "", pt: "" },
+  mediaReveal: "instant" as const,
+  revealNote: { en: "", pt: "" },
+  numberUnit: { en: "", pt: "" },
   timeLimitSeconds: null,
   points: 1000,
 };
@@ -38,7 +48,7 @@ const multipleChoice: QuizshowQuestion = {
     { id: "c", text: { en: "C", pt: "C" } },
     { id: "d", text: { en: "D", pt: "D" } },
   ],
-  answer: { correctIndex: 2 },
+  answer: { correctIndexes: [2] },
   acceptedAnswers: [],
 };
 
@@ -68,6 +78,8 @@ function roundOf(
       writeSeconds: 60,
       voteSeconds: 30,
       ...QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
+      isWarmUp: false,
+      talkSeconds: 0,
     },
     questions,
   };
@@ -79,6 +91,7 @@ function quizOf(rounds: QuizshowRound[]): QuizshowQuiz {
     languages: "en",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt: "2026-10-19T00:00:00.000Z",
     rounds,
   };
@@ -114,6 +127,8 @@ function enginePlayers(): QuizshowEnginePlayer[] {
     jokerRoundIndex: null,
     joinedAt: 0,
     isRemoved: false,
+    leftAt: null,
+    disconnectedAt: null,
   }));
 }
 
@@ -138,6 +153,9 @@ function cursorFor(
     roundNumber: 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
   };
 }
 
@@ -160,6 +178,12 @@ function playOf(
     pointsByPlayer: {},
     teamPoints: {},
     myReveals: {},
+    awayPlayerIds: [],
+    readMs: 4_000,
+    streakBeforeByPlayer: {},
+    keyOverride: null,
+    acceptedTexts: [],
+    wasCorrected: false,
   };
 }
 
@@ -186,6 +210,12 @@ function submittedPayloads(actions: QuizshowEngineAction[]) {
   );
 }
 
+function joinActionsOf(actions: QuizshowEngineAction[]) {
+  return actions.filter(
+    (action) => action.type === "player" && action.name === "lobby:join",
+  );
+}
+
 function planAfter(engine: QuizshowEngineState, seed: number) {
   const first = planBotActions(createBotState(seed, 0), engine, 0);
   return first.botState;
@@ -204,8 +234,10 @@ describe("simulated players", () => {
       const now = 700 * (joinIndex + 1);
       const planned = planBotActions(botState, engine, now);
       botState = planned.botState;
-      expect(planned.actions).toHaveLength(1);
-      const [action] = planned.actions;
+      // Bots that joined already may react in the lobby too.
+      const joins = joinActionsOf(planned.actions);
+      expect(joins).toHaveLength(1);
+      const [action] = joins;
       if (!action) throw new Error("expected one join");
       expect(action).toMatchObject({
         type: "player",
@@ -215,7 +247,9 @@ describe("simulated players", () => {
       engine = reduceQuizshowEngine(engine, action).state;
     }
     expect(engine.players).toHaveLength(12);
-    expect(planBotActions(botState, engine, 20_000).actions).toEqual([]);
+    expect(
+      joinActionsOf(planBotActions(botState, engine, 20_000).actions),
+    ).toEqual([]);
   });
 
   it("creates the four simulated teams first and sends the rest to theirs in teams mode", () => {
@@ -424,5 +458,307 @@ describe("simulated players around the wheel", () => {
     );
     expect(botState.plans).toEqual([]);
     expect(actions).toEqual([]);
+  });
+});
+
+function plannedPayloads(engine: QuizshowEngineState, seed: number) {
+  const { botState } = planBotActions(createBotState(seed, 0), engine, 10_000);
+  return botState.plans.flatMap((plan) =>
+    plan.action.type === "player" && plan.action.name === "answer:submit"
+      ? [(plan.action.payload as { payload: Record<string, unknown> }).payload]
+      : [],
+  );
+}
+
+function tableTeam(
+  index: number,
+  colorKey: QuizshowEngineTeam["colorKey"],
+  isHostMade = false,
+): QuizshowEngineTeam {
+  return {
+    teamId: `table-${index}`,
+    name: `Table ${index + 1}`,
+    colorKey,
+    score: 0,
+    hasUsedJoker: false,
+    jokerRoundIndex: null,
+    isHostMade,
+  };
+}
+
+describe("simulated players on version 2 questions", () => {
+  it("picks among the correct indexes when right", () => {
+    const twoCorrect: QuizshowQuestion = {
+      ...questionShared,
+      id: "question-two-correct",
+      type: "multiple_choice",
+      options: multipleChoice.options,
+      answer: { correctIndexes: [1, 3] },
+      acceptedAnswers: [],
+    };
+    const quiz = quizOf([roundOf("quiz", [twoCorrect])]);
+    const engine = engineInPhase("open", quiz, twoCorrect);
+    const pickedIndexes: number[] = [];
+    for (let seed = 1; seed <= 60; seed += 1) {
+      for (const payload of plannedPayloads(engine, seed)) {
+        pickedIndexes.push(payload.optionIndex as number);
+      }
+    }
+    expect(pickedIndexes).toContain(1);
+    expect(pickedIndexes).toContain(3);
+    const rightShare =
+      pickedIndexes.filter((optionIndex) => [1, 3].includes(optionIndex))
+        .length / pickedIndexes.length;
+    expect(rightShare).toBeGreaterThan(0.5);
+  });
+
+  it("answers a poll with any of its options", () => {
+    const poll: QuizshowQuestion = {
+      ...questionShared,
+      id: "question-poll",
+      type: "poll",
+      options: [
+        { id: "a", text: { en: "A", pt: "A" } },
+        { id: "b", text: { en: "B", pt: "B" } },
+        { id: "c", text: { en: "C", pt: "C" } },
+      ],
+      answer: null,
+      acceptedAnswers: [],
+    };
+    const quiz = quizOf([roundOf("quiz", [poll])]);
+    const engine = engineInPhase("open", quiz, poll);
+    const pickedIndexes = new Set<number>();
+    for (let seed = 1; seed <= 10; seed += 1) {
+      const payloads = plannedPayloads(engine, seed);
+      expect(payloads).toHaveLength(12);
+      for (const payload of payloads) {
+        expect(payload.type).toBe("poll");
+        pickedIndexes.add(payload.optionIndex as number);
+      }
+    }
+    expect([...pickedIndexes].sort()).toEqual([0, 1, 2]);
+  });
+
+  it("spreads closest guesses so each tolerance shows both outcomes", () => {
+    const tolerances: QuizshowClosestTolerance[] = [
+      { mode: "exact", amount: 0 },
+      { mode: "absolute", amount: 10 },
+      { mode: "percent", amount: 10 },
+    ];
+    for (const tolerance of tolerances) {
+      const closest: QuizshowQuestion = {
+        ...questionShared,
+        id: `question-closest-${tolerance.mode}`,
+        type: "closest_number",
+        options: [],
+        answer: { value: 1969, tolerance },
+        acceptedAnswers: [],
+      };
+      const quiz = quizOf([roundOf("quiz", [closest])]);
+      const engine = engineInPhase("open", quiz, closest);
+      for (let seed = 1; seed <= 20; seed += 1) {
+        const guesses = plannedPayloads(engine, seed).map((payload, index) => ({
+          playerId: `player-${index}`,
+          value: payload.value as number,
+        }));
+        const outcomes = [
+          ...closestNumberOutcomes(1969, tolerance, guesses).values(),
+        ];
+        const bandCount = outcomes.filter(
+          (outcome) => outcome.isWithinBand && !outcome.isClosest,
+        ).length;
+        const missCount = outcomes.filter(
+          (outcome) => !outcome.isWithinBand && !outcome.isClosest,
+        ).length;
+        expect(outcomes.some((outcome) => outcome.isClosest)).toBe(true);
+        expect(missCount).toBeGreaterThan(0);
+        if (tolerance.mode !== "exact") expect(bandCount).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("spreads the bots over the 24 keys, tier 1 first", () => {
+    let engine = lobbyEngine(
+      "teams",
+      quizOf([roundOf("quiz", [multipleChoice])]),
+    );
+    let botState = createBotState(3, 0, { teamCount: 12 });
+    for (let joinIndex = 0; joinIndex < 12; joinIndex += 1) {
+      const planned = planBotActions(botState, engine, 700 * (joinIndex + 1));
+      botState = planned.botState;
+      const [action] = joinActionsOf(planned.actions);
+      if (!action) throw new Error("expected one join");
+      engine = reduceQuizshowEngine(engine, action).state;
+    }
+    expect(engine.teams.map((team) => team.colorKey)).toEqual([
+      "circle",
+      "triangle",
+      "star",
+      "moon",
+      "square",
+      "diamond",
+      "hexagon",
+      "heart",
+      "circle_2",
+      "triangle_2",
+      "square_2",
+      "diamond_2",
+    ]);
+    const nameKeys = engine.teams.map((team) => foldNameKey(team.name));
+    expect(new Set(nameKeys).size).toBe(12);
+  });
+
+  it("takes the first free tier-3 keys beside other teams and joins one when all 24 are used", () => {
+    const quiz = quizOf([roundOf("quiz", [multipleChoice])]);
+    const sixteenTables = QUIZSHOW_TEAM_COLOR_KEYS.slice(0, 16).map(
+      (colorKey, index) => tableTeam(index, colorKey),
+    );
+    const withTables = { ...lobbyEngine("teams", quiz), teams: sixteenTables };
+    const firstJoin = joinActionsOf(
+      planBotActions(createBotState(3, 0), withTables, 700).actions,
+    )[0];
+    expect(firstJoin).toMatchObject({
+      payload: {
+        team: { newTeam: { name: "Quizzly Bears", colorKey: "circle_3" } },
+      },
+    });
+    const everyKeyUsed = {
+      ...withTables,
+      teams: QUIZSHOW_TEAM_COLOR_KEYS.map((colorKey, index) =>
+        tableTeam(index, colorKey),
+      ),
+    };
+    const fullJoin = joinActionsOf(
+      planBotActions(createBotState(3, 0), everyKeyUsed, 700).actions,
+    )[0];
+    expect(fullJoin).toMatchObject({
+      payload: { team: { teamId: "table-0" } },
+    });
+  });
+
+  it("joins an empty host-made table before founding a team", () => {
+    const quiz = quizOf([roundOf("quiz", [multipleChoice])]);
+    const tables = [tableTeam(0, "square", true), tableTeam(1, "heart", true)];
+    const withTables = { ...lobbyEngine("teams", quiz), teams: tables };
+    const firstJoin = joinActionsOf(
+      planBotActions(createBotState(3, 0), withTables, 700).actions,
+    )[0];
+    expect(firstJoin).toMatchObject({
+      payload: { team: { teamId: "table-0" } },
+    });
+    const [seated] = enginePlayers();
+    if (!seated) throw new Error("expected a player");
+    const firstTableTaken = {
+      ...withTables,
+      players: [{ ...seated, memberKey: "member-self", teamId: "table-0" }],
+    };
+    const secondJoin = joinActionsOf(
+      planBotActions(createBotState(3, 0), firstTableTaken, 700).actions,
+    )[0];
+    expect(secondJoin).toMatchObject({
+      payload: { team: { teamId: "table-1" } },
+    });
+  });
+});
+
+describe("simulated player names and reactions", () => {
+  it("passes over a bot whose join was refused", () => {
+    const engine = lobbyEngine(
+      "solo",
+      quizOf([roundOf("quiz", [multipleChoice])]),
+    );
+    const first = planBotActions(createBotState(3, 0), engine, 700);
+    expect(joinActionsOf(first.actions)[0]).toMatchObject({
+      memberKey: QUIZSHOW_SIMULATED_PLAYERS[0]?.memberKey,
+    });
+    // The join is never applied, as after a refusal.
+    const second = planBotActions(first.botState, engine, 1_400);
+    expect(joinActionsOf(second.actions)[0]).toMatchObject({
+      memberKey: QUIZSHOW_SIMULATED_PLAYERS[1]?.memberKey,
+    });
+  });
+
+  it("answers the same after a long stay in the lobby", () => {
+    const quiz = quizOf([roundOf("quiz", [multipleChoice])]);
+    const lobby = { ...lobbyEngine("solo", quiz), players: enginePlayers() };
+    const open = engineInPhase("open", quiz, multipleChoice, 70_000);
+    let stayedBotState = createBotState(5, 0);
+    for (let now = 0; now <= 60_000; now += 250) {
+      stayedBotState = planBotActions(stayedBotState, lobby, now).botState;
+    }
+    expect(stayedBotState.reactionRandomState).not.toBe(
+      createBotState(5, 0).reactionRandomState,
+    );
+    const afterStay = planBotActions(stayedBotState, open, 70_000);
+    const straightIn = planBotActions(createBotState(5, 0), open, 70_000);
+    expect(afterStay.botState.plans).toEqual(straightIn.botState.plans);
+  });
+
+  it("keeps bot names unique by foldNameKey", () => {
+    const quiz = quizOf([roundOf("quiz", [multipleChoice])]);
+    const [firstPlayer] = enginePlayers();
+    if (!firstPlayer) throw new Error("expected a player");
+    const engine = {
+      ...lobbyEngine("solo", quiz),
+      players: [
+        {
+          ...firstPlayer,
+          playerId: "player-self",
+          memberKey: "member-self",
+          screenName: "RÍTA ",
+        },
+      ],
+    };
+    const [join] = joinActionsOf(
+      planBotActions(createBotState(3, 0), engine, 700).actions,
+    );
+    expect(join).toMatchObject({
+      memberKey: QUIZSHOW_SIMULATED_PLAYERS[0]?.memberKey,
+      payload: { screenName: "Rita 2" },
+    });
+  });
+
+  it("reacts in the lobby at most once per bot every 3 s and never while a question is open", () => {
+    const quiz = quizOf([roundOf("quiz", [multipleChoice])]);
+    const lobby = { ...lobbyEngine("solo", quiz), players: enginePlayers() };
+    let botState = createBotState(9, 0);
+    const sentAtByMemberKey = new Map<string, number[]>();
+    for (let now = 0; now <= 60_000; now += 250) {
+      const planned = planBotActions(botState, lobby, now);
+      botState = planned.botState;
+      for (const action of planned.actions) {
+        if (action.type !== "player" || action.name !== "reaction:send") {
+          continue;
+        }
+        const { reactionId } = action.payload as { reactionId: string };
+        expect(QUIZSHOW_REACTION_IDS).toContain(reactionId);
+        sentAtByMemberKey.set(action.memberKey, [
+          ...(sentAtByMemberKey.get(action.memberKey) ?? []),
+          action.now,
+        ]);
+      }
+    }
+    expect(sentAtByMemberKey.size).toBe(12);
+    for (const sentAts of sentAtByMemberKey.values()) {
+      sentAts.forEach((sentAt, index) => {
+        const previous = sentAts[index - 1];
+        if (previous !== undefined) {
+          expect(sentAt - previous).toBeGreaterThanOrEqual(3_000);
+        }
+      });
+    }
+
+    const open = engineInPhase("open", quiz, multipleChoice, 0);
+    let openBotState = createBotState(9, 0);
+    for (let now = 0; now <= 20_000; now += 250) {
+      const planned = planBotActions(openBotState, open, now);
+      openBotState = planned.botState;
+      expect(
+        planned.actions.filter(
+          (action) =>
+            action.type === "player" && action.name === "reaction:send",
+        ),
+      ).toEqual([]);
+    }
   });
 });

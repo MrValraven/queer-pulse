@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import {
   QUIZSHOW_GAMES_PER_MEMBER_MAX,
   QUIZSHOW_JOIN_CODE_PATTERN,
+  type QuizshowRematch,
   type QuizshowContentLabel,
   type QuizshowGameInput,
   type QuizshowGameResponse,
@@ -19,6 +20,7 @@ import {
   QUIZSHOW_DEMO_TEMPLATE_IDS,
   templateSeedById,
 } from "../demo/quizshowTemplates.data";
+import { normaliseStoredQuizShape } from "../quizshowNormalise";
 import {
   demoCreateGame,
   demoDeleteGame,
@@ -33,14 +35,21 @@ import {
   demoListGames,
   demoOpenGameSession,
   demoPutGame,
+  demoRefreshGameLobby,
   resetQuizshowDemoGames,
 } from "./quizshowDemoGames";
+import { onDemoLobbyRefreshed, onDemoRematch } from "./quizshowDemoBus";
 import {
   QUIZSHOW_DEMO_GAME_HOST,
   QUIZSHOW_DEMO_GAME_IDS,
 } from "./quizshowDemoGames.data";
 import { hasAdultsRound } from "./quizshowDemoQuizzes";
-import { demoJoin, resetQuizshowDemoStore } from "./quizshowDemoStore";
+import {
+  demoEndSession,
+  demoJoin,
+  demoJoinPreview,
+  resetQuizshowDemoStore,
+} from "./quizshowDemoStore";
 import { demoGetTemplate, demoPutTemplate } from "./quizshowDemoTemplates";
 
 const OPEN_INPUT: QuizshowOpenSessionInput = {
@@ -49,6 +58,8 @@ const OPEN_INPUT: QuizshowOpenSessionInput = {
   isReviewOn: true,
   notifyGuests: false,
   shouldReplaceResults: false,
+  isPractice: false,
+  rematchOfSessionId: null,
 };
 
 const WHEEL_TEST_SETTINGS: QuizshowRoundSettings = {
@@ -60,6 +71,8 @@ const WHEEL_TEST_SETTINGS: QuizshowRoundSettings = {
   wheelBonus: 0,
   wheelPick: "round",
   sliceCount: null,
+  isWarmUp: false,
+  talkSeconds: 0,
 };
 
 function wheelTestRound(
@@ -84,6 +97,10 @@ function wheelTestRound(
             answer: { isTrue: true },
             acceptedAnswers: [],
             mediaRef: null,
+            mediaAlt: { en: "", pt: "" },
+            mediaReveal: "instant",
+            revealNote: { en: "", pt: "" },
+            numberUnit: { en: "", pt: "" },
             timeLimitSeconds: null,
             points: 1000,
           },
@@ -213,7 +230,9 @@ describe("quizshow demo games store", () => {
   it("creates a game from a template with the switch on for an adults round", () => {
     const prideId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
     const pride = demoGetTemplate(prideId);
-    const prideQuiz = structuredClone(templateSeedById(prideId).quiz);
+    const prideQuiz = structuredClone(
+      normaliseStoredQuizShape(templateSeedById(prideId).quiz),
+    );
     const firstRound = prideQuiz.rounds[0];
     if (!firstRound) throw new Error("no round");
     prideQuiz.rounds[0] = { ...firstRound, contentLabel: "adults" };
@@ -221,6 +240,7 @@ describe("quizshow demo games store", () => {
       card: pride.card,
       staffNotes: pride.staffNotes,
       quiz: { ...prideQuiz, expectedUpdatedAt: pride.quiz.updatedAt },
+      changeNote: { en: "", pt: "" },
     });
     const created = demoCreateGame({
       title: "Pride after dark",
@@ -444,5 +464,160 @@ describe("quizshow demo game lobbies, sources and joins", () => {
       QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
     ).items.find((source) => source.gameId === created.gameId);
     expect(gameSource?.roundCount).toBe(3);
+  });
+});
+
+describe("quizshow demo game v2 lobbies", () => {
+  const rematches: QuizshowRematch[] = [];
+  let unsubscribeRematch: () => void = () => undefined;
+
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+    rematches.length = 0;
+    unsubscribeRematch = onDemoRematch((rematch) => rematches.push(rematch));
+  });
+
+  afterEach(() => {
+    unsubscribeRematch();
+  });
+
+  it("names the wheel night's template without an update and leaves pre-stamp copies without a line", () => {
+    expect(
+      demoGetGame(QUIZSHOW_DEMO_GAME_IDS.wheelNight).quiz?.sourceTemplate,
+    ).toMatchObject({
+      templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons,
+      hasUpdate: false,
+    });
+    expect(
+      demoGetGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz).quiz?.sourceTemplate,
+    ).toBeNull();
+    const fromTemplate = demoCreateGame({
+      title: "Fresh copy",
+      source: {
+        from: "template",
+        templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+      },
+    });
+    expect(fromTemplate.quiz?.sourceTemplate?.hasUpdate).toBe(false);
+  });
+
+  it("opens a practice lobby over kept results and remembers the settings", () => {
+    const opened = demoOpenGameSession(QUIZSHOW_DEMO_GAME_IDS.flatQuiz, {
+      ...OPEN_INPUT,
+      isPractice: true,
+    });
+    const game = demoGetGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz);
+    expect(game.hasResults).toBe(true);
+    expect(game.liveSession).toMatchObject({
+      sessionId: opened.sessionId,
+      isPractice: true,
+      isBehindQuiz: false,
+    });
+    expect(game.lastOpenSettings).toEqual({
+      playMode: "solo",
+      maxTeamSize: null,
+      isReviewOn: true,
+    });
+    expect(
+      demoListGames().games.find(
+        (summary) => summary.id === QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
+      )?.liveSession?.isPractice,
+    ).toBe(true);
+  });
+
+  it("refuses a rematch of another game's session with rematch_not_found", () => {
+    const error = refusalOf(() =>
+      demoOpenGameSession(QUIZSHOW_DEMO_GAME_IDS.wheelNight, {
+        ...OPEN_INPUT,
+        rematchOfSessionId:
+          QUIZSHOW_DEMO_GAME_SESSION_PREFIX + QUIZSHOW_DEMO_GAME_IDS.afterDark,
+      }),
+    );
+    expect(error.status).toBe(404);
+    expect(dataOf(error).code).toBe("quizshow_rematch_not_found");
+  });
+
+  it("reopens the 18+ game's finished session with a new code and a bus event", () => {
+    const sessionId =
+      QUIZSHOW_DEMO_GAME_SESSION_PREFIX + QUIZSHOW_DEMO_GAME_IDS.afterDark;
+    demoEndSession(sessionId);
+    expect(demoJoinGame(QUIZSHOW_DEMO_GAME_JOIN_CODE)).toBeNull();
+    const rematch = demoOpenGameSession(QUIZSHOW_DEMO_GAME_IDS.afterDark, {
+      ...OPEN_INPUT,
+      rematchOfSessionId: sessionId,
+    });
+    expect(rematch.sessionId).toBe(sessionId);
+    expect(rematch.joinCode).not.toBe(QUIZSHOW_DEMO_GAME_JOIN_CODE);
+    expect(rematches).toEqual([
+      {
+        fromSessionId: sessionId,
+        sessionId,
+        joinCode: rematch.joinCode,
+        playMode: "solo",
+      },
+    ]);
+    expect(demoJoinPreview(rematch.joinCode)).toEqual({
+      quizTitle: "After dark trivia",
+      status: "lobby",
+    });
+  });
+
+  it("refreshes a game lobby once its quiz is saved again", () => {
+    const refreshedSessionIds: string[] = [];
+    const unsubscribeRefresh = onDemoLobbyRefreshed((event) =>
+      refreshedSessionIds.push(event.sessionId),
+    );
+    try {
+      expect(demoRefreshGameLobby(QUIZSHOW_DEMO_GAME_IDS.afterDark)).toEqual({
+        isNoop: true,
+      });
+      const afterDark = demoGetGame(QUIZSHOW_DEMO_GAME_IDS.afterDark);
+      const saved = demoPutGame(
+        QUIZSHOW_DEMO_GAME_IDS.afterDark,
+        putInputOf(afterDark, true),
+      );
+      expect(saved.liveSession?.isBehindQuiz).toBe(true);
+      expect(demoRefreshGameLobby(QUIZSHOW_DEMO_GAME_IDS.afterDark)).toEqual({
+        isNoop: false,
+      });
+      expect(refreshedSessionIds).toEqual([
+        QUIZSHOW_DEMO_GAME_SESSION_PREFIX + QUIZSHOW_DEMO_GAME_IDS.afterDark,
+      ]);
+      const noLobby = refusalOf(() =>
+        demoRefreshGameLobby(QUIZSHOW_DEMO_GAME_IDS.flatQuiz),
+      );
+      expect(dataOf(noLobby).code).toBe("quizshow_session_not_found");
+    } finally {
+      unsubscribeRefresh();
+    }
+  });
+
+  it("appends rows into a game and keeps its title, and names the saver on a stale token", () => {
+    const before = demoGetGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz).quiz;
+    const appended = demoImportGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz, {
+      from: "event",
+      eventSlug: "open-clinic-night",
+      mode: "append",
+      roundIndexes: [0],
+      expectedUpdatedAt: before?.updatedAt ?? null,
+    });
+    expect(appended.quiz?.title).toBe("Friday flat quiz");
+    expect(appended.quiz?.rounds).toHaveLength(
+      (before?.rounds.length ?? 0) + 1,
+    );
+    const stale = refusalOf(() =>
+      demoImportGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz, {
+        from: "event",
+        eventSlug: "open-clinic-night",
+        mode: "append",
+        roundIndexes: [0],
+        expectedUpdatedAt: before?.updatedAt ?? null,
+      }),
+    );
+    expect(stale.status).toBe(409);
+    expect(dataOf(stale)).toMatchObject({
+      code: "quizshow_quiz_changed",
+      updatedByName: "You",
+    });
   });
 });

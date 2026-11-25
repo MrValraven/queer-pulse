@@ -10,6 +10,7 @@ import type {
   QuizshowScreenState,
   QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
+import { QuizshowRoundCard as QuizshowRoundCardView } from "../stage/QuizshowRoundCard";
 import { QuizshowScreenLobby } from "./QuizshowScreenLobby";
 import { QuizshowScreenParty } from "./QuizshowScreenParty";
 import { QuizshowScreenQuestion } from "./QuizshowScreenQuestion";
@@ -31,6 +32,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     roundNumber: 2,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
     ...overrides,
   };
 }
@@ -47,6 +51,8 @@ function roundCardOf(
     questionCount: 4,
     isJokerAllowed: true,
     isSpeedBonusOn: false,
+    isWarmUp: false,
+    talkSeconds: 0,
     ...overrides,
   };
 }
@@ -64,6 +70,10 @@ function questionOf(
     mediaUrl: null,
     points: 1000,
     timeLimitSeconds: 20,
+    mediaAlt: { en: "", pt: "" },
+    mediaReveal: "instant",
+    numberUnit: { en: "", pt: "" },
+    readMs: 4000,
     options: null,
     ...overrides,
   };
@@ -86,6 +96,10 @@ function screenSession(
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor: cursorWith(),
     rounds: [],
@@ -259,5 +273,225 @@ describe("the TV round lines", () => {
     expect(screen.getByText("Round title 0")).toBeInTheDocument();
     // The wheel row before it never counts, so the blank round is the second one.
     expect(screen.getByText("Round 2")).toBeInTheDocument();
+  });
+
+  it("reads Warm-up on the intro of a warm-up round", async () => {
+    await renderOnScreen(
+      <QuizshowRoundCardView
+        round={roundCardOf(0, { isWarmUp: true })}
+        roundNumber={1}
+        roundCount={5}
+        language="en"
+        size="screen"
+      />,
+    );
+    expect(screen.getByText("Warm-up")).toBeInTheDocument();
+    expect(screen.queryByText(/^Round \d+ of \d+$/)).toBeNull();
+    expect(screen.getByText("Round title 0")).toBeInTheDocument();
+    // The warm-up reads by its name: the big round number stays off the card.
+    expect(screen.queryByText("1")).toBeNull();
+  });
+
+  it("reads Warm-up in the round line of a warm-up question", async () => {
+    const warmUpRound = roundCardOf(0, { isWarmUp: true });
+    const session = screenSession({
+      cursor: cursorWith({ roundIndex: 0, roundNumber: 1 }),
+      rounds: [warmUpRound],
+      round: warmUpRound,
+    });
+    await renderOnScreen(
+      <QuizshowScreenQuestion
+        session={session}
+        question={questionOf({ roundIndex: 0 })}
+        clockOffsetMs={0}
+        size="screen"
+      />,
+    );
+    expect(screen.getByText("Warm-up")).toBeInTheDocument();
+    expect(screen.queryByText("Round 1 of 5")).toBeNull();
+    expect(screen.getByText("Round title 0")).toBeInTheDocument();
+    expect(screen.getByText("Question 1 of 4")).toBeInTheDocument();
+  });
+
+  it("keeps Round N of M on a round with talk time", async () => {
+    await renderOnScreen(
+      <QuizshowRoundCardView
+        round={roundCardOf(2, { talkSeconds: 30 })}
+        roundNumber={2}
+        roundCount={5}
+        language="en"
+        size="screen"
+      />,
+    );
+    expect(screen.getByText("Round 2 of 5")).toBeInTheDocument();
+    expect(screen.queryByText("Warm-up")).toBeNull();
+  });
+});
+
+describe("the TV reveal content", () => {
+  const REVEAL_CURSOR = cursorWith({ phase: "reveal" });
+
+  it("shows the fun fact under the answer at the reveal", async () => {
+    const session = screenSession({
+      cursor: REVEAL_CURSOR,
+      round: roundCardOf(4),
+      reveal: {
+        phaseId: "1",
+        questionId: "question-1",
+        correct: { type: "true_false", isTrue: true },
+        answeredCount: 3,
+        eligibleCount: 4,
+        distribution: { kind: "true_false", trueCount: 2, falseCount: 1 },
+        note: {
+          en: "The riots began on 28 June",
+          pt: "Os motins começaram a 28 de junho",
+        },
+        wasCorrected: false,
+      },
+    });
+    await renderOnScreen(
+      <QuizshowScreenQuestion
+        session={session}
+        question={questionOf()}
+        clockOffsetMs={0}
+        size="screen"
+      />,
+    );
+    expect(screen.getByText("Fun fact")).toBeInTheDocument();
+    expect(screen.getByText("The riots began on 28 June")).toBeInTheDocument();
+  });
+
+  it("shows no fun fact when the reveal has no note", async () => {
+    const session = screenSession({
+      cursor: REVEAL_CURSOR,
+      round: roundCardOf(4),
+      reveal: {
+        phaseId: "1",
+        questionId: "question-1",
+        correct: { type: "true_false", isTrue: true },
+        answeredCount: 3,
+        eligibleCount: 4,
+        distribution: { kind: "true_false", trueCount: 2, falseCount: 1 },
+        note: null,
+        wasCorrected: false,
+      },
+    });
+    await renderOnScreen(
+      <QuizshowScreenQuestion
+        session={session}
+        question={questionOf()}
+        clockOffsetMs={0}
+        size="screen"
+      />,
+    );
+    expect(screen.queryByText("Fun fact")).toBeNull();
+  });
+
+  it("says the host corrected the answer only on a corrected reveal", async () => {
+    const revealOf = (wasCorrected: boolean) => ({
+      phaseId: "1",
+      questionId: "question-1",
+      correct: { type: "true_false" as const, isTrue: true },
+      answeredCount: 3,
+      eligibleCount: 4,
+      distribution: {
+        kind: "true_false" as const,
+        trueCount: 2,
+        falseCount: 1,
+      },
+      note: null,
+      wasCorrected,
+    });
+    const { rerender } = await renderOnScreen(
+      <QuizshowScreenQuestion
+        session={screenSession({
+          cursor: REVEAL_CURSOR,
+          round: roundCardOf(4),
+          reveal: revealOf(false),
+        })}
+        question={questionOf()}
+        clockOffsetMs={0}
+        size="screen"
+      />,
+    );
+    expect(screen.queryByText("The host corrected this answer")).toBeNull();
+
+    rerender(
+      <TestProviders>
+        <MotionProvider>
+          <QuizshowScreenQuestion
+            session={screenSession({
+              cursor: REVEAL_CURSOR,
+              round: roundCardOf(4),
+              reveal: revealOf(true),
+            })}
+            question={questionOf()}
+            clockOffsetMs={0}
+            size="screen"
+          />
+        </MotionProvider>
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByText("The host corrected this answer"),
+    ).toBeInTheDocument();
+  });
+
+  it("heads a poll reveal with How everyone voted", async () => {
+    const pollQuestion = questionOf({
+      type: "poll",
+      options: [
+        { id: "option-a", text: { en: "Cats", pt: "Gatos" } },
+        { id: "option-b", text: { en: "Dogs", pt: "Cães" } },
+      ],
+    });
+    const session = screenSession({
+      cursor: REVEAL_CURSOR,
+      round: roundCardOf(4),
+      reveal: {
+        phaseId: "1",
+        questionId: "question-1",
+        correct: null,
+        answeredCount: 3,
+        eligibleCount: 4,
+        distribution: { kind: "options", counts: [2, 1] },
+        note: null,
+        wasCorrected: false,
+      },
+    });
+    await renderOnScreen(
+      <QuizshowScreenQuestion
+        session={session}
+        question={pollQuestion}
+        clockOffsetMs={0}
+        size="screen"
+      />,
+    );
+    expect(screen.getByText("How everyone voted")).toBeInTheDocument();
+    expect(screen.queryByText("Correct answer")).toBeNull();
+  });
+
+  it("shows the prompt in EN with the PT line under it under Both", async () => {
+    const session = screenSession({
+      screenLanguage: "both",
+      round: roundCardOf(4),
+    });
+    await renderOnScreen(
+      <QuizshowScreenQuestion
+        session={session}
+        question={questionOf()}
+        clockOffsetMs={0}
+        size="screen"
+      />,
+    );
+    const heading = screen.getByRole("heading", { level: 1 });
+    expect(within(heading).getByText("Was Stonewall in 1969?")).toHaveAttribute(
+      "lang",
+      "en",
+    );
+    expect(within(heading).getByText("Stonewall foi em 1969?")).toHaveAttribute(
+      "lang",
+      "pt",
+    );
   });
 });

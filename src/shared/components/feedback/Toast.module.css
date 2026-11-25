@@ -37,6 +37,23 @@
   --toast-shift-sign: 1;
 }
 
+/* A surface with its own bar along the top edge (the Pulse Live studio) sets
+   data-toast-placement="bottom" on the root element, and the stack rests on
+   the bottom edge instead, so a message never covers that bar. The cards are
+   still placed from the container's top, so the stack grows upward from the
+   bottom edge, and they arrive from and leave toward below. */
+:global(html[data-toast-placement="bottom"]) .container {
+  top: auto;
+  bottom: max(20px, calc(env(safe-area-inset-bottom, 0px) + 8px));
+  translate: calc(var(--toast-shift-end, 0px) * var(--toast-shift-sign)) 0;
+}
+:global(html[data-toast-placement="bottom"]) .toast {
+  animation-name: qpToastInFromBelow;
+}
+:global(html[data-toast-placement="bottom"]) .leaving {
+  animation-name: qpToastOutToBelow;
+}
+
 /* One per politeness level. Both are always in the DOM, because a live region
    created at announce time is not reliably announced. Each is a plain
    unpositioned wrapper: its cards place themselves against the container, so
@@ -463,6 +480,22 @@
   from {
     transform: translateY(-20px) scale(0.96);
     filter: blur(6px);
+  }
+}
+@keyframes qpToastInFromBelow {
+  from {
+    transform: translateY(20px) scale(0.96);
+    filter: blur(6px);
+  }
+}
+@keyframes qpToastOutToBelow {
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    filter: blur(4px);
   }
 }
 @keyframes qpToastContentIn {

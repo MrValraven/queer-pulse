@@ -27,6 +27,8 @@ export interface QuizshowDemoGameSeed {
   hasResults: boolean;
   isLobbyOpen: boolean;
   updatedAt: string;
+  /** When the game copied its template (C6.25); null for a copy made before the stamp existed, which shows no template line. */
+  sourceTemplateCopiedAt: string | null;
 }
 
 export const QUIZSHOW_DEMO_GAME_SEEDS: readonly QuizshowDemoGameSeed[] = [
@@ -39,6 +41,7 @@ export const QUIZSHOW_DEMO_GAME_SEEDS: readonly QuizshowDemoGameSeed[] = [
     hasResults: true,
     isLobbyOpen: false,
     updatedAt: "2026-10-17T21:30:00.000Z",
+    sourceTemplateCopiedAt: null,
   },
   {
     gameId: QUIZSHOW_DEMO_GAME_IDS.afterDark,
@@ -49,6 +52,7 @@ export const QUIZSHOW_DEMO_GAME_SEEDS: readonly QuizshowDemoGameSeed[] = [
     hasResults: false,
     isLobbyOpen: true,
     updatedAt: "2026-10-19T20:00:00.000Z",
+    sourceTemplateCopiedAt: null,
   },
   {
     gameId: QUIZSHOW_DEMO_GAME_IDS.wheelNight,
@@ -59,5 +63,6 @@ export const QUIZSHOW_DEMO_GAME_SEEDS: readonly QuizshowDemoGameSeed[] = [
     hasResults: false,
     isLobbyOpen: false,
     updatedAt: "2026-11-09T19:00:00.000Z",
+    sourceTemplateCopiedAt: "2026-11-09T19:00:00.000Z",
   },
 ];

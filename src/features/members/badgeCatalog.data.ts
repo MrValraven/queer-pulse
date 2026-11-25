@@ -198,7 +198,7 @@ export function badgeDisplayMetaFor(badgeKey: string): BadgeDisplayMeta | null {
 }
 
 /**
- * The seven category names the badge catalogue groups by. These arrive as
+ * The eight category names the badge catalogue groups by. These arrive as
  * display words rather than slugs (`cat: 'Attendance'`), so the map is keyed
  * on the exact backend spelling; they double as the filter chips' labels and
  * as the accessible name of each mute switch, which is why an untranslated
@@ -212,6 +212,7 @@ export const BADGE_CATEGORY_LABEL_KEY: Record<string, string> = {
   Hosting: "members:badges.category.hosting",
   Milestones: "members:badges.category.milestones",
   Platform: "members:badges.category.platform",
+  "Quiz nights": "members:badges.category.quizNights",
 };
 
 /** i18n key for a category label, or null for a category this map does not

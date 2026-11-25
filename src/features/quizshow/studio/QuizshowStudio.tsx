@@ -3,6 +3,7 @@ import { QuizshowStudioPortalContext } from "./quizshowStudioPortal";
 import { AnimatePresence } from "motion/react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowScopeContext, type QuizshowScope } from "../quizshowScope";
+import { QuizshowReviewMarksProvider } from "../builder/quizshowReviewMarks";
 import { QuizshowBackdrop } from "../stage/QuizshowBackdrop";
 import { isWheelRoundKind } from "../quizshowWheel";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
@@ -14,6 +15,7 @@ import {
 import { QuizshowStudioInspector } from "./QuizshowStudioInspector";
 import type { QuizshowStudioMoreAction } from "./QuizshowStudioMoreMenu";
 import { QuizshowStudioRail } from "./QuizshowStudioRail";
+import { QuizshowStudioLobbyStrip } from "./QuizshowStudioSaveStatus";
 import {
   QuizshowStudioRemoveDialog,
   type QuizshowStudioRemoval,
@@ -32,6 +34,7 @@ import {
 } from "./QuizshowStudioTopBar";
 import { railItemSelectionAfter } from "./quizshowStudioDom";
 import { useQuizshowStudioController } from "./useQuizshowStudioController";
+import { useStudioToastsAtBottom } from "./useStudioToastsAtBottom";
 import {
   STUDIO_ROOT_ATTRIBUTE,
   STUDIO_THUMBNAIL_ATTRIBUTE,
@@ -62,7 +65,7 @@ interface QuizshowStudioWorkspaceProps {
   moreActions: readonly QuizshowStudioMoreAction[];
 }
 
-/** The loaded studio: top bar, rail, canvas with its hint strip, inspector, and the keyboard. */
+/** The loaded studio: top bar, the open lobby's strip, rail, canvas with its hint strip, inspector, and the keyboard. */
 function QuizshowStudioWorkspace({
   backLink,
   moreActions,
@@ -109,6 +112,12 @@ function QuizshowStudioWorkspace({
         moreActions={moreActions}
         onShowShortcuts={() => setIsShortcutsOpen(true)}
       />
+      {/* The open lobby's line: its own row under the bar, so it never crowds the bar's controls. */}
+      {hasQuiz && (
+        <div className={styles.lobbyStripCell}>
+          <QuizshowStudioLobbyStrip />
+        </div>
+      )}
       {hasQuiz && (
         <QuizshowStudioRail
           onRequestRemoveQuestion={(roundIndex, questionIndex) =>
@@ -179,6 +188,8 @@ export function QuizshowStudio({
   children,
 }: QuizshowStudioProps) {
   useQuizshowFramelessPage();
+  // The dark top bar owns the top edge, so toasts rest on the bottom one.
+  useStudioToastsAtBottom();
   // Menus portal into the root (kept in state so the portal target is never read during render).
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const eventStart = useMemo(
@@ -189,10 +200,12 @@ export function QuizshowStudio({
     eventStartAt: eventStart,
     initialImportPicker: initialImportPicker ? "sources" : null,
   });
+  // Page overlays (the game's results panel) read the same studio as the workspace; null until it is ready.
+  const readyStudio = result.status === "ready" ? result.value : null;
   let body: ReactNode;
-  if (result.status === "ready" && result.value !== null) {
+  if (readyStudio !== null) {
     body = (
-      <QuizshowStudioContext.Provider value={result.value}>
+      <QuizshowStudioContext.Provider value={readyStudio}>
         <QuizshowStudioWorkspace
           backLink={backLink}
           moreActions={moreActions ?? NO_MORE_ACTIONS}
@@ -222,10 +235,13 @@ export function QuizshowStudio({
       >
         <QuizshowBackdrop variant="studio" />
         <QuizshowStudioPortalContext.Provider value={rootElement}>
-          {body}
+          {/* Item 24: the draft session's review marks; they outlive a reload of the quiz and are never saved. */}
+          <QuizshowReviewMarksProvider>{body}</QuizshowReviewMarksProvider>
         </QuizshowStudioPortalContext.Provider>
         {result.conflictDialog}
-        {children}
+        <QuizshowStudioContext.Provider value={readyStudio}>
+          {children}
+        </QuizshowStudioContext.Provider>
       </div>
     </QuizshowScopeContext.Provider>
   );

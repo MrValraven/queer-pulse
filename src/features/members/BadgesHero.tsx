@@ -13,7 +13,7 @@ import {
   RARITY_LABEL_KEY,
   unitsRemaining,
 } from "./badgeSelectors";
-import { badgeDisplayMetaFor } from "./badgeCatalog.data";
+import { badgeNameFor } from "./badgeDisplayText";
 import { BadgesDial } from "./BadgesDial";
 import { BadgesRungs } from "./BadgesRungs";
 import { BadgeCaseCard } from "./BadgeCaseCard";
@@ -32,18 +32,14 @@ export function BadgesHero({
   since,
   recognition,
 }: BadgesHeroProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [caseCardOpen, setCaseCardOpen] = useState(false);
   const { level, badges, levelLadder, perks } = recognition;
   const totalCatalog = badges.earnedCount + badges.discoverCount;
   const rarest: Badge | null = rarestBadge(badges.earned);
   const closest: Badge | undefined = closestToEarning(badges.locked)[0];
   const closestLeft = closest ? unitsRemaining(closest) : null;
-  // Both stat tiles name a badge. The catalogue ships a stable id beside its
-  // English display words, so the name resolves here rather than off the wire
-  // (see `badgeCatalog.data.ts`); an unmapped id keeps the server's English.
-  const rarestMeta = rarest ? badgeDisplayMetaFor(rarest.key) : null;
-  const closestMeta = closest ? badgeDisplayMetaFor(closest.key) : null;
+  // Both stat tiles name a badge; the name resolves in `badgeDisplayText.ts`.
 
   return (
     <>
@@ -78,7 +74,7 @@ export function BadgesHero({
                 <div className={`${styles.statNum} ${styles.statNumSm}`}>
                   {rarest ? (
                     <>
-                      {rarestMeta ? t(rarestMeta.nameKey) : rarest.name}
+                      {badgeNameFor(rarest, t, language)}
                       <em>{t(RARITY_LABEL_KEY[rarest.rarity])}</em>
                     </>
                   ) : (
@@ -93,7 +89,7 @@ export function BadgesHero({
                 <div className={`${styles.statNum} ${styles.statNumSm}`}>
                   {closest ? (
                     <>
-                      {closestMeta ? t(closestMeta.nameKey) : closest.name}
+                      {badgeNameFor(closest, t, language)}
                       {closestLeft !== null && (
                         <em>
                           {t("members:badges.hero.toGo", {

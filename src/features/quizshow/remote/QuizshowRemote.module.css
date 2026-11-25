@@ -84,9 +84,9 @@
   min-width: 0;
 }
 
-/* The ring keeps its slot while it folds away, so the title never jumps. Out of
-   a timed phase the slot shows the ring's empty track, so the header reads the
-   same in every phase. The dial is 2.9em of the ring's 24px type. */
+/* The ring keeps its slot while it folds away, so the title never jumps. Out
+   of a timed phase the slot fades out with its space kept: an idle phase shows
+   no empty dial. The dial is 2.9em of the ring's 24px type. */
 .ringSlot {
   --ring-size: calc(2.9 * var(--text-24));
   position: relative;
@@ -96,25 +96,12 @@
   justify-content: center;
   inline-size: 4.5rem;
   block-size: var(--ring-size);
-}
-
-.ringSlot::before {
-  content: "";
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 50%;
-  box-sizing: border-box;
-  inline-size: var(--ring-size);
-  block-size: var(--ring-size);
-  border: calc(0.2 * var(--text-24)) solid var(--qs-ring-track);
-  border-radius: 50%;
-  opacity: 0;
-  transform: translateX(-50%);
+  opacity: 1;
   transition: opacity var(--dur-base) var(--ease);
 }
 
-.ringSlot[data-is-idle="true"]::before {
-  opacity: 1;
+.ringSlot[data-is-idle="true"] {
+  opacity: 0;
 }
 
 .phase {
@@ -128,26 +115,23 @@
 
 /* The thin rail under the header: the countdown assistive tech hears, shown as
    a quiet line. Its own note is hidden because the ring shows it. The rail
-   keeps its height and draws an empty track when no clock is running. */
+   keeps its height and fades out while no clock is running. */
 .rail {
   position: relative;
   min-block-size: calc(3 * var(--stage-track-height));
-}
-
-.rail::before {
-  content: "";
-  position: absolute;
-  inset-block-start: var(--stage-track-height);
-  inset-inline: 0;
-  block-size: var(--stage-track-height);
-  border-radius: var(--radius-pill);
-  background: var(--qs-ring-track);
-  opacity: 0;
+  opacity: 1;
   transition: opacity var(--dur-base) var(--ease);
 }
 
-.rail[data-is-idle="true"]::before {
-  opacity: 1;
+.rail[data-is-idle="true"] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ringSlot,
+  .rail {
+    transition: none;
+  }
 }
 
 .rail span[aria-hidden="true"] {
@@ -177,7 +161,8 @@
   background: var(--qs-glass-raised-top);
 }
 
-/* Two fixed lines, so a phase with fewer facts never shortens the header. */
+/* Two lines, so a phase with fewer facts never shortens the header. A long
+   line (a Portuguese round title at 320px) wraps onto a second row of its own. */
 .meta {
   display: flex;
   flex-direction: column;
@@ -188,20 +173,21 @@
 
 .metaLine {
   display: flex;
-  gap: var(--gap-sm);
+  flex-wrap: wrap;
+  column-gap: var(--gap-sm);
   min-block-size: 1.5em;
   line-height: 1.5;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .metaLine > * {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .joinCode {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
 }
@@ -275,12 +261,20 @@
 
 /* Answer key */
 .tiles {
+  /* Option words break only where they fit whole: "Greenwich" never splits
+     into "Greenwi-ch". The tile sets its own hyphens, so the rule below
+     reaches inside it. */
+  hyphens: manual;
   /* The host reads this key while players answer, so a wrong option steps back
      only to 0.6, which keeps its text above 4.5:1. */
   --stage-dimmed-opacity: 0.6;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--gap-xs);
+}
+
+.tiles > div * {
+  hyphens: manual;
 }
 
 .keyText {
@@ -305,6 +299,41 @@
 .keyLetter {
   color: var(--qs-text-mute);
   font-variant-numeric: tabular-nums;
+}
+
+/* The reveal note: a quiet inset under the answer behind one hairline, its
+   label set apart by space and weight. */
+.revealNote {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-block-start: var(--gap-xs);
+  padding-block-start: var(--gap-xs);
+  border-block-start: 1px solid var(--qs-line);
+}
+
+.revealNoteTitle {
+  margin: 0;
+  font-size: var(--text-13-5);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+}
+
+.revealNoteText {
+  margin: 0;
+  font-size: var(--text-16);
+  line-height: 1.45;
+  color: var(--qs-text);
+  overflow-wrap: anywhere;
+}
+
+/* The practice badge sits above the phase title at every width. */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 /* Rows (review, favourites, players, teams) */
@@ -503,6 +532,61 @@
   touch-action: manipulation;
 }
 
+/* The auto-advance ring sits before the label in the button's ink colour. */
+.autoAdvanceSlot {
+  display: inline-flex;
+  flex: none;
+}
+
+.autoAdvanceRing {
+  width: 1.4em;
+  height: 1.4em;
+  /* Starts at 12 o'clock. */
+  transform: rotate(-90deg);
+}
+
+.autoAdvanceTrack,
+.autoAdvanceArc {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+}
+
+.autoAdvanceTrack {
+  opacity: 0.25;
+}
+
+/* Only stroke-dashoffset moves: full at the start, empty at autoAdvanceAt.
+   The negative delay starts it part way when the ring mounts late. */
+.autoAdvanceArc {
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  animation: autoAdvanceEmpty var(--qs-auto-advance-ms, 6000ms) linear
+    var(--qs-auto-advance-delay, 0ms) forwards;
+}
+
+@keyframes autoAdvanceEmpty {
+  to {
+    stroke-dashoffset: 100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .autoAdvanceArc {
+    animation: none;
+  }
+}
+
+/* Reduced motion: the ring gives way to this still line under the button. */
+.autoAdvanceCaption {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.4;
+  text-align: center;
+  color: var(--qs-text-mute);
+}
+
 .secondaryRow {
   display: flex;
   flex-wrap: wrap;
@@ -516,6 +600,15 @@
   flex: 1 1 0;
   min-width: 4rem;
   max-width: 7rem;
+}
+
+/* With the More button the row holds five: they share the width a little tighter, so no label drops to a second row. */
+.secondaryRow[data-has-more="true"] > * {
+  min-width: 0;
+}
+
+.secondaryRow[data-has-more="true"] .secondaryButton {
+  padding-inline: 0.125rem;
 }
 
 .secondaryRow .secondaryButton {

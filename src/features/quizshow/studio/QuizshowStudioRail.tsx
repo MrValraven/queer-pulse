@@ -34,6 +34,45 @@ import { STUDIO_RAIL_ATTRIBUTE } from "./useStudioShortcuts";
 import { useStudioStableCallback } from "./useStudioStableCallback";
 import styles from "./QuizshowStudioRail.module.css";
 
+/**
+ * The rail's one shared menu: what it is open for, and the entry a menu
+ * swapped into its place focuses (Back lands on "Move to round").
+ */
+function useRailMenuTarget() {
+  const menu = useStudioMenuAnchor();
+  const [menuTarget, setMenuTarget] = useState<StudioRailMenuTarget | null>(
+    null,
+  );
+  const [menuFocusKey, setMenuFocusKey] = useState<string | null>(null);
+  /** A "..." press toggles; a right-click, Shift+F10 or the menu key only opens. */
+  const openMenu = (
+    target: StudioRailMenuTarget,
+    element: HTMLElement,
+    point: { x: number; y: number } | null,
+    mode: StudioRailMenuOpenMode,
+  ) => {
+    if (mode === "toggle" && menu.anchor?.element === element) {
+      menu.close(true);
+      return;
+    }
+    setMenuTarget(target);
+    setMenuFocusKey(null);
+    menu.openAt(element, point);
+  };
+  /** Another menu in the open one's place, hanging from the same opener. */
+  const swapMenuTarget = (
+    target: StudioRailMenuTarget,
+    focusKey: string | null = null,
+  ) => {
+    const { anchor } = menu;
+    if (anchor === null) return;
+    setMenuTarget(target);
+    setMenuFocusKey(focusKey);
+    menu.openAt(anchor.element, anchor.point);
+  };
+  return { menu, menuTarget, menuFocusKey, openMenu, swapMenuTarget };
+}
+
 /** The settings row at the top of the rail, then every round, then Add round. */
 export function QuizshowStudioRail({
   onRequestRemoveQuestion,
@@ -54,10 +93,8 @@ export function QuizshowStudioRail({
   } = useQuizshowStudio();
   const { rounds } = controller.draft;
   const railRef = useRef<HTMLElement>(null);
-  const menu = useStudioMenuAnchor();
-  const [menuTarget, setMenuTarget] = useState<StudioRailMenuTarget | null>(
-    null,
-  );
+  const { menu, menuTarget, menuFocusKey, openMenu, swapMenuTarget } =
+    useRailMenuTarget();
   const { skipNextScroll } = useStudioRailFollow(railRef, selection);
   const isQuizSelected = selection.kind === "quiz";
 
@@ -74,20 +111,6 @@ export function QuizshowStudioRail({
 
   const { containerRef: roundsRef, gripHandlers: roundGripHandlers } =
     useRowDragReorder(actions.moveRound);
-  /** A "..." press toggles; a right-click, Shift+F10 or the menu key only opens. */
-  const openMenu = (
-    target: StudioRailMenuTarget,
-    element: HTMLElement,
-    point: { x: number; y: number } | null,
-    mode: StudioRailMenuOpenMode,
-  ) => {
-    if (mode === "toggle" && menu.anchor?.element === element) {
-      menu.close(true);
-      return;
-    }
-    setMenuTarget(target);
-    menu.openAt(element, point);
-  };
   /** Focus and a context menu select their item without scrolling the rail (the menu would close on the scroll). */
   const selectQuietly = (next: QuizshowStudioSelection) => {
     if (isSameStudioSelection(next, selection)) return;
@@ -159,8 +182,17 @@ export function QuizshowStudioRail({
     actions,
     onRequestRemoveQuestion,
     onRequestRemoveRound,
+    // The submenu and the question menu take each other's place, from the same opener.
+    onOpenMoveToRound: (roundIndex, questionIndex) =>
+      swapMenuTarget({ kind: "moveQuestion", roundIndex, questionIndex }),
+    onBackToQuestionMenu: (roundIndex, questionIndex) =>
+      swapMenuTarget(
+        { kind: "question", roundIndex, questionIndex },
+        "moveToRound",
+      ),
     t,
   });
+  const isMoveToRoundMenu = menuTarget?.kind === "moveQuestion";
   const openMenuKey = menu.isOpen ? railMenuKeyOf(menuTarget) : null;
 
   return (
@@ -197,9 +229,16 @@ export function QuizshowStudioRail({
         }
       />
       <QuizshowStudioMenu
-        label={t("quizshow:studio.rail.menuLabel")}
+        // A new key mounts each menu fresh, so focus lands on its first entry.
+        key={isMoveToRoundMenu ? "moveToRound" : "rail"}
+        label={t(
+          isMoveToRoundMenu
+            ? "quizshow:studio.moveToRound"
+            : "quizshow:studio.rail.menuLabel",
+        )}
         entries={menuEntries}
         anchor={menu.anchor}
+        initialFocusKey={menuFocusKey}
         placement={
           menuTarget?.kind === "addRound" ? "bottom-start" : "bottom-end"
         }

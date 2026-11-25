@@ -39,6 +39,7 @@ export function QuizshowStudioStart() {
             variant="empty"
             onImported={start.importDraft}
             initialOpenPicker={start.initialImportPicker}
+            onStartBlank={start.startBlank}
           />
           <Button type="button" variant="ghost" onClick={start.startBlank}>
             <FiFilePlus aria-hidden /> {t("quizshow:studio.start.blank")}

@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import type {
+  QuizshowQuizChangedDetails,
   QuizshowQuizProblem,
   QuizshowQuizResponse,
 } from "../../../shared/contracts/quizshow";
+import type { TranslateOptions } from "../../../shared/i18n/types";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ApiError } from "../../../shared/api/client";
 import {
   quizshowErrorCodeOf,
   quizshowErrorKeyOf,
   quizshowProblemsOf,
+  quizshowQuizChangedDetailsOf,
 } from "../api/quizshowErrors";
 import {
   useSaveQuizshowQuiz,
@@ -54,6 +57,33 @@ export function conflictUpdatedAtOf(error: unknown): string | null {
   return typeof updatedAt === "string" ? updatedAt : null;
 }
 
+/** The copy key `errors.quiz_changed_by` reads when the 409 names who saved (item 54). */
+export const QUIZSHOW_CONFLICT_BY_KEY = "quizshow:errors.quiz_changed_by";
+
+/**
+ * The conflict dialog's body (item 54, C3.3): "{name} saved this quiz at
+ * {time}. Load their version to keep editing" when the 409 names who saved
+ * and when, else the scope's own body (`fallbackKey`). A game keeps its own
+ * body: it has one owner, so the name would be the viewer's. Pure;
+ * `formatTime` is the app's time formatter.
+ */
+export function conflictBodyCopyOf(
+  details: QuizshowQuizChangedDetails | null,
+  scopeKind: QuizshowScope["kind"],
+  fallbackKey: string,
+  formatTime: (value: Date) => string,
+): { key: string; values: TranslateOptions } {
+  const name = details?.updatedByName?.trim() ?? "";
+  const updatedAt = details?.updatedAt ?? null;
+  if (scopeKind === "game" || name === "" || updatedAt === null) {
+    return { key: fallbackKey, values: {} };
+  }
+  return {
+    key: QUIZSHOW_CONFLICT_BY_KEY,
+    values: { name, time: formatTime(new Date(updatedAt)) },
+  };
+}
+
 /**
  * Saves the draft for an event, a game or a template. `isAdultsOnly` is the
  * game's 18+ switch, and null elsewhere. `templateFields` is a template's card
@@ -90,6 +120,9 @@ export function useQuizshowSave(options: {
     null,
   );
   const [isConflictOpen, setIsConflictOpen] = useState(false);
+  // Who saved the version this save collided with, and when (item 54).
+  const [conflictDetails, setConflictDetails] =
+    useState<QuizshowQuizChangedDetails | null>(null);
   // A 409 waits for the host to pick their version or mine; closing the
   // dialog leaves it pending, so the studio's autosave stays paused.
   const [isConflictPending, setIsConflictPending] = useState(false);
@@ -212,6 +245,7 @@ export function useQuizshowSave(options: {
       const code = quizshowErrorCodeOf(error);
       if (code === "quizshow_quiz_changed") {
         setConflictUpdatedAt(conflictUpdatedAtOf(error));
+        setConflictDetails(quizshowQuizChangedDetailsOf(error));
         setIsConflictOpen(true);
         setIsConflictPending(true);
         return "conflict";
@@ -270,6 +304,8 @@ export function useQuizshowSave(options: {
     closeConflict: () => setIsConflictOpen(false),
     /** True from a 409 until the host loads their version or saves mine. */
     isConflictPending,
+    /** Additive. Who saved the version the last 409 collided with, and when (item 54); null when the 409 named nobody. */
+    conflictDetails,
     /** Opens the conflict dialog again while a conflict is pending ("Review changes"). */
     reopenConflict: () => {
       if (isConflictPending) setIsConflictOpen(true);

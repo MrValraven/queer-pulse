@@ -24,6 +24,7 @@ import {
   applyQuizshowFrame,
   createQuizshowClientState,
   isPlayerState,
+  type QuizshowClientAction,
   type QuizshowClientState,
   type QuizshowPendingAnswer,
 } from "./quizshowClientStore";
@@ -83,8 +84,27 @@ function shouldKeepPending(
   );
 }
 
-/** A live session that ended: an event changes its page's Pulse Live card, the quiz lock and the
- *  results; a game (owner-only) changes the game, its results and My games. */
+/** The store cursor's phase id once `action` is reduced: a replay sets it, and a
+ *  phase change moves it while the store holds a session. */
+function phaseIdAfter(
+  phaseId: string | null,
+  action: QuizshowClientAction,
+): string | null {
+  if (action.event === "session:state") return action.payload.cursor.phaseId;
+  if (action.event === "phase:change" && phaseId !== null) {
+    return action.payload.cursor.phaseId;
+  }
+  return phaseId;
+}
+
+/** How long after an event session ends the results, the member's badges and
+ *  the next game's Win to earn read once more: the server writes the win
+ *  badges just after the end frame, so the first refresh can arrive early. */
+export const QUIZSHOW_RESULTS_SETTLE_DELAY_MS = 4000;
+
+/** A live session that ended: an event changes its page's Pulse Live card, the quiz lock, the
+ *  results and the next game's Win to earn, then reads the results, the badges and Win to earn
+ *  once more after a short settle; a game (owner-only) changes the game, its results and My games. */
 function useRefreshAfterSessionEnd(input: {
   isEnded: boolean;
   session: QuizshowClientState["session"];
@@ -109,21 +129,28 @@ function useRefreshAfterSessionEnd(input: {
       return;
     }
     if (endedEventSlug === null) return;
+    const refreshResultsAndBadges = () => {
+      void queryClient.invalidateQueries({
+        queryKey: quizshowKeys.results(endedEventSlug, false),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: quizshowKeys.winBadgesPreview(endedEventSlug, false),
+      });
+    };
     void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
     void queryClient.invalidateQueries({
       queryKey: quizshowKeys.quiz(endedEventSlug, false),
     });
-    void queryClient.invalidateQueries({
-      queryKey: quizshowKeys.results(endedEventSlug, false),
-    });
+    refreshResultsAndBadges();
+    const settleTimer = setTimeout(() => {
+      refreshResultsAndBadges();
+      void queryClient.invalidateQueries({ queryKey: ["recognition"] });
+    }, QUIZSHOW_RESULTS_SETTLE_DELAY_MS);
+    return () => clearTimeout(settleTimer);
   }, [endedEventSlug, endedGameId, queryClient]);
 }
 
-/**
- * The live `/quizshow` connection, or the in-browser demo engine, behind one
- * shape. Live opens one socket per session and role; demo opens none.
- */
-export function useQuizshowSession(options: {
+export interface QuizshowSessionOptions {
   sessionId: string | null;
   role: QuizshowAttachRole;
   demo: Omit<QuizshowDemoEngineOptions, "role">;
@@ -131,11 +158,32 @@ export function useQuizshowSession(options: {
   gameId?: string | null;
   /** The scope's 18+ flag (the join response's, the event's or the game's), for the demo engine. */
   isAdultsOnly?: boolean;
-}): QuizshowSessionController {
-  const { sessionId, role, demo, gameId = null, isAdultsOnly } = options;
+  /** A paired TV's or helper's ticket (contract 6.5): live with it even while signed out. */
+  deviceTicket?: string | null;
+}
+
+/**
+ * The live `/quizshow` connection, or the in-browser demo engine, behind one
+ * shape. Live opens one socket per session and role; demo opens none.
+ */
+export function useQuizshowSession(
+  options: QuizshowSessionOptions,
+): QuizshowSessionController {
+  const {
+    sessionId,
+    role,
+    demo,
+    gameId = null,
+    isAdultsOnly,
+    deviceTicket = null,
+  } = options;
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
-  const isLive = !demoMode && loggedIn && apiAvailable && sessionId !== null;
+  const isLive =
+    !demoMode &&
+    apiAvailable &&
+    sessionId !== null &&
+    (loggedIn || deviceTicket !== null);
   const [state, dispatch] = useReducer(
     applyQuizshowFrame,
     role,
@@ -152,6 +200,8 @@ export function useQuizshowSession(options: {
   const replayCountRef = useRef(0);
   const resentKeysRef = useRef(new Set<string>());
   const [lostAck, setLostAck] = useState<LostAnswerAck | null>(null);
+  /** The store cursor's phase id, read by the socket's wake resync (contract 6.6). */
+  const phaseIdRef = useRef<string | null>(null);
 
   // Live and demo swapped (demo toggle, sign out): nothing of the other connection carries over.
   const [isLiveSeen, setIsLiveSeen] = useState(isLive);
@@ -170,9 +220,13 @@ export function useQuizshowSession(options: {
       role,
       onAction: (action) => {
         if (action.event === "session:state") replayCountRef.current += 1;
+        // In step before the render, so a ping ack in the same burst compares the new phase.
+        phaseIdRef.current = phaseIdAfter(phaseIdRef.current, action);
         dispatch(action);
       },
       onClockOffset: setClockOffsetMs,
+      currentPhaseId: () => phaseIdRef.current,
+      deviceTicket,
     });
     clientRef.current = client;
     client.connect();
@@ -180,7 +234,7 @@ export function useQuizshowSession(options: {
       client.dispose();
       if (clientRef.current === client) clientRef.current = null;
     };
-  }, [isLive, sessionId, role]);
+  }, [isLive, sessionId, role, deviceTicket]);
 
   const demoEngine = useQuizshowDemoEngine(
     {
@@ -229,6 +283,9 @@ export function useQuizshowSession(options: {
   );
 
   const currentPhaseId = state.session?.cursor.phaseId ?? null;
+  useEffect(() => {
+    phaseIdRef.current = currentPhaseId;
+  }, [currentPhaseId]);
 
   const submitAnswer = useCallback(
     async (input: {

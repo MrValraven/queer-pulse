@@ -33,6 +33,27 @@ describe("auditActionLabel", () => {
     ).toBe("admin:moderation.action.quizshowTemplateDeleted");
   });
 
+  it("labels the seven quiz badge actions", () => {
+    const expectedLabels: Record<string, string> = {
+      quiz_badge_attached: "admin:moderation.action.quizBadgeAttached",
+      quiz_badge_detached: "admin:moderation.action.quizBadgeDetached",
+      quiz_badge_awarded_after_game:
+        "admin:moderation.action.quizBadgeAwardedAfterGame",
+      quiz_game_win_revoked: "admin:moderation.action.quizGameWinRevoked",
+      quiz_badge_definition_archived:
+        "admin:moderation.action.quizBadgeDefinitionArchived",
+      quiz_badge_definition_restored:
+        "admin:moderation.action.quizBadgeDefinitionRestored",
+      quiz_badge_definition_deleted:
+        "admin:moderation.action.quizBadgeDefinitionDeleted",
+    };
+    for (const [actionCode, expectedLabel] of Object.entries(expectedLabels)) {
+      expect(auditActionLabel(actionOf(actionCode), echoKey)).toBe(
+        expectedLabel,
+      );
+    }
+  });
+
   it("falls back to the raw code for an unmapped action", () => {
     expect(auditActionLabel(actionOf("some_new_action"), echoKey)).toBe(
       "some_new_action",

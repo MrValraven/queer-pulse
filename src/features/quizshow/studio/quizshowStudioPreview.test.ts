@@ -24,10 +24,40 @@ const MULTIPLE_CHOICE: QuizshowQuestionInput = {
     { id: "b", text: { en: "1970", pt: "1970" } },
     { id: "c", text: { en: "1975", pt: "1975" } },
   ],
-  answer: { correctIndex: 1 },
+  answer: { correctIndexes: [1] },
 };
 
-function draftOf(): QuizshowDraft {
+const TWO_CORRECT: QuizshowQuestionInput = {
+  ...newQuestion("multiple_choice", "quiz"),
+  prompt: { en: "Which of these are colours?", pt: "Quais destas são cores?" },
+  options: [
+    { id: "a", text: { en: "Lilac", pt: "Lilás" } },
+    { id: "b", text: { en: "Tuesday", pt: "Terça" } },
+    { id: "c", text: { en: "Teal", pt: "Azul-petróleo" } },
+  ],
+  answer: { correctIndexes: [0, 2] },
+  revealNote: {
+    en: "Lilac was a Pride colour long before the flag",
+    pt: "O lilás era uma cor do Pride muito antes da bandeira",
+  },
+};
+
+const POLL: QuizshowQuestionInput = {
+  ...newQuestion("poll", "quiz"),
+  prompt: {
+    en: "Which decade had the best Pride anthems?",
+    pt: "Que década teve os melhores hinos do Pride?",
+  },
+  options: [
+    { id: "a", text: { en: "The 1970s", pt: "Os anos 70" } },
+    { id: "b", text: { en: "The 1980s", pt: "Os anos 80" } },
+    { id: "c", text: { en: "The 1990s", pt: "Os anos 90" } },
+  ],
+};
+
+function draftOf(
+  questions: readonly QuizshowQuestionInput[] = [MULTIPLE_CHOICE],
+): QuizshowDraft {
   const round = newRound("quiz");
   return {
     title: "Pride trivia",
@@ -37,9 +67,11 @@ function draftOf(): QuizshowDraft {
       {
         ...round,
         title: { en: "Our history", pt: "A nossa história" },
-        questions: [
-          { draftKey: "question-1", question: MULTIPLE_CHOICE, mediaUrl: null },
-        ],
+        questions: questions.map((question, questionIndex) => ({
+          draftKey: `question-${questionIndex + 1}`,
+          question,
+          mediaUrl: null,
+        })),
       },
     ],
   };
@@ -81,12 +113,128 @@ describe("studioScreenStateFor", () => {
     expect(state.reveal?.questionId).toBe(state.question?.questionId);
     expect(state.reveal?.correct).toEqual({
       type: "multiple_choice",
-      correctIndex: 1,
+      correctIndexes: [1],
     });
     expect(state.reveal?.distribution).toEqual({
       kind: "options",
       counts: [0, 0, 0],
     });
+    expect(state.reveal?.note).toBeNull();
+    expect(state.reveal?.wasCorrected).toBe(false);
+  });
+
+  it("marks every right option of a two-correct question in reveal, with its note", () => {
+    const state = studioScreenStateFor(
+      draftOf([TWO_CORRECT]),
+      QUESTION_SELECTION,
+      {
+        language: "en",
+        phase: "reveal",
+        pickedPreviewUrls: NO_PREVIEWS,
+      },
+    );
+    expect(state.reveal?.correct).toEqual({
+      type: "multiple_choice",
+      correctIndexes: [0, 2],
+    });
+    expect(state.reveal?.note).toEqual({
+      en: "Lilac was a Pride colour long before the flag",
+      pt: "O lilás era uma cor do Pride muito antes da bandeira",
+    });
+  });
+
+  it("keeps the reveal note out of the open phase", () => {
+    const state = studioScreenStateFor(
+      draftOf([TWO_CORRECT]),
+      QUESTION_SELECTION,
+      {
+        language: "en",
+        phase: "open",
+        pickedPreviewUrls: NO_PREVIEWS,
+      },
+    );
+    expect(state.reveal).toBeNull();
+    expect(state.question).not.toHaveProperty("revealNote");
+  });
+
+  it("draws a poll with its options in order and no right answer", () => {
+    const options = {
+      language: "en",
+      pickedPreviewUrls: NO_PREVIEWS,
+    } as const;
+    const open = studioScreenStateFor(draftOf([POLL]), QUESTION_SELECTION, {
+      ...options,
+      phase: "open",
+    });
+    expect(open.question?.type).toBe("poll");
+    expect(open.question?.options?.map((option) => option.text.en)).toEqual([
+      "The 1970s",
+      "The 1980s",
+      "The 1990s",
+    ]);
+    // Contract 6.12: 1500 + 25 per character of the longer language (PT, 73).
+    expect(open.question?.readMs).toBe(3325);
+    const reveal = studioScreenStateFor(draftOf([POLL]), QUESTION_SELECTION, {
+      ...options,
+      phase: "reveal",
+    });
+    expect(reveal.reveal?.correct).toBeNull();
+    expect(reveal.reveal?.distribution).toEqual({
+      kind: "options",
+      counts: [0, 0, 0],
+    });
+  });
+
+  it("fills every live-only field with its neutral value", () => {
+    const state = studioScreenStateFor(draftOf(), QUESTION_SELECTION, {
+      language: "en",
+      phase: "open",
+      pickedPreviewUrls: NO_PREVIEWS,
+    });
+    expect(state).toMatchObject({
+      isPractice: false,
+      isJoinLocked: false,
+      isAutoAdvanceOn: false,
+      giving: null,
+    });
+    expect(state.cursor).toMatchObject({
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
+    });
+    expect(state.question).toMatchObject({
+      mediaAlt: { en: "", pt: "" },
+      mediaReveal: "instant",
+      numberUnit: { en: "", pt: "" },
+      // A short question reads for the 3 s floor.
+      readMs: 3000,
+    });
+  });
+
+  it("carries the round's warm-up and talk seconds on its card", () => {
+    const draft = draftOf();
+    const warmUpDraft: QuizshowDraft = {
+      ...draft,
+      rounds: draft.rounds.map((round) => ({
+        ...round,
+        settings: { ...round.settings, isWarmUp: true, talkSeconds: 30 },
+      })),
+    };
+    const state = studioScreenStateFor(
+      warmUpDraft,
+      { kind: "round", roundIndex: 0 },
+      { language: "en", phase: "open", pickedPreviewUrls: NO_PREVIEWS },
+    );
+    expect(state.round).toMatchObject({ isWarmUp: true, talkSeconds: 30 });
+  });
+
+  it("shows both languages when the quiz shows both on the screen", () => {
+    const state = studioScreenStateFor(
+      { ...draftOf(), screenLanguage: "both" },
+      QUESTION_SELECTION,
+      { language: "pt", phase: "open", pickedPreviewUrls: NO_PREVIEWS },
+    );
+    expect(state.screenLanguage).toBe("both");
   });
 
   it("carries the round title in the round intro phase", () => {
@@ -100,8 +248,19 @@ describe("studioScreenStateFor", () => {
       en: "Our history",
       pt: "A nossa história",
     });
-    expect(state.screenLanguage).toBe("pt");
+    // The big screen draws in the quiz's own screen language, whatever
+    // language the host types in.
+    expect(state.screenLanguage).toBe("en");
     expect(state.question).toBeNull();
+  });
+
+  it("keeps a Portuguese screen in Portuguese while the host types in English", () => {
+    const state = studioScreenStateFor(
+      { ...draftOf(), screenLanguage: "pt" },
+      QUESTION_SELECTION,
+      { language: "en", phase: "open", pickedPreviewUrls: NO_PREVIEWS },
+    );
+    expect(state.screenLanguage).toBe("pt");
   });
 
   it("draws a selected round header as its intro card", () => {
@@ -152,6 +311,20 @@ describe("studioPlayerQuestionPropsFor", () => {
     expect(props?.question.options).toHaveLength(3);
     expect(props?.controller.state.session?.role).toBe("player");
     expect(props?.controller.state.session?.cursor.phase).toBe("open");
+    expect(props?.controller.state.session).toMatchObject({
+      lobby: { teams: [], playerCount: 0 },
+      answerCount: null,
+    });
+  });
+
+  it("gives the phone a poll to vote on", () => {
+    const props = studioPlayerQuestionPropsFor(
+      draftOf([POLL]),
+      QUESTION_SELECTION,
+      { language: "en", phase: "open", pickedPreviewUrls: NO_PREVIEWS },
+    );
+    expect(props?.question.type).toBe("poll");
+    expect(props?.question.options).toHaveLength(3);
   });
 
   it("is null when no question is selected", () => {

@@ -57,6 +57,8 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "eventParticipation",
     "quizshowPlays",
     "quizshowGames",
+    "quizBadgeWins",
+    "quizGameWins",
   ],
   goTogether: ["go-together"],
   connections: [
@@ -313,6 +315,55 @@ function demoCommunityOwnershipOfferRows() {
   ];
 }
 
+/** The demo member's quiz badge wins, `wonAt` ascending (C12 shape). */
+function demoQuizBadgeWins(now: string): unknown[] {
+  const championBadge = {
+    badgeKey: "quiz:demo-quiz-badge-champion",
+    badgeName: { en: "Quiz Night Champion", pt: "Campeã da noite de quiz" },
+  };
+  return [
+    {
+      ...championBadge,
+      eventName: "Members' Quiz Social",
+      gameNumber: 1,
+      wonAt: "2026-08-29T21:30:00.000Z",
+      hiddenFromProfile: false,
+    },
+    {
+      ...championBadge,
+      eventName: "Pride Brunch: June Edition",
+      gameNumber: 1,
+      wonAt: now,
+      hiddenFromProfile: false,
+    },
+    // The same game also gave the Sharpshooter badge, as the demo Badges page
+    // shows. It has no Portuguese name, so `pt` stays null.
+    {
+      badgeKey: "quiz:demo-quiz-badge-sharpshooter",
+      badgeName: { en: "Trivia Sharpshooter", pt: null },
+      eventName: "Pride Brunch: June Edition",
+      gameNumber: 1,
+      wonAt: now,
+      hiddenFromProfile: false,
+    },
+  ];
+}
+
+/** The demo member's quiz game wins. */
+function demoQuizGameWins(now: string): unknown[] {
+  return [
+    {
+      eventTitle: "Pride Brunch: June Edition",
+      gameNumber: 1,
+      finishedAt: now,
+      screenName: "Quiz Whiz",
+      teamName: null,
+      revokedAt: null,
+      revokeReason: null,
+    },
+  ];
+}
+
 /**
  * Small, plausible demo content for one archive key, built from the existing
  * demo mocks where that is cheap (the current user, one community, one
@@ -499,6 +550,10 @@ function demoContentFor(archiveKey: string): unknown {
           ],
         },
       ];
+    case "quizBadgeWins":
+      return demoQuizBadgeWins(now);
+    case "quizGameWins":
+      return demoQuizGameWins(now);
     case "flatmateProfile":
     case "preferences":
     case "eventPreferences":

@@ -3,6 +3,7 @@ import type {
   QuizshowTemplateCard,
   QuizshowTemplateDetail,
   QuizshowTemplateInput,
+  QuizshowTemplatePreview,
   QuizshowTemplateRow,
 } from "../../../shared/contracts/quizshow";
 
@@ -17,6 +18,18 @@ const staffTemplatePath = (templateId: string): string =>
 export const getQuizshowTemplateCards = (): Promise<{
   items: QuizshowTemplateCard[];
 }> => apiGet<{ items: QuizshowTemplateCard[] }>(HOST_TEMPLATES_PATH);
+
+/** Item 23: a published template's card text and round prompts, read before importing it. */
+export const getQuizshowTemplatePreview = (
+  templateId: string,
+  signal?: AbortSignal,
+): Promise<QuizshowTemplatePreview> =>
+  apiGet<QuizshowTemplatePreview>(
+    `${HOST_TEMPLATES_PATH}/${encodeURIComponent(templateId)}/preview`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 export const getQuizshowTemplateRows = (): Promise<{
   items: QuizshowTemplateRow[];

@@ -16,15 +16,29 @@ import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
  * A `PageShellLeadContext` provider above the page can hand it a lead (the
  * admin guide preview bar) that renders first inside `<main>`, so it is the
  * first stop for Tab after a route change focuses the landmark.
+ *
+ * `className` lands on `<main>`, for a page that animates its whole content
+ * region as one (the directory detail page fades in this way).
  */
-export function PageShell({ children }: { children: ReactNode }) {
+export function PageShell({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   useRegisterShellFrame();
   const lead = usePageShellLead();
   return (
     <>
       <SkipToContentLink />
       <AnnouncementBanner />
-      <main id={MAIN_CONTENT_ID} tabIndex={-1} data-page-main>
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        data-page-main
+        className={className}
+      >
         {lead}
         {children}
       </main>

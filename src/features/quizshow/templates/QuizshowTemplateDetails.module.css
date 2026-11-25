@@ -79,8 +79,13 @@ textarea.staffNotes.staffNotes {
   border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
-.statusLine {
+/* The status line and, once a later save moved it, the last publish under it. */
+.statusStack {
   flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.statusLine {
   margin: 0;
   min-width: 0;
   font-size: var(--text-body-sm);
@@ -90,6 +95,25 @@ textarea.staffNotes.staffNotes {
 
 .statusLine[data-status="published"] {
   color: var(--ink);
+}
+
+/* Padding, so the gap folds away with the line inside the Collapse. */
+.lastPublished {
+  margin: 0;
+  padding-block-start: var(--gap-xs);
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* Why the change note stopped at its limit: a quiet helper line under the
+   field. Padding, so the gap folds away with it inside the Collapse. */
+.changeNoteCut {
+  margin: 0;
+  padding-block-start: var(--gap-xs);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
 }
 
 .actions {

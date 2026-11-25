@@ -12,15 +12,26 @@ import {
   QUIZSHOW_DEMO_TEMPLATE_IDS,
   templateSeedById,
 } from "../demo/quizshowTemplates.data";
+import { normaliseStoredQuizShape } from "../quizshowNormalise";
 import { eventScope, gameScope, templateScope } from "../quizshowScope";
 import { quizshowKeys } from "./quizshowKeys";
 import {
   QUIZSHOW_DEMO_LIVE_SLUG,
   QUIZSHOW_DEMO_RESULTS,
   QUIZSHOW_DEMO_RESULTS_SLUG,
+  QUIZSHOW_DEMO_TEMPLATE_COPY_SLUG,
 } from "./quizshowDemoStore.data";
-import { demoPutQuiz, resetQuizshowDemoStore } from "./quizshowDemoStore";
-import { demoGetGame, demoListGames } from "./quizshowDemoGames";
+import {
+  demoOpenSession,
+  demoPutQuiz,
+  demoQuizFor,
+  resetQuizshowDemoStore,
+} from "./quizshowDemoStore";
+import {
+  demoGetGame,
+  demoListGames,
+  demoOpenGameSession,
+} from "./quizshowDemoGames";
 import {
   demoGetTemplate,
   demoListTemplates,
@@ -31,8 +42,15 @@ import { QUIZSHOW_DEMO_GAME_IDS } from "./quizshowDemoGames.data";
 import { demoBodyOf } from "./quizshowDemoQuizzes";
 import {
   useDeleteQuizshowResults,
+  useRefreshQuizshowLobby,
   useSaveQuizshowQuiz,
 } from "./useQuizshowMutations";
+import {
+  shouldRetryJoinPreview,
+  useQuizshowJoinPreview,
+} from "./useQuizshowPublic";
+import { ApiError } from "../../../shared/api/client";
+import { QUIZSHOW_DEMO_JOIN_CODE } from "../quizshow.constants";
 
 // The event demo branch keeps calling the event store; the spy reads its body.
 vi.mock("./quizshowDemoStore", async (importOriginal) => {
@@ -48,9 +66,9 @@ vi.mock("./quizshowDemoTemplates", async (importOriginal) => {
 });
 
 /** The Pride template's quiz, the fixture every event save starts from. */
-const PRIDE_QUIZ = templateSeedById(
-  QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
-).quiz;
+const PRIDE_QUIZ = normaliseStoredQuizShape(
+  templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory).quiz,
+);
 
 function setup() {
   const queryClient = new QueryClient({
@@ -153,6 +171,7 @@ describe("quizshow mutations in demo mode", () => {
       templateFields: {
         card: templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory).card,
         staffNotes: "",
+        changeNote: { en: "", pt: "" },
       },
     });
 
@@ -182,7 +201,7 @@ describe("quizshow mutations in demo mode", () => {
       ...demoBodyOf(detail.quiz),
       expectedUpdatedAt: detail.quiz.updatedAt,
       isAdultsOnly: true,
-      templateFields: { card, staffNotes },
+      templateFields: { card, staffNotes, changeNote: { en: "", pt: "" } },
     });
 
     expect(vi.mocked(demoPutTemplate)).toHaveBeenCalledTimes(1);
@@ -190,9 +209,11 @@ describe("quizshow mutations in demo mode", () => {
     expect(sentId).toBe(templateId);
     expect(Object.keys(sentBody ?? {}).sort()).toEqual([
       "card",
+      "changeNote",
       "quiz",
       "staffNotes",
     ]);
+    expect(sentBody?.changeNote).toEqual({ en: "", pt: "" });
     expect(sentBody?.card).toEqual(card);
     expect(sentBody?.staffNotes).toBe(staffNotes);
     expect(sentBody?.quiz.expectedUpdatedAt).toBe(detail.quiz.updatedAt);
@@ -221,7 +242,11 @@ describe("quizshow mutations in demo mode", () => {
       ...demoBodyOf(detail.quiz),
       title: "Pride history, revised",
       expectedUpdatedAt: detail.quiz.updatedAt,
-      templateFields: { card: detail.card, staffNotes: detail.staffNotes },
+      templateFields: {
+        card: detail.card,
+        staffNotes: detail.staffNotes,
+        changeNote: { en: "", pt: "" },
+      },
     });
 
     expect(queryClient.getQueryState(rowsKey)?.isInvalidated).toBe(true);
@@ -244,5 +269,99 @@ describe("quizshow mutations in demo mode", () => {
       }),
     ).rejects.toThrow("A template save needs its card and staff notes");
     expect(vi.mocked(demoPutTemplate)).not.toHaveBeenCalled();
+  });
+});
+
+describe("Pulse Live lobby refresh and join preview in demo mode", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+  });
+
+  it("refetches the quiz after a lobby refresh", async () => {
+    demoOpenSession(QUIZSHOW_DEMO_TEMPLATE_COPY_SLUG, {
+      playMode: "solo",
+      maxTeamSize: null,
+      isReviewOn: true,
+      notifyGuests: false,
+      shouldReplaceResults: false,
+      isPractice: true,
+      rematchOfSessionId: null,
+    });
+    const { queryClient, wrapper } = setup();
+    const quizKey = quizshowKeys.quiz(QUIZSHOW_DEMO_TEMPLATE_COPY_SLUG, true);
+    queryClient.setQueryData(quizKey, { quiz: null });
+    const { result } = renderHook(
+      () =>
+        useRefreshQuizshowLobby(eventScope(QUIZSHOW_DEMO_TEMPLATE_COPY_SLUG)),
+      { wrapper },
+    );
+
+    const response = await result.current.mutateAsync();
+
+    expect(response).toEqual({ isNoop: true });
+    expect(queryClient.getQueryState(quizKey)?.isInvalidated).toBe(true);
+  });
+
+  it("refetches the game and My games after a game lobby refresh", async () => {
+    const gameId = QUIZSHOW_DEMO_GAME_IDS.flatQuiz;
+    demoOpenGameSession(gameId, {
+      playMode: "solo",
+      maxTeamSize: null,
+      isReviewOn: true,
+      notifyGuests: false,
+      shouldReplaceResults: false,
+      isPractice: true,
+      rematchOfSessionId: null,
+    });
+    const { queryClient, wrapper } = setup();
+    const gameKey = quizshowKeys.game(gameId, true);
+    const gamesKey = quizshowKeys.games(true);
+    queryClient.setQueryData(gameKey, demoGetGame(gameId));
+    queryClient.setQueryData(gamesKey, demoListGames());
+    const { result } = renderHook(
+      () => useRefreshQuizshowLobby(gameScope(gameId)),
+      { wrapper },
+    );
+
+    await result.current.mutateAsync();
+
+    expect(queryClient.getQueryState(gameKey)?.isInvalidated).toBe(true);
+    expect(queryClient.getQueryState(gamesKey)?.isInvalidated).toBe(true);
+  });
+
+  it("reads the demo join preview for a typed code in any case", async () => {
+    const { wrapper } = setup();
+    const { result } = renderHook(
+      () => useQuizshowJoinPreview(QUIZSHOW_DEMO_JOIN_CODE.toLowerCase()),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data).toEqual({
+      quizTitle: demoQuizFor(QUIZSHOW_DEMO_LIVE_SLUG).title,
+      status: "lobby",
+    });
+  });
+
+  it("retries a join preview only for a failure a retry can change", () => {
+    const refusal = (status: number) =>
+      new ApiError(status, "x", { code: "quizshow_session_finished" });
+    expect(shouldRetryJoinPreview(0, refusal(410))).toBe(false);
+    expect(shouldRetryJoinPreview(0, refusal(429))).toBe(false);
+    expect(shouldRetryJoinPreview(0, refusal(403))).toBe(false);
+    expect(shouldRetryJoinPreview(0, refusal(404))).toBe(false);
+    expect(shouldRetryJoinPreview(0, refusal(503))).toBe(true);
+    expect(shouldRetryJoinPreview(2, refusal(503))).toBe(false);
+  });
+
+  it("holds the join preview back until the code has the join shape", () => {
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useQuizshowJoinPreview("QZ7"), {
+      wrapper,
+    });
+
+    expect(result.current.fetchStatus).toBe("idle");
+    expect(result.current.data).toBeUndefined();
   });
 });

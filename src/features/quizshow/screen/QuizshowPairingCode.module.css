@@ -1,0 +1,103 @@
+/* The big pairing code a venue TV (/play/tv) and a helper's phone
+   (/play/remote) show. It sits on a dark Pulse Live page over the velvet
+   backdrop, so every colour is a --qs-* token. Sized for reading across a
+   room: the code uses the stage's join-code size. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  width: min(100%, 64rem);
+  text-align: center;
+}
+
+.title {
+  max-width: 24ch;
+  margin: 0;
+  color: var(--qs-text);
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  text-wrap: balance;
+}
+
+.body {
+  max-width: 40ch;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-screen-label);
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.codeSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--text-screen-code) * 1.5);
+  margin: var(--gap-sm) 0 0;
+}
+
+/* The spinner and each code fade in this frame, one after the other. */
+.codeFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.codeLine {
+  margin: 0;
+}
+
+.code {
+  display: flex;
+  gap: var(--gap-xs);
+}
+
+/* One glass tile per digit, so a host reading the code aloud can count them. */
+.digit {
+  display: grid;
+  place-items: center;
+  min-width: 1.15em;
+  padding: 0.12em 0.08em;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--radius-badge);
+  background: linear-gradient(
+    180deg,
+    var(--qs-glass-raised-top),
+    var(--qs-glass-raised-bottom)
+  );
+  color: var(--qs-text);
+  font-size: var(--text-screen-code);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* A phone (the helper's pairing page) keeps all six digits on one line down
+   to 360px: six tiles of 1.05em at 11vw plus five 4.5px gaps fill about 286px,
+   inside the 332px the page padding leaves. */
+@media (max-width: 30rem) {
+  .code {
+    gap: calc(var(--gap-xs) / 2);
+  }
+
+  .digit {
+    min-width: 1.05em;
+    padding-inline: 0;
+    font-size: min(var(--text-screen-code), 11vw);
+  }
+}
+
+/* A corner of the stage (a paired TV after its game ended): half the size,
+   so the thank-you card keeps the room's eye. */
+.codeSlot[data-size="compact"] {
+  min-height: calc(var(--text-screen-code) * 0.75);
+  margin: 0;
+}
+
+.codeSlot[data-size="compact"] .digit {
+  font-size: calc(var(--text-screen-code) / 2);
+}

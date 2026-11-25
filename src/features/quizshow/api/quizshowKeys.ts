@@ -16,8 +16,18 @@ export const quizshowKeys = {
   /** One template as the builder reads it. */
   template: (templateId: string, demoMode: boolean) =>
     ["quizshow", "template", templateId, demoMode] as const,
+  /** A published template's card and prompts, read before importing it (item 23). */
+  templatePreview: (templateId: string, demoMode: boolean) =>
+    ["quizshow", "template-preview", templateId, demoMode] as const,
+  /** The signed-out join card's read (item 29). The key holds a typed join
+   *  code, so its query sets `isPrivateQueryKey`. */
+  joinPreview: (code: string, demoMode: boolean) =>
+    ["quizshow", "join-preview", code, demoMode] as const,
   results: (slug: string, demoMode: boolean) =>
     ["quizshow", "results", slug, demoMode] as const,
+  /** The next game's "Win to earn" badges for one event (route 11). */
+  winBadgesPreview: (slug: string, demoMode: boolean) =>
+    ["quizshow", "win-badges-preview", slug, demoMode] as const,
   games: (demoMode: boolean) => ["quizshow", "games", demoMode] as const,
   game: (gameId: string, demoMode: boolean) =>
     ["quizshow", "game", gameId, demoMode] as const,

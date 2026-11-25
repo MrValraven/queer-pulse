@@ -1,5 +1,5 @@
 /* The player's lobby on the velvet stage: the hero card with their chip, the
-   change team picker, the settings sheet and the joker. */
+   change team picker, the settings sheet, the joker and the way out. */
 
 /* The hero: the chip, the team and the live count, centred. */
 .card {
@@ -197,4 +197,60 @@
 .jokerWheelHint svg {
   flex: none;
   color: var(--qs-low);
+}
+
+/* The 24 team keys (C6.11): 6 columns by 4 rows, one screen tall at 320 px wide.
+   All 24 stay in place; a key another team holds fades to the shared dimmed tile.
+   Two classes, so the cell wins over the shared tile padding whatever the load order. */
+.teamShapeGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+.teamShapeGrid .teamShapeCell {
+  position: relative;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0;
+  transition-property: transform, opacity, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* A cell is about 41px wide at 320px, so its hit area reaches into half the gap
+   on each side for a 44px target (the Button `.quiet.sm::after` pattern). */
+.teamShapeGrid .teamShapeCell::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--gap-xs) / -2);
+}
+
+.teamShapeGrid[data-reduced-motion="true"] .teamShapeCell {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .teamShapeGrid .teamShapeCell {
+    transition: none;
+  }
+}
+
+/* The practice badge sits above the lobby title, on its left edge. */
+.practiceBadge {
+  align-self: flex-start;
+}
+
+/* Leaving is quiet and sits last, under the settings. */
+.leave {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+/* The "Use Sam 2" suggestion under the name field. */
+.nameSuggestion {
+  display: flex;
+  padding-block-start: var(--gap-xs);
 }

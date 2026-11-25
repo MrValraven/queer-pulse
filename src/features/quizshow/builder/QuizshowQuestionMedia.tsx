@@ -1,10 +1,19 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Collapse } from "../../../shared/components/ui";
+import { Toggle } from "../../../shared/components/ui/Controls";
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowLanguageMode,
+  type QuizshowMediaReveal,
+  type QuizshowText,
+} from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDiscardableUploads } from "../../members/api/useDiscardableUploads";
 import { ImageUploadField } from "../../subprofiles/ImageUploadField";
+import { QuizshowBilingualInput } from "./QuizshowBilingualInput";
 import { copyPicturePreview } from "./quizshowPicturePreview";
 import styles from "./QuizshowQuestionEditor.module.css";
+import roundStyles from "./QuizshowRounds.module.css";
 
 /** Height of the picture slot in pixels. */
 const MEDIA_SLOT_HEIGHT = 160;
@@ -33,6 +42,96 @@ interface QuizshowQuestionMediaProps {
   slotHeight?: number;
   /** Additive. The empty slot's caption; the upload field's own when left out. */
   placeholder?: string;
+  /**
+   * Additive. The picture's description and its slow reveal, shown under the
+   * `field` variant while a picture is set. Left out, the field shows neither.
+   */
+  pictureDetails?: QuizshowQuestionPictureDetailsProps;
+  /**
+   * Additive. The picture's `alt`, already in the language the caller shows
+   * (`pickQuizshowText(question.mediaAlt, language)`, contract 6.29 item 25).
+   * Left out or blank, the picture keeps `alt=""`.
+   */
+  alt?: string;
+}
+
+export interface QuizshowQuestionPictureDetailsProps {
+  /** Whether the question holds a picture; the fields come and go with it. */
+  hasPicture: boolean;
+  /** The picture's `alt` on every screen (contract 6.29, item 25). */
+  alt: QuizshowText;
+  languages: QuizshowLanguageMode;
+  onAltChange: (alt: QuizshowText) => void;
+  /** Quiz rounds only: the slow reveal (contract 6.23). Left out, the switch stays hidden. */
+  mediaReveal?: QuizshowMediaReveal;
+  onMediaRevealChange?: (mediaReveal: QuizshowMediaReveal) => void;
+}
+
+/**
+ * "Describe the picture" and, in quiz rounds, "Reveal slowly", with no fold of
+ * their own: for a caller whose own Collapse already follows the picture.
+ */
+export function QuizshowQuestionPictureFields({
+  alt,
+  languages,
+  onAltChange,
+  mediaReveal,
+  onMediaRevealChange,
+}: Omit<QuizshowQuestionPictureDetailsProps, "hasPicture">) {
+  const { t } = useTranslation();
+  const toggleId = useId();
+  const hintId = useId();
+  const isRevealShown =
+    mediaReveal !== undefined && Boolean(onMediaRevealChange);
+  const revealLabel = t("quizshow:questions.mediaReveal.label");
+  return (
+    <div className={roundStyles.fields}>
+      <QuizshowBilingualInput
+        label={t("quizshow:questions.mediaAlt.label")}
+        hint={t("quizshow:questions.mediaAlt.hint")}
+        value={alt}
+        languages={languages}
+        maxLength={QUIZSHOW_LIMITS.mediaAltMax}
+        onChange={onAltChange}
+      />
+      <Collapse isOpen={isRevealShown}>
+        <div className={roundStyles.toggleRow}>
+          <div className={roundStyles.toggleText}>
+            <label className={roundStyles.toggleLabel} htmlFor={toggleId}>
+              {revealLabel}
+            </label>
+            <p id={hintId} className={roundStyles.hint}>
+              {t("quizshow:questions.mediaReveal.hint")}
+            </p>
+          </div>
+          <Toggle
+            id={toggleId}
+            label={revealLabel}
+            checked={mediaReveal === "slow"}
+            aria-describedby={hintId}
+            onChange={(isSlow) =>
+              onMediaRevealChange?.(isSlow ? "slow" : "instant")
+            }
+          />
+        </div>
+      </Collapse>
+    </div>
+  );
+}
+
+/**
+ * The picture fields for a question that holds a picture: they come and go
+ * with it.
+ */
+export function QuizshowQuestionPictureDetails({
+  hasPicture,
+  ...fieldProps
+}: QuizshowQuestionPictureDetailsProps) {
+  return (
+    <Collapse isOpen={hasPicture}>
+      <QuizshowQuestionPictureFields {...fieldProps} />
+    </Collapse>
+  );
 }
 
 export type QuizshowQuestionMediaVariant = "field" | "slide" | "chip";
@@ -59,6 +158,8 @@ export function QuizshowQuestionMedia({
   variant = "field",
   slotHeight = MEDIA_SLOT_HEIGHT,
   placeholder,
+  pictureDetails,
+  alt,
 }: QuizshowQuestionMediaProps) {
   const { t } = useTranslation();
   const labelId = useId();
@@ -98,69 +199,79 @@ export function QuizshowQuestionMedia({
     : (mediaUrl ?? mediaRef ?? "");
   const value = isPickedHere ? mediaRef : (pickedPreviewUrl ?? fallbackValue);
 
+  // The details sit beside the picture group: its tap-floor rule for the
+  // upload chips would stretch their switch.
   return (
-    <div
-      className={[styles.mediaField, VARIANT_CLASS_NAMES[variant]]
-        .filter(Boolean)
-        .join(" ")}
-      role="group"
-      aria-labelledby={labelId}
-    >
-      <span
-        id={labelId}
-        className={
-          variant === "field" ? styles.groupLabel : styles.mediaHiddenLabel
-        }
+    <>
+      <div
+        className={[styles.mediaField, VARIANT_CLASS_NAMES[variant]]
+          .filter(Boolean)
+          .join(" ")}
+        role="group"
+        aria-labelledby={labelId}
       >
-        {t("quizshow:questions.media.label")}
-      </span>
-      <ImageUploadField
-        kind="event-cover"
-        value={value}
-        size={slotHeight}
-        placeholder={placeholder}
-        className={variant === "field" ? undefined : styles.mediaUpload}
-        slotClassName={variant === "slide" ? styles.mediaSlideSlot : undefined}
-        buttonClassName={
-          variant === "field" ? undefined : styles.mediaSlideButton
-        }
-        isSlotHidden={variant === "chip"}
-        // On the slide the slot keeps its height, so a poster never pushes
-        // the answers off the 720px canvas; the Big screen preview shows it whole.
-        isPosterAware={variant === "field"}
-        onUploaded={track}
-        onChange={(key) => {
-          // Set at once: the preview callback can fire in the same tick and
-          // must carry this key.
-          currentKeyRef.current = key || null;
-          setPickedKey(key || null);
-          onChange(key || null, key ? undefined : null);
-        }}
-        onPreviewChange={(previewUrl) => {
-          const pickedMediaRef = currentKeyRef.current;
-          const isFreshBlob = previewUrl?.startsWith("blob:") ?? false;
-          // The field revokes its own blob: url when it unmounts, so the
-          // draft gets a copy it owns for the slot to show after a remount.
-          if (
-            previewUrl &&
-            isFreshBlob &&
-            pickedMediaRef !== null &&
-            onPickedPreview
-          ) {
-            void copyPicturePreview(previewUrl).then((copyUrl) => {
-              if (copyUrl !== null) onPickedPreview(pickedMediaRef, copyUrl);
-            });
+        <span
+          id={labelId}
+          className={
+            variant === "field" ? styles.groupLabel : styles.mediaHiddenLabel
           }
-          // The field previews a fresh pick itself; the draft keeps only urls
-          // that outlive it.
-          onChange(pickedMediaRef, isFreshBlob ? null : previewUrl);
-        }}
-      />
-      <Collapse isOpen={Boolean(errorText)}>
-        <p className={styles.problem} role="alert">
-          {errorText}
-        </p>
-      </Collapse>
-    </div>
+        >
+          {t("quizshow:questions.media.label")}
+        </span>
+        <ImageUploadField
+          kind="event-cover"
+          value={value}
+          alt={alt}
+          size={slotHeight}
+          placeholder={placeholder}
+          className={variant === "field" ? undefined : styles.mediaUpload}
+          slotClassName={
+            variant === "slide" ? styles.mediaSlideSlot : undefined
+          }
+          buttonClassName={
+            variant === "field" ? undefined : styles.mediaSlideButton
+          }
+          isSlotHidden={variant === "chip"}
+          // On the slide the slot keeps its height, so a poster never pushes
+          // the answers off the 720px canvas; the Big screen preview shows it whole.
+          isPosterAware={variant === "field"}
+          onUploaded={track}
+          onChange={(key) => {
+            // Set at once: the preview callback can fire in the same tick and
+            // must carry this key.
+            currentKeyRef.current = key || null;
+            setPickedKey(key || null);
+            onChange(key || null, key ? undefined : null);
+          }}
+          onPreviewChange={(previewUrl) => {
+            const pickedMediaRef = currentKeyRef.current;
+            const isFreshBlob = previewUrl?.startsWith("blob:") ?? false;
+            // The field revokes its own blob: url when it unmounts, so the
+            // draft gets a copy it owns for the slot to show after a remount.
+            if (
+              previewUrl &&
+              isFreshBlob &&
+              pickedMediaRef !== null &&
+              onPickedPreview
+            ) {
+              void copyPicturePreview(previewUrl).then((copyUrl) => {
+                if (copyUrl !== null) onPickedPreview(pickedMediaRef, copyUrl);
+              });
+            }
+            // The field previews a fresh pick itself; the draft keeps only urls
+            // that outlive it.
+            onChange(pickedMediaRef, isFreshBlob ? null : previewUrl);
+          }}
+        />
+        <Collapse isOpen={Boolean(errorText)}>
+          <p className={styles.problem} role="alert">
+            {errorText}
+          </p>
+        </Collapse>
+      </div>
+      {variant === "field" && pictureDetails && (
+        <QuizshowQuestionPictureDetails {...pictureDetails} />
+      )}
+    </>
   );
 }

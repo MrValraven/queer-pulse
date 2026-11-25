@@ -23,9 +23,15 @@ export interface QuizshowHostSession {
   gameTitle: string;
   /** The scope's 18+ flag, or an adults round in its quiz: a first join then needs consent. */
   isAdultsOnly: boolean;
-  /** The event page or the game page. */
+  /** The event page, the game page, the TV's code screen, or Pulse Live for a helper's phone. */
   backPath: string;
-  backLabelKey: "quizshow:screen.backToEvent" | "quizshow:screen.backToGame";
+  backLabelKey:
+    | "quizshow:screen.backToEvent"
+    | "quizshow:screen.backToGame"
+    | "quizshow:tv.backToCode"
+    | "quizshow:player.backToPlay";
+  /** Navigation state the back controls send: the TV page sets `QUIZSHOW_TV_LEAVE_STATE`, so its back link leaves the pairing. */
+  backState?: unknown;
   /** What the screen and the remote say while no lobby is open. */
   noGameKeys: { screen: string; remote: string };
   isOrganizer: boolean;
@@ -42,6 +48,9 @@ export interface QuizshowHostSession {
   loadError?: unknown;
   /** The open session's play mode; solo until a session says otherwise. */
   playMode: QuizshowPlayMode;
+  /** A paired device's ticket (contract 6.5), set only by the TV page and the helper
+   *  remote; the screen and the remote pass it to `useQuizshowSession`. */
+  deviceTicket?: string | null;
 }
 
 /** The name the event screen and remote have always used. */

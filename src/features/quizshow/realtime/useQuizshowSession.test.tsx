@@ -16,6 +16,8 @@ interface CapturedClientOptions {
   sessionId: string;
   role: string;
   onAction: (action: QuizshowClientAction) => void;
+  currentPhaseId?: () => string | null;
+  deviceTicket?: string | null;
 }
 
 const socketMock = vi.hoisted(() => ({
@@ -25,6 +27,7 @@ const socketMock = vi.hoisted(() => ({
   dispose: vi.fn(),
 }));
 const demoModeMock = vi.hoisted(() => ({ isDemo: false }));
+const authMock = vi.hoisted(() => ({ loggedIn: true }));
 const demoEngineMock = vi.hoisted(() => ({
   sessionStateFor: vi.fn(),
   subscribe: vi.fn(() => () => undefined),
@@ -59,7 +62,7 @@ vi.mock("../../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({ demoMode: demoModeMock.isDemo }),
 }));
 vi.mock("../../../app/providers/authContext", () => ({
-  useAuth: () => ({ loggedIn: true }),
+  useAuth: () => ({ loggedIn: authMock.loggedIn }),
 }));
 vi.mock("../../../shared/api/config", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../../shared/api/config")>()),
@@ -89,6 +92,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     roundNumber: 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
     ...overrides,
   };
 }
@@ -119,6 +125,10 @@ function playerState(
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: false,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     rounds: [],
     round: null,
@@ -130,7 +140,8 @@ function playerState(
     wheelBonus: null,
     role: "player",
     cursor: cursorWith(),
-    lobby: { players: [], teams: [], playerCount: 0 },
+    lobby: { teams: [], playerCount: 0 },
+    answerCount: null,
     question: {
       questionId: "q1",
       roundIndex: 0,
@@ -139,6 +150,10 @@ function playerState(
       type: "multiple_choice",
       prompt: { en: "Which one", pt: "Qual" },
       mediaUrl: null,
+      mediaAlt: { en: "", pt: "" },
+      mediaReveal: "instant",
+      numberUnit: { en: "", pt: "" },
+      readMs: 4000,
       points: 1000,
       timeLimitSeconds: 20,
       options: null,
@@ -165,7 +180,10 @@ const DEMO_OPTIONS = {
   shouldLoop: false,
 } as const;
 
-function renderSession(queryClient = new QueryClient()) {
+function renderSession(
+  queryClient = new QueryClient(),
+  overrides: Partial<Parameters<typeof useQuizshowSession>[0]> = {},
+) {
   function QueryWrapper({ children }: { children: ReactNode }) {
     return (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -177,6 +195,7 @@ function renderSession(queryClient = new QueryClient()) {
         sessionId: "session-1",
         role: "player",
         demo: DEMO_OPTIONS,
+        ...overrides,
       }),
     { wrapper: QueryWrapper },
   );
@@ -200,6 +219,7 @@ beforeEach(() => {
   socketMock.send.mockReset();
   socketMock.dispose.mockReset();
   demoModeMock.isDemo = false;
+  authMock.loggedIn = true;
   demoEngineMock.sessionStateFor.mockReset();
   demoEngineMock.subscribe.mockClear();
 });
@@ -499,6 +519,8 @@ describe("useQuizshowSession endings and mode swaps", () => {
         podium: [],
         nextEvent: null,
         hasResults: true,
+        isPractice: false,
+        giving: null,
       },
     });
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ["event"] });
@@ -571,5 +593,56 @@ describe("useQuizshowSession modes", () => {
     expect(result.current.state.session).toEqual(demoState);
     expect(result.current.state.status).toBe("attached");
     expect(result.current.demoScreenState).toBeNull();
+  });
+});
+
+describe("useQuizshowSession device tickets and wake resync", () => {
+  it("goes live with a device ticket while signed out", () => {
+    authMock.loggedIn = false;
+
+    renderSession(new QueryClient(), {
+      role: "screen",
+      deviceTicket: "device-ticket-1",
+    });
+
+    expect(socketMock.constructedOptions).toHaveLength(1);
+    expect(socketMock.constructedOptions[0]).toMatchObject({
+      sessionId: "session-1",
+      role: "screen",
+      deviceTicket: "device-ticket-1",
+    });
+    expect(socketMock.connect).toHaveBeenCalledTimes(1);
+  });
+
+  it("opens no socket while signed out without a ticket", () => {
+    authMock.loggedIn = false;
+
+    renderSession(new QueryClient(), { role: "screen" });
+
+    expect(socketMock.constructedOptions).toHaveLength(0);
+    expect(socketMock.connect).not.toHaveBeenCalled();
+  });
+
+  it("gives the socket the store cursor's phase id for the wake resync", () => {
+    renderSession();
+    const options = socketMock.constructedOptions[0];
+    expect(options?.currentPhaseId?.()).toBeNull();
+
+    pushAction({ event: "session:state", payload: playerState() });
+
+    expect(options?.currentPhaseId?.()).toBe("5");
+  });
+
+  it("moves the phase id inside the frame burst, before the next render", () => {
+    renderSession();
+    const options = socketMock.constructedOptions[0];
+    let phaseIdInBurst: string | null | undefined;
+
+    act(() => {
+      options?.onAction({ event: "session:state", payload: playerState() });
+      phaseIdInBurst = options?.currentPhaseId?.();
+    });
+
+    expect(phaseIdInBurst).toBe("5");
   });
 });

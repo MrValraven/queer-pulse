@@ -104,6 +104,40 @@
   color: var(--qs-text-mute);
 }
 
+/* The template picker's empty state, inside the dark stage dialog: why the
+   gallery is empty, then the two other ways to start a quiz. */
+.pickerEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-sm);
+}
+
+.pickerEmptyTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  line-height: 1.2;
+  color: var(--qs-text);
+}
+
+.pickerEmptyBody {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--qs-text-mute);
+}
+
+.pickerEmptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  padding-block-start: var(--gap-sm);
+}
+
 .skeletonRow {
   margin-block-end: var(--gap-xs);
 }
@@ -164,4 +198,273 @@
 .galleryAction {
   width: 100%;
   justify-content: center;
+}
+
+/* ── Add rounds from (item 23) ────────────────────────────────────────────
+   A source row's actions, then its round checklist folding open below. The
+   fold's wrapper takes the full row only while open, so a folded row keeps
+   no empty line under it. */
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.rowChecklist {
+  flex-basis: 100%;
+  align-self: stretch;
+  min-width: 0;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-xs);
+}
+
+.checklistLegend {
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+.checklistRows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A slice row sits indented under its wheel. */
+.checklistRow[data-slice="true"] {
+  padding-inline-start: var(--gap-sm);
+}
+
+.checklistLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--gap-xs) / 2) var(--gap-xs);
+  min-block-size: var(--tap-min);
+  padding-inline: var(--gap-xs);
+  font-size: var(--text-13-5);
+  color: var(--qs-text);
+  border-radius: var(--radius-10);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .checklistLabel:hover {
+    background: rgba(var(--qs-line-rgb), 0.05);
+  }
+}
+
+.checklistBox {
+  flex: none;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.checklistKind {
+  flex: none;
+  font-weight: 600;
+}
+
+.checklistTitle {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.checklistCount {
+  flex: none;
+  font-size: var(--text-caption);
+  color: var(--qs-text-mute);
+}
+
+.checklistFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.checklistHint {
+  font-size: var(--text-caption);
+  color: var(--qs-text-mute);
+}
+
+/* A slice the wheel holds checked is muted, with a lock; the wheel row says why once. */
+.checklistRow[data-locked="true"] .checklistLabel {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.checklistLock {
+  flex: none;
+  inline-size: 0.9rem;
+  block-size: 0.9rem;
+  margin-inline-start: auto;
+  color: var(--qs-text-mute);
+}
+
+/* A wheel row says its slices come along; a slice row names its wheel. */
+.checklistSliceHint {
+  display: block;
+  padding-inline-start: calc(var(--gap-xs) + 1.05rem + var(--gap-xs));
+  padding-block-end: calc(var(--gap-xs) / 2);
+  font-size: var(--text-caption);
+  color: var(--qs-text-mute);
+}
+
+/* ── Template preview (item 23) ──────────────────────────────────────────
+   The card's words, then each round with its prompts. No answers: the read
+   carries none. */
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.previewTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  line-height: 1.2;
+  color: var(--qs-text);
+}
+
+.previewChangeNote {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap-xs) / 2);
+  padding: var(--gap-sm);
+  background: rgba(var(--accent-rgb), 0.12);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+}
+
+.previewSectionTitle {
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+.previewText {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--qs-text-mute);
+}
+
+.previewRounds {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.previewRound {
+  padding: var(--gap-sm);
+  background: rgba(var(--qs-line-rgb), 0.04);
+  border: 1px solid var(--qs-line);
+  border-radius: var(--qs-radius-tile);
+}
+
+.previewRoundHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: calc(var(--gap-xs) / 2) var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--qs-text);
+}
+
+.previewRoundTitle {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.previewPrompts {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap-xs) / 2);
+  margin: var(--gap-xs) 0 0;
+  padding-inline-start: 1.1rem;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+}
+
+.previewActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+}
+
+/* The preview's footer in add-only mode: the hint on the start side, the
+   submit at the end, so "Add these rounds" never scrolls away. */
+.previewFooter {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+}
+
+.previewFooter > .checklistHint {
+  order: -1;
+  margin-inline-end: auto;
+}
+
+/* A blocked source says what to turn on, under its adults tag. */
+.tagReason {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--qs-text-mute);
+}
+
+/* The picker's header line folds away when the gallery turns out empty, so the
+   head does not jump; hidden it also leaves the reading order. */
+.dialog .pickerSub {
+  max-height: 8em;
+  transition:
+    max-height var(--dur-base) var(--ease),
+    margin var(--dur-base) var(--ease),
+    opacity var(--dur-fast) var(--ease),
+    visibility 0s;
+}
+
+.dialog .pickerSubHidden {
+  max-height: 0;
+  margin-block: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    max-height var(--dur-base) var(--ease),
+    margin var(--dur-base) var(--ease),
+    opacity var(--dur-fast) var(--ease),
+    visibility 0s linear var(--dur-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog .pickerSub,
+  .dialog .pickerSubHidden {
+    transition: none;
+  }
 }

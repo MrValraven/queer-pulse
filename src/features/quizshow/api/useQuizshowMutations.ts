@@ -32,6 +32,8 @@ import {
   openQuizshowSession,
   putQuizshowGame,
   putQuizshowQuiz,
+  refreshQuizshowGameLobby,
+  refreshQuizshowLobby,
 } from "./quizshow.api";
 import { putQuizshowTemplate } from "./quizshowTemplates.api";
 import { quizshowKeys } from "./quizshowKeys";
@@ -43,12 +45,14 @@ import {
   demoJoin,
   demoOpenSession,
   demoPutQuiz,
+  demoRefreshLobby,
 } from "./quizshowDemoStore";
 import {
   demoDeleteGameResults,
   demoImportGame,
   demoOpenGameSession,
   demoPutGame,
+  demoRefreshGameLobby,
 } from "./quizshowDemoGames";
 import { demoPutTemplate } from "./quizshowDemoTemplates";
 
@@ -82,6 +86,7 @@ async function saveTemplate(
   const templateBody = {
     card: templateFields.card,
     staffNotes: templateFields.staffNotes,
+    changeNote: templateFields.changeNote,
     quiz: quizBodyOf(body),
   };
   const detail = demoMode
@@ -141,6 +146,21 @@ async function openSessionFor(
   return demoMode
     ? demoOpenGameSession(scope.gameId, body)
     : openQuizshowGameSession(scope.gameId, body);
+}
+
+/** C6.10: the open lobby takes the latest saved quiz. */
+async function refreshLobbyFor(
+  scope: QuizshowSessionScope,
+  demoMode: boolean,
+): Promise<{ isNoop: boolean }> {
+  if (scope.kind === "event") {
+    return demoMode
+      ? demoRefreshLobby(scope.eventSlug)
+      : refreshQuizshowLobby(scope.eventSlug);
+  }
+  return demoMode
+    ? demoRefreshGameLobby(scope.gameId)
+    : refreshQuizshowGameLobby(scope.gameId);
 }
 
 async function deleteResultsFor(
@@ -246,6 +266,23 @@ export function useOpenQuizshowSession(
   >({
     meta: SILENT_ERROR_META,
     mutationFn: async (body) => openSessionFor(scope, demoMode, body),
+    onSuccess: async () => {
+      await refreshAfterSessionWrite(queryClient, scope, demoMode);
+    },
+  });
+}
+
+/** Item 18: loads the latest saved quiz into the open lobby. The quiz read
+ *  refetches so its live session stops reading as behind the quiz, and the
+ *  event detail or My games refetches for the live session's new title. */
+export function useRefreshQuizshowLobby(
+  scope: QuizshowSessionScope,
+): UseMutationResult<{ isNoop: boolean }, unknown, void> {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<{ isNoop: boolean }, unknown, void>({
+    meta: SILENT_ERROR_META,
+    mutationFn: async () => refreshLobbyFor(scope, demoMode),
     onSuccess: async () => {
       await refreshAfterSessionWrite(queryClient, scope, demoMode);
     },

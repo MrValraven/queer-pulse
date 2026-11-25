@@ -4,6 +4,7 @@ import { MotionProvider } from "../../../app/providers/MotionProvider";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
 import { TestProviders } from "../../../test/TestProviders";
 import { awaitCatalog } from "../../../test/awaitCatalog";
+import { awaitCatalogUnderFakeTimers } from "../../../test/awaitCatalogUnderFakeTimers";
 import {
   QUIZSHOW_LIMITS,
   type QuizshowCursor,
@@ -17,9 +18,16 @@ import {
   type QuizshowWheelSlice,
   type QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import {
+  applyQuizshowFrame,
+  createQuizshowClientState,
+  isPlayerState,
+  type QuizshowClientAction,
+  type QuizshowClientState,
+} from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowPlayerStage } from "./QuizshowPlayerStage";
+import { QUIZSHOW_VIBRATION_STORAGE_KEY } from "./quizshowVibrate";
 
 vi.mock("./QuizshowJokerButton", () => ({
   QuizshowJokerButton: () => <button type="button">Joker</button>,
@@ -35,6 +43,10 @@ const QUESTION: QuizshowQuestionView = {
   mediaUrl: null,
   points: 1000,
   timeLimitSeconds: 20,
+  mediaAlt: { en: "", pt: "" },
+  mediaReveal: "instant",
+  numberUnit: { en: "", pt: "" },
+  readMs: 4000,
   options: [
     { id: "a", text: { en: "Rainbow", pt: "Arco-iris" } },
     { id: "b", text: { en: "Trans", pt: "Trans" } },
@@ -58,6 +70,9 @@ function cursorIn(phase: QuizshowPhase, phaseId: string): QuizshowCursor {
     roundNumber: 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
   };
 }
 
@@ -96,6 +111,10 @@ function stateIn(
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor: cursorIn(phase, phaseId),
     rounds: [],
@@ -107,7 +126,8 @@ function stateIn(
     wheel: null,
     wheelBonus: null,
     role: "player",
-    lobby: { players: [], teams: [], playerCount: 5 },
+    lobby: { teams: [], playerCount: 5 },
+    answerCount: null,
     question: QUESTION,
     voteOptions: null,
     me: {
@@ -132,18 +152,18 @@ function stateIn(
   };
 }
 
-function controllerOf(session: QuizshowPlayerState): QuizshowSessionController {
-  const state: QuizshowClientState = {
-    role: "player",
-    status: "attached",
-    refusalCode: null,
-    session,
-    sessionEnd: null,
-    isRemoved: false,
-    pendingAnswer: null,
-  };
+function controllerOf(
+  session: QuizshowPlayerState,
+  clientOverrides: Partial<QuizshowClientState> = {},
+): QuizshowSessionController {
   return {
-    state,
+    state: {
+      ...createQuizshowClientState("player"),
+      status: "attached",
+      hasAttached: true,
+      session,
+      ...clientOverrides,
+    },
     clockOffsetMs: 0,
     isDemo: true,
     send: vi.fn(),
@@ -153,11 +173,17 @@ function controllerOf(session: QuizshowPlayerState): QuizshowSessionController {
   };
 }
 
-function stageOf(session: QuizshowPlayerState, isReducedMotion = false) {
+function stageOf(
+  session: QuizshowPlayerState,
+  isReducedMotion = false,
+  clientOverrides: Partial<QuizshowClientState> = {},
+) {
   return (
     <TestProviders>
       <ReducedMotionContext.Provider value={isReducedMotion}>
-        <QuizshowPlayerStage controller={controllerOf(session)} />
+        <QuizshowPlayerStage
+          controller={controllerOf(session, clientOverrides)}
+        />
       </ReducedMotionContext.Provider>
     </TestProviders>
   );
@@ -168,10 +194,12 @@ const REVEAL_STATE = stateIn("reveal", "20", {
   reveal: {
     phaseId: "20",
     questionId: "question-1",
-    correct: { type: "multiple_choice", correctIndex: 0 },
+    correct: { type: "multiple_choice", correctIndexes: [0] },
     answeredCount: 4,
     eligibleCount: 5,
     distribution: { kind: "options", counts: [3, 1] },
+    note: null,
+    wasCorrected: false,
   },
 });
 
@@ -188,6 +216,7 @@ describe("QuizshowPlayerStage", () => {
 
   afterEach(() => {
     Reflect.deleteProperty(navigator, "vibrate");
+    window.localStorage.removeItem(QUIZSHOW_VIBRATION_STORAGE_KEY);
   });
 
   it("announces each new phase in a live region", async () => {
@@ -214,7 +243,7 @@ describe("QuizshowPlayerStage", () => {
     expect(await screen.findByText("Right")).toBeInTheDocument();
     expect(screen.getByText("+1,200 points")).toBeInTheDocument();
     expect(screen.getByText("Streak of 3")).toBeInTheDocument();
-    expect(screen.getByText("You're 2 of 5")).toBeInTheDocument();
+    expect(screen.getByText("You're 2nd of 5")).toBeInTheDocument();
     expect(
       screen.getByRole("group", {
         name: "Correct answer, Answer A, Triangle: Rainbow",
@@ -239,8 +268,15 @@ describe("QuizshowPlayerStage", () => {
     await waitFor(() => expect(vibrate).toHaveBeenCalledTimes(2));
   });
 
-  it("stays still under reduced motion", async () => {
+  it("vibrates under reduced motion too, since the switch is its own preference", async () => {
     render(stageOf(REVEAL_STATE, true));
+    await screen.findByText("Right");
+    await waitFor(() => expect(vibrate).toHaveBeenCalledTimes(1));
+  });
+
+  it("sends no vibration when this device switched vibration off", async () => {
+    window.localStorage.setItem(QUIZSHOW_VIBRATION_STORAGE_KEY, "false");
+    render(stageOf(REVEAL_STATE));
     await screen.findByText("Right");
     expect(vibrate).not.toHaveBeenCalled();
   });
@@ -276,6 +312,7 @@ function leaderboardEntryOf(rank: number): QuizshowLeaderboardEntry {
     colorKey: null,
     score: 5000 - rank * 100,
     previousScore: 4000 - rank * 100,
+    streak: 0,
   };
 }
 
@@ -310,6 +347,8 @@ describe("QuizshowPlayerStage outcomes and scores", () => {
               partialCount: 2,
               noneCount: 1,
             },
+            note: null,
+            wasCorrected: false,
           },
         }),
       ),
@@ -358,7 +397,7 @@ describe("QuizshowPlayerStage outcomes and scores", () => {
     expect(within(ownRow).getByText("13")).toBeInTheDocument();
     expect(within(ownRow).getByText("Sam")).toBeInTheDocument();
     expect(ownRow).toHaveAttribute("aria-current", "true");
-    expect(screen.getByText("You're 13 of 14")).toBeInTheDocument();
+    expect(screen.getByText("You're 13th of 14")).toBeInTheDocument();
   });
 
   it("the phone scores keep the top ten alone when your row is in it", async () => {
@@ -411,10 +450,12 @@ describe("QuizshowPlayerStage outcomes and scores", () => {
           reveal: {
             phaseId: "70",
             questionId: "question-1",
-            correct: { type: "multiple_choice", correctIndex: 0 },
+            correct: { type: "multiple_choice", correctIndexes: [0] },
             answeredCount: 4,
             eligibleCount: 5,
             distribution: { kind: "options", counts: [3, 1] },
+            note: null,
+            wasCorrected: false,
           },
         }),
       ),
@@ -485,6 +526,8 @@ function roundCardOf(
     questionCount: kind === "wheel" ? 0 : 3,
     isJokerAllowed: kind !== "wheel",
     isSpeedBonusOn: false,
+    isWarmUp: false,
+    talkSeconds: 0,
   };
 }
 
@@ -642,5 +685,754 @@ describe("QuizshowPlayerStage wheel", () => {
           ),
       ).toBe(true),
     );
+  });
+});
+
+const POLL_QUESTION: QuizshowQuestionView = {
+  ...QUESTION,
+  questionId: "question-poll",
+  type: "poll",
+  prompt: { en: "Best Pride?", pt: "Melhor Pride?" },
+};
+
+function talkStateOf(
+  playMode: QuizshowPlayerState["playMode"],
+): QuizshowPlayerState {
+  const now = Date.now();
+  return stateIn("read", "80", {
+    playMode,
+    cursor: {
+      ...cursorIn("read", "80"),
+      phaseStartedAt: now - 6_000,
+      deadline: now + 14_000,
+      talkStartsAt: now - 2_000,
+    },
+  });
+}
+
+describe("QuizshowPlayerStage reveal content and talk", () => {
+  it("marks every correct option and keeps you right on either", async () => {
+    render(
+      stageOf(
+        stateIn("reveal", "20", {
+          myAnswer: {
+            questionId: "question-1",
+            phaseId: "19",
+            payload: { type: "multiple_choice", optionIndex: 1 },
+            receivedAt: 1,
+          },
+          myReveal: MY_REVEAL,
+          reveal: {
+            ...(REVEAL_STATE.reveal as NonNullable<
+              QuizshowPlayerState["reveal"]
+            >),
+            correct: { type: "multiple_choice", correctIndexes: [0, 1] },
+          },
+        }),
+      ),
+    );
+    expect(await screen.findByText("Right")).toBeInTheDocument();
+    expect(
+      screen.getByRole("group", {
+        name: "Correct answer, Answer A, Triangle: Rainbow",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("group", {
+        name: "Correct answer, Answer B, Diamond: Trans",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows the fun fact under the answer when the reveal has a note", async () => {
+    render(
+      stageOf(
+        stateIn("reveal", "20", {
+          myReveal: MY_REVEAL,
+          reveal: {
+            ...(REVEAL_STATE.reveal as NonNullable<
+              QuizshowPlayerState["reveal"]
+            >),
+            note: {
+              en: "It flew first in 1978",
+              pt: "Voou pela primeira vez em 1978",
+            },
+          },
+        }),
+      ),
+    );
+    expect(await screen.findByText("Fun fact")).toBeInTheDocument();
+    expect(screen.getByText("It flew first in 1978")).toHaveAttribute(
+      "lang",
+      "en",
+    );
+  });
+
+  it("leaves the fun fact out without a note", async () => {
+    render(stageOf(REVEAL_STATE));
+    await screen.findByText("Right");
+    expect(screen.queryByText("Fun fact")).toBeNull();
+  });
+
+  it("says the place as an ordinal of everyone playing", async () => {
+    render(
+      stageOf(
+        stateIn("reveal", "20", {
+          lobby: { teams: [], playerCount: 12 },
+          myReveal: { ...MY_REVEAL, rank: 3 },
+          reveal: REVEAL_STATE.reveal,
+        }),
+      ),
+    );
+    expect(await screen.findByText("You're 3rd of 12")).toBeInTheDocument();
+  });
+
+  it("shows a poll's shares and your pick with no right or wrong", async () => {
+    render(
+      stageOf(
+        stateIn("reveal", "40", {
+          question: POLL_QUESTION,
+          myAnswer: {
+            questionId: "question-poll",
+            phaseId: "39",
+            payload: { type: "poll", optionIndex: 1 },
+            receivedAt: 1,
+          },
+          myReveal: {
+            ...MY_REVEAL,
+            phaseId: "40",
+            questionId: "question-poll",
+            isCorrect: null,
+            pointsAwarded: 0,
+            streakBonus: 0,
+          },
+          reveal: {
+            phaseId: "40",
+            questionId: "question-poll",
+            correct: null,
+            answeredCount: 4,
+            eligibleCount: 5,
+            distribution: { kind: "options", counts: [3, 1] },
+            note: null,
+            wasCorrected: false,
+          },
+        }),
+      ),
+    );
+    expect(
+      await screen.findByRole("group", {
+        name: "Answer A, Triangle: Rainbow. 75% picked this",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("group", {
+        name: "Answer B, Diamond: Trans. 25% picked this. Your pick",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Right")).toBeNull();
+    expect(screen.queryByText("Not this time")).toBeNull();
+    expect(screen.queryByText("Correct answer")).toBeNull();
+    expect(screen.queryByText(/points$/)).toBeNull();
+  });
+
+  it("asks a team to talk it over with the seconds left", async () => {
+    render(stageOf(talkStateOf("teams")));
+    expect(
+      await screen.findByText("Talk it over with your team"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/seconds left$/)).toBeInTheDocument();
+    // One ask at a time: the "Get ready" pill waits out the talk.
+    expect(screen.queryByText("Get ready")).toBeNull();
+  });
+
+  it("never asks a solo player to talk it over", async () => {
+    render(stageOf(talkStateOf("solo")));
+    await screen.findByRole("heading", { level: 1, name: "Which flag?" });
+    expect(screen.queryByText("Talk it over with your team")).toBeNull();
+    expect(await screen.findByText("Get ready")).toBeInTheDocument();
+  });
+
+  it("keeps the podium mounted from one podium step to the next", async () => {
+    const bronze = {
+      place: 3 as const,
+      kind: "player" as const,
+      entrantId: "player-bronze",
+      name: "Bronze",
+      colorKey: null,
+      score: 1000,
+    };
+    const silver = {
+      ...bronze,
+      place: 2 as const,
+      entrantId: "player-silver",
+      name: "Silver",
+      score: 2000,
+    };
+    const { container, rerender } = render(
+      stageOf(stateIn("podium", "70", { question: null, podium: [bronze] })),
+    );
+    await screen.findByText("Bronze");
+    const podiumList = container
+      .querySelector<HTMLElement>('[data-place="3"]')
+      ?.closest("ol");
+    expect(podiumList).not.toBeNull();
+
+    // The next step is a new phase id (C6.7): the same podium takes it.
+    rerender(
+      stageOf(
+        stateIn("podium", "71", { question: null, podium: [silver, bronze] }),
+      ),
+    );
+    const silverName = await screen.findByText("Silver");
+    expect(podiumList?.isConnected).toBe(true);
+    expect(podiumList?.contains(silverName)).toBe(true);
+  });
+
+  it("shows the question picture in read, blurred on the slow reveal", async () => {
+    const now = Date.now();
+    render(
+      stageOf(
+        stateIn("read", "81", {
+          question: {
+            ...QUESTION,
+            mediaUrl: "https://cdn.example.test/flag.jpg",
+            mediaAlt: { en: "A striped flag", pt: "Uma bandeira às riscas" },
+            mediaReveal: "slow",
+          },
+          cursor: {
+            ...cursorIn("read", "81"),
+            phaseStartedAt: now - 1_000,
+            deadline: now + 3_000,
+          },
+        }),
+      ),
+    );
+    const picture = await screen.findByRole("img", { name: "A striped flag" });
+    expect(picture.style.filter).toContain("blur");
+  });
+});
+
+describe("QuizshowPlayerStage movement, gap and podium", () => {
+  it("says how many places the player went up at the reveal", async () => {
+    render(
+      stageOf(REVEAL_STATE, false, {
+        ownRanks: { previous: 4, current: 2 },
+      }),
+    );
+    expect(await screen.findByText("Up 2 places")).toBeInTheDocument();
+  });
+
+  it("says how many places the player went down at the reveal", async () => {
+    render(
+      stageOf(REVEAL_STATE, false, {
+        ownRanks: { previous: 1, current: 2 },
+      }),
+    );
+    expect(await screen.findByText("Down 1 place")).toBeInTheDocument();
+    expect(screen.queryByText(/^Up /)).toBeNull();
+  });
+
+  it("says no move at a later reveal with an unchanged rank, as the store remembers it", async () => {
+    const earlierQuestion = { ...QUESTION, questionId: "question-0" };
+    const actions: QuizshowClientAction[] = [
+      {
+        event: "session:state",
+        payload: stateIn("reveal", "10", {
+          question: earlierQuestion,
+          myReveal: { ...MY_REVEAL, phaseId: "10", questionId: "question-0" },
+        }),
+      },
+      {
+        event: "phase:change",
+        payload: {
+          cursor: cursorIn("read", "19"),
+          round: null,
+          question: QUESTION,
+          wheel: null,
+          wheelBonus: null,
+        },
+      },
+      {
+        event: "phase:change",
+        payload: {
+          cursor: cursorIn("reveal", "20"),
+          round: null,
+          question: QUESTION,
+          wheel: null,
+          wheelBonus: null,
+        },
+      },
+      { event: "reveal:mine", payload: MY_REVEAL },
+    ];
+    const storeState = actions.reduce(
+      applyQuizshowFrame,
+      createQuizshowClientState("player"),
+    );
+    // Both reveals put the player 2nd: the store says no move.
+    expect(storeState.ownRanks).toEqual({ previous: 2, current: 2 });
+    const session = isPlayerState(storeState.session)
+      ? storeState.session
+      : REVEAL_STATE;
+    render(stageOf(session, false, storeState));
+    await screen.findByText("Right");
+    expect(screen.queryByText(/^Up /)).toBeNull();
+    expect(screen.queryByText(/^Down /)).toBeNull();
+  });
+});
+
+describe("QuizshowPlayerStage gap, podium place and footer", () => {
+  it("shows the gap to the entrant above inside the top ten", async () => {
+    const topTen = TOP_TEN_RANKS.map((rank): QuizshowLeaderboardEntry =>
+      rank === 3
+        ? { ...leaderboardEntryOf(rank), entrantId: "player-1", name: "Sam" }
+        : leaderboardEntryOf(rank),
+    );
+    render(
+      stageOf(
+        stateIn("scores", "62", {
+          scores: {
+            phaseId: "62",
+            scope: "question",
+            entries: topTen,
+            entrantCount: 14,
+          },
+          myScores: {
+            phaseId: "62",
+            rank: 3,
+            score: 4700,
+            previousScore: 3700,
+            ownScore: 4700,
+          },
+        }),
+        false,
+        { ownRanks: { previous: 5, current: 3 } },
+      ),
+    );
+    expect(
+      await screen.findByText("100 points behind Player 2"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Up 2 places")).toBeInTheDocument();
+  });
+
+  it("leaves the gap out below the top ten", async () => {
+    const topTen = TOP_TEN_RANKS.map((rank) => leaderboardEntryOf(rank));
+    render(
+      stageOf(
+        stateIn("scores", "63", {
+          scores: {
+            phaseId: "63",
+            scope: "question",
+            entries: topTen,
+            entrantCount: 14,
+          },
+          myScores: {
+            phaseId: "63",
+            rank: 13,
+            score: 900,
+            previousScore: 600,
+            ownScore: 900,
+          },
+        }),
+      ),
+    );
+    expect(await screen.findByText("You're 13th of 14")).toBeInTheDocument();
+    expect(screen.queryByText(/points behind/)).toBeNull();
+  });
+
+  it("leaves the gap out in first place", async () => {
+    const topTen = TOP_TEN_RANKS.map((rank): QuizshowLeaderboardEntry =>
+      rank === 1
+        ? { ...leaderboardEntryOf(rank), entrantId: "player-1", name: "Sam" }
+        : leaderboardEntryOf(rank),
+    );
+    render(
+      stageOf(
+        stateIn("scores", "64", {
+          scores: {
+            phaseId: "64",
+            scope: "question",
+            entries: topTen,
+            entrantCount: 14,
+          },
+          myScores: {
+            phaseId: "64",
+            rank: 1,
+            score: 4900,
+            previousScore: 3900,
+            ownScore: 4900,
+          },
+        }),
+      ),
+    );
+    expect(await screen.findByText("You're 1st of 14")).toBeInTheDocument();
+    expect(screen.queryByText(/points behind/)).toBeNull();
+  });
+
+  it("shows the player's own podium place only once it is revealed", async () => {
+    const bronze = {
+      place: 3 as const,
+      kind: "player" as const,
+      entrantId: "player-bronze",
+      name: "Bronze",
+      colorKey: null,
+      score: 1000,
+    };
+    const silver = {
+      ...bronze,
+      place: 2 as const,
+      entrantId: "player-1",
+      name: "Sam",
+      score: 2000,
+    };
+    const { rerender } = render(
+      stageOf(
+        stateIn("podium", "90", {
+          question: null,
+          lobby: { teams: [], playerCount: 12 },
+          podium: [bronze],
+        }),
+      ),
+    );
+    await screen.findByText("Bronze");
+    expect(screen.queryByText(/^You're/)).toBeNull();
+
+    rerender(
+      stageOf(
+        stateIn("podium", "91", {
+          question: null,
+          lobby: { teams: [], playerCount: 12 },
+          podium: [silver, bronze],
+        }),
+      ),
+    );
+    expect(await screen.findByText("You're 2nd of 12")).toBeInTheDocument();
+  });
+
+  it("lists the player first on a crowded tied step and marks it as theirs", async () => {
+    const tiedSecond = ["Ana", "Bo", "Cleo", "Sam"].map((name) => ({
+      place: 2 as const,
+      kind: "player" as const,
+      entrantId: name === "Sam" ? "player-1" : `player-${name}`,
+      name,
+      colorKey: null,
+      score: 2000,
+    }));
+    render(
+      stageOf(
+        stateIn("podium", "92", {
+          question: null,
+          lobby: { teams: [], playerCount: 12 },
+          podium: tiedSecond,
+        }),
+        true,
+      ),
+    );
+    const ownName = await screen.findByText("Sam");
+    expect(ownName.closest('[aria-current="true"]')).not.toBeNull();
+    expect(screen.getByText("+1 more")).toBeInTheDocument();
+    expect(screen.queryByText("Cleo")).toBeNull();
+  });
+
+  it("offers leaving the game at the foot of the running game", async () => {
+    render(stageOf(REVEAL_STATE));
+    expect(
+      await screen.findByRole("button", { name: "Leave the game" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows the reaction bar at a reveal and folds it away while answers are open", async () => {
+    const { rerender } = render(stageOf(REVEAL_STATE));
+    expect(
+      await screen.findByRole("button", { name: "Heart" }),
+    ).toBeInTheDocument();
+    rerender(stageOf(stateIn("open", "21")));
+    await waitFor(() =>
+      expect(screen.queryByRole("button", { name: "Heart" })).toBeNull(),
+    );
+  });
+});
+
+const PODIUM_BRONZE = {
+  place: 3 as const,
+  kind: "player" as const,
+  entrantId: "player-bronze",
+  name: "Bronze",
+  colorKey: null,
+  score: 1000,
+};
+
+const PODIUM_SILVER = {
+  ...PODIUM_BRONZE,
+  place: 2 as const,
+  entrantId: "player-silver",
+  name: "Silver",
+  score: 2000,
+};
+
+function podiumStateAt(
+  phaseId: string,
+  overrides: Partial<QuizshowPlayerState> = {},
+): QuizshowPlayerState {
+  return stateIn("podium", phaseId, {
+    question: null,
+    lobby: { teams: [], playerCount: 12 },
+    ...overrides,
+  });
+}
+
+describe("QuizshowPlayerStage podium on the phone, timed", () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "Date"] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("holds the player's own 1st place for the winner beat", async () => {
+    const winner = {
+      ...PODIUM_BRONZE,
+      place: 1 as const,
+      entrantId: "player-1",
+      name: "Sam",
+      score: 3000,
+    };
+    const { rerender } = render(
+      stageOf(podiumStateAt("92", { podium: [PODIUM_SILVER, PODIUM_BRONZE] })),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(screen.queryByText(/^You're/)).toBeNull();
+
+    rerender(
+      stageOf(
+        podiumStateAt("93", {
+          podium: [winner, PODIUM_SILVER, PODIUM_BRONZE],
+        }),
+      ),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    act(() => {
+      vi.advanceTimersByTime(QUIZSHOW_LIMITS.podiumWinnerHoldMs - 100);
+    });
+    expect(screen.queryByText("You're 1st of 12")).toBeNull();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(200);
+    });
+    expect(screen.getByText("You're 1st of 12")).toBeInTheDocument();
+  });
+
+  it("reads a place below the podium from this step's scores:mine only", async () => {
+    const { rerender } = render(
+      stageOf(
+        podiumStateAt("94", {
+          podium: [PODIUM_BRONZE],
+          myScores: {
+            phaseId: "80",
+            rank: 5,
+            score: 400,
+            previousScore: 300,
+            ownScore: 400,
+          },
+        }),
+      ),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    // Another phase's myScores says nothing about this step.
+    expect(screen.queryByText(/^You're/)).toBeNull();
+
+    rerender(
+      stageOf(
+        podiumStateAt("94", {
+          podium: [PODIUM_BRONZE],
+          myScores: {
+            phaseId: "94",
+            rank: 5,
+            score: 400,
+            previousScore: 300,
+            ownScore: 400,
+          },
+        }),
+      ),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(screen.getByText("You're 5th of 12")).toBeInTheDocument();
+  });
+});
+
+describe("QuizshowPlayerStage heading focus on every phase body", () => {
+  it("focuses the outcome line once the player's own reveal lands", async () => {
+    const { rerender } = render(
+      stageOf({ ...REVEAL_STATE, myReveal: null, question: QUESTION }),
+    );
+    // The reveal frame alone leaves a hidden heading: results are in.
+    const waitingHeading = await screen.findByRole("heading", { level: 1 });
+    await waitFor(() => expect(waitingHeading).toHaveFocus());
+
+    rerender(stageOf(REVEAL_STATE));
+    const outcomeHeading = await screen.findByRole("heading", {
+      level: 1,
+      name: "Right",
+    });
+    await waitFor(() => expect(outcomeHeading).toHaveFocus());
+    expect(outcomeHeading).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("gives a poll reveal a heading to focus even with no outcome line", async () => {
+    render(
+      stageOf(
+        stateIn("reveal", "20", {
+          question: POLL_QUESTION,
+          myReveal: { ...MY_REVEAL, isCorrect: null },
+          reveal: {
+            ...(REVEAL_STATE.reveal as NonNullable<
+              QuizshowPlayerState["reveal"]
+            >),
+            correct: null,
+          },
+        }),
+      ),
+    );
+    const heading = await screen.findByRole("heading", { level: 1 });
+    await waitFor(() => expect(heading).toHaveFocus());
+  });
+
+  it("focuses the place line on the scores, and a hidden heading before the rank lands", async () => {
+    const scores = {
+      phaseId: "62",
+      scope: "question" as const,
+      entries: TOP_TEN_RANKS.map((rank) => leaderboardEntryOf(rank)),
+      entrantCount: 14,
+    };
+    const { rerender } = render(stageOf(stateIn("scores", "62", { scores })));
+    const hiddenHeading = await screen.findByRole("heading", { level: 1 });
+    await waitFor(() => expect(hiddenHeading).toHaveFocus());
+
+    rerender(
+      stageOf(
+        stateIn("scores", "62", {
+          scores,
+          myScores: {
+            phaseId: "62",
+            rank: 13,
+            score: 900,
+            previousScore: 600,
+            ownScore: 900,
+          },
+        }),
+      ),
+    );
+    const placeHeading = await screen.findByRole("heading", {
+      level: 1,
+      name: "You're 13th of 14",
+    });
+    await waitFor(() => expect(placeHeading).toHaveFocus());
+  });
+
+  it("focuses a heading on the round intro", async () => {
+    render(
+      stageOf(stateIn("round_intro", "5", { round: roundCardOf(0, "quiz") })),
+    );
+    const heading = await screen.findByRole("heading", { level: 1 });
+    await waitFor(() => expect(heading).toHaveFocus());
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Warm up" }),
+    ).toBeInTheDocument();
+  });
+
+  it("focuses a heading when the podium lands and leaves it alone on the next step", async () => {
+    const { rerender } = render(
+      stageOf(podiumStateAt("95", { podium: [PODIUM_BRONZE] })),
+    );
+    const heading = await screen.findByRole("heading", { level: 1 });
+    await waitFor(() => expect(heading).toHaveFocus());
+
+    heading.blur();
+    rerender(
+      stageOf(podiumStateAt("96", { podium: [PODIUM_SILVER, PODIUM_BRONZE] })),
+    );
+    await screen.findByText("Silver");
+    expect(heading).not.toHaveFocus();
+  });
+});
+
+describe("QuizshowPlayerStage warm-up and corrected reveals", () => {
+  const WARM_UP_ROUND: QuizshowRoundCard = {
+    ...roundCardOf(0, "quiz"),
+    isWarmUp: true,
+  };
+
+  it("says a warm-up scores nothing and leaves the points and place out", async () => {
+    render(
+      stageOf({
+        ...REVEAL_STATE,
+        round: WARM_UP_ROUND,
+        rounds: [WARM_UP_ROUND],
+      }),
+    );
+    expect(await screen.findByText("Right")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Warm-up: no points|player\.warmUpNoPoints/),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("+1,200 points")).toBeNull();
+    expect(screen.queryByText(/^You're/)).toBeNull();
+    expect(screen.queryByText("Streak of 3")).toBeNull();
+  });
+
+  it("finds the warm-up flag on the round list when the current round card is gone", async () => {
+    render(
+      stageOf(
+        { ...REVEAL_STATE, round: null, rounds: [WARM_UP_ROUND] },
+        false,
+        { ownRanks: { previous: 1, current: 2 } },
+      ),
+    );
+    await screen.findByText("Right");
+    expect(screen.queryByText(/^Down /)).toBeNull();
+    expect(screen.queryByText("+1,200 points")).toBeNull();
+  });
+
+  it("keeps the points and place on a scored round", async () => {
+    render(
+      stageOf({
+        ...REVEAL_STATE,
+        round: roundCardOf(0, "quiz"),
+        rounds: [roundCardOf(0, "quiz")],
+      }),
+    );
+    expect(await screen.findByText("+1,200 points")).toBeInTheDocument();
+    expect(screen.getByText("You're 2nd of 5")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Warm-up: no points|player\.warmUpNoPoints/),
+    ).toBeNull();
+  });
+
+  it("tells the player the host corrected the answer", async () => {
+    render(
+      stageOf({
+        ...REVEAL_STATE,
+        reveal: {
+          ...(REVEAL_STATE.reveal as NonNullable<
+            QuizshowPlayerState["reveal"]
+          >),
+          wasCorrected: true,
+        },
+      }),
+    );
+    expect(
+      await screen.findByText(
+        /The host corrected this answer|player\.hostCorrected/,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("says nothing of a correction when the host left the answer alone", async () => {
+    render(stageOf(REVEAL_STATE));
+    await screen.findByText("Right");
+    expect(
+      screen.queryByText(
+        /The host corrected this answer|player\.hostCorrected/,
+      ),
+    ).toBeNull();
   });
 });

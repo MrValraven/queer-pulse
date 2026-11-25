@@ -152,6 +152,23 @@
   padding-block-end: var(--gap-xs);
 }
 
+/* A crowded lobby: two columns, the member count under the name. */
+.choiceList[data-compact="true"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gap-xs);
+}
+
+.choiceList[data-compact="true"] .choiceBody {
+  flex-wrap: wrap;
+  row-gap: 0;
+  padding-inline: var(--gap-xs);
+}
+
+.choiceList[data-compact="true"] .choiceMeta {
+  flex-basis: 100%;
+}
+
 .choice {
   position: relative;
   display: block;
@@ -222,17 +239,6 @@
   flex-shrink: 0;
   font-size: var(--text-caption);
   color: var(--qs-text-mute);
-}
-
-.shapeGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--gap-xs);
-}
-
-.shapeBody {
-  justify-content: center;
-  padding-inline: 0;
 }
 
 .newTeam {
@@ -415,4 +421,54 @@
 .reportRow {
   /* Collapse draws its panel as a flow-root, so the button centres as inline content. */
   text-align: center;
+}
+
+/* The signed-out join card (item 29): a small kicker, the quiz title, how the
+   game stands, then the code the visitor followed. */
+.previewEyebrow {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+}
+
+.previewStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--qs-text);
+}
+
+.previewStatus svg {
+  flex-shrink: 0;
+  color: var(--jade-text);
+}
+
+.previewCode {
+  display: flex;
+  flex-direction: column;
+  gap: var(--triage-gap-hair);
+  margin: 0;
+}
+
+.previewCodeLabel {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--qs-text-mute);
+}
+
+.previewCodeValue {
+  font-family: var(--sans);
+  font-size: var(--text-28);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: var(--qs-text);
 }

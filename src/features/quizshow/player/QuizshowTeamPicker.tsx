@@ -1,24 +1,31 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { CollapseListItem } from "../../../shared/components/ui/CollapseListItem";
 import { FormField } from "../../../shared/components/ui/FormField";
 import {
   QUIZSHOW_LIMITS,
   QUIZSHOW_TEAM_COLOR_KEYS,
-  type QuizshowLobby,
   type QuizshowLobbyJoinInput,
+  type QuizshowPlayerLobby,
   type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowShape } from "../QuizshowShape";
-import { QUIZSHOW_SWATCHES } from "../quizshowSwatches";
+import { teamShapeLabel } from "../quizshowSwatches";
 import styles from "./QuizshowPlay.module.css";
+import lobbyStyles from "./QuizshowPlayerLobby.module.css";
 
 type TeamChoice = QuizshowLobbyJoinInput["team"];
 
+/** From this many teams the list takes two compact columns, so a full lobby
+ *  of 24 does not push "I'm in" a screen and a half down a phone. */
+const COMPACT_TEAM_COUNT = 9;
+
 interface QuizshowTeamPickerProps {
-  lobby: QuizshowLobby;
+  /** Teams and member counts only: the players room never gets the roster (W2). */
+  lobby: QuizshowPlayerLobby;
   maxTeamSize: number | null;
   value: TeamChoice;
   onChange: (team: TeamChoice) => void;
@@ -26,6 +33,8 @@ interface QuizshowTeamPickerProps {
   currentTeamId?: string | null;
   /** A catalog key shown on the new team's name field, such as a blank name. */
   nameErrorKey?: string | null;
+  /** A team to pick once on mount while nothing is picked, such as the old team of a rematch (D7). */
+  initialTeamId?: string | null;
 }
 
 function firstFreeShape(
@@ -48,6 +57,35 @@ function preferredShape(
   return firstFreeShape(hasUnusedShape ? lobbyShapes : takenShapes);
 }
 
+/** Picks `initialTeamId` once on mount while nothing is picked and the team has room. */
+function useInitialTeam({
+  lobby,
+  maxTeamSize,
+  value,
+  onChange,
+  initialTeamId,
+}: {
+  lobby: QuizshowPlayerLobby;
+  maxTeamSize: number | null;
+  value: TeamChoice;
+  onChange: (team: TeamChoice) => void;
+  initialTeamId: string | null;
+}) {
+  const hasAppliedRef = useRef(false);
+  useEffect(() => {
+    if (hasAppliedRef.current) return;
+    hasAppliedRef.current = true;
+    if (initialTeamId === null || value !== null) return;
+    const initialTeam = lobby.teams.find(
+      (team) => team.teamId === initialTeamId,
+    );
+    if (initialTeam === undefined) return;
+    const isFull =
+      maxTeamSize !== null && initialTeam.memberCount >= maxTeamSize;
+    if (!isFull) onChange({ teamId: initialTeam.teamId });
+  }, [initialTeamId, lobby.teams, maxTeamSize, onChange, value]);
+}
+
 /** Pick a team that has room, or start one with a name and a shape nobody uses. */
 export function QuizshowTeamPicker({
   lobby,
@@ -56,6 +94,7 @@ export function QuizshowTeamPicker({
   onChange,
   currentTeamId = null,
   nameErrorKey = null,
+  initialTeamId = null,
 }: QuizshowTeamPickerProps) {
   const { t } = useTranslation();
   const groupName = useId();
@@ -74,13 +113,17 @@ export function QuizshowTeamPicker({
   const isStartingTeam = value !== null && "newTeam" in value;
   const isTeamLimitReached =
     otherTeams.length >= QUIZSHOW_LIMITS.teamsPerSessionMax;
+  useInitialTeam({ lobby, maxTeamSize, value, onChange, initialTeamId });
 
   return (
     <fieldset className={styles.group}>
       <legend className={styles.groupLegend}>
         {t("quizshow:player.teamTitle")}
       </legend>
-      <ul className={styles.choiceList}>
+      <ul
+        className={styles.choiceList}
+        data-compact={lobby.teams.length >= COMPACT_TEAM_COUNT}
+      >
         <AnimatePresence initial={false}>
           {lobby.teams.map((team) => {
             const isCurrent = team.teamId === currentTeamId;
@@ -196,15 +239,25 @@ function QuizshowShapeChoice({
 }) {
   const { t } = useTranslation();
   const groupName = useId();
+  const { reducedMotion } = useMotionPrefs();
+  // All 24 keys stay in place, tier 1 first (C6.11), so nothing moves under the
+  // thumb: a key another team holds dims and says so, and cannot be picked.
+  const isPickTaken = takenShapes.has(value);
   return (
     <fieldset className={styles.group}>
       <legend className={styles.groupLegend}>
         {t("quizshow:player.teamShapeLabel")}
       </legend>
-      <div className={styles.shapeGrid}>
+      <div
+        className={lobbyStyles.teamShapeGrid}
+        data-reduced-motion={reducedMotion}
+      >
         {QUIZSHOW_TEAM_COLOR_KEYS.map((colorKey) => {
           const isTaken = takenShapes.has(colorKey);
-          const shapeName = t(QUIZSHOW_SWATCHES[colorKey].labelKey);
+          const shapeLabel = teamShapeLabel(colorKey, t);
+          const shapeName = isTaken
+            ? t("quizshow:player.teamShapeTaken", { shape: shapeLabel })
+            : shapeLabel;
           return (
             <label key={colorKey} className={styles.choice}>
               <input
@@ -217,7 +270,9 @@ function QuizshowShapeChoice({
                   if (!isTaken) onChange(colorKey);
                 }}
               />
-              <span className={`${styles.choiceBody} ${styles.shapeBody}`}>
+              <span
+                className={`${styles.choiceBody} ${lobbyStyles.teamShapeCell}`}
+              >
                 <QuizshowShape colorKey={colorKey} size="medium" label={null} />
               </span>
               <span className={styles.visuallyHidden}>{shapeName}</span>
@@ -225,6 +280,9 @@ function QuizshowShapeChoice({
           );
         })}
       </div>
+      <Collapse isOpen={isPickTaken}>
+        <p className={styles.hint}>{t("quizshow:errors.team_color_taken")}</p>
+      </Collapse>
     </fieldset>
   );
 }

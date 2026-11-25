@@ -1,24 +1,37 @@
 import { AnimatePresence, m } from "motion/react";
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
-import { IconButton } from "../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { QuizshowHostState } from "../../../shared/contracts/quizshow";
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowCursor,
+  type QuizshowHostState,
+  type QuizshowPhase,
+} from "../../../shared/contracts/quizshow";
 import { QuizshowStudioDarkStamp } from "../studio/QuizshowStudioDarkStamp";
+import { serverNow } from "../realtime/quizshowClock";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { useQuizshowWheelClock } from "../stage/useQuizshowWheelClock";
 import { endConfirmBodyKeyOf } from "./quizshowRemoteEndCopy";
 import { QuizshowRemoteFinishWheel } from "./QuizshowRemoteFinishWheel";
-import { quizshowPrimaryControlOf } from "./quizshowPrimaryControl";
 import {
-  secondaryControlsOf,
-  type SecondaryControl,
-} from "./quizshowRemoteSecondaryControls";
+  quizshowPrimaryControlOf,
+  type QuizshowPrimaryControl,
+} from "./quizshowPrimaryControl";
+import { QuizshowRemoteSecondaryRow } from "./QuizshowRemoteSecondaryRow";
+import { secondaryControlsOf } from "./quizshowRemoteSecondaryControls";
 import { useQuizshowHostCommand } from "./useQuizshowHostCommand";
+import { useSkipHold, type QuizshowSkipTarget } from "./useSkipHold";
 import styles from "./QuizshowRemote.module.css";
 
 /** A failed command's copy, folding in and out under a live region that stays mounted. */
@@ -96,67 +109,152 @@ function useReportedHeight(
   return setElement;
 }
 
-/** From this many controls the labels shrink so a long one such as Finish the wheel stays on one line. */
-const CROWDED_ROW_FROM = 4;
+/** What a screen reader hears while a Skip waits for its Undo. */
+const SKIP_ANNOUNCE_KEYS: Record<QuizshowSkipTarget, string> = {
+  question: "quizshow:remote.skipToast",
+  scores: "quizshow:remote.skipScoresToast",
+};
 
-/** The secondary row: one icon button per control, folding in and out as the phase changes. */
-function QuizshowRemoteSecondaryRow({
-  controls,
-  isPending,
+/** How long each phase that moves on by itself waits (contract 6.16); the ring's full turn. */
+const AUTO_ADVANCE_MS_BY_PHASE: Partial<Record<QuizshowPhase, number>> = {
+  round_intro: QUIZSHOW_LIMITS.autoAdvanceRoundIntroMs,
+  reveal: QUIZSHOW_LIMITS.autoAdvanceRevealMs,
+  scores: QUIZSHOW_LIMITS.autoAdvanceScoresMs,
+};
+
+/**
+ * The auto-advance ring: it empties toward `autoAdvanceAt` on the server
+ * clock. The time already gone is read once (the caller keys the ring by the
+ * deadline) and handed to a CSS animation as a negative delay, so only
+ * stroke-dashoffset moves and nothing re-renders while it runs.
+ */
+function QuizshowAutoAdvanceRing({
+  autoAdvanceAt,
+  totalMs,
+  clockOffsetMs,
 }: {
-  controls: SecondaryControl[];
-  isPending: (name: SecondaryControl["name"]) => boolean;
+  autoAdvanceAt: number;
+  totalMs: number;
+  clockOffsetMs: number;
+}) {
+  const [elapsedMs] = useState(() => {
+    const remainingMs = autoAdvanceAt - serverNow(Date.now(), clockOffsetMs);
+    return Math.min(totalMs, Math.max(0, totalMs - remainingMs));
+  });
+  const arcStyle = {
+    "--qs-auto-advance-ms": `${totalMs}ms`,
+    "--qs-auto-advance-delay": `${-elapsedMs}ms`,
+  } as CSSProperties;
+  return (
+    <svg
+      className={styles.autoAdvanceRing}
+      viewBox="0 0 36 36"
+      aria-hidden="true"
+      focusable="false"
+      data-auto-advance-ring=""
+    >
+      <circle
+        className={styles.autoAdvanceTrack}
+        cx="18"
+        cy="18"
+        r="15"
+        pathLength={100}
+      />
+      <circle
+        className={styles.autoAdvanceArc}
+        cx="18"
+        cy="18"
+        r="15"
+        pathLength={100}
+        style={arcStyle}
+      />
+    </svg>
+  );
+}
+
+/**
+ * The big button: its label fades between steps, and while the game moves on
+ * by itself it draws the auto-advance ring. With reduced motion the ring
+ * gives way to a still "Moves on by itself" line under the button.
+ */
+function QuizshowRemotePrimaryButton({
+  primary,
+  isBlocked,
+  cursor,
+  clockOffsetMs,
+  onActivate,
+}: {
+  primary: QuizshowPrimaryControl;
+  isBlocked: boolean;
+  cursor: QuizshowCursor;
+  clockOffsetMs: number;
+  onActivate: () => void;
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  const captionId = useId();
   const fade = { duration: reducedMotion ? 0 : 0.2 };
+  const label = t(primary.labelKey, primary.labelValues);
+  const { autoAdvanceAt } = cursor;
+  const hasAutoAdvance = autoAdvanceAt !== null;
+  const autoAdvanceMs =
+    AUTO_ADVANCE_MS_BY_PHASE[cursor.phase] ??
+    QUIZSHOW_LIMITS.autoAdvanceRevealMs;
   return (
-    <div
-      className={styles.secondaryRow}
-      data-is-crowded={controls.length >= CROWDED_ROW_FROM}
-    >
-      <AnimatePresence initial={false}>
-        {controls.map((control) => {
-          const isBlocked = control.isBlocked || isPending(control.name);
-          const label = t(control.labelKey);
-          return (
-            <m.div
-              key={control.key}
-              layout="position"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
+    <>
+      <Button
+        variant="stage"
+        size="lg"
+        className={styles.primary}
+        aria-disabled={isBlocked}
+        aria-describedby={hasAutoAdvance ? captionId : undefined}
+        onClick={() => {
+          if (!isBlocked) onActivate();
+        }}
+      >
+        {/* "wait": a new deadline's ring enters only after the old one left, so two rings never sit side by side. */}
+        <AnimatePresence mode="wait" initial={false}>
+          {hasAutoAdvance && !reducedMotion && (
+            <m.span
+              key={`ring:${autoAdvanceAt}`}
+              className={styles.autoAdvanceSlot}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={fade}
             >
-              <IconButton
-                className={styles.secondaryButton}
-                tone="dark"
-                aria-label={label}
-                aria-disabled={isBlocked}
-                onClick={() => {
-                  if (!isBlocked) control.onActivate();
-                }}
-              >
-                {/* Pause and Resume keep one button, so only its face fades. */}
-                <AnimatePresence mode="wait" initial={false}>
-                  <m.span
-                    key={control.labelKey}
-                    className={styles.secondaryFace}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={fade}
-                  >
-                    {control.icon}
-                    <span className={styles.secondaryLabel}>{label}</span>
-                  </m.span>
-                </AnimatePresence>
-              </IconButton>
-            </m.div>
-          );
-        })}
-      </AnimatePresence>
-    </div>
+              {/* A new clock offset re-reads the time gone, with no fade. */}
+              <QuizshowAutoAdvanceRing
+                key={clockOffsetMs}
+                autoAdvanceAt={autoAdvanceAt}
+                totalMs={autoAdvanceMs}
+                clockOffsetMs={clockOffsetMs}
+              />
+            </m.span>
+          )}
+        </AnimatePresence>
+        <AnimatePresence mode="wait" initial={false}>
+          <m.span
+            key={`${primary.labelKey}:${label}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={fade}
+          >
+            {label}
+          </m.span>
+        </AnimatePresence>
+      </Button>
+      {/* Always mounted, so the button's description never moves the bar. */}
+      <span id={captionId} className={styles.visuallyHidden}>
+        {hasAutoAdvance ? t("quizshow:remote.autoAdvanceCaption") : ""}
+      </span>
+      <Collapse isOpen={hasAutoAdvance && reducedMotion}>
+        <p className={styles.autoAdvanceCaption} aria-hidden="true">
+          {t("quizshow:remote.autoAdvanceCaption")}
+        </p>
+      </Collapse>
+    </>
   );
 }
 
@@ -174,6 +272,7 @@ export function QuizshowRemoteControls({
   const barRef = useReportedHeight(onBarHeightChange);
   const { reducedMotion } = useMotionPrefs();
   const { run, isPending, lastErrorKey } = useQuizshowHostCommand(controller);
+  const { startSkip, cancelSkip, heldTarget } = useSkipHold(controller, run);
   const [isEndConfirmOpen, setIsEndConfirmOpen] = useState(false);
   const [isFinishWheelOpen, setIsFinishWheelOpen] = useState(false);
   // Re-renders the bar at the stop, so the buttons enable the moment the wheel lands.
@@ -192,6 +291,9 @@ export function QuizshowRemoteControls({
   const secondaryControls = secondaryControlsOf(state, serverNowMs, run, {
     onEnd: () => setIsEndConfirmOpen(true),
     onFinishWheel: () => setIsFinishWheelOpen(true),
+    onSkip: startSkip,
+    heldSkipTarget: heldTarget,
+    onUndoSkip: cancelSkip,
   });
 
   // The wheel can end under the host (the timer, another host tab); the confirm closes with it.
@@ -222,33 +324,22 @@ export function QuizshowRemoteControls({
         >
           <div className={styles.barInner}>
             <QuizshowRemoteErrorLine errorKey={lastErrorKey} />
+            {/* The pending skip is spoken here; the Skip button shows its Undo under the thumb. */}
+            <span role="status" className={styles.visuallyHidden}>
+              {heldTarget === null ? "" : t(SKIP_ANNOUNCE_KEYS[heldTarget])}
+            </span>
             <Collapse isOpen={status === "paused" && cursor.isRestartRecovery}>
               <p className={styles.note}>
                 {t("quizshow:remote.restartRecovery")}
               </p>
             </Collapse>
-            <Button
-              variant="stage"
-              size="lg"
-              className={styles.primary}
-              aria-disabled={isPrimaryBlocked}
-              onClick={() => {
-                if (isPrimaryBlocked) return;
-                void run(primary.name, { phaseId });
-              }}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <m.span
-                  key={`${primary.labelKey}:${primary.labelValues?.title ?? ""}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={fade}
-                >
-                  {t(primary.labelKey, primary.labelValues)}
-                </m.span>
-              </AnimatePresence>
-            </Button>
+            <QuizshowRemotePrimaryButton
+              primary={primary}
+              isBlocked={isPrimaryBlocked}
+              cursor={cursor}
+              clockOffsetMs={controller.clockOffsetMs}
+              onActivate={() => void run(primary.name, { phaseId })}
+            />
             <QuizshowRemoteSecondaryRow
               controls={secondaryControls}
               isPending={isPending}

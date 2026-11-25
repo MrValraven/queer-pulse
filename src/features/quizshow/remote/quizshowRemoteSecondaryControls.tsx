@@ -6,6 +6,7 @@ import {
   FiPlay,
   FiPlusCircle,
   FiRefreshCw,
+  FiRotateCcw,
   FiRotateCw,
   FiSkipForward,
   FiStopCircle,
@@ -19,6 +20,7 @@ import { QUIZSHOW_REMOTE_ADD_TIME_SECONDS } from "../quizshow.constants";
 import type { QuizshowHostFrameName } from "../engine/quizshowEngineTypes";
 import { isWheelSpinLanded } from "../quizshowWheel";
 import type { useQuizshowHostCommand } from "./useQuizshowHostCommand";
+import type { QuizshowSkipTarget } from "./useSkipHold";
 
 const TIMED_PHASES: readonly QuizshowPhase[] = [...QUIZSHOW_TIMED_PHASES];
 const REVEAL_PHASES: readonly QuizshowPhase[] = ["open", "vote"];
@@ -39,7 +41,36 @@ export interface SecondaryControl {
   labelKey: string;
   icon: ReactNode;
   isBlocked: boolean;
+  /** Where it goes first when the bar is narrow: a higher number folds earlier; a control without one stays in view. */
+  foldRank?: number;
   onActivate: () => void;
+}
+
+/** The controls a narrow bar fits in one row before the foldable ones move behind "More controls". */
+export const NARROW_BAR_MAX_CONTROLS = 4;
+
+/**
+ * Splits the controls for a bar too narrow for them all: past
+ * NARROW_BAR_MAX_CONTROLS, the foldable ones (Add time) go behind "More
+ * controls", which takes a fifth, narrower place in the row. End game, Pause,
+ * Reveal and Skip always stay in view.
+ */
+export function splitControlsForNarrowBar(controls: SecondaryControl[]): {
+  visible: SecondaryControl[];
+  folded: SecondaryControl[];
+} {
+  const foldable = controls
+    .filter((control) => control.foldRank !== undefined)
+    .sort((first, second) => (second.foldRank ?? 0) - (first.foldRank ?? 0));
+  const foldedKeys = new Set<string>();
+  for (const control of foldable) {
+    if (controls.length - foldedKeys.size <= NARROW_BAR_MAX_CONTROLS) break;
+    foldedKeys.add(control.key);
+  }
+  return {
+    visible: controls.filter((control) => !foldedKeys.has(control.key)),
+    folded: controls.filter((control) => foldedKeys.has(control.key)),
+  };
 }
 
 type RunHostCommand = ReturnType<typeof useQuizshowHostCommand>["run"];
@@ -47,6 +78,12 @@ type RunHostCommand = ReturnType<typeof useQuizshowHostCommand>["run"];
 export interface SecondaryControlHandlers {
   onEnd: () => void;
   onFinishWheel: () => void;
+  /** Skip waits for an Undo first (useSkipHold), so it gets the phase id the tap was made in. */
+  onSkip: (phaseId: string, target: QuizshowSkipTarget) => void;
+  /** What the Skip waiting for its Undo passes over; null when none waits. */
+  heldSkipTarget: QuizshowSkipTarget | null;
+  /** Takes the waiting Skip back. */
+  onUndoSkip: () => void;
 }
 
 /** Pause while running, Resume while paused, nothing in the lobby and after the end. */
@@ -132,6 +169,10 @@ function wheelControlsOf(
 function questionControlsOf(
   state: QuizshowHostState,
   run: RunHostCommand,
+  skipHandlers: Pick<
+    SecondaryControlHandlers,
+    "onSkip" | "heldSkipTarget" | "onUndoSkip"
+  >,
 ): SecondaryControl[] {
   const { phase, status, phaseId, deadline } = state.cursor;
   const isRunning = status === "running";
@@ -143,6 +184,7 @@ function questionControlsOf(
       labelKey: "quizshow:remote.addTime",
       icon: <FiPlusCircle aria-hidden="true" fill="none" />,
       isBlocked: false,
+      foldRank: 1,
       onActivate: () =>
         void run("host:addTime", {
           phaseId,
@@ -162,15 +204,35 @@ function questionControlsOf(
     });
   }
   const isQuizReveal = phase === "reveal" && state.round?.kind === "quiz";
+  // From a quiz reveal Skip passes over the scores step, which a warm-up or a poll does not have.
+  const hasScoresStep =
+    isQuizReveal &&
+    state.round?.isWarmUp !== true &&
+    state.question?.type !== "poll";
   if (SKIP_PHASES.includes(phase) || isQuizReveal) {
-    controls.push({
-      key: "skip",
-      name: "host:skip",
-      labelKey: "quizshow:remote.skip",
-      icon: <FiSkipForward aria-hidden="true" fill="none" />,
-      isBlocked: !isRunning,
-      onActivate: () => void run("host:skip", { phaseId }),
-    });
+    // While a Skip waits for its Undo, the button itself is the Undo, under the thumb.
+    if (skipHandlers.heldSkipTarget !== null) {
+      controls.push({
+        key: "skip",
+        name: "host:skip",
+        labelKey: "quizshow:remote.skipUndoAction",
+        icon: <FiRotateCcw aria-hidden="true" fill="none" />,
+        isBlocked: false,
+        onActivate: skipHandlers.onUndoSkip,
+      });
+    } else {
+      controls.push({
+        key: "skip",
+        name: "host:skip",
+        labelKey: hasScoresStep
+          ? "quizshow:remote.skipScores"
+          : "quizshow:remote.skip",
+        icon: <FiSkipForward aria-hidden="true" fill="none" />,
+        isBlocked: !isRunning,
+        onActivate: () =>
+          skipHandlers.onSkip(phaseId, hasScoresStep ? "scores" : "question"),
+      });
+    }
   }
   return controls;
 }
@@ -191,7 +253,7 @@ export function secondaryControlsOf(
   return [
     ...(pauseResume === null ? [] : [pauseResume]),
     ...wheelControlsOf(state, serverNowMs, run, handlers.onFinishWheel),
-    ...questionControlsOf(state, run),
+    ...questionControlsOf(state, run, handlers),
     {
       key: "end",
       name: "host:end",

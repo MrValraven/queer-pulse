@@ -35,6 +35,7 @@ function storedQuiz(title: string, updatedAt: string): QuizshowQuiz {
     languages: "both",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt,
     rounds: [storedRound("round-1", "First"), storedRound("round-2", "Second")],
   };
@@ -153,7 +154,7 @@ describe("useQuizshowDraft picked previews", () => {
     return { ...view, setPicture };
   }
 
-  it("keeps a picked preview while a duplicate holds its key and revokes it once none does", () => {
+  it("keeps a picked preview while a duplicate or the undo history holds its key and revokes it once none does", () => {
     const revokeSpy = vi.spyOn(URL, "revokeObjectURL");
     const { result, setPicture } = renderDraft();
     expect(result.current.pickedPreviewUrls.get("picked-key")).toBe(
@@ -167,7 +168,15 @@ describe("useQuizshowDraft picked previews", () => {
     );
     expect(revokeSpy).not.toHaveBeenCalledWith("blob:draft-copy");
 
+    // The removal can be undone, so the history still holds the key.
     act(() => result.current.removeQuestion(0, 1));
+    expect(result.current.pickedPreviewUrls.get("picked-key")).toBe(
+      "blob:draft-copy",
+    );
+    expect(revokeSpy).not.toHaveBeenCalledWith("blob:draft-copy");
+
+    // A reset clears the history, and nothing holds the key any more.
+    act(() => result.current.resetTo(storedQuiz("Night", stamp)));
     expect(result.current.pickedPreviewUrls.has("picked-key")).toBe(false);
     expect(revokeSpy).toHaveBeenCalledWith("blob:draft-copy");
     revokeSpy.mockRestore();
@@ -202,17 +211,24 @@ describe("useQuizshowDraft picked previews", () => {
 
   it("revokes a copy at once when it arrives after every question dropped its key", () => {
     const revokeSpy = vi.spyOn(URL, "revokeObjectURL");
-    const { result, setPicture } = renderDraft();
-    setPicture(0, "later-key");
-    setPicture(0, null);
+    // A frozen clock: every setPicture lands in one coalesced undo step, so no
+    // draft in the history holds "later-key" however slow the run is.
+    const clockSpy = vi.spyOn(Date, "now").mockReturnValue(1_000);
+    try {
+      const { result, setPicture } = renderDraft();
+      setPicture(0, "later-key");
+      setPicture(0, null);
 
-    act(() =>
-      result.current.rememberPickedPreview("later-key", "blob:late-copy"),
-    );
+      act(() =>
+        result.current.rememberPickedPreview("later-key", "blob:late-copy"),
+      );
 
-    expect(result.current.pickedPreviewUrls.has("later-key")).toBe(false);
-    expect(revokeSpy).toHaveBeenCalledWith("blob:late-copy");
-    revokeSpy.mockRestore();
+      expect(result.current.pickedPreviewUrls.has("later-key")).toBe(false);
+      expect(revokeSpy).toHaveBeenCalledWith("blob:late-copy");
+    } finally {
+      clockSpy.mockRestore();
+      revokeSpy.mockRestore();
+    }
   });
 
   it("revokes every picked preview when the builder unmounts", () => {
@@ -223,5 +239,194 @@ describe("useQuizshowDraft picked previews", () => {
 
     expect(revokeSpy).toHaveBeenCalledWith("blob:draft-copy");
     revokeSpy.mockRestore();
+  });
+});
+
+describe("useQuizshowDraft undo and redo", () => {
+  const stamp = "2026-10-19T10:00:00.000Z";
+
+  function renderDraft() {
+    return renderHook(() => useQuizshowDraft(storedQuiz("Night", stamp)));
+  }
+
+  /** Pins Date.now, so the coalesce window is under the test's control. */
+  function pinClock(startsAt: number) {
+    let now = startsAt;
+    const spy = vi.spyOn(Date, "now").mockImplementation(() => now);
+    return {
+      advance: (milliseconds: number) => {
+        now += milliseconds;
+      },
+      restore: () => spy.mockRestore(),
+    };
+  }
+
+  it("undoes typing in one field as one step and redoes it", () => {
+    const clock = pinClock(1_000);
+    const { result } = renderDraft();
+    expect(result.current.canUndo).toBe(false);
+
+    act(() => result.current.setQuizField("title", "N"));
+    clock.advance(300);
+    act(() => result.current.setQuizField("title", "Ni"));
+    clock.advance(300);
+    act(() => result.current.setQuizField("title", "Nig"));
+    expect(result.current.canUndo).toBe(true);
+
+    act(() => result.current.undo?.());
+    expect(result.current.draft.title).toBe("Night");
+    expect(result.current.canUndo).toBe(false);
+    expect(result.current.canRedo).toBe(true);
+
+    act(() => result.current.redo?.());
+    expect(result.current.draft.title).toBe("Nig");
+    expect(result.current.canRedo).toBe(false);
+    clock.restore();
+  });
+
+  it("keeps a pause past the coalesce window and another field as steps of their own", () => {
+    const clock = pinClock(1_000);
+    const { result } = renderDraft();
+
+    act(() => result.current.setQuizField("title", "One"));
+    clock.advance(900);
+    act(() => result.current.setQuizField("title", "Two"));
+    act(() => result.current.setQuizField("languages", "en"));
+
+    act(() => result.current.undo?.());
+    expect(result.current.draft.languages).toBe("both");
+    expect(result.current.draft.title).toBe("Two");
+    act(() => result.current.undo?.());
+    expect(result.current.draft.title).toBe("One");
+    act(() => result.current.undo?.());
+    expect(result.current.draft.title).toBe("Night");
+    clock.restore();
+  });
+
+  it("clears what is left to redo on a new change", () => {
+    const { result } = renderDraft();
+    act(() => result.current.removeRound(1));
+    act(() => result.current.undo?.());
+    expect(result.current.canRedo).toBe(true);
+
+    act(() => result.current.addWheel());
+
+    expect(result.current.canRedo).toBe(false);
+  });
+
+  it("clears the history on a reset and keeps it on a rebase or a key-keeping reset", () => {
+    const { result } = renderDraft();
+    act(() => result.current.removeRound(1));
+    act(() => result.current.rebaseTo?.(storedQuiz("Night", stamp)));
+    expect(result.current.canUndo).toBe(true);
+    act(() =>
+      result.current.resetTo(storedQuiz("Night", stamp), {
+        shouldKeepKeys: true,
+      }),
+    );
+    expect(result.current.canUndo).toBe(true);
+
+    act(() => result.current.resetTo(storedQuiz("Night", stamp)));
+
+    expect(result.current.canUndo).toBe(false);
+  });
+
+  it("moves a question to the end of another round and undoes the move", () => {
+    const { result } = renderDraft();
+    const movedKey = result.current.draft.rounds[0]?.questions[0]?.draftKey;
+
+    act(() => result.current.moveQuestionToRound?.(0, 0, 1));
+
+    expect(result.current.draft.rounds[0]?.questions).toHaveLength(0);
+    expect(result.current.draft.rounds[1]?.questions).toHaveLength(2);
+    expect(result.current.draft.rounds[1]?.questions[1]?.draftKey).toBe(
+      movedKey,
+    );
+
+    act(() => result.current.undo?.());
+
+    expect(result.current.draft.rounds[0]?.questions[0]?.draftKey).toBe(
+      movedKey,
+    );
+    expect(result.current.draft.rounds[1]?.questions).toHaveLength(1);
+  });
+
+  it("clears the warm-up on the row a move takes off the top", () => {
+    const { result } = renderDraft();
+    const firstSettings = result.current.draft.rounds[0]?.settings;
+    if (!firstSettings) throw new Error("round missing");
+    act(() =>
+      result.current.updateRound(0, {
+        settings: { ...firstSettings, isWarmUp: true },
+      }),
+    );
+
+    act(() => result.current.moveRound(0, 1));
+
+    expect(result.current.draft.rounds[1]?.title.en).toBe("First");
+    expect(result.current.draft.rounds[1]?.settings.isWarmUp).toBe(false);
+  });
+});
+
+describe("useQuizshowDraft history guards", () => {
+  const stamp = "2026-10-19T10:00:00.000Z";
+
+  function renderDraft() {
+    return renderHook(() => useQuizshowDraft(storedQuiz("Night", stamp)));
+  }
+
+  it("records no step and keeps the redo for an edit that changes nothing", () => {
+    const { result } = renderDraft();
+    act(() => result.current.setQuizField("title", "Night"));
+    expect(result.current.canUndo).toBe(false);
+
+    act(() => result.current.removeRound(1));
+    act(() => result.current.undo?.());
+    act(() => result.current.setQuizField("title", "Night"));
+
+    expect(result.current.canRedo).toBe(true);
+  });
+
+  it("undoes a removal through undoIfLatest while it is the latest change", () => {
+    const { result } = renderDraft();
+    const draftBefore = result.current.draft;
+    act(() => result.current.removeRound(1));
+
+    const onUndone = vi.fn();
+    act(() => result.current.undoIfLatest?.(draftBefore, onUndone));
+
+    expect(onUndone).toHaveBeenCalledTimes(1);
+    expect(result.current.draft.rounds).toHaveLength(2);
+  });
+
+  it("leaves a later change alone when undoIfLatest no longer matches", () => {
+    const { result } = renderDraft();
+    const draftBefore = result.current.draft;
+    act(() => result.current.removeRound(1));
+    act(() => result.current.setQuizField("title", "Later edit"));
+
+    const onUndone = vi.fn();
+    act(() => result.current.undoIfLatest?.(draftBefore, onUndone));
+
+    expect(onUndone).not.toHaveBeenCalled();
+    expect(result.current.draft.title).toBe("Later edit");
+    expect(result.current.draft.rounds).toHaveLength(1);
+  });
+
+  it("adds a question mid-round as one undo step", () => {
+    const { result } = renderDraft();
+    const firstKey = result.current.draft.rounds[1]?.questions[0]?.draftKey;
+
+    act(() => result.current.addQuestionAt?.(1, 0));
+
+    const questions = result.current.draft.rounds[1]?.questions ?? [];
+    expect(questions).toHaveLength(2);
+    expect(questions[1]?.draftKey).toBe(firstKey);
+    expect(questions[0]?.draftKey).not.toBe(firstKey);
+
+    act(() => result.current.undo?.());
+
+    expect(result.current.draft.rounds[1]?.questions).toHaveLength(1);
+    expect(result.current.canUndo).toBe(false);
   });
 });

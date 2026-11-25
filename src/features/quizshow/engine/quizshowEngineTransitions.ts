@@ -10,8 +10,12 @@ import {
   type QuizshowPodiumEntry,
   type QuizshowScoresScope,
 } from "../../../shared/contracts/quizshow";
-import { isQuizRoundKind, isWheelRoundKind } from "../quizshowWheel";
-import { competitionRanks } from "./quizshowScoring";
+import {
+  isInWheelRange,
+  isQuizRoundKind,
+  isWheelRoundKind,
+} from "../quizshowWheel";
+import { buildRankIndex } from "./quizshowEngineRanks";
 import {
   activePlayers,
   advanceCursor,
@@ -19,13 +23,17 @@ import {
   entrantTotals,
   extraTimeMs,
   findPlayer,
+  isActivePlayer,
+  isAwayAt,
   isOpenStatus,
   mintId,
   openLimitMs,
   ownDeadline,
   questionAt,
+  readPhaseMsFor,
   roundAt,
   setSessionStatus,
+  shownOptionsOf,
   voteLimitMs,
   writeLimitMs,
   type QuizshowEngineContext,
@@ -33,6 +41,7 @@ import {
 import { scoreQuestionOnce } from "./quizshowEngineScoringStep";
 import type {
   QuizshowEngineEffect,
+  QuizshowEnginePlayer,
   QuizshowEngineQuestionPlay,
   QuizshowEngineState,
   QuizshowEngineVoteOption,
@@ -49,6 +58,9 @@ export const QUIZSHOW_ENGINE_QUESTION_PHASES: readonly QuizshowPhase[] = [
 
 /** Phases that take answers or votes and close early once everyone is done. */
 const SUBMISSION_PHASES: readonly QuizshowPhase[] = ["open", "write", "vote"];
+
+/** The phases a returning player can still answer the question in play (contract 6.2). */
+const RETURN_PHASES: readonly QuizshowPhase[] = ["read", "open", "write"];
 
 /** The no-op and stale rule shared by every moving command. */
 export function checkMovingCommand(
@@ -75,7 +87,7 @@ function isStillToSubmit(
   const play = state.current;
   if (play === null || !play.eligiblePlayerIds.includes(playerId)) return false;
   const player = findPlayer(state, playerId);
-  if (player === undefined || player.isRemoved) return false;
+  if (player === undefined || !isActivePlayer(player)) return false;
   return state.cursor.phase === "vote"
     ? !play.votes.some((vote) => vote.voterPlayerId === playerId)
     : !play.answers.some((answer) => answer.playerId === playerId);
@@ -92,7 +104,12 @@ function isAwaitedSubmitter(
   return deadline === null || now <= deadline + QUIZSHOW_LIMITS.answerGraceMs;
 }
 
-/** Opens a question at its first phase and freezes who may play it. */
+/**
+ * Opens a question at its first phase and freezes who may play it: every
+ * active player who is not away (contract 6.2). A quiz round reads for a
+ * length scaled to the text (contract 6.12); in teams play a talk beat follows
+ * the read inside the same phase (contract 6.20).
+ */
 export function openQuestion(
   state: QuizshowEngineState,
   roundIndex: number,
@@ -111,7 +128,25 @@ export function openQuestion(
       `Pulse Live demo ${state.sessionId} has no question ${roundIndex}.${questionIndex}.`,
     );
   }
-  const eligiblePlayers = activePlayers(state);
+  const presentPlayers = activePlayers(state);
+  const eligiblePlayers = presentPlayers.filter(
+    (player) => !isAwayAt(player, now),
+  );
+  const awayPlayerIds = presentPlayers
+    .filter((player) => isAwayAt(player, now))
+    .map((player) => player.playerId);
+  const isQuiz = isQuizRoundKind(round.kind);
+  const readMs = isQuiz
+    ? readPhaseMsFor(
+        question,
+        state.quiz.languages,
+        shownOptionsOf(state, question),
+      )
+    : 0;
+  const talkMs =
+    isQuiz && state.playMode === "teams"
+      ? round.settings.talkSeconds * 1000
+      : 0;
   state.current = {
     questionId: question.id,
     roundIndex,
@@ -130,9 +165,14 @@ export function openQuestion(
     teamPoints: {},
     tooCloseFakeCounts: {},
     myReveals: {},
+    awayPlayerIds,
+    readMs,
+    streakBeforeByPlayer: {},
+    keyOverride: null,
+    acceptedTexts: [],
+    wasCorrected: false,
   };
-  const isQuiz = isQuizRoundKind(round.kind);
-  const limitMs = isQuiz ? QUIZSHOW_LIMITS.readPhaseMs : writeLimitMs(round);
+  const limitMs = isQuiz ? readMs + talkMs : writeLimitMs(round);
   advanceCursor(state, {
     phase: isQuiz ? "read" : "write",
     roundIndex,
@@ -140,8 +180,57 @@ export function openQuestion(
     now,
     durationMs: limitMs,
     extraTimeMs: isQuiz ? null : extraTimeMs(limitMs),
+    talkStartsAt: talkMs > 0 ? now + readMs : null,
   });
   return [{ kind: "phase_changed" }, { kind: "answer_count_changed" }];
+}
+
+/**
+ * Gives an active player a place in the question in play while it still takes
+ * answers (`read`, `open`, `write`): an away player whose socket came back
+ * (contract 6.2), or with `isRejoin` a player who joined again after leaving
+ * and had no place at the open (contract 6.14). Anywhere else they play from
+ * the next question. The browser never sets `disconnectedAt`, so in demo only
+ * the rejoin path admits anyone; the away path is ported for parity.
+ */
+export function returnAwayPlayer(
+  state: QuizshowEngineState,
+  playerId: string,
+  _now: number,
+  isRejoin = false,
+): QuizshowEngineEffect[] {
+  const play = state.current;
+  const player = findPlayer(state, playerId);
+  if (
+    state.cursor.status !== "running" ||
+    !RETURN_PHASES.includes(state.cursor.phase) ||
+    play === null ||
+    player === undefined ||
+    !isActivePlayer(player)
+  ) {
+    return [];
+  }
+  const isAway = play.awayPlayerIds.includes(playerId);
+  const hasNoPlace = isRejoin && !play.eligiblePlayerIds.includes(playerId);
+  if (!isAway && !hasNoPlace) return [];
+  admitToPlay(play, player);
+  return [{ kind: "answer_count_changed" }];
+}
+
+function admitToPlay(
+  play: QuizshowEngineQuestionPlay,
+  player: QuizshowEnginePlayer,
+): void {
+  const { playerId } = player;
+  if (!play.eligiblePlayerIds.includes(playerId)) {
+    play.eligiblePlayerIds.push(playerId);
+  }
+  if (player.hasExtraTime && !play.extraTimePlayerIds.includes(playerId)) {
+    play.extraTimePlayerIds.push(playerId);
+  }
+  play.awayPlayerIds = play.awayPlayerIds.filter(
+    (awayPlayerId) => awayPlayerId !== playerId,
+  );
 }
 
 /** `read` to `open` with the question's limit and its extra time. */
@@ -175,7 +264,90 @@ export function openRoundIntro(
     durationMs: null,
     extraTimeMs: null,
   });
+  armAutoAdvance(state, now);
   return [{ kind: "phase_changed" }];
+}
+
+/** The round row is the warm-up (contract 6.19): its questions score 0. */
+export function isWarmUpRound(
+  state: QuizshowEngineState,
+  roundIndex: number,
+): boolean {
+  return roundAt(state, roundIndex)?.settings.isWarmUp ?? false;
+}
+
+/** A warm-up question or a poll scores nobody, so `host:next` from its reveal moves on with no scores frame (contract 6.19, 6.22). */
+export function skipsScoresAfterReveal(state: QuizshowEngineState): boolean {
+  const play = state.current;
+  if (play === null) return false;
+  const question = questionAt(state, play.roundIndex, play.questionIndex);
+  if (question === null) return false;
+  return isWarmUpRound(state, play.roundIndex) || question.type === "poll";
+}
+
+/**
+ * True when the cursor's row is a quiz round marked warm-up (contract 6.19):
+ * its questions scored nobody, so the round can end with no leaderboard. A
+ * warm-up inside a wheel range (a stored quiz from before validation refused
+ * it) keeps the leaderboard, so the wheel flow runs as it does for every
+ * slice (backend `shouldSkipLeaderboard` twin).
+ */
+export function skipsLeaderboardAfterRound(
+  state: QuizshowEngineState,
+): boolean {
+  const { roundIndex } = state.cursor;
+  const round = roundIndex === null ? null : roundAt(state, roundIndex);
+  return (
+    roundIndex !== null &&
+    round !== null &&
+    isQuizRoundKind(round.kind) &&
+    round.settings.isWarmUp &&
+    !isInWheelRange(state.quiz.rounds, roundIndex)
+  );
+}
+
+/** How long the phase waits before moving on by itself (contract 6.16); null where it never does. */
+function autoAdvanceDelayMs(state: QuizshowEngineState): number | null {
+  const { phase, roundIndex } = state.cursor;
+  if (phase === "round_intro") return QUIZSHOW_LIMITS.autoAdvanceRoundIntroMs;
+  if (phase === "scores") return QUIZSHOW_LIMITS.autoAdvanceScoresMs;
+  if (phase !== "reveal" || roundIndex === null) return null;
+  // Caption This and Drag Name reveals wait for the host to pick a favourite.
+  const round = roundAt(state, roundIndex);
+  const isTimedReveal =
+    round !== null &&
+    (isQuizRoundKind(round.kind) || round.kind === "lie_detector");
+  return isTimedReveal ? QUIZSHOW_LIMITS.autoAdvanceRevealMs : null;
+}
+
+/**
+ * Arms or clears `cursor.autoAdvanceAt` for the phase the cursor is in
+ * (contract 6.16): set from `now` on `round_intro`, a quiz or Lie Detector
+ * `reveal` and `scores` while auto-advance is on and the session runs; null
+ * everywhere else. Entering a phase, turning it on mid-phase and a resume all
+ * call it with the time of that change, so a resume waits the full duration.
+ */
+export function armAutoAdvance(state: QuizshowEngineState, now: number): void {
+  const delayMs =
+    state.isAutoAdvanceOn && state.cursor.status === "running"
+      ? autoAdvanceDelayMs(state)
+      : null;
+  state.cursor.autoAdvanceAt = delayMs === null ? null : now + delayMs;
+}
+
+/** The armed auto-advance came due: the tick runs the same path as `host:next`. */
+export function isAutoAdvanceDue(
+  state: QuizshowEngineState,
+  now: number,
+): boolean {
+  const { autoAdvanceAt, status } = state.cursor;
+  return (
+    state.isAutoAdvanceOn &&
+    status === "running" &&
+    autoAdvanceAt !== null &&
+    autoAdvanceDelayMs(state) !== null &&
+    now >= autoAdvanceAt
+  );
 }
 
 /** Each entrant's current total, keyed by entrant id: the shape of `scoresAtLastFrame`. */
@@ -240,6 +412,7 @@ export function showScores(
     extraTimeMs: null,
   });
   recordScoresFrame(state, scope);
+  armAutoAdvance(state, now);
   return [{ kind: "phase_changed" }, { kind: "scores_shown" }];
 }
 
@@ -249,7 +422,7 @@ function podiumPlaceOf(rank: number): 1 | 2 | 3 | null {
 
 /** Every entrant ranked 3 or better, ties sharing a place. */
 export function buildPodium(state: QuizshowEngineState): QuizshowPodiumEntry[] {
-  return competitionRanks(entrantTotals(state)).flatMap(
+  return buildRankIndex(state).ranked.flatMap(
     (entry): QuizshowPodiumEntry[] => {
       const place = podiumPlaceOf(entry.rank);
       if (place === null) return [];
@@ -267,6 +440,7 @@ export function buildPodium(state: QuizshowEngineState): QuizshowPodiumEntry[] {
   );
 }
 
+/** The podium opens at step 0, every place withheld until the host reveals it (contract 6.7). */
 export function showPodium(
   state: QuizshowEngineState,
   now: number,
@@ -280,6 +454,7 @@ export function showPodium(
     now,
     durationMs: null,
     extraTimeMs: null,
+    podiumRevealedCount: 0,
   });
   recordScoresFrame(state, "final");
   state.podium = buildPodium(state);
@@ -290,15 +465,78 @@ export function showPodium(
   ];
 }
 
-/** On the podium a removal or a withdrawal reorders it; anywhere else nothing to do. */
+/** The distinct podium places, revealed in the order 3, 2, 1 (contract 6.7); a tie shares a step. */
+export function podiumStepsOf(
+  state: Pick<QuizshowEngineState, "podium">,
+): Array<1 | 2 | 3> {
+  const places = new Set((state.podium ?? []).map((entry) => entry.place));
+  return ([3, 2, 1] as const).filter((place) => places.has(place));
+}
+
+/**
+ * `host:next` on the podium shows the next place, 3rd first (contract 6.7):
+ * a new podium phase id, so the moving command rule and double taps work as
+ * for any move. The final scores frame carries over to the new phase id, so
+ * `previousScore` stays the one the podium opened with. Null once every step
+ * is shown (a null count shows every place): the night ends.
+ */
+export function revealNextPodiumStep(
+  state: QuizshowEngineState,
+  now: number,
+): QuizshowEngineEffect[] | null {
+  const stepCount = podiumStepsOf(state).length;
+  const revealedCount = state.cursor.podiumRevealedCount ?? stepCount;
+  if (revealedCount >= stepCount) return null;
+  advanceCursor(state, {
+    phase: "podium",
+    roundIndex: null,
+    questionIndex: null,
+    now,
+    durationMs: null,
+    extraTimeMs: null,
+    podiumRevealedCount: revealedCount + 1,
+  });
+  const scoresFrame = state.lastScoresFrame;
+  if (scoresFrame !== null && scoresFrame.scope === "final") {
+    state.lastScoresFrame = { ...scoresFrame, phaseId: state.cursor.phaseId };
+  }
+  return [
+    { kind: "phase_changed" },
+    { kind: "podium_shown" },
+    { kind: "scores_shown" },
+  ];
+}
+
+/**
+ * On the podium a removal, a leave or a withdrawal reorders it; anywhere else
+ * nothing to do. The rebuilt podium never shows a place the host has not
+ * revealed: the count becomes the longest leading run of the new steps whose
+ * places were already shown. A null count (every place shown) stays null.
+ */
 export function refreshPodiumIfShown(
   state: QuizshowEngineState,
 ): QuizshowEngineEffect[] {
   if (state.cursor.phase !== "podium") return [];
+  const { cursor } = state;
+  const previousCount = cursor.podiumRevealedCount;
+  const revealedPlaces =
+    previousCount === null
+      ? null
+      : new Set<number>(podiumStepsOf(state).slice(0, previousCount));
   state.podium = buildPodium(state);
-  return [{ kind: "podium_shown" }];
+  if (revealedPlaces === null) return [{ kind: "podium_shown" }];
+  const newSteps = podiumStepsOf(state);
+  const firstHiddenStep = newSteps.findIndex(
+    (place) => !revealedPlaces.has(place),
+  );
+  const nextCount = firstHiddenStep === -1 ? newSteps.length : firstHiddenStep;
+  if (nextCount === previousCount) return [{ kind: "podium_shown" }];
+  cursor.podiumRevealedCount = nextCount;
+  // The count lives on the cursor, so viewers get it with a fresh phase frame.
+  return [{ kind: "phase_changed" }, { kind: "podium_shown" }];
 }
 
+/** Ends the night on its podium. A practice session keeps no results: the end frame says `hasResults: false` and `isPractice: true`, which the views read from `state.isPractice` (contract 6.9). */
 export function finishSession(
   state: QuizshowEngineState,
   now: number,
@@ -342,7 +580,8 @@ export function revealQuestion(
 ): QuizshowEngineEffect[] {
   const context = currentPlayContext(state);
   scoreQuestionOnce(state, context);
-  state.hasScoredQuestion = true;
+  // A warm-up question or a poll scores nobody, so ending after only those skips a podium of zeros.
+  if (!skipsScoresAfterReveal(state)) state.hasScoredQuestion = true;
   advanceCursor(state, {
     phase: "reveal",
     roundIndex: context.play.roundIndex,
@@ -351,6 +590,7 @@ export function revealQuestion(
     durationMs: null,
     extraTimeMs: null,
   });
+  armAutoAdvance(state, now);
   return [{ kind: "phase_changed" }, { kind: "revealed" }];
 }
 
@@ -358,16 +598,15 @@ function visibleAnswerCount(play: QuizshowEngineQuestionPlay): number {
   return play.answers.filter((answer) => !answer.isHidden).length;
 }
 
-/** The Lie Detector truth in the screen language, the other language when that one is blank. */
+/** The Lie Detector truth in the screen language (EN when the screen shows both), the other language when that one is blank. */
 function truthText(state: QuizshowEngineState): string | null {
   const { question } = currentPlayContext(state);
   if (question.type !== "prompt" || question.answer === null) return null;
   const { truth } = question.answer;
-  const screenText = truth[state.quiz.screenLanguage].trim();
+  const leadLanguage = state.quiz.screenLanguage === "pt" ? "pt" : "en";
+  const screenText = truth[leadLanguage].trim();
   if (screenText !== "") return screenText;
-  const otherText = (
-    state.quiz.screenLanguage === "en" ? truth.pt : truth.en
-  ).trim();
+  const otherText = (leadLanguage === "en" ? truth.pt : truth.en).trim();
   return otherText === "" ? null : otherText;
 }
 

@@ -3,13 +3,19 @@
  * browser, so a demo game, a dry run and a live game render the same frames.
  * `reduceQuizshowEngine` is pure from outside: it works on a clone of the
  * state, mutates that clone with the backend's rules, and returns it with the
- * frames in emission order and the ack (null on a tick). Every refusal is
+ * frames in emission order and the ack (null on a tick). A tick also runs
+ * auto-advance once its time has passed. Every refusal is
  * checked before anything changes, except the two notes a refusal leaves:
  * `lastHostCommandAt` (kept for parity only; the demo has no idle clock) and
  * the Lie Detector too-close count.
  */
 import { quizshowRandomFrom } from "./quizshowRandom";
-import { runHostCommand, runPlayerCommand } from "./quizshowEngineCommands";
+import {
+  autoAdvance,
+  runHostCommand,
+  runPlayerCommand,
+} from "./quizshowEngineCommands";
+import { refreshQuiz } from "./quizshowEngineRoster";
 import {
   createQuizshowEngineState,
   type QuizshowEngineContext,
@@ -36,8 +42,14 @@ function runAction(
   action: QuizshowEngineAction,
 ): QuizshowCommandResult | { ack: null; effects: QuizshowEngineEffect[] } {
   switch (action.type) {
-    case "tick":
-      return { ack: null, effects: tickEngine(context, action.now) };
+    case "tick": {
+      // The phase clock first; then a phase that moves on by itself whose auto-advance time has passed (contract 6.16).
+      const clockEffects = tickEngine(context, action.now);
+      return {
+        ack: null,
+        effects: [...clockEffects, ...autoAdvance(context, action.now)],
+      };
+    }
     case "player":
       return runPlayerCommand(
         context,
@@ -48,6 +60,14 @@ function runAction(
       );
     case "host":
       return runHostCommand(context, action.name, action.payload, action.now);
+    case "refreshQuiz":
+      // The demo's lobby refresh (contract 6.10): the stored quiz changed after the lobby opened.
+      return refreshQuiz(
+        context,
+        action.quiz,
+        action.sourceUpdatedAt,
+        action.now,
+      );
   }
 }
 

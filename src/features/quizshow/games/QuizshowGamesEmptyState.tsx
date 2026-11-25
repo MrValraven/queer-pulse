@@ -102,8 +102,17 @@ export function QuizshowGamesEmptyState({
       <QuizshowTemplatePicker
         isOpen={isTemplatePickerOpen}
         isAdultsAllowed
+        isGameScope
         onClose={() => setIsTemplatePickerOpen(false)}
         onPick={(card) => void startFromTemplate(card)}
+        onStartBlank={() => {
+          setIsTemplatePickerOpen(false);
+          onStartNewGame("blank");
+        }}
+        onCopyFromEvent={() => {
+          setIsTemplatePickerOpen(false);
+          onStartNewGame("copy");
+        }}
       />
     </section>
   );

@@ -6,9 +6,16 @@ import type {
   QuizshowRoundInput,
 } from "../../../shared/contracts/quizshow";
 import { QUIZSHOW_QUIZ_PROBLEM_CODES } from "../../../shared/contracts/quizshow";
-import { defaultRoundSettings, newQuestion } from "./quizshowDraft";
+import {
+  blankDraft,
+  defaultRoundSettings,
+  newQuestion,
+  newRound,
+  newWheel,
+} from "./quizshowDraft";
 import {
   isStructuralProblem,
+  problemsOfRound,
   quizshowProblemsFor,
   quizshowProblemsFromServer,
   usedLanguagesOf,
@@ -29,7 +36,7 @@ function validMultipleChoice(): Extract<
       { id: "a", text: filled("One") },
       { id: "b", text: filled("Two") },
     ],
-    answer: { correctIndex: 0 },
+    answer: { correctIndexes: [0] },
   };
 }
 
@@ -54,6 +61,34 @@ function wheelRow(
   return roundOf(questions, {
     kind: "wheel",
     settings: { ...defaultRoundSettings(), sliceCount },
+  });
+}
+
+function validClosest(tolerance: {
+  mode: "exact" | "absolute" | "percent";
+  amount: number;
+}): QuizshowQuestionInput {
+  return {
+    ...newQuestion("closest_number", "quiz"),
+    prompt: filled("When?"),
+    answer: { value: 1969, tolerance },
+  };
+}
+
+function validPoll(): QuizshowQuestionInput {
+  return {
+    ...newQuestion("poll", "quiz"),
+    prompt: filled("Which one?"),
+    options: [
+      { id: "a", text: filled("One") },
+      { id: "b", text: filled("Two") },
+    ],
+  };
+}
+
+function warmUpRound(): QuizshowRoundInput {
+  return roundOf([validMultipleChoice()], {
+    settings: { ...defaultRoundSettings(), isWarmUp: true },
   });
 }
 
@@ -159,7 +194,10 @@ const cases: Array<[QuizshowQuizProblemCode, () => Body]> = [
         ],
       }),
   ],
-  ["answer_out_of_range", () => withQuestion({ answer: { correctIndex: 5 } })],
+  [
+    "answer_out_of_range",
+    () => withQuestion({ answer: { correctIndexes: [5] } }),
+  ],
   [
     "order_answer_not_permutation",
     () =>
@@ -217,6 +255,27 @@ const cases: Array<[QuizshowQuizProblemCode, () => Body]> = [
           kind: "caption_this",
         }),
       ]),
+  ],
+  [
+    "correct_option_missing",
+    () => withQuestion({ answer: { correctIndexes: [] } }),
+  ],
+  [
+    "too_many_correct_options",
+    () => withQuestion({ answer: { correctIndexes: [0, 1] } }),
+  ],
+  [
+    "tolerance_out_of_range",
+    () => bodyOf([roundOf([validClosest({ mode: "percent", amount: 70 })])]),
+  ],
+  [
+    "poll_in_party_round",
+    () => bodyOf([roundOf([validPoll()], { kind: "drag_name" })]),
+  ],
+  ["slow_reveal_needs_picture", () => withQuestion({ mediaReveal: "slow" })],
+  [
+    "warm_up_not_first",
+    () => bodyOf([roundOf([validMultipleChoice()]), warmUpRound()]),
   ],
 ];
 
@@ -292,7 +351,7 @@ describe("quizshowProblemsFor", () => {
           [
             {
               ...validMultipleChoice(),
-              answer: { correctIndex: 9 },
+              answer: { correctIndexes: [9] },
               prompt: filled(""),
             },
           ],
@@ -458,6 +517,104 @@ describe("quizshowProblemsFor with wheel rows", () => {
         questionIndex: 0,
         language: null,
       },
+    ]);
+  });
+});
+
+describe("quizshowProblemsFor with the Pulse Live v2 rules", () => {
+  it("accepts a poll, several correct options and every margin inside its range", () => {
+    const body = bodyOf([
+      roundOf([
+        validPoll(),
+        {
+          ...validMultipleChoice(),
+          options: [
+            { id: "a", text: filled("One") },
+            { id: "b", text: filled("Two") },
+            { id: "c", text: filled("Three") },
+          ],
+          answer: { correctIndexes: [0, 2] },
+        },
+        validClosest({ mode: "exact", amount: 0 }),
+        validClosest({ mode: "absolute", amount: 2.5 }),
+        validClosest({ mode: "percent", amount: 50 }),
+      ]),
+    ]);
+    expect(codesOf(body)).toEqual([]);
+  });
+
+  it("refuses each margin outside its mode's range", () => {
+    for (const tolerance of [
+      { mode: "exact" as const, amount: 1 },
+      { mode: "absolute" as const, amount: 0 },
+      { mode: "percent" as const, amount: 0 },
+      { mode: "percent" as const, amount: 51 },
+      { mode: "percent" as const, amount: 2.5 },
+    ]) {
+      expect(codesOf(bodyOf([roundOf([validClosest(tolerance)])]))).toEqual([
+        "tolerance_out_of_range",
+      ]);
+    }
+    expect(isStructuralProblem("tolerance_out_of_range")).toBe(true);
+  });
+
+  it("lets the first non-wheel row be the warm-up when no wheel range holds it", () => {
+    expect(codesOf(bodyOf([warmUpRound(), ...completeRounds(1)]))).toEqual([]);
+    // A row right behind a wheel is one of its slices, drawn only when the wheel lands on it.
+    const onWheelSlice = quizshowProblemsFor(
+      bodyOf([wheelRow(), warmUpRound(), ...completeRounds(1)]),
+      { isAdultsEvent: true },
+    );
+    expect(onWheelSlice).toEqual([
+      {
+        code: "warm_up_not_first",
+        roundIndex: 1,
+        questionIndex: null,
+        language: null,
+      },
+    ]);
+    const secondRow = quizshowProblemsFor(
+      bodyOf([...completeRounds(1), warmUpRound()]),
+      { isAdultsEvent: true },
+    );
+    expect(secondRow).toEqual([
+      {
+        code: "warm_up_not_first",
+        roundIndex: 1,
+        questionIndex: null,
+        language: null,
+      },
+    ]);
+    expect(isStructuralProblem("warm_up_not_first")).toBe(true);
+  });
+
+  it("needs no answer on a poll and names a poll in a party round", () => {
+    expect(codesOf(bodyOf([roundOf([validPoll()])]))).toEqual([]);
+    expect(
+      codesOf(bodyOf([roundOf([validPoll()], { kind: "lie_detector" })])),
+    ).toEqual(["poll_in_party_round"]);
+  });
+
+  it("asks for a picture behind a slow reveal in a quiz round only", () => {
+    expect(codesOf(withQuestion({ mediaReveal: "slow" }))).toEqual([
+      "slow_reveal_needs_picture",
+    ]);
+    expect(
+      codesOf(withQuestion({ mediaReveal: "slow", mediaRef: "uploads/a.jpg" })),
+    ).toEqual([]);
+  });
+
+  it("lists one row's problems with problemsOfRound", () => {
+    const draft = {
+      ...blankDraft(),
+      title: "Night",
+      rounds: [newRound("quiz"), newWheel()],
+    };
+    const firstRow = problemsOfRound(draft, 0);
+    expect(firstRow.length).toBeGreaterThan(0);
+    expect(firstRow.every((found) => found.roundIndex === 0)).toBe(true);
+    expect(problemsOfRound(draft, 1).map((found) => found.code)).toEqual([
+      "wheel_too_few_slices",
     ]);
   });
 });

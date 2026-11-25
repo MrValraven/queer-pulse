@@ -2184,6 +2184,17 @@ export const members: Catalog = {
   "badges.category.hosting": "Organização",
   "badges.category.milestones": "Marcos",
   "badges.category.platform": "Plataforma",
+  "badges.category.quizNights": "Noites de quiz",
+  "badges.quiz.count": "×{count}",
+  "badges.quiz.countLabel_one": "Ganho uma vez",
+  "badges.quiz.countLabel_other": "Ganho {count} vezes",
+  "badges.quiz.winsHeading": "Vitórias",
+  "badges.quiz.maskedEvent": "Noite de quiz QueerPulse",
+  "badges.quiz.winLine": "{event}, jogo {number}",
+  "badges.quiz.howChecked":
+    "Dado a quem vence um jogo numa noite de quiz oficial da QueerPulse",
+  "badges.quiz.adultsDefaultHidden":
+    "As vitórias em eventos 18+ começam escondidas do teu perfil",
   "badges.catalog.localScout.name": "Radar do Bairro",
   "badges.catalog.localScout.locked": "Guarda 3 sítios no diretório Local",
   "badges.catalog.localScout.earned": "Guardaste 3 sítios no diretório Local",

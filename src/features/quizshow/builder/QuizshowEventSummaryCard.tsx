@@ -33,9 +33,11 @@ const NO_PICKED_PREVIEWS: ReadonlyMap<string, string> = new Map();
 function QuizshowEventSummaryLoaded({
   scope,
   data,
+  isDraftEvent,
 }: {
   scope: QuizshowEventScope;
   data: QuizshowQuizResponse;
+  isDraftEvent: boolean;
 }) {
   const { t } = useTranslation();
   const headingId = useId();
@@ -44,7 +46,7 @@ function QuizshowEventSummaryLoaded({
   const { quiz, isAdultsEvent } = data;
   const tryOut = useSavedQuizTryOut(quiz, isAdultsEvent);
   const lobbyProblemCount = quizshowProblemsFromServer(data.problems).length;
-  const status = summaryStatusOf(data, lobbyProblemCount, t);
+  const status = summaryStatusOf(data, lobbyProblemCount, t, isDraftEvent);
   const shownLiveSession = useLastPresent(data.liveSession);
   const hasShownResults = useLastPresent(data.hasResults ? true : null);
   const coverTitle = quiz?.title.trim() ? quiz.title : eventTitle;
@@ -108,6 +110,7 @@ function QuizshowEventSummaryLoaded({
                 scope={scope}
                 rounds={quiz.rounds}
                 appearance="secondary"
+                isPracticeOnly={isDraftEvent}
                 isBlocked={lobbyProblemCount > 0}
                 blockedReason={t("quizshow:builder.summary.lobbyBlocked")}
               />
@@ -135,14 +138,26 @@ function QuizshowEventSummaryLoaded({
  * The Manage page's Live game tab: a summary of the event's quiz in the app's
  * cream style. The quiz's title slide, the lobby state, Open the editor (the
  * full-screen studio), Try it and Open lobby, the open game's panel, and the
- * kept results.
+ * kept results. A draft event (item 53) offers a practice lobby only.
  */
-export function QuizshowEventSummaryCard({ slug }: { slug: string }) {
+export function QuizshowEventSummaryCard({
+  slug,
+  isDraftEvent = false,
+}: {
+  slug: string;
+  isDraftEvent?: boolean;
+}) {
   const { t } = useTranslation();
   const scope = useMemo(() => eventScope(slug), [slug]);
   const query = useQuizshowQuiz(scope, { isEnabled: true });
   if (query.data) {
-    return <QuizshowEventSummaryLoaded scope={scope} data={query.data} />;
+    return (
+      <QuizshowEventSummaryLoaded
+        scope={scope}
+        data={query.data}
+        isDraftEvent={isDraftEvent}
+      />
+    );
   }
   if (query.isPending) {
     return (

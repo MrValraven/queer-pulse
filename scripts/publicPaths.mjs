@@ -62,9 +62,13 @@ export const GATED_PATTERNS = [
   "/create-gathering",
   // Mirrors authGate.ts
   "/create-gathering/*",
-  // Pulse Live's player screen (quizshow), members only. The presenter and the remote sit under /gatherings/* above.
+  // Pulse Live (quizshow). Mirrors authGate.ts: the join page `/play/:code`
+  // and the TV page `/play/tv` stay public, so there is no `/play/*`.
   "/play",
-  "/play/*",
+  "/play/games",
+  "/play/games/*",
+  "/play/remote",
+  "/play/remote/*",
   // A guest community's collab invite. Mirrors authGate.ts.
   "/collab-invites",
   "/collab-invites/*",

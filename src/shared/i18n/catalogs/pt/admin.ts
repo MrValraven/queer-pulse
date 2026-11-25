@@ -9852,6 +9852,16 @@ export const admin: Catalog = {
   "moderation.action.quizshowTemplateUnpublished":
     "Despublicou um modelo de quiz",
   "moderation.action.quizshowTemplateDeleted": "Apagou um modelo de quiz",
+  "moderation.action.quizBadgeAttached": "Associou um crachá de quiz a um jogo",
+  "moderation.action.quizBadgeDetached": "Tirou um crachá de quiz de um jogo",
+  "moderation.action.quizBadgeAwardedAfterGame":
+    "Deu um crachá de quiz depois do jogo",
+  "moderation.action.quizGameWinRevoked":
+    "Revogou a vitória de um jogo de quiz",
+  "moderation.action.quizBadgeDefinitionArchived": "Arquivou um crachá de quiz",
+  "moderation.action.quizBadgeDefinitionRestored":
+    "Restaurou um crachá de quiz",
+  "moderation.action.quizBadgeDefinitionDeleted": "Apagou um crachá de quiz",
   "governance.audit.actionType.quizshow_game_ended":
     "Jogo do Pulse Live terminado",
   "governance.audit.actionType.quizshow_game_deleted":
@@ -9862,6 +9872,20 @@ export const admin: Catalog = {
     "Modelo de quiz despublicado",
   "governance.audit.actionType.quizshow_template_deleted":
     "Modelo de quiz apagado",
+  "governance.audit.actionType.quiz_badge_attached":
+    "Associou um crachá de quiz a um jogo",
+  "governance.audit.actionType.quiz_badge_detached":
+    "Tirou um crachá de quiz de um jogo",
+  "governance.audit.actionType.quiz_badge_awarded_after_game":
+    "Deu um crachá de quiz depois do jogo",
+  "governance.audit.actionType.quiz_game_win_revoked":
+    "Revogou a vitória de um jogo de quiz",
+  "governance.audit.actionType.quiz_badge_definition_archived":
+    "Arquivou um crachá de quiz",
+  "governance.audit.actionType.quiz_badge_definition_restored":
+    "Restaurou um crachá de quiz",
+  "governance.audit.actionType.quiz_badge_definition_deleted":
+    "Apagou um crachá de quiz",
   "governance.audit.actionType.lead_persona_linked":
     "Contacto ligado a uma persona",
   "governance.audit.actionType.lead_persona_unlinked":

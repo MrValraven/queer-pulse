@@ -3447,6 +3447,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-24.headline":
+    "Pulse Live adds TV pairing, practice lobbies and winner badges; listings load in place.",
   "changelog.releases.2026-11-23.headline":
     "Community badges, Quick Exit on every page and tighter privacy for everyone.",
   "changelog.releases.2026-11-22.headline":
@@ -3829,6 +3831,48 @@ export const marketing: Catalog = {
     "Start a community from your phone in three steps",
   "changelog.entries.quick-start-community.body":
     "Name it, say who it's for and open it, then a checklist on its page lists what to add next.",
+  "changelog.entries.quiz-win-badges.title":
+    "Winners of official quiz nights earn badges",
+  "changelog.entries.quiz-win-badges.body":
+    "Our team attaches badges to an event's quiz games, and winners find each one on their Badges page.",
+  "changelog.entries.pulse-live-tv-pairing.title":
+    "Pair the big screen with a code",
+  "changelog.entries.pulse-live-tv-pairing.body":
+    "Open /play/tv on any TV and type its code on your remote; helpers can run the game from their phone.",
+  "changelog.entries.pulse-live-studio-tools.title":
+    "Build quizzes faster in the studio",
+  "changelog.entries.pulse-live-studio-tools.body":
+    "Paste questions or import a CSV, try one round on its own and print host and answer sheets.",
+  "changelog.entries.pulse-live-practice-and-teams.title":
+    "Rehearse in a practice lobby",
+  "changelog.entries.pulse-live-practice-and-teams.body":
+    "Practice games keep no results, teams get a beat to talk it over and a warm-up round can open the night.",
+  "changelog.entries.pulse-live-giving-link.title":
+    "Invite players to give at the end",
+  "changelog.entries.pulse-live-giving-link.body":
+    "When an event's community takes donations, the end screen links everyone to its giving page.",
+  "changelog.entries.pulse-live-steadier-nights.title":
+    "Keep live games steady on busy Wi-Fi",
+  "changelog.entries.pulse-live-steadier-nights.body":
+    "Phones reconnect by themselves after a blip or an update, and every refusal names its reason.",
+  "changelog.entries.pulse-live-join-from-link.title":
+    "Join a game straight from its link",
+  "changelog.entries.pulse-live-join-from-link.body":
+    "Signed out, the join link shows the game's name and status, with one tap to sign in and play.",
+  "changelog.entries.community-insights-load-again.title":
+    "Community insights open again",
+  "changelog.entries.community-insights-load-again.body":
+    "Member counts and weekly trends load again for the people who run a community.",
+  "changelog.entries.iphone-install-screenshots.title":
+    "iPhone install steps come with screenshots",
+  "changelog.entries.iphone-install-screenshots.body":
+    "Each step shows Safari's own screens in your language, with the button to tap circled.",
+  "changelog.entries.back-keeps-your-place.title": "Back keeps your place",
+  "changelog.entries.back-keeps-your-place.body":
+    "Going back lands where you left the page, even on long lists that take a moment to fill in.",
+  "changelog.entries.listing-page-skeleton.title": "See listings load in place",
+  "changelog.entries.listing-page-skeleton.body":
+    "Opening a listing shows the page's outline while it loads, then it fades in with every photo ready.",
   "changelog.entries.vj-default-cut.title": "VJ screens cut by default",
   "changelog.entries.vj-default-cut.body":
     "A new show switches clips instantly, and fades or other transitions are one tap away on the remote.",
@@ -11253,12 +11297,7 @@ export const marketing: Catalog = {
   "directory.detail.visitWebsite": "Visit website",
   "directory.detail.getInTouch": "Get in touch",
   "directory.detail.claimsFiledLink": "See the claims you've filed",
-  "directory.detail.loader.ariaLabel": "Opening this place",
-  "directory.detail.loader.title": "Opening this place",
-  "directory.detail.loader.caption": "Worth seeing it all at once.",
-  "directory.detail.loader.steps.fetchingListing": "Finding the listing",
-  "directory.detail.loader.steps.preparingDetails": "Laying out the details",
-  "directory.detail.loader.steps.loadingPhotos": "Bringing in the photos",
+  "directory.detail.loadingLabel": "Loading listing",
   "directory.detail.notFound.title": "We couldn't find this place",
   "directory.detail.notFound.body":
     "This listing may have been taken down, or the link might be out of date. Everywhere else that's open to us is still in the directory.",

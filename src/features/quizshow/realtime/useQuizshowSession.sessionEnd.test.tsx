@@ -1,13 +1,16 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   QuizshowSessionEnd,
   QuizshowSessionState,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowClientAction } from "./quizshowClientStore";
-import { useQuizshowSession } from "./useQuizshowSession";
+import {
+  QUIZSHOW_RESULTS_SETTLE_DELAY_MS,
+  useQuizshowSession,
+} from "./useQuizshowSession";
 
 interface CapturedClientOptions {
   onAction: (action: QuizshowClientAction) => void;
@@ -118,6 +121,8 @@ const SESSION_END: QuizshowSessionEnd = {
   podium: [],
   nextEvent: null,
   hasResults: true,
+  isPractice: false,
+  giving: null,
 };
 
 beforeEach(() => {
@@ -125,6 +130,16 @@ beforeEach(() => {
   demoEngineMock.capturedOptions.length = 0;
   demoEngineMock.sessionStateFor.mockReset();
   demoModeMock.isDemo = false;
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
+const EVENT_HOST_STATE = hostStateWith({
+  kind: "event",
+  gameId: null,
+  eventSlug: "quiz-night",
 });
 
 describe("useQuizshowSession session end", () => {
@@ -150,20 +165,13 @@ describe("useQuizshowSession session end", () => {
     expect(invalidateSpy).toHaveBeenCalledTimes(3);
   });
 
-  it("refreshes the event as before when an event session ends", () => {
+  it("refreshes the event and its Win to earn when an event session ends", () => {
     const queryClient = new QueryClient();
     const invalidateSpy = vi
       .spyOn(queryClient, "invalidateQueries")
       .mockResolvedValue(undefined);
     renderSession(queryClient);
-    pushAction({
-      event: "session:state",
-      payload: hostStateWith({
-        kind: "event",
-        gameId: null,
-        eventSlug: "quiz-night",
-      }),
-    });
+    pushAction({ event: "session:state", payload: EVENT_HOST_STATE });
     pushAction({ event: "session:end", payload: SESSION_END });
     expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ["event"] });
     expect(invalidateSpy).toHaveBeenCalledWith({
@@ -172,7 +180,76 @@ describe("useQuizshowSession session end", () => {
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ["quizshow", "results", "quiz-night", false],
     });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["quizshow", "win-badges-preview", "quiz-night", false],
+    });
+    expect(invalidateSpy).toHaveBeenCalledTimes(4);
+  });
+
+  it("reads the results, the badges and Win to earn once more after the settle delay", () => {
+    vi.useFakeTimers();
+    const queryClient = new QueryClient();
+    const invalidateSpy = vi
+      .spyOn(queryClient, "invalidateQueries")
+      .mockResolvedValue(undefined);
+    renderSession(queryClient);
+    pushAction({ event: "session:state", payload: EVENT_HOST_STATE });
+    pushAction({ event: "session:end", payload: SESSION_END });
+    expect(invalidateSpy).toHaveBeenCalledTimes(4);
+    expect(invalidateSpy).not.toHaveBeenCalledWith({
+      queryKey: ["recognition"],
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(QUIZSHOW_RESULTS_SETTLE_DELAY_MS - 1);
+    });
+    expect(invalidateSpy).toHaveBeenCalledTimes(4);
+
+    invalidateSpy.mockClear();
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["quizshow", "results", "quiz-night", false],
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ["recognition"] });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["quizshow", "win-badges-preview", "quiz-night", false],
+    });
     expect(invalidateSpy).toHaveBeenCalledTimes(3);
+  });
+
+  it("drops the delayed read when the session unmounts first", () => {
+    vi.useFakeTimers();
+    const queryClient = new QueryClient();
+    const invalidateSpy = vi
+      .spyOn(queryClient, "invalidateQueries")
+      .mockResolvedValue(undefined);
+    const { unmount } = renderSession(queryClient);
+    pushAction({ event: "session:state", payload: EVENT_HOST_STATE });
+    pushAction({ event: "session:end", payload: SESSION_END });
+    invalidateSpy.mockClear();
+    unmount();
+    act(() => {
+      vi.advanceTimersByTime(QUIZSHOW_RESULTS_SETTLE_DELAY_MS);
+    });
+    expect(invalidateSpy).not.toHaveBeenCalled();
+  });
+
+  it("schedules no delayed read after a game session ends", () => {
+    vi.useFakeTimers();
+    const queryClient = new QueryClient();
+    const invalidateSpy = vi
+      .spyOn(queryClient, "invalidateQueries")
+      .mockResolvedValue(undefined);
+    renderSession(queryClient, { gameId: "game-1" });
+    pushAction({ event: "session:state", payload: hostStateWith({}) });
+    pushAction({ event: "session:end", payload: SESSION_END });
+    invalidateSpy.mockClear();
+    act(() => {
+      vi.advanceTimersByTime(QUIZSHOW_RESULTS_SETTLE_DELAY_MS);
+    });
+    expect(invalidateSpy).not.toHaveBeenCalled();
   });
 
   it("passes the 18+ flag and game id to the demo engine", () => {

@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { FiAward, FiCopy, FiTrash2 } from "react-icons/fi";
+import { FiAward, FiCopy, FiPlay, FiTrash2 } from "react-icons/fi";
 import { useParams, useSearchParams } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
 import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PageMeta } from "../../../shared/seo/PageMeta";
 import { useQuizshowQuiz } from "../api/useQuizshowQuiz";
+import { QuizshowOpenLobbyDialog } from "../builder/QuizshowOpenLobbyDialog";
 import {
   QUIZSHOW_GAME_START_COPY,
   QUIZSHOW_GAME_START_PARAM,
@@ -20,22 +21,35 @@ import {
 import { QuizshowStudioDarkStamp } from "../studio/QuizshowStudioDarkStamp";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
 import { QuizshowGameResultsPanel } from "./QuizshowGameResultsPanel";
-import { useQuizshowGameActions } from "./useQuizshowGameActions";
+import {
+  QUIZSHOW_GAME_START_OPEN,
+  QuizshowGameResultsActionsContext,
+  useQuizshowGameActions,
+  type QuizshowGameResultsActions,
+} from "./useQuizshowGameActions";
 import styles from "./QuizshowGamePage.module.css";
 
 const BACK_LINK = { to: routes.play, labelKey: "quizshow:game.back" };
 
+/** What `?start=` asked the page to open first: the source picker or the open-lobby dialog. */
+type QuizshowGameInitialStart = "copy" | "open" | null;
+
+function initialStartOf(value: string | null): QuizshowGameInitialStart {
+  if (value === QUIZSHOW_GAME_START_COPY) return "copy";
+  if (value === QUIZSHOW_GAME_START_OPEN) return "open";
+  return null;
+}
+
 /**
- * Reads `?start=copy` once, then drops it from the address with `replace`,
- * so a reload or a Back press never opens the source picker a second time.
- * The page clears it when a delete starts, so the studio a failed delete
- * brings back never reopens the picker.
+ * Reads `?start=copy` or `?start=open` once, then drops it from the address
+ * with `replace`, so a reload or a Back press never opens the source picker
+ * or the open-lobby dialog a second time. The page clears it when a delete
+ * starts, so the studio a failed delete brings back never reopens either.
  */
-function useInitialImportPicker(): [boolean, () => void] {
+function useInitialStart(): [QuizshowGameInitialStart, () => void] {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isInitialImportPicker, setIsInitialImportPicker] = useState(
-    () =>
-      searchParams.get(QUIZSHOW_GAME_START_PARAM) === QUIZSHOW_GAME_START_COPY,
+  const [initialStart, setInitialStart] = useState(() =>
+    initialStartOf(searchParams.get(QUIZSHOW_GAME_START_PARAM)),
   );
   const hasStartParam = searchParams.has(QUIZSHOW_GAME_START_PARAM);
   useEffect(() => {
@@ -49,17 +63,16 @@ function useInitialImportPicker(): [boolean, () => void] {
       { replace: true },
     );
   }, [hasStartParam, setSearchParams]);
-  const clearInitialImportPicker = useCallback(
-    () => setIsInitialImportPicker(false),
-    [],
-  );
-  return [isInitialImportPicker, clearInitialImportPicker];
+  const clearInitialStart = useCallback(() => setInitialStart(null), []);
+  return [initialStart, clearInitialStart];
 }
 
 /**
  * A game the member owns at `/play/games/:gameId`: its quiz in the studio,
  * with Show results, Duplicate game and Delete game in the studio's More
- * menu. The studio names a game that is gone or failed to load itself.
+ * menu. With results kept, Duplicate and open leads More and the results
+ * panel (item 60). The studio names a game that is gone or failed to load
+ * itself.
  */
 export function QuizshowGamePage() {
   const { t } = useTranslation();
@@ -67,8 +80,7 @@ export function QuizshowGamePage() {
   useQuizshowFramelessPage();
   const { gameId = "" } = useParams();
   const scope = useMemo(() => gameScope(gameId), [gameId]);
-  const [isInitialImportPicker, clearInitialImportPicker] =
-    useInitialImportPicker();
+  const [initialStart, clearInitialStart] = useInitialStart();
   // Set once the member confirms Delete game. The studio (and its unsaved
   // changes guard) leaves at once and this page's game read stops.
   const [isLeaving, setIsLeaving] = useState(false);
@@ -81,17 +93,38 @@ export function QuizshowGamePage() {
   const gameActions = useQuizshowGameActions({
     gameId,
     onDeleteStart: () => {
-      // The studio mounts again if the delete fails: the picker is spent by then.
-      clearInitialImportPicker();
+      // The studio mounts again if the delete fails: the picker or dialog is spent by then.
+      clearInitialStart();
       setIsResultsOpen(false);
       setIsLeaving(true);
     },
     onDeleteFailed: () => setIsLeaving(false),
   });
 
+  // The copy Duplicate and open made: its dialog waits for the quiz, so it lists the copy's rounds.
+  const lobbyRounds = query.data?.quiz?.rounds;
+  const { duplicateAndOpen, isDuplicatePending } = gameActions;
+  const resultsActions = useMemo<QuizshowGameResultsActions>(
+    () => ({
+      duplicateAndOpen,
+      isDuplicatePending,
+      closeResults: () => setIsResultsOpen(false),
+    }),
+    [duplicateAndOpen, isDuplicatePending],
+  );
+
+  // With results kept, the main action is to play the quiz again on a fresh copy (item 60).
+  const duplicateAndOpenAction: QuizshowStudioMoreAction = {
+    key: "duplicateAndOpen",
+    labelKey: "quizshow:game.duplicateAndOpen",
+    icon: FiPlay,
+    onSelect: ({ saveFirst }) => duplicateAndOpen(saveFirst),
+  };
+
   const moreActions: QuizshowStudioMoreAction[] = [
     ...(hasResults
       ? [
+          duplicateAndOpenAction,
           {
             key: "results",
             labelKey: "quizshow:game.more.results",
@@ -134,17 +167,25 @@ export function QuizshowGamePage() {
           scope={scope}
           backLink={BACK_LINK}
           moreActions={moreActions}
-          initialImportPicker={isInitialImportPicker}
+          initialImportPicker={initialStart === "copy"}
         >
-          <AnimatePresence>
-            {isResultsOpen && (
-              <QuizshowGameResultsPanel
-                key="game-results"
-                scope={scope}
-                onClose={() => setIsResultsOpen(false)}
-              />
-            )}
-          </AnimatePresence>
+          <QuizshowGameResultsActionsContext value={resultsActions}>
+            <AnimatePresence>
+              {isResultsOpen && (
+                <QuizshowGameResultsPanel
+                  key="game-results"
+                  scope={scope}
+                  onClose={() => setIsResultsOpen(false)}
+                />
+              )}
+            </AnimatePresence>
+          </QuizshowGameResultsActionsContext>
+          <QuizshowOpenLobbyDialog
+            scope={scope}
+            rounds={lobbyRounds ?? []}
+            isOpen={initialStart === "open" && lobbyRounds !== undefined}
+            onClose={clearInitialStart}
+          />
         </QuizshowStudio>
       )}
       <AnimatePresence>

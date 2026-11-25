@@ -1,36 +1,47 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { Collapse } from "../../../shared/components/ui";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type {
-  QuizshowLanguage,
-  QuizshowPhase,
-  QuizshowPlayerState,
-  QuizshowQuestionView,
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowLanguage,
+  type QuizshowPhase,
+  type QuizshowPlayerState,
+  type QuizshowQuestionView,
 } from "../../../shared/contracts/quizshow";
+import { useNow } from "../../gatherings/checkin/useNow";
 import { isPlayerState } from "../realtime/quizshowClientStore";
+import { serverNow } from "../realtime/quizshowClock";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
 import { QuizshowPodium } from "../stage/QuizshowPodium";
-import { QuizshowRoundCard } from "../stage/QuizshowRoundCard";
-import { pickQuizshowText } from "../stage/quizshowText";
+import { QuizshowStageText } from "../stage/QuizshowStageText";
+import { useQuizshowCountdown } from "../stage/useQuizshowCountdown";
 import { wheelBonusAwardCopy, wheelTitleOf } from "../stage/quizshowWheelCopy";
 import { isMyWheelBonus } from "../stage/quizshowWheelView";
 import { isQuizRoundKind, isWheelRoundKind } from "../quizshowWheel";
 import styles from "./QuizshowPlayer.module.css";
-import { QuizshowJokerButton } from "./QuizshowJokerButton";
+import { QuizshowLeaveGame } from "./QuizshowLeaveGame";
 import { QuizshowWaitDots } from "./QuizshowLockedPanel";
 import { QuizshowPartyReveal } from "./QuizshowPartyReveal";
+import { QuizshowPhaseHeading } from "./QuizshowPhaseHeading";
 import { QuizshowPlayerParty } from "./QuizshowPlayerParty";
-import { QuizshowPlayerQuestion } from "./QuizshowPlayerQuestion";
-import { QuizshowPlayerReveal } from "./QuizshowPlayerReveal";
+import {
+  QuizshowPlayerQuestion,
+  QuizshowQuestionPicture,
+} from "./QuizshowPlayerQuestion";
+import {
+  QuizshowPlaceLine,
+  QuizshowPlayerReveal,
+} from "./QuizshowPlayerReveal";
+import { QuizshowPlayerRoundIntro } from "./QuizshowPlayerRoundIntro";
 import { QuizshowPlayerScores } from "./QuizshowPlayerScores";
 import { QuizshowPlayerWheel } from "./QuizshowPlayerWheel";
+import { QuizshowReactionBar } from "./QuizshowReactionBar";
 import { QuizshowReportGameButton } from "./QuizshowReportGameButton";
 import { outcomeKeyOf } from "./quizshowRevealOutcome";
-import { vibrateForReveal } from "./quizshowVibrate";
-import { lobbyJokerTargetOf } from "./quizshowJokerTarget";
+import { isVibrationOn, vibrateForReveal } from "./quizshowVibrate";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
 
 const ANNOUNCED_PHASES: readonly QuizshowPhase[] = [
@@ -56,43 +67,132 @@ const REPORTABLE_PHASES: readonly QuizshowPhase[] = [
   "reveal",
 ];
 
-/** Buzzes once per reveal phase, once the player's own result is in, unless motion is reduced. */
+/**
+ * Buzzes once per reveal phase, once the player's own result is in, while
+ * this device keeps vibration on (item 43). Reduced motion has no say: the
+ * "Vibration" switch is its own preference.
+ */
 function useRevealVibration(
   phaseId: string,
   isRevealResultIn: boolean,
   isCorrect: boolean | null,
-  isReducedMotion: boolean,
 ) {
   const vibratedPhaseIdRef = useRef<string | null>(null);
   useEffect(() => {
-    if (!isRevealResultIn || isReducedMotion) return;
+    if (!isRevealResultIn || !isVibrationOn()) return;
     if (vibratedPhaseIdRef.current === phaseId) return;
     vibratedPhaseIdRef.current = phaseId;
     vibrateForReveal(isCorrect);
-  }, [phaseId, isRevealResultIn, isCorrect, isReducedMotion]);
+  }, [phaseId, isRevealResultIn, isCorrect]);
 }
 
-/** The question as it is read out, before answers open; the heading takes focus. */
+const TALK_CLOCK_REFRESH_MS = 250;
+
+/** "Get ready" with the breathing dots, while the phone waits for what comes next. */
+function ReadyPill() {
+  const { t } = useTranslation();
+  return (
+    <p className={styles.readyPill}>
+      {t("quizshow:player.getReady")}
+      <QuizshowWaitDots />
+    </p>
+  );
+}
+
+/**
+ * Talk it over (C6.20), mounted only in teams play with `cursor.talkStartsAt`
+ * set, so no clock runs otherwise. It opens once the server clock passes the
+ * talk start and shows the seconds left until `read` ends. While paused the
+ * talk start has not moved yet, so the frozen remainder decides: it is talk
+ * time when no more than the round's talk seconds were left. The "Get ready"
+ * pill folds away while the talk runs, so the phone asks one thing at a time.
+ */
+function TalkLine({
+  player,
+  talkStartsAt,
+  clockOffsetMs,
+}: {
+  player: QuizshowPlayerState;
+  talkStartsAt: number;
+  clockOffsetMs: number;
+}) {
+  const { t } = useTranslation();
+  const { cursor } = player;
+  const clientNow = useNow(TALK_CLOCK_REFRESH_MS).getTime();
+  const countdown = useQuizshowCountdown(cursor, clockOffsetMs, {
+    hasExtraTime: false,
+  });
+  const talkMs = (player.round?.talkSeconds ?? 0) * 1000;
+  const isTalkTime =
+    cursor.status === "paused"
+      ? cursor.pausedRemainingMs !== null && cursor.pausedRemainingMs <= talkMs
+      : serverNow(clientNow, clockOffsetMs) >= talkStartsAt;
+  const secondsLeft =
+    countdown.remainingMs === null
+      ? null
+      : Math.max(0, Math.ceil(countdown.remainingMs / 1000));
+  return (
+    <>
+      <Collapse isOpen={isTalkTime}>
+        <p className={styles.talkLine}>
+          <span className={styles.talkTitle}>
+            {t("quizshow:player.talkItOver")}
+          </span>
+          {secondsLeft !== null && (
+            <span className={styles.talkSeconds}>
+              {t("quizshow:stage.secondsLeft", { count: secondsLeft })}
+            </span>
+          )}
+        </p>
+      </Collapse>
+      {/* Inline content of the fold's flow-root panel: the read body's
+          centred text keeps the pill in the middle. */}
+      <Collapse isOpen={!isTalkTime}>
+        <ReadyPill />
+      </Collapse>
+    </>
+  );
+}
+
+/** The question as it is read out, before answers open; the heading takes focus. The picture
+ *  shows here too, on the TV's slow reveal window (C6.23). */
 function ReadBody({
   question,
   language,
-  phaseId,
+  player,
+  clockOffsetMs,
 }: {
   question: QuizshowQuestionView;
   language: QuizshowLanguage;
-  phaseId: string;
+  player: QuizshowPlayerState;
+  clockOffsetMs: number;
 }) {
-  const { t } = useTranslation();
-  const headingRef = useQuizshowHeadingFocus(phaseId);
+  const headingRef = useQuizshowHeadingFocus(player.cursor.phaseId);
+  const { talkStartsAt } = player.cursor;
   return (
     <div className={`${styles.screenBody} ${styles.readBody}`}>
       <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
-        {pickQuizshowText(question.prompt, language)}
+        <QuizshowStageText text={question.prompt} language={language} />
       </h1>
-      <p className={styles.readyPill}>
-        {t("quizshow:player.getReady")}
-        <QuizshowWaitDots />
-      </p>
+      {question.mediaUrl !== null && (
+        <QuizshowQuestionPicture
+          question={question}
+          mediaUrl={question.mediaUrl}
+          cursor={player.cursor}
+          talkSeconds={player.round?.talkSeconds ?? 0}
+          language={language}
+          clockOffsetMs={clockOffsetMs}
+        />
+      )}
+      {player.playMode === "teams" && talkStartsAt !== null ? (
+        <TalkLine
+          player={player}
+          talkStartsAt={talkStartsAt}
+          clockOffsetMs={clockOffsetMs}
+        />
+      ) : (
+        <ReadyPill />
+      )}
     </div>
   );
 }
@@ -139,8 +239,115 @@ function bodyKeyOf(
   if (phase === "wheel") {
     return `wheel:${player.wheel?.wheelRoundIndex ?? "unplanned"}`;
   }
-  if (phase === "podium" && player.podium === null) return `${phaseId}:waiting`;
+  // Each podium step is a new phase id (C6.7); one body holds them all, so
+  // the podium stays mounted and paces itself, winner hold included.
+  if (phase === "podium") {
+    return player.podium === null ? `${phaseId}:waiting` : "podium";
+  }
   return phaseId;
+}
+
+/** The last place the podium stands for: 3rd (C6.7). */
+const PODIUM_LOWEST_PLACE = 3;
+
+/**
+ * The beat before the player's own win (C6.7): the same `podiumWinnerHoldMs`
+ * the podium holds on "And the winner is", from the same mount, so the line
+ * never names the winner ahead of the podium. Mounted with the win already in
+ * (a reload), it shows at once.
+ */
+function useOwnWinnerHold(isOwnWin: boolean): boolean {
+  const [isHoldDone, setIsHoldDone] = useState(isOwnWin);
+  const isHolding = isOwnWin && !isHoldDone;
+  useEffect(() => {
+    if (!isHolding) return undefined;
+    const timer = window.setTimeout(() => {
+      setIsHoldDone(true);
+    }, QUIZSHOW_LIMITS.podiumWinnerHoldMs);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [isHolding]);
+  return isHolding;
+}
+
+/**
+ * The podium on the phone (C6.7): the revealed places only, as the podium
+ * frame sends them, and the player's own place once it is shown. A place on
+ * the podium reads from the revealed entries; a place below it from
+ * `scores:mine`, which the server holds back while the player's step waits.
+ */
+function PodiumBody({ player }: { player: QuizshowPlayerState }) {
+  const { podium, myScores, me, cursor } = player;
+  const ownEntrantId =
+    player.playMode === "teams" ? (me?.teamId ?? null) : (me?.playerId ?? null);
+  const podiumPlace =
+    podium?.find((entry) => entry.entrantId === ownEntrantId)?.place ?? null;
+  const scoresRank =
+    myScores !== null && myScores.phaseId === cursor.phaseId
+      ? myScores.rank
+      : null;
+  // Each step is a new phase id, which clears `myScores` until the step's own
+  // `scores:mine` lands: the last rank holds through that gap.
+  const [heldRank, setHeldRank] = useState(scoresRank);
+  if (scoresRank !== null && scoresRank !== heldRank) setHeldRank(scoresRank);
+  const belowPodiumRank =
+    heldRank !== null && heldRank > PODIUM_LOWEST_PLACE ? heldRank : null;
+  const isOwnWinnerHold = useOwnWinnerHold(podiumPlace === 1);
+  const ownRank = isOwnWinnerHold ? null : (podiumPlace ?? belowPodiumRank);
+  // One body holds every podium step, so focus moves once, when the podium lands.
+  const headingRef = useQuizshowHeadingFocus("podium");
+  return (
+    <div className={styles.podiumBody}>
+      <QuizshowPhaseHeading headingRef={headingRef} phase="podium" />
+      <QuizshowPodium
+        entries={podium ?? []}
+        size="phone"
+        entrantCount={player.scores?.entrantCount ?? null}
+        highlightEntrantId={ownEntrantId}
+      />
+      <Collapse isOpen={ownRank !== null} className={styles.podiumPlaceRow}>
+        {ownRank !== null && (
+          <p className={styles.podiumPlace}>
+            <QuizshowPlaceLine
+              state={player}
+              rank={ownRank}
+              total={player.scores?.entrantCount}
+            />
+          </p>
+        )}
+      </Collapse>
+    </div>
+  );
+}
+
+/** The foot of the running game: reactions between questions (C6.19), the
+ *  report link on a member's game, and "Leave the game" (item 35). */
+function StageFooter({
+  controller,
+  player,
+}: {
+  controller: QuizshowSessionController;
+  player: QuizshowPlayerState;
+}) {
+  const isReportShown =
+    player.kind === "game" &&
+    player.me !== null &&
+    REPORTABLE_PHASES.includes(player.cursor.phase);
+  return (
+    <>
+      <QuizshowReactionBar controller={controller} />
+      <Collapse isOpen={isReportShown} className={styles.reportRow}>
+        <QuizshowReportGameButton
+          sessionId={player.sessionId}
+          quizTitle={player.quizTitle}
+        />
+      </Collapse>
+      <Collapse isOpen={player.me !== null}>
+        <QuizshowLeaveGame controller={controller} />
+      </Collapse>
+    </>
+  );
 }
 
 /** The player's phone, swapped by phase. */
@@ -158,12 +365,7 @@ export function QuizshowPlayerStage({
   const myReveal = player?.myReveal ?? null;
   const isRevealResultIn =
     phase === "reveal" && myReveal !== null && myReveal.phaseId === phaseId;
-  useRevealVibration(
-    phaseId,
-    isRevealResultIn,
-    myReveal?.isCorrect ?? null,
-    reducedMotion,
-  );
+  useRevealVibration(phaseId, isRevealResultIn, myReveal?.isCorrect ?? null);
   if (player === null || phase === null) return null;
 
   const { question, round } = player;
@@ -173,8 +375,11 @@ export function QuizshowPlayerStage({
     !isQuizRoundKind(question.roundKind) &&
     !isWheelRoundKind(question.roundKind);
   const isPaused = player.cursor.status === "paused";
+  // A poll has no right or wrong, so its reveal says no outcome (C6.22).
   const outcomeKey =
-    isRevealResultIn && myReveal ? outcomeKeyOf(myReveal) : null;
+    isRevealResultIn && myReveal && question?.type !== "poll"
+      ? outcomeKeyOf(myReveal)
+      : null;
   let phaseLine = ANNOUNCED_PHASES.includes(phase)
     ? t(`quizshow:player.announce.${phase}`)
     : "";
@@ -196,27 +401,22 @@ export function QuizshowPlayerStage({
 
   let body: ReactNode = null;
   if (phase === "round_intro" && round !== null) {
-    const jokerTarget = lobbyJokerTargetOf(player);
     body = (
-      <>
-        <QuizshowRoundCard
-          round={round}
-          roundNumber={player.cursor.roundNumber}
-          roundCount={player.cursor.roundCount}
-          language={language}
-          size="phone"
-        />
-        {jokerTarget.kind === "round" && (
-          <QuizshowJokerButton
-            controller={controller}
-            roundIndex={jokerTarget.round.roundIndex}
-          />
-        )}
-      </>
+      <QuizshowPlayerRoundIntro
+        controller={controller}
+        player={player}
+        round={round}
+        language={language}
+      />
     );
   } else if (phase === "read" && question !== null) {
     body = (
-      <ReadBody question={question} language={language} phaseId={phaseId} />
+      <ReadBody
+        question={question}
+        language={language}
+        player={player}
+        clockOffsetMs={controller.clockOffsetMs}
+      />
     );
   } else if (phase === "open" && question !== null) {
     body = (
@@ -241,7 +441,10 @@ export function QuizshowPlayerStage({
     body = isParty ? (
       <QuizshowPartyReveal state={player} language={language} />
     ) : (
-      <QuizshowPlayerReveal state={player} />
+      <QuizshowPlayerReveal
+        state={player}
+        ownRanks={controller.state.ownRanks}
+      />
     );
   } else if (phase === "scores" || phase === "leaderboard") {
     body = <QuizshowPlayerScores player={player} controller={controller} />;
@@ -261,23 +464,10 @@ export function QuizshowPlayerStage({
   } else if (phase === "podium") {
     // The podium frame can land a moment after the phase change.
     body =
-      player.podium === null ? (
-        <p className={styles.readyPill}>
-          {t("quizshow:player.getReady")}
-          <QuizshowWaitDots />
-        </p>
-      ) : (
-        <div className={styles.podiumBody}>
-          <QuizshowPodium entries={player.podium} size="phone" />
-        </div>
-      );
+      player.podium === null ? <ReadyPill /> : <PodiumBody player={player} />;
   }
 
   const bodyKey = bodyKeyOf(phase, phaseId, player);
-  const isReportShown =
-    player.kind === "game" &&
-    player.me !== null &&
-    REPORTABLE_PHASES.includes(phase);
   return (
     <div className={styles.stage}>
       <span role="status" className={styles.visuallyHidden}>
@@ -296,12 +486,7 @@ export function QuizshowPlayerStage({
           {body}
         </m.div>
       </AnimatePresence>
-      <Collapse isOpen={isReportShown} className={styles.reportRow}>
-        <QuizshowReportGameButton
-          sessionId={player.sessionId}
-          quizTitle={player.quizTitle}
-        />
-      </Collapse>
+      <StageFooter controller={controller} player={player} />
     </div>
   );
 }

@@ -340,6 +340,7 @@ describe("detailToGathering care and access", () => {
       hasQuiz: true,
       liveSessionCode: "QZ7KP4",
       hasResults: false,
+      winBadges: null,
     };
 
     const withSummary = detailToGathering(

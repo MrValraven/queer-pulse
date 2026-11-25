@@ -1,0 +1,22 @@
+/* Coral fill carrying the fixed cream label (--cream-rgb stays light in both
+   themes): --accent-fill-strong is 4.56:1 against #f7f3ee, the pair the
+   primary Button uses. --accent itself would be 2.63:1 under that label. */
+.count {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.75em;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill-strong);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+

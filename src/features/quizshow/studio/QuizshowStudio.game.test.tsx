@@ -96,6 +96,7 @@ function emptyGameClient(gameId: string): QueryClient {
     isAdultsOnly: false,
     liveSession: null,
     hasResults: false,
+    lastOpenSettings: null,
   };
   queryClient.setQueryData(quizshowKeys.game(gameId, true), response);
   return queryClient;
@@ -274,13 +275,17 @@ describe("QuizshowStudio on a game", () => {
         name: "Replace with another quiz",
       }),
     );
-    const afterDarkTitle = await screen.findByRole("heading", {
+    // Each source row is a group named by its title.
+    const afterDarkRow = await screen.findByRole("group", {
       name: "After dark trivia",
     });
-    const afterDarkRow = afterDarkTitle.parentElement?.parentElement;
-    if (!afterDarkRow) throw new Error("The After dark row has no wrapper");
     expect(
-      within(afterDarkRow).getByRole("button", { name: "Copy this quiz" }),
+      within(afterDarkRow).getByRole("button", { name: "Replace the quiz" }),
+    ).toHaveAttribute("aria-disabled", "true");
+    expect(
+      within(afterDarkRow).getByRole("button", {
+        name: "Add rounds from this quiz",
+      }),
     ).toHaveAttribute("aria-disabled", "true");
   });
 
@@ -303,5 +308,116 @@ describe("QuizshowStudio on a game", () => {
     expect(demoGetGame(blankGame.gameId).quiz?.rounds.length).toBeGreaterThan(
       0,
     );
+  });
+});
+
+describe("QuizshowStudio on a game copied from a template (C6.25)", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+    resetQuizshowDemoGames();
+    vi.mocked(demoPutGame).mockClear();
+  });
+
+  it("names the template a quiz is based on and opens what changed", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+    });
+    const flatGame = demoGetGame(FLAT_QUIZ_ID);
+    const templateId = flatGame.quiz?.sourceTemplateId;
+    if (!flatGame.quiz || !templateId) {
+      throw new Error("The flat quiz game names no template");
+    }
+    queryClient.setQueryData<QuizshowGameResponse>(
+      quizshowKeys.game(FLAT_QUIZ_ID, true),
+      {
+        ...flatGame,
+        quiz: {
+          ...flatGame.quiz,
+          sourceTemplate: {
+            templateId,
+            // One title in both languages: the line reads the view language.
+            title: { en: "Eurovision night", pt: "Eurovision night" },
+            copiedAt: "2026-10-01T00:00:00.000Z",
+            lastPublishedAt: "2026-11-01T00:00:00.000Z",
+            hasUpdate: true,
+            changeNote: { en: "Two new rounds", pt: "Two new rounds" },
+          },
+        },
+      },
+    );
+    renderGame(FLAT_QUIZ_ID, queryClient);
+
+    // The Quiz settings inspector names the template; the bar keeps only the chip.
+    const inspector = await screen.findByRole("complementary", {
+      name: "Quiz editor settings",
+    });
+    expect(
+      await within(inspector).findByText("Based on Eurovision night"),
+    ).toBeInTheDocument();
+    expect(
+      within(inspector).getByText("Updated since you copied it"),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Based on Eurovision night")).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "See what changed" }));
+    const preview = await screen.findByRole("dialog", {
+      name: "Template preview",
+    });
+    expect(
+      await within(preview).findByText("Two new rounds"),
+    ).toBeInTheDocument();
+    expect(
+      within(preview).getByRole("button", {
+        name: "Add rounds from this template",
+      }),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("QuizshowStudio top bar on a game with an open lobby", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+    resetQuizshowDemoGames();
+  });
+
+  it("makes the open lobby's pill the one lobby control in the bar", async () => {
+    renderGame(AFTER_DARK_ID);
+    expect(
+      await screen.findByRole("button", {
+        name: /^Lobby open, join code [A-Z0-9]+\. Open the big screen or the remote$/,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Open lobby" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("tags a practice lobby's pill with Practice and names it in the label", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+    });
+    const afterDarkGame = demoGetGame(AFTER_DARK_ID);
+    if (afterDarkGame.liveSession === null) {
+      throw new Error("The seeded game has no open lobby");
+    }
+    queryClient.setQueryData<QuizshowGameResponse>(
+      quizshowKeys.game(AFTER_DARK_ID, true),
+      {
+        ...afterDarkGame,
+        liveSession: { ...afterDarkGame.liveSession, isPractice: true },
+      },
+    );
+    renderGame(AFTER_DARK_ID, queryClient);
+    const pill = await screen.findByRole("button", {
+      name: /^Lobby open, practice, join code [A-Z0-9]+\. Open the big screen or the remote$/,
+    });
+    expect(within(pill).getByText("Practice")).toBeInTheDocument();
+  });
+
+  it("shows no Practice tag on a real lobby's pill", async () => {
+    renderGame(AFTER_DARK_ID);
+    const pill = await screen.findByRole("button", {
+      name: /^Lobby open, join code [A-Z0-9]+\. Open the big screen or the remote$/,
+    });
+    expect(within(pill).queryByText("Practice")).not.toBeInTheDocument();
   });
 });

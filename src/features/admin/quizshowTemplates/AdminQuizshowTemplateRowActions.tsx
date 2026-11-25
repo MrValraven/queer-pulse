@@ -27,28 +27,9 @@ import {
 import { templateCardTitleOf } from "../../quizshow/templates/quizshowTemplateResponse";
 import { QUIZSHOW_TEMPLATES_HEADING_ID } from "./quizshowTemplateList.data";
 import { AdminRowActions, adminRowActionClasses } from "../ui";
+import { focusHeadingOnceFocusDrops } from "../ui/adminListPageHelpers";
 import phone from "../adminPhoneActions.module.css";
 import styles from "./AdminQuizshowTemplates.module.css";
-
-/** About a second and a half of frames to wait for the dialog's focus return to fail. */
-const FOCUS_WATCH_FRAME_LIMIT = 90;
-
-/**
- * After a delete, the dialog hands focus back to Delete template, which leaves
- * with its row, so focus drops to the body. This waits for that drop and moves
- * focus onto the page heading. A staff member who has already moved focus
- * somewhere else keeps it there.
- */
-function focusHeadingOnceFocusDrops(framesLeft = FOCUS_WATCH_FRAME_LIMIT) {
-  requestAnimationFrame(() => {
-    const activeElement = document.activeElement;
-    if (!activeElement || activeElement === document.body) {
-      document.getElementById(QUIZSHOW_TEMPLATES_HEADING_ID)?.focus();
-      return;
-    }
-    if (framesLeft > 0) focusHeadingOnceFocusDrops(framesLeft - 1);
-  });
-}
 
 /** The refusal copy stays put while its panel folds away, so it never blanks mid-fold. */
 interface RowRefusal {
@@ -146,7 +127,7 @@ export function AdminQuizshowTemplateRowActions({
     }
     setIsDeleteConfirmOpen(false);
     showToast(t("quizshow:templates.row.deleted"), "success");
-    focusHeadingOnceFocusDrops();
+    focusHeadingOnceFocusDrops(QUIZSHOW_TEMPLATES_HEADING_ID);
   };
 
   return (

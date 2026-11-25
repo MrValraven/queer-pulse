@@ -65,6 +65,32 @@ const ADULTS_SOURCE: QuizshowImportSource = {
   isSameSeries: false,
   kind: "event",
   gameId: null,
+  rounds: [
+    {
+      roundIndex: 0,
+      kind: "quiz",
+      title: { en: "Round one", pt: "Ronda um" },
+      questionCount: 4,
+      sliceCount: null,
+      contentLabel: "none",
+    },
+    {
+      roundIndex: 1,
+      kind: "quiz",
+      title: { en: "Round two", pt: "Ronda dois" },
+      questionCount: 4,
+      sliceCount: null,
+      contentLabel: "none",
+    },
+    {
+      roundIndex: 2,
+      kind: "quiz",
+      title: { en: "Round three", pt: "Ronda três" },
+      questionCount: 4,
+      sliceCount: null,
+      contentLabel: "adults",
+    },
+  ],
 };
 
 function createClient(): QueryClient {
@@ -136,6 +162,7 @@ function responseOf(
     isAdultsEvent: false,
     liveSession: null,
     hasResults: false,
+    lastOpenSettings: null,
   };
 }
 
@@ -506,9 +533,7 @@ describe("QuizshowStudio wheel rows", () => {
     renderEventStudio();
     await findThumbnail(0, 0);
     await addFromRail(user, /^Wheel/);
-    expect(
-      await screen.findByText("Wheel · picks the next round · 0 slices"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Wheel · 0 slices")).toBeInTheDocument();
     expect(
       await screen.findByRole("heading", { name: "Pick a round" }),
     ).toBeInTheDocument();
@@ -525,9 +550,7 @@ describe("QuizshowStudio wheel rows", () => {
 
     await addFromRail(user, /^Quiz/);
     await addFromRail(user, /^Quiz/);
-    expect(
-      await screen.findByText("Wheel · picks the next round · 2 slices"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Wheel · 2 slices")).toBeInTheDocument();
   });
 
   it("shows the Wheel bonus only inside a range", async () => {
@@ -559,9 +582,7 @@ describe("QuizshowStudio wheel rows", () => {
       roundWith("quiz", "multiple_choice"),
     ]);
     renderEventStudio();
-    expect(
-      await screen.findByText("Wheel · picks the next round · 2 slices"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Wheel · 2 slices")).toBeInTheDocument();
     fireEvent.click(await findRailHeader(0));
     await user.click(
       await screen.findByRole("radio", {
@@ -569,7 +590,7 @@ describe("QuizshowStudio wheel rows", () => {
       }),
     );
     expect(
-      await screen.findByText("Wheel · picks a question · 2 slices"),
+      await screen.findByText("Question wheel · 2 slices"),
     ).toBeInTheDocument();
   });
 
@@ -607,7 +628,7 @@ describe("QuizshowStudio wheel rows", () => {
         ).toHaveLength(2),
       { timeout: 3000 },
     );
-    expect(screen.queryByText(/^Wheel · picks/)).toBeNull();
+    expect(screen.queryByText(/^Wheel · \d+ slices?$/)).toBeNull();
     expect(
       screen.getByRole("button", { name: /^Round 1: .*\. Quiz, 1 question$/ }),
     ).toBeInTheDocument();

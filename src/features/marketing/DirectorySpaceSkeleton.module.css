@@ -1,0 +1,221 @@
+/* The directory detail page's loading skeleton (DirectorySpaceSkeleton). The
+   layout containers come from DirectorySpacePage.module.css, so the blocks
+   here only size what sits inside them: each row takes the height of the
+   real line box it stands for, with its margins, so the page lands on the
+   same lines when it replaces the skeleton. Two-class selectors set a block's
+   own radius over the shimmer's default one. */
+
+/* Invisible through the grace period, then a short fade in. A load that
+   settles inside the grace period never shows the skeleton at all. */
+.skeleton {
+  animation: skeletonFadeIn var(--dur-base) var(--ease)
+    var(--skeleton-grace, 0ms) backwards;
+}
+
+/* The real page fades in over the skeleton's place, on its own <main>. Only
+   opacity moves, so sticky rail blocks and stacking stay as they are once the
+   fade ends. */
+.revealFade {
+  animation: skeletonFadeIn var(--dur-base) var(--ease) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revealFade {
+    animation: none;
+  }
+}
+
+/* ── Breadcrumb and identity header ─────────────────────────────────────── */
+/* `.breadcrumb` adds its 14px foot under the trail's 20px line. */
+.crumbRow {
+  display: flex;
+  align-items: center;
+  height: 34px;
+}
+.eyebrowRow,
+.nameRow,
+.taglineRow,
+.textRow,
+.headingRow,
+.subLineRow,
+.chipRow,
+.cardRow,
+.contactRow {
+  display: flex;
+  align-items: center;
+}
+.eyebrowRow {
+  height: 17px;
+  margin-bottom: 14px;
+}
+/* The name's line box is exactly its font size (`.h1` is line-height 1). */
+.nameRow {
+  height: clamp(2.5rem, 5.5vw, 4rem);
+  margin-bottom: 12px;
+}
+.taglineRow {
+  height: 26px;
+  margin-bottom: 22px;
+}
+.taglineWrapRow {
+  display: none;
+}
+@media (--md) {
+  .taglineRow {
+    margin-bottom: 0;
+  }
+  .taglineWrapRow {
+    display: flex;
+    align-items: center;
+    height: 27px;
+    margin-bottom: 22px;
+  }
+}
+.metaRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 34px;
+}
+.metaRow .pill,
+.metaRow .pillShort,
+.metaRow .pillWide {
+  height: 28px;
+  border-radius: var(--radius-8);
+}
+.pill {
+  width: 112px;
+}
+.pillShort {
+  width: 44px;
+}
+/* As wide as the stars, score and review count, so a phone wraps it onto a
+   second line the way it wraps the real rating. */
+.pillWide {
+  width: 196px;
+}
+.bylineRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+  margin-top: 16px;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+}
+/* Body copy runs at 16px on a 1.7 line height. */
+.textRow {
+  height: 27.2px;
+}
+
+/* ── Gallery: the hero and its thumbnail column, as `.photoGallery` ────── */
+.gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+.galleryFull {
+  grid-template-columns: 1fr;
+}
+.gallery .hero {
+  height: clamp(300px, 42vh, 460px);
+  border-radius: var(--radius-card);
+}
+.thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+.thumbs .thumb {
+  flex: 1 1 0;
+  min-height: 0;
+  border-radius: var(--radius-14);
+}
+@media (--md) {
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+  .gallery .hero {
+    height: clamp(220px, 56vw, 340px);
+  }
+  .thumbs {
+    flex-direction: row;
+  }
+  .thumbs .thumb {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ── Body grid: section heads, the hours card and the visit card ───────── */
+/* Section heads total 92px, the space the real heading and subline take above
+   the visit card and the first section's rows. */
+.headingRow {
+  height: 40px;
+  margin-bottom: 9px;
+}
+.subLineRow {
+  height: 27px;
+  margin-bottom: 16px;
+}
+.chipRows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.chipRow {
+  min-height: 56px;
+}
+/* The hours head carries a status chip row, so its card sits 14px lower. The
+   margin collapses with the subline's 16px, which makes 30px the total. */
+.card {
+  margin-top: 30px;
+}
+.cardRow {
+  height: 38px;
+  padding-inline: 20px;
+}
+.cardRow + .cardRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.visitCard .map {
+  min-height: 190px;
+  border-radius: 0;
+}
+.visitBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px;
+}
+.visitButtons {
+  display: flex;
+  gap: 8px;
+}
+.visitButtons .button {
+  flex: 1 1 0;
+  height: 40px;
+  border-radius: var(--radius-pill);
+}
+.contactRow {
+  height: 44px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.visitBody .cta {
+  height: 44px;
+  margin-top: 8px;
+  border-radius: var(--radius-pill);
+}
+
+@keyframes skeletonFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

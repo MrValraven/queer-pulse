@@ -37,6 +37,9 @@ function cursorWith(overrides: Partial<QuizshowCursor>): QuizshowCursor {
     roundNumber: 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
     ...overrides,
   };
 }

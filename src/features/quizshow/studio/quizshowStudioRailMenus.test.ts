@@ -1,13 +1,23 @@
 import { describe, expect, it, vi } from "vitest";
-import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowPlayableRoundKind,
+} from "../../../shared/contracts/quizshow";
 import {
   newRound,
   newWheel,
   type QuizshowDraftRound,
 } from "../builder/quizshowDraft";
+import { displayRoundNumber } from "../quizshowWheel";
 import type { QuizshowStudioActions } from "./QuizshowStudioContext";
-import type { QuizshowStudioMenuEntry } from "./QuizshowStudioMenu";
-import { railMenuEntriesOf } from "./quizshowStudioRailMenus";
+import type {
+  QuizshowStudioMenuAction,
+  QuizshowStudioMenuEntry,
+} from "./QuizshowStudioMenu";
+import {
+  questionMoveTargetsOf,
+  railMenuEntriesOf,
+} from "./quizshowStudioRailMenus";
 
 /** Echoes the key, with its values as JSON when there are any. */
 function translateStub(
@@ -47,6 +57,8 @@ function entriesOf(input: {
   quizQuestionCount?: number;
   actions?: QuizshowStudioActions;
   onRequestRemoveRound?: (roundIndex: number) => void;
+  onOpenMoveToRound?: (roundIndex: number, questionIndex: number) => void;
+  onBackToQuestionMenu?: (roundIndex: number, questionIndex: number) => void;
 }): QuizshowStudioMenuEntry[] {
   return railMenuEntriesOf({
     target: input.target,
@@ -56,8 +68,17 @@ function entriesOf(input: {
     actions: input.actions ?? actionsStub(),
     onRequestRemoveQuestion: vi.fn(),
     onRequestRemoveRound: input.onRequestRemoveRound ?? vi.fn(),
+    onOpenMoveToRound: input.onOpenMoveToRound,
+    onBackToQuestionMenu: input.onBackToQuestionMenu,
     t: translateStub,
   });
+}
+
+/** Whether the entry is one someone can choose (neither a separator nor a heading). */
+function isActionEntry(
+  entry: QuizshowStudioMenuEntry | undefined,
+): entry is QuizshowStudioMenuAction {
+  return entry !== undefined && "onSelect" in entry;
 }
 
 function entryByKey(
@@ -90,7 +111,7 @@ describe("railMenuEntriesOf: add round", () => {
       entriesOf({ target: { kind: "addRound" }, actions }),
       "wheel",
     );
-    if (wheelEntry?.kind === "separator") throw new Error("wheel entry");
+    if (!isActionEntry(wheelEntry)) throw new Error("wheel entry");
     wheelEntry?.onSelect();
     expect(actions.addWheel).toHaveBeenCalledTimes(1);
   });
@@ -193,7 +214,7 @@ describe("railMenuEntriesOf: a wheel row", () => {
       }),
       "remove",
     );
-    if (removeEntry?.kind === "separator") throw new Error("remove entry");
+    if (!isActionEntry(removeEntry)) throw new Error("remove entry");
     removeEntry?.onSelect();
     expect(onRequestRemoveRound).toHaveBeenCalledWith(1);
   });
@@ -209,5 +230,147 @@ describe("railMenuEntriesOf: numbers skip wheel rows", () => {
     expect(entryByKey(entries, "moveUp")).toMatchObject({
       label: translateStub("quizshow:rounds.moveUp", { title }),
     });
+  });
+});
+
+describe("railMenuEntriesOf: move to round", () => {
+  /** A round of `kind` titled `title` holding `questionCount` questions. */
+  function roundOf(
+    kind: QuizshowPlayableRoundKind,
+    title: string,
+    questionCount = 1,
+  ): QuizshowDraftRound {
+    const round = newRound(kind);
+    const [question] = round.questions;
+    if (question === undefined) throw new Error("new round has no question");
+    return {
+      ...round,
+      title: { en: title, pt: title },
+      questions: Array.from({ length: questionCount }, (_unused, index) => ({
+        ...question,
+        draftKey: `${round.draftKey}-${index}`,
+      })),
+    };
+  }
+
+  const rounds = (): QuizshowDraftRound[] => [
+    roundOf("quiz", "Opener"),
+    newWheel(),
+    roundOf("lie_detector", "Liars"),
+    roundOf("quiz", "Full", QUIZSHOW_LIMITS.questionsPerRoundMax),
+    roundOf("quiz", "Closer"),
+    roundOf("lie_detector", "More liars"),
+  ];
+
+  it("lists only other rounds of the same kind with room", () => {
+    expect(questionMoveTargetsOf(rounds(), 0)).toEqual([4]);
+    expect(questionMoveTargetsOf(rounds(), 2)).toEqual([5]);
+    expect(questionMoveTargetsOf(rounds(), 1)).toEqual([]);
+  });
+
+  it("adds Move to round after Move down and opens the submenu from it", () => {
+    const onOpenMoveToRound = vi.fn();
+    const entries = entriesOf({
+      target: { kind: "question", roundIndex: 0, questionIndex: 0 },
+      rounds: rounds(),
+      actions: actionsStub({ moveQuestionToRound: vi.fn() }),
+      onOpenMoveToRound,
+    });
+    expect(entries.map((entry) => entry.key)).toEqual([
+      "duplicate",
+      "moveUp",
+      "moveDown",
+      "moveToRound",
+      "separator",
+      "remove",
+    ]);
+    const moveEntry = entryByKey(entries, "moveToRound");
+    if (!isActionEntry(moveEntry)) {
+      throw new Error("move entry");
+    }
+    expect(moveEntry).toMatchObject({
+      label: "quizshow:studio.moveToRound",
+      isDisabled: false,
+      hasPopup: true,
+    });
+    moveEntry.onSelect();
+    expect(onOpenMoveToRound).toHaveBeenCalledWith(0, 0);
+  });
+
+  it("disables Move to round when no round fits the question", () => {
+    const entries = entriesOf({
+      target: { kind: "question", roundIndex: 0, questionIndex: 0 },
+      rounds: [roundOf("quiz", "Only"), roundOf("caption_this", "Captions")],
+      actions: actionsStub({ moveQuestionToRound: vi.fn() }),
+      onOpenMoveToRound: vi.fn(),
+    });
+    expect(entryByKey(entries, "moveToRound")).toMatchObject({
+      isDisabled: true,
+      disabledReason: "quizshow:studio.moveToRoundNone",
+    });
+  });
+
+  it("names each fitting round in the submenu and moves the question there", () => {
+    const moveQuestionToRound = vi.fn();
+    const entries = entriesOf({
+      target: { kind: "moveQuestion", roundIndex: 2, questionIndex: 0 },
+      rounds: rounds(),
+      actions: actionsStub({ moveQuestionToRound }),
+    });
+    expect(entries.map((each) => each.key)).toEqual(["heading", "round-5"]);
+    expect(entryByKey(entries, "heading")).toMatchObject({
+      kind: "heading",
+      label: "quizshow:studio.moveToRound",
+    });
+    const entry = entryByKey(entries, "round-5");
+    if (!isActionEntry(entry)) {
+      throw new Error("round entry");
+    }
+    expect(entry.label).toBe(
+      translateStub("quizshow:studio.moveToRoundItem", {
+        number: displayRoundNumber(rounds(), 5),
+        title: "More liars",
+      }),
+    );
+    entry.onSelect();
+    expect(moveQuestionToRound).toHaveBeenCalledWith(2, 0, 5);
+  });
+
+  it("names an untitled round by its number alone", () => {
+    const entries = entriesOf({
+      target: { kind: "moveQuestion", roundIndex: 0, questionIndex: 0 },
+      rounds: [roundOf("quiz", "Opener"), roundOf("quiz", "")],
+      actions: actionsStub({ moveQuestionToRound: vi.fn() }),
+    });
+    const entry = entryByKey(entries, "round-1");
+    if (!isActionEntry(entry)) {
+      throw new Error("round entry");
+    }
+    expect(entry.label).toBe(
+      translateStub("quizshow:rounds.untitled", { number: 2 }),
+    );
+  });
+
+  it("opens the submenu with Back, which returns to the question's menu", () => {
+    const onBackToQuestionMenu = vi.fn();
+    const entries = entriesOf({
+      target: { kind: "moveQuestion", roundIndex: 2, questionIndex: 0 },
+      rounds: rounds(),
+      actions: actionsStub({ moveQuestionToRound: vi.fn() }),
+      onBackToQuestionMenu,
+    });
+    expect(entries.map((entry) => entry.key)).toEqual([
+      "back",
+      "separator",
+      "heading",
+      "round-5",
+    ]);
+    const backEntry = entryByKey(entries, "back");
+    if (!isActionEntry(backEntry)) {
+      throw new Error("back entry");
+    }
+    expect(backEntry.label).toBe("quizshow:studio.moveToRoundBack");
+    backEntry.onSelect();
+    expect(onBackToQuestionMenu).toHaveBeenCalledWith(2, 0);
   });
 });

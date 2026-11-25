@@ -27,6 +27,7 @@ import {
   demoPutTemplate,
   demoTemplateCards,
   demoTemplateCopy,
+  demoTemplatePreview,
   demoUnpublishTemplate,
 } from "./quizshowDemoTemplates";
 
@@ -35,6 +36,7 @@ const CARD_FIELD_NAMES = [
   "hasAdultsRounds",
   "id",
   "languages",
+  "lastPublishedAt",
   "questionCount",
   "roundCount",
   "title",
@@ -62,6 +64,7 @@ function inputOf(
   return {
     card: structuredClone(detail.card),
     staffNotes: detail.staffNotes,
+    changeNote: structuredClone(detail.changeNote),
     quiz: {
       title: detail.quiz.title,
       languages: detail.quiz.languages,
@@ -359,14 +362,26 @@ describe("quizshow demo template publishing and host copies", () => {
     editedInput.quiz.title = "Pride history, edited";
     demoPutTemplate(prideId, editedInput);
     demoUnpublishTemplate(prideId);
-    expect(demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG).quiz).toEqual(copy);
+    // Contract 6.25: an unpublished template names no source on its copies.
+    expect(demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG).quiz).toEqual({
+      ...copy,
+      sourceTemplate: null,
+    });
     demoDeleteTemplate(prideId);
     const eventQuiz = demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG).quiz;
-    expect(eventQuiz).toEqual({ ...copy, sourceTemplateId: null });
+    expect(eventQuiz).toEqual({
+      ...copy,
+      sourceTemplateId: null,
+      sourceTemplate: null,
+    });
     expect(eventQuiz?.title).toBe("Pride and queer history");
     expect(eventQuiz?.rounds).toEqual(copy?.rounds);
     const gameQuiz = demoGetGame(gameCopy.gameId).quiz;
-    expect(gameQuiz).toEqual({ ...gameCopy.quiz, sourceTemplateId: null });
+    expect(gameQuiz).toEqual({
+      ...gameCopy.quiz,
+      sourceTemplateId: null,
+      sourceTemplate: null,
+    });
     expect(gameQuiz?.rounds).toEqual(gameCopy.quiz?.rounds);
     expect(
       demoGetGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz).quiz?.sourceTemplateId,
@@ -390,6 +405,160 @@ describe("quizshow demo template publishing and host copies", () => {
     ];
     for (const action of actions) {
       const error = refusalOf(action);
+      expect(error.status).toBe(404);
+      expect(dataOf(error).code).toBe("quizshow_template_not_found");
+    }
+  });
+});
+
+describe("quizshow demo template change notes and previews", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+  });
+
+  it("carries each seed's change note and latest publish on details and cards", () => {
+    const eurovisionId = QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision;
+    const eurovision = demoGetTemplate(eurovisionId);
+    expect(eurovision.lastPublishedAt).toBe("2026-11-20T10:00:00.000Z");
+    expect(eurovision.changeNote.en).not.toBe("");
+    expect(eurovision.changeNote.pt).not.toBe("");
+    const pride = demoGetTemplate(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+    expect(pride.lastPublishedAt).toBe(pride.publishedAt);
+    expect(pride.changeNote).toEqual({ en: "", pt: "" });
+    const cinema = demoGetTemplate(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
+    expect(cinema.lastPublishedAt).toBeNull();
+    const cards = demoTemplateCards().items;
+    expect(
+      cards.find((card) => card.id === eurovisionId)?.lastPublishedAt,
+    ).toBe("2026-11-20T10:00:00.000Z");
+    for (const card of cards) {
+      expect(card.lastPublishedAt).not.toBe("");
+    }
+  });
+
+  it("stores a trimmed change note and moves the latest publish on a save while published", () => {
+    const prideId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    const pride = demoGetTemplate(prideId);
+    const saved = demoPutTemplate(
+      prideId,
+      inputOf(pride, {
+        changeNote: { en: "  New final round  ", pt: " Nova ronda final " },
+      }),
+    );
+    expect(saved.changeNote).toEqual({
+      en: "New final round",
+      pt: "Nova ronda final",
+    });
+    expect(saved.lastPublishedAt).toBe(saved.quiz.updatedAt);
+    expect(saved.publishedAt).toBe(pride.publishedAt);
+    expect(demoGetTemplate(prideId).changeNote).toEqual(saved.changeNote);
+  });
+
+  it("keeps a draft without a latest publish until it is published", () => {
+    const created = demoCreateTemplate();
+    expect(created.lastPublishedAt).toBeNull();
+    expect(created.changeNote).toEqual({ en: "", pt: "" });
+    const saved = demoPutTemplate(
+      created.id,
+      inputOf(created, {
+        changeNote: { en: "First version", pt: "Primeira versão" },
+      }),
+    );
+    expect(saved.lastPublishedAt).toBeNull();
+    expect(saved.changeNote.en).toBe("First version");
+    const prideId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    expect(demoUnpublishTemplate(prideId).lastPublishedAt).toBeNull();
+    const republished = demoPublishTemplate(prideId);
+    expect(republished.lastPublishedAt).toBe(republished.publishedAt);
+  });
+
+  it("refuses a change note over 300 characters with 400 and keeps the stored note", () => {
+    const eurovisionId = QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision;
+    const eurovision = demoGetTemplate(eurovisionId);
+    const error = refusalOf(() =>
+      demoPutTemplate(
+        eurovisionId,
+        inputOf(eurovision, { changeNote: { en: "", pt: "y".repeat(301) } }),
+      ),
+    );
+    expect(error.status).toBe(400);
+    expect(demoGetTemplate(eurovisionId).changeNote).toEqual(
+      eurovision.changeNote,
+    );
+    const longest = demoPutTemplate(
+      eurovisionId,
+      inputOf(eurovision, { changeNote: { en: "x".repeat(300), pt: "" } }),
+    );
+    expect(longest.changeNote.en).toHaveLength(300);
+  });
+
+  it("names the last editor on a stale save", () => {
+    const pride = demoGetTemplate(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+    const staleInput = inputOf(pride);
+    staleInput.quiz.expectedUpdatedAt = "2026-01-01T00:00:00.000Z";
+    const error = refusalOf(() =>
+      demoPutTemplate(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory, staleInput),
+    );
+    expect(dataOf(error).updatedByName).toBe(QUIZSHOW_DEMO_STAFF_NAME);
+  });
+
+  it("previews a published template with its prompts only", () => {
+    const lisbonId = QUIZSHOW_DEMO_TEMPLATE_IDS.lisbonQueerIcons;
+    const lisbon = demoGetTemplate(lisbonId);
+    const preview = demoTemplatePreview(lisbonId);
+    expect(preview).toMatchObject({
+      templateId: lisbonId,
+      title: lisbon.card.title,
+      description: lisbon.card.description,
+      languages: lisbon.quiz.languages,
+    });
+    expect(preview.rounds).toHaveLength(lisbon.quiz.rounds.length);
+    expect(preview.rounds[0]).toMatchObject({
+      roundIndex: 0,
+      kind: "wheel",
+      questionCount: 0,
+      prompts: [],
+    });
+    preview.rounds.forEach((round, roundIndex) => {
+      const sourceRound = lisbon.quiz.rounds[roundIndex];
+      expect(Object.keys(round).sort()).toEqual([
+        "contentLabel",
+        "kind",
+        "prompts",
+        "questionCount",
+        "roundIndex",
+        "sliceCount",
+        "title",
+      ]);
+      expect(round.roundIndex).toBe(roundIndex);
+      expect(round.sliceCount).toBe(
+        sourceRound?.kind === "wheel"
+          ? (sourceRound.settings.sliceCount ?? null)
+          : null,
+      );
+      expect(round.title).toEqual(sourceRound?.title);
+      expect(round.contentLabel).toBe(sourceRound?.contentLabel);
+      expect(round.questionCount).toBe(sourceRound?.questions.length);
+      if (sourceRound?.kind !== "wheel") {
+        expect(round.prompts).toEqual(
+          sourceRound?.questions.map((question) => question.prompt),
+        );
+      }
+    });
+    expect(JSON.stringify(preview)).not.toMatch(
+      /"(options|answer|acceptedAnswers|revealNote|staffNotes|changeNote)"/,
+    );
+  });
+
+  it("refuses a preview of a draft, an unpublished or an unknown template", () => {
+    const prideId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    demoUnpublishTemplate(prideId);
+    for (const templateId of [
+      QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema,
+      prideId,
+      "demo-template-unknown",
+    ]) {
+      const error = refusalOf(() => demoTemplatePreview(templateId));
       expect(error.status).toBe(404);
       expect(dataOf(error).code).toBe("quizshow_template_not_found");
     }

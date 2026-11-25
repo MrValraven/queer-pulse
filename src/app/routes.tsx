@@ -120,12 +120,13 @@ export function AppRoutes() {
     return isExitingPlane ? null : <Navigate to={gateRedirect} replace />;
   }
   // Pulse Live hosting is unlaunched: the early-access grant gates hosting
-  // only (My games, game pages, the event screen and remote). A signed-in
-  // member without it goes to the roadmap from those paths, the same place
-  // every other unlaunched surface lands, while `/play` and `/play/:code` stay
-  // open to every signed-in member. Decided after the sign-in gate so a
-  // signed-out visitor goes to sign-in with `?next=` kept, and after the
-  // `checking` hold above (every Pulse Live path is gated) so a grant holder is
+  // only (My games, game pages, the event screen, remote and print sheet). A
+  // signed-in member without it goes to the roadmap from those paths, the same
+  // place every other unlaunched surface lands, while `/play`, `/play/tv`,
+  // `/play/remote` and `/play/:code` stay open to every signed-in member.
+  // Signed out, the hosting paths and `/play` are gated (sign-in with `?next=`
+  // kept), whereas `/play/:code` and `/play/tv` are public. Decided after the
+  // `checking` hold above (which covers the gated paths) so a grant holder is
   // never bounced before `/auth/me` settles. Demo and `pnpm dev` always pass.
   if (!isQuizshowVisible && isQuizshowHostingPath(pathname)) {
     return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;

@@ -7,9 +7,13 @@ import {
   quizshowErrorCodeOf,
   quizshowErrorKeyOf,
   quizshowLoadFailureKeyOf,
+  quizshowRefusalActionOf,
   quizshowRefusalKeyOf,
+  QUIZSHOW_TRANSPORT_TIMEOUT_KEY,
   quizshowOpenSessionRefOf,
   quizshowProblemsOf,
+  quizshowQuizChangedDetailsOf,
+  quizshowSuggestedScreenNameOf,
 } from "./quizshowErrors";
 
 describe("quizshow error readers", () => {
@@ -84,6 +88,13 @@ describe("quizshow error readers", () => {
       "quizshow:errors.offline",
       "quizshow:errors.server_unavailable",
       "quizshow:errors.refused_unknown",
+      "quizshow:errors.refused_signed_out",
+      "quizshow:errors.refused_session_revoked",
+      "quizshow:errors.refused_platform_locked",
+      "quizshow:errors.refused_feature_hidden",
+      "quizshow:errors.refused_forbidden",
+      "quizshow:errors.refused_server_error",
+      QUIZSHOW_TRANSPORT_TIMEOUT_KEY,
     ].map((key) => key.replace(/^quizshow:/, ""));
     for (const language of ["en", "pt"] as const) {
       const catalog = (await loadNamespace(language, "quizshow")) as Record<
@@ -145,6 +156,46 @@ describe("quizshow error readers", () => {
     expect(quizshowRefusalKeyOf(null)).toBe("quizshow:errors.offline");
   });
 
+  it("names each transport refusal and the action that fits it", () => {
+    const cases: Array<[string, string, string]> = [
+      ["UNAUTHORIZED", "quizshow:errors.refused_signed_out", "signIn"],
+      ["TOKEN_EXPIRED", "quizshow:errors.refused_signed_out", "signIn"],
+      ["SESSION_REVOKED", "quizshow:errors.refused_session_revoked", "signIn"],
+      [
+        "PLATFORM_LOCKED",
+        "quizshow:errors.refused_platform_locked",
+        "enterCode",
+      ],
+      ["NOT_FOUND", "quizshow:errors.refused_feature_hidden", "enterCode"],
+      ["FORBIDDEN", "quizshow:errors.refused_forbidden", "enterCode"],
+      ["SERVER_ERROR", "quizshow:errors.refused_server_error", "reload"],
+      ["BAD_REQUEST", "quizshow:errors.refused_unknown", "reload"],
+      [
+        "quizshow_session_finished",
+        "quizshow:errors.session_finished",
+        "enterCode",
+      ],
+    ];
+    for (const [code, key, action] of cases) {
+      expect(quizshowRefusalKeyOf(code), code).toBe(key);
+      expect(quizshowRefusalActionOf(code), code).toBe(action);
+    }
+    expect(quizshowRefusalActionOf(null)).toBe("reload");
+    expect(quizshowRefusalKeyOf("constructor")).toBe(
+      "quizshow:errors.refused_unknown",
+    );
+  });
+
+  it("says offline for a server fault on an offline device, and keeps a lapsed sign-in named", () => {
+    vi.spyOn(window.navigator, "onLine", "get").mockReturnValue(false);
+    expect(quizshowRefusalKeyOf("SERVER_ERROR")).toBe(
+      "quizshow:errors.offline",
+    );
+    expect(quizshowRefusalKeyOf("UNAUTHORIZED")).toBe(
+      "quizshow:errors.refused_signed_out",
+    );
+  });
+
   it("reads only a plain 4xx refusal as a missing event", () => {
     expect(isQuizshowEventMissing(new ApiError(404, "x"))).toBe(true);
     for (const status of [401, 403, 408, 429, 500, 503]) {
@@ -157,5 +208,94 @@ describe("quizshow error readers", () => {
       false,
     );
     expect(isQuizshowEventMissing(null)).toBe(false);
+  });
+});
+
+describe("quizshow conflict and screen name readers", () => {
+  it("reads who saved the quiz off a quiz_changed 409", () => {
+    const error = new ApiError(409, "x", {
+      code: "quizshow_quiz_changed",
+      updatedAt: "2026-11-20T18:30:00.000Z",
+      updatedByName: "Philippine",
+    });
+    expect(quizshowQuizChangedDetailsOf(error)).toEqual({
+      updatedAt: "2026-11-20T18:30:00.000Z",
+      updatedByName: "Philippine",
+    });
+  });
+
+  it("keeps a quiz_changed 409 without a name, and one on a target with no quiz", () => {
+    const goneAccount = new ApiError(409, "x", {
+      code: "quizshow_quiz_changed",
+      updatedAt: "2026-11-20T18:30:00.000Z",
+      updatedByName: null,
+    });
+    expect(quizshowQuizChangedDetailsOf(goneAccount)).toEqual({
+      updatedAt: "2026-11-20T18:30:00.000Z",
+      updatedByName: null,
+    });
+    const noQuiz = new ApiError(409, "x", {
+      code: "quizshow_quiz_changed",
+      updatedAt: null,
+      updatedByName: null,
+    });
+    expect(quizshowQuizChangedDetailsOf(noQuiz)).toEqual({
+      updatedAt: null,
+      updatedByName: null,
+    });
+  });
+
+  it("answers null details for a missing or malformed field and for another code", () => {
+    expect(
+      quizshowQuizChangedDetailsOf(
+        new ApiError(409, "x", {
+          code: "quizshow_quiz_changed",
+          updatedAt: "2026-11-20T18:30:00.000Z",
+        }),
+      ),
+    ).toBeNull();
+    expect(
+      quizshowQuizChangedDetailsOf(
+        new ApiError(409, "x", {
+          code: "quizshow_quiz_changed",
+          updatedAt: 1_700_000_000_000,
+          updatedByName: "Philippine",
+        }),
+      ),
+    ).toBeNull();
+    expect(
+      quizshowQuizChangedDetailsOf(
+        new ApiError(409, "x", {
+          code: "quizshow_results_exist",
+          updatedAt: "2026-11-20T18:30:00.000Z",
+          updatedByName: "Philippine",
+        }),
+      ),
+    ).toBeNull();
+    expect(quizshowQuizChangedDetailsOf(new Error("plain"))).toBeNull();
+  });
+
+  it("reads the suggested screen name off a screen_name_taken ack only", () => {
+    expect(
+      quizshowSuggestedScreenNameOf({
+        code: "quizshow_screen_name_taken",
+        suggestedScreenName: "  Alex 2 ",
+      }),
+    ).toBe("Alex 2");
+    expect(
+      quizshowSuggestedScreenNameOf({ code: "quizshow_screen_name_taken" }),
+    ).toBeNull();
+    expect(
+      quizshowSuggestedScreenNameOf({
+        code: "quizshow_screen_name_taken",
+        suggestedScreenName: "   ",
+      }),
+    ).toBeNull();
+    expect(
+      quizshowSuggestedScreenNameOf({
+        code: "quizshow_joining_locked",
+        suggestedScreenName: "Alex 2",
+      }),
+    ).toBeNull();
   });
 });

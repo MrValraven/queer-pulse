@@ -1,4 +1,5 @@
-import { useId, useState } from "react";
+import { useContext, useId, useState } from "react";
+import { FiChevronDown } from "react-icons/fi";
 import { ApiError } from "../../../shared/api/client";
 import type {
   QuizshowResultsPodiumEntry,
@@ -6,6 +7,7 @@ import type {
 } from "../../../shared/contracts/quizshow";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Button } from "../../../shared/components/ui/Button";
+import { Sending } from "../../../shared/components/ui/Spinner";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
 import { SkeletonCard } from "../../../shared/components/ui/Skeleton";
@@ -15,8 +17,11 @@ import { useDeleteQuizshowResults } from "../api/useQuizshowMutations";
 import { useQuizshowResults } from "../api/useQuizshowResults";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
 import { useQuizshowDarkDialog } from "../builder/useQuizshowDarkDialog";
+import { useQuizshowGameResultsActions } from "../games/useQuizshowGameActions";
 import { QuizshowShape } from "../QuizshowShape";
+import { QuizshowResultsWinBadges } from "../winBadges/QuizshowResultsWinBadges";
 import type { QuizshowSessionScope } from "../quizshowScope";
+import { QuizshowStudioContext } from "../studio/QuizshowStudioContext";
 import { QuizshowRecap } from "./QuizshowRecap";
 import styles from "./QuizshowEvent.module.css";
 
@@ -69,13 +74,45 @@ function OwnPlacing({ results }: { results: QuizshowResultsResponse }) {
   );
 }
 
+/** Nothing waits to be saved outside the studio. */
+const NOTHING_TO_SAVE = (): Promise<string | null> => Promise.resolve(null);
+
+/**
+ * Duplicate and open (item 60): on a game page the results panel leads with
+ * it. It lands the studio's autosave first, like Duplicate game in More.
+ */
+function DuplicateAndOpenButton() {
+  const { t } = useTranslation();
+  const gameResults = useQuizshowGameResultsActions();
+  const studio = useContext(QuizshowStudioContext);
+  if (gameResults === null) return null;
+  const { isDuplicatePending } = gameResults;
+  const label = t("quizshow:game.duplicateAndOpen");
+  return (
+    <Button
+      variant="stage"
+      size="sm"
+      aria-busy={isDuplicatePending ? true : undefined}
+      aria-disabled={isDuplicatePending ? true : undefined}
+      onClick={() => {
+        if (isDuplicatePending) return;
+        gameResults.duplicateAndOpen(studio?.save.saveFirst ?? NOTHING_TO_SAVE);
+      }}
+    >
+      {isDuplicatePending ? <Sending label={label} /> : label}
+    </Button>
+  );
+}
+
 function ResultsBody({
   results,
+  scope,
   canDelete,
   isFlat,
   onDelete,
 }: {
   results: QuizshowResultsResponse;
+  scope: QuizshowSessionScope;
   canDelete: boolean;
   /** In the studio's results panel: no card surface, and the panel's title stands in for this heading. */
   isFlat: boolean;
@@ -84,6 +121,7 @@ function ResultsBody({
   const { t, language } = useTranslation();
   const recapId = useId();
   const [isRecapOpen, setIsRecapOpen] = useState(false);
+  const winBadges = results.winBadges ?? null;
   const counts = [
     t("quizshow:results.players", { count: results.playerCount }),
     ...(results.teamCount !== null
@@ -107,7 +145,9 @@ function ResultsBody({
       </ol>
       <OwnPlacing results={results} />
       <p className={styles.counts}>{counts}</p>
+      {winBadges ? <QuizshowResultsWinBadges winBadges={winBadges} /> : null}
       <div className={styles.resultsActions}>
+        <DuplicateAndOpenButton />
         {results.recap !== null && (
           <Button
             variant="ghost"
@@ -121,6 +161,12 @@ function ResultsBody({
                 ? "quizshow:results.recap.hide"
                 : "quizshow:results.recap.show",
             )}
+            <FiChevronDown
+              aria-hidden="true"
+              fill="none"
+              className={styles.toggleChevron}
+              data-is-open={isRecapOpen}
+            />
           </Button>
         )}
         {canDelete && (
@@ -137,7 +183,11 @@ function ResultsBody({
       {results.recap !== null && (
         <div id={recapId}>
           <Collapse isOpen={isRecapOpen}>
-            <QuizshowRecap recap={results.recap} language={language} />
+            <QuizshowRecap
+              recap={results.recap}
+              language={language}
+              scope={scope}
+            />
           </Collapse>
         </div>
       )}
@@ -188,6 +238,7 @@ export function QuizshowResultsCard({
     body = (
       <ResultsBody
         results={query.data}
+        scope={scope}
         canDelete={canDelete}
         isFlat={isInDarkStudio}
         onDelete={() => setIsConfirming(true)}

@@ -9,11 +9,12 @@ import type {
   QuizshowPlayerState,
 } from "../../../shared/contracts/quizshow";
 import { ReportListingModal } from "../../economy/ReportListingModal";
+import { QuizshowStagePicture } from "../stage/QuizshowStagePicture";
 import { orderRevealEntries } from "../stage/quizshowRevealOrder";
 import styles from "./QuizshowPlayer.module.css";
-import { partyHeadingOf } from "./quizshowPartyHeading";
 import { QuizshowPointsLine } from "./QuizshowPhoneResult";
-import { entrantTotalOf } from "./quizshowRevealOutcome";
+import { QuizshowPartyHeadingText } from "./QuizshowPlayerParty";
+import { QuizshowPlaceLine } from "./QuizshowPlayerReveal";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
 
 /** A party reveal on the phone: every entry with author, votes, truth and favourite,
@@ -43,11 +44,18 @@ export function QuizshowPartyReveal({
     <div className={styles.screenBody}>
       {question !== null && (
         <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
-          {partyHeadingOf(question, language, t)}
+          <QuizshowPartyHeadingText question={question} language={language} />
         </h1>
       )}
       {question !== null && question.mediaUrl !== null && (
-        <img className={styles.media} src={question.mediaUrl} alt="" />
+        <QuizshowStagePicture
+          className={styles.picture}
+          mediaUrl={question.mediaUrl}
+          alt={question.mediaAlt}
+          language={language}
+          slowReveal={null}
+          clockOffsetMs={0}
+        />
       )}
       <Collapse isOpen={myReveal !== null}>
         {myReveal !== null && (
@@ -55,12 +63,7 @@ export function QuizshowPartyReveal({
             <QuizshowPointsLine points={myReveal.pointsAwarded} />
             <ul className={styles.facts}>
               <li className={`${styles.fact} ${styles.placeFact}`}>
-                {t(
-                  state.playMode === "teams"
-                    ? "quizshow:player.teamPlace"
-                    : "quizshow:player.place",
-                  { place: myReveal.rank, total: entrantTotalOf(state) },
-                )}
+                <QuizshowPlaceLine state={state} rank={myReveal.rank} />
               </li>
             </ul>
           </div>

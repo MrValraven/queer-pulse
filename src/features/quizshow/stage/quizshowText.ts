@@ -1,5 +1,6 @@
 import type {
   QuizshowLanguage,
+  QuizshowScreenLanguage,
   QuizshowText,
 } from "../../../shared/contracts/quizshow";
 
@@ -8,8 +9,30 @@ export function pickQuizshowText(
   text: QuizshowText,
   language: QuizshowLanguage,
 ): string {
+  return pickQuizshowTextWithLanguage(text, language).text;
+}
+
+/**
+ * The text and the language it is actually in after the blank fallback, so a
+ * quiz text node can set `lang` to the language the words are in (item 41).
+ * When both sides are blank it answers the asked language with an empty text.
+ */
+export function pickQuizshowTextWithLanguage(
+  text: QuizshowText,
+  language: QuizshowLanguage,
+): { text: string; language: QuizshowLanguage } {
   const otherLanguage: QuizshowLanguage = language === "en" ? "pt" : "en";
-  return text[language].trim() !== "" ? text[language] : text[otherLanguage];
+  if (text[language].trim() !== "" || text[otherLanguage].trim() === "") {
+    return { text: text[language], language };
+  }
+  return { text: text[otherLanguage], language: otherLanguage };
+}
+
+/** The one language a screen setting reads first: "both" leads with EN (C6.26). */
+export function primaryLanguageOf(
+  screenLanguage: QuizshowScreenLanguage,
+): QuizshowLanguage {
+  return screenLanguage === "both" ? "en" : screenLanguage;
 }
 
 const OPTION_LETTERS = ["A", "B", "C", "D", "E", "F"] as const;

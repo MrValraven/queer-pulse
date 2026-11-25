@@ -51,7 +51,7 @@ import {
 import { isMemberWrittenReason } from "./notificationReason";
 import { reasonLeadKeyOf } from "./notificationReason";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
-import type { TFunction } from "../../../shared/i18n/types";
+import type { Language, TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { Notification, NotifType } from "../notifications.types";
 import {
@@ -508,6 +508,7 @@ export function notificationDtoToView(
   dto: NotificationDTO,
   t: TFunction,
   fmt: Formatters,
+  language?: Language,
 ): Notification {
   const { text, meta, reason, category, kind, textValues } = formatNotification(
     dto.type,
@@ -522,6 +523,8 @@ export function notificationDtoToView(
     // `group_added` names the adder in its plain `.text` (it is not a
     // personalized kind); every other kind ignores this argument.
     dto.actor ? actorName(dto.actor) : undefined,
+    // `badge_earned` names a quiz badge in the viewer's language.
+    language,
   );
   const view: Notification = {
     // Backend ids are uuids — pass through as-is. Coercing with Number() would

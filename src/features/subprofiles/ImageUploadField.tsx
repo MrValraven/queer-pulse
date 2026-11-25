@@ -87,6 +87,10 @@ interface ImageUploadFieldProps {
   /** Additive. Leaves the slot out, so only the buttons show (a picker
    *  offered as a lone "Add image" chip). Off by default. */
   isSlotHidden?: boolean;
+  /** Additive. The image's `alt` text for a picture that carries meaning
+   *  (a quiz question's picture). Left out, the image stays decorative
+   *  (`alt=""`), as before. */
+  alt?: string;
 }
 
 /**
@@ -125,6 +129,7 @@ export function ImageUploadField({
   slotClassName,
   buttonClassName,
   isSlotHidden = false,
+  alt,
 }: ImageUploadFieldProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -195,6 +200,7 @@ export function ImageUploadField({
     tint: "plum",
     shape: circle ? "circle" : "rounded",
     src: displayedValue || undefined,
+    alt,
     width: circle || isSquare ? size : "100%",
     height: posterAspect === null ? size : posterSlotHeight(posterAspect, size),
     radius: 14,

@@ -53,95 +53,128 @@
   list-style: none;
 }
 
+/* An answer or order row: the shape (or the grip), the "Answer 1" label and
+   the row's buttons on the first line, its language fields across the whole
+   row under them, so the inputs get the full width of a narrow column. */
 .optionRow,
 .orderRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "lead label actions"
+    "fields fields fields";
+  align-items: center;
+  column-gap: 8px;
+  row-gap: 4px;
   padding-block: 8px;
   border-bottom: 1px solid var(--line);
 }
 
-.optionRow > :nth-child(2),
-.orderRow > :nth-child(2),
-.orderRow > :only-child {
-  flex: 1;
+/* A text-only row (the studio's other-language fields) has no buttons: an
+   order row drops the grip column too, so no empty column leaves a gap. */
+.optionRow.textOnlyRow {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "lead label"
+    "fields fields";
+}
+
+.orderRow.textOnlyRow {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label"
+    "fields";
+}
+
+.rowLead {
+  grid-area: lead;
+  display: flex;
+  align-items: center;
+}
+
+.rowLabel {
+  grid-area: label;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rowFields {
+  grid-area: fields;
   min-width: 0;
 }
 
 .optionActions {
+  grid-area: actions;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding-top: 24px;
+  gap: 0;
 }
 
+/* The held row covers its neighbours while it follows the pointer, so it
+   alone keeps a ground. The studio inspector sets both hooks: its rows sit
+   on the column's own surface. */
 .orderRow {
   position: relative;
-  background: var(--paper);
+  background: var(--studio-order-row-background, var(--paper));
 }
 
-/* A drawn radio: the native one paints a flat grey disc on a dark surface. */
-.radio {
-  appearance: none;
-  display: grid;
-  flex-shrink: 0;
-  place-content: center;
-  width: 24px;
-  height: 24px;
-  margin: 10px;
+.orderRow[data-held] {
+  background: var(--studio-order-row-held-background, var(--paper));
+}
+
+/* The correct mark of a multiple choice option: a check toggle. Several
+   options can be marked; the last wrong one cannot (aria-disabled). */
+button.correctToggle {
   border: 2px solid rgba(var(--line-rgb), 0.45);
   border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
-  transition-property: border-color, background-color;
+  color: transparent;
+  transition-property: border-color, background-color, color;
   transition-duration: var(--dur-fast);
 }
 
-.radio::before {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent-deep);
-  transform: scale(0);
-  transition: transform var(--dur-fast) var(--ease);
-}
-
-.radio:checked {
+button.correctToggleOn {
   border-color: var(--accent-deep);
   background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-deep);
 }
 
-.radio:checked::before {
-  transform: scale(1);
-}
-
-:global([data-theme="dark"]) .radio:checked {
+:global([data-theme="dark"]) button.correctToggleOn {
   border-color: var(--accent);
+  color: var(--accent);
 }
 
-:global([data-theme="dark"]) .radio:checked::before {
-  background: var(--accent);
+button.correctToggle[aria-disabled="true"] {
+  border-style: dashed;
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
-@media (hover: hover) {
-  .radio:not(:checked):hover {
+@media (hover: hover) and (pointer: fine) {
+  button.correctToggle:not(.correctToggleOn):not([aria-disabled="true"]):hover {
     border-color: rgba(var(--line-rgb), 0.7);
+    color: rgba(var(--ink-rgb), 0.4);
+  }
+
+  /* Outranks the icon button's own (0,4,0) hover, which would grey the mark. */
+  button.correctToggle.correctToggleOn:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    background: rgba(var(--accent-rgb), 0.18);
+    color: var(--accent-deep);
+  }
+
+  :global([data-theme="dark"])
+    button.correctToggle.correctToggleOn:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    color: var(--accent);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .radio,
-  .radio::before {
+  button.correctToggle {
     transition: none;
   }
-}
-
-.radio:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
 }
 
 /* Reorder controls */
@@ -152,37 +185,26 @@
   padding-top: 20px;
 }
 
-.grip {
-  display: inline-flex;
+/* The up and down buttons side by side, spaced as the player's trio is. */
+.reorderArrows {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  min-width: var(--tap-min);
-  min-height: var(--tap-min);
-  border: none;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--ink-60);
-  cursor: grab;
-  touch-action: none;
-  transition-property: background-color, color;
-  transition-duration: var(--dur-fast);
+  gap: 2px;
 }
 
-.grip:active {
+/* The grip is the shared icon button; these add what a drag handle needs.
+   Doubled, so they outrank the button module's own cursor and press scale. */
+.grip.grip {
+  cursor: grab;
+  touch-action: none;
+}
+
+.grip.grip:active {
   cursor: grabbing;
 }
 
-.grip:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .grip:hover {
-    background: rgba(var(--ink-rgb), 0.06);
-    color: var(--ink);
-  }
+button.grip.grip:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: none;
 }
 
 /* True or false cards */
@@ -218,6 +240,24 @@
 :global([data-theme="dark"]) .cardChecked {
   border-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.14);
+}
+
+/* Closest number: the margin control under the right number (contract 6.1). */
+.toleranceFields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.card.toleranceCard {
+  justify-content: center;
+  padding-inline: 8px;
+  text-align: center;
+}
+
+.amountField {
+  margin-bottom: 0;
 }
 
 /* Accepted answers */
@@ -344,4 +384,94 @@ button.mediaSlideButton svg {
 .mediaSlide .problem,
 .mediaChip .problem {
   color: var(--qs-low);
+}
+
+/* Item 24, studio only: the "Same in both" switch row of a bilingual field,
+   the muted PT line it shows where the PT input was, and the review mark
+   under a PT text filled from EN. */
+.sameRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--tap-min);
+}
+
+/* One line, whatever the column: it shortens with an ellipsis before it
+   would ever break inside a word. */
+.sameLabel {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.sameRow > :last-child {
+  flex: none;
+}
+
+.portugueseSlot {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mirrorLine {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-tag);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+  min-width: 0;
+}
+
+.mirrorTag {
+  flex: none;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+}
+
+.mirrorText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.reviewMark {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding-top: 8px;
+}
+
+.reviewMarkText {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-13);
+  /* Advisory, amber: the text may be right already; it only asks for a look. */
+  color: var(--amber-ink);
+}
+
+.reviewMarkIcon {
+  flex: none;
+  width: 1em;
+  height: 1em;
+}
+
+/* "Fill empty PT with the EN text" under the languages choice. */
+.fillRow {
+  display: flex;
+  padding-top: 4px;
 }

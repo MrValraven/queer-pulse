@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type FormEvent,
-  type ReactNode,
-} from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { Toggle } from "../../../shared/components/ui/Controls";
@@ -17,6 +10,8 @@ import {
   type QuizshowPlayerState,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { quizshowSuggestedScreenNameOf } from "../api/quizshowErrors";
+import { foldNameKey } from "../quizshowNormalise";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import styles from "./QuizshowPlay.module.css";
@@ -27,6 +22,8 @@ const NAME_ERROR_CODES: readonly QuizshowErrorCode[] = [
   "quizshow_text_blank",
   "quizshow_text_blocked",
 ];
+/** The name copy when every "<name> 2".."<name> 99" is taken too (C6.13 omits the suggestion). */
+const NAME_TAKEN_NO_SUGGESTION_KEY = "quizshow:player.nameTakenNoSuggestion";
 const TEAM_ERROR_CODES: readonly QuizshowErrorCode[] = [
   "quizshow_team_not_found",
   "quizshow_team_full",
@@ -52,11 +49,25 @@ function errorsForCode(
 ): JoinErrors {
   const key = sendFailureKeyOf(code);
   if (code === "transport_timeout") return { ...NO_ERRORS, form: key };
+  if (code === "quizshow_screen_name_taken") return { ...NO_ERRORS, name: key };
   if (NAME_ERROR_CODES.includes(code)) {
     return { ...NO_ERRORS, name: key, team: hasSentNewTeam ? key : null };
   }
   if (TEAM_ERROR_CODES.includes(code)) return { ...NO_ERRORS, team: key };
   return { ...NO_ERRORS, form: key };
+}
+
+/** The lobby team named like the player's old team (C6.17), compared by `foldNameKey`. */
+function rematchTeamIdOf(
+  session: QuizshowPlayerState,
+  teamName: string | null,
+): string | null {
+  if (teamName === null) return null;
+  const teamKey = foldNameKey(teamName);
+  const lobbyTeam = session.lobby.teams.find(
+    (candidate) => foldNameKey(candidate.name) === teamKey,
+  );
+  return lobbyTeam?.teamId ?? null;
 }
 
 /** A line under a control that folds in and out; it keeps its words while it folds away. */
@@ -113,32 +124,68 @@ export function QuizshowToggleRow({
 
 interface QuizshowJoinFormProps {
   controller: QuizshowSessionController;
-  /** Shown above the name step, such as the game's host. */
-  header?: ReactNode;
   /** The player confirmed the 18+ step; `lobby:join` then carries it. */
   hasAcceptedAdultContent?: boolean;
   /** The server asked for the 18+ step; the page shows it again and the form shows no error. */
   onConsentRequired?: () => void;
+  /** The old team's name for a rematch join (D7). The play page owns the
+   *  stored name: it reads it once and clears it, so the form never touches storage. */
+  rematchTeamName?: string | null;
+}
+
+/** "Use Alex 2" under a taken name (item 33): fills the field, then focus moves to "I'm in". */
+function NameSuggestion({
+  suggestion,
+  onUse,
+}: {
+  suggestion: string | null;
+  onUse: (suggestion: string) => void;
+}) {
+  const { t } = useTranslation();
+  const [shownSuggestion, setShownSuggestion] = useState(suggestion);
+  if (suggestion !== null && suggestion !== shownSuggestion) {
+    setShownSuggestion(suggestion);
+  }
+  return (
+    <Collapse isOpen={suggestion !== null}>
+      <Button
+        variant="stage-ghost"
+        size="md"
+        onClick={() => {
+          if (shownSuggestion !== null) onUse(shownSuggestion);
+        }}
+      >
+        {t("quizshow:player.useSuggestion", {
+          suggestion: shownSuggestion ?? "",
+        })}
+      </Button>
+    </Collapse>
+  );
 }
 
 function JoinFormBody({
   controller,
   session,
-  header,
   hasAcceptedAdultContent = false,
   onConsentRequired,
+  rematchTeamName = null,
 }: QuizshowJoinFormProps & { session: QuizshowPlayerState }) {
   const { t } = useTranslation();
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
   // Coming from the 18+ step, focus lands on the name step's heading.
   useEffect(() => {
     if (hasAcceptedAdultContent) headingRef.current?.focus();
   }, [hasAcceptedAdultContent]);
   const [screenName, setScreenName] = useState(session.suggestedScreenName);
-  const [isAvatarShown, setIsAvatarShown] = useState(false);
-  const [hasExtraTime, setHasExtraTime] = useState(false);
+  // A rematch join starts on the old team when it is in this lobby (D7).
+  const [rematchTeamId] = useState(() =>
+    rematchTeamIdOf(session, rematchTeamName),
+  );
+  // The picker selects `rematchTeamId` on mount when that team has room.
   const [team, setTeam] = useState<QuizshowLobbyJoinInput["team"]>(null);
   const [errors, setErrors] = useState<JoinErrors>(NO_ERRORS);
+  const [nameSuggestion, setNameSuggestion] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const isTeams = session.playMode === "teams";
   // A picked team that emptied and vanished drops the pick, and says why.
@@ -149,6 +196,13 @@ function JoinFormBody({
   ) {
     setTeam(null);
     setErrors({ ...errors, team: "quizshow:errors.team_not_found" });
+  }
+
+  function applySuggestion(suggestion: string) {
+    setScreenName(suggestion);
+    setNameSuggestion(null);
+    setErrors({ ...errors, name: null });
+    submitRef.current?.focus();
   }
 
   async function submitJoin(event: FormEvent<HTMLFormElement>) {
@@ -171,35 +225,43 @@ function JoinFormBody({
       return;
     }
     setErrors(NO_ERRORS);
+    setNameSuggestion(null);
     setIsSending(true);
     const sentTeam =
       team !== null && "newTeam" in team
         ? { newTeam: { ...team.newTeam, name: team.newTeam.name.trim() } }
         : team;
+    // Extra time and the photo are set from the lobby sheet after joining (item 31).
     const result = await controller.send("lobby:join", {
       screenName: trimmedName,
       ...(hasAcceptedAdultContent ? { hasAcceptedAdultContent: true } : {}),
-      isAvatarShown,
-      hasExtraTime,
+      isAvatarShown: false,
+      hasExtraTime: false,
       team: isTeams ? sentTeam : null,
     });
     setIsSending(false);
+    if (result.ok) return;
     if (
-      !result.ok &&
       result.code === "quizshow_adult_consent_required" &&
       onConsentRequired !== undefined
     ) {
       onConsentRequired();
       return;
     }
-    if (!result.ok) {
-      setErrors(
-        errorsForCode(
-          result.code,
-          isTeams && sentTeam !== null && "newTeam" in sentTeam,
-        ),
-      );
-    }
+    const suggestion =
+      result.code === "transport_timeout"
+        ? null
+        : quizshowSuggestedScreenNameOf(result);
+    const nextErrors = errorsForCode(
+      result.code,
+      isTeams && sentTeam !== null && "newTeam" in sentTeam,
+    );
+    setNameSuggestion(suggestion);
+    setErrors(
+      result.code === "quizshow_screen_name_taken" && suggestion === null
+        ? { ...nextErrors, name: NAME_TAKEN_NO_SUGGESTION_KEY }
+        : nextErrors,
+    );
   }
 
   return (
@@ -208,7 +270,6 @@ function JoinFormBody({
       onSubmit={(event) => void submitJoin(event)}
       noValidate
     >
-      {header}
       <h1 ref={headingRef} tabIndex={-1} className={styles.title}>
         {t("quizshow:player.nameTitle")}
       </h1>
@@ -218,7 +279,11 @@ function JoinFormBody({
       <FormField
         label={t("quizshow:player.nameLabel")}
         helper={t("quizshow:player.nameHint")}
-        error={errors.name === null ? undefined : t(errors.name)}
+        error={
+          errors.name === null
+            ? undefined
+            : t(errors.name, { suggestion: nameSuggestion ?? "" })
+        }
       >
         <input
           type="text"
@@ -229,20 +294,11 @@ function JoinFormBody({
           onChange={(event) => {
             setScreenName(event.target.value);
             setErrors({ ...errors, name: null });
+            setNameSuggestion(null);
           }}
         />
       </FormField>
-      <QuizshowToggleRow
-        label={t("quizshow:player.avatarLabel")}
-        isOn={isAvatarShown}
-        onChange={setIsAvatarShown}
-      />
-      <QuizshowToggleRow
-        label={t("quizshow:player.extraTimeLabel")}
-        hint={t("quizshow:player.extraTimeHint")}
-        isOn={hasExtraTime}
-        onChange={setHasExtraTime}
-      />
+      <NameSuggestion suggestion={nameSuggestion} onUse={applySuggestion} />
       {isTeams && (
         <>
           <hr className={styles.divider} />
@@ -250,6 +306,7 @@ function JoinFormBody({
             lobby={session.lobby}
             maxTeamSize={session.maxTeamSize}
             value={team}
+            initialTeamId={rematchTeamId}
             onChange={(nextTeam) => {
               setTeam(nextTeam);
               setErrors({ ...errors, team: null });
@@ -259,8 +316,14 @@ function JoinFormBody({
         </>
       )}
       <QuizshowErrorLine errorKey={errors.form} />
-      <Button type="submit" variant="stage" size="lg" aria-disabled={isSending}>
-        {t("quizshow:player.joinCta")}
+      <Button
+        ref={submitRef}
+        type="submit"
+        variant="stage"
+        size="lg"
+        aria-disabled={isSending}
+      >
+        {t("quizshow:player.joinSubmit")}
       </Button>
     </form>
   );
@@ -268,9 +331,9 @@ function JoinFormBody({
 
 export function QuizshowJoinForm({
   controller,
-  header,
   hasAcceptedAdultContent,
   onConsentRequired,
+  rematchTeamName,
 }: QuizshowJoinFormProps) {
   const { session } = controller.state;
   if (!isPlayerState(session)) return null;
@@ -278,9 +341,9 @@ export function QuizshowJoinForm({
     <JoinFormBody
       controller={controller}
       session={session}
-      header={header}
       hasAcceptedAdultContent={hasAcceptedAdultContent}
       onConsentRequired={onConsentRequired}
+      rematchTeamName={rematchTeamName}
     />
   );
 }

@@ -82,6 +82,12 @@ export const routes = {
   adminQuizshowTemplates: "/admin/quizshow/templates",
   /** One template in the full-screen studio (`adminQuizshowTemplatePath`). */
   adminQuizshowTemplate: "/admin/quizshow/templates/:templateId",
+  /** Pulse Live win badges: the badge library. Moderator and Admin. */
+  adminQuizshowBadges: "/admin/quizshow/badges",
+  /** Pulse Live events with a quiz: the staff list. Moderator and Admin. */
+  adminQuizshowEvents: "/admin/quizshow/events",
+  /** One event's badge setup (`adminQuizshowEventBadgesPath`). */
+  adminQuizshowEventBadges: "/admin/quizshow/events/:eventId/badges",
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",
   adminMarketingVideos: "/admin/marketing-videos",
@@ -356,7 +362,7 @@ export const routes = {
   /** One-time founder bootstrap. Public, and 404s from the API once used. */
   genesis: "/genesis",
   gatherings: "/gatherings",
-  /** Pulse Live's player screen (quizshow): `/play` takes a join code, `/play/:code` plays a session. */
+  /** Pulse Live's player screen (quizshow): `/play` takes a join code, `/play/:code` plays a session. The TV pairing page (`/play/tv`) and the helper remote (`/play/remote`) sit under it. */
   play: "/play",
   /** The standalone friend-match questionnaire (F3): `?return=` sends the
    *  member back to the gathering card that opened it. */
@@ -644,6 +650,9 @@ export const adminCreatorDraftPath = (kind: string, id: string) =>
 /** One Pulse Live quiz template's builder page. */
 export const adminQuizshowTemplatePath = (templateId: string) =>
   `${routes.adminQuizshowTemplates}/${encodeURIComponent(templateId)}`;
+/** One event's win badge setup page. */
+export const adminQuizshowEventBadgesPath = (eventId: string) =>
+  `${routes.adminQuizshowEvents}/${encodeURIComponent(eventId)}/badges`;
 /** The creator drafts list, optionally filtered to one kind. */
 export const adminCreatorDraftsPath = (kind?: string | null) =>
   kind ? `/admin/creator-drafts?kind=${kind}` : "/admin/creator-drafts";

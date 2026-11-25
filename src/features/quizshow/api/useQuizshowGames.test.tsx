@@ -209,6 +209,8 @@ describe("quizshow games in demo mode", () => {
         playMode: "solo",
         playerCount: 3,
         startedAt: "2026-10-20T19:00:00.000Z",
+        isPractice: false,
+        isBehindQuiz: false,
       },
       quiz: {
         ...quiz,

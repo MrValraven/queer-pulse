@@ -456,14 +456,30 @@ describe("useAuthGateRedirect: mod-accessible admin pages", () => {
 
 describe("Pulse Live gates", () => {
   afterEach(() => vi.unstubAllEnvs());
-  it("keeps the player screen for signed-in members", () => {
+  it("keeps /play, My games and the helper remote for signed-in members", () => {
     expect(isGatedPath("/play")).toBe(true);
-    expect(isGatedPath("/play/QZ7KP4")).toBe(true);
+    expect(isGatedPath("/play/games")).toBe(true);
+    expect(isGatedPath("/play/games/g1")).toBe(true);
+    expect(isGatedPath("/play/games/g1/print")).toBe(true);
+    expect(isGatedPath("/play/remote")).toBe(true);
+    expect(isGatedPath("/play/remote/session-1")).toBe(true);
+  });
+  it("leaves the join page and the TV pairing page open to signed-out visitors", () => {
+    expect(isGatedPath("/play/QZ7KP4")).toBe(false);
+    expect(isGatedPath("/play/ABC234")).toBe(false);
+    expect(isGatedPath("/play/tv")).toBe(false);
+  });
+  it("keeps an event's quizshow print sheet for signed-in members", () => {
+    expect(
+      isGatedPath("/gatherings/pride-brunch-jun-abcde/quizshow/print"),
+    ).toBe(true);
   });
   it("leaves Pulse Live out of the coming-soon gate, so early-access members reach it", () => {
     vi.stubEnv("DEV", false);
     expect(isComingSoonPath("/play")).toBe(false);
     expect(isComingSoonPath("/play/QZ7KP4")).toBe(false);
+    expect(isComingSoonPath("/play/tv")).toBe(false);
+    expect(isComingSoonPath("/play/remote")).toBe(false);
     expect(
       isComingSoonPath("/gatherings/pride-brunch-jun-abcde/quizshow/screen"),
     ).toBe(false);
@@ -491,9 +507,20 @@ describe("Pulse Live gates", () => {
     );
     expect(isQuizshowHostingPath("/players")).toBe(false);
   });
-  it("leaves /play and /play/:code out of the hosting gate", () => {
+  it("treats the print sheets as hosting paths", () => {
+    expect(isQuizshowHostingPath("/play/games/g1/print")).toBe(true);
+    expect(
+      isQuizshowHostingPath(
+        "/gatherings/pride-brunch-jun-abcde/quizshow/print",
+      ),
+    ).toBe(true);
+  });
+  it("leaves /play, /play/:code, /play/tv and the helper remote out of the hosting gate", () => {
     expect(isQuizshowHostingPath("/play")).toBe(false);
     expect(isQuizshowHostingPath("/play/QZ7KP4")).toBe(false);
+    expect(isQuizshowHostingPath("/play/tv")).toBe(false);
+    expect(isQuizshowHostingPath("/play/remote")).toBe(false);
+    expect(isQuizshowHostingPath("/play/remote/session-1")).toBe(false);
   });
 });
 

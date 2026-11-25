@@ -2,6 +2,7 @@ import { useId } from "react";
 import { Button, QrCode } from "../../../shared/components/ui";
 import type { QuizshowLiveSessionRef } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { QuizshowPracticeBadge } from "../stage/QuizshowPracticeBadge";
 import {
   quizshowScopeRemotePath,
   quizshowScopeRemoteUrl,
@@ -35,6 +36,12 @@ export function QuizshowLiveSessionPanel({
           {t("quizshow:live.title")}
         </h3>
         <p className={styles.statusLine} role="status">
+          {liveSession.isPractice && (
+            <QuizshowPracticeBadge
+              tone="studio"
+              className={styles.practiceBadge}
+            />
+          )}
           <span className={styles.status}>
             {t(`quizshow:live.status.${liveSession.status}`)}
           </span>

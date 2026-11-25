@@ -29,7 +29,9 @@ export {
 export {
   INSTALL_INSTRUCTIONS,
   INSTALL_TAB_LABEL_KEY,
+  INSTALL_STEP_IMAGES,
   getInstallStepKeys,
+  type InstallStepScreenshot,
 } from "./installInstructions";
 export { detectInAppBrowser } from "./inAppBrowser";
 export { useUnsavedChangesGuard } from "./useUnsavedChangesGuard";

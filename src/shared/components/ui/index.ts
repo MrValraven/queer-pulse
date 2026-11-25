@@ -9,7 +9,12 @@ export { Eyebrow } from "./Eyebrow";
 export { ExpandableText } from "./ExpandableText";
 export { SectionHead } from "./SectionHead";
 export { VisibilityBadge, type VisibilityMode } from "./VisibilityBadge";
-export { SkeletonLine, SkeletonAvatar, SkeletonCard } from "./Skeleton";
+export {
+  SkeletonLine,
+  SkeletonBlock,
+  SkeletonAvatar,
+  SkeletonCard,
+} from "./Skeleton";
 export { EmptyState } from "./EmptyState";
 export { LoadErrorState, type LoadErrorStateProps } from "./LoadErrorState";
 export {

@@ -17,6 +17,7 @@ import {
   QUIZSHOW_ERROR_CODES,
   QUIZSHOW_GAMES_PER_MEMBER_MAX,
   QUIZSHOW_LOBBY_OPENS_PER_HOUR_MAX,
+  QUIZSHOW_PAIRING_CODE_PATTERN,
   QUIZSHOW_TEMPLATE_CARD_FIELDS,
   QUIZSHOW_TEMPLATE_STATUSES,
   type QuizshowImportInput,
@@ -25,6 +26,67 @@ import {
   type QuizshowPhaseChangeFrame,
   type QuizshowStateBase,
 } from "./quizshow";
+
+/** Contract 3.3: the item 8 causes, then the new feature codes, in table order. */
+const QUIZSHOW_V2_ERROR_CODES = [
+  "quizshow_session_not_started",
+  "quizshow_already_started",
+  "quizshow_session_paused",
+  "quizshow_session_ended",
+  "quizshow_spin_not_available",
+  "quizshow_no_wheel_open",
+  "quizshow_no_timer_running",
+  "quizshow_already_revealed",
+  "quizshow_nothing_to_reveal",
+  "quizshow_nothing_to_skip",
+  "quizshow_review_not_open",
+  "quizshow_unhide_review_only",
+  "quizshow_author_removed",
+  "quizshow_favourite_not_available",
+  "quizshow_teams_off",
+  "quizshow_screen_name_taken",
+  "quizshow_joining_locked",
+  "quizshow_not_in_lobby",
+  "quizshow_move_during_question",
+  "quizshow_player_left",
+  "quizshow_rescore_not_now",
+  "quizshow_accept_needs_typed_answer",
+  "quizshow_change_needs_choice_question",
+  "quizshow_answer_text_not_found",
+  "quizshow_answer_already_correct",
+  "quizshow_correct_option_not_found",
+  "quizshow_every_option_correct",
+  "quizshow_adjust_not_now",
+  "quizshow_adjust_below_zero",
+  "quizshow_entrant_not_found",
+  "quizshow_pairing_code_not_found",
+  "quizshow_pairing_code_expired",
+  "quizshow_pairing_code_used",
+  "quizshow_paired_devices_full",
+  "quizshow_helper_cannot_pair",
+  "quizshow_helper_is_playing",
+  "quizshow_device_not_found",
+  "quizshow_device_unpaired",
+  "quizshow_device_ticket_expired",
+  "quizshow_pairing_not_found",
+  "quizshow_pairing_rate_limited",
+  "quizshow_pairing_too_many_tries",
+  "quizshow_guest_push_cooldown",
+  "quizshow_guest_push_already_sent",
+  "quizshow_guest_push_needs_event",
+  "quizshow_guest_push_practice",
+  "quizshow_refresh_quiz_incomplete",
+  "quizshow_refresh_adults_mismatch",
+  "quizshow_refresh_adults_lobby_joined",
+  "quizshow_refresh_quiz_gone",
+  "quizshow_rematch_not_found",
+  "quizshow_rematch_expired",
+  "quizshow_reaction_not_now",
+  "quizshow_import_round_not_found",
+  "quizshow_import_too_many_rounds",
+  "quizshow_import_too_many_questions",
+  "quizshow_import_too_many_wheels",
+] as const;
 
 describe("quizshow contract mirror", () => {
   it("keeps the join code alphabet free of look-alike characters", () => {
@@ -39,7 +101,12 @@ describe("quizshow contract mirror", () => {
     expect(QUIZSHOW_LIMITS.streakCap).toBe(500);
     expect(QUIZSHOW_LIMITS.answerGraceMs).toBe(500);
     expect(QUIZSHOW_LIMITS.extraTimeFactor).toBe(1.5);
-    expect(QUIZSHOW_LIMITS.readPhaseMs).toBe(4000);
+    expect(QUIZSHOW_LIMITS.readPhaseBaseMs).toBe(1500);
+    expect(QUIZSHOW_LIMITS.readPhaseMsPerChar).toBe(25);
+    expect(QUIZSHOW_LIMITS.readPhaseMinMs).toBe(3000);
+    expect(QUIZSHOW_LIMITS.readPhaseMaxMs).toBe(8000);
+    expect("readPhaseMs" in QUIZSHOW_LIMITS).toBe(false);
+    expect("closestNumberBand" in QUIZSHOW_LIMITS).toBe(false);
     expect(QUIZSHOW_LIMITS.pointsValues).toEqual([500, 1000, 2000]);
     expect(QUIZSHOW_LIMITS.lieDetectorFooledPoints).toBe(500);
     expect(QUIZSHOW_LIMITS.partyVotePoints).toBe(250);
@@ -67,8 +134,16 @@ describe("quizshow contract mirror", () => {
       "paused",
     ]);
   });
-  it("offers eight team shapes", () => {
-    expect(QUIZSHOW_TEAM_COLOR_KEYS).toHaveLength(8);
+  it("offers one team key per team a session can hold", () => {
+    expect(QUIZSHOW_TEAM_COLOR_KEYS).toHaveLength(24);
+    expect(QUIZSHOW_TEAM_COLOR_KEYS.length).toBe(
+      QUIZSHOW_LIMITS.teamsPerSessionMax,
+    );
+  });
+  it("accepts a pairing code of six digits from 2 to 9 only", () => {
+    expect(QUIZSHOW_PAIRING_CODE_PATTERN.test("234567")).toBe(true);
+    expect(QUIZSHOW_PAIRING_CODE_PATTERN.test("123456")).toBe(false);
+    expect(QUIZSHOW_PAIRING_CODE_PATTERN.test("23456")).toBe(false);
   });
   it("carries the shared screen mute on the state base", () => {
     const base: Pick<
@@ -205,12 +280,18 @@ describe("quizshow contract mirror, wheel vocabulary", () => {
     expect(QUIZSHOW_LIMITS.wheelLandingToleranceMs).toBe(250);
   });
   it("appends the wheel problem codes and the wheel socket codes", () => {
-    expect(QUIZSHOW_QUIZ_PROBLEM_CODES.slice(-2)).toEqual([
-      "too_many_wheels",
-      "wheel_too_few_slices",
-    ]);
-    const accountIndex = QUIZSHOW_ERROR_CODES.indexOf("ACCOUNT_RESTRICTED");
-    expect(QUIZSHOW_ERROR_CODES.slice(accountIndex - 5, accountIndex)).toEqual([
+    const wheelProblemIndex =
+      QUIZSHOW_QUIZ_PROBLEM_CODES.indexOf("too_many_wheels");
+    expect(
+      QUIZSHOW_QUIZ_PROBLEM_CODES.slice(
+        wheelProblemIndex,
+        wheelProblemIndex + 2,
+      ),
+    ).toEqual(["too_many_wheels", "wheel_too_few_slices"]);
+    const jokerIndex = QUIZSHOW_ERROR_CODES.indexOf(
+      "quizshow_joker_wheel_next",
+    );
+    expect(QUIZSHOW_ERROR_CODES.slice(jokerIndex - 4, jokerIndex + 1)).toEqual([
       "quizshow_wheel_not_spun",
       "quizshow_wheel_spinning",
       "quizshow_wheel_spin_too_few_rounds",
@@ -241,5 +322,33 @@ describe("quizshow contract mirror, wheel vocabulary", () => {
       kind: "wheel",
       wheelRoundIndex: 3,
     });
+  });
+});
+
+describe("quizshow contract mirror, Pulse Live v2 codes", () => {
+  it("appends the 57 v2 error codes once each, in contract order, before the restriction code", () => {
+    const jokerIndex = QUIZSHOW_ERROR_CODES.indexOf(
+      "quizshow_joker_wheel_next",
+    );
+    const accountIndex = QUIZSHOW_ERROR_CODES.indexOf("ACCOUNT_RESTRICTED");
+    expect(QUIZSHOW_ERROR_CODES.slice(jokerIndex + 1, accountIndex)).toEqual([
+      ...QUIZSHOW_V2_ERROR_CODES,
+    ]);
+    expect(QUIZSHOW_V2_ERROR_CODES).toHaveLength(57);
+    for (const code of QUIZSHOW_V2_ERROR_CODES) {
+      expect(
+        QUIZSHOW_ERROR_CODES.filter((listed) => listed === code),
+      ).toHaveLength(1);
+    }
+  });
+  it("appends the six v2 problem codes after the wheel problems", () => {
+    expect(QUIZSHOW_QUIZ_PROBLEM_CODES.slice(-6)).toEqual([
+      "correct_option_missing",
+      "too_many_correct_options",
+      "tolerance_out_of_range",
+      "poll_in_party_round",
+      "slow_reveal_needs_picture",
+      "warm_up_not_first",
+    ]);
   });
 });

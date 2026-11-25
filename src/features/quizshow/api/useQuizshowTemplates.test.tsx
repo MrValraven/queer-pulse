@@ -18,6 +18,7 @@ import {
   useDeleteQuizshowTemplate,
   usePublishQuizshowTemplate,
   useQuizshowTemplateCards,
+  useQuizshowTemplatePreview,
   useQuizshowTemplateRows,
 } from "./useQuizshowTemplates";
 import { quizResponseOfTemplate } from "../templates/quizshowTemplateResponse";
@@ -63,6 +64,31 @@ describe("quizshow templates in demo mode", () => {
     const cardIds = result.current.data?.items.map((card) => card.id) ?? [];
     expect(cardIds).toHaveLength(10);
     expect(cardIds).not.toContain(QUIZSHOW_DEMO_TEMPLATE_IDS.queerCinema);
+  });
+
+  it("reads a template preview for the host before importing", async () => {
+    const templateId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    const { wrapper } = setup();
+    const { result } = renderHook(
+      () => useQuizshowTemplatePreview(templateId),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(result.current.data?.templateId).toBe(templateId);
+    expect(result.current.data?.title).toEqual(
+      demoGetTemplate(templateId).card.title,
+    );
+  });
+
+  it("holds the template preview back without a template id", () => {
+    const { wrapper } = setup();
+    const { result } = renderHook(() => useQuizshowTemplatePreview(null), {
+      wrapper,
+    });
+
+    expect(result.current.fetchStatus).toBe("idle");
   });
 
   it("lists drafts first for staff", async () => {

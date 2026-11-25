@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import {
   NavigationType,
   useLocation,
@@ -87,6 +87,69 @@ function rememberPosition(key: string, offset: number): void {
   }
 }
 
+/**
+ * How long a Back restore keeps chasing its saved offset while the page grows
+ * into it. Pages often paint shorter than they end up (a list filling in, a
+ * deferred section, a photo hold), so the first `scrollTo` is clamped to the
+ * short page. Chrome's scroll anchoring then pins whatever sits in view (often
+ * the footer) and rides it down as content arrives above, which landed a
+ * directory Back at the very bottom. A few seconds covers a slow first paint;
+ * past that the page is what it is.
+ */
+const RESTORE_SETTLE_MS = 3000;
+
+/** Anything the visitor does to scroll ends the chase: their intent wins. */
+const SCROLL_INTENT_EVENTS = [
+  "wheel",
+  "touchstart",
+  "keydown",
+  "pointerdown",
+] as const;
+
+/**
+ * Scroll the window to `targetOffset`, and if the page is still too short to
+ * get there, re-apply it each time the page grows until it lands, the visitor
+ * scrolls, or `RESTORE_SETTLE_MS` passes. Returns a function that stops the
+ * chase (the caller runs it when the visitor navigates again).
+ */
+function restoreScrollPosition(targetOffset: number): () => void {
+  const scrollToTarget = () =>
+    window.scrollTo({ top: targetOffset, behavior: "instant" });
+  const hasReachedTarget = () => Math.abs(window.scrollY - targetOffset) <= 1;
+
+  scrollToTarget();
+  if (hasReachedTarget() || typeof ResizeObserver === "undefined") {
+    return () => {};
+  }
+
+  // Scroll anchoring would ride the clamped viewport's anchor down as content
+  // arrives above it; this function owns the offset until it lands.
+  const rootStyle = document.documentElement.style;
+  const previousOverflowAnchor = rootStyle.overflowAnchor;
+  rootStyle.overflowAnchor = "none";
+  const resizeObserver = new ResizeObserver(() => {
+    scrollToTarget();
+    if (hasReachedTarget()) stopChasing();
+  });
+  const settleTimer = window.setTimeout(stopChasing, RESTORE_SETTLE_MS);
+  function stopChasing() {
+    rootStyle.overflowAnchor = previousOverflowAnchor;
+    resizeObserver.disconnect();
+    window.clearTimeout(settleTimer);
+    for (const eventName of SCROLL_INTENT_EVENTS) {
+      window.removeEventListener(eventName, stopChasing, true);
+    }
+  }
+  resizeObserver.observe(document.body);
+  for (const eventName of SCROLL_INTENT_EVENTS) {
+    window.addEventListener(eventName, stopChasing, {
+      capture: true,
+      passive: true,
+    });
+  }
+  return stopChasing;
+}
+
 export function ScrollManager() {
   const { pathname, search, hash, key } = useLocation();
   const navigationType = useNavigationType();
@@ -94,6 +157,18 @@ export function ScrollManager() {
   // page change from the same page re-stating its query string. Null until the
   // first navigation completes, which keeps the initial load resetting to top.
   const previousRouteRef = useRef<ScrollRouteLocation | null>(null);
+  // The scroll-map slot of the entry on screen, switched in the same commit
+  // that swaps the page. The incoming page often paints shorter than it ends
+  // up (a first render, a list still filling), and the browser clamps scrollY
+  // to fit it. That clamp lands after the commit: in the scroll event it
+  // fires, and in the passive cleanup below. Both would stamp the clamped
+  // value over the entry being left, so Back restored short. Writes for any
+  // slot other than this one are dropped; the listener already recorded the
+  // real offset while the visitor was on that page.
+  const liveScrollKeyRef = useRef(scrollKeyForPath(pathname, key));
+  useLayoutEffect(() => {
+    liveScrollKeyRef.current = scrollKeyForPath(pathname, key);
+  }, [pathname, key]);
 
   // Own scroll restoration ourselves; the browser's guess fights our restore.
   useEffect(() => {
@@ -106,8 +181,10 @@ export function ScrollManager() {
   }, []);
 
   // Keep this entry's scroll offset fresh so it's accurate the moment we leave
-  // it. The cleanup records the final position when `key` changes (navigation
-  // away), and the passive scroll listener keeps it current in between.
+  // it. The passive scroll listener keeps it current while the entry is on
+  // screen; the cleanup's final write lands only while this entry is still the
+  // live one (see `liveScrollKeyRef`), so a navigation never records the
+  // incoming page's clamped offset here.
   useEffect(() => {
     // The window isn't this route's scroll container — recording window.scrollY
     // would just stamp ~0 over its slot. The pane's registered container records
@@ -121,6 +198,7 @@ export function ScrollManager() {
       // `history.back()` (a POP) would then restore the page to the top. Skip
       // until the lock releases (which restores the true offset first).
       if (isScrollLocked()) return;
+      if (liveScrollKeyRef.current !== scrollMapKey) return;
       rememberPosition(scrollMapKey, window.scrollY);
     };
     window.addEventListener("scroll", recordPosition, { passive: true });
@@ -196,8 +274,9 @@ export function ScrollManager() {
         scrollKeyForPath(pathname, key),
       );
       if (savedPosition !== undefined) {
-        window.scrollTo({ top: savedPosition, behavior: "instant" });
-        return;
+        // Chases the offset while the page grows into it (see
+        // RESTORE_SETTLE_MS); the next navigation stops the chase.
+        return restoreScrollPosition(savedPosition);
       }
     }
 

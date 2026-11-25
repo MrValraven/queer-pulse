@@ -21,6 +21,8 @@ export const WHEEL_TEST_SETTINGS: QuizshowRoundSettings = {
   writeSeconds: 60,
   voteSeconds: 30,
   ...QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
+  isWarmUp: false,
+  talkSeconds: 0,
 };
 
 export function wheelTestQuestion(id: string): QuizshowQuestion {
@@ -34,10 +36,14 @@ export function wheelTestQuestion(id: string): QuizshowQuestion {
       { id: "c", text: { en: "Third", pt: "Terceira" } },
       { id: "d", text: { en: "Fourth", pt: "Quarta" } },
     ],
-    answer: { correctIndex: 1 },
+    answer: { correctIndexes: [1] },
     acceptedAnswers: [],
     mediaRef: null,
     mediaUrl: null,
+    mediaAlt: { en: "", pt: "" },
+    mediaReveal: "instant",
+    revealNote: { en: "", pt: "" },
+    numberUnit: { en: "", pt: "" },
     timeLimitSeconds: null,
     points: 1000,
   };
@@ -82,6 +88,7 @@ export function wheelTestQuiz(rounds: QuizshowRound[]): QuizshowQuiz {
     languages: "both",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt: "2026-11-09T00:00:00.000Z",
     rounds,
   };

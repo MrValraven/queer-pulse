@@ -16,6 +16,7 @@ import { DirectoryRelatedPlaces } from "./DirectoryRelatedPlaces";
 import { categoryLabel } from "./localCategories";
 import { directoryCategoryPath } from "./directoryBreadcrumb";
 import s from "./DirectorySpacePage.module.css";
+import skeletonStyles from "./DirectorySpaceSkeleton.module.css";
 
 /** Truncate a listing's tagline/description to a sensible social-meta length. */
 function clampDescription(text: string): string {
@@ -27,15 +28,20 @@ interface Props {
   place: DirectoryPlace;
   /** The viewer's own ref for this listing, present only when they own it. */
   ownerRef?: string;
+  /** The loading skeleton was on screen, so the page fades in over its place. */
+  shouldFadeIn?: boolean;
 }
 
 /**
  * The resolved directory detail page. Split out of `DirectorySpacePage` so that
- * page is left holding only the read, its loading/error/not-found branches, and
- * the staged loader that covers them, and so `place` arrives here already
- * narrowed to a real listing.
+ * page is left holding only the read and its skeleton, error and not-found
+ * branches, and so `place` arrives here already narrowed to a real listing.
  */
-export function DirectorySpaceDetail({ place, ownerRef }: Props) {
+export function DirectorySpaceDetail({
+  place,
+  ownerRef,
+  shouldFadeIn = false,
+}: Props) {
   const { t } = useTranslation();
   // The resolved label (heals legacy display-string categories too) and the
   // filter link whose chip matches it, on the tab the listing lives in.
@@ -55,7 +61,7 @@ export function DirectorySpaceDetail({ place, ownerRef }: Props) {
   const handleExitVisitorView = () => setIsVisitorViewRequested(false);
 
   return (
-    <PageShell>
+    <PageShell className={shouldFadeIn ? skeletonStyles.revealFade : undefined}>
       {/* This route is permanently member-gated (see authGate.ts) and excluded
           from the sitemap/prerender allowlist, so canonical/OG/structured-data
           tags can never reach a crawler or an unauthenticated link-preview

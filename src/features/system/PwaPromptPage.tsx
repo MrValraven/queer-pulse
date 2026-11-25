@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button, Collapse } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
+import { InstallStepImage } from "../../shared/components/system/InstallStepImage";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -174,12 +175,13 @@ export function PwaPromptPage() {
           {stepKeys.map((stepKey, stepIndex) => (
             <div key={stepKey} className={styles.step}>
               <span className={styles.stepN}>{stepIndex + 1}</span>
-              <span>
+              <div>
                 <Translation
                   i18nKey={stepKey}
                   components={{ b: <b />, em: <em /> }}
                 />
-              </span>
+                <InstallStepImage stepKey={stepKey} />
+              </div>
             </div>
           ))}
         </div>

@@ -1,0 +1,72 @@
+/* Quiz badge sections of the badge drawer. The section frame (`drSec`) comes
+   from BadgesPage.module.css; this file holds only what is specific to the
+   quiz details. */
+.howChecked {
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.winsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 13px;
+}
+.winsHead .winsTitle {
+  margin-bottom: 0;
+}
+
+.winList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.winItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 11px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.winItem:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.winLine {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.winDate {
+  flex: none;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.winLink {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.winLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-7);
+}
+@media (hover: hover) and (pointer: fine) {
+  .winLink:hover {
+    color: var(--accent-ink);
+  }
+}

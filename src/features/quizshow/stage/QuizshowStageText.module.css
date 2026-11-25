@@ -1,0 +1,12 @@
+/* Each line of a two-language text (C6.26) sits on its own row. */
+.line {
+  display: block;
+}
+
+/* The PT line when the caller passes no class: smaller, and muted through
+   the stage's own text token, which flips with the screen theme. Text on a
+   team fill (an answer tile) passes its own secondary class instead. */
+.secondary {
+  color: var(--qs-text-mute);
+  font-size: 0.72em;
+}

@@ -360,6 +360,14 @@ button.tile:active:not([aria-disabled="true"]) {
   text-wrap: balance;
 }
 
+/* The PT line of a two-language answer (C6.26) sits on the team fill, so it
+   keeps the tile's own ink and steps back by size and weight. */
+.tileTextSecondary {
+  font-size: 0.72em;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
 /* Additive hook: a tile in a slot narrower than 15rem (a phone's two
    answers side by side) puts its text on its own line under the shape and
    the letter, so words stay whole. The slot opts in by being a
@@ -521,19 +529,34 @@ button.tile:active:not([aria-disabled="true"]) {
   min-width: 0;
 }
 
-/* Two lines at most, ending in an ellipsis, so a long answer still reads. */
+/* The letter, then the answer text clamped to two lines. Under screen
+   language Both the text is an EN line with the PT line under it (C6.26),
+   so it gets a third line. */
 .barLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.barText {
   display: -webkit-box;
+  min-width: 0;
   overflow: hidden;
   overflow-wrap: break-word;
-  font-weight: 600;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;
 }
 
+.barText:has([lang] + [lang]) {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
 .barLetter {
-  margin-inline-end: 0.15em;
+  flex-shrink: 0;
   color: var(--qs-text-mute);
   font-weight: 700;
 }
@@ -730,11 +753,13 @@ button.tile:active:not([aria-disabled="true"]) {
 }
 
 /* No backdrop blur on rows: a long board would stack too many blurred layers
-   for a cheap TV browser. The tint under the wash holds the contrast. */
+   for a cheap TV browser. The tint under the wash holds the contrast. The
+   row is opaque, the glass tint over the stage base, so a row gliding past
+   another in the re-sort never lets the text beneath show through. */
 .leaderboardRow {
   position: relative;
   display: grid;
-  grid-template-columns: 1.6em auto minmax(0, 1fr) auto;
+  grid-template-columns: 1.6em auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: var(--stage-gap);
   box-sizing: border-box;
@@ -748,8 +773,14 @@ button.tile:active:not([aria-disabled="true"]) {
       var(--qs-glass-top) 0%,
       var(--qs-glass-bottom) 100%
     ),
-    var(--qs-glass-tint);
+    linear-gradient(var(--qs-glass-tint), var(--qs-glass-tint)),
+    var(--qs-base);
   box-shadow: var(--qs-shadow-glass);
+}
+
+/* A climbing row glides over the rows it passes. */
+.leaderboardRowRising {
+  z-index: 1;
 }
 
 /* The edge is a full-row layer with the row's own radius, masked to its first
@@ -788,7 +819,8 @@ button.tile:active:not([aria-disabled="true"]) {
   --leaderboard-edge-stop: 100%;
 }
 
-/* The player's own row: a raised glass and a coral edge all round. */
+/* The player's own row: a raised glass and a coral edge all round, opaque
+   like every row. */
 .leaderboardRowSelf {
   background:
     linear-gradient(
@@ -796,7 +828,8 @@ button.tile:active:not([aria-disabled="true"]) {
       var(--qs-glass-raised-top) 0%,
       var(--qs-glass-raised-bottom) 100%
     ),
-    var(--qs-glass-tint);
+    linear-gradient(var(--qs-glass-tint), var(--qs-glass-tint)),
+    var(--qs-base);
   outline: 2px solid var(--accent);
   outline-offset: -2px;
 }
@@ -825,6 +858,83 @@ button.tile:active:not([aria-disabled="true"]) {
   font-family: var(--serif);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+}
+
+/* "+2 places" and the streak flame, between the name and the score. */
+.leaderboardBadges {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--stage-gap);
+  font-size: 0.7em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.placesUp,
+.streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+/* The arrow carries the jade; the words keep the stage's text colour. */
+.placesUp svg {
+  color: var(--qs-right-border);
+}
+
+.streak {
+  color: var(--qs-low);
+  font-variant-numeric: tabular-nums;
+}
+
+.placesUp svg,
+.streak svg {
+  flex-shrink: 0;
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+/* The name and its badges: on the TV and the preview the cell steps aside
+   and both sit in the row's own grid, side by side. */
+.entrantCell {
+  display: contents;
+}
+
+/* On a phone the row has four columns and the badges sit under the name,
+   so "+2 places" never squeezes the name to a letter. A long team name
+   takes a second line before it ends in an ellipsis. */
+.phone .leaderboardRow {
+  grid-template-columns: 1.6em auto minmax(0, 1fr) auto;
+}
+
+.phone .entrantCell {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--stage-gap) / 4);
+  min-width: 0;
+}
+
+.phone .entrantName {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+/* The badges wrap onto a second line of their own before they reach the
+   score; each badge keeps its words together. */
+.phone .leaderboardBadges {
+  flex-wrap: wrap;
+  row-gap: calc(var(--stage-gap) / 4);
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.phone .leaderboardBadges:empty {
+  display: none;
 }
 
 @media (forced-colors: active) {
@@ -917,6 +1027,60 @@ button.tile:active:not([aria-disabled="true"]) {
   grid-row: 1;
 }
 
+/* A tie that leaves a place nobody reaches: the two steps that stand are
+   centred, each as wide as one step of three. 2nd stands left of the winner
+   and 3rd right of it, as on the full podium; `data-layout` names the pair. */
+.podium[data-steps="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-inline: calc((100% + var(--stage-gap)) / 6);
+}
+
+.podium[data-layout="second-first"] .podiumSecond,
+.podium[data-layout="first-third"] .podiumFirst {
+  grid-column: 1;
+}
+
+.podium[data-layout="second-first"] .podiumFirst,
+.podium[data-layout="first-third"] .podiumThird {
+  grid-column: 2;
+}
+
+/* What stands over the block: the names and the score once revealed, or
+   the held line before the winner. */
+.podiumTop {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+  max-width: 100%;
+}
+
+.podiumHold {
+  font-family: var(--serif);
+  font-size: var(--stage-main);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+/* A place still to come: the block stands dimmed, its beam low, until the
+   host reveals it. */
+.podiumBlock,
+.podiumStep::before {
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+.podiumStep[data-revealed="false"] .podiumBlock {
+  opacity: 0.5;
+}
+
+.podiumStep[data-revealed="false"]::before {
+  opacity: 0.35;
+}
+
 /* Tied entrants share the step, one name a line. */
 .podiumNames {
   position: relative;
@@ -937,25 +1101,48 @@ button.tile:active:not([aria-disabled="true"]) {
 }
 
 /* A phone step is about 110px wide: the shape sits above the name, so the
-   name gets the whole width and stays in one piece. */
+   name gets the whole width. */
 .phone .podiumEntrant,
 .preview .podiumEntrant {
   flex-direction: column;
   gap: 0.3em;
 }
 
-/* A name too long for the step ends in an ellipsis on one line, so it never
-   splits mid-word; the full name is still in the text for screen readers. */
-.phone .podiumName,
-.preview .podiumName {
-  overflow: hidden;
-  font-size: var(--text-16);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* The viewer's own name on a phone: a raised glass and a coral edge all
+   round, the way their leaderboard row is marked. */
+.podiumEntrantSelf {
+  box-sizing: border-box;
+  padding: calc(var(--stage-pad) / 2) var(--stage-pad);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-raised-top) 0%,
+      var(--qs-glass-raised-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
+/* A long team name takes a second line, breaking inside a word only when
+   the word alone is wider than the step, then ends in an ellipsis. */
+.phone .podiumName {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: var(--text-16);
+  overflow-wrap: anywhere;
+}
+
+/* The studio preview's step is narrower still: one line, then an ellipsis. */
 .preview .podiumName {
+  overflow: hidden;
   font-size: var(--text-12);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .podiumMore {
@@ -1050,7 +1237,11 @@ button.tile:active:not([aria-disabled="true"]) {
   pointer-events: none;
 }
 
-.podiumPulse .podiumBlockFirst::after {
+.podiumStep[data-revealed="false"] .podiumBlockFirst::after {
+  opacity: 0;
+}
+
+.podiumPulse .podiumStep[data-revealed="true"] .podiumBlockFirst::after {
   animation: podiumGlow 3.2s var(--ease-in-out) 2.2s infinite alternate both;
 }
 

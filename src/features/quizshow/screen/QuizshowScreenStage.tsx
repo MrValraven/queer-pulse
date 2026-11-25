@@ -1,18 +1,20 @@
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import {
   I18nContext,
   type I18nContextValue,
 } from "../../../app/providers/i18nContext";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
-import { Spinner } from "../../../shared/components/ui";
+import { Collapse, Spinner } from "../../../shared/components/ui";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type {
-  QuizshowLanguage,
-  QuizshowNextEvent,
-  QuizshowScreenState,
-  QuizshowSessionEnd,
+import {
+  QUIZSHOW_OPEN_SESSION_STATUSES,
+  type QuizshowGivingLink,
+  type QuizshowLanguage,
+  type QuizshowNextEvent,
+  type QuizshowScreenState,
+  type QuizshowSessionEnd,
 } from "../../../shared/contracts/quizshow";
 import { isQuizRoundKind } from "../quizshowWheel";
 import {
@@ -22,8 +24,15 @@ import {
 import { QuizshowLeaderboard } from "../stage/QuizshowLeaderboard";
 import { QuizshowPausedNote } from "../stage/QuizshowPausedNote";
 import { QuizshowPodium } from "../stage/QuizshowPodium";
+import { QuizshowPracticeBadge } from "../stage/QuizshowPracticeBadge";
 import { QuizshowRoundCard } from "../stage/QuizshowRoundCard";
-import { EmphasisText } from "./QuizshowScreenChrome";
+import { primaryLanguageOf } from "../stage/quizshowText";
+import {
+  EmphasisText,
+  QuizshowScreenJoinChip,
+  StageReadingProvider,
+  StageScreenLanguageProvider,
+} from "./QuizshowScreenChrome";
 import { QuizshowScreenLobby } from "./QuizshowScreenLobby";
 import { QuizshowScreenParty } from "./QuizshowScreenParty";
 import { QuizshowScreenQuestion } from "./QuizshowScreenQuestion";
@@ -52,7 +61,9 @@ export interface QuizshowScreenStageProps {
 /**
  * The stage's copy, numbers and dates in the big screen language: `t` reads
  * that language and falls back to the site's `t` for a key it lacks (or while
- * its catalog loads). Null keeps the site language.
+ * its catalog loads). Null keeps the site language. Under screen language
+ * Both the caller passes the lead language (`primaryLanguageOf`, EN): UI copy
+ * reads in it, while quiz texts show both lines through QuizshowStageText.
  */
 function ScreenLanguageScope({
   language,
@@ -86,9 +97,12 @@ function ScreenLanguageScope({
 function QuizshowScreenThanks({
   isAbandoned,
   nextEvent,
+  giving,
 }: {
   isAbandoned: boolean;
   nextEvent: QuizshowNextEvent | null;
+  /** The event's community takes gifts (item 66): a text line, since nobody taps a TV. */
+  giving: QuizshowGivingLink | null;
 }) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -108,6 +122,11 @@ function QuizshowScreenThanks({
               event: nextEvent.title,
               date: format.date(new Date(nextEvent.startAt)),
             })}
+          </p>
+        )}
+        {giving !== null && (
+          <p className={styles.thanksGiving}>
+            {t("quizshow:stage.givingLine", { name: giving.communityName })}
           </p>
         )}
       </div>
@@ -134,7 +153,7 @@ function ScoresBoardTitle({
     <QuizshowScreenWheelBonus
       bonus={session.wheelBonus}
       rounds={session.rounds}
-      language={session.screenLanguage}
+      language={primaryLanguageOf(session.screenLanguage)}
       variant="board"
     />
   );
@@ -177,6 +196,8 @@ function viewFor(
   leaderboardTitle: string,
   isJoinHidden = false,
   isFixedCanvas = false,
+  /** The last entrant count the stage saw, kept across phases (the podium reads it). */
+  lastEntrantCount: number | null = null,
 ): { viewKey: string; body: ReactNode } {
   const { cursor, question, round, screenLanguage } = session;
   const phase = cursor.phase;
@@ -219,8 +240,11 @@ function viewFor(
           wheel={session.wheel}
           wheelBonus={session.wheelBonus}
           rounds={session.rounds}
-          joinCode={isJoinHidden ? null : session.joinCode}
-          language={screenLanguage}
+          // Locked: the wheel's bar drops the code and the join chip says so (C6.15).
+          joinCode={
+            isJoinHidden || session.isJoinLocked ? null : session.joinCode
+          }
+          language={primaryLanguageOf(screenLanguage)}
           playMode={session.playMode}
           clockOffsetMs={clockOffsetMs}
           size={size}
@@ -260,6 +284,7 @@ function viewFor(
             question={question}
             clockOffsetMs={clockOffsetMs}
             size={size}
+            isFixedCanvas={isFixedCanvas}
           />
         ),
       };
@@ -297,7 +322,12 @@ function viewFor(
           <h1 className={styles.boardTitle}>
             <EmphasisText i18nKey="quizshow:stage.podiumTitleEm" />
           </h1>
-          <QuizshowPodium entries={session.podium ?? []} size={size} />
+          {/* Only the revealed places arrive (C6.7); the podium paces itself from them. */}
+          <QuizshowPodium
+            entries={session.podium ?? []}
+            size={size}
+            entrantCount={lastEntrantCount}
+          />
         </div>
       ),
     };
@@ -309,6 +339,7 @@ function viewFor(
         <QuizshowScreenThanks
           isAbandoned={cursor.status === "abandoned"}
           nextEvent={session.nextEvent}
+          giving={session.giving}
         />
       ),
     };
@@ -337,9 +368,35 @@ function viewWithoutSession(sessionEnd: QuizshowSessionEnd | null): {
       <QuizshowScreenThanks
         isAbandoned={sessionEnd.status === "abandoned"}
         nextEvent={sessionEnd.nextEvent}
+        giving={sessionEnd.giving}
       />
     ),
   };
+}
+
+/** The phases whose chip opens with the QR (item 13). */
+const JOIN_CHIP_EXPANDED_PHASES: ReadonlySet<string> = new Set([
+  "round_intro",
+  "leaderboard",
+]);
+
+/**
+ * Whether the join chip shows (item 13): every phase after the lobby while
+ * the session is open. The wheel's own top bar already carries the join
+ * line, so the chip stays out of the wheel unless joining is locked, when it
+ * says so there too.
+ */
+function isJoinChipShown(
+  session: QuizshowScreenState,
+  isJoinHidden: boolean,
+): boolean {
+  if (isJoinHidden) return false;
+  const { phase, status } = session.cursor;
+  const isOpen = (QUIZSHOW_OPEN_SESSION_STATUSES as readonly string[]).includes(
+    status,
+  );
+  if (!isOpen || phase === "lobby" || phase === "ended") return false;
+  return phase !== "wheel" || session.isJoinLocked;
 }
 
 function QuizshowScreenStageBody({
@@ -359,6 +416,27 @@ function QuizshowScreenStageBody({
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  // The podium's empty steps read the entrant count; a phase without scores
+  // keeps the last one seen for this session (adjusted while rendering,
+  // React's derived-state pattern). A new session starts from none.
+  const [lastEntrantCountOf, setLastEntrantCountOf] = useState<{
+    sessionId: string;
+    count: number;
+  } | null>(null);
+  const sessionId = session?.sessionId ?? null;
+  const entrantCount = session?.scores?.entrantCount ?? null;
+  if (
+    sessionId !== null &&
+    entrantCount !== null &&
+    (lastEntrantCountOf?.sessionId !== sessionId ||
+      lastEntrantCountOf.count !== entrantCount)
+  ) {
+    setLastEntrantCountOf({ sessionId, count: entrantCount });
+  }
+  const lastEntrantCount =
+    lastEntrantCountOf !== null && lastEntrantCountOf.sessionId === sessionId
+      ? lastEntrantCountOf.count
+      : null;
   // The reveal of a quiz answer tints the stage toward jade: a still field
   // under the content that fades in and out by opacity alone.
   const isRightAnswerShown =
@@ -375,17 +453,43 @@ function QuizshowScreenStageBody({
           t("quizshow:stage.leaderboard"),
           isJoinHidden,
           isFixedCanvas,
+          entrantCount ?? lastEntrantCount,
         );
+  const isPractice = session?.isPractice ?? sessionEnd?.isPractice ?? false;
+  // The session the chip reads, when the chip shows (item 13).
+  const joinChipSession =
+    session !== null && isJoinChipShown(session, isJoinHidden) ? session : null;
+  // Locked, the chip holds its one line: no QR, so not expanded (C6.15).
+  const isJoinChipExpanded =
+    joinChipSession !== null &&
+    !joinChipSession.isJoinLocked &&
+    JOIN_CHIP_EXPANDED_PHASES.has(joinChipSession.cursor.phase);
+  let joinChipState: "expanded" | "compact" | undefined;
+  if (joinChipSession !== null)
+    joinChipState = isJoinChipExpanded ? "expanded" : "compact";
   return (
     <div
       className={`${styles.stage} ${styles[size]}`}
+      // Copy on the stage reads in the screen's lead language; each quiz text
+      // sets its own `lang` where it differs (item 41).
+      lang={
+        session === null ? undefined : primaryLanguageOf(session.screenLanguage)
+      }
       data-fixed-canvas={isFixedCanvas ? "true" : undefined}
+      data-join-chip={joinChipState}
+      // The lobby fills the screen: the practice badge leaves the flow there.
+      data-view={session?.cursor.phase === "lobby" ? "lobby" : undefined}
+      data-practice={isPractice ? "true" : undefined}
     >
       <div
         className={styles.revealGlow}
         data-shown={isRightAnswerShown ? "true" : "false"}
         aria-hidden="true"
       />
+      {/* C6.9: a practice session wears the badge in the stage's top corner. */}
+      <Collapse isOpen={isPractice} className={styles.practiceCorner}>
+        <QuizshowPracticeBadge tone="stage" className={styles.practiceBadge} />
+      </Collapse>
       <AnimatePresence mode="wait" initial={false}>
         <m.div
           key={viewKey}
@@ -400,6 +504,28 @@ function QuizshowScreenStageBody({
         >
           {body}
         </m.div>
+      </AnimatePresence>
+      <AnimatePresence initial={false}>
+        {joinChipSession !== null && (
+          <m.div
+            key="join-chip"
+            className={styles.joinChipSlot}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: reducedMotion ? 0 : 0.25,
+              ease: SCREEN_EASE,
+            }}
+          >
+            <QuizshowScreenJoinChip
+              joinCode={joinChipSession.joinCode}
+              isJoinLocked={joinChipSession.isJoinLocked}
+              isExpanded={isJoinChipExpanded}
+              size={size}
+            />
+          </m.div>
+        )}
       </AnimatePresence>
       {size === "screen" && (
         <QuizshowPausedNote isPaused={session?.cursor.status === "paused"} />
@@ -418,15 +544,25 @@ export function QuizshowScreenStage({
 }: QuizshowScreenStageProps) {
   const session = isScreenState(state.session) ? state.session : null;
   return (
-    <ScreenLanguageScope language={session?.screenLanguage ?? null}>
-      <QuizshowScreenStageBody
-        session={session}
-        sessionEnd={state.sessionEnd}
-        clockOffsetMs={clockOffsetMs}
-        size={size}
-        isJoinHidden={isJoinHidden}
-        isFixedCanvas={isFixedCanvas}
-      />
+    <ScreenLanguageScope
+      language={
+        session === null ? null : primaryLanguageOf(session.screenLanguage)
+      }
+    >
+      <StageScreenLanguageProvider
+        screenLanguage={session === null ? null : session.screenLanguage}
+      >
+        <StageReadingProvider isReading={session?.cursor.phase === "read"}>
+          <QuizshowScreenStageBody
+            session={session}
+            sessionEnd={state.sessionEnd}
+            clockOffsetMs={clockOffsetMs}
+            size={size}
+            isJoinHidden={isJoinHidden}
+            isFixedCanvas={isFixedCanvas}
+          />
+        </StageReadingProvider>
+      </StageScreenLanguageProvider>
     </ScreenLanguageScope>
   );
 }

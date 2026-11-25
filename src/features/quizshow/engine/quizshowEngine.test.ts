@@ -18,9 +18,26 @@ import {
 import type { QuizshowServerFrame } from "../realtime/quizshowFrames";
 import { createQuizshowEngine, reduceQuizshowEngine } from "./quizshowEngine";
 import { quizshowRandomFrom } from "./quizshowRandom";
+import { readPhaseMsFor, setSessionStatus } from "./quizshowEngineSetup";
+import {
+  isAutoAdvanceDue,
+  isWarmUpRound,
+  openQuestion,
+  openRoundIntro,
+  podiumStepsOf,
+  refreshPodiumIfShown,
+  returnAwayPlayer,
+  revealNextPodiumStep,
+  revealQuestion,
+  showPodium,
+  showScores,
+  skipsLeaderboardAfterRound,
+  skipsScoresAfterReveal,
+} from "./quizshowEngineTransitions";
 import type {
   QuizshowEngineAction,
   QuizshowEngineOptions,
+  QuizshowEnginePlayer,
   QuizshowEngineState,
   QuizshowEngineStep,
   QuizshowHostFrameName,
@@ -57,6 +74,10 @@ function bilingual(english: string): QuizshowText {
 const QUESTION_SHARED = {
   mediaRef: null,
   mediaUrl: null,
+  mediaAlt: bilingual(""),
+  mediaReveal: "instant" as const,
+  revealNote: bilingual(""),
+  numberUnit: bilingual(""),
   timeLimitSeconds: null,
   points: 1000,
 };
@@ -72,7 +93,7 @@ const CHOICE_QUESTION: QuizshowQuestion = {
     { id: "c", text: bilingual("Third") },
     { id: "d", text: bilingual("Fourth") },
   ],
-  answer: { correctIndex: 1 },
+  answer: { correctIndexes: [1] },
   acceptedAnswers: [],
 };
 
@@ -82,7 +103,7 @@ const NUMBER_QUESTION: QuizshowQuestion = {
   type: "closest_number",
   prompt: bilingual("How many glitter cannons fired?"),
   options: [],
-  answer: { value: 100 },
+  answer: { value: 100, tolerance: { mode: "percent", amount: 10 } },
   acceptedAnswers: [],
 };
 
@@ -117,6 +138,7 @@ function quizOf(rounds: QuizshowRound[]): QuizshowQuiz {
     languages: "both",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt: "2026-10-19T00:00:00.000Z",
     rounds,
   };
@@ -235,13 +257,13 @@ function skipStep(state: QuizshowEngineState, now: number): QuizshowEngineStep {
   return hostStep(state, "host:skip", { phaseId: state.cursor.phaseId }, now);
 }
 
-/** Started at 0, then the first question's `read` (phase id 2, deadline 4000). */
+/** Started at 0, then the first question's `read` (phase id 2, deadline 3000: the 3 s floor of the scaled read). */
 function toRead(state: QuizshowEngineState): QuizshowEngineState {
   const started = hostStep(state, "host:start", { phaseId: "0" }, 0).state;
   return nextStep(started, 0).state;
 }
 
-/** The first question's `open` from 4000 (deadline 24000, extra time 34000). */
+/** The first question's `open` from 4000, past the read (deadline 24000, extra time 34000). */
 function toOpen(state: QuizshowEngineState): QuizshowEngineState {
   return tickStep(toRead(state), 4_000).state;
 }
@@ -386,6 +408,7 @@ describe("demo engine lobby and start", () => {
           score: 0,
           hasUsedJoker: false,
           jokerRoundIndex: null,
+          isHostMade: false,
         },
       ],
     };
@@ -418,24 +441,26 @@ describe("demo engine lobby and start", () => {
 });
 
 describe("demo engine timed phases", () => {
-  it("shows a quiz question for four seconds, then opens it with the round's limit", () => {
+  it("shows a quiz question for its scaled read, then opens it with the round's limit", () => {
     const reading = toRead(joinedEngine());
+    // 30 prompt characters and 22 option characters read under the 3 s floor.
     expect(reading.cursor).toMatchObject({
       phaseId: "2",
       phase: "read",
-      deadline: 4_000,
+      deadline: 3_000,
     });
-    const early = tickStep(reading, 3_999);
+    expect(reading.current?.readMs).toBe(3_000);
+    const early = tickStep(reading, 2_999);
     expect(early.state.cursor.phase).toBe("read");
     expect(early.frames).toEqual([]);
     expect(early.ack).toBeNull();
-    const opened = tickStep(reading, 4_000);
+    const opened = tickStep(reading, 3_000);
     expect(opened.state.cursor).toMatchObject({
       phaseId: "3",
       phase: "open",
-      phaseStartedAt: 4_000,
-      deadline: 24_000,
-      extraTimeDeadline: 34_000,
+      phaseStartedAt: 3_000,
+      deadline: 23_000,
+      extraTimeDeadline: 33_000,
     });
   });
 
@@ -624,7 +649,7 @@ describe("demo engine privacy", () => {
     ];
     const secretKeys = [
       '"answerKey"',
-      '"correctIndex"',
+      '"correctIndexes"',
       '"truth"',
       '"isTruth"',
       '"voteCount"',
@@ -677,12 +702,12 @@ describe("demo engine privacy", () => {
       0,
     );
     expect(hostChange.question).toMatchObject({
-      answerKey: { type: "multiple_choice", correctIndex: 1 },
+      answerKey: { type: "multiple_choice", correctIndexes: [1] },
     });
     expect(
       engineSessionStateFor(result.state, { role: "host" }).question,
     ).toMatchObject({
-      answerKey: { type: "multiple_choice", correctIndex: 1 },
+      answerKey: { type: "multiple_choice", correctIndexes: [1] },
     });
     const screenChange = at(
       payloadsOf(screenFrames(result), "phase:change"),
@@ -880,14 +905,23 @@ describe("demo engine rounds, podium and scores", () => {
     expect(payloadsOf(screenFrames(result), "podium")).toHaveLength(1);
   });
 
-  it("finishes from the podium on Next", () => {
+  it("reveals the podium on Next, then finishes on the Next after the last step", () => {
     let state = toRead(joinedEngine());
     for (let skipIndex = 0; skipIndex < 2; skipIndex += 1)
       state = skipStep(state, 0).state;
     state = nextStep(nextStep(state, 0).state, 0).state;
     state = skipStep(state, 0).state;
-    expect(state.cursor.phase).toBe("podium");
-    const result = nextStep(state, 1_000);
+    expect(state.cursor).toMatchObject({
+      phase: "podium",
+      podiumRevealedCount: 0,
+    });
+    // Everyone tied on 0, so the podium has one step: the winners.
+    const revealed = nextStep(state, 500);
+    expect(revealed.state.cursor).toMatchObject({
+      phase: "podium",
+      podiumRevealedCount: 1,
+    });
+    const result = nextStep(revealed.state, 1_000);
     expect(result.state.cursor).toMatchObject({
       phase: "ended",
       status: "finished",
@@ -1429,5 +1463,378 @@ describe("demo engine running order with wheels: endings and edges", () => {
     });
     expect(opened.wheelProgress.openedWheelRoundIndexes).toEqual([0]);
     expect(openedWheelIn(opened).sliceRoundIndexes).toEqual([1, 2]);
+  });
+});
+
+const POLL_QUESTION: QuizshowQuestion = {
+  ...QUESTION_SHARED,
+  id: "question-poll",
+  type: "poll",
+  prompt: bilingual("Which snack wins the night?"),
+  options: [
+    { id: "a", text: bilingual("Crisps") },
+    { id: "b", text: bilingual("Olives") },
+  ],
+  answer: null,
+  acceptedAnswers: [],
+};
+
+const CAPTION_QUESTION: QuizshowQuestion = {
+  ...QUESTION_SHARED,
+  id: "question-caption",
+  type: "prompt",
+  prompt: bilingual("Caption this"),
+  options: [],
+  answer: null,
+  acceptedAnswers: [],
+};
+
+/** Row 0 a warm-up, row 1 a quiz round with a 20 s talk beat (a poll, then a choice), row 2 Caption This. */
+const FLOW_QUIZ = quizOf([
+  {
+    ...roundOf("warm", "quiz", [{ ...CHOICE_QUESTION, id: "question-warm" }]),
+    settings: { ...WHEEL_TEST_SETTINGS, isWarmUp: true },
+  },
+  {
+    ...roundOf("talk", "quiz", [POLL_QUESTION, CHOICE_QUESTION]),
+    settings: { ...WHEEL_TEST_SETTINGS, talkSeconds: 20 },
+  },
+  roundOf("caption", "caption_this", [CAPTION_QUESTION]),
+]);
+
+/** The flow quiz with no players, its status already running, for the transitions called directly. */
+function flowEngine(
+  overrides: Partial<QuizshowEngineOptions> = {},
+): QuizshowEngineState {
+  const state = engineWith({ quiz: FLOW_QUIZ, ...overrides });
+  setSessionStatus(state, "running");
+  return state;
+}
+
+function enginePlayer(
+  playerId: string,
+  score: number,
+  overrides: Partial<QuizshowEnginePlayer> = {},
+): QuizshowEnginePlayer {
+  return {
+    playerId,
+    memberKey: `member-${playerId}`,
+    screenName: playerId,
+    teamId: null,
+    isAvatarShown: false,
+    hasExtraTime: false,
+    isCohostPlayer: false,
+    score,
+    streak: 0,
+    hasUsedJoker: false,
+    jokerRoundIndex: null,
+    joinedAt: 0,
+    isRemoved: false,
+    leftAt: null,
+    disconnectedAt: null,
+    ...overrides,
+  };
+}
+
+describe("demo engine read length, talk beat and away players", () => {
+  it("scales the read length with the prompt and clamps it at 3 s and 8 s", () => {
+    const {
+      readPhaseBaseMs,
+      readPhaseMsPerChar,
+      readPhaseMinMs,
+      readPhaseMaxMs,
+    } = QUIZSHOW_LIMITS;
+    expect(
+      readPhaseMsFor({ prompt: bilingual("Short?"), options: [] }, "en"),
+    ).toBe(readPhaseMinMs);
+    expect(
+      readPhaseMsFor({ prompt: bilingual("x".repeat(100)), options: [] }, "en"),
+    ).toBe(readPhaseBaseMs + readPhaseMsPerChar * 100);
+    expect(
+      readPhaseMsFor({ prompt: bilingual("x".repeat(400)), options: [] }, "en"),
+    ).toBe(readPhaseMaxMs);
+    const withOptions = {
+      prompt: bilingual("x".repeat(80)),
+      options: [
+        { id: "a", text: bilingual("y".repeat(10)) },
+        { id: "b", text: bilingual("z".repeat(10)) },
+      ],
+    };
+    expect(readPhaseMsFor(withOptions, "pt")).toBe(
+      readPhaseBaseMs + readPhaseMsPerChar * 100,
+    );
+    // Both languages on screen: the longer one sets the length.
+    const uneven = {
+      prompt: { en: "x".repeat(60), pt: "x".repeat(120) },
+      options: [],
+    };
+    expect(readPhaseMsFor(uneven, "en")).toBe(readPhaseMinMs);
+    expect(readPhaseMsFor(uneven, "both")).toBe(
+      readPhaseBaseMs + readPhaseMsPerChar * 120,
+    );
+  });
+
+  it("extends read by the talk beat in teams play and leaves the solo read alone", () => {
+    const teams = flowEngine({ playMode: "teams" });
+    openQuestion(teams, 1, 1, 1_000);
+    const readMs = teams.current?.readMs ?? 0;
+    expect(readMs).toBe(QUIZSHOW_LIMITS.readPhaseMinMs);
+    expect(teams.cursor).toMatchObject({
+      phase: "read",
+      deadline: 1_000 + readMs + 20_000,
+      talkStartsAt: 1_000 + readMs,
+    });
+    const solo = flowEngine();
+    openQuestion(solo, 1, 1, 1_000);
+    expect(solo.cursor).toMatchObject({
+      phase: "read",
+      deadline: 1_000 + readMs,
+      talkStartsAt: null,
+    });
+  });
+
+  it("leaves an away player out at the open and lets them in when they return during the question", () => {
+    const state = flowEngine();
+    // Away after awayAfterMs (20 s) with no socket: bo left at 0, cy only 5 s before the open.
+    state.players.push(
+      enginePlayer("ana", 0),
+      enginePlayer("bo", 0, { disconnectedAt: 0, hasExtraTime: true }),
+      enginePlayer("cy", 0, { disconnectedAt: 25_000 }),
+    );
+    openQuestion(state, 1, 1, 30_000);
+    expect(state.current).toMatchObject({
+      eligiblePlayerIds: ["ana", "cy"],
+      extraTimePlayerIds: [],
+      awayPlayerIds: ["bo"],
+    });
+    expect(returnAwayPlayer(state, "bo", 31_000)).toEqual([
+      { kind: "answer_count_changed" },
+    ]);
+    expect(state.current).toMatchObject({
+      eligiblePlayerIds: ["ana", "cy", "bo"],
+      extraTimePlayerIds: ["bo"],
+      awayPlayerIds: [],
+    });
+    expect(returnAwayPlayer(state, "ana", 31_000)).toEqual([]);
+  });
+
+  it("starts a rematch with its host-made teams and keeps the practice flag", () => {
+    const state = engineWith({
+      playMode: "teams",
+      isPractice: true,
+      initialTeams: [{ name: "Quizzly Bears", colorKey: "circle" }],
+    });
+    expect(state).toMatchObject({
+      isPractice: true,
+      isJoinLocked: false,
+      isAutoAdvanceOn: false,
+      sourceUpdatedAt: DEMO_QUIZ.updatedAt,
+      giving: null,
+      pairedDevices: [],
+    });
+    expect(state.teams).toHaveLength(1);
+    const rematchTeam = at(state.teams, 0);
+    expect(rematchTeam.teamId).toMatch(/^demo-team-\d+$/);
+    expect(rematchTeam).toMatchObject({
+      name: "Quizzly Bears",
+      colorKey: "circle",
+      score: 0,
+      hasUsedJoker: false,
+      jokerRoundIndex: null,
+      isHostMade: true,
+    });
+    expect(state.cursor).toMatchObject({
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
+    });
+  });
+});
+
+describe("demo engine podium steps, auto-advance and skipped scores", () => {
+  it("reveals the podium 3rd, 2nd, then 1st, each step on a new phase id", () => {
+    const state = flowEngine();
+    state.players.push(
+      enginePlayer("ana", 300),
+      enginePlayer("bo", 200),
+      enginePlayer("cy", 100),
+      enginePlayer("di", 50),
+    );
+    showPodium(state, 1_000);
+    expect(state.cursor).toMatchObject({
+      phase: "podium",
+      podiumRevealedCount: 0,
+    });
+    expect(podiumStepsOf(state)).toEqual([3, 2, 1]);
+    const seenPhaseIds = [state.cursor.phaseId];
+    for (const expectedCount of [1, 2, 3]) {
+      const effects = revealNextPodiumStep(state, 1_000 + expectedCount);
+      expect(effects?.map((effect) => effect.kind)).toEqual([
+        "phase_changed",
+        "podium_shown",
+        "scores_shown",
+      ]);
+      expect(state.cursor).toMatchObject({
+        phase: "podium",
+        podiumRevealedCount: expectedCount,
+      });
+      // The final scores frame follows the step, so previousScore stays the podium's.
+      expect(state.lastScoresFrame?.phaseId).toBe(state.cursor.phaseId);
+      seenPhaseIds.push(state.cursor.phaseId);
+    }
+    expect(new Set(seenPhaseIds).size).toBe(4);
+  });
+
+  it("lets a tie share one podium step", () => {
+    const state = flowEngine();
+    state.players.push(
+      enginePlayer("ana", 300),
+      enginePlayer("bo", 200),
+      enginePlayer("cy", 200),
+      enginePlayer("di", 50),
+    );
+    showPodium(state, 1_000);
+    expect(podiumStepsOf(state)).toEqual([2, 1]);
+    expect(
+      (state.podium ?? [])
+        .filter((entry) => entry.place === 2)
+        .map((entry) => entry.name),
+    ).toEqual(["bo", "cy"]);
+    revealNextPodiumStep(state, 1_001);
+    revealNextPodiumStep(state, 1_002);
+    expect(state.cursor.podiumRevealedCount).toBe(2);
+    // Every step shown, so host:next finishes the night.
+    expect(revealNextPodiumStep(state, 1_003)).toBeNull();
+    expect(state.cursor.podiumRevealedCount).toBe(2);
+  });
+
+  it("caps the shown podium steps when a removal drops a place", () => {
+    const state = flowEngine();
+    state.players.push(
+      enginePlayer("ana", 300),
+      enginePlayer("bo", 200),
+      enginePlayer("cy", 100),
+    );
+    showPodium(state, 1_000);
+    for (const stepNow of [1_001, 1_002, 1_003])
+      revealNextPodiumStep(state, stepNow);
+    expect(state.cursor.podiumRevealedCount).toBe(3);
+    const cy = state.players.find((player) => player.playerId === "cy");
+    if (cy === undefined) throw new Error("cy is not in the session.");
+    cy.isRemoved = true;
+    expect(refreshPodiumIfShown(state)).toEqual([
+      { kind: "phase_changed" },
+      { kind: "podium_shown" },
+    ]);
+    expect(state.cursor.podiumRevealedCount).toBe(2);
+    expect(refreshPodiumIfShown(state)).toEqual([{ kind: "podium_shown" }]);
+  });
+
+  it("arms auto-advance on a round intro, a quiz reveal and scores, and never on a Caption This reveal", () => {
+    const state = flowEngine();
+    state.isAutoAdvanceOn = true;
+    openRoundIntro(state, 1, 1_000);
+    const introDueAt = 1_000 + QUIZSHOW_LIMITS.autoAdvanceRoundIntroMs;
+    expect(state.cursor.autoAdvanceAt).toBe(introDueAt);
+    expect(isAutoAdvanceDue(state, introDueAt - 1)).toBe(false);
+    expect(isAutoAdvanceDue(state, introDueAt)).toBe(true);
+    openQuestion(state, 1, 1, 7_000);
+    expect(state.cursor.autoAdvanceAt).toBeNull();
+    revealQuestion(state, 8_000);
+    expect(state.cursor.autoAdvanceAt).toBe(
+      8_000 + QUIZSHOW_LIMITS.autoAdvanceRevealMs,
+    );
+    showScores(state, "scores", "question", 9_000);
+    expect(state.cursor.autoAdvanceAt).toBe(
+      9_000 + QUIZSHOW_LIMITS.autoAdvanceScoresMs,
+    );
+    showScores(state, "leaderboard", "round", 10_000);
+    expect(state.cursor.autoAdvanceAt).toBeNull();
+    openQuestion(state, 2, 0, 11_000);
+    expect(state.cursor.phase).toBe("write");
+    revealQuestion(state, 12_000);
+    expect(state.cursor).toMatchObject({
+      phase: "reveal",
+      autoAdvanceAt: null,
+    });
+    expect(isAutoAdvanceDue(state, 99_000)).toBe(false);
+    const switchedOff = flowEngine();
+    openRoundIntro(switchedOff, 1, 1_000);
+    expect(switchedOff.cursor.autoAdvanceAt).toBeNull();
+  });
+
+  it("skips scores after a warm-up or a poll question and the leaderboard after the warm-up round", () => {
+    const state = flowEngine();
+    expect(isWarmUpRound(state, 0)).toBe(true);
+    expect(isWarmUpRound(state, 1)).toBe(false);
+    openQuestion(state, 0, 0, 1_000);
+    expect(skipsScoresAfterReveal(state)).toBe(true);
+    expect(skipsLeaderboardAfterRound(state)).toBe(true);
+    openQuestion(state, 1, 0, 2_000);
+    expect(skipsScoresAfterReveal(state)).toBe(true);
+    expect(skipsLeaderboardAfterRound(state)).toBe(false);
+    openQuestion(state, 1, 1, 3_000);
+    expect(skipsScoresAfterReveal(state)).toBe(false);
+  });
+
+  it("keeps the leaderboard after a warm-up stored on a wheel slice", () => {
+    // A stored quiz from before validation refused a warm-up inside a wheel range.
+    const slicedWarmUpQuiz = quizOf([
+      roundOf("spin", "wheel", []),
+      {
+        ...roundOf("warm", "quiz", [
+          { ...CHOICE_QUESTION, id: "question-warm" },
+        ]),
+        settings: { ...WHEEL_TEST_SETTINGS, isWarmUp: true },
+      },
+      roundOf("slice", "quiz", [CHOICE_QUESTION]),
+    ]);
+    const state = engineWith({ quiz: slicedWarmUpQuiz });
+    setSessionStatus(state, "running");
+    openQuestion(state, 1, 0, 1_000);
+    expect(skipsScoresAfterReveal(state)).toBe(true);
+    expect(skipsLeaderboardAfterRound(state)).toBe(false);
+  });
+
+  it("hides a place the host has not revealed when a leave reorders the podium", () => {
+    const state = flowEngine();
+    state.players.push(
+      enginePlayer("ana", 300),
+      enginePlayer("bo", 200),
+      enginePlayer("cy", 100),
+    );
+    showPodium(state, 1_000);
+    revealNextPodiumStep(state, 1_001);
+    revealNextPodiumStep(state, 1_002);
+    expect(state.cursor.podiumRevealedCount).toBe(2);
+    // 3rd and 2nd are shown; once cy leaves, bo stays 2nd and the winner is still hidden.
+    const cy = state.players.find((player) => player.playerId === "cy");
+    if (cy === undefined) throw new Error("cy is not in the session.");
+    cy.leftAt = 1_003;
+    expect(refreshPodiumIfShown(state)).toEqual([
+      { kind: "phase_changed" },
+      { kind: "podium_shown" },
+    ]);
+    expect(podiumStepsOf(state)).toEqual([2, 1]);
+    expect(state.cursor.podiumRevealedCount).toBe(1);
+    expect(refreshPodiumIfShown(state)).toEqual([{ kind: "podium_shown" }]);
+  });
+
+  it("counts no warm-up or poll reveal as scored, so ending after only those abandons", () => {
+    const state = flowEngine();
+    openQuestion(state, 0, 0, 1_000);
+    revealQuestion(state, 2_000);
+    expect(state.hasScoredQuestion).toBe(false);
+    openQuestion(state, 1, 0, 3_000);
+    revealQuestion(state, 4_000);
+    expect(state.hasScoredQuestion).toBe(false);
+    const ended = endStep(state, 5_000);
+    expect(ended.state.cursor).toMatchObject({
+      phase: "ended",
+      status: "abandoned",
+    });
+    openQuestion(state, 1, 1, 6_000);
+    revealQuestion(state, 7_000);
+    expect(state.hasScoredQuestion).toBe(true);
   });
 });

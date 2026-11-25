@@ -9,7 +9,10 @@ import type {
   QuizshowRoundCard,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowHostSession } from "../screen/quizshowHostSession";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import {
+  createQuizshowClientState,
+  type QuizshowClientState,
+} from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QUIZSHOW_GAME_REMOTE_ROUTE, quizshowGamePath } from "../quizshowPaths";
 import { QUIZSHOW_DEMO_GAME_SESSION_PREFIX } from "../quizshow.constants";
@@ -90,6 +93,8 @@ const ROUND: QuizshowRoundCard = {
   questionCount: 5,
   isJokerAllowed: true,
   isSpeedBonusOn: true,
+  isWarmUp: false,
+  talkSeconds: 0,
 };
 
 function endedGameState(): QuizshowHostState {
@@ -109,6 +114,9 @@ function endedGameState(): QuizshowHostState {
     roundNumber: 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
   };
   return {
     role: "host",
@@ -125,6 +133,10 @@ function endedGameState(): QuizshowHostState {
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor,
     rounds: [ROUND],
@@ -140,6 +152,9 @@ function endedGameState(): QuizshowHostState {
     wheel: null,
     wheelBonus: null,
     reviewList: null,
+    pairedDevices: [],
+    typedAnswers: null,
+    guestPushSentAt: null,
   };
 }
 
@@ -149,13 +164,10 @@ function stubLiveController(
 ): QuizshowSessionController {
   return {
     state: {
-      role: "host",
+      ...createQuizshowClientState("host"),
       status,
-      refusalCode: null,
+      hasAttached: status === "attached",
       session,
-      sessionEnd: null,
-      isRemoved: false,
-      pendingAnswer: null,
     },
     clockOffsetMs: 0,
     isDemo: false,

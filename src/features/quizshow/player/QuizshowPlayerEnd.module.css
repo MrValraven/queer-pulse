@@ -1,0 +1,248 @@
+/* The phone's end screen additions: Your night, the next event card, the
+   rematch, giving and rejoin rows. Every colour is a --qs-* stage token. */
+
+/* ── Your night (item 15) ── */
+
+.night {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: var(--gap-grid) var(--gap-sm);
+
+  /* The saved image's geometry in canvas pixels (a 4:5 portrait), read by
+     quizshowYourNightImage.ts through getComputedStyle. */
+  --night-image-width: 1080;
+  --night-image-height: 1350;
+  --night-image-padding: 96;
+  --night-image-title-size: 112;
+  --night-image-subtitle-size: 40;
+  --night-image-fact-size: 60;
+  --night-image-gap: 36;
+}
+
+.nightTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--qs-text);
+  text-wrap: balance;
+}
+
+.nightFacts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nightFact {
+  padding-block-start: var(--gap-xs);
+  border-block-start: 1px solid var(--qs-line);
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--qs-text);
+  overflow-wrap: anywhere;
+}
+
+.saveImage {
+  align-self: flex-start;
+  gap: var(--gap-xs);
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.answersToggle {
+  align-self: flex-start;
+  gap: var(--gap-xs);
+}
+
+.answersChevron {
+  transition: transform 0.2s var(--ease);
+}
+
+.answersChevron[data-open="true"] {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answersChevron {
+    transition: none;
+  }
+}
+
+.answerList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answerRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--gap-xs);
+  align-items: start;
+  padding: var(--gap-xs) var(--gap-sm);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+}
+
+/* The right or wrong mark: jade-edged when right, plain glass otherwise. */
+.answerMark {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 1.75em;
+  block-size: 1.75em;
+  margin-block-start: 0.1em;
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  color: var(--qs-text-mute);
+  font-size: var(--text-body);
+}
+
+/* A poll or a question still waiting for its reveal keeps the column, with no ring. */
+.answerMark[data-mark="empty"] {
+  border-color: transparent;
+}
+
+.answerMark[data-mark="right"] {
+  border-color: var(--qs-right-border);
+  background: var(--qs-right-fill);
+  color: var(--qs-text);
+}
+
+.answerMark[data-mark="wrong"] {
+  background: var(--qs-wrong-wash);
+  color: var(--qs-text);
+}
+
+.answerBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-inline-size: 0;
+}
+
+.answerPrompt {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--qs-text);
+  overflow-wrap: anywhere;
+}
+
+.answerMine {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+  overflow-wrap: anywhere;
+}
+
+.answerNote {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+  overflow-wrap: anywhere;
+}
+
+/* ── Next event (item 61) ── */
+
+.nextEvent {
+  composes: glass from "../stage/quizshowSurfaces.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-grid) var(--gap-sm);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--qs-text-mute);
+}
+
+.nextEventTitle {
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--qs-text);
+  text-decoration: underline;
+  text-decoration-color: var(--qs-glass-border-strong);
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+
+.nextEventTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.nextEventDate,
+.nextEventGoing {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+}
+
+.nextEventGoing {
+  padding-block-start: var(--gap-xs);
+  color: var(--qs-text);
+  font-weight: 600;
+}
+
+.nextEventButton {
+  margin-block-start: var(--gap-xs);
+}
+
+/* ── Rematch, giving, practice and rejoin rows ── */
+
+.givingLink {
+  inline-size: 100%;
+  gap: var(--gap-xs);
+}
+
+/* A button inside a Collapse fills the row, as its flex-column siblings do. */
+.fullWidth {
+  box-sizing: border-box;
+  inline-size: 100%;
+}
+
+.practice,
+.rejoin {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+}
+
+.rejoin {
+  align-items: stretch;
+}

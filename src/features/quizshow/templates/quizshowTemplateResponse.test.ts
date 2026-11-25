@@ -19,6 +19,7 @@ const EMPTY_QUIZ: QuizshowQuiz = {
   languages: "both",
   screenLanguage: "en",
   sourceTemplateId: null,
+  sourceTemplate: null,
   updatedAt: "2026-10-27T10:00:00.000Z",
   rounds: [],
 };
@@ -37,6 +38,8 @@ const DETAIL: QuizshowTemplateDetail = {
   publishedAt: "2026-10-20T10:00:00.000Z",
   publishedByName: "Rui Marçal",
   quiz: EMPTY_QUIZ,
+  changeNote: { en: "New final round", pt: "Nova ronda final" },
+  lastPublishedAt: "2026-10-22T10:00:00.000Z",
 };
 
 const EMPTY_CARD: QuizshowTemplateCardText = {
@@ -52,6 +55,7 @@ describe("quizshow template response adapter", () => {
     expect(response.isAdultsEvent).toBe(true);
     expect(response.liveSession).toBeNull();
     expect(response.hasResults).toBe(false);
+    expect(response.lastOpenSettings).toBeNull();
     expect(response.problems.map((problem) => problem.code)).toEqual([
       "no_rounds",
     ]);
@@ -65,6 +69,8 @@ describe("quizshow template response adapter", () => {
       status: "published",
       publishedAt: "2026-10-20T10:00:00.000Z",
       publishedByName: "Rui Marçal",
+      changeNote: { en: "New final round", pt: "Nova ronda final" },
+      lastPublishedAt: "2026-10-22T10:00:00.000Z",
     });
     expect(templateMetaOf(response)).toEqual(response.template);
     expect(
@@ -74,6 +80,7 @@ describe("quizshow template response adapter", () => {
         isAdultsEvent: false,
         liveSession: null,
         hasResults: false,
+        lastOpenSettings: null,
       }),
     ).toBeNull();
   });

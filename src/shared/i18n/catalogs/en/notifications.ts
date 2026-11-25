@@ -805,6 +805,7 @@ export const notifications: Catalog = {
   // System-driven (no actor); {badgeName} comes from the payload.
   "type.badge_earned.text": "You earned the {badgeName} badge.",
   "type.badge_earned.meta": "Badge earned",
+  "type.badge_earned.quizText": "You won the {badgeName} badge at {eventName}.",
   "type.community_badge_earned.text":
     "You earned the {badgeName} badge in {communityName}.",
   "type.community_badge_earned.meta": "Community badge",

@@ -32,6 +32,17 @@
   min-height: 0;
 }
 
+/* The guests' reactions rise in this slot: over the backdrop, under the
+   page body, so a score, the QR or the join code always stays in front of
+   them (QuizshowScreenReactions). */
+.reactionsSlot {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 /* Messages: the page refused, or no game is open */
 .message {
   display: flex;
@@ -57,14 +68,19 @@
 
 /* Toolbar: a glass pill fixed bottom right, portaled to the body. The top
    right corner belongs to the timer ring. It is the one stage surface that
-   keeps its blur: there is only one of it. */
+   keeps its blur: there is only one of it. It never runs wider than the
+   window: on a narrow one its buttons wrap, packed to the right. */
 .toolbar {
   position: fixed;
   bottom: max(var(--gap-sm), env(safe-area-inset-bottom));
   inset-inline-end: max(var(--gap-sm), env(safe-area-inset-right));
   z-index: var(--z-sticky);
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: var(--gap-xs);
+  box-sizing: border-box;
+  max-inline-size: calc(100vw - 2 * var(--gap-sm));
   padding: var(--gap-xs);
   border: 1px solid var(--qs-glass-border);
   border-radius: var(--qs-radius-pill);
@@ -114,7 +130,7 @@
      tint under the wash carries the contrast on its own. */
   --qs-glass-blur: none;
   /* The tiles' vote share: the percent alone, at the answer's size, as the
-     mockup reads from the back of the room. */
+     mockup reads from the back of the venue. */
   --stage-share-percent-size: 1em;
   --stage-share-count-display: none;
   position: relative;
@@ -137,9 +153,16 @@
   --screen-code: var(--text-screen-code);
   --screen-meta: calc(var(--screen-label) * 0.85);
   /* The bottom-right toolbar's height and offset (44px buttons, the pill's
-     padding, the gap to the edge), less the view's own padding, plus a gap. */
+     padding and 1px borders, the gap to the edge), less the view's own
+     padding, plus a gap. */
   --screen-toolbar-clearance: calc(
-    44px + var(--gap-xs) * 3 + var(--gap-sm) - var(--screen-pad)
+    44px + 2px + var(--gap-xs) * 3 + var(--gap-sm) - var(--screen-pad)
+  );
+  /* The "Turn on sound" chip (a 44px button, bottom left, over the iOS
+     home indicator) and its offset: the join chip climbs this far while it
+     shows, so both stack in one corner. */
+  --screen-sound-chip-lift: calc(
+    44px + max(var(--gap-sm), env(safe-area-inset-bottom))
   );
   /* Read by a stage piece without its own size class (the paused note). */
   --stage-label: var(--screen-label);
@@ -169,6 +192,10 @@
   --screen-vote-gap: min(var(--gap-sm), calc(1 * var(--screen-vh)));
   --screen-vote-pad-block: min(var(--gap-xs), calc(0.8 * var(--screen-vh)));
   --screen-vote-pad-inline: min(var(--gap-sm), calc(1.3 * var(--screen-vh)));
+  /* The join chip (item 13): its type, its gap to the corner, its QR. */
+  --screen-chip-text: var(--screen-meta);
+  --screen-chip-inset: calc(var(--screen-pad) * 0.4);
+  --screen-chip-qr: calc(24 * var(--screen-vh));
 }
 
 /* Light stage: a wrong answer steps back less, so it still reads on a
@@ -219,6 +246,9 @@
   --screen-vote-gap: var(--gap-xs);
   --screen-vote-pad-block: var(--gap-xs);
   --screen-vote-pad-inline: var(--gap-xs);
+  --screen-chip-text: var(--screen-meta);
+  --screen-chip-inset: var(--gap-xs);
+  --screen-chip-qr: 3rem;
 }
 
 .view {
@@ -232,6 +262,154 @@
   min-height: 0;
   overflow: auto;
   padding: var(--screen-pad);
+}
+
+/* The practice badge (C6.9) in the stage's top corner, in the flow above
+   the view, so it never sits over a header. */
+.practiceCorner {
+  flex-shrink: 0;
+}
+
+.practiceBadge {
+  margin: calc(var(--screen-pad) * 0.5) var(--screen-pad) 0;
+}
+
+/* The lobby fills the screen: the badge leaves the flow and sits in the top
+   right corner, over the roster's free end beside the title. */
+.stage[data-view="lobby"] > .practiceCorner {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+
+.preview .practiceBadge {
+  font-size: var(--screen-label);
+}
+
+/* The join chip (item 13) in the bottom-left corner, over the view. The
+   view keeps the chip's height clear at its foot; an open chip (with the QR)
+   takes room on both sides, so a centred board or card stays centred. */
+.joinChipSlot {
+  position: absolute;
+  z-index: 2;
+  inset-block-end: var(--screen-chip-inset);
+  inset-inline-start: var(--screen-chip-inset);
+  pointer-events: none;
+  transition: translate var(--dur-slow) var(--ease);
+}
+
+.stage[data-join-chip="compact"] > .view {
+  padding-block-end: max(
+    var(--screen-pad),
+    calc(var(--screen-chip-inset) + var(--screen-chip-text) * 2 + var(--gap-xs))
+  );
+}
+
+/* While "Turn on sound" shows bottom left (QuizshowScreenSoundChip sets the
+   attribute on <html>), the join chip climbs above it and the compact view
+   keeps both heights clear, so the bottom centre stays free. The TV only:
+   the page holds the chip. */
+:global(html[data-quizshow-sound-chip="true"]) .page .joinChipSlot {
+  translate: 0 calc(-1 * var(--screen-sound-chip-lift));
+}
+
+:global(html[data-quizshow-sound-chip="true"])
+  .page
+  .stage[data-join-chip="compact"]
+  > .view {
+  padding-block-end: max(
+    var(--screen-pad),
+    calc(
+      var(--screen-chip-inset) + var(--screen-chip-text) * 2 + var(--gap-xs) +
+        var(--screen-sound-chip-lift)
+    )
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .joinChipSlot {
+    transition: none;
+  }
+}
+
+/* A phone-width window: the sound chip stands above the toolbar's row
+   (QuizshowScreenSound.module.css), so the join chip climbs that row too. */
+@media (max-width: 30.5rem) {
+  .screen {
+    --screen-sound-chip-lift: calc(
+      44px + max(var(--gap-sm), env(safe-area-inset-bottom)) + 44px + 2px +
+        var(--gap-xs) * 3
+    );
+  }
+
+  /* In the lobby the sound chip docks at the top (QuizshowScreenSound.module.css),
+     so the stacked lobby starts under it and the join code stays in view. */
+  :global(html[data-quizshow-sound-chip="true"])
+    .page
+    .stage[data-view="lobby"]
+    .lobby {
+    padding-block-start: calc(
+      max(var(--gap-sm), env(safe-area-inset-top)) + 44px + var(--gap-xs)
+    );
+  }
+}
+
+.stage[data-join-chip="expanded"] > .view {
+  padding-inline: calc(
+    var(--screen-chip-inset) + var(--screen-chip-qr) + var(--screen-chip-text) *
+      2 + var(--gap-sm)
+  );
+}
+
+.joinChip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0.35em 0.9em;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  color: var(--qs-text);
+  font-size: var(--screen-chip-text);
+}
+
+.joinChip[data-expanded="true"] {
+  border-radius: var(--qs-radius-tile);
+}
+
+.joinChipQr {
+  display: block;
+  width: var(--screen-chip-qr);
+  height: auto;
+  margin-block: 0.5em 0.35em;
+  border-radius: var(--radius-6);
+}
+
+.joinChipText {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.joinChipText svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
 }
 
 .centred {
@@ -298,6 +476,50 @@
   text-align: center;
   /* The join code sizes itself from the card's own width. */
   container-type: inline-size;
+}
+
+/* The QR, the site and the code fold as one when joining is locked. */
+.lobbyJoinFold {
+  align-self: stretch;
+}
+
+.lobbyJoinBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--screen-gap) * 0.7);
+}
+
+/* C6.15: the join card while joining is locked: a large lock over the
+   line, in the title's size, so it reads from the back of the venue. */
+.joiningClosed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--screen-gap) * 0.6);
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--screen-question);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.joiningClosedIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+  border: 1px solid var(--qs-glass-border-strong);
+  border-radius: var(--qs-radius-pill);
+  color: var(--qs-text-mute);
+}
+
+.joiningClosedIcon svg {
+  width: 1em;
+  height: 1em;
 }
 
 .qr {
@@ -399,17 +621,29 @@
   flex-direction: column;
 }
 
-/* More than four teams: two columns of rows in a smaller type, so eight
-   teams take the height of four. */
-.screen .teamList[data-columns="two"] {
+/* Three teams or more: two columns of rows, so eight teams take the height
+   of four and the last round row stays above the toolbar. More than twelve
+   (to 24, C6.11): three columns, a step smaller. */
+.screen .teamList:is([data-columns="two"], [data-columns="three"]) {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: var(--screen-gap);
 }
 
-.screen .teamList[data-columns="two"] .teamRow {
-  font-size: min(var(--screen-answer), calc(3 * var(--screen-vh)));
+.screen .teamList[data-columns="three"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--gap-sm);
+}
+
+.screen .teamList[data-columns="three"] .teamRow {
+  gap: var(--gap-xs);
+  padding: calc(var(--gap-xs) * 0.8) var(--gap-xs);
+  font-size: min(var(--screen-label), calc(2.4 * var(--screen-vh)));
   line-height: 1.2;
+}
+
+.screen .teamList[data-columns="three"] .teamRow .muted {
+  font-size: 0.8em;
 }
 
 /* Solo lobby: the player chips and the "+N more" line fold together. */
@@ -437,16 +671,48 @@
   box-shadow: var(--qs-shadow-glass);
 }
 
+/* A team row takes a player chip's type and padding, so the teams lobby
+   holds the same height as the solo one. */
 .teamRow {
   gap: var(--gap-sm);
-  padding: calc(var(--gap-xs) * 1.2) var(--gap-sm);
-  font-size: var(--screen-answer);
+  padding: var(--gap-xs) var(--gap-sm);
+  font-size: var(--screen-label);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
+/* The team's shape follows the row's type, at every row size. */
+.teamRow > :first-child {
+  --quizshow-shape-size: 1.2em;
+}
+
+.teamRow .muted {
+  flex-shrink: 0;
+  font-weight: 400;
+}
+
+/* Two lines at most, ending in an ellipsis (a name runs to 40 characters);
+   the whole name stays in the text for a screen reader. */
 .teamName {
+  display: -webkit-box;
   min-width: 0;
+  overflow: hidden;
   font-weight: 700;
   overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* The teams lobby keeps each round to its lead-language line, one line
+   tall, so up to eight teams fit above tonight's rounds at 1080p. */
+.screen .lobby[data-teams="true"] .roundTitle {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.screen .lobby[data-teams="true"] .roundTitle > span + span {
+  display: none;
 }
 
 .playerItem {
@@ -704,8 +970,34 @@
   text-overflow: ellipsis;
 }
 
+/* A two-language title (C6.26): the segment stays a row, so the dot sits
+   beside the lines; the lines stack in .metaLines and each gives way with an
+   ellipsis. Placed after the rule above, at the same weight, to win it. */
+.metaSegment.metaSegmentLines:nth-child(n) {
+  display: inline-flex;
+  flex-shrink: 1;
+  align-items: center;
+  min-width: 0;
+  overflow: visible;
+}
+
+/* A block: one language ends in an ellipsis on itself, two stack as the
+   text component's block lines and each ends in its own. */
+.metaLines {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metaLines > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .metaSegment + .metaSegment::before {
   display: inline-block;
+  flex-shrink: 0;
   width: 0.26em;
   height: 0.26em;
   margin-inline: 0.7em;
@@ -830,7 +1122,7 @@
 
 /* With no reveal column beside the answers the picture takes the room. */
 .questionBody[data-reveal="tiles"] > .picture {
-  max-height: min(calc(var(--screen-picture-max) * 1.25), 100%);
+  --screen-picture-cap: calc(var(--screen-picture-max) * 1.25);
 }
 
 .revealColumn {
@@ -845,18 +1137,26 @@
   --stage-label: min(var(--screen-label), calc(3 * var(--screen-vh)));
 }
 
+/* The question picture's frame (QuizshowStagePicture). The frame takes the
+   height cap and clips the slow reveal; the image inside keeps its own
+   proportions under the same cap, so the radius and shadow hug the picture
+   itself and never a letterbox around it. */
 .picture {
+  --screen-picture-cap: var(--screen-picture-max);
   align-self: center;
   justify-self: center;
   max-width: 100%;
-  max-height: min(var(--screen-picture-max), 100%);
+  max-height: min(var(--screen-picture-cap), 100%);
   border-radius: var(--qs-radius-tile);
   box-shadow: var(--qs-shadow-glass);
-  object-fit: contain;
 }
 
-.picture[data-size="compact"] {
-  max-height: min(var(--screen-picture-party), 100%);
+.picture img,
+.partyPicture img {
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: 100%;
+  max-block-size: var(--screen-picture-cap);
 }
 
 .tileGrid {
@@ -942,6 +1242,88 @@
   overflow-wrap: anywhere;
 }
 
+/* "Talk it over" under the prompt while teams talk (C6.20): a coral-edged
+   glass pill at answer size, so it reads from the back of the venue, with the
+   seconds left in figures that do not jitter as they count down. Coral
+   marks the edge and the icon only; the words stay in the stage's text
+   colour, which holds its contrast in both screen themes. */
+.talkChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  box-sizing: border-box;
+  margin: 0;
+  margin-block-start: calc(var(--screen-gap) * 0.6);
+  padding: 0.4em 1em;
+  border: 1px solid var(--accent);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  color: var(--qs-text);
+  font-size: calc(var(--screen-answer) * 0.85);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.talkChip svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  color: var(--accent);
+}
+
+.talkChipSeconds {
+  min-width: 2ch;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* "Fun fact" under the answers at the reveal (C6.22): raised glass across
+   the width, a small muted label with a coral icon above the note, at a
+   reading measure. */
+.revealNote {
+  composes: glassRaised from "../stage/quizshowSurfaces.module.css";
+  --qs-glass-radius: var(--qs-radius-tile);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--screen-gap) * 0.3);
+  padding: calc(var(--screen-gap) * 0.6) var(--screen-gap);
+}
+
+.revealNoteLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--screen-meta);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.revealNoteLabel svg {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  color: var(--accent);
+}
+
+.revealNoteText {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--qs-text);
+  font-size: var(--screen-label);
+  font-weight: 500;
+  line-height: var(--lh-body);
+  overflow-wrap: anywhere;
+}
+
 .playerAvatar {
   display: inline-flex;
 }
@@ -1021,7 +1403,7 @@
 
 /* Review: the hosts are checking. A glass pill centred under the prompt, at
    the answers' size, with a calm pulse beside the line, so the wait reads
-   from the back of the room. */
+   from the back of the venue. */
 .checking {
   display: flex;
   box-sizing: border-box;
@@ -1086,8 +1468,6 @@
   min-width: 0;
 }
 
-/* Inside the card the picture's height cap is its own: a percentage of the
-   card's content-sized height would not resolve. */
 /* While players write or wait for the review, the card is the whole screen:
    a size up, centred. */
 .promptCard[data-compact="false"] {
@@ -1100,13 +1480,30 @@
   font-size: calc(var(--screen-question) * 1.2);
 }
 
-.promptCard > .picture {
+/* The party picture's slot carries the glide between the two sizes; the
+   picture inside takes the cap for the slot's size. Inside the card the cap
+   is its own length: a percentage of the card's content-sized height would
+   not resolve. */
+.promptCard > .partyPictureSlot {
   align-self: center;
-  max-height: var(--screen-picture-max);
+  max-width: 100%;
 }
 
-.promptCard > .picture[data-size="compact"] {
-  max-height: var(--screen-picture-party);
+/* The slot wears the corner (set as a style value in QuizshowScreenParty, so
+   Motion keeps it round while the slot scales) and clips the picture to it,
+   so nothing spills while the card and the slot glide. */
+.partyPictureSlot {
+  overflow: clip;
+  box-shadow: var(--qs-shadow-glass);
+}
+
+.partyPicture {
+  --screen-picture-cap: var(--screen-picture-max);
+  max-height: var(--screen-picture-cap);
+}
+
+.partyPictureSlot[data-size="compact"] > .partyPicture {
+  --screen-picture-cap: var(--screen-picture-party);
 }
 
 /* Once the captions or the reveal sit below, the picture steps beside the
@@ -1121,10 +1518,22 @@
   min-width: 0;
 }
 
-.promptCard[data-compact="true"] > .picture {
+.promptCard[data-compact="true"] > .partyPictureSlot {
   flex-shrink: 0;
   max-width: 40%;
   margin-inline-start: auto;
+}
+
+/* No prompt text (a Caption This picture on its own): the compact card
+   hugs the picture, centred, so no empty glass sits beside it. */
+.promptCard[data-compact="true"][data-has-prompt="false"] {
+  align-self: center;
+  justify-content: center;
+}
+
+.promptCard[data-compact="true"][data-has-prompt="false"] > .partyPictureSlot {
+  max-width: 100%;
+  margin-inline: auto;
 }
 
 .partyPrompt {
@@ -1266,7 +1675,8 @@
   min-width: 0;
   overflow: hidden;
   overflow-wrap: break-word;
-  hyphens: auto;
+  /* Whole words: a split like "fi-nally" reads badly from across the venue. */
+  hyphens: manual;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -1422,6 +1832,14 @@
   font-size: calc(var(--screen-question) * 1.6);
 }
 
+/* Item 66: the event's community takes gifts. Plain text on the TV. */
+.thanksGiving {
+  margin: 0;
+  font-size: var(--screen-answer);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
 .thanksNext {
   margin: 0;
   color: var(--qs-text-mute);
@@ -1430,7 +1848,7 @@
 }
 
 /* A shorter screen (720p): lobby chips and rounds a step smaller (22px,
-   still readable across a room), so 12 players and five rounds fit beside
+   still readable across a venue), so 12 players and five rounds fit beside
    the code without scrolling.
    Answers, team rows and gaps shrink too, so a question with a picture and
    two rows of tiles fits under the header. */
@@ -1461,7 +1879,8 @@
     --screen-row-pad: var(--gap-xs) var(--gap-sm);
   }
 
-  .screen .playerChip {
+  .screen .playerChip,
+  .screen .teamRow {
     padding: calc(var(--gap-xs) * 0.8) var(--gap-sm);
     font-size: var(--text-22);
   }
@@ -1476,8 +1895,40 @@
     padding-block: calc(var(--gap-xs) * 0.6);
   }
 
+  /* 720p and 768p: the lines of the people and the rounds sit closer, so
+     with a "+N more teams" line the last round row still clears the toolbar
+     by at least 10px. */
+  .screen .lobbyPeople,
+  .screen .lobbyRounds {
+    gap: var(--gap-xs);
+  }
+
+  /* 720p: each round on one line, its lead-language title alone. */
+  .screen .roundTitle {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .screen .roundTitle > span + span {
+    display: none;
+  }
+
   .screen .qr {
     width: min(100%, calc(36 * var(--screen-vh)));
+  }
+}
+
+/* A short, narrow screen (1024x768): two team columns would wrap every name
+   over several lines, so the teams stand in one column of one-line rows
+   (the lobby shows four of them, QuizshowScreenLobby). */
+@media (max-height: 50rem) and (max-width: 70rem) {
+  .screen:not([data-fixed-canvas="true"]) .teamList[data-columns="two"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .screen:not([data-fixed-canvas="true"]) .teamName {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
   }
 }
 
@@ -1486,6 +1937,21 @@
 @media (max-width: 48rem) {
   .screen:not([data-fixed-canvas="true"]) .lobby {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The stacked lobby scrolls: the badge goes back into the flow above the
+     join card, and the team rows take the full width again. */
+  .stage.screen:not([data-fixed-canvas="true"])[data-view="lobby"]
+    > .practiceCorner {
+    position: static;
+  }
+
+  .screen:not([data-fixed-canvas="true"]) .teamList[data-columns="two"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .screen:not([data-fixed-canvas="true"]) .teamList[data-columns="three"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .screen:not([data-fixed-canvas="true"]) .tileGrid {
@@ -1544,7 +2010,8 @@
   --screen-row-pad: var(--gap-xs) var(--gap-sm);
 }
 
-.stage[data-fixed-canvas="true"] .playerChip {
+.stage[data-fixed-canvas="true"] .playerChip,
+.stage[data-fixed-canvas="true"] .teamRow {
   padding: calc(var(--gap-xs) * 0.8) var(--gap-sm);
   font-size: var(--text-22);
 }
@@ -1559,6 +2026,25 @@
   padding-block: calc(var(--gap-xs) * 0.6);
 }
 
+.stage[data-fixed-canvas="true"] .roundTitle {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.stage[data-fixed-canvas="true"] .roundTitle > span + span {
+  display: none;
+}
+
 .stage[data-fixed-canvas="true"] .qr {
   width: min(100%, calc(36 * var(--screen-vh)));
+}
+
+/* Item 40: after two still seconds the page sets this attribute on <html>
+   (QuizshowScreenPage), and the pointer hides over the page and over the
+   toolbar portaled beside it. Any movement removes the attribute. */
+:global(html[data-quizshow-pointer-still="true"]) .page,
+:global(html[data-quizshow-pointer-still="true"]) .page *,
+:global(html[data-quizshow-pointer-still="true"]) .toolbar,
+:global(html[data-quizshow-pointer-still="true"]) .toolbar * {
+  cursor: none;
 }

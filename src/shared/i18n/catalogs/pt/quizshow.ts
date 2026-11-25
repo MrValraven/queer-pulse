@@ -14,6 +14,7 @@ export const quizshow: Catalog = {
   "teams.shape.hexagon": "Hexágono",
   "teams.shape.heart": "Coração",
   "teams.shape.moon": "Lua",
+  "teams.tierLabel": "{shape} {tier}",
   "kind.quiz.name": "Quiz",
   "kind.quiz.hint":
     "Perguntas com resposta certa, pontuadas pela rapidez e pelas sequências",
@@ -32,6 +33,8 @@ export const quizshow: Catalog = {
   "type.order": "Pôr por ordem",
   "type.closest_number": "Número mais próximo",
   "type.prompt": "Mote",
+  "type.poll": "Sondagem",
+  "type.pollHint": "Toda a gente vota e ninguém pontua",
   "contentLabel.none": "Sem etiqueta",
   "contentLabel.spicy": "Picante",
   "contentLabel.sensitive": "Temas sensíveis",
@@ -63,6 +66,27 @@ export const quizshow: Catalog = {
   "importSources.adultsTag": "Tem rondas para adultos",
   "importSources.sameSeriesTag": "Mesma série",
   "importSources.loadError": "Não conseguimos carregar os teus eventos",
+  "importSources.replace": "Substituir o quiz",
+  "importSources.addRounds": "Adicionar rondas deste quiz",
+  "importSources.adultsRequiredToAdd": "Ativa o 18+ para usares estas rondas",
+  "importSources.wheelHoldsSlices":
+    "As fatias vêm juntas. Desmarca a roda para as deixares de fora",
+  "importSources.wheelSlices_one": "{count} fatia",
+  "importSources.wheelSlices_other": "{count} fatias",
+  "importSources.addTheseRounds": "Adicionar estas rondas",
+  "importSources.chooseRounds": "Escolhe as rondas a adicionar",
+  "importSources.chooseRoundsHint":
+    "Escolhe pelo menos uma ronda para adicionar",
+  "importSources.roundsAdded": "Rondas adicionadas",
+  "importSources.sliceOf": "Uma fatia de {wheel}",
+  "importSources.appendConflict":
+    "Este quiz mudou desde que o abriste. A versão mais recente já está carregada, por isso adiciona as rondas outra vez",
+  "importSources.appendConflictBy":
+    "{name} guardou este quiz às {time}. A versão dessa pessoa já está carregada, por isso adiciona as rondas outra vez",
+  "importSources.appendSub":
+    "Escolhe um quiz e depois as rondas a adicionar a seguir às tuas",
+  "importSources.saveFailed":
+    "As tuas últimas alterações não foram guardadas, por isso nenhuma ronda foi adicionada. Tenta outra vez",
   "import.confirmTitle": "Substituir este quiz?",
   "import.confirmBody":
     "A cópia substitui todas as rondas e perguntas que tens aqui agora",
@@ -74,6 +98,7 @@ export const quizshow: Catalog = {
   "settings.screenLanguage.label": "Língua do ecrã grande",
   "settings.screenLanguage.hint":
     "Os telemóveis seguem a língua da app de cada pessoa",
+  "settings.screenLanguage.both": "As duas",
   "rounds.heading": "Rondas",
   "rounds.add": "Adicionar ronda",
   "rounds.count": "{count} de {max} rondas",
@@ -100,6 +125,14 @@ export const quizshow: Catalog = {
     "Cada pessoa ou equipa pode duplicar uma ronda por noite",
   "rounds.writeSeconds.label": "Segundos para escrever",
   "rounds.voteSeconds.label": "Segundos para votar",
+  "rounds.warmUp.label": "Ronda de aquecimento",
+  "rounds.warmUp.hint":
+    "As respostas são corrigidas e não dão pontos, as sequências ficam como estavam e os jokers ficam desligados",
+  "rounds.talkSeconds.label": "Falem sobre isto",
+  "rounds.talkSeconds.hint":
+    "Em jogo por equipas, as equipas falam durante este tempo antes de as respostas abrirem",
+  "rounds.talkSeconds.off": "Desligado",
+  "rounds.talkSeconds.seconds": "{seconds} s",
   "questions.add": "Adicionar pergunta",
   "questions.count": "{count} de {max} perguntas",
   "questions.untitled": "Pergunta {number}",
@@ -115,8 +148,9 @@ export const quizshow: Catalog = {
   "questions.options.label": "Respostas",
   "questions.options.add": "Adicionar resposta",
   "questions.options.remove": "Remover a resposta {number}",
-  "questions.options.markCorrect": "Marcar a resposta {number} como certa",
+  "questions.options.markCorrect": "A resposta {number} está certa",
   "questions.options.item": "Resposta {number}",
+  "questions.options.keepOneWrong": "Deixa pelo menos uma opção errada",
   "questions.trueFalse.label": "A afirmação é",
   "questions.trueFalse.true": "Verdadeira",
   "questions.trueFalse.false": "Falsa",
@@ -137,12 +171,34 @@ export const quizshow: Catalog = {
   "questions.closest.label": "O número certo",
   "questions.closest.invalid": "Escreve um número, como 1969 ou 2,5",
   "questions.closest.hint":
-    "As respostas mais próximas valem os pontos todos e quem fica a menos de 10% leva metade",
+    "As respostas mais próximas valem os pontos todos e as que ficam dentro da margem levam metade",
+  "questions.tolerance.label": "Margem para metade dos pontos",
+  "questions.tolerance.exact": "Exato",
+  "questions.tolerance.within": "Margem",
+  "questions.tolerance.withinPercent": "Margem em %",
+  "questions.tolerance.amount": "Margem",
+  "questions.tolerance.percentHint": "Um número inteiro de {min} a {max}",
+  "questions.tolerance.zeroHint": "Uma margem em % de 0 é 0",
+  "questions.tolerance.amountMissing": "Escreve uma margem",
+  "questions.tolerance.amountInvalid":
+    "Escreve a margem como um número, como 5 ou 2,5",
+  "questions.tolerance.amountAboveZero": "A margem tem de ser maior do que 0",
+  "questions.tolerance.percentOutOfRange":
+    "Usa um número inteiro de {min} a {max}",
+  "questions.numberUnit.label": "Unidade",
+  "questions.numberUnit.placeholder": "Como anos ou km, aparece com o número",
   "questions.truth.label": "A resposta verdadeira",
   "questions.truth.hint":
     "Quem joga escreve respostas falsas para enganar as outras pessoas. Uma falsa demasiado parecida com esta é recusada",
   "questions.media.label": "Imagem",
   "questions.media.captionRequired": "Legenda Isto precisa de uma imagem",
+  "questions.revealNote.label": "Curiosidade",
+  "questions.revealNote.hint": "Aparece com a resposta",
+  "questions.mediaAlt.label": "Descreve a imagem",
+  "questions.mediaAlt.hint": "Lida a quem usa um leitor de ecrã",
+  "questions.mediaReveal.label": "Revelar aos poucos",
+  "questions.mediaReveal.hint":
+    "A imagem começa desfocada e fica nítida até as respostas fecharem",
   "questions.timeLimit.label": "Segundos para esta pergunta",
   "questions.timeLimit.roundDefault": "Igual à ronda ({seconds}s)",
   "questions.points.label": "Pontos",
@@ -179,9 +235,20 @@ export const quizshow: Catalog = {
     "A pergunta {question} da ronda {round} precisa de uma imagem",
   "problems.adults_round_needs_adults_event":
     "A ronda {round} está marcada só para adultos e este evento não é 18+",
+  "problems.correct_option_missing": "Marca pelo menos uma opção como certa",
+  "problems.too_many_correct_options": "Deixa pelo menos uma opção errada",
+  "problems.tolerance_out_of_range":
+    "Define uma margem dentro do intervalo permitido",
+  "problems.poll_in_party_round": "As sondagens ficam em rondas de quiz",
+  "problems.slow_reveal_needs_picture":
+    "Adiciona uma imagem para a revelar devagar",
+  "problems.warm_up_not_first": "Só a primeira ronda pode ser de aquecimento",
   "save.saving": "A guardar",
   "save.saved": "Quiz guardado",
   "save.unsaved": "Alterações por guardar",
+  "save.lobbyBehind": "Este lobby usa uma versão anterior",
+  "save.useLatestEdits": "Usar as minhas últimas alterações neste lobby",
+  "save.appliesNextGame": "As alterações contam a partir do próximo jogo",
   "save.discard": "Descartar alterações",
   "save.leaveConfirm": "Tens alterações por guardar neste quiz. Sair na mesma?",
   "save.error": "Não conseguimos guardar o quiz. Tenta outra vez",
@@ -223,6 +290,11 @@ export const quizshow: Catalog = {
   "lobby.pushSent": "Quem vai recebeu uma notificação com o código",
   "lobby.pushSkipped":
     "Quem vai já recebeu uma notificação deste evento nas últimas duas horas",
+  "lobby.practice.label": "Lobby de treino",
+  "lobby.practice.hint":
+    "Um ensaio com amigos: ninguém recebe aviso e nenhum resultado fica guardado",
+  "lobby.rematch.title": "Jogar outra vez com estas pessoas",
+  "lobby.rematch.submit": "Jogar outra vez com estas pessoas",
   "live.title": "Jogo a decorrer",
   "live.status.lobby": "Lobby aberto",
   "live.status.running": "A jogar",
@@ -255,6 +327,8 @@ export const quizshow: Catalog = {
   "results.recap.hide": "Esconder resumo",
   "results.recap.title": "Resumo para quem organiza",
   "results.recap.sub": "Totais de quem jogou. Nada aqui identifica ninguém",
+  "results.recap.subWithStandings":
+    "Totais de quem jogou e a classificação final",
   "results.recap.questions_one": "{count} pergunta jogada",
   "results.recap.questions_other": "{count} perguntas jogadas",
   "results.recap.answers_one": "{count} resposta dada",
@@ -268,6 +342,15 @@ export const quizshow: Catalog = {
   "results.deleteBody":
     "O pódio, todos os lugares e todos os nomes deste jogo desaparecem de vez",
   "results.deleted": "Resultados apagados",
+  "results.standings": "Classificação completa",
+  "results.standingsShow": "Mostrar a classificação completa",
+  "results.standingsHide": "Esconder a classificação completa",
+  "results.sort.label": "Ordem das perguntas",
+  "results.sort.playOrder": "Ordem de jogo",
+  "results.sort.hardestFirst": "Mais difíceis primeiro",
+  "results.editQuestion": "Editar esta pergunta",
+  "results.tag.warmUp": "Aquecimento",
+  "results.tag.corrected": "Corrigida",
   "errors.generic": "Algo correu mal. Tenta outra vez",
   "errors.account_restricted": "A tua conta não pode fazer isto agora",
   "errors.event_not_found": "Não encontrámos este evento",
@@ -289,7 +372,7 @@ export const quizshow: Catalog = {
   "errors.session_already_open": "Já há um jogo aberto para este evento",
   "errors.results_exist": "Este evento já tem resultados de um jogo anterior",
   "errors.event_not_playable":
-    "Eventos em rascunho ou cancelados não podem ter jogo ao vivo",
+    "Eventos em rascunho só têm jogos de treino. Eventos cancelados não podem ter jogos",
   "errors.join_code_not_found": "Não encontrámos nenhum jogo com esse código",
   "errors.session_finished": "Esse jogo já acabou",
   "errors.banned_from_event": "Não podes entrar neste jogo",
@@ -321,7 +404,7 @@ export const quizshow: Catalog = {
   "errors.own_answer_vote": "Escolhe a resposta de outra pessoa",
   "errors.team_not_found": "Essa equipa já não existe. Escolhe outra",
   "errors.team_full": "Essa equipa está cheia",
-  "errors.team_limit": "As oito equipas já existem. Junta-te a uma delas",
+  "errors.team_limit": "As 24 equipas já existem. Junta-te a uma delas",
   "errors.team_name_taken": "Outra equipa já tem esse nome",
   "errors.team_color_taken": "Outra equipa já tem essa forma. Escolhe outra",
   "errors.team_required": "Escolhe uma equipa ou cria uma",
@@ -333,11 +416,95 @@ export const quizshow: Catalog = {
   "errors.player_not_found": "Essa pessoa já saiu",
   "errors.answer_not_found": "Essa resposta já não está aqui",
   "errors.rate_limited": "Vai com calma e tenta outra vez",
+  "errors.session_not_started": "O jogo ainda não começou",
+  "errors.already_started": "O jogo já começou",
+  "errors.session_paused": "O jogo está em pausa. Retoma-o primeiro",
+  "errors.session_ended": "Este jogo já acabou",
+  "errors.spin_not_available": "Podes girar numa roda ou entre rondas",
+  "errors.no_wheel_open": "Não há nenhuma roda aberta agora",
+  "errors.no_timer_running": "Não há nenhum tempo a contar para acrescentar",
+  "errors.already_revealed": "A resposta já está à vista",
+  "errors.nothing_to_reveal":
+    "Nenhuma pergunta está a receber respostas para revelar",
+  "errors.nothing_to_skip": "Não há nenhuma pergunta para saltar agora",
+  "errors.review_not_open": "As respostas não estão em revisão agora",
+  "errors.unhide_review_only":
+    "Só podes voltar a mostrar uma resposta durante a revisão",
+  "errors.author_removed": "Quem escreveu isto já não está no jogo",
+  "errors.favourite_not_available":
+    "Escolhe a favorita quando uma ronda escrita mostra as respostas",
+  "errors.teams_off": "Este jogo é individual, por isso não tem equipas",
+  "errors.screen_name_taken":
+    "Alguém aqui já usa esse nome. Experimenta {suggestion}",
+  "errors.joining_locked": "Quem apresenta fechou as entradas neste jogo",
+  "errors.not_in_lobby": "Isto só funciona antes de o jogo começar",
+  "errors.move_during_question": "Muda as pessoas de equipa entre perguntas",
+  "errors.player_left": "Essa pessoa saiu do jogo",
+  "errors.rescore_not_now":
+    "Corrige respostas enquanto a resposta desta pergunta está à vista",
+  "errors.accept_needs_typed_answer": "Só podes aceitar respostas escritas",
+  "errors.change_needs_choice_question":
+    "Só podes mudar a resposta certa numa escolha múltipla ou verdadeiro ou falso",
+  "errors.answer_text_not_found": "Ninguém escreveu essa resposta",
+  "errors.answer_already_correct": "Essa resposta já conta como certa",
+  "errors.correct_option_not_found": "Essa opção não existe nesta pergunta",
+  "errors.every_option_correct": "Pelo menos uma opção tem de ficar errada",
+  "errors.adjust_not_now": "Muda os pontos durante o jogo, antes do pódio",
+  "errors.adjust_below_zero": "Uma pontuação não pode ficar abaixo de 0",
+  "errors.entrant_not_found": "Essa pessoa ou equipa não está neste jogo",
+  "errors.pairing_code_not_found": "Nenhum ecrã está a mostrar esse código",
+  "errors.pairing_code_expired":
+    "Esse código expirou. Mostra um novo no outro ecrã",
+  "errors.pairing_code_used": "Esse código já está emparelhado",
+  "errors.paired_devices_full":
+    "Este jogo já tem 6 dispositivos emparelhados. Desemparelha um primeiro",
+  "errors.helper_cannot_pair":
+    "Só quem apresenta o jogo pode emparelhar dispositivos",
+  "errors.helper_is_playing":
+    "Essa pessoa está a jogar este jogo, por isso não o pode apresentar",
+  "errors.device_not_found":
+    "Esse dispositivo não está emparelhado com este jogo",
+  "errors.device_unpaired": "Quem apresenta desemparelhou este ecrã",
+  "errors.device_ticket_expired":
+    "Este emparelhamento expirou. Emparelha o ecrã outra vez",
+  "errors.pairing_not_found": "Este código desapareceu. Mostra um novo",
+  "errors.pairing_rate_limited":
+    "Demasiados códigos de emparelhamento agora. Tenta daqui a uns minutos",
+  "errors.pairing_too_many_tries":
+    "Demasiados códigos errados. Espera uns minutos e tenta outra vez",
+  "errors.guest_push_cooldown":
+    "Os convidados foram avisados há menos de 2 horas",
+  "errors.guest_push_already_sent": "Os convidados já têm o código deste jogo",
+  "errors.guest_push_needs_event":
+    "Só o jogo de um evento pode avisar convidados",
+  "errors.guest_push_practice": "Um lobby de treino não avisa ninguém",
+  "errors.refresh_quiz_incomplete":
+    "As tuas últimas alterações têm problemas para corrigir antes de este lobby as usar",
+  "errors.refresh_adults_mismatch":
+    "As tuas últimas alterações têm uma ronda 18+ que este jogo não pode ter",
+  "errors.refresh_adults_lobby_joined":
+    "Já entrou gente, por isso este jogo já não pode passar a 18+. Abre um novo lobby para a versão 18+",
+  "errors.refresh_quiz_gone": "Este quiz já não existe",
+  "errors.rematch_not_found": "Não há nenhum jogo terminado aqui para repetir",
+  "errors.rematch_expired":
+    "Uma desforra abre até 30 minutos depois de um jogo acabar",
+  "errors.reaction_not_now": "As reações abrem entre perguntas",
+  "errors.import_round_not_found":
+    "Uma das rondas escolhidas já não está nesse quiz",
+  "errors.import_too_many_rounds":
+    "Adicionar estas rondas passa o limite de 10 rondas",
+  "errors.import_too_many_questions":
+    "Adicionar estas rondas passa as 100 perguntas",
+  "errors.import_too_many_wheels": "Adicionar estas rondas passa as 3 rodas",
+  "errors.quiz_changed_by":
+    "{name} guardou este quiz às {time}. Carrega essa versão para continuares a editar",
   "stage.answered": "{count} de {total} responderam",
   "stage.written": "{count} de {total} escreveram",
   "stage.voted": "{count} de {total} votaram",
   "stage.finishingUp": "A terminar",
-  "stage.secondsLeft": "Faltam {seconds} segundos",
+  "stage.secondsLeft_one": "Falta {count} segundo",
+  "stage.secondsLeft_other": "Faltam {count} segundos",
+  "stage.hostCorrected": "Quem apresenta corrigiu esta resposta",
   "stage.paused": "Em pausa",
   "stage.timerLabel": "Tempo restante",
   "stage.roundOf": "Ronda {number} de {total}",
@@ -360,24 +527,61 @@ export const quizshow: Catalog = {
   "stage.orderNone": "{count} sem nada no sítio",
   "stage.closestValue": "Palpite mais próximo: {value}",
   "stage.closestNames": "Mais perto: {names}",
-  "stage.withinBand": "{count} a menos de 10%",
   "stage.leaderboard": "Classificação",
   "stage.nextEvent": "A seguir nesta série: {event}, {date}",
   "stage.abandoned": "Este jogo terminou",
   "stage.answerLabel": "Resposta {letter}, {shape}: {text}",
   "stage.answerOnPhone": "Responde no telemóvel",
   "stage.reconnecting": "A voltar a ligar ao jogo",
+  "stage.connecting": "A ligar",
+  "stage.retry.refreshingSignIn": "A atualizar a tua sessão",
+  "stage.retry.rateLimited": "Demasiadas tentativas. A aguardar um momento",
+  "stage.retry.serverError": "O servidor teve um problema. A tentar outra vez",
+  "stage.retry.offline": "Estás sem ligação. À espera de rede",
+  "stage.revealNote": "Curiosidade",
+  "stage.pollResults": "Como todos votaram",
+  "stage.closestBand.absolute": "A {amount} {unit} ou menos ganha metade",
+  "stage.closestBand.absoluteNoUnit": "A {amount} ou menos ganha metade",
+  "stage.closestBand.percent": "A {amount}% ou menos ganha metade",
+  "stage.talkItOverChip": "Falem sobre isto",
+  "stage.warmUp": "Aquecimento",
+  "stage.withinMargin": "{count} dentro da margem",
+  "stage.placesUp_one": "+{count} lugar",
+  "stage.placesUp_other": "+{count} lugares",
+  "stage.streakLabel": "Sequência de {count}",
+  "stage.podiumWinnerHold": "E quem ganhou é",
+  "stage.givingLine": "Apoiar {name}",
+  "stage.placeOf": "{place} de {total}",
+  "stage.practice": "Treino",
+  "reactions.heart": "Coração",
+  "reactions.fire": "Fogo",
+  "reactions.clap": "Aplausos",
+  "reactions.laugh": "A rir",
+  "reactions.wow": "Uau",
+  "reactions.party": "Festa",
   "screen.metaTitle": "Ecrã grande do Pulse Live",
   "screen.mutedByHost": "Quem organiza silenciou este ecrã",
   "screen.joinAt": "Entra em {host}/play",
   "screen.morePlayers": "+{count} mais",
   "screen.joinCode": "Código",
+  "screen.joinChip": "Entrar: {code}",
+  "screen.joiningClosed": "As entradas estão fechadas",
   "screen.qrLabel": "Código QR para entrar no jogo",
+  "screen.soundChip": "Ligar o som",
+  "screen.soundLevel.cycle": "Som: {level}",
+  "screen.soundLevel.next": "Carrega para mudar para {level}",
+  "screen.soundLevel.quiet": "Baixo",
+  "screen.soundLevel.normal": "Normal",
+  "screen.soundLevel.venue": "Alto",
+  "screen.hideReactions": "Esconder reações",
+  "screen.showReactions": "Mostrar reações",
   "screen.roundsTitle": "As rondas desta noite",
-  "screen.fullscreen": "Ecrã inteiro",
+  "screen.fullscreen": "Ver em ecrã inteiro",
   "screen.exitFullscreen": "Sair do ecrã inteiro",
-  "screen.themeLight": "Ecrã claro",
-  "screen.themeDark": "Ecrã escuro",
+  "screen.themeLight": "Usar um ecrã claro",
+  "screen.themeDark": "Usar um ecrã escuro",
+  "screen.moreTeams_one": "Mais {count} equipa",
+  "screen.moreTeams_other": "Mais {count} equipas",
   "screen.mute": "Silenciar sons",
   "screen.unmute": "Ligar sons",
   "screen.noGame":
@@ -386,7 +590,8 @@ export const quizshow: Catalog = {
   "player.metaTitle": "Jogar Pulse Live",
   "player.codeTitle": "Entrar num jogo ao vivo",
   "player.codeLabel": "Código do jogo",
-  "player.codeHint": "Seis letras e números que aparecem no ecrã grande",
+  "player.codeHint":
+    "Seis letras e números do ecrã grande. Entras assim que tiveres os seis",
   "player.codeSubmit": "Entrar no jogo",
   "player.nameTitle": "Escolhe o teu nome de jogo",
   "player.nameLabel": "Nome de jogo",
@@ -394,6 +599,9 @@ export const quizshow: Catalog = {
   "player.avatarLabel": "Mostrar a minha foto no ecrã grande",
   "player.extraTimeLabel": "Dá-me mais tempo em cada pergunta",
   "player.extraTimeHint": "Só tu e quem organiza veem isto",
+  "player.vibration.label": "Vibração",
+  "player.vibration.hint":
+    "Uma vibração curta quando cada resposta é revelada, nos telemóveis que vibram",
   "player.teamTitle": "Escolhe uma equipa",
   "player.teamJoin": "Entrar na equipa {team}",
   "player.changeTeam.open": "Mudar de equipa",
@@ -406,12 +614,28 @@ export const quizshow: Catalog = {
   "player.teamCreate": "Criar uma equipa",
   "player.teamNameLabel": "Nome da equipa",
   "player.teamShapeLabel": "Forma da equipa",
-  "player.joinCta": "Estou dentro",
+  "player.joinSubmit": "Estou dentro",
+  "player.useSuggestion": "Usar {suggestion}",
+  "player.nameTakenNoSuggestion": "Alguém aqui já usa esse nome. Escolhe outro",
+  "player.preview.title": "Um jogo Pulse Live",
+  "player.preview.status.lobby": "O lobby está aberto",
+  "player.preview.status.running":
+    "O jogo já começou. Podes entrar a partir da próxima pergunta",
+  "player.preview.status.paused": "O jogo está numa pausa curta",
+  "player.preview.signIn": "Inicia sessão para jogar",
+  "player.preview.membersOnly":
+    "Os jogos Pulse Live são para membros da QueerPulse",
+  "player.teamShapeTaken": "{shape}, forma já escolhida por outra equipa",
   "player.lobbyTitle": "Já estás dentro",
   "player.lobbyBody":
     "Olha para o ecrã grande. O jogo começa quando quem organiza der o arranque",
   "player.yourTeam": "A tua equipa: {team}",
   "player.changeName": "Mudar nome",
+  "player.leave.button": "Sair do jogo",
+  "player.leave.confirmTitle": "Sair deste jogo?",
+  "player.leave.confirmBody": "Podes voltar a entrar com o código",
+  "player.leave.confirm": "Sair do jogo",
+  "player.leave.cancel": "Ficar no jogo",
   "player.saveName": "Guardar nome",
   "player.jokerPlay": "Jogar o meu joker nesta ronda",
   "player.jokerHint": "Esta ronda vale o dobro para ti",
@@ -444,13 +668,56 @@ export const quizshow: Catalog = {
   "player.pointsEarned": "+{points} pontos",
   "player.streak": "Sequência de {count}",
   "player.jokerDoubled": "Duplicado pelo teu joker",
-  "player.place": "Estás em {place} de {total}",
-  "player.teamPlace": "A tua equipa está em {place} de {total}",
+  "player.answeredCount_one": "{count} de {total} respondeu",
+  "player.answeredCount_other": "{count} de {total} responderam",
+  "player.talkItOver": "Falem sobre isto em equipa",
+  "player.pollYourPick": "A tua escolha",
+  "player.pollShare": "{percent}% escolheram isto",
+  "player.placeLine": "Estás em {place}",
+  "player.teamPlaceLine": "A tua equipa está em {place}",
   "player.report": "Denunciar",
   "player.reportAria": "Denunciar a resposta {text}",
   "player.removedBody": "Podes continuar a aproveitar o resto do evento",
   "player.endedTitle": "E assim acaba o jogo",
-  "player.finalPlace": "Acabaste em {place} de {total}",
+  "player.night.title": "A tua noite",
+  "player.night.right": "{right} de {answered} certas",
+  "player.night.bestStreak": "Melhor sequência: {streak}",
+  "player.night.jokerPoints": "Pontos do joker: {points}",
+  "player.night.place": "Lugar final: {place}",
+  "player.night.teamPlace": "Lugar da equipa: {place}",
+  "player.night.saveImage": "Guardar imagem",
+  "player.night.answers": "Respostas",
+  "player.night.imageCanvasFailed":
+    "Este navegador não consegue desenhar a imagem",
+  "player.night.imagePngFailed":
+    "Este navegador não conseguiu transformar o cartão num PNG",
+  "player.night.imageSaveFailed":
+    "Não foi possível guardar a imagem neste dispositivo",
+  "player.night.imageStylesFailed":
+    "Os estilos da imagem não carregaram. Recarrega a página e tenta outra vez",
+  "player.rematch": "Entrar na desforra",
+  "player.makeYourOwn": "Criar o teu jogo",
+  "player.nextEvent.rsvp": "Confirmar presença neste evento",
+  "player.nextEvent.label": "A seguir nesta série",
+  "player.giving": "Apoiar {name}",
+  "player.removedCanRejoin": "Quem organiza deixa-te entrar outra vez",
+  "player.joinAgain": "Entrar outra vez",
+  "player.practiceEnd":
+    "Os resultados de um jogo de treino não ficam guardados",
+  "player.warmUpNoPoints": "Aquecimento: sem pontos",
+  "player.hostCorrected": "Quem apresenta corrigiu esta resposta",
+  "player.refused.signIn": "Iniciar sessão outra vez",
+  "player.refused.reload": "Recarregar a página",
+  "player.placesUp_one": "Subiste {count} lugar",
+  "player.placesUp_other": "Subiste {count} lugares",
+  "player.placesDown_one": "Desceste {count} lugar",
+  "player.placesDown_other": "Desceste {count} lugares",
+  "player.pointsBehind": "A {points} pontos de {name}",
+  "player.reactions.label": "Envia uma reação",
+  "player.reactions.sent": "Reação enviada",
+  "player.closestBand.range": "De {low} a {high} {unit} vale metade",
+  "player.closestBand.rangeNoUnit": "De {low} a {high} vale metade",
+  "player.closestYours": "A tua resposta: {value}",
   "player.playAgain": "Jogar outra vez",
   "player.backToEvent": "Voltar ao evento",
   "player.announce.round_intro": "Nova ronda",
@@ -465,12 +732,90 @@ export const quizshow: Catalog = {
   "player.announce.podium": "O pódio",
   "player.extraTimeOn": "O teu tempo extra está ligado",
   "remote.metaTitle": "Comando do Pulse Live",
-  "remote.start": "Começar jogo",
   "remote.next": "Seguinte",
+  "remote.primary.start": "Começar o jogo",
+  "remote.primary.showFirstQuestion": "Mostrar a primeira pergunta",
+  "remote.primary.takeAnswers": "Receber respostas já",
+  "remote.primary.closeAnswers": "Fechar respostas",
+  "remote.primary.closeWriting": "Fechar a escrita",
+  "remote.primary.showScores": "Mostrar pontuações",
+  "remote.primary.nextQuestion": "Próxima pergunta ({n} de {total})",
+  "remote.primary.endRound": "Terminar a ronda {n}",
+  "remote.primary.startRound": "Começar a ronda {n}: {title}",
+  "remote.primary.startRoundUntitled": "Começar a ronda {n}",
+  "remote.primary.openWheel": "Abrir a roda",
+  "remote.primary.showPodium": "Mostrar o pódio",
+  "remote.primary.playSlice": "Jogar {title}",
+  "remote.primary.revealThird": "Revelar o 3.º lugar",
+  "remote.primary.revealSecond": "Revelar o 2.º lugar",
+  "remote.primary.revealWinner": "Revelar quem ganhou",
+  "remote.primary.finishGame": "Terminar o jogo",
+  "remote.primary.endWarmUp": "Terminar o aquecimento",
+  "remote.skipToast": "A saltar esta pergunta",
+  "remote.skipScoresToast": "A saltar a pontuação",
+  "remote.skipScores": "Saltar a pontuação",
+  "remote.skipUndoAction": "Anular o salto",
+  "remote.moreControls": "Mais controlos",
+  "remote.more": "Mais",
+  "remote.autoAdvanceCaption": "Avança sozinho",
+  "remote.awayTag": "Ausente",
+  "remote.player.menu": "Opções para {name}",
+  "remote.player.rename": "Mudar o nome",
+  "remote.player.renameLabel": "Nome no ecrã grande",
+  "remote.player.renameSave": "Guardar nome",
+  "remote.player.move": "Mudar de equipa",
+  "remote.player.moveLabel": "Escolhe uma equipa para {name}",
+  "remote.player.moveDuringQuestion":
+    "Muda as pessoas de equipa antes de uma pergunta abrir ou depois das pontuações",
+  "remote.player.remove": "Retirar do jogo",
+  "remote.player.removeRejoinBody":
+    "Sai agora e pode voltar a entrar com o mesmo código. A pontuação e as respostas ficam",
+  "remote.player.allowRejoin": "Deixar voltar a entrar",
+  "remote.settings.title": "Definições do jogo",
+  "remote.settings.joinLock": "Fechar as entradas",
+  "remote.settings.joinLockHint":
+    "Ninguém novo pode entrar. Quem já entrou pode voltar",
+  "remote.settings.autoAdvance": "Avançar sozinho",
+  "remote.settings.autoAdvanceHint":
+    "Os cartões de ronda, as revelações e as pontuações avançam passados uns segundos",
+  "remote.notifyGuests": "Enviar o código aos convidados",
+  "remote.guestsNotified": "Os convidados têm o código",
+  "remote.makeTeams.open": "Fazer equipas para as mesas",
+  "remote.makeTeams.hint":
+    "Uma equipa por mesa. Muda qualquer nome antes de as criares",
+  "remote.makeTeams.count": "Quantas mesas",
+  "remote.makeTeams.fewer": "Tirar uma mesa",
+  "remote.makeTeams.more": "Juntar uma mesa",
+  "remote.makeTeams.defaultName": "Mesa {number}",
+  "remote.makeTeams.nameLabel": "Nome da equipa {number}",
+  "remote.makeTeams.submit": "Criar estas equipas",
+  "remote.makeTeams.limit":
+    "Este jogo tem lugar para 24 equipas. Faz menos mesas",
+  "remote.streakLabel": "Sequência de {count}",
+  "remote.rescore.title": "Corrigir respostas",
+  "remote.rescore.typedTitle": "Respostas escritas dadas como erradas",
+  "remote.rescore.typedEmpty": "Não há respostas escritas erradas para aceitar",
+  "remote.rescore.accept": "Aceitar para todas as pessoas que escreveram isto",
+  "remote.rescore.acceptedCount_one": "{count} pessoa escreveu isto",
+  "remote.rescore.acceptedCount_other": "{count} pessoas escreveram isto",
+  "remote.rescore.changeTitle": "Mudar a resposta certa",
+  "remote.rescore.saveKey_one": "Guardar a resposta certa",
+  "remote.rescore.saveKey_other": "Guardar as respostas certas",
+  "remote.rescore.adjustTitle": "Dar ou tirar pontos",
+  "remote.rescore.give": "Dar pontos",
+  "remote.rescore.take": "Tirar pontos",
+  "remote.rescore.amount": "Pontos",
+  "remote.rescore.amountDown": "Baixar o valor em {step}",
+  "remote.rescore.amountUp": "Subir o valor em {step}",
+  "remote.rescore.pickPlayerFirst": "Escolhe primeiro uma pessoa",
+  "remote.rescore.pickTeamFirst": "Escolhe primeiro uma equipa",
+  "remote.rescore.corrected": "Resposta corrigida",
   "remote.pause": "Pausa",
   "remote.resume": "Retomar",
   "remote.addTime": "Mais 15 segundos",
   "remote.reveal": "Revelar agora",
+  "remote.pollNoAnswer": "Sondagem: não há resposta certa",
+  "remote.revealNoteHint": "Só tu vês isto até à revelação",
   "remote.skip": "Saltar pergunta",
   "remote.end": "Terminar jogo",
   "remote.endConfirmTitle": "Terminar o jogo agora?",
@@ -509,7 +854,6 @@ export const quizshow: Catalog = {
   "remote.extraTimeTag": "Tempo extra",
   "remote.jokerTag": "Joker usado",
   "remote.offlineTag": "Sem ligação",
-  "remote.remove": "Retirar do jogo",
   "remote.removeConfirmTitle": "Retirar {name} deste jogo?",
   "remote.removeConfirmBody":
     "Não pode voltar a entrar neste jogo e as respostas escritas ficam escondidas",
@@ -519,6 +863,86 @@ export const quizshow: Catalog = {
   "remote.noGame": "Não há jogo aberto para este evento",
   "remote.restartRecovery":
     "O jogo parou enquanto os nossos servidores reiniciavam. Retoma para repetir esta pergunta desde o início",
+  "remote.pair.title": "Emparelhar um dispositivo",
+  "remote.pair.codeLabel": "Código de emparelhamento",
+  "remote.pair.submit": "Emparelhar este dispositivo",
+  "remote.pair.hint":
+    "Abre /play/tv numa TV, ou /play/remote no telemóvel de quem ajuda, e escreve o código que aparece",
+  "remote.pair.codeInvalid":
+    "Escreve os 6 algarismos do código que está no dispositivo. Vão de 2 a 9",
+  "remote.pair.pairedScreen": "Ecrã emparelhado. Já mostra este jogo",
+  "remote.pair.pairedHelper": "{name} já pode ajudar a apresentar este jogo",
+  "remote.pair.refusal.cannotViewEvent":
+    "Este membro não consegue ver o evento, por isso não pode ajudar a apresentar",
+  "remote.pair.refusal.cannotViewGame":
+    "Este membro não consegue ver este jogo, por isso não pode ajudar a apresentar",
+  "remote.pair.refusal.bannedFromEvent":
+    "Este membro foi banido do evento, por isso não pode ajudar a apresentar",
+  "remote.pair.refusal.helperIsPlaying":
+    "Este membro está a jogar este jogo, por isso não pode ajudar a apresentar",
+  "remote.devices.title": "Dispositivos emparelhados",
+  "remote.devices.screen": "Ecrã",
+  "remote.devices.helper": "Quem ajuda",
+  "remote.devices.connected": "Ligado",
+  "remote.devices.notConnected": "Sem ligação",
+  "remote.devices.pairedAt": "Emparelhado às {time}",
+  "remote.devices.unpairScreen": "Desemparelhar este ecrã",
+  "remote.devices.unpairHelper": "Desemparelhar esta pessoa",
+  "remote.devices.confirm": "Desemparelhar este dispositivo?",
+  "remote.devices.confirmScreenBody":
+    "O ecrã deixa de mostrar este jogo e mostra um código de emparelhamento novo",
+  "remote.devices.confirmHelperBody":
+    "O comando de {name} deixa de funcionar neste jogo",
+  "remote.devices.keepPaired": "Manter emparelhado",
+  "remote.pairAgain.ended":
+    "Para o próximo jogo, emparelha outra vez o ecrã e quem te ajuda",
+  "remote.pairAgain.lobby": "Emparelha o ecrã outra vez para este jogo",
+  "remote.devices.keyHint":
+    "Depois de uma atualização de segurança do servidor, os ecrãs e as pessoas emparelhadas podem perder o emparelhamento. Emparelha-os outra vez com o código novo que cada um mostra",
+  "tv.title": "Mostrar o Pulse Live neste ecrã",
+  "tv.body":
+    "No teu comando, toca em Emparelhar um dispositivo e escreve este código",
+  "tv.expires": "Este código funciona até às {time}",
+  "tv.newCode": "Mostrar um código novo",
+  "tv.backToCode": "Mostrar um código novo",
+  "tv.nextGameTitle": "Próximo jogo? Emparelha este ecrã outra vez",
+  "tv.metaTitle": "Emparelhar um ecrã com o Pulse Live",
+  "tv.demoNote":
+    "Emparelhar um ecrã precisa da app ao vivo. Na demo, abre o ecrã grande a partir do teu evento ou jogo",
+  "tv.codeLabel": "Código de emparelhamento {code}",
+  "tv.pollSlow":
+    "Há muitos ecrãs a emparelhar nesta rede. Este código continua a funcionar",
+  "tv.pollOffline":
+    "Este dispositivo está sem ligação. Este código continua a funcionar quando voltar a ligar-se",
+  "tv.pollServer":
+    "O servidor está a demorar a responder. Este código continua a funcionar",
+  "tv.failed.rateLimited":
+    "Demasiados códigos de emparelhamento agora. Tenta daqui a uns minutos",
+  "tv.failed.offline":
+    "Este dispositivo está sem ligação. Volta a ligá-lo à internet para emparelhar",
+  "tv.failed.server":
+    "Não conseguimos chegar ao servidor para emparelhar este dispositivo. Tenta outra vez daqui a pouco",
+  "tv.failed.notAvailable":
+    "O Pulse Live ainda não está aberto neste servidor, por isso este dispositivo não pode emparelhar",
+  "tv.failed.codeGone":
+    "Os códigos deste dispositivo deixam de funcionar antes de alguém os usar. Mostra um código novo para tentares outra vez",
+  "helper.title": "Ajudar a apresentar este jogo",
+  "helper.body":
+    "No comando de quem apresenta, toca em Emparelhar um dispositivo e escreve este código",
+  "helper.pairAgain": "Emparelhar outra vez",
+  "helper.metaTitle": "Ajudar a apresentar um jogo do Pulse Live",
+  "helper.demoNote":
+    "Emparelhar o telemóvel de quem ajuda precisa da app ao vivo. Na demo, abre o comando a partir do teu evento ou jogo",
+  "helper.pollSlow":
+    "Há muitos dispositivos a emparelhar nesta rede. Este código continua a funcionar",
+  "helper.refusal.deviceUnpaired":
+    "Quem apresenta desemparelhou este telemóvel do jogo",
+  "helper.refusal.ticketExpired":
+    "Este emparelhamento expirou. Emparelha outra vez para continuares a ajudar",
+  "helper.refusal.helperIsPlaying":
+    "Estás a jogar este jogo, por isso não podes ajudar a apresentar",
+  "helper.refusal.bannedFromEvent":
+    "Não podes participar neste jogo, por isso não podes ajudar a apresentá-lo",
   "dryRun.open": "Experimentar",
   "dryRun.title": "Experimenta o teu quiz",
   "dryRun.sub":
@@ -528,6 +952,36 @@ export const quizshow: Catalog = {
   "dryRun.blockedTitle": "Resolve isto primeiro para experimentar o teu quiz",
   "dryRun.blockedMore_one": "E mais {count} problema",
   "dryRun.blockedMore_other": "E mais {count} problemas",
+  "dryRun.tryRound": "Experimentar esta ronda",
+  "dryRun.tryFromQuestion": "Experimentar a partir desta pergunta",
+  "dryRun.viewer.label": "Ver em",
+  "dryRun.starting": "A começar…",
+  "dryRun.teamsLocked": "As equipas só podem mudar antes de o jogo começar",
+  "dryRun.titleRound": "Experimenta a ronda {round}",
+  "dryRun.titleFromQuestion":
+    "Experimenta a partir da pergunta {question} da ronda {round}",
+  "dryRun.viewer.screen": "Ecrã",
+  "dryRun.viewer.phone": "Telemóvel",
+  "dryRun.teams": "Equipas",
+  "dryRun.you": "Tu",
+  "print.metaTitle": "Imprimir as tuas folhas do Pulse Live",
+  "print.print": "Imprimir estas páginas",
+  "print.hostTitle": "Folha de quem apresenta",
+  "print.answersTitle": "Folha de respostas",
+  "print.teamName": "Nome da equipa",
+  "print.round": "Ronda {number}",
+  "print.answer": "Resposta",
+  "print.margin": "Margem",
+  "print.note": "Nota",
+  "print.timing": "Tempos",
+  "print.timingQuiz": "{read}s para ler, depois {limit}s para responder",
+  "print.timingQuizTalk":
+    "{read}s para ler, {talk}s para as equipas falarem sobre a pergunta, depois {limit}s para responder",
+  "print.timingParty": "{write}s para escrever, depois {vote}s para votar",
+  "print.noAnswer": "Ainda sem resposta definida",
+  "print.noQuestions":
+    "Ainda não há perguntas para imprimir. Junta algumas no estúdio",
+  "print.pictureQuestion": "Pergunta com imagem",
   // ── Games without an event ──
   "home.myGames.title": "Os meus jogos",
   "home.myGames.sub":
@@ -540,7 +994,7 @@ export const quizshow: Catalog = {
   "import.fromCopy": "Copiar um jogo ou o quiz de um evento",
   "games.row.adultsTag": "18+",
   "games.row.liveTag": "Ao vivo, código {code}",
-  "games.row.lobbyTag": "Sala aberta, código {code}",
+  "games.row.lobbyTag": "Lobby aberto, código {code}",
   "games.row.resultsTag": "Resultados",
   "games.row.edited": "Editado a {date}",
   "games.new.title": "Novo jogo",
@@ -555,6 +1009,7 @@ export const quizshow: Catalog = {
   "game.untitled": "Jogo sem título",
   "game.duplicate": "Duplicar jogo",
   "game.duplicated": "Jogo duplicado",
+  "game.duplicateAndOpen": "Duplicar e abrir",
   "game.delete": "Apagar jogo",
   "game.deleteTitle": "Apagar este jogo?",
   "game.deleteBody":
@@ -619,7 +1074,7 @@ export const quizshow: Catalog = {
   // ── Pulse Live wheel ──
   "kind.wheel.name": "Roda",
   "kind.wheel.hint":
-    "Gira para escolher o que se joga a seguir, entre as rondas logo depois dela",
+    "Gira para escolher a próxima ronda entre as rondas logo depois dela",
   "stage.wheel.pill": "Roda · giro {number} de {total}",
   "stage.wheel.pillUnplanned": "Roda · próxima ronda",
   "stage.wheel.questionPill": "{category} · giro {number} de {total}",
@@ -670,7 +1125,6 @@ export const quizshow: Catalog = {
     "As rondas que ainda estão na roda ficam de fora, e o jogo continua",
   "remote.wheel.finishConfirmBodyQuestion":
     "As perguntas que ainda estão na roda ficam de fora, e o jogo continua",
-  "remote.wheel.startRound": "Começar {title}",
   "remote.wheel.playQuestion": "Jogar a pergunta",
   "remote.wheel.spinForNextRound": "Girar para a próxima ronda",
   "problems.too_many_wheels": "Um quiz leva no máximo {max} rodas",
@@ -683,14 +1137,10 @@ export const quizshow: Catalog = {
   "rounds.removeWheelConfirmTitle": "Apagar esta roda?",
   "rounds.removeWheelConfirmBody":
     "As rondas depois dela ficam e jogam-se por ordem",
-  "studio.rail.wheelCardRound_one":
-    "Roda · escolhe a próxima ronda · {count} fatia",
-  "studio.rail.wheelCardRound_other":
-    "Roda · escolhe a próxima ronda · {count} fatias",
-  "studio.rail.wheelCardQuestion_one":
-    "Roda · escolhe uma pergunta · {count} fatia",
-  "studio.rail.wheelCardQuestion_other":
-    "Roda · escolhe uma pergunta · {count} fatias",
+  "studio.rail.wheelCardRound_one": "Roda · {count} fatia",
+  "studio.rail.wheelCardRound_other": "Roda · {count} fatias",
+  "studio.rail.wheelCardQuestion_one": "Roda de perguntas · {count} fatia",
+  "studio.rail.wheelCardQuestion_other": "Roda de perguntas · {count} fatias",
   "studio.rail.wheelMenu": "Opções da roda {number}",
   "studio.rail.inWheel": "Na roda {number}",
   "studio.canvas.wheelSlide": "Diapositivo da roda",
@@ -735,7 +1185,25 @@ export const quizshow: Catalog = {
     "Feitos pela nossa equipa. Tudo é copiado para o teu quiz, por isso podes mudar qualquer pergunta",
   "templates.use": "Usar este modelo",
   "templates.loadError": "Não conseguimos carregar os modelos",
-  "templates.empty": "A nossa equipa ainda não publicou modelos",
+  "templates.changeNote.label": "O que mudou",
+  "templates.changeNote.hint":
+    "Quem copiou este modelo vê esta nota quando ele é atualizado",
+  "templates.changeNote.tooLong":
+    "As notas têm até {max} caracteres, por isso o fim foi cortado",
+  "templates.lastPublished": "Última publicação a {date}",
+  "templates.empty.title": "Ainda não há modelos",
+  "templates.empty.body": "A nossa equipa publica aqui quizzes verificados",
+  "templates.empty.startBlank": "Começar um quiz em branco",
+  "templates.empty.copyEvent": "Copiar de outro evento",
+  "templates.empty.copyQuiz": "Copiar de outro quiz",
+  "templates.preview.open": "Pré-visualizar",
+  "templates.preview.title": "Pré-visualização do modelo",
+  "templates.preview.changeNote": "O que mudou",
+  "templates.preview.useTemplate": "Usar este modelo",
+  "templates.preview.addRounds": "Adicionar rondas deste modelo",
+  "templates.preview.loadError": "Não conseguimos carregar este modelo",
+  "templates.appendSub":
+    "Escolhe um modelo e depois as rondas a adicionar a seguir às tuas",
   "errors.template_not_found": "Não encontrámos esse modelo",
   "errors.template_card_incomplete":
     "Escreve o título e a descrição do cartão em cada língua que o quiz usa e depois publica",
@@ -859,6 +1327,8 @@ export const quizshow: Catalog = {
   "studio.slide.numberPlaceholder": "Escreve o número certo",
   "studio.slide.markHint": "Clica num círculo para marcar a resposta certa",
   "studio.slide.rightIs": "{answer} é a resposta certa",
+  "studio.slide.rightAre": "{answers} são as respostas certas",
+  "studio.pollTag": "Sondagem",
   "studio.slide.statementIs": "A afirmação é {answer}",
   "studio.slide.lieDetectorPlaceholder": "Escreve a pergunta verdadeira",
   "studio.slide.captionPlaceholder":
@@ -871,6 +1341,8 @@ export const quizshow: Catalog = {
   "studio.rail.label": "Rondas e perguntas",
   "studio.rail.quizSettings": "Definições do quiz",
   "studio.rail.questionLabel": "Pergunta {number}: {prompt}",
+  "studio.rail.pollLabel": "Pergunta {number} (sondagem): {prompt}",
+  "studio.rail.pollUntitled": "Pergunta {number} (sondagem)",
   "studio.rail.questionMenu": "Opções da pergunta {number}",
   "studio.rail.roundLabel_one":
     "Ronda {number}: {title}. {kind}, {count} pergunta",
@@ -893,14 +1365,20 @@ export const quizshow: Catalog = {
   "studio.typeIn": "Escrever em {language}",
   "studio.live.pillLabel":
     "{status}, código {code}. Abrir o ecrã grande ou o comando",
+  "studio.live.pillLabelPractice":
+    "{status}, treino, código {code}. Abrir o ecrã grande ou o comando",
   "studio.more": "Mais ações",
   "studio.shortcuts.open": "Atalhos de teclado",
   "studio.shortcuts.title": "Atalhos de teclado",
-  "studio.shortcuts.sub": "Funcionam sempre que não estás a escrever num campo",
+  "studio.shortcuts.sub":
+    "Guardar, anular e refazer funcionam enquanto escreves no quiz, os outros quando sais do campo",
   "studio.shortcuts.newQuestion": "Nova pergunta",
   "studio.shortcuts.duplicate": "Duplicar pergunta",
   "studio.shortcuts.delete": "Apagar a pergunta em foco",
   "studio.shortcuts.save": "Guardar agora",
+  "studio.shortcuts.undo": "Anular a última alteração",
+  "studio.shortcuts.redo": "Refazer a alteração que anulaste",
+  "studio.shortcuts.or": "ou",
   "studio.shortcuts.help": "Todos os atalhos",
   "studio.shortcuts.keyCommand": "Command",
   "studio.shortcuts.keyCtrl": "Ctrl",
@@ -908,6 +1386,35 @@ export const quizshow: Catalog = {
   "studio.shortcuts.keyArrowUp": "Seta para cima",
   "studio.shortcuts.keyArrowDown": "Seta para baixo",
   "studio.removeQuestionTitle": "Apagar a pergunta {number}?",
+  "studio.undo": "Anular",
+  "studio.redo": "Refazer",
+  "studio.removed.round": "Ronda removida",
+  "studio.removed.wheel": "Roda removida",
+  "studio.removed.question": "Pergunta removida",
+  "studio.removed.undo": "Anular",
+  "studio.moveToRound": "Mover para a ronda",
+  "studio.moveToRoundBack": "Voltar",
+  "studio.moveToRoundItem": "{number} · {title}",
+  "studio.moveToRoundNone":
+    "Nenhuma outra ronda deste tipo tem espaço para ela",
+  "studio.runningTime": "Cerca de {minutes} minutos",
+  "studio.runningTimeLabel": "Duração",
+  "studio.sameInBoth": "Igual nas duas",
+  "studio.fillPt": "Preencher o PT vazio com o texto EN",
+  "studio.checkTranslation": "Revê esta tradução",
+  "studio.looksRight": "Marcar como revista",
+  "studio.typeChange.title": "Mudar o tipo de pergunta?",
+  "studio.typeChange.bodyOptionsAndAnswer_one":
+    "Mudar para {type} remove {count} opção e a resposta certa",
+  "studio.typeChange.bodyOptionsAndAnswer_other":
+    "Mudar para {type} remove as {count} opções e a resposta certa",
+  "studio.typeChange.bodyOptions_one": "Mudar para {type} remove {count} opção",
+  "studio.typeChange.bodyOptions_other":
+    "Mudar para {type} remove as {count} opções",
+  "studio.typeChange.bodyAnswer": "Mudar para {type} remove a resposta certa",
+  "studio.typeChange.confirmAnswer": "Mudar o tipo e remover a resposta",
+  "studio.typeChange.changed": "Mudado para {type}",
+  "studio.typeChange.confirm": "Mudar o tipo e remover as opções",
   "screen.waitingTitleEm": "À espera de quem <em>joga</em>",
   "stage.podiumTitleEm": "E quem <em>ganhou</em> foi",
   "stage.thanksTitleEm": "Foi um prazer <em>jogar</em> convosco",
@@ -915,6 +1422,102 @@ export const quizshow: Catalog = {
   "studio.canvas.sideHint": "Edita este diapositivo no painel à direita",
   "studio.more.replaceFromTemplate": "Substituir por um modelo",
   "studio.more.replaceFromCopy": "Substituir por outro quiz",
+  "studio.more.addFromTemplate": "Adicionar rondas de um modelo",
+  "studio.more.addFromCopy": "Adicionar rondas de outro quiz",
+  "studio.more.undo": "Anular a última alteração",
+  "studio.more.redo": "Refazer a alteração",
+  "studio.more.undoEmpty": "Ainda não há nenhuma alteração para anular",
+  "studio.more.redoEmpty": "Não há nenhuma alteração anulada para refazer",
+  "studio.basedOn": "Baseado em {title}",
+  "studio.templateUpdated": "Atualizado desde que o copiaste",
+  "studio.seeWhatChanged": "Ver o que mudou",
+  "studio.paste.open": "Colar perguntas",
+  "studio.paste.title": "Colar perguntas",
+  "studio.paste.sub":
+    "Cola as tuas perguntas como texto, ou escolhe um ficheiro CSV",
+  "studio.paste.formatHelp":
+    "Escreve cada pergunta num bloco: Q: para a pergunta, - para uma opção, * para uma certa, A: para uma resposta escrita ou um número (1969 ~10 aceita até 10 de diferença), # para uma ronda nova. Escreve EN | PT para dar as duas línguas, ou escolhe um ficheiro CSV. O CSV guarda as perguntas, as opções, as respostas principais, os pontos e os tempos, e deixa de fora as respostas alternativas, as notas e as imagens",
+  "studio.paste.formatShow": "Mostrar o formato",
+  "studio.paste.formatHide": "Esconder o formato",
+  "studio.paste.textLabel": "As tuas perguntas",
+  "studio.paste.placeholder":
+    "# Música\nQ: Quem cantou Vogue?\n- Cher\n* Madonna\n\nQ: Em que ano foi Stonewall?\nA: 1969 ~2",
+  "studio.paste.chooseFile": "Escolher um ficheiro CSV",
+  "studio.paste.fileChosen": "De {name}",
+  "studio.paste.removeFile": "Tirar o ficheiro",
+  "studio.paste.fileTooLarge": "Escolhe um ficheiro CSV com menos de {max}",
+  "studio.paste.fileReadFailed":
+    "O teu navegador não conseguiu ler {name}. Escolhe-o outra vez",
+  "studio.paste.summary_one": "{count} pergunta em {rounds}",
+  "studio.paste.summary_other": "{count} perguntas em {rounds}",
+  "studio.paste.roundCount_one": "{count} ronda",
+  "studio.paste.roundCount_other": "{count} rondas",
+  "studio.paste.empty": "Ainda não há nada para juntar",
+  "studio.paste.issuesTitle_one": "{count} coisa a corrigir antes de juntar",
+  "studio.paste.issuesTitle_other": "{count} coisas a corrigir antes de juntar",
+  "studio.paste.issueLine": "Linha {line}",
+  "studio.paste.submit": "Juntar estas perguntas",
+  "studio.paste.added_one": "Juntaste {count} pergunta",
+  "studio.paste.added_other": "Juntaste {count} perguntas",
+  "studio.paste.textLimitReached":
+    "Este texto chegou ao limite de {max} caracteres, por isso o que vier a seguir fica de fora",
+  "studio.paste.fixToAdd": "Corrige isto para juntares as tuas perguntas",
+  "studio.paste.selectLine": "Seleciona a linha {line} no texto",
+  "studio.paste.chooseAnother": "Escolher outro ficheiro",
+  "studio.paste.issue.noCorrect": "Marca a opção certa com *",
+  "studio.paste.issue.allCorrect": "Deixa pelo menos uma opção sem *",
+  "studio.paste.issue.unknownLine": "Começa esta linha com #, Q:, A:, - ou *",
+  "studio.paste.issue.noQuestion": "Escreve uma linha Q: antes desta",
+  "studio.paste.issue.noAnswer": "Junta opções ou uma linha A: a esta pergunta",
+  "studio.paste.issue.emptyAnswer": "Escreve a resposta depois de A:",
+  "studio.paste.issue.mixedAnswer":
+    "Fica só com as opções ou só com a linha A:",
+  "studio.paste.issue.twoAnswers": "Dá a cada pergunta uma só linha A:",
+  "studio.paste.issue.tooFewOptions":
+    "Dá a esta pergunta pelo menos {min} opções",
+  "studio.paste.issue.tooManyOptions":
+    "Dá a esta pergunta no máximo {max} opções",
+  "studio.paste.issue.emptyOption":
+    "A opção {number} está vazia, preenche-a ou sobe as opções seguintes",
+  "studio.paste.issue.badClosest":
+    "Escreve o número como 1969, 1969 ~10 ou 1969 ~10% (uma percentagem de {min} a {max})",
+  "studio.paste.issue.emptyRound": "Junta pelo menos uma pergunta a esta ronda",
+  "studio.paste.issue.roundTooLong": "Uma ronda leva até {max} perguntas",
+  "studio.paste.issue.tooManyRounds":
+    "Com estas, o quiz passa das {max} rondas",
+  "studio.paste.issue.overLimit": "Com estas, o quiz passa das {max} perguntas",
+  "studio.paste.issue.tooLong": "Encurta este texto para {max} caracteres",
+  "studio.paste.issue.missingHeader":
+    "Começa o ficheiro com uma linha com o nome das colunas: {columns}",
+  "studio.paste.issue.missingHeaderLead":
+    "Começa o ficheiro com uma linha com o nome destas colunas",
+  "studio.paste.issue.unknownType": "Usa um destes tipos: {types}",
+  "studio.paste.issue.badCorrect.multiple_choice":
+    "Escreve os números das opções certas em correct, como 1;3",
+  "studio.paste.issue.badCorrect.true_false":
+    "Escreve true ou false em correct",
+  "studio.paste.issue.badCorrect.type_answer": "Escreve a resposta em correct",
+  "studio.paste.issue.badCorrect.closest_number":
+    "Escreve o número em correct com um ponto nas casas decimais, como 1969, 2.5 ~0.5 ou 1969 ~10%",
+  "studio.paste.issue.badCorrect.order":
+    "Escreve cada número de opção uma vez em correct, pela ordem certa, como 2;1;3",
+  "studio.paste.issue.badPoints": "Os pontos têm de ser um destes: {values}",
+  "studio.paste.issue.badTimeLimit":
+    "Escreve o tempo em segundos inteiros de {min} a {max}, ou deixa-o vazio",
+  "studio.paste.issue.unclosedQuote":
+    "Uma célula entre aspas que começa nesta linha nunca fecha",
+  "studio.paste.issue.mixedRound": "Põe as linhas prompt numa ronda só delas",
+  "studio.csv.download": "Descarregar em CSV",
+  "studio.csv.downloaded": "CSV descarregado",
+  "studio.csv.keeps":
+    "Guarda as perguntas, as opções, as respostas principais, os pontos e os tempos, e deixa de fora as respostas alternativas, as notas e as imagens",
+  "studio.csv.untitledFile": "Quiz Pulse Live",
+  "studio.print.host": "Imprimir a folha de quem apresenta",
+  "studio.print.answers": "Imprimir folhas de respostas",
+  "studio.print.tabBlocked":
+    "O teu navegador bloqueou o separador novo da folha. Permite pop-ups neste site e tenta outra vez",
+  "studio.print.saveFailed":
+    "As tuas alterações não acabaram de gravar, por isso a folha não abriu. Tenta outra vez",
   "stage.gotIt_one": "{count} de {total} acertou",
   "stage.gotIt_other": "{count} de {total} acertaram",
   "studio.shortcuts.moveList": "Subir ou descer na lista",
@@ -925,8 +1528,11 @@ export const quizshow: Catalog = {
   "builder.summary.openEditor": "Abrir o editor",
   "builder.summary.title": "O quiz deste evento",
   "builder.summary.lead":
-    "Molda as rondas no editor, experimenta-as com doze jogadores a fingir e abre a sala quando estiverem todos",
-  "builder.summary.lobbyBlocked": "Resolve-os no editor e depois abre a sala",
+    "Molda as rondas no editor, experimenta-as com doze jogadores a fingir e abre o lobby quando estiverem todos",
+  "builder.summary.lobbyBlocked": "Resolve-os no editor e depois abre o lobby",
+  "builder.draftEvent.line":
+    "Evento em rascunho: publica-o para jogar com convidados",
+  "builder.draftEvent.openPractice": "Abrir um lobby de treino",
   "studio.publish.fixFirst":
     "Corrige primeiro os problemas do quiz e depois publica",
   "studio.titlePlaceholder": "Dá um nome ao quiz",
@@ -942,4 +1548,187 @@ export const quizshow: Catalog = {
     "A sessão em direto recusou esta ligação sem indicar o motivo. Recarrega a página para tentar outra vez",
   "errors.signed_out":
     "A tua sessão terminou. Entra outra vez para conduzires este jogo",
+  "errors.transport_timeout":
+    "O jogo não respondeu a tempo. Verifica a tua ligação e tenta outra vez",
+  "errors.refused_signed_out":
+    "A tua sessão terminou. Inicia sessão outra vez para voltares ao jogo",
+  "errors.refused_session_revoked":
+    "Este dispositivo terminou a sessão. Inicia sessão outra vez para voltares ao jogo",
+  "errors.refused_platform_locked":
+    "O QueerPulse está em pausa para toda a gente neste momento. Tenta mais tarde",
+  "errors.refused_feature_hidden":
+    "O Pulse Live ainda não está aberto para a tua conta",
+  "errors.refused_forbidden":
+    "A tua conta não pode ligar-se a jogos ao vivo neste momento",
+  "errors.refused_server_error":
+    "O servidor teve um problema. Recarrega para voltares ao jogo",
+  // Quiz win badges (winBadges/*, admin/quizBadges/*)
+  "winBadges.winToEarn.title": "Vence e ganha",
+  "winBadges.winToEarn.game": "Jogo {number}",
+  "winBadges.winToEarn.hint": "Quem vencer este jogo ganha estes crachás",
+  "winBadges.results.youEarned": "Ganhaste",
+  "winBadges.results.winnerEarned": "{name} ganhou",
+  "winBadges.openDialog.practiceNoBadges": "Os jogos de treino não dão crachás",
+  "winBadges.admin.library.title": "Crachás de quiz",
+  "winBadges.admin.library.create": "Criar crachá",
+  "winBadges.admin.library.edit": "Editar crachá",
+  "winBadges.admin.library.archive": "Arquivar crachá",
+  "winBadges.admin.library.restore": "Restaurar crachá",
+  "winBadges.admin.library.delete": "Apagar crachá",
+  "winBadges.admin.library.holders_one": "{count} pessoa com este crachá",
+  "winBadges.admin.library.holders_other": "{count} pessoas com este crachá",
+  "winBadges.admin.library.events_one": "Usado em {count} evento",
+  "winBadges.admin.library.events_other": "Usado em {count} eventos",
+  "winBadges.admin.library.archivedTag": "Arquivado",
+  "winBadges.admin.form.nameEn": "Nome em inglês",
+  "winBadges.admin.form.namePt": "Nome em português",
+  "winBadges.admin.form.descriptionEn": "Descrição em inglês",
+  "winBadges.admin.form.descriptionPt": "Descrição em português",
+  "winBadges.admin.form.ptHint":
+    "Quem lê em português vê o texto em inglês quando isto fica vazio",
+  "winBadges.admin.form.icon": "Ícone",
+  "winBadges.admin.form.tint": "Cor",
+  "winBadges.admin.form.rarity": "Raridade",
+  "winBadges.admin.form.preview": "Como as pessoas o veem",
+  "winBadges.admin.form.save": "Guardar crachá",
+  "winBadges.admin.events.title": "Eventos com quiz",
+  "winBadges.admin.events.search": "Procura eventos pelo título",
+  "winBadges.admin.events.empty":
+    "Nenhum evento com quiz Pulse Live corresponde a esta pesquisa",
+  "winBadges.admin.events.emptyNoSearch":
+    "Ainda nenhum evento tem um quiz Pulse Live",
+  "winBadges.admin.events.configuredCount_one": "{count} jogo com crachás",
+  "winBadges.admin.events.configuredCount_other": "{count} jogos com crachás",
+  "winBadges.admin.events.finishedCount_one": "{count} jogado",
+  "winBadges.admin.events.finishedCount_other": "{count} jogados",
+  "winBadges.admin.setup.title": "Crachás de {event}",
+  "winBadges.admin.setup.game": "Jogo {number}",
+  "winBadges.admin.setup.attach": "Associar crachás",
+  "winBadges.admin.setup.save": "Guardar crachás dos jogos",
+  "winBadges.admin.setup.finishedTag": "Jogado",
+  "winBadges.admin.setup.nextGame": "Próximo jogo: {number}",
+  "winBadges.admin.setup.awardedAfter_one": "Entregaste {count} crachá",
+  "winBadges.admin.setup.awardedAfter_other": "Entregaste {count} crachás",
+  "winBadges.admin.setup.removeKeepsWins":
+    "Tirar um crachá mantém as vitórias já dadas. Usa Revogar vitória numa pessoa para lhe retirar o jogo",
+  "winBadges.admin.finished.title": "Jogos terminados",
+  "winBadges.admin.finished.noWinner": "Sem vencedor registado",
+  "winBadges.admin.finished.revoke": "Revogar vitória",
+  "winBadges.admin.finished.revokedTag": "Revogada",
+  "winBadges.admin.finished.revokedLine": "Revogada a {date}: {reason}",
+  "winBadges.admin.revoke.title": "Revogar esta vitória?",
+  "winBadges.admin.revoke.body":
+    "{name} perde todos os crachás que este jogo lhe deu. Não recebe nenhuma notificação",
+  "winBadges.admin.revoke.final":
+    "Os crachás associados a este jogo mais tarde passam-lhe ao lado. Isto não se pode desfazer",
+  "winBadges.admin.revoke.reason": "Motivo",
+  "winBadges.admin.revoke.confirm": "Revogar vitória",
+  "winBadges.admin.revoke.done": "Vitória revogada",
+  "winBadges.admin.library.sub":
+    "Crachás para quem vence jogos de quiz oficiais. Associa cada um a quantos eventos quiseres",
+  "winBadges.admin.library.loadError":
+    "Não conseguimos carregar os crachás de quiz",
+  "winBadges.admin.library.emptyTitle": "Ainda não há crachás de quiz",
+  "winBadges.admin.library.emptyBody":
+    "Cria o primeiro e depois associa-o aos jogos de um evento",
+  "winBadges.admin.library.created": "Crachá criado",
+  "winBadges.admin.library.saved": "Crachá guardado",
+  "winBadges.admin.library.archived":
+    "Crachá arquivado. Quem o tem continua a tê-lo",
+  "winBadges.admin.library.restored": "Crachá restaurado",
+  "winBadges.admin.library.deleted": "Crachá apagado",
+  "winBadges.admin.library.deleteTitle": "Apagar {name}?",
+  "winBadges.admin.library.deleteBody":
+    "Ainda ninguém tem este crachá. Não é possível desfazer",
+  "winBadges.admin.library.keep": "Manter crachá",
+  "winBadges.admin.library.actions": "Ações para {name}",
+  "winBadges.admin.form.cancel": "Cancelar",
+  "winBadges.admin.form.counter": "{count} de {max} caracteres",
+  "winBadges.admin.events.sub":
+    "Escolhe um evento para definir os crachás que cada jogo dá",
+  "winBadges.admin.events.loadError": "Não conseguimos carregar os eventos",
+  "winBadges.admin.events.open": "Configurar crachás",
+  "winBadges.admin.events.previous": "Página anterior",
+  "winBadges.admin.events.next": "Página seguinte",
+  "winBadges.admin.events.page": "Página {page} de {pages}",
+  "winBadges.admin.events.status.draft": "Rascunho",
+  "winBadges.admin.events.status.published": "Publicado",
+  "winBadges.admin.events.status.cancelled": "Cancelado",
+  "winBadges.admin.events.adultsTag": "18+",
+  "winBadges.admin.setup.sub":
+    "Quem vence cada jogo ganha os crachás desse jogo",
+  "winBadges.admin.setup.loadError":
+    "Não conseguimos carregar os crachás deste evento",
+  "winBadges.admin.setup.back": "Voltar aos eventos com quiz",
+  "winBadges.admin.setup.saved": "Crachás dos jogos guardados",
+  "winBadges.admin.setup.empty": "Este jogo ainda não dá crachás",
+  "winBadges.admin.setup.pickerLabel": "Associar crachás ao jogo {number}",
+  "winBadges.admin.setup.full":
+    "Este jogo dá {limit} crachás, o máximo possível",
+  "winBadges.admin.setup.noLibrary": "Cria primeiro um crachá na biblioteca",
+  "winBadges.admin.setup.allAttached":
+    "Todos os crachás ativos já estão neste jogo",
+  "winBadges.admin.setup.libraryLink": "Abrir a biblioteca de crachás",
+  "winBadges.admin.setup.removeAria": "Tirar {name} do jogo {number}",
+  "winBadges.admin.finished.empty": "Ainda nenhum jogo deste evento terminou",
+  "winBadges.admin.finished.game": "Jogo {number}, terminado a {date}",
+  "winBadges.admin.finished.team": "Equipa {name}",
+  "winBadges.admin.finished.noBadges": "Não ganhou crachás neste jogo",
+  "winBadges.admin.finished.accountGone": "Conta apagada",
+  "winBadges.admin.finished.revokedBy": "Revogada por {name}",
+  "winBadges.admin.revoke.cancel": "Manter vitória",
+  "winBadges.errors.quiz_badge_not_found":
+    "Este crachá foi apagado. Recarrega a lista para veres os crachás atuais.",
+  "winBadges.errors.quiz_badge_text_invalid":
+    "Não foi possível ler {field} como texto. Escreve outra vez e guarda.",
+  "winBadges.errors.quiz_badge_name_required":
+    "Adiciona um nome em inglês. As pessoas veem-no quando falta o português.",
+  "winBadges.errors.quiz_badge_name_too_long":
+    "Os nomes de crachás têm no máximo 40 caracteres. Encurta o nome em {language}.",
+  "winBadges.errors.quiz_badge_name_taken":
+    "Outro crachá já usa este nome em {language}. Escolhe outro.",
+  "winBadges.errors.quiz_badge_description_required":
+    "Adiciona uma descrição em inglês. Quem vence lê-a como o texto do crachá ganho.",
+  "winBadges.errors.quiz_badge_description_too_long":
+    "As descrições têm no máximo 140 caracteres. Encurta a descrição em {language}.",
+  "winBadges.errors.quiz_badge_icon_unknown":
+    "Esse ícone não faz parte dos ícones de crachá. Escolhe um da lista.",
+  "winBadges.errors.quiz_badge_tint_unknown":
+    "Escolhe uma das três cores de crachá: jade, coral ou ameixa.",
+  "winBadges.errors.quiz_badge_rarity_unknown":
+    "Escolhe uma raridade: comum, rara ou lendária.",
+  "winBadges.errors.quiz_badge_archived":
+    "Este crachá está arquivado, por isso só pode ficar nos jogos que já o dão. Restaura-o para o associares aqui.",
+  "winBadges.errors.quiz_badge_in_use_one":
+    "{holderCount} pessoa tem este crachá, por isso só pode ser arquivado.",
+  "winBadges.errors.quiz_badge_in_use_other":
+    "{holderCount} pessoas têm este crachá, por isso só pode ser arquivado.",
+  "winBadges.errors.quiz_badge_event_not_found":
+    "Este evento foi apagado ou o link está errado. Procura-o outra vez.",
+  "winBadges.errors.quiz_badge_event_has_no_quiz":
+    "Este evento ainda não tem um quiz Pulse Live. Quem organiza adiciona um no criador de quiz do evento.",
+  "winBadges.errors.quiz_badge_setup_invalid":
+    "A configuração dos jogos chegou num formato que o servidor não conseguiu ler. Recarrega a página e guarda outra vez.",
+  "winBadges.errors.quiz_badge_game_number_invalid":
+    "Os números dos jogos são números inteiros a partir de 1.",
+  "winBadges.errors.quiz_badge_game_limit_reached":
+    "Um evento dá crachás em até {limit} jogos.",
+  "winBadges.errors.quiz_badge_slot_limit_reached":
+    "O jogo {gameNumber} já dá {limit} crachás, o máximo que um jogo pode dar.",
+  "winBadges.errors.quiz_badge_slot_duplicate":
+    "O jogo {gameNumber} tem o mesmo crachá duas vezes.",
+  "winBadges.errors.quiz_badge_winner_not_found":
+    "Este registo de vitória pertence a outro evento ou já não existe. Recarrega a página.",
+  "winBadges.errors.quiz_badge_winner_already_revoked":
+    "Outra pessoa da administração já revogou esta vitória a {revokedAt}. Recarrega a página para a veres.",
+  "winBadges.errors.quiz_badge_revoke_reason_required":
+    "Adiciona um motivo. O registo de moderação guarda-o com a revogação.",
+  "winBadges.errors.quiz_badge_revoke_reason_too_long":
+    "Os motivos têm no máximo 300 caracteres. Encurta este.",
+  "winBadges.errors.language.en": "inglês",
+  "winBadges.errors.language.pt": "português",
+  "winBadges.errors.field.name.en": "o nome em inglês",
+  "winBadges.errors.field.name.pt": "o nome em português",
+  "winBadges.errors.field.description.en": "a descrição em inglês",
+  "winBadges.errors.field.description.pt": "a descrição em português",
 };

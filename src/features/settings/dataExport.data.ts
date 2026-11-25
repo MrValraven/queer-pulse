@@ -169,7 +169,8 @@ export interface AccordionItem {
  *                  communityBadges, communityEventsAttended,
  *                  communityGiftsReceived, communityGiftsSent,
  *                  communityOwnershipOffers
- *   gatherings     events, go-together, eventPreferences, eventParticipation
+ *   gatherings     events, go-together, eventPreferences, eventParticipation,
+ *                  quizBadgeWins, quizGameWins
  *   connections    connections, connectionNotes, invitesSent
  *   safety         blocks, mutes, hiddenMembers, reportsFiled,
  *                  suggestionDismissals, appeals
@@ -272,6 +273,7 @@ export const ACCORDION_ITEMS: AccordionItem[] = [
       "settings:dataExport.tag.goTogether",
       "settings:dataExport.tag.rsvpDetails",
       "settings:dataExport.tag.eventSettings",
+      "settings:dataExport.tag.quizBadgeWins",
     ],
   },
   {

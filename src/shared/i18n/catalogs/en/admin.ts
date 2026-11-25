@@ -9712,6 +9712,14 @@ export const admin: Catalog = {
   "moderation.action.quizshowTemplateUnpublished":
     "Unpublished a quiz template",
   "moderation.action.quizshowTemplateDeleted": "Deleted a quiz template",
+  "moderation.action.quizBadgeAttached": "Attached a quiz badge to a game",
+  "moderation.action.quizBadgeDetached": "Removed a quiz badge from a game",
+  "moderation.action.quizBadgeAwardedAfterGame":
+    "Gave a quiz badge after the game",
+  "moderation.action.quizGameWinRevoked": "Revoked a quiz game win",
+  "moderation.action.quizBadgeDefinitionArchived": "Archived a quiz badge",
+  "moderation.action.quizBadgeDefinitionRestored": "Restored a quiz badge",
+  "moderation.action.quizBadgeDefinitionDeleted": "Deleted a quiz badge",
   "governance.audit.actionType.quizshow_game_ended": "Pulse Live game ended",
   "governance.audit.actionType.quizshow_game_deleted":
     "Pulse Live game deleted",
@@ -9721,6 +9729,20 @@ export const admin: Catalog = {
     "Quiz template unpublished",
   "governance.audit.actionType.quizshow_template_deleted":
     "Quiz template deleted",
+  "governance.audit.actionType.quiz_badge_attached":
+    "Attached a quiz badge to a game",
+  "governance.audit.actionType.quiz_badge_detached":
+    "Removed a quiz badge from a game",
+  "governance.audit.actionType.quiz_badge_awarded_after_game":
+    "Gave a quiz badge after the game",
+  "governance.audit.actionType.quiz_game_win_revoked":
+    "Revoked a quiz game win",
+  "governance.audit.actionType.quiz_badge_definition_archived":
+    "Archived a quiz badge",
+  "governance.audit.actionType.quiz_badge_definition_restored":
+    "Restored a quiz badge",
+  "governance.audit.actionType.quiz_badge_definition_deleted":
+    "Deleted a quiz badge",
   "governance.audit.actionType.lead_persona_linked": "Lead linked to a persona",
   "governance.audit.actionType.lead_persona_unlinked":
     "Lead unlinked from a persona",

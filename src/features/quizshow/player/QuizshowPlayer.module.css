@@ -50,6 +50,14 @@
   box-shadow: var(--ring-cream);
 }
 
+/* A heading that only takes focus from code (tabindex -1: focus moves to it on
+   each new question) is no control. After a typed answer the browser counts
+   that move as keyboard focus, so it draws no ring or box. */
+.heading[tabindex="-1"]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 /* Read: the question alone, centred in the screen while answers wait. */
 .readBody {
   justify-content: center;
@@ -78,14 +86,56 @@
   color: var(--qs-text-mute);
 }
 
-.media {
-  display: block;
-  width: 100%;
-  max-height: 28svh;
-  object-fit: contain;
+/* The question picture's frame (QuizshowStagePicture draws the image and the
+   slow reveal inside it). The frame clips, so the radius holds the blur halo. */
+.picture {
+  inline-size: 100%;
+  max-block-size: 28svh;
   border: 1px solid var(--qs-glass-border);
   border-radius: var(--qs-radius-tile);
   background: var(--qs-glass-tint);
+}
+
+/* A closest-number answer with a unit: the unit sits beside the field,
+   level with the input, and the input names it as its description. */
+.unitRow {
+  /* One height for the field and its unit, so the unit centres on the input. */
+  --unit-field-height: 3rem;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap-xs);
+  min-width: 0;
+  margin-block-end: var(--gap-sm);
+}
+
+.unitRow > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The field's own bottom margin would push the unit below the input's centre;
+   the row carries the spacing instead. */
+.unitRow .unitField {
+  margin-block-end: 0;
+}
+
+.unitRow .unitField input {
+  box-sizing: border-box;
+  block-size: var(--unit-field-height);
+  padding-block: 0;
+}
+
+.unit {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  block-size: var(--unit-field-height);
+  max-inline-size: 40%;
+  font-size: var(--text-20);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--qs-text-mute);
+  overflow-wrap: anywhere;
 }
 
 /* The answers sit at the foot of the screen, in the thumb's reach. */
@@ -131,6 +181,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-xs);
+}
+
+/* The send button fills the form's width inside its fold. */
+.form .submitButton {
+  inline-size: 100%;
 }
 
 /* A typed answer, a party caption: the field and its send button on glass. */
@@ -217,6 +272,17 @@
   font-size: var(--text-body);
   line-height: 1.4;
   color: var(--qs-text-mute);
+}
+
+/* "9 of 14 answered": the count so far, quiet under the locked words. */
+.answeredLine {
+  display: block;
+  padding-block-start: var(--triage-gap-hair);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+  font-variant-numeric: tabular-nums;
 }
 
 .waitDots {
@@ -403,6 +469,11 @@
   box-shadow: var(--qs-glow-jade);
 }
 
+.outcome[tabindex="-1"]:focus,
+.subheading[tabindex="-1"]:focus {
+  outline: none;
+}
+
 .outcome {
   margin: 0;
   font-family: var(--serif);
@@ -465,6 +536,16 @@
   white-space: normal;
 }
 
+/* "Up 2 places": the arrow sits right before the words. */
+.facts .moveFact {
+  gap: var(--triage-gap-tight);
+}
+
+/* On the scores the move and the gap line up under the place heading. */
+.standingFacts {
+  justify-content: flex-start;
+}
+
 .correctLabel {
   margin: 0;
   font-size: var(--text-label);
@@ -487,6 +568,72 @@
   font-size: var(--text-subhead);
   font-weight: 600;
   overflow-wrap: anywhere;
+}
+
+/* The margin that scored half, under a closest-number answer. */
+.bandLine {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.4;
+  color: var(--qs-text-mute);
+}
+
+/* A poll reveal holds no right answer, so its tiles stay readable: the
+   player's own pick at full strength, the rest a step back. */
+.pollTiles .tileSlot {
+  --stage-dimmed-opacity: 0.72;
+}
+
+.pollTiles .tileSlot[data-mine="true"] {
+  --stage-dimmed-opacity: 1;
+}
+
+/* The reveal note: a glass card under the answer with its own small label. */
+.noteCard {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin-block-start: var(--gap-xs);
+  padding: var(--gap-sm);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-tile);
+  background:
+    linear-gradient(180deg, var(--qs-glass-top), var(--qs-glass-bottom)),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-glass);
+}
+
+.noteText {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--qs-text);
+  overflow-wrap: anywhere;
+}
+
+/* Talk it over: the team's cue during read, with the seconds left. */
+.talkLine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--triage-gap-hair);
+  margin: 0;
+}
+
+.talkTitle {
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 600;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.talkSeconds {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--qs-text-mute);
+  font-variant-numeric: tabular-nums;
 }
 
 /* The full-screen wash behind a reveal: jade for right, a calm rose for wrong. */
@@ -645,6 +792,26 @@ p.readyPill {
   justify-content: center;
 }
 
+/* The player's own place under the podium, once it is revealed (C6.7).
+   Collapse draws its panel as a flow-root, so the pill centres as inline content. */
+.podiumPlaceRow {
+  text-align: center;
+}
+
+.podiumPlace {
+  composes: pill from "../stage/quizshowSurfaces.module.css";
+  --qs-pill-padding: 0.55em 1.3em;
+  margin: 0;
+  border-color: var(--qs-glass-border-strong);
+}
+
+/* The element in the selector outranks the pill's own size, whatever the module order. */
+p.podiumPlace {
+  font-size: var(--text-20);
+  font-weight: 700;
+  white-space: normal;
+}
+
 /* A narrow phone: the question read aloud steps down one size so it fits. */
 @media (max-width: 359px) {
   .readBody .heading:where(:not([data-fixed-canvas="true"] *)) {
@@ -678,15 +845,22 @@ p.readyPill {
   }
 }
 
-/* The player's own pick at a reveal: an outline and a small tag over the
-   tile, so it reads as theirs while the jade answer stays the hero. */
+/* The player's own pick at a reveal: a small tag in a row of its own above the
+   tile (a wrong pick carries an X) and a dashed outline around the tile, so it
+   reads as theirs while the jade answer stays the hero. The tag never sits on
+   the tile's content, whatever the answer's length. */
 .tileSlot[data-mine="true"] {
-  position: relative;
+  grid-template-rows: auto minmax(0, 1fr);
+  row-gap: var(--gap-xs);
+}
+
+.tileSlot[data-mine="true"] > :not(.mineTag) {
+  grid-area: 2 / 1;
 }
 
 .tileSlot[data-mine="true"]::after {
-  position: absolute;
-  inset: -3px;
+  grid-area: 2 / 1;
+  margin: -3px;
   border: 1.5px dashed var(--qs-glass-border-strong);
   border-radius: var(--radius-20);
   content: "";
@@ -694,10 +868,11 @@ p.readyPill {
 }
 
 .mineTag {
-  position: absolute;
-  inset-block-start: -0.7em;
-  inset-inline-end: var(--gap-sm);
-  z-index: 1;
+  grid-area: 1 / 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
   padding: 0.15em 0.7em;
   border: 1px solid var(--qs-glass-border-strong);
   border-radius: var(--qs-radius-pill);
@@ -740,7 +915,7 @@ p.readyPill {
   --text-heading: var(--text-22);
 }
 
-.screenBody[data-fixed-canvas="true"] .media {
+.screenBody[data-fixed-canvas="true"] .picture {
   max-height: calc(28 * var(--phone-vh));
 }
 

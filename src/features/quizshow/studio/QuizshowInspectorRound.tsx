@@ -7,6 +7,8 @@ import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
 import { QUIZSHOW_LIMITS } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowRoundEditor } from "../builder/QuizshowRoundEditor";
+import { QuizshowTryItButton } from "../builder/QuizshowTryItButton";
+import { sliceProblemsOf } from "../builder/quizshowDryRunQuiz";
 import { useQuizshowDarkDialog } from "../builder/useQuizshowDarkDialog";
 import {
   displayRoundNumber,
@@ -51,14 +53,14 @@ function focusAfterRemoval(selection: QuizshowStudioSelection) {
   });
 }
 
-/** Add question to this round, with the count and the limit that blocks it. */
+/** Add question to this round, with the count and the limit that blocks it, and Try this round (item 21). */
 function QuizshowInspectorRoundQuestions({
   roundIndex,
 }: {
   roundIndex: number;
 }) {
   const { t } = useTranslation();
-  const { controller, actions } = useQuizshowStudio();
+  const { controller, actions, dryRunProblems } = useQuizshowStudio();
   const countId = useId();
   const questionCount = controller.draft.rounds[roundIndex]?.questions.length;
   const isAllowed = actions.isAddQuestionToRoundAllowed(roundIndex);
@@ -91,6 +93,17 @@ function QuizshowInspectorRoundQuestions({
                 max: QUIZSHOW_LIMITS.questionsPerQuizMax,
               })}
         </p>
+      </div>
+      <div className={styles.addRow}>
+        <QuizshowTryItButton
+          appearance="studio"
+          draft={controller.draft}
+          pickedPreviewUrls={controller.pickedPreviewUrls}
+          problems={sliceProblemsOf(dryRunProblems, controller.draft, {
+            roundIndex,
+          })}
+          slice={{ roundIndex }}
+        />
       </div>
     </QuizshowInspectorSection>
   );
@@ -171,6 +184,9 @@ export function QuizshowInspectorRound({ roundIndex }: { roundIndex: number }) {
   const { controller, isAdultsEvent, problems } = useQuizshowStudio();
   const round = controller.draft.rounds[roundIndex];
   if (!round) return null;
+  const firstPlayableRoundIndex = controller.draft.rounds.findIndex(
+    (draftRound) => !isWheelRoundKind(draftRound.kind),
+  );
   return (
     <>
       <QuizshowInspectorSection
@@ -181,6 +197,7 @@ export function QuizshowInspectorRound({ roundIndex }: { roundIndex: number }) {
           roundIndex={roundIndex}
           isAdultsEvent={isAdultsEvent}
           languages={controller.draft.languages}
+          isFirstPlayableRow={roundIndex === firstPlayableRoundIndex}
           onChange={(patch) => controller.updateRound(roundIndex, patch)}
           onChangeKind={(kind) => controller.changeRoundKind(roundIndex, kind)}
         />

@@ -1,28 +1,37 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
 import { TestProviders } from "../../../test/TestProviders";
 import type {
-  QuizshowLobby,
   QuizshowMe,
+  QuizshowPlayerLobby,
   QuizshowPlayerState,
 } from "../../../shared/contracts/quizshow";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import {
+  createQuizshowClientState,
+  type QuizshowClientState,
+} from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowChangeTeam } from "./QuizshowChangeTeam";
 import { awaitCatalog } from "../../../test/awaitCatalog";
 
-const TEAMS_LOBBY: QuizshowLobby = {
-  players: [],
+const TEAMS_LOBBY: QuizshowPlayerLobby = {
   teams: [
     {
       teamId: "team-1",
       name: "Rainbow crew",
       colorKey: "circle",
       memberCount: 3,
+      isHostMade: false,
     },
-    { teamId: "team-2", name: "Night owls", colorKey: "moon", memberCount: 2 },
+    {
+      teamId: "team-2",
+      name: "Night owls",
+      colorKey: "moon",
+      memberCount: 2,
+      isHostMade: false,
+    },
   ],
   playerCount: 5,
 };
@@ -57,6 +66,10 @@ function lobbySession(
     playMode: "teams",
     maxTeamSize: 3,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor: {
       phaseId: "1",
@@ -74,6 +87,9 @@ function lobbySession(
       roundNumber: 0,
       upNext: null,
       canSpinForNextRound: false,
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
     },
     rounds: [],
     round: null,
@@ -85,6 +101,7 @@ function lobbySession(
     wheelBonus: null,
     role: "player",
     lobby: TEAMS_LOBBY,
+    answerCount: null,
     question: null,
     voteOptions: null,
     me: ME,
@@ -103,13 +120,10 @@ function controllerOf(
   send: QuizshowSessionController["send"],
 ): QuizshowSessionController {
   const state: QuizshowClientState = {
-    role: "player",
+    ...createQuizshowClientState("player"),
     status: "attached",
-    refusalCode: null,
     session,
-    sessionEnd: null,
-    isRemoved: false,
-    pendingAnswer: null,
+    hasAttached: true,
   };
   return {
     state,
@@ -236,6 +250,35 @@ describe("QuizshowChangeTeam", () => {
       name: "Glitter",
       colorKey: "triangle",
     });
+  });
+
+  it("keeps all 24 shapes in place and marks the ones other teams hold", async () => {
+    const user = userEvent.setup();
+    const send = sendOf();
+    render(
+      changeTeamOf(lobbySession(), send as QuizshowSessionController["send"]),
+    );
+    await awaitCatalog("quizshow");
+
+    await openPicker(user);
+    await user.click(screen.getByRole("radio", { name: /Start a team/ }));
+    const shapeGroup = screen.getByRole("group", { name: "Team shape" });
+    expect(within(shapeGroup).getAllByRole("radio")).toHaveLength(24);
+    expect(
+      within(shapeGroup).getByRole("radio", {
+        name: "Circle, taken by another team",
+      }),
+    ).toHaveAttribute("aria-disabled", "true");
+    expect(
+      within(shapeGroup).getByRole("radio", {
+        name: "Moon, taken by another team",
+      }),
+    ).toHaveAttribute("aria-disabled", "true");
+    const triangle = within(shapeGroup).getByRole("radio", {
+      name: "Triangle",
+    });
+    expect(triangle).toHaveAttribute("aria-disabled", "false");
+    expect(triangle).toBeChecked();
   });
 
   it("keeps the current team without sending anything", async () => {

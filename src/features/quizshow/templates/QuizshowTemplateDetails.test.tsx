@@ -1,6 +1,6 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { awaitCatalog } from "../../../test/awaitCatalog";
 import { TestProviders } from "../../../test/TestProviders";
@@ -8,13 +8,17 @@ import type { QuizshowTemplateCardField } from "../../../shared/contracts/quizsh
 import { resetQuizshowDemoStore } from "../api/quizshowDemoStore";
 import { demoGetTemplate } from "../api/quizshowDemoTemplates";
 import { QUIZSHOW_DEMO_TEMPLATE_IDS } from "../demo/quizshowTemplates.data";
+import { STUDIO_NATIVE_UNDO_ATTRIBUTE } from "../shared/quizshowNativeUndo";
 import { QuizshowTemplateDetails } from "./QuizshowTemplateDetails";
 import {
   missingCardFieldsOf,
   quizResponseOfTemplate,
   type QuizshowTemplateQuizResponse,
 } from "./quizshowTemplateResponse";
-import { useQuizshowTemplateDraft } from "./useQuizshowTemplateDraft";
+import {
+  useQuizshowTemplateDraft,
+  type QuizshowTemplateDraft,
+} from "./useQuizshowTemplateDraft";
 import type { QuizshowTemplatePublishing } from "./useQuizshowTemplatePublish";
 
 const SAVE_FIRST_KEY = "quizshow:templates.details.saveFirst";
@@ -30,12 +34,18 @@ function DetailsHarness({
   response,
   hasQuizProblems = false,
   isPending = false,
+  onDraft,
 }: {
   response: QuizshowTemplateQuizResponse;
   hasQuizProblems?: boolean;
   isPending?: boolean;
+  /** Hears the draft after every render, so a test can read what a save would send. */
+  onDraft?: (templateDraft: QuizshowTemplateDraft) => void;
 }) {
   const templateDraft = useQuizshowTemplateDraft({ data: response });
+  useEffect(() => {
+    onDraft?.(templateDraft);
+  });
   const [shownMissingFields, setShownMissingFields] = useState<
     readonly QuizshowTemplateCardField[]
   >([]);
@@ -66,7 +76,11 @@ function DetailsHarness({
 
 async function renderDetails(
   templateId: string,
-  options: { hasQuizProblems?: boolean; isPending?: boolean } = {},
+  options: {
+    hasQuizProblems?: boolean;
+    isPending?: boolean;
+    onDraft?: (templateDraft: QuizshowTemplateDraft) => void;
+  } = {},
 ) {
   const response = quizResponseOfTemplate(demoGetTemplate(templateId));
   const { unmount } = render(
@@ -75,6 +89,7 @@ async function renderDetails(
         response={response}
         hasQuizProblems={options.hasQuizProblems}
         isPending={options.isPending}
+        onDraft={options.onDraft}
       />
     </TestProviders>,
   );
@@ -119,6 +134,16 @@ describe("QuizshowTemplateDetails", () => {
     const notesField = screen.getByRole("textbox", { name: /Staff notes/ });
     expect((notesField as HTMLTextAreaElement).value).toBe(staffNotes);
     expect(staffNotes).toContain("Round 1, question 1:");
+  });
+
+  it("marks the card panel so Cmd/Ctrl+Z keeps the browser's own undo there", async () => {
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+
+    expect(
+      screen
+        .getByRole("region", { name: "Template card" })
+        .hasAttribute(STUDIO_NATIVE_UNDO_ATTRIBUTE),
+    ).toBe(true);
   });
 
   it("shows Draft or who published it and when", async () => {
@@ -222,5 +247,134 @@ describe("QuizshowTemplateDetails", () => {
     expect(
       screen.queryByRole("button", { name: "Publish template" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("QuizshowTemplateDetails change note and last publish", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+  });
+
+  it("shows the last publish under the status line once a later save moved it", async () => {
+    const sameDayView = await renderDetails(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
+    );
+    // Published and last published on the same day: the status line says it once.
+    expect(screen.queryByText(/^Last published/)).not.toBeInTheDocument();
+    sameDayView.unmount();
+
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision);
+    expect(panelStatusLine()).toHaveTextContent(
+      /^Published .*2026 by Rui Marçal$/,
+    );
+    expect(
+      await screen.findByText(/^Last published .*2026$/),
+    ).toBeInTheDocument();
+  });
+
+  it("puts the What changed note, trimmed, in what a save sends", async () => {
+    const user = userEvent.setup();
+    let latestDraft: QuizshowTemplateDraft | null = null;
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory, {
+      onDraft: (templateDraft) => {
+        latestDraft = templateDraft;
+      },
+    });
+    const noteGroup = screen.getByRole("group", { name: "What changed" });
+    const [englishNote, portugueseNote] =
+      within(noteGroup).getAllByRole("textbox");
+    if (!englishNote || !portugueseNote) throw new Error("no note fields");
+    expect(englishNote).toHaveValue("");
+
+    await user.type(englishNote, "Fixed the Stonewall date  ");
+    await user.type(portugueseNote, " Corrigimos a data de Stonewall");
+
+    const draft = latestDraft as QuizshowTemplateDraft | null;
+    expect(draft?.isUnsaved).toBe(true);
+    expect(draft?.changeNote.en).toBe("Fixed the Stonewall date  ");
+    expect(draft?.fieldsToSave?.changeNote).toEqual({
+      en: "Fixed the Stonewall date",
+      pt: "Corrigimos a data de Stonewall",
+    });
+  });
+
+  it("counts the What changed note in code points and leaves room by code points", async () => {
+    const user = userEvent.setup();
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+    const noteGroup = screen.getByRole("group", { name: "What changed" });
+    const [englishNote] = within(noteGroup).getAllByRole("textbox");
+    if (!englishNote) throw new Error("no English note field");
+    expect(englishNote).toHaveAttribute("maxlength", "300");
+
+    // An astral character (U+1F308) is one code point and two UTF-16 units.
+    const astralCharacter = String.fromCodePoint(0x1f308);
+    await user.click(englishNote);
+    await user.paste(astralCharacter.repeat(10));
+
+    expect(within(noteGroup).getByText("10/300")).toBeInTheDocument();
+    // 20 units typed, plus one unit for each of the 290 code points left.
+    expect(englishNote).toHaveAttribute("maxlength", "310");
+    expect(
+      within(noteGroup).queryByText(
+        "Notes hold up to 300 characters, so the end was cut",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it("cuts a long paste at 300 and says so in a helper line, keeping the note valid", async () => {
+    const user = userEvent.setup();
+    let latestDraft: QuizshowTemplateDraft | null = null;
+    await renderDetails(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory, {
+      onDraft: (templateDraft) => {
+        latestDraft = templateDraft;
+      },
+    });
+    const noteGroup = screen.getByRole("group", { name: "What changed" });
+    const [englishNote] = within(noteGroup).getAllByRole("textbox");
+    if (!englishNote) throw new Error("no English note field");
+
+    await user.click(englishNote);
+    await user.paste("a".repeat(301));
+
+    const draft = latestDraft as QuizshowTemplateDraft | null;
+    expect(draft?.changeNote.en).toBe("a".repeat(300));
+    expect(within(noteGroup).getByText("300/300")).toBeInTheDocument();
+    const cutLine = await within(noteGroup).findByText(
+      "Notes hold up to 300 characters, so the end was cut",
+    );
+    expect(englishNote).not.toHaveAttribute("aria-invalid", "true");
+    expect(englishNote.getAttribute("aria-describedby")).toContain(cutLine.id);
+
+    // The next edit retires the line.
+    await user.type(englishNote, "{Backspace}");
+    await waitFor(() =>
+      expect(
+        within(noteGroup).queryByText(
+          "Notes hold up to 300 characters, so the end was cut",
+        ),
+      ).not.toBeInTheDocument(),
+    );
+  });
+
+  it("counts a space typed at the end of the saved note as no change", async () => {
+    const user = userEvent.setup();
+    let latestDraft: QuizshowTemplateDraft | null = null;
+    const { response } = await renderDetails(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+      {
+        onDraft: (templateDraft) => {
+          latestDraft = templateDraft;
+        },
+      },
+    );
+    const savedNote = response.template.changeNote;
+    const englishNote = screen.getByDisplayValue(savedNote.en);
+
+    await user.type(englishNote, " ");
+
+    const draft = latestDraft as QuizshowTemplateDraft | null;
+    expect(draft?.changeNote.en).toBe(`${savedNote.en} `);
+    expect(draft?.isUnsaved).toBe(false);
+    expect(draft?.fieldsToSave?.changeNote).toEqual(savedNote);
   });
 });

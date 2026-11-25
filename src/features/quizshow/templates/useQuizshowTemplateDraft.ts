@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type {
   QuizshowQuizResponse,
   QuizshowTemplateCardText,
@@ -15,8 +15,12 @@ export interface QuizshowTemplateDraft {
   setCardTitle: (title: QuizshowText) => void;
   setCardDescription: (description: QuizshowText) => void;
   setStaffNotes: (staffNotes: string) => void;
+  /** Additive. The staff's "What changed" note for the latest publish (C6.25), as typed. */
+  changeNote: QuizshowText;
+  /** Additive. */
+  setChangeNote: (changeNote: QuizshowText) => void;
   isUnsaved: boolean;
-  /** The save body's template part; null outside a template. */
+  /** The save body's template part, the change note trimmed (C2.5); null outside a template. */
   fieldsToSave: QuizshowTemplateFields | null;
   resetTo: (response: QuizshowQuizResponse | null) => void;
   /**
@@ -33,16 +37,26 @@ const BLANK_FIELDS: QuizshowTemplateFields = {
     description: { en: "", pt: "" },
   },
   staffNotes: "",
+  changeNote: { en: "", pt: "" },
 };
 
 function savedFieldsOf(response: QuizshowQuizResponse): QuizshowTemplateFields {
   const meta = templateMetaOf(response);
   if (meta === null) return BLANK_FIELDS;
-  return { card: meta.card, staffNotes: meta.staffNotes };
+  return {
+    card: meta.card,
+    staffNotes: meta.staffNotes,
+    changeNote: meta.changeNote,
+  };
 }
 
 function isSameText(first: QuizshowText, second: QuizshowText): boolean {
   return first.en === second.en && first.pt === second.pt;
+}
+
+/** The change note as a save sends it: each language trimmed, as the server stores it. */
+function trimmedNoteOf(changeNote: QuizshowText): QuizshowText {
+  return { en: changeNote.en.trim(), pt: changeNote.pt.trim() };
 }
 
 function isSameFields(
@@ -52,7 +66,13 @@ function isSameFields(
   return (
     isSameText(first.card.title, second.card.title) &&
     isSameText(first.card.description, second.card.description) &&
-    first.staffNotes === second.staffNotes
+    first.staffNotes === second.staffNotes &&
+    // Compared trimmed: the server trims the note, so a space typed at its
+    // end stays out of the unsaved check.
+    isSameText(
+      trimmedNoteOf(first.changeNote),
+      trimmedNoteOf(second.changeNote),
+    )
   );
 }
 
@@ -78,6 +98,14 @@ export function useQuizshowTemplateDraft(options: {
     setFieldsState({ draft: savedFields, baseline: savedFields });
   }
   const { draft } = fieldsState;
+  // One object per draft, so the studio's edit key moves only on an edit.
+  const fieldsToSave = useMemo<QuizshowTemplateFields | null>(
+    () =>
+      isTemplate
+        ? { ...draft, changeNote: trimmedNoteOf(draft.changeNote) }
+        : null,
+    [isTemplate, draft],
+  );
 
   function updateDraft(
     change: (current: QuizshowTemplateFields) => QuizshowTemplateFields,
@@ -103,8 +131,12 @@ export function useQuizshowTemplateDraft(options: {
     setStaffNotes: (staffNotes) => {
       updateDraft((current) => ({ ...current, staffNotes }));
     },
+    changeNote: draft.changeNote,
+    setChangeNote: (changeNote) => {
+      updateDraft((current) => ({ ...current, changeNote }));
+    },
     isUnsaved: isTemplate && !isSameFields(draft, savedFields),
-    fieldsToSave: isTemplate ? draft : null,
+    fieldsToSave,
     resetTo: (response) => {
       const resetFields = savedFieldsOf(response ?? data);
       setFieldsState({ draft: resetFields, baseline: resetFields });

@@ -7,6 +7,7 @@ import type { QuizshowGameSummary } from "../../../shared/contracts/quizshow";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { quizshowGamePath } from "../quizshowPaths";
+import { QuizshowPracticeBadge } from "../stage/QuizshowPracticeBadge";
 import { QuizshowGameCover } from "./QuizshowGameCover";
 import styles from "./QuizshowGames.module.css";
 
@@ -102,6 +103,11 @@ export function QuizshowGameRow({ game }: { game: QuizshowGameSummary }) {
                     : "quizshow:games.row.liveTag",
                   { code: liveSession.joinCode },
                 )}
+              </FadingTag>
+            )}
+            {liveSession?.isPractice === true && (
+              <FadingTag key="practice">
+                <QuizshowPracticeBadge tone="studio" />
               </FadingTag>
             )}
             {game.isAdultsOnly && (

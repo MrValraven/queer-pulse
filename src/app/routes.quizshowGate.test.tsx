@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthUser } from "../features/auth/api/auth.api";
@@ -8,8 +8,10 @@ import { AppRoutes } from "./routes";
 
 /**
  * The per-viewer Pulse Live gate in `AppRoutes`: signed out goes to sign-in
- * with `?next=` kept, signed in without the early-access grant plays freely but
- * goes to the roadmap from hosting pages, and a grant holder, demo and `pnpm dev` render the page. The real
+ * with `?next=` kept (except on the two public pages), signed in without the early-access grant plays freely but
+ * goes to the roadmap from hosting pages, and a grant holder, demo and `pnpm dev` render the page.
+ * The join page `/play/:code` and the TV page `/play/tv` open signed out; `/play`,
+ * My games and the helper remote go to sign-in. The real
  * `useAuthGateRedirect`, `useIsQuizshowVisible` and `useHasEarlyAccess` run;
  * only the session (a real `AuthContext.Provider`), demo mode, the Studio
  * access read, the session loader and the three destination route groups are
@@ -41,8 +43,11 @@ vi.mock("../features/quizshow/routes", async () => {
   const {
     QUIZSHOW_EDIT_ROUTE,
     QUIZSHOW_GAME_ROUTE,
+    QUIZSHOW_HELPER_PAIR_ROUTE,
+    QUIZSHOW_HELPER_REMOTE_ROUTE,
     QUIZSHOW_PLAY_CODE_ROUTE,
     QUIZSHOW_SCREEN_ROUTE,
+    QUIZSHOW_TV_ROUTE,
   } = await import("../features/quizshow/quizshowPaths");
   return {
     quizshowRoutes: () => (
@@ -57,6 +62,18 @@ vi.mock("../features/quizshow/routes", async () => {
         />
         <Route
           path={QUIZSHOW_GAME_ROUTE}
+          element={<div data-testid="pulse-live-page" />}
+        />
+        <Route
+          path={QUIZSHOW_TV_ROUTE}
+          element={<div data-testid="pulse-live-page" />}
+        />
+        <Route
+          path={QUIZSHOW_HELPER_PAIR_ROUTE}
+          element={<div data-testid="pulse-live-page" />}
+        />
+        <Route
+          path={QUIZSHOW_HELPER_REMOTE_ROUTE}
           element={<div data-testid="pulse-live-page" />}
         />
         <Route
@@ -100,6 +117,11 @@ vi.mock("../features/marketing/routes", async () => {
 
 const PLAYER_PATH = "/play/QZ7KP4";
 const PLAY_PATH = "/play";
+const JOIN_CODE_PATH = "/play/ABC234";
+const TV_PATH = "/play/tv";
+const HELPER_PAIR_PATH = "/play/remote";
+const HELPER_REMOTE_PATH = "/play/remote/session-1";
+const GAMES_PATH = "/play/games";
 const GAME_PATH = "/play/games/game-1";
 const SCREEN_PATH = "/gatherings/pride-brunch-jun-abcde/quizshow/screen";
 const EDIT_PATH = "/gatherings/pride-brunch-jun-abcde/quizshow/edit";
@@ -172,12 +194,40 @@ describe("AppRoutes: Pulse Live hosting gate", () => {
 
   afterEach(() => vi.unstubAllEnvs());
 
-  it("sends a signed-out visitor to sign-in with the player link kept", async () => {
-    renderAt(PLAYER_PATH, authValue(null));
+  it("renders the join page for a signed-out visitor without the sign-in gate", async () => {
+    renderAt(JOIN_CODE_PATH, authValue(null));
+    expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+    expect(screen.queryByTestId("sign-in-page")).not.toBeInTheDocument();
+    expect(landedAt()).toBe(JOIN_CODE_PATH);
+  });
+
+  it("renders the TV pairing page for a signed-out visitor without the sign-in gate", async () => {
+    renderAt(TV_PATH, authValue(null));
+    expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+    expect(screen.queryByTestId("sign-in-page")).not.toBeInTheDocument();
+    expect(landedAt()).toBe(TV_PATH);
+  });
+
+  it.each([
+    ["/play", PLAY_PATH],
+    ["/play/games", GAMES_PATH],
+    ["/play/remote", HELPER_PAIR_PATH],
+    ["/play/remote/:sessionId", HELPER_REMOTE_PATH],
+  ])("sends a signed-out visitor from %s to sign-in", async (_label, path) => {
+    renderAt(path, authValue(null));
     expect(await screen.findByTestId("sign-in-page")).toBeInTheDocument();
     expect(landedAt()).toBe(
-      `${routes.signIn}?next=${encodeURIComponent(PLAYER_PATH)}`,
+      `${routes.signIn}?next=${encodeURIComponent(path)}`,
     );
+  });
+
+  it("lets a signed-in member without the grant reach the TV page, the helper pairing page and a helper remote", async () => {
+    for (const path of [TV_PATH, HELPER_PAIR_PATH, HELPER_REMOTE_PATH]) {
+      cleanup();
+      renderAt(path, authValue(memberWith([])));
+      expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+      expect(landedAt()).toBe(path);
+    }
   });
 
   it("lets a signed-in member without the grant play at /play/:code", async () => {
@@ -234,9 +284,16 @@ describe("AppRoutes: Pulse Live hosting gate", () => {
     expect(landedAt()).toBe(SCREEN_PATH);
   });
 
-  it("holds on the loader while the session is still being checked", () => {
-    renderAt(PLAYER_PATH, authValue(null, { isChecking: true }));
+  it("holds a gated path on the loader while the session is still being checked", () => {
+    renderAt(PLAY_PATH, authValue(null, { isChecking: true }));
     expect(screen.getByTestId("session-loader")).toBeInTheDocument();
+    expect(landedAt()).toBe(PLAY_PATH);
+  });
+
+  it("renders the join page with no loader while the session is still being checked", async () => {
+    renderAt(PLAYER_PATH, authValue(null, { isChecking: true }));
+    expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+    expect(screen.queryByTestId("session-loader")).not.toBeInTheDocument();
     expect(landedAt()).toBe(PLAYER_PATH);
   });
 

@@ -25,9 +25,13 @@ import {
 } from "../studio/studioPaths";
 import { Translation } from "../../shared/i18n/Translation";
 import type { Formatters } from "../../shared/i18n/format";
-import type { TFunction } from "../../shared/i18n/types";
+import type { Language, TFunction } from "../../shared/i18n/types";
 import { buildCommunityBadgeNotifications } from "./communityBadgeNotifications.data";
 import { buildListingTeamNotifications } from "./listingTeamNotifications.data";
+import {
+  buildQuizBadgeNotifications,
+  DEMO_QUIZ_BADGE_NOTIFICATION_ID,
+} from "./quizBadgeNotifications.data";
 import type { Notification } from "./notifications.types";
 import {
   buildUnreadActivityNotifications,
@@ -837,10 +841,12 @@ function buildReadNotifications(
 export function buildNotifications(
   t: TFunction,
   fmt: Formatters,
+  language?: Language,
 ): Notification[] {
   return [
     ...buildUnreadNotifications(t, fmt),
     ...buildCommunityBadgeNotifications(t, fmt),
+    ...buildQuizBadgeNotifications(t, fmt, language),
     ...buildUnreadStudioPlaylistEditorNotifications(t, fmt),
     ...buildListingTeamNotifications(t, fmt),
     ...buildStudioOwnerNotifications(t, fmt),
@@ -852,5 +858,21 @@ export function buildNotifications(
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
 export const DEMO_UNREAD_IDS = [
-  2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18, 40, 26, 29, 32, 38,
+  2,
+  3,
+  13,
+  14,
+  15,
+  16,
+  4,
+  5,
+  6,
+  7,
+  18,
+  40,
+  26,
+  29,
+  32,
+  38,
+  DEMO_QUIZ_BADGE_NOTIFICATION_ID,
 ];

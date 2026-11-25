@@ -1,13 +1,16 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
 import { TestProviders } from "../../../test/TestProviders";
 import type {
-  QuizshowLobby,
+  QuizshowPlayerLobby,
   QuizshowPlayerState,
 } from "../../../shared/contracts/quizshow";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import {
+  createQuizshowClientState,
+  type QuizshowClientState,
+} from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowJoinForm } from "./QuizshowJoinForm";
 import { awaitCatalog } from "../../../test/awaitCatalog";
@@ -17,6 +20,11 @@ function lobbySession(
 ): QuizshowPlayerState {
   return {
     sessionId: "session-1",
+    answerCount: null,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     eventSlug: "quiz-night",
     eventTitle: "Quiz night",
     kind: "event",
@@ -46,6 +54,9 @@ function lobbySession(
       roundNumber: 0,
       upNext: null,
       canSpinForNextRound: false,
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
     },
     rounds: [],
     round: null,
@@ -56,7 +67,7 @@ function lobbySession(
     wheel: null,
     wheelBonus: null,
     role: "player",
-    lobby: { players: [], teams: [], playerCount: 0 },
+    lobby: { teams: [], playerCount: 0 },
     question: null,
     voteOptions: null,
     me: null,
@@ -75,13 +86,10 @@ function controllerOf(
   send: QuizshowSessionController["send"],
 ): QuizshowSessionController {
   const state: QuizshowClientState = {
-    role: "player",
+    ...createQuizshowClientState("player"),
     status: "attached",
-    refusalCode: null,
+    hasAttached: true,
     session,
-    sessionEnd: null,
-    isRemoved: false,
-    pendingAnswer: null,
   };
   return {
     state,
@@ -97,26 +105,36 @@ function controllerOf(
 function renderForm(
   session: QuizshowPlayerState,
   send: QuizshowSessionController["send"],
+  rematchTeamName: string | null = null,
 ) {
   return render(
     <TestProviders>
       <ReducedMotionContext.Provider value={true}>
-        <QuizshowJoinForm controller={controllerOf(session, send)} />
+        <QuizshowJoinForm
+          controller={controllerOf(session, send)}
+          rematchTeamName={rematchTeamName}
+        />
       </ReducedMotionContext.Provider>
     </TestProviders>,
   );
 }
 
-const TEAMS_LOBBY: QuizshowLobby = {
-  players: [],
+const TEAMS_LOBBY: QuizshowPlayerLobby = {
   teams: [
     {
       teamId: "team-1",
       name: "Rainbow crew",
       colorKey: "circle",
       memberCount: 3,
+      isHostMade: false,
     },
-    { teamId: "team-2", name: "Night owls", colorKey: "moon", memberCount: 2 },
+    {
+      teamId: "team-2",
+      name: "Night owls",
+      colorKey: "moon",
+      memberCount: 2,
+      isHostMade: false,
+    },
   ],
   playerCount: 5,
 };
@@ -137,7 +155,7 @@ function findComponentAlert(): Promise<HTMLElement> {
 }
 
 describe("QuizshowJoinForm", () => {
-  it("prefills the suggested name and sends the join with the choices", async () => {
+  it("prefills the suggested name and joins with one field", async () => {
     const user = userEvent.setup();
     const send = vi.fn().mockResolvedValue({ ok: true });
     renderForm(lobbySession(), send as QuizshowSessionController["send"]);
@@ -146,27 +164,51 @@ describe("QuizshowJoinForm", () => {
     const nameInput = screen.getByLabelText("Screen name");
     expect(nameInput).toHaveValue("Sam");
     expect(nameInput).toHaveAttribute("maxlength", "30");
-    await user.click(
-      screen.getByRole("switch", {
-        name: "Give me more time on each question",
-      }),
-    );
     await user.click(screen.getByRole("button", { name: "I'm in" }));
 
+    // Extra time and the photo are set from the lobby sheet after joining (item 31).
     expect(send).toHaveBeenCalledWith("lobby:join", {
       screenName: "Sam",
       isAvatarShown: false,
-      hasExtraTime: true,
+      hasExtraTime: false,
       team: null,
     });
   });
 
-  it("keeps extra time private", async () => {
+  it("shows no switches on the name step", async () => {
     renderForm(lobbySession(), vi.fn() as QuizshowSessionController["send"]);
     await awaitCatalog("quizshow");
+
+    expect(screen.getByLabelText("Screen name")).toBeInTheDocument();
+    expect(screen.queryAllByRole("switch")).toHaveLength(0);
     expect(
-      screen.getByText("Only you and the hosts see this"),
-    ).toBeInTheDocument();
+      screen.queryByText("Give me more time on each question"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Show my photo on the big screen"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("offers the suggested free name when the name is taken", async () => {
+    const user = userEvent.setup();
+    const send = vi.fn().mockResolvedValue({
+      ok: false,
+      code: "quizshow_screen_name_taken",
+      message: "taken",
+      suggestedScreenName: "Sam 2",
+    });
+    renderForm(lobbySession(), send as QuizshowSessionController["send"]);
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "I'm in" }));
+
+    expect(await findComponentAlert()).toHaveTextContent(
+      "Someone here already uses that name. Try Sam 2",
+    );
+    await user.click(screen.getByRole("button", { name: "Use Sam 2" }));
+
+    expect(screen.getByLabelText("Screen name")).toHaveValue("Sam 2");
+    expect(screen.getByRole("button", { name: "I'm in" })).toHaveFocus();
   });
 
   it("asks for a team in teams mode and starts one with a free shape", async () => {
@@ -210,6 +252,30 @@ describe("QuizshowJoinForm", () => {
     });
   });
 
+  it("names a taken name with no button when no free name is left", async () => {
+    const user = userEvent.setup();
+    const send = vi.fn().mockResolvedValue({
+      ok: false,
+      code: "quizshow_screen_name_taken",
+      message: "taken",
+    });
+    renderForm(lobbySession(), send as QuizshowSessionController["send"]);
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "I'm in" }));
+
+    expect(await findComponentAlert()).toHaveTextContent(
+      "Someone here already uses that name. Pick another one",
+    );
+    expect(
+      screen.queryByRole("button", { name: /^Use/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Screen name")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  });
+
   it("shows the gentle copy for a blocked name", async () => {
     const user = userEvent.setup();
     const send = vi.fn().mockResolvedValue({
@@ -229,5 +295,74 @@ describe("QuizshowJoinForm", () => {
       "aria-invalid",
       "true",
     );
+  });
+});
+
+describe("QuizshowJoinForm rematch", () => {
+  const STORAGE_KEY = "quizshow.rematchTeamName.QZ7KP4";
+
+  afterEach(() => {
+    window.sessionStorage.clear();
+  });
+
+  it("starts on the old team the page passes down", async () => {
+    const user = userEvent.setup();
+    const send = vi.fn().mockResolvedValue({ ok: true });
+    // The name folds to the lobby team's key (case and spaces differ).
+    renderForm(
+      lobbySession({ playMode: "teams", maxTeamSize: 3, lobby: TEAMS_LOBBY }),
+      send as QuizshowSessionController["send"],
+      "  night   OWLS ",
+    );
+    await awaitCatalog("quizshow");
+
+    await user.click(screen.getByRole("button", { name: "I'm in" }));
+
+    expect(send).toHaveBeenCalledWith("lobby:join", {
+      screenName: "Sam",
+      isAvatarShown: false,
+      hasExtraTime: false,
+      team: { teamId: "team-2" },
+    });
+  });
+
+  it("starts with no team when the old team is not in the lobby", async () => {
+    const send = vi.fn().mockResolvedValue({ ok: true });
+    renderForm(
+      lobbySession({ playMode: "teams", maxTeamSize: 3, lobby: TEAMS_LOBBY }),
+      send as QuizshowSessionController["send"],
+      "Glitter",
+    );
+    await awaitCatalog("quizshow");
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(
+      screen
+        .getAllByRole("radio")
+        .some((radio) => (radio as HTMLInputElement).checked),
+    ).toBe(false);
+  });
+
+  it("leaves the stored name to the page that owns it", async () => {
+    window.sessionStorage.setItem(STORAGE_KEY, "Night owls");
+    const send = vi.fn().mockResolvedValue({ ok: true });
+    renderForm(
+      lobbySession({ playMode: "teams", maxTeamSize: 3, lobby: TEAMS_LOBBY }),
+      send as QuizshowSessionController["send"],
+    );
+    await awaitCatalog("quizshow");
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+    // The form neither reads nor clears it: no team starts picked.
+    expect(window.sessionStorage.getItem(STORAGE_KEY)).toBe("Night owls");
+    expect(
+      screen
+        .getAllByRole("radio")
+        .some((radio) => (radio as HTMLInputElement).checked),
+    ).toBe(false);
   });
 });

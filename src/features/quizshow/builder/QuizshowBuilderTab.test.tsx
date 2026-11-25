@@ -1,5 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import type { QuizshowQuizResponse } from "../../../shared/contracts/quizshow";
@@ -23,12 +24,19 @@ vi.mock("../api/quizshowDemoStore", async (importOriginal) => {
 const SLUG = "pride-quiz-night";
 const EVENT_START = new Date("2026-11-20T19:00:00.000Z");
 
-function renderTab(options: { slug?: string; queryClient?: QueryClient } = {}) {
+function renderTab(
+  options: {
+    slug?: string;
+    queryClient?: QueryClient;
+    isDraftEvent?: boolean;
+  } = {},
+) {
   return render(
     <TestProviders queryClient={options.queryClient}>
       <QuizshowBuilderTab
         slug={options.slug ?? SLUG}
         eventStartAt={EVENT_START}
+        isDraftEvent={options.isDraftEvent}
       />
     </TestProviders>,
   );
@@ -52,6 +60,7 @@ function savedQuizResponse(
     isAdultsEvent: false,
     liveSession: null,
     hasResults: false,
+    lastOpenSettings: null,
     ...overrides,
   };
 }
@@ -151,6 +160,8 @@ describe("QuizshowBuilderTab", () => {
             playMode: "solo",
             playerCount: 3,
             startedAt: "2026-11-20T19:05:00.000Z",
+            isPractice: false,
+            isBehindQuiz: false,
           },
         }),
       ),
@@ -164,6 +175,57 @@ describe("QuizshowBuilderTab", () => {
     expect(
       screen.getByRole("link", { name: "Open big screen" }),
     ).toBeInTheDocument();
+  });
+
+  it("offers a practice lobby on a draft event", async () => {
+    const user = userEvent.setup();
+    renderTab({
+      queryClient: seededClient(savedQuizResponse()),
+      isDraftEvent: true,
+    });
+    const card = await screen.findByRole("region", {
+      name: "This event's quiz",
+    });
+    expect(within(card).getByRole("status")).toHaveTextContent(
+      "Draft event: publish it to play with guests",
+    );
+    expect(
+      screen.queryByRole("button", { name: "Open lobby" }),
+    ).not.toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: "Open a practice lobby" }),
+    );
+    const practice = await screen.findByRole("switch", {
+      name: /Practice lobby/,
+    });
+    expect(practice).toHaveAttribute("aria-checked", "true");
+    expect(practice).toBeDisabled();
+  });
+
+  it("marks a practice lobby on the live game panel", async () => {
+    renderTab({
+      queryClient: seededClient(
+        savedQuizResponse({
+          liveSession: {
+            sessionId: "session-1",
+            joinCode: "QZ7KP4",
+            status: "lobby",
+            playMode: "solo",
+            playerCount: 0,
+            startedAt: "2026-11-20T19:05:00.000Z",
+            isPractice: true,
+            isBehindQuiz: false,
+          },
+        }),
+      ),
+    });
+    const heading = await screen.findByRole("heading", {
+      name: "Game in progress",
+    });
+    const panel = heading.closest("section");
+    if (!panel) throw new Error("The live game panel has no section");
+    expect(within(panel).getByText("Practice")).toBeInTheDocument();
   });
 
   it("shows the kept results on an event that has them", async () => {

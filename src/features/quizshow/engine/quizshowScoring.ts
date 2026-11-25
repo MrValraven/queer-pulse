@@ -5,7 +5,9 @@
  */
 import {
   QUIZSHOW_LIMITS,
+  type QuizshowAnswerKeyView,
   type QuizshowAnswerPayload,
+  type QuizshowClosestTolerance,
   type QuizshowQuestion,
   type QuizshowText,
 } from "../../../shared/contracts/quizshow";
@@ -27,6 +29,9 @@ export function normaliseAnswerText(text: string): string {
     .replace(/ +/g, " ")
     .trim();
 }
+
+/** The contract's name for the typed-answer normaliser (C6.4): the same function. */
+export const normaliseTypedAnswer = normaliseAnswerText;
 
 function spaceFreeForm(text: string): string {
   return normaliseAnswerText(text).replace(/ /g, "");
@@ -96,13 +101,20 @@ function isTypedAnswerMatch(
   });
 }
 
-/** Matches against the key in both languages plus every accepted answer. */
+/**
+ * Matches against the key in both languages plus every accepted answer, or
+ * holds a normalised text a host accepted on the night (`acceptedTexts`).
+ */
 export function isTypedAnswerCorrect(
   submitted: string,
   key: QuizshowText,
   acceptedAnswers: readonly string[],
+  acceptedTexts: readonly string[] = [],
 ): boolean {
-  return isTypedAnswerMatch(submitted, [key.en, key.pt, ...acceptedAnswers]);
+  return (
+    isTypedAnswerMatch(submitted, [key.en, key.pt, ...acceptedAnswers]) ||
+    acceptedTexts.includes(normaliseTypedAnswer(submitted))
+  );
 }
 
 /** A Lie Detector fake the typed-answer matcher would accept as the truth. */
@@ -135,6 +147,7 @@ export function streakBonusFor(streakAfterAnswer: number): number {
 
 export interface ClosestNumberOutcome {
   isClosest: boolean;
+  /** At most the band width away; the half-points `band` outcome is this without `isClosest`. */
   isWithinBand: boolean;
 }
 
@@ -142,28 +155,43 @@ export interface ClosestNumberOutcome {
 const distanceKey = (distance: number): number =>
   Number(distance.toPrecision(12));
 
+/** Half-points band around the truth; 0 means only the closest answers score. */
+export function closestBandWidth(
+  truth: number,
+  tolerance: QuizshowClosestTolerance,
+): number {
+  switch (tolerance.mode) {
+    case "exact":
+      return 0;
+    case "absolute":
+      return tolerance.amount;
+    case "percent":
+      return (Math.abs(truth) * tolerance.amount) / 100;
+  }
+}
+
 /**
- * Every answer at the minimum distance from the key is closest; an answer is
- * within the band when its distance is at most 10% of the key (a key of 0
- * bands at 0, so only an exact answer). Distances compare at 12 significant
- * digits so float noise keeps a decimal tie fair and an answer at the band
- * edge inside.
+ * Every answer at the minimum distance from the truth is closest; any other
+ * answer whose distance is at most the question's band width
+ * (`closestBandWidth`) is in the band and takes half. An exact tolerance, or a
+ * percent tolerance on a truth of 0, bands at 0. Distances compare at 12
+ * significant digits so float noise keeps a decimal tie fair and an answer at
+ * the band edge inside.
  */
 export function closestNumberOutcomes(
-  keyValue: number,
+  truth: number,
+  tolerance: QuizshowClosestTolerance,
   answers: ReadonlyArray<{ playerId: string; value: number }>,
 ): Map<string, ClosestNumberOutcome> {
   const outcomes = new Map<string, ClosestNumberOutcome>();
   if (answers.length === 0) return outcomes;
   const minimumDistance = Math.min(
-    ...answers.map((answer) => Math.abs(answer.value - keyValue)),
+    ...answers.map((answer) => Math.abs(answer.value - truth)),
   );
   const minimumDistanceKey = distanceKey(minimumDistance);
-  const bandWidthKey = distanceKey(
-    QUIZSHOW_LIMITS.closestNumberBand * Math.abs(keyValue),
-  );
+  const bandWidthKey = distanceKey(closestBandWidth(truth, tolerance));
   for (const answer of answers) {
-    const answerDistanceKey = distanceKey(Math.abs(answer.value - keyValue));
+    const answerDistanceKey = distanceKey(Math.abs(answer.value - truth));
     outcomes.set(answer.playerId, {
       isClosest: answerDistanceKey === minimumDistanceKey,
       isWithinBand: answerDistanceKey <= bandWidthKey,
@@ -173,8 +201,17 @@ export function closestNumberOutcomes(
 }
 
 export interface QuizAnswerScoringInput {
-  /** A quiz-round type with a non-null answer. */
+  /** A quiz-round type: a poll scores nothing, the rest need a key. */
   question: QuizshowQuestion;
+  /**
+   * The key to judge by: a host correction when one was made (C6.4). Left
+   * out, the question's own answer is the key.
+   */
+  answerKey?: QuizshowAnswerKeyView | null;
+  /** Normalised texts a host accepted on a typed answer (C6.4 rule 2). */
+  acceptedTexts?: readonly string[];
+  /** A warm-up round: judged, 0 points, streak kept (C6.19). */
+  isWarmUp?: boolean;
   /** null when the player did not answer. */
   payload: QuizshowAnswerPayload | null;
   /** receivedAt minus phaseStartedAt of open. */
@@ -189,7 +226,8 @@ export interface QuizAnswerScoringInput {
 }
 
 export interface QuizAnswerScore {
-  isCorrect: boolean;
+  /** null on a poll, which has no right answer. */
+  isCorrect: boolean | null;
   /** order only. */
   correctPositions: number | null;
   basePoints: number;
@@ -199,76 +237,172 @@ export interface QuizAnswerScore {
 }
 
 /**
+ * The authored key of a quiz question; null on a poll, a prompt or a missing
+ * answer. Twin of `toAnswerKeyView` in quizshowEngineViews.ts, kept here so
+ * this module stays pure; the two must read the same fields.
+ */
+function answerKeyOfQuestion(
+  question: QuizshowQuestion,
+): QuizshowAnswerKeyView | null {
+  if (question.type === "prompt" || question.type === "poll") return null;
+  if (question.answer === null) return null;
+  switch (question.type) {
+    case "multiple_choice":
+      return {
+        type: "multiple_choice",
+        correctIndexes: question.answer.correctIndexes,
+      };
+    case "true_false":
+      return { type: "true_false", isTrue: question.answer.isTrue };
+    case "type_answer":
+      return {
+        type: "type_answer",
+        text: question.answer.text,
+        acceptedAnswers: question.acceptedAnswers,
+      };
+    case "order":
+      return { type: "order", orderedIds: question.answer.orderedIds };
+    case "closest_number":
+      return {
+        type: "closest_number",
+        value: question.answer.value,
+        tolerance: question.answer.tolerance,
+      };
+  }
+}
+
+interface QuizAnswerJudgement {
+  isCorrect: boolean;
+  correctPositions: number | null;
+  /** Order only: partial points by position; 0 elsewhere. */
+  partialBasePoints: number;
+}
+
+/** Whether a payload is right against its key; a payload of another type is wrong. */
+function judgeQuizAnswer(
+  answerKey: QuizshowAnswerKeyView,
+  payload: QuizshowAnswerPayload,
+  base: number,
+  closest: ClosestNumberOutcome | null,
+  acceptedTexts: readonly string[],
+): QuizAnswerJudgement {
+  const wrongJudgement: QuizAnswerJudgement = {
+    isCorrect: false,
+    correctPositions: null,
+    partialBasePoints: 0,
+  };
+  switch (answerKey.type) {
+    case "multiple_choice":
+      return payload.type === "multiple_choice"
+        ? {
+            ...wrongJudgement,
+            isCorrect: answerKey.correctIndexes.includes(payload.optionIndex),
+          }
+        : wrongJudgement;
+    case "true_false":
+      return payload.type === "true_false"
+        ? { ...wrongJudgement, isCorrect: payload.isTrue === answerKey.isTrue }
+        : wrongJudgement;
+    case "type_answer":
+      return payload.type === "type_answer"
+        ? {
+            ...wrongJudgement,
+            isCorrect: isTypedAnswerCorrect(
+              payload.text,
+              answerKey.text,
+              answerKey.acceptedAnswers,
+              acceptedTexts,
+            ),
+          }
+        : wrongJudgement;
+    case "order": {
+      // A payload of another type leaves positions null, as the backend does.
+      if (payload.type !== "order") return wrongJudgement;
+      const correctIds = answerKey.orderedIds;
+      const matchedPositions = correctIds.filter(
+        (optionId, position) => payload.orderedIds[position] === optionId,
+      ).length;
+      const isCorrect =
+        correctIds.length > 0 && matchedPositions === correctIds.length;
+      return {
+        isCorrect,
+        correctPositions: matchedPositions,
+        partialBasePoints:
+          !isCorrect && matchedPositions > 0
+            ? Math.round((base * matchedPositions) / correctIds.length)
+            : 0,
+      };
+    }
+    case "closest_number": {
+      if (payload.type !== "closest_number") return wrongJudgement;
+      const isCorrect = closest?.isClosest === true;
+      return {
+        isCorrect,
+        correctPositions: null,
+        partialBasePoints:
+          !isCorrect && closest?.isWithinBand === true
+            ? Math.round(base / 2)
+            : 0,
+      };
+    }
+    case "lie_detector":
+      return wrongJudgement;
+  }
+}
+
+/**
  * Speed points on a correct answer (closest number takes the plain base),
  * order partials and the closest-number band without speed, the streak bonus
- * on a correct answer, and the joker doubling the whole question total.
+ * on a correct answer, and the joker doubling the whole question total. A
+ * poll is never judged: `isCorrect` null, 0 points, streak kept. A warm-up
+ * answer is judged and scores 0 with the streak kept, so the warm-up never
+ * moves the standings.
  */
 export function scoreQuizAnswer(
   input: QuizAnswerScoringInput,
 ): QuizAnswerScore {
   const { question, payload } = input;
-  const base = question.points;
-  let isCorrect = false;
-  let correctPositions: number | null = null;
-  let basePoints = 0;
-  if (payload !== null && question.answer !== null) {
-    switch (question.type) {
-      case "multiple_choice":
-        isCorrect =
-          payload.type === "multiple_choice" &&
-          payload.optionIndex === question.answer.correctIndex;
-        break;
-      case "true_false":
-        isCorrect =
-          payload.type === "true_false" &&
-          payload.isTrue === question.answer.isTrue;
-        break;
-      case "type_answer":
-        isCorrect =
-          payload.type === "type_answer" &&
-          isTypedAnswerCorrect(
-            payload.text,
-            question.answer.text,
-            question.acceptedAnswers,
-          );
-        break;
-      case "order": {
-        // A payload of another type leaves positions null, as the backend does.
-        if (payload.type !== "order") break;
-        const correctIds = question.answer.orderedIds;
-        const submittedIds = payload.orderedIds;
-        const matchedPositions = correctIds.filter(
-          (optionId, position) => submittedIds[position] === optionId,
-        ).length;
-        correctPositions = matchedPositions;
-        isCorrect =
-          correctIds.length > 0 && matchedPositions === correctIds.length;
-        if (!isCorrect && matchedPositions > 0)
-          basePoints = Math.round(
-            (base * matchedPositions) / correctIds.length,
-          );
-        break;
-      }
-      case "closest_number": {
-        const isClosestNumberPayload = payload.type === "closest_number";
-        isCorrect = isClosestNumberPayload && input.closest?.isClosest === true;
-        const isWithinBand =
-          isClosestNumberPayload && input.closest?.isWithinBand === true;
-        basePoints = isCorrect ? base : isWithinBand ? Math.round(base / 2) : 0;
-        break;
-      }
-      case "prompt":
-        break;
-    }
-    if (isCorrect && question.type !== "closest_number") {
-      basePoints = speedPoints(
-        base,
-        input.elapsedMs,
-        input.limitMs,
-        input.isSpeedBonusOn,
-      );
-    }
+  if (question.type === "poll") {
+    return {
+      isCorrect: null,
+      correctPositions: null,
+      basePoints: 0,
+      streakBonus: 0,
+      streakAfter: input.streakBefore,
+      pointsAwarded: 0,
+    };
   }
+  const answerKey =
+    input.answerKey === undefined
+      ? answerKeyOfQuestion(question)
+      : input.answerKey;
+  const base = question.points;
+  const judgement =
+    payload !== null && answerKey !== null
+      ? judgeQuizAnswer(
+          answerKey,
+          payload,
+          base,
+          input.closest,
+          input.acceptedTexts ?? [],
+        )
+      : { isCorrect: false, correctPositions: null, partialBasePoints: 0 };
+  const { isCorrect, correctPositions } = judgement;
+  if (input.isWarmUp === true) {
+    return {
+      isCorrect,
+      correctPositions,
+      basePoints: 0,
+      streakBonus: 0,
+      streakAfter: input.streakBefore,
+      pointsAwarded: 0,
+    };
+  }
+  const basePoints = !isCorrect
+    ? judgement.partialBasePoints
+    : question.type === "closest_number"
+      ? base
+      : speedPoints(base, input.elapsedMs, input.limitMs, input.isSpeedBonusOn);
   const streakAfter = isCorrect ? input.streakBefore + 1 : 0;
   const streakBonus = isCorrect ? streakBonusFor(streakAfter) : 0;
   const multiplier = input.isJokerActive ? QUIZSHOW_LIMITS.jokerMultiplier : 1;

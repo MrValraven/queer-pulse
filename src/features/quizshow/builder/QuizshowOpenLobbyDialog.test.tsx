@@ -1,3 +1,4 @@
+import { QueryClient } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useLocation } from "react-router-dom";
@@ -25,10 +26,13 @@ import {
   resetQuizshowDemoGames,
 } from "../api/quizshowDemoGames";
 import { QUIZSHOW_DEMO_GAME_IDS } from "../api/quizshowDemoGames.data";
+import { quizshowKeys } from "../api/quizshowKeys";
 import {
   QUIZSHOW_DEMO_TEMPLATE_IDS,
   templateSeedById,
 } from "../demo/quizshowTemplates.data";
+import { normaliseStoredQuizShape } from "../quizshowNormalise";
+import { resetQuizWinBadgesDemoStore } from "../winBadges/quizWinBadgesDemoStore";
 import { ApiError } from "../../../shared/api/client";
 import {
   eventScope,
@@ -74,18 +78,29 @@ function LocationProbe() {
 function templateQuiz(
   overrides: Partial<QuizshowQuizInput> = {},
 ): QuizshowQuizInput {
-  const { quiz } = templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+  const quiz = normaliseStoredQuizShape(
+    templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory).quiz,
+  );
   return { ...quiz, expectedUpdatedAt: null, ...overrides };
 }
 
-function renderDialog(scope: QuizshowSessionScope) {
+function renderDialog(
+  scope: QuizshowSessionScope,
+  options: {
+    queryClient?: QueryClient;
+    isPracticeOnly?: boolean;
+    rematchOf?: { sessionId: string; isPractice: boolean } | null;
+  } = {},
+) {
   return render(
-    <TestProviders>
+    <TestProviders queryClient={options.queryClient}>
       <QuizshowOpenLobbyDialog
         scope={scope}
         rounds={[]}
         isOpen
         onClose={() => {}}
+        isPracticeOnly={options.isPracticeOnly}
+        rematchOf={options.rematchOf}
       />
       <LocationProbe />
     </TestProviders>,
@@ -107,22 +122,26 @@ describe("QuizshowOpenLobbyDialog", () => {
     vi.mocked(demoOpenSession).mockClear();
   });
 
-  it("opens a solo lobby with review and the guest push on by default", async () => {
+  it("opens a solo lobby with review on and the guest push off by default", async () => {
     const user = userEvent.setup();
     demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
     renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
 
-    await user.click(await screen.findByRole("button", { name: "Open lobby" }));
+    const guestsSwitch = await screen.findByRole("switch", {
+      name: /Let guests know/,
+    });
+    expect(guestsSwitch.getAttribute("aria-checked")).toBe("false");
+    await user.click(screen.getByRole("button", { name: "Open lobby" }));
 
-    expect(
-      await screen.findByText("Guests got a push with the code"),
-    ).toBeTruthy();
-    expect(lastOpenInput()).toMatchObject({
+    await waitFor(() => expect(demoOpenSession).toHaveBeenCalledTimes(1));
+    expect(lastOpenInput()).toEqual({
       playMode: "solo",
       maxTeamSize: null,
       isReviewOn: true,
-      notifyGuests: true,
+      notifyGuests: false,
       shouldReplaceResults: false,
+      isPractice: false,
+      rematchOfSessionId: null,
     });
     expect(demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG).liveSession?.playMode).toBe(
       "solo",
@@ -132,6 +151,8 @@ describe("QuizshowOpenLobbyDialog", () => {
         quizshowScopeScreenPath(eventScope(QUIZSHOW_DEMO_LIVE_SLUG)),
       ),
     );
+    // Checked once the open settled, so a push toast would already show.
+    expect(screen.queryByText("Guests got a push with the code")).toBeNull();
   });
 
   it("keeps Let guests know on an event lobby", async () => {
@@ -186,6 +207,8 @@ describe("QuizshowOpenLobbyDialog", () => {
       isReviewOn: true,
       notifyGuests: false,
       shouldReplaceResults: false,
+      isPractice: false,
+      rematchOfSessionId: null,
     });
     renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
 
@@ -235,6 +258,151 @@ describe("QuizshowOpenLobbyDialog", () => {
 
     await user.click(button);
     expect(screen.queryByText("How people play")).toBeNull();
+  });
+});
+
+describe("QuizshowOpenLobbyDialog settings, practice and rematch", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+    resetQuizshowDemoGames();
+    vi.mocked(demoOpenSession).mockClear();
+  });
+
+  it("sends the guest push once the host turns it on", async () => {
+    const user = userEvent.setup();
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
+    renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
+
+    await user.click(
+      await screen.findByRole("switch", { name: /Let guests know/ }),
+    );
+    await user.click(screen.getByRole("button", { name: "Open lobby" }));
+
+    expect(
+      await screen.findByText("Guests got a push with the code"),
+    ).toBeTruthy();
+    expect(lastOpenInput().notifyGuests).toBe(true);
+  });
+
+  it("prefills the play mode, team size and review from the last open", async () => {
+    const user = userEvent.setup();
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
+    const scope = eventScope(QUIZSHOW_DEMO_LIVE_SLUG);
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+    });
+    queryClient.setQueryData(quizshowKeys.quizFor(scope, true), {
+      ...demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG),
+      lastOpenSettings: {
+        playMode: "teams",
+        maxTeamSize: 6,
+        isReviewOn: false,
+      },
+    });
+    renderDialog(scope, { queryClient });
+
+    const teams = await screen.findByRole("radio", { name: /^Teams/ });
+    expect(teams.getAttribute("aria-checked")).toBe("true");
+    expect(await screen.findByText("Most people per team")).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: "Open lobby" }));
+
+    await waitFor(() => expect(demoOpenSession).toHaveBeenCalledTimes(1));
+    expect(lastOpenInput()).toMatchObject({
+      playMode: "teams",
+      maxTeamSize: 6,
+      isReviewOn: false,
+      notifyGuests: false,
+    });
+  });
+
+  it("opens a practice lobby without the guest push", async () => {
+    const user = userEvent.setup();
+    demoPutQuiz(QUIZSHOW_DEMO_RESULTS_SLUG, templateQuiz());
+    renderDialog(eventScope(QUIZSHOW_DEMO_RESULTS_SLUG));
+
+    // The push is on before practice: practice still sends none.
+    await user.click(
+      await screen.findByRole("switch", { name: /Let guests know/ }),
+    );
+    await user.click(screen.getByRole("switch", { name: /Practice lobby/ }));
+    await waitFor(() =>
+      expect(screen.queryByText("Let guests know")).toBeNull(),
+    );
+    await user.click(screen.getByRole("button", { name: "Open lobby" }));
+
+    await waitFor(() => expect(demoOpenSession).toHaveBeenCalledTimes(1));
+    expect(lastOpenInput()).toMatchObject({
+      isPractice: true,
+      notifyGuests: false,
+      shouldReplaceResults: false,
+    });
+    // Kept results stay untouched, so nothing asks to replace them.
+    expect(screen.queryByText("Start a new game?")).toBeNull();
+  });
+
+  it("says practice games give no badges for an event with badges", async () => {
+    const user = userEvent.setup();
+    const practiceLine = "Practice games give no badges";
+    resetQuizWinBadgesDemoStore();
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
+    renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
+
+    const practiceSwitch = await screen.findByRole("switch", {
+      name: /Practice lobby/,
+    });
+    expect(screen.queryByText(practiceLine)).toBeNull();
+
+    await user.click(practiceSwitch);
+    expect(await screen.findByText(practiceLine)).toBeTruthy();
+
+    await user.click(practiceSwitch);
+    await waitFor(() => expect(screen.queryByText(practiceLine)).toBeNull());
+  });
+
+  it("holds practice on for a draft event", async () => {
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
+    renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG), {
+      isPracticeOnly: true,
+    });
+
+    const practice = await screen.findByRole("switch", {
+      name: /Practice lobby/,
+    });
+    expect(practice.getAttribute("aria-checked")).toBe("true");
+    expect(practice).toBeDisabled();
+    expect(screen.queryByText("Let guests know")).toBeNull();
+  });
+
+  it("names a rematch and sends the finished session's id", async () => {
+    const user = userEvent.setup();
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
+    vi.mocked(demoOpenSession).mockImplementationOnce(() => {
+      throw new ApiError(409, "quizshow_rematch_expired", {
+        code: "quizshow_rematch_expired",
+      });
+    });
+    renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG), {
+      rematchOf: { sessionId: "session-finished", isPractice: false },
+    });
+
+    expect(
+      await screen.findByRole("dialog", {
+        name: "Play again with these players",
+      }),
+    ).toBeTruthy();
+    await user.click(
+      screen.getByRole("button", { name: "Play again with these players" }),
+    );
+
+    expect(
+      await screen.findByText(
+        "A rematch opens up to 30 minutes after a game ends",
+      ),
+    ).toBeTruthy();
+    expect(lastOpenInput()).toMatchObject({
+      rematchOfSessionId: "session-finished",
+      isPractice: false,
+    });
   });
 });
 

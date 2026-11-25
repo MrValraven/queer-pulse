@@ -1,0 +1,88 @@
+/* The venue TV's pairing page (/play/tv): the layout and the lines under the
+   code (the code itself is QuizshowPairingCode.module.css). It sits on the
+   stage page (QuizshowScreen.module.css .page, always dark) over the velvet
+   backdrop, so every colour is a --qs-* token. */
+
+.main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: var(--gap-lg);
+}
+
+.notice,
+.note,
+.failure {
+  max-width: 44ch;
+  margin: 0;
+  padding-top: var(--gap-xs);
+  font-size: var(--text-screen-label);
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.notice {
+  color: var(--qs-text);
+}
+
+.note {
+  color: var(--qs-text-mute);
+}
+
+.failure {
+  color: var(--qs-low);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--gap-sm);
+}
+
+/* A paired TV after its game ended: the next pairing code sits in the
+   bottom-left corner beside the thank-you card (the toolbar holds the
+   bottom right). Glass like the stage's chips, over the stage. */
+.nextCode {
+  position: absolute;
+  z-index: 2;
+  inset-block-end: max(var(--gap-lg), env(safe-area-inset-bottom));
+  inset-inline-start: max(var(--gap-lg), env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+  max-inline-size: min(32rem, calc(100vw - 2 * var(--gap-lg)));
+  padding: var(--gap-sm) var(--gap-grid);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  color: var(--qs-text);
+  text-align: center;
+}
+
+.nextCodeTitle {
+  margin: 0;
+  color: var(--qs-text);
+  font-family: var(--serif);
+  font-size: var(--text-screen-label);
+  font-weight: 600;
+  line-height: var(--lh-title);
+  text-wrap: balance;
+}
+
+/* A phone-sized window keeps the page padding small. */
+@media (max-width: 30rem) {
+  .main {
+    padding: var(--gap-grid) var(--gap-sm);
+  }
+}

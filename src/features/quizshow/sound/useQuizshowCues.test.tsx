@@ -8,12 +8,29 @@ import {
   createQuizshowClientState,
   type QuizshowClientState,
 } from "../realtime/quizshowClientStore";
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowPodiumEntry,
+} from "../../../shared/contracts/quizshow";
 import type { QuizshowCue } from "./quizshowCues";
-import { useQuizshowCues } from "./useQuizshowCues";
+import { useQuizshowCues, useQuizshowSoundLevel } from "./useQuizshowCues";
 
-const cueMock = vi.hoisted(() => ({ playQuizshowCue: vi.fn() }));
+const cueMock = vi.hoisted(() => ({
+  playQuizshowCue: vi.fn(),
+  isAudioRunning: false,
+  applySoundLevel: vi.fn(),
+  resumeQuizshowAudio: vi.fn(),
+  storedLevel: "normal",
+}));
 vi.mock("./quizshowCues", () => ({
   playQuizshowCue: cueMock.playQuizshowCue,
+  isQuizshowAudioRunning: () => cueMock.isAudioRunning,
+  resumeQuizshowAudio: cueMock.resumeQuizshowAudio,
+  applySoundLevel: cueMock.applySoundLevel,
+  readStoredSoundLevel: () => cueMock.storedLevel,
+  saveSoundLevel: (level: string) => {
+    cueMock.storedLevel = level;
+  },
 }));
 
 const NOW_MS = Date.parse("2026-10-19T20:00:00Z");
@@ -23,6 +40,7 @@ const ALL_CUES: readonly QuizshowCue[] = [
   "timeAlmostUp",
   "reveal",
   "podium",
+  "podiumDrum",
 ];
 
 interface StateOptions {
@@ -30,6 +48,21 @@ interface StateOptions {
   phase: QuizshowPhase;
   playerCount?: number;
   deadline?: number | null;
+  /** The podium places shown so far (screen role: revealed ones only). */
+  podiumPlaces?: number[];
+}
+
+function podiumOf(places: readonly number[]): QuizshowPodiumEntry[] {
+  return places.map(
+    (place) =>
+      ({
+        entrantId: `entrant-${place}`,
+        place,
+        name: `Place ${place}`,
+        score: 100 * (4 - place),
+        colorKey: null,
+      }) as unknown as QuizshowPodiumEntry,
+  );
 }
 
 function stateWith(options: StateOptions): QuizshowClientState {
@@ -47,6 +80,10 @@ function stateWith(options: StateOptions): QuizshowClientState {
       deadline: options.deadline ?? null,
       extraTimeDeadline: null,
     },
+    podium:
+      options.podiumPlaces === undefined
+        ? null
+        : podiumOf(options.podiumPlaces),
   } as unknown as QuizshowScreenState;
   return { ...createQuizshowClientState("screen"), session };
 }
@@ -76,6 +113,10 @@ describe("useQuizshowCues", () => {
     vi.useFakeTimers();
     vi.setSystemTime(NOW_MS);
     cueMock.playQuizshowCue.mockReset();
+    cueMock.applySoundLevel.mockReset();
+    cueMock.resumeQuizshowAudio.mockReset();
+    cueMock.isAudioRunning = false;
+    cueMock.storedLevel = "normal";
   });
   afterEach(() => {
     vi.useRealTimers();
@@ -177,5 +218,97 @@ describe("useQuizshowCues", () => {
       isMuted: false,
     });
     expect(playedCues()).toEqual([]);
+  });
+
+  it("plays the podium cue per place, then the drum on the beat before the winner", () => {
+    const view = renderCues(stateWith({ phaseId: "8", phase: "leaderboard" }));
+    const podiumStep = (phaseId: string, places: number[]) => {
+      view.rerender({
+        state: stateWith({ phaseId, phase: "podium", podiumPlaces: places }),
+        isMuted: false,
+      });
+    };
+    podiumStep("9", []);
+    expect(playedCues()).toEqual(["podium"]);
+    vi.advanceTimersByTime(400);
+    podiumStep("10", [3]);
+    expect(playedCues()).toEqual(["podium", "podium"]);
+    vi.advanceTimersByTime(400);
+    podiumStep("11", [3, 2]);
+    expect(playedCues()).toEqual(["podium", "podium", "podium"]);
+    // The step's phase arrives before its podium frame: nothing yet.
+    podiumStep("12", [3, 2]);
+    expect(playedCues()).toHaveLength(3);
+    podiumStep("12", [3, 2, 1]);
+    expect(playedCues()).toEqual(["podium", "podium", "podium", "podiumDrum"]);
+    act(() => {
+      vi.advanceTimersByTime(QUIZSHOW_LIMITS.podiumWinnerHoldMs - 1);
+    });
+    expect(playedCues()).toHaveLength(4);
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(playedCues()).toEqual([
+      "podium",
+      "podium",
+      "podium",
+      "podiumDrum",
+      "podium",
+    ]);
+  });
+
+  it("plays no drum when the screen loads with the winner already shown", () => {
+    const view = renderCues(
+      stateWith({ phaseId: "12", phase: "podium", podiumPlaces: [3, 2, 1] }),
+    );
+    view.rerender({
+      state: stateWith({
+        phaseId: "12",
+        phase: "podium",
+        podiumPlaces: [3, 2, 1],
+      }),
+      isMuted: false,
+    });
+    act(() => {
+      vi.advanceTimersByTime(QUIZSHOW_LIMITS.podiumWinnerHoldMs);
+    });
+    expect(playedCues()).toEqual([]);
+  });
+
+  it("says when audio runs and asks for it on a tap", () => {
+    const view = renderCues(stateWith({ phaseId: "1", phase: "lobby" }));
+    expect(view.result.current.isAudioRunning).toBe(false);
+    cueMock.isAudioRunning = true;
+    act(() => {
+      view.result.current.resumeAudio();
+    });
+    expect(cueMock.resumeQuizshowAudio).toHaveBeenCalledTimes(1);
+    expect(view.result.current.isAudioRunning).toBe(true);
+    cueMock.isAudioRunning = false;
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(view.result.current.isAudioRunning).toBe(false);
+  });
+});
+
+describe("useQuizshowSoundLevel", () => {
+  beforeEach(() => {
+    cueMock.applySoundLevel.mockReset();
+    cueMock.storedLevel = "venue";
+  });
+
+  it("starts from the stored level, keeps a change and goes back to Normal on unmount", () => {
+    const view = renderHook(() => useQuizshowSoundLevel());
+    expect(view.result.current.soundLevel).toBe("venue");
+    expect(cueMock.applySoundLevel).toHaveBeenLastCalledWith("venue");
+    act(() => {
+      view.result.current.changeSoundLevel("quiet");
+    });
+    expect(view.result.current.soundLevel).toBe("quiet");
+    expect(cueMock.storedLevel).toBe("quiet");
+    expect(cueMock.applySoundLevel).toHaveBeenLastCalledWith("quiet");
+    view.unmount();
+    expect(cueMock.applySoundLevel).toHaveBeenLastCalledWith("normal");
   });
 });

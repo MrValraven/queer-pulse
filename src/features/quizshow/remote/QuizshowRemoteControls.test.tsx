@@ -1,4 +1,11 @@
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi, type Mock } from "vitest";
 import { ReducedMotionContext } from "../../../app/providers/motionPrefs";
@@ -29,6 +36,8 @@ const QUIZ_ROUND: QuizshowRoundCard = {
   questionCount: 5,
   isJokerAllowed: true,
   isSpeedBonusOn: true,
+  isWarmUp: false,
+  talkSeconds: 0,
 };
 
 const LIE_DETECTOR_ROUND: QuizshowRoundCard = {
@@ -55,6 +64,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     roundNumber: roundIndex === null ? 0 : roundIndex + 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
     ...overrides,
   };
 }
@@ -78,6 +90,10 @@ function hostState(
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor: cursorWith(cursorOverrides),
     rounds: [QUIZ_ROUND],
@@ -93,6 +109,9 @@ function hostState(
     wheel: null,
     wheelBonus: null,
     reviewList: null,
+    pairedDevices: [],
+    typedAnswers: null,
+    guestPushSentAt: null,
   };
 }
 
@@ -123,6 +142,15 @@ function controllerFor(
       sessionEnd: null,
       isRemoved: false,
       pendingAnswer: null,
+      hasAttached: true,
+      retryCause: null,
+      rematch: null,
+      reactionBurst: null,
+      canRejoinAfterRemoval: false,
+      nightLog: [],
+      ownRanks: { previous: null, current: null },
+      ownRankSourceKey: null,
+      lastTeamName: null,
     },
     clockOffsetMs: 0,
     isDemo: true,
@@ -172,7 +200,7 @@ describe("QuizshowRemoteControls", () => {
     renderControls(hostState({ phase: "read" }), send);
     await awaitCatalog("quizshow");
 
-    const nextButton = screen.getByRole("button", { name: "Next" });
+    const nextButton = screen.getByRole("button", { name: "Take answers now" });
     await user.click(nextButton);
     await user.click(nextButton);
 
@@ -205,7 +233,7 @@ describe("QuizshowRemoteControls", () => {
       });
     renderControls(hostState({ phase: "open" }), send);
     await awaitCatalog("quizshow");
-    const nextButton = screen.getByRole("button", { name: "Next" });
+    const nextButton = screen.getByRole("button", { name: "Close answers" });
 
     await user.click(nextButton);
     for (const statusRegion of screen.getAllByRole("status")) {
@@ -308,8 +336,10 @@ describe("QuizshowRemoteControls", () => {
         `Reveal now in ${phase}`,
       ).toBe(testCase.hasReveal);
       expect(
-        screen.queryByRole("button", { name: "Skip question" }) !== null,
-        `Skip question in ${phase}`,
+        screen.queryByRole("button", {
+          name: /^Skip (question|the scores)$/,
+        }) !== null,
+        `Skip in ${phase}`,
       ).toBe(testCase.hasSkip);
       view.unmount();
     }
@@ -339,7 +369,7 @@ describe("QuizshowRemoteControls", () => {
     expect(screen.queryByRole("button", { name: "Pause" })).toBeNull();
     expect(
       screen
-        .getByRole("button", { name: "Next" })
+        .getByRole("button", { name: "Close answers" })
         .getAttribute("aria-disabled"),
     ).toBe("true");
     await user.click(screen.getByRole("button", { name: "Resume" }));
@@ -482,15 +512,15 @@ describe("QuizshowRemoteControls end confirm and pause", () => {
     expect(document.activeElement).toBe(pauseButton);
   });
 
-  it("says Start game in the lobby", async () => {
+  it("says Start the game in the lobby", async () => {
     const user = userEvent.setup();
     const send = acting();
     renderControls(lobbyState(), send);
     await awaitCatalog("quizshow");
 
-    expect(screen.queryByRole("button", { name: "Next" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Close answers" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Pause" })).toBeNull();
-    await user.click(screen.getByRole("button", { name: "Start game" }));
+    await user.click(screen.getByRole("button", { name: "Start the game" }));
     expect(send).toHaveBeenCalledWith("host:start", { phaseId: PHASE_ID });
   });
 });
@@ -593,7 +623,7 @@ describe("QuizshowRemoteControls wheel", () => {
     expect(screen.queryByRole("button", { name: "Spin again" })).toBeNull();
   });
 
-  it("turns into Start Music at the stop", async () => {
+  it("turns into Play Music at the stop", async () => {
     vi.useFakeTimers({
       toFake: [
         "setTimeout",
@@ -619,7 +649,7 @@ describe("QuizshowRemoteControls wheel", () => {
       await vi.advanceTimersByTimeAsync(600);
     });
 
-    expect(screen.getByRole("button", { name: "Start Music" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Play Music" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Spin again" })).toBeTruthy();
   });
 
@@ -631,7 +661,7 @@ describe("QuizshowRemoteControls wheel", () => {
 
     await user.click(screen.getByRole("button", { name: "Spin again" }));
     expect(send).toHaveBeenCalledWith("host:spin", { phaseId: PHASE_ID });
-    await user.click(screen.getByRole("button", { name: "Start Music" }));
+    await user.click(screen.getByRole("button", { name: "Play Music" }));
     expect(send).toHaveBeenLastCalledWith("host:next", { phaseId: PHASE_ID });
   });
 
@@ -756,7 +786,7 @@ describe("QuizshowRemoteControls wheel", () => {
     );
     await awaitCatalog("quizshow");
 
-    for (const name of ["Spin again", "Finish the wheel", "Start Music"]) {
+    for (const name of ["Spin again", "Finish the wheel", "Play Music"]) {
       expect(
         screen.getByRole("button", { name }).getAttribute("aria-disabled"),
         name,
@@ -780,5 +810,310 @@ describe("QuizshowRemoteControls wheel", () => {
         "No question has scored yet, so the game closes with no results",
       ),
     ).toBeTruthy();
+  });
+});
+
+/** The faked clock the hold tests run on: timers, frames and Date move together. */
+function fakeClock() {
+  vi.useFakeTimers({
+    toFake: [
+      "setTimeout",
+      "clearTimeout",
+      "requestAnimationFrame",
+      "cancelAnimationFrame",
+      "Date",
+    ],
+  });
+}
+
+async function advanceBy(milliseconds: number) {
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(milliseconds);
+  });
+}
+
+describe("QuizshowRemoteControls skip hold", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("sends Skip with the tapped phase id once the 4 second hold ends", async () => {
+    fakeClock();
+    const send = acting();
+    renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip question" }));
+    expect(screen.getByText("Skipping this question")).toBeTruthy();
+    // The Skip button is now the Undo, so nothing else can start a second skip.
+    expect(screen.queryByRole("button", { name: "Skip question" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Undo skip" })).toBeTruthy();
+
+    await advanceBy(3_999);
+    expect(send).not.toHaveBeenCalled();
+    await advanceBy(1);
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(send).toHaveBeenCalledWith("host:skip", { phaseId: PHASE_ID });
+  });
+
+  it("sends nothing after Undo", async () => {
+    fakeClock();
+    const send = acting();
+    renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip question" }));
+    fireEvent.click(screen.getByRole("button", { name: "Undo skip" }));
+    // Well inside the 4 s hold: only the Undo can have ended it.
+    await advanceBy(1_000);
+    expect(screen.queryByText("Skipping this question")).toBeNull();
+    expect(screen.getByRole("button", { name: "Skip question" })).toBeTruthy();
+    await advanceBy(4_000);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("cancels the hold when the phase changes under it", async () => {
+    fakeClock();
+    const send = acting();
+    const view = renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip question" }));
+    await advanceBy(1_000);
+    view.rerender(
+      controlsTree(hostState({ phase: "reveal", phaseId: "8" }), send),
+    );
+    await advanceBy(1_000);
+    expect(screen.queryByText("Skipping this question")).toBeNull();
+    await advanceBy(4_000);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("cancels the hold when the game is paused under it", async () => {
+    fakeClock();
+    const send = acting();
+    const view = renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip question" }));
+    await advanceBy(1_000);
+    view.rerender(
+      controlsTree(
+        hostState({
+          phase: "open",
+          status: "paused",
+          deadline: null,
+          pausedRemainingMs: 9_000,
+        }),
+        send,
+      ),
+    );
+    await advanceBy(1_000);
+    expect(screen.queryByText("Skipping this question")).toBeNull();
+    await advanceBy(4_000);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("says it skips the scores from a quiz reveal", async () => {
+    fakeClock();
+    const send = acting();
+    renderControls(hostState({ phase: "reveal", deadline: null }), send);
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    // From a quiz reveal the button says what it passes over.
+    expect(screen.queryByRole("button", { name: "Skip question" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Skip the scores" }));
+    expect(screen.getByText("Skipping the scores")).toBeTruthy();
+    expect(screen.queryByText("Skipping this question")).toBeNull();
+  });
+
+  it("shows a refused skip on the bar", async () => {
+    fakeClock();
+    const send = vi.fn<SendFunction>(() =>
+      Promise.resolve({
+        ok: false,
+        code: "quizshow_command_not_allowed",
+        message: "not allowed",
+      }),
+    );
+    renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip question" }));
+    await advanceBy(4_000);
+    expect(send).toHaveBeenCalledWith("host:skip", { phaseId: PHASE_ID });
+    expect(screen.getByText("That can't happen right now")).toBeTruthy();
+  });
+
+  it("clears the hold timer when the remote unmounts", async () => {
+    fakeClock();
+    const send = acting();
+    const view = renderControls(hostState({ phase: "open" }), send);
+    await awaitCatalogUnderFakeTimers("quizshow");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip question" }));
+    view.unmount();
+    await advanceBy(5_000);
+    expect(send).not.toHaveBeenCalled();
+  });
+});
+
+describe("QuizshowRemoteControls narrow bar", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  function stubNarrowScreen(isNarrow: boolean) {
+    vi.spyOn(window, "matchMedia").mockImplementation(
+      (query) =>
+        ({
+          matches: isNarrow,
+          media: query,
+          onchange: null,
+          addListener: () => undefined,
+          removeListener: () => undefined,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+          dispatchEvent: () => false,
+        }) as MediaQueryList,
+    );
+  }
+
+  it("folds only Add time behind More controls so the bar keeps one row", async () => {
+    stubNarrowScreen(true);
+    const user = userEvent.setup();
+    const send = acting();
+    renderControls(hostState({ phase: "open", deadline: DEADLINE }), send);
+    await awaitCatalog("quizshow");
+
+    expect(screen.getByRole("button", { name: "Pause" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Reveal now" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Skip question" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Add 15 seconds" })).toBeNull();
+    // End game never hides: it is the one control a host must always reach.
+    expect(screen.getByRole("button", { name: "End game" })).toBeTruthy();
+
+    const more = screen.getByRole("button", { name: "More controls" });
+    expect(more).toHaveAttribute("aria-expanded", "false");
+    await user.click(more);
+    expect(more).toHaveAttribute("aria-expanded", "true");
+    await user.click(screen.getByRole("button", { name: "Add 15 seconds" }));
+
+    expect(send).toHaveBeenCalledWith("host:addTime", {
+      phaseId: PHASE_ID,
+      seconds: 15,
+      expectedDeadline: DEADLINE,
+    });
+    // Using a folded control hands focus to the More button and closes the fold.
+    expect(more).toHaveFocus();
+    expect(more).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("button", { name: "Add 15 seconds" })).toBeNull();
+  });
+
+  it("keeps every control in view when the bar has room", async () => {
+    stubNarrowScreen(false);
+    renderControls(hostState({ phase: "open" }), acting());
+    await awaitCatalog("quizshow");
+
+    expect(screen.getByRole("button", { name: "Add 15 seconds" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "End game" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "More controls" })).toBeNull();
+  });
+
+  it("shows no More button while four controls or fewer fit", async () => {
+    stubNarrowScreen(true);
+    renderControls(hostState({ phase: "reveal", deadline: null }), acting());
+    await awaitCatalog("quizshow");
+
+    expect(screen.queryByRole("button", { name: "More controls" })).toBeNull();
+    expect(screen.getByRole("button", { name: "End game" })).toBeTruthy();
+  });
+});
+
+function renderWithMotion(
+  state: QuizshowHostState,
+  isReducedMotion: boolean,
+  clockOffsetMs = 0,
+) {
+  return render(
+    <TestProviders>
+      <ReducedMotionContext.Provider value={isReducedMotion}>
+        <QuizshowRemoteControls
+          controller={{ ...controllerFor(state, acting()), clockOffsetMs }}
+          state={state}
+        />
+      </ReducedMotionContext.Provider>
+    </TestProviders>,
+  );
+}
+
+function autoAdvanceRing(): Element | null {
+  return document.querySelector("[data-auto-advance-ring]");
+}
+
+describe("QuizshowRemoteControls auto-advance ring", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("draws the ring on the primary button only while autoAdvanceAt is set", async () => {
+    const autoView = renderWithMotion(
+      hostState({
+        phase: "reveal",
+        deadline: null,
+        autoAdvanceAt: Date.now() + 6_000,
+      }),
+      false,
+    );
+    await awaitCatalog("quizshow");
+    const ring = autoAdvanceRing();
+    expect(ring).not.toBeNull();
+    expect(ring?.closest("button")?.textContent?.includes("Show scores")).toBe(
+      true,
+    );
+    autoView.unmount();
+
+    renderWithMotion(hostState({ phase: "reveal", deadline: null }), false);
+    await awaitCatalog("quizshow");
+    expect(autoAdvanceRing()).toBeNull();
+  });
+
+  it("shows a still caption with reduced motion and no ring", async () => {
+    renderWithMotion(
+      hostState({
+        phase: "scores",
+        deadline: null,
+        autoAdvanceAt: Date.now() + 6_000,
+      }),
+      true,
+    );
+    await awaitCatalog("quizshow");
+    expect(autoAdvanceRing()).toBeNull();
+    const captions = await screen.findAllByText("Moves on by itself");
+    // The visible caption under the button, beside the button's hidden description.
+    expect(captions.some((caption) => caption.tagName === "P")).toBe(true);
+  });
+
+  it("starts the ring part way from the server clock", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(1_000_000);
+    // The server runs 2 s ahead, so 2 s of the 6 s reveal wait are gone.
+    renderWithMotion(
+      hostState({
+        phase: "reveal",
+        deadline: null,
+        autoAdvanceAt: 1_000_000 + 6_000,
+      }),
+      false,
+      2_000,
+    );
+    await awaitCatalog("quizshow");
+    const arc = document.querySelector<SVGElement>(
+      "[data-auto-advance-ring] circle:last-of-type",
+    );
+    expect(arc?.style.getPropertyValue("--qs-auto-advance-delay")).toBe(
+      "-2000ms",
+    );
+    expect(arc?.style.getPropertyValue("--qs-auto-advance-ms")).toBe("6000ms");
   });
 });

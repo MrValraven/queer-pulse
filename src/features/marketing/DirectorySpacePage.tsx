@@ -1,30 +1,51 @@
-import { useMemo, type ReactNode } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { NavigationType, useNavigationType, useParams } from "react-router-dom";
 import { FiMapPin } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import {
-  EmptyState,
-  SkeletonLine,
-  LoadErrorState,
-} from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { useImagesReady } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlace } from "./api/useDirectory";
 import { useDirectoryListings } from "./listBusiness/api/useDirectoryListings";
 import { routes } from "../../app/routeMap";
-import { galleryImageSources } from "./directoryGalleryShots";
+import { galleryImageSources, galleryShotsOf } from "./directoryGalleryShots";
 import { DirectorySpaceDetail } from "./DirectorySpaceDetail";
-import { DirectorySpaceLoader } from "./DirectorySpaceLoader";
+import { DirectorySpaceSkeleton } from "./DirectorySpaceSkeleton";
 import { PageMeta } from "../../shared/seo/PageMeta";
 import s from "./DirectorySpacePage.module.css";
+
+/**
+ * How long a wait runs before the skeleton fades in. A warm cache or a
+ * back-navigation settles well inside it, and the page then appears in one
+ * step with no skeleton blink and no fade.
+ */
+const SKELETON_GRACE_MS = 150;
+
+/**
+ * Whether the skeleton for this wait has been on screen: true once `isWaiting`
+ * has held for the grace period. Recorded per `waitKey` (the slug), so moving
+ * to another listing starts from "not shown" without resetting any state.
+ */
+function useHasSkeletonShown(isWaiting: boolean, waitKey: string): boolean {
+  const [shownForKey, setShownForKey] = useState<string | null>(null);
+  useEffect(() => {
+    if (!isWaiting) return;
+    const graceTimer = window.setTimeout(
+      () => setShownForKey(waitKey),
+      SKELETON_GRACE_MS,
+    );
+    return () => window.clearTimeout(graceTimer);
+  }, [isWaiting, waitKey]);
+  return shownForKey === waitKey;
+}
 
 export function DirectorySpacePage() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const { place, isLoading, isError, error, refetch } = useDirectoryPlace(slug);
   // A genuine 404 is an ANSWER ("no listing has this slug"), so it earns the
-  // not-found panel below rather than the retry panel. Everything else that
+  // not-found panel below. Everything else that
   // failed (5xx, a network drop) is retryable. The demo miss (settled, no
   // error, no place) is the same answer reached without a request. Same shape
   // as `HousingListingPage`'s `isNotFound`.
@@ -33,15 +54,15 @@ export function DirectorySpacePage() {
   // Owner detection: match the viewer's own listings against this slug.
   // `useDirectoryListings` is the same demo-aware "is this mine" source
   // `PlacesSection` reads (the session overlay in demo, overlay + GET
-  // /listings/mine deduped in live) — unlike `useAllMyListings`, which is
-  // hook-disabled in demo mode (`enabled: !demoMode`) and so left `owned`
-  // permanently undefined there, this resolves in both modes. Logged-out
+  // /listings/mine deduped in live). `useAllMyListings` is hook-disabled in
+  // demo mode (`enabled: !demoMode`) and so left `owned` permanently undefined
+  // there; this one resolves in both modes. Logged-out
   // visitors simply never match (an empty `submitted`), same as before.
   const { submitted } = useDirectoryListings();
   const owned = submitted.find((listing) => listing.slug === slug);
 
   // Warm the gallery's photos before the page is revealed, so they paint from
-  // cache in one go instead of popping in over a half-drawn layout. Null while
+  // cache in one go together with the rest of the layout. Null while
   // the listing is still in flight: there is nothing to preload yet, and the
   // hook must not start its hard-cap clock against a wait it cannot see.
   const photoSources = useMemo(
@@ -50,29 +71,34 @@ export function DirectorySpacePage() {
   );
   const { isReady: arePhotosReady } = useImagesReady(photoSources);
 
+  // The skeleton holds the page's place while the listing is in flight and,
+  // once it arrives, until its photos are decoded, so they paint in one go
+  // with the rest of the page. A read that settles with no listing goes
+  // straight to the not-found or retry state below.
+  //
+  // Back/forward skips the photo hold. ScrollManager restores the saved offset
+  // once, on the first render, so the full page has to be there to land on;
+  // the photos were seen on the way out and come from the browser cache.
+  const isHistoryReturn = useNavigationType() === NavigationType.Pop;
+  const isWaitingForPhotos =
+    Boolean(place) && !arePhotosReady && !isHistoryReturn;
+  const isWaitingForPage = isLoading || isWaitingForPhotos;
+  const hasSkeletonShown = useHasSkeletonShown(isWaitingForPage, slug ?? "");
+
   let body: ReactNode;
   // In live mode the fetch is async: hold the layout while it's in flight
-  // rather than redirecting on the initial undefined. Only redirect once the
-  // read has settled with no matching live listing.
-  if (isLoading) {
+  // and wait for the read to settle before deciding the listing is missing.
+  if (isWaitingForPage) {
     body = (
-      <PageShell>
-        <div className={s.page}>
-          <div className={s.grid}>
-            <div>
-              <SkeletonLine width="45%" height={16} />
-              <SkeletonLine width="80%" height={34} style={{ marginTop: 12 }} />
-              <SkeletonLine width="60%" height={16} style={{ marginTop: 12 }} />
-            </div>
-            <SkeletonLine width="100%" height={220} />
-          </div>
-        </div>
-      </PageShell>
+      <DirectorySpaceSkeleton
+        photoCount={place ? galleryShotsOf(place).length : undefined}
+        graceMs={SKELETON_GRACE_MS}
+      />
     );
     // Settled with no matching listing (a genuine 404 or demo miss). Show an
-    // honest not-found state — a stale or mistyped link deserves an explanation
-    // and a way back, not a silent bounce to the directory that leaves the
-    // visitor wondering what happened. `noIndex` keeps the miss out of search.
+    // honest not-found state: a stale or mistyped link deserves an explanation
+    // and a way back to the directory, so the visitor knows what happened.
+    // `noIndex` keeps the miss out of search.
     // Checked BEFORE `isError`: a 404 arrives as a rejected query now, and
     // reading it as an outage would offer a retry that can only 404 again.
   } else if (isNotFound) {
@@ -96,8 +122,8 @@ export function DirectorySpacePage() {
       </PageShell>
     );
     // The read failed for a reason OTHER than "no such listing" (5xx, network):
-    // offer a retry instead of a misleading not-found panel. `!place` rides
-    // along so the branch below has a narrowed place rather than a cast.
+    // offer a retry. `!place` rides along so the branch below gets a narrowed
+    // place with no cast.
   } else if (isError || !place) {
     body = (
       <PageShell>
@@ -110,23 +136,10 @@ export function DirectorySpacePage() {
         key={place.slug}
         place={place}
         ownerRef={owned?.ref}
+        shouldFadeIn={hasSkeletonShown}
       />
     );
   }
 
-  // The overlay gets ONE stable position in the tree, outside the branching
-  // above: re-parenting it as the page moves from loading to loaded would
-  // unmount it and restart its grace period, so the checklist would reset
-  // exactly when it is meant to be finishing. It portals to document.body, so
-  // sitting beside `body` rather than inside it costs nothing.
-  return (
-    <>
-      {body}
-      <DirectorySpaceLoader
-        isFetchingListing={isLoading}
-        hasPlace={Boolean(place)}
-        arePhotosReady={arePhotosReady}
-      />
-    </>
-  );
+  return body;
 }

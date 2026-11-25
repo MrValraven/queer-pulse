@@ -254,3 +254,42 @@ describe("demo data export, community ownership offers", () => {
     expect(JSON.stringify(offers)).not.toContain("Mónica");
   });
 });
+
+describe("demo data export, quiz badge wins", () => {
+  it("writes both quiz keys for the events category", () => {
+    const content = buildDemoArchiveContent(["events"]);
+    for (const archiveKey of ["quizBadgeWins", "quizGameWins"]) {
+      expect(CATEGORY_ARCHIVE_KEYS.events).toContain(archiveKey);
+      expect(Array.isArray(content[archiveKey])).toBe(true);
+    }
+  });
+
+  it("keeps the badge name in both languages and the wins in date order", () => {
+    const wins = buildDemoArchiveContent(["events"]).quizBadgeWins as Array<{
+      badgeName: { en: string; pt: string | null };
+      wonAt: string;
+    }>;
+    expect(wins).toHaveLength(3);
+    expect(typeof wins[0]?.badgeName.pt).toBe("string");
+    expect(typeof wins[0]?.badgeName.en).toBe("string");
+    const wonAtTimes = wins.map((win) => Date.parse(win.wonAt));
+    expect(wonAtTimes).toEqual([...wonAtTimes].sort((a, b) => a - b));
+  });
+
+  it("lists the Sharpshooter win the demo Badges page shows, with no Portuguese name", () => {
+    const wins = buildDemoArchiveContent(["events"]).quizBadgeWins as Array<{
+      badgeKey: string;
+      badgeName: { en: string; pt: string | null };
+      eventName: string;
+      gameNumber: number;
+    }>;
+    const sharpshooterWin = wins.find(
+      (win) => win.badgeKey === "quiz:demo-quiz-badge-sharpshooter",
+    );
+    expect(sharpshooterWin).toMatchObject({
+      badgeName: { en: "Trivia Sharpshooter", pt: null },
+      eventName: "Pride Brunch: June Edition",
+      gameNumber: 1,
+    });
+  });
+});

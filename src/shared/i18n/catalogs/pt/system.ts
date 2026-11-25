@@ -293,14 +293,22 @@ export const system: Catalog = {
   "pwaPrompt.tabs.android": "Android",
   "pwaPrompt.tabs.desktop": "Computador",
   // Ver o catálogo EN: no Safari do iOS 26, Partilhar pode estar atrás do
-  // botão de três pontos; o passo 1 cobre os dois casos.
+  // botão de menu (três pontos ou três linhas); o passo 1 cobre os dois casos.
+  // As chaves stepNImage são o texto alternativo da captura de ecrã do Safari
+  // em cada passo.
   "pwaPrompt.instructions.ios.title": "iPhone e iPad · Safari, Chrome e outros",
   "pwaPrompt.instructions.ios.step1":
-    "Toca em <b>Partilhar</b> na barra de ferramentas, ou toca primeiro nos <b>três pontos</b> e depois em <b>Partilhar</b>",
+    "Toca em <b>Partilhar</b> na barra de ferramentas, ou abre primeiro o <b>menu</b> (três pontos ou três linhas) e depois toca em <b>Partilhar</b>",
   "pwaPrompt.instructions.ios.step2":
-    "Toca em <b>Adicionar ao ecrã principal</b> <em>· desliza a lista para baixo se não o vires</em>",
+    "Toca em <b>Adicionar ao ecrã principal</b> <em>· se não o vires, toca em Ver mais ou desliza a lista para baixo</em>",
   "pwaPrompt.instructions.ios.step3":
-    "Deixa <b>Abrir como app web</b> ligado se o vires e toca em <b>Adicionar</b>",
+    "Deixa <b>Abrir como aplicação web</b> ligado se o vires e toca em <b>Adicionar</b>",
+  "pwaPrompt.instructions.ios.step1Image":
+    "A barra de endereço do Safari com o botão de menu assinalado, e depois o menu com Partilhar assinalado",
+  "pwaPrompt.instructions.ios.step2Image":
+    "A folha de partilha do Safari com Ver mais assinalado, e depois a lista com Adicionar ao ecrã principal assinalado",
+  "pwaPrompt.instructions.ios.step3Image":
+    "O ecrã Adicionar ao ecrã principal com Abrir como aplicação web ligado e o botão Adicionar assinalado",
   "pwaPrompt.instructions.android.title": "Android · Chrome e Samsung Internet",
   "pwaPrompt.instructions.android.step1":
     "Abre o menu do navegador: os <b>três pontos</b> no Chrome, as <b>três linhas</b> no Samsung Internet",

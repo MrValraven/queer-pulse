@@ -249,6 +249,10 @@ export interface GatheringDetail {
    * route.
    */
   cancelled?: boolean;
+  /** Live mode only: the event is still a draft the host has not published.
+   *  The Live game tab then offers a practice lobby only (Pulse Live item 53).
+   *  Absent in the demo registry. */
+  isDraft?: boolean;
   /** Live mode only: the gathering happens online rather than at a door.
    *  Derived from the DTO rather than from the `hood` string, which is a
    *  display label and gets translated (DES-130). */

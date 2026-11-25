@@ -3,8 +3,8 @@
  * spinning a wheel, starting the landed pick, the end of a question and of a
  * round with the slice bonus, finishing a wheel early, and the wheel refusals.
  * Ports of the backend's quizshow-engine-phases.ts wheel bodies; the browser
- * also closes and skips a wheel with no slice left (contract A5) and refreshes
- * scores after a bonus (contract A14).
+ * also closes and skips a wheel with no slice left and refreshes scores after
+ * a bonus.
  */
 import {
   QUIZSHOW_LIMITS,
@@ -39,6 +39,7 @@ import {
   openRoundIntro,
   showPodium,
   showScores,
+  skipsLeaderboardAfterRound,
   totalsByEntrant,
 } from "./quizshowEngineTransitions";
 import type {
@@ -78,7 +79,7 @@ function closeOpenWheel(state: QuizshowEngineState): void {
 }
 
 /**
- * The frames a bonus owes (contract A14): the hosts' lobby scores, and each
+ * The frames a bonus owes: the hosts' lobby scores, and each
  * awarded solo player's own score. Teams mode changes team scores only.
  */
 function wheelBonusEffects(
@@ -155,7 +156,7 @@ export function openStep(
 /**
  * Opens a planned wheel, or returns to it after a slice with its played slice
  * off it. A wheel with no slice left to draw closes and the night carries on
- * with the next step (contract A5).
+ * with the next step.
  */
 export function openWheel(
   state: QuizshowEngineState,
@@ -215,7 +216,7 @@ export function spinWheel(
     state.wheelProgress,
   ).length;
   if (drawnCount === 0) {
-    // Nothing left to draw: the wheel closes and the night carries on (contract A5).
+    // Nothing left to draw: the wheel closes and the night carries on.
     closeOpenWheel(state);
     return openStep(state, nextStepOf(state), now);
   }
@@ -313,15 +314,21 @@ export function startWheelPick(
 
 /**
  * A round, or a pick-a-question wheel, ended: its leaderboard, or the podium
- * when nothing remains and no bonus waits to be announced.
+ * when nothing remains and no bonus waits to be announced. The warm-up round
+ * scored nobody, so with no bonus to announce it opens the next step straight
+ * away (contract 6.19).
  */
 export function afterRoundEnds(
   state: QuizshowEngineState,
   award: QuizshowWheelBonusView | null,
   now: number,
 ): QuizshowEngineEffect[] {
-  if (nextStepOf(state).kind === "podium" && award === null) {
+  const nextStep = nextStepOf(state);
+  if (nextStep.kind === "podium" && award === null) {
     return showPodium(state, now);
+  }
+  if (award === null && skipsLeaderboardAfterRound(state)) {
+    return openStep(state, nextStep, now);
   }
   return showScores(
     state,
@@ -421,10 +428,10 @@ export function finishWheel(
 }
 
 /**
- * Why `host:spin` cannot act now (contract 6.2 steps 3 to 5, after the stale
+ * Why `host:spin` cannot act now (after the stale
  * and status checks), or null: a wheel still turning, a wheel step coming
  * next on its own, too few rounds for an unplanned spin, or a phase without
- * a spin.
+ * a spin (`quizshow_spin_not_available`, contract 3.2, sent with the cursor).
  */
 export function wheelSpinRefusal(
   state: QuizshowEngineState,
@@ -456,11 +463,11 @@ export function wheelSpinRefusal(
     }
     return null;
   }
-  return "quizshow_command_not_allowed";
+  return "quizshow_spin_not_available";
 }
 
 /**
- * Why `host:next` in `wheel` cannot act now (contract 6.3), or null: no spin
+ * Why `host:next` in `wheel` cannot act now, or null: no spin
  * yet, or a spin that has not landed within the tolerance. Null outside the
  * `wheel` phase, where no wheel rule applies.
  */

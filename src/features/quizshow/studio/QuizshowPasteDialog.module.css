@@ -1,0 +1,24 @@
+/* Paste questions dialog (item 22). The shell, fields and issue box come
+   from QuizshowLobby.module.css and QuizshowStudioMenu.module.css; this
+   module holds only what the dialog adds on top. */
+
+/* The issue list scrolls, so it takes keyboard focus; the ring sits inside
+   the box so the scroll edge never clips it. */
+.issueList:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  border-radius: var(--radius-8);
+}
+
+/* The settled count for screen readers; the visible count updates at once. */
+.visuallyHidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

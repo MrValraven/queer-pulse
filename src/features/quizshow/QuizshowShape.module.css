@@ -1,5 +1,6 @@
 .shape {
   --quizshow-shape-size: 32px;
+  position: relative;
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -63,4 +64,82 @@
     0 0 calc(var(--quizshow-shape-size) * 0.45)
       color-mix(in srgb, var(--quizshow-shape-fill) 75%, transparent)
   );
+}
+
+/* Team tiers (C2.1): 24 teams are eight shapes in three tiers, told apart
+   by shape, tier and numeral together, with colour as a fourth cue. Tier 1 is
+   the solid base above. The tiers sit after .glowing so their ground wins on
+   the stage too; the halo stays. */
+
+/* Tier 2: an outline over a faint tint, the icon in the outline colour. The
+   stroke keeps the shape's hue and chroma at a fixed OKLCH lightness of 0.56,
+   a mid-tone that clears 3:1 on every ground a team shape sits on, whatever
+   the app or screen theme: measured over both fill sets (light and dark app
+   tokens) and the 6% tint, the worst case is 3.40:1 (moon on the velvet base
+   #150a1d), with the light stage base #f9e8e3, cream and paper all between
+   3.4:1 and 4.7:1. The fallback without relative colour support is the fill
+   itself. */
+.tierOutline {
+  --quizshow-shape-stroke: max(2px, calc(var(--quizshow-shape-size) * 0.08));
+  --quizshow-tier-stroke: var(--quizshow-shape-fill);
+  background: color-mix(in srgb, var(--quizshow-shape-fill) 6%, transparent);
+  border: var(--quizshow-shape-stroke) solid var(--quizshow-tier-stroke);
+  color: var(--quizshow-tier-stroke);
+}
+
+@supports (color: oklch(from red l c h)) {
+  .tierOutline {
+    --quizshow-tier-stroke: oklch(from var(--quizshow-shape-fill) 0.56 c h);
+  }
+}
+
+/* Tier 3: the shape's own fill dotted with its own ink at 20%, so the icon
+   keeps the tier 1 pair. The icon's ink over a dot measures 3.65:1 at worst
+   (star, light token set; 4.91:1 at worst in the dark set), and the ink over
+   the bare fill 5.39:1 at worst. */
+.tierDotted {
+  --quizshow-shape-dot: color-mix(
+    in srgb,
+    var(--quizshow-shape-ink) 20%,
+    transparent
+  );
+  background-color: var(--quizshow-shape-fill);
+  background-image: radial-gradient(
+    circle at center,
+    var(--quizshow-shape-dot) 0 24%,
+    transparent 28%
+  );
+  background-size: calc(var(--quizshow-shape-size) / 4)
+    calc(var(--quizshow-shape-size) / 4);
+}
+
+/* The tier numeral: a small text badge on the bottom corner, the swatch's own
+   pair turned round (ink ground, fill numeral) so it reads on every fill. It
+   overlaps the tile by 30% of the tile size and hangs the rest outside, so it
+   reaches at most the empty corner of the icon's box (the middle 62%): 2.2px
+   into it at the small 20px size, where the badge is 12px with a 9px numeral
+   and overlaps the tile by 6px, and none at large or screen sizes. The
+   shape's aria-label already names the tier, so the badge is hidden. */
+.tierBadge {
+  --quizshow-badge-size: max(0.75rem, calc(var(--quizshow-shape-size) * 0.42));
+  --quizshow-badge-offset: calc(
+    var(--quizshow-shape-size) * 0.3 - var(--quizshow-badge-size)
+  );
+  position: absolute;
+  inset-block-end: var(--quizshow-badge-offset);
+  inset-inline-end: var(--quizshow-badge-offset);
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--quizshow-badge-size);
+  block-size: var(--quizshow-badge-size);
+  padding-inline: 0.15em;
+  border: 1px solid var(--quizshow-shape-fill);
+  border-radius: var(--radius-pill);
+  background: var(--quizshow-shape-ink);
+  color: var(--quizshow-shape-fill);
+  font-family: var(--sans);
+  font-size: max(var(--text-9), calc(var(--quizshow-shape-size) * 0.3));
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1;
 }

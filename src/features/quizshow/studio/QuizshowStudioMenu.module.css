@@ -132,3 +132,181 @@
   margin: 0.375rem 0.5rem;
   background: var(--qs-line);
 }
+
+/* A submenu's title ("Move to round"): quiet and small, aligned with the
+   item labels under it. It is no item, so it takes no hover or focus. */
+.heading {
+  padding: 0.5rem 0.75rem 0.25rem 0.5rem;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* ── Paste questions dialog (item 22) ──────────────────────────────────────
+   Lives in the open lobby's dark dialog shell (QuizshowLobby.module.css
+   stageDialog, form, field, label, footer). The textarea is a FormField
+   control; the doubled class outranks the field's own textarea rule. */
+.pasteText.pasteText textarea {
+  min-block-size: 12rem;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.pasteFileRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.pasteFileName {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-inline-size: 0;
+  font-size: var(--text-14);
+  color: var(--qs-text);
+  overflow-wrap: anywhere;
+}
+
+.pasteFileName svg {
+  flex: none;
+  color: var(--qs-text-mute);
+}
+
+.pasteSummary {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+.pasteError {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--danger-ink);
+}
+
+/* A status the host can read at a glance and need not act on, such as the
+   text sitting at its size limit: muted, with an info icon. */
+.pasteNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+}
+
+.pasteNote svg {
+  flex: none;
+  margin-block-start: 0.15rem;
+}
+
+/* "Show the format": the full syntax stays one tap away, so the count and
+   the issues keep their place in the dialog. */
+.pasteFormatChevron {
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.pasteFormatChevronOpen {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pasteFormatChevron {
+    transition: none;
+  }
+}
+
+.pasteFormatHelp {
+  margin: 0;
+  padding-block-end: 0.25rem;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--qs-text-mute);
+}
+
+/* The CSV's column names wrap as chips, so the list never runs off a phone. */
+.pasteColumns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pasteColumn {
+  padding: 0.1rem 0.4rem;
+  border: 1px solid rgba(var(--line-rgb), 0.28);
+  border-radius: var(--radius-6);
+  color: var(--qs-text);
+  font-size: var(--text-12-5);
+  overflow-wrap: anywhere;
+}
+
+/* "Or" between a shortcut's two combinations. */
+.shortcutOr {
+  margin-inline: 0.3rem;
+  color: var(--qs-text-mute);
+  font-size: var(--text-12-5);
+}
+
+.pasteIssues {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(var(--line-rgb), 0.28);
+  border-radius: var(--qs-radius-tile);
+  background: var(--qs-glass-bottom);
+}
+
+.pasteIssuesTitle {
+  margin: 0;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+.pasteIssueList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-block-size: 11rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--qs-text-mute);
+}
+
+.pasteIssueLine {
+  padding-block-start: 0.35rem;
+  font-weight: 600;
+  color: var(--qs-text);
+}
+
+/* One issue: the line reference beside its reason, which wraps on its own. */
+.pasteIssue {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.pasteIssue .pasteIssueLineButton {
+  flex: none;
+}
+
+.pasteIssueReason {
+  flex: 1;
+  min-inline-size: 0;
+  padding-block-start: 0.35rem;
+  overflow-wrap: anywhere;
+}

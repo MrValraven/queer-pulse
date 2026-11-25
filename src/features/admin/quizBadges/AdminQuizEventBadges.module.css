@@ -1,0 +1,346 @@
+/* The quiz events search (AdminQuizEventsPage) and one event's badge setup
+   (AdminQuizEventBadgesPage, its game slot cards, finished games and the
+   revoke dialog), laid out on the admin kit's panel and table row. */
+
+/* ---- Events search ---- */
+
+.search {
+  margin-block-start: var(--gap-grid);
+  max-width: 32rem;
+}
+
+/* The rows sit in one flush AdminPanel. The hairline between two rows is on
+   the list item, so a row that leaves folds its divider away with it. */
+.rowsPanel {
+  margin-block-start: var(--gap-sm);
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rows > li:not(:last-child) {
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+
+/* The empty and error panels sit where the rows would start. */
+.panel {
+  margin-block-start: var(--gap-sm);
+}
+
+.skeletonRows {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-block-start: var(--gap-sm);
+}
+
+/* Sits on the kit's table row. The doubled selector out-specifies the kit's
+   `.row`, so these overrides hold in any bundle order. */
+.eventRow.eventRow {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--gap-xs);
+  padding: var(--admin-row-pad);
+}
+
+.eventTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.eventTitle {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--icon-gap-inline);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--icon-gap-inline) var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.metaItem {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rowActions.rowActions {
+  justify-content: flex-start;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  margin-block-start: var(--gap-sm);
+}
+
+.pageLine {
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+/* ---- Event setup ---- */
+
+.back {
+  margin-block-end: var(--gap-xs);
+}
+
+.nextGame {
+  margin: var(--gap-xs) 0 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+/* The library read failed: the cause line and its retry sit above the games. */
+.libraryAlert.libraryAlert {
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: none;
+  margin-block-start: var(--gap-grid);
+}
+
+.libraryAlertText {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: min(100%, 14rem);
+}
+
+.libraryAlertTitle {
+  margin: 0;
+  font-weight: 600;
+}
+
+.libraryAlertCause {
+  margin: 0;
+  color: var(--ink-60);
+}
+
+.games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: var(--gap-sm);
+  margin-block-start: var(--gap-grid);
+}
+
+.gameCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+  padding: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.gameHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.gameTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.slotList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A game with no badges drops the list, so the card's gap stays even. */
+.slotList:empty {
+  display: none;
+}
+
+.slotRow {
+  display: flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+  padding-block: 2px;
+}
+
+.slotChip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  flex: 1;
+  min-width: 0;
+}
+
+.quietLine {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.libraryLink {
+  margin-block-start: var(--icon-gap-inline);
+}
+
+.saveBar {
+  display: grid;
+  justify-items: start;
+  gap: var(--gap-sm);
+  margin-block-start: var(--gap-grid);
+}
+
+.note {
+  margin: 0;
+  max-width: 65ch;
+  padding: var(--gap-xs) var(--gap-sm);
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink);
+  background: rgba(var(--jade-rgb), 0.1);
+  border-radius: var(--radius-16);
+}
+
+.refusal {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  max-width: 65ch;
+  padding: var(--gap-xs) var(--gap-sm);
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-16);
+}
+
+.refusalIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-block-start: 1px;
+  color: var(--accent-text);
+}
+
+/* ---- Finished games ---- */
+
+.finished {
+  margin-block-start: var(--gap-lg);
+}
+
+.finishedGames {
+  display: grid;
+  gap: var(--gap-grid);
+}
+
+.finishedGame {
+  display: grid;
+  gap: var(--gap-xs);
+}
+
+.finishedTitle {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.winners {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.winners > li:not(:last-child) {
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+
+.winner {
+  display: grid;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-sm);
+}
+
+.winnerTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs) var(--gap-sm);
+}
+
+.winnerName {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.screenName {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.winnerLive {
+  display: grid;
+  gap: var(--gap-xs);
+}
+
+.revoked {
+  display: grid;
+  justify-items: start;
+  gap: var(--icon-gap-inline);
+}
+
+/* ---- Revoke dialog ---- */
+
+.dialogBody {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
+.dialogLine {
+  margin: 0;
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.reason {
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
+}

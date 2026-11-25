@@ -10,6 +10,7 @@ import {
   type StudioShortcutKey,
 } from "./quizshowStudioShortcuts.data";
 import lobbyStyles from "../builder/QuizshowLobby.module.css";
+import menuStyles from "./QuizshowStudioMenu.module.css";
 import styles from "./QuizshowStudio.module.css";
 
 /** Apple keyboards print the command key as a symbol; everyone else presses Ctrl. */
@@ -69,15 +70,42 @@ function QuizshowStudioKey({
   }
 }
 
-/** A shortcut's keys: pressed together, or (for the arrows) either one. */
-function QuizshowStudioKeys({ shortcut }: { shortcut: StudioShortcut }) {
+/** One combination's key caps. */
+function QuizshowStudioKeyCaps({
+  idPrefix,
+  keys,
+}: {
+  idPrefix: string;
+  keys: readonly StudioShortcutKey[];
+}) {
   return (
-    <span className={styles.keys}>
-      {shortcut.keys.map((shortcutKey, keyIndex) => (
-        <Fragment key={`${shortcut.id}-${keyIndex}`}>
+    <>
+      {keys.map((shortcutKey, keyIndex) => (
+        <Fragment key={`${idPrefix}-${keyIndex}`}>
           <QuizshowStudioKey shortcutKey={shortcutKey} />
         </Fragment>
       ))}
+    </>
+  );
+}
+
+/** A shortcut's keys: pressed together, or (for the arrows) either one; a second combination follows "or". */
+function QuizshowStudioKeys({ shortcut }: { shortcut: StudioShortcut }) {
+  const { t } = useTranslation();
+  return (
+    <span className={styles.keys}>
+      <QuizshowStudioKeyCaps idPrefix={shortcut.id} keys={shortcut.keys} />
+      {shortcut.alternativeKeys === undefined ? null : (
+        <>
+          <span className={menuStyles.shortcutOr}>
+            {t("quizshow:studio.shortcuts.or")}
+          </span>
+          <QuizshowStudioKeyCaps
+            idPrefix={`${shortcut.id}-alternative`}
+            keys={shortcut.alternativeKeys}
+          />
+        </>
+      )}
     </span>
   );
 }

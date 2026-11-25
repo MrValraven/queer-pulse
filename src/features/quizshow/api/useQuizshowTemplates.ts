@@ -10,6 +10,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type {
   QuizshowTemplateCard,
   QuizshowTemplateDetail,
+  QuizshowTemplatePreview,
   QuizshowTemplateRow,
 } from "../../../shared/contracts/quizshow";
 import { quizResponseOfTemplate } from "../templates/quizshowTemplateResponse";
@@ -18,6 +19,7 @@ import {
   deleteQuizshowTemplate,
   duplicateQuizshowTemplate,
   getQuizshowTemplateCards,
+  getQuizshowTemplatePreview,
   getQuizshowTemplateRows,
   publishQuizshowTemplate,
   unpublishQuizshowTemplate,
@@ -30,6 +32,7 @@ import {
   demoListTemplates,
   demoPublishTemplate,
   demoTemplateCards,
+  demoTemplatePreview,
   demoUnpublishTemplate,
 } from "./quizshowDemoTemplates";
 import { shouldRetryQuizshowRead } from "./useQuizshowQuiz";
@@ -120,6 +123,27 @@ export function useQuizshowTemplateCards(options: {
     retry: shouldRetryQuizshowRead,
     queryFn: async () =>
       demoMode ? demoTemplateCards() : getQuizshowTemplateCards(),
+  });
+}
+
+/** Item 23: a published template's card and round prompts, read before the
+ *  host imports it. A null id holds the read back. */
+export function useQuizshowTemplatePreview(
+  templateId: string | null,
+): UseQueryResult<QuizshowTemplatePreview> {
+  const { demoMode } = useDemoMode();
+  return useQuery<QuizshowTemplatePreview>({
+    queryKey: quizshowKeys.templatePreview(templateId ?? "", demoMode),
+    enabled: templateId !== null && templateId !== "",
+    retry: shouldRetryQuizshowRead,
+    queryFn: async ({ signal }) => {
+      if (templateId === null) {
+        throw new Error("A template preview needs a template id");
+      }
+      return demoMode
+        ? demoTemplatePreview(templateId)
+        : getQuizshowTemplatePreview(templateId, signal);
+    },
   });
 }
 

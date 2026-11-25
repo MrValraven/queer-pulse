@@ -1,0 +1,132 @@
+/* The guests' reactions on the TV (C6.19): icons rise from the bottom edge
+   behind the stage content (the page's reactions slot, between the backdrop
+   and the stage), so scores, the QR and the join code stay in front. Only
+   transform and opacity move. */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--qs-text);
+}
+
+/* Reduced motion: the still tally, in front of the stage and under the
+   toolbar, portaled to the body. */
+.tallyLayer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-raised);
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--qs-text);
+}
+
+.floater {
+  position: absolute;
+  bottom: 0;
+  display: inline-flex;
+  font-size: var(--text-44);
+  opacity: 0;
+  transform: translate3d(0, 100%, 0) scale(var(--reaction-scale, 1));
+  animation: reactionRise 3.2s var(--ease) both;
+  will-change: transform, opacity;
+}
+
+@keyframes reactionRise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0) scale(var(--reaction-scale, 1));
+  }
+  12% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--reaction-drift, 0), -55vh, 0)
+      scale(var(--reaction-scale, 1));
+  }
+}
+
+/* Reduced motion: the still tally of the last window, bottom centre. Equal
+   side margins as wide as the toolbar (five 44px buttons, the 8rem sound
+   level, the pill's gaps, padding and border) keep it clear of the toolbar
+   on the right and the sound and join chips on the left. */
+.tallyDock {
+  --tally-bottom: max(var(--gap-sm), env(safe-area-inset-bottom));
+  --tally-toolbar-width: calc(44px * 5 + 8rem + var(--gap-xs) * 7 + 2px);
+  position: absolute;
+  bottom: var(--tally-bottom);
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  padding-inline: calc(var(--tally-toolbar-width) + var(--gap-sm) * 2);
+}
+
+/* Too narrow to share the bottom row with the toolbar: the tally climbs above
+   it (the toolbar's 44px row, its padding and border, and a gap) and takes
+   the width. */
+@media (max-width: 75rem) {
+  .tallyDock {
+    bottom: calc(var(--tally-bottom) + 44px + 2px + var(--gap-xs) * 3);
+    padding-inline: var(--gap-sm);
+  }
+
+  /* The sound chip lifts the join chip a row (QuizshowScreen.module.css):
+     the tally climbs one more, clear of both. */
+  :global(html[data-quizshow-sound-chip="true"]) .tallyDock {
+    bottom: calc(
+      var(--tally-bottom) + (44px + var(--gap-sm)) * 2 + 2px + var(--gap-xs) *
+        3
+    );
+  }
+}
+
+/* A phone-width window: the sound chip stands above the toolbar's row too,
+   so the tally climbs that row as well while the chip shows. */
+@media (max-width: 30.5rem) {
+  :global(html[data-quizshow-sound-chip="true"]) .tallyDock {
+    bottom: calc(
+      var(--tally-bottom) + (44px + var(--gap-sm)) * 2 + (44px + 2px) * 2 +
+        var(--gap-xs) * 6
+    );
+  }
+}
+
+.tally {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: var(--gap-xs) var(--gap-sm);
+  border: 1px solid var(--qs-glass-border);
+  border-radius: var(--qs-radius-pill);
+  background:
+    linear-gradient(
+      180deg,
+      var(--qs-glass-top) 0%,
+      var(--qs-glass-bottom) 100%
+    ),
+    var(--qs-glass-tint);
+  box-shadow: var(--qs-shadow-pill);
+  list-style: none;
+}
+
+.tallyItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  font-size: var(--text-24);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floater {
+    display: none;
+  }
+}

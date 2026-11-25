@@ -102,6 +102,8 @@ interface QuizshowRoundEditorProps {
   isAdultsEvent: boolean;
   /** The quiz's languages; both languages when omitted. */
   languages?: QuizshowLanguageMode;
+  /** The first non-wheel row: the only one that shows the warm-up switch. */
+  isFirstPlayableRow?: boolean;
   onChange: (
     patch: Partial<
       Pick<QuizshowDraftRound, "title" | "contentLabel" | "settings">
@@ -125,6 +127,7 @@ export function QuizshowRoundEditor({
   roundIndex,
   isAdultsEvent,
   languages = "both",
+  isFirstPlayableRow = false,
   onChange,
   onChangeKind,
 }: QuizshowRoundEditorProps) {
@@ -184,6 +187,7 @@ export function QuizshowRoundEditor({
       <QuizshowRoundSettingsFields
         kind={round.kind}
         settings={round.settings}
+        isFirstPlayableRow={isFirstPlayableRow}
         onChange={(settings) => onChange({ settings })}
       />
       <AnimatePresence>

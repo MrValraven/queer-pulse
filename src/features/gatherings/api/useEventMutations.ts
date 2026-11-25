@@ -19,6 +19,7 @@ import {
   type CreateCohostInviteDto,
   type CreateEventDto,
   type RsvpDetailsDTO,
+  type RsvpStatus,
   type SeriesScope,
   type UpdateEventDto,
   type UpdateRsvpDetailsDto,
@@ -216,13 +217,20 @@ export type RsvpIntent = "going" | "maybe" | "waitlisted";
 export function useRsvp(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, RsvpIntent, RsvpContext>({
+  // Resolves with the standing the server gave (a full event answers "going" with
+  // "waitlisted"); null in demo, where no server answers.
+  return useMutation<RsvpStatus | null, Error, RsvpIntent, RsvpContext>({
     // The caller words this failure itself (gatheringActionErrors.ts), so the
     // app-wide mutation toast would only repeat it.
     meta: { silentError: true },
     mutationFn: async (intent) => {
-      if (demoMode) return;
-      await rsvpEvent(slug, intent === "waitlisted" ? "going" : intent);
+      if (demoMode) return null;
+      // A bodiless answer (a stubbed client, an old server) reads as an unknown standing.
+      const response: { status: RsvpStatus } | undefined = await rsvpEvent(
+        slug,
+        intent === "waitlisted" ? "going" : intent,
+      );
+      return response?.status ?? null;
     },
     onMutate: async (intent) => {
       const key = eventKeys.attendees(slug, demoMode);

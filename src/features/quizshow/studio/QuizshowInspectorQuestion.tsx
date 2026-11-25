@@ -1,17 +1,26 @@
 import { Button } from "../../../shared/components/ui";
+import { Collapse } from "../../../shared/components/ui/Collapse";
 import {
   QUIZSHOW_LIMITS,
   type QuizshowLanguage,
   type QuizshowLanguageMode,
+  type QuizshowMediaReveal,
   type QuizshowQuestionInput,
   type QuizshowPlayableRoundKind,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowBilingualInput } from "../builder/QuizshowBilingualInput";
 import type { QuizshowDraftRound } from "../builder/quizshowDraft";
-import { QuizshowQuestionMedia } from "../builder/QuizshowQuestionMedia";
+import { sliceProblemsOf } from "../builder/quizshowDryRunQuiz";
+import { QuizshowTryItButton } from "../builder/QuizshowTryItButton";
+import {
+  QuizshowQuestionMedia,
+  QuizshowQuestionPictureFields,
+  type QuizshowQuestionPictureDetailsProps,
+} from "../builder/QuizshowQuestionMedia";
 import type { QuizshowLocalProblem } from "../builder/quizshowValidation";
 import { displayRoundNumber } from "../quizshowWheel";
+import { pickQuizshowText } from "../stage/quizshowText";
 import { QuizshowInspectorAnswerFields } from "./QuizshowInspectorAnswerFields";
 import { QuizshowInspectorProblems } from "./QuizshowInspectorProblems";
 import {
@@ -30,8 +39,11 @@ const PROMPT_LABEL_KEYS: Record<QuizshowPlayableRoundKind, string> = {
   drag_name: "quizshow:questions.prompt.dragNameLabel",
 };
 
-/** The type-specific fields the slide has no room for: accepted answers, the Lie Detector truth, the closest band. */
-const EXTRA_TYPES = ["type_answer", "prompt"] as const;
+/** The type-specific fields the slide has no room for: accepted answers, the Lie Detector truth, the closest margin and unit. */
+const EXTRA_TYPES = ["type_answer", "prompt", "closest_number"] as const;
+
+/** The other language's texts: the option lists. */
+const OTHER_LANGUAGE_TYPES = ["multiple_choice", "order", "poll"] as const;
 
 interface QuestionPartProps {
   roundIndex: number;
@@ -80,14 +92,67 @@ function PromptField({
   );
 }
 
+/** Quiz and Caption This questions carry a picture. */
+function hasPictureSlot(round: QuizshowDraftRound): boolean {
+  return round.kind === "quiz" || round.kind === "caption_this";
+}
+
+/** The picture's description and, in quiz rounds, its slow reveal. */
+function pictureDetailsOf(
+  { round, question, onChange }: QuestionPartProps,
+  languages: QuizshowLanguageMode,
+): QuizshowQuestionPictureDetailsProps {
+  return {
+    hasPicture: question.mediaRef !== null,
+    alt: question.mediaAlt,
+    languages,
+    onAltChange: (mediaAlt) => onChange({ ...question, mediaAlt }),
+    // Party rounds show a picture at once (contract 6.23).
+    ...(round.kind === "quiz"
+      ? {
+          mediaReveal: question.mediaReveal,
+          onMediaRevealChange: (mediaReveal: QuizshowMediaReveal) =>
+            onChange({ ...question, mediaReveal }),
+        }
+      : {}),
+  };
+}
+
+/** The "Fun fact" the reveal shows with the answer, on a quiz round's question (contract 6.22). */
+function RevealNoteSection({
+  round,
+  question,
+  languages,
+  onChange,
+}: Pick<QuestionPartProps, "round" | "question" | "onChange"> & {
+  languages: QuizshowLanguageMode;
+}) {
+  const { t } = useTranslation();
+  if (round.kind !== "quiz" || question.type === "prompt") return null;
+  const label = t("quizshow:questions.revealNote.label");
+  return (
+    <QuizshowInspectorSection isTitleHidden title={label}>
+      <QuizshowBilingualInput
+        label={label}
+        hint={t("quizshow:questions.revealNote.hint")}
+        value={question.revealNote}
+        languages={languages}
+        maxLength={QUIZSHOW_LIMITS.revealNoteMax}
+        isMultiline
+        onChange={(revealNote) => onChange({ ...question, revealNote })}
+      />
+    </QuizshowInspectorSection>
+  );
+}
+
 /** Below 1024px the host types here: the question text and its picture, then the answers. */
 function NarrowEditing(props: QuestionPartProps) {
   const { t } = useTranslation();
-  const { controller, data } = useQuizshowStudio();
+  const { controller, data, viewLanguage } = useQuizshowStudio();
   const { round, roundNumber, question, questionIndex, problems, onChange } =
     props;
   const { languages } = controller.draft;
-  const hasPicture = round.kind === "quiz" || round.kind === "caption_this";
+  const hasPicture = hasPictureSlot(round);
   const hasAnswers =
     question.type !== "prompt" || round.kind === "lie_detector";
   const mediaProblem = problems.some(
@@ -131,8 +196,19 @@ function NarrowEditing(props: QuestionPartProps) {
                   })
                 : undefined
             }
+            alt={pickQuizshowText(question.mediaAlt, viewLanguage)}
+            pictureDetails={pictureDetailsOf(props, languages)}
             onChange={(mediaRef, mediaUrl) =>
-              props.onChange({ ...question, mediaRef }, mediaUrl)
+              props.onChange(
+                {
+                  ...question,
+                  mediaRef,
+                  // A slow reveal needs a picture (slow_reveal_needs_picture).
+                  mediaReveal:
+                    mediaRef === null ? "instant" : question.mediaReveal,
+                },
+                mediaUrl,
+              )
             }
           />
         )}
@@ -142,6 +218,7 @@ function NarrowEditing(props: QuestionPartProps) {
           <QuizshowInspectorAnswerFields
             roundKind={round.kind}
             question={question}
+            draftKey={ownKey ?? ""}
             languages={languages}
             questionNumber={questionIndex + 1}
             problems={problems}
@@ -149,6 +226,12 @@ function NarrowEditing(props: QuestionPartProps) {
           />
         </QuizshowInspectorSection>
       )}
+      <RevealNoteSection
+        round={round}
+        question={question}
+        languages={languages}
+        onChange={onChange}
+      />
     </>
   );
 }
@@ -160,6 +243,9 @@ function WideExtras(props: QuestionPartProps) {
   const { round, question, questionIndex, problems, onChange } = props;
   const { languages } = controller.draft;
   const otherLanguage: QuizshowLanguage = viewLanguage === "en" ? "pt" : "en";
+  const draftKey = round.questions[questionIndex]?.draftKey ?? "";
+  // The slide holds the picture itself; its description and reveal live here.
+  const isPictureShown = hasPictureSlot(round) && question.mediaRef !== null;
   const hasExtras =
     EXTRA_TYPES.some((type) => type === question.type) &&
     (question.type !== "prompt" || round.kind === "lie_detector");
@@ -173,13 +259,29 @@ function WideExtras(props: QuestionPartProps) {
             roundKind={round.kind}
             question={question}
             languages={languages}
+            draftKey={draftKey}
             onlyTypes={EXTRA_TYPES}
+            // The slide edits the right number; here the margin and the unit.
+            isNumberValueShown={false}
             questionNumber={questionIndex + 1}
             problems={problems}
             onChange={onChange}
           />
         </QuizshowInspectorSection>
       )}
+      <Collapse isOpen={isPictureShown}>
+        <QuizshowInspectorSection title={t("quizshow:questions.media.label")}>
+          <QuizshowQuestionPictureFields
+            {...pictureDetailsOf(props, languages)}
+          />
+        </QuizshowInspectorSection>
+      </Collapse>
+      <RevealNoteSection
+        round={round}
+        question={question}
+        languages={languages}
+        onChange={onChange}
+      />
       {languages === "both" && (
         <QuizshowInspectorSection
           title={t("quizshow:studio.inspector.question.otherLanguage", {
@@ -190,8 +292,9 @@ function WideExtras(props: QuestionPartProps) {
           <QuizshowInspectorAnswerFields
             roundKind={round.kind}
             question={question}
+            draftKey={draftKey}
             languages={otherLanguage}
-            onlyTypes={["multiple_choice", "order"]}
+            onlyTypes={OTHER_LANGUAGE_TYPES}
             isTextOnly
             questionNumber={questionIndex + 1}
             problems={problems}
@@ -203,14 +306,20 @@ function WideExtras(props: QuestionPartProps) {
   );
 }
 
-/** Which round the question is in, its content label, and the way to the round's settings. */
+/** Which round the question is in, its content label, the way to the round's settings, and Try from this question (item 21). */
 function InThisRound({
   roundIndex,
   roundNumber,
   round,
-}: Pick<QuestionPartProps, "roundIndex" | "roundNumber" | "round">) {
+  questionIndex,
+}: Pick<
+  QuestionPartProps,
+  "roundIndex" | "roundNumber" | "round" | "questionIndex"
+>) {
   const { t } = useTranslation();
-  const { select, viewLanguage } = useQuizshowStudio();
+  const { controller, dryRunProblems, select, viewLanguage } =
+    useQuizshowStudio();
+  const slice = { roundIndex, fromQuestionIndex: questionIndex };
   const roundName =
     round.title[viewLanguage].trim() ||
     t("quizshow:rounds.untitled", { number: roundNumber });
@@ -244,6 +353,13 @@ function InThisRound({
         >
           {t("quizshow:studio.inspector.question.editRound")}
         </Button>
+        <QuizshowTryItButton
+          appearance="studio"
+          draft={controller.draft}
+          pickedPreviewUrls={controller.pickedPreviewUrls}
+          problems={sliceProblemsOf(dryRunProblems, controller.draft, slice)}
+          slice={slice}
+        />
       </div>
     </QuizshowInspectorSection>
   );
@@ -293,6 +409,8 @@ export function QuizshowInspectorQuestion({
           <QuizshowInspectorTypeGrid
             question={question}
             roundKind={round.kind}
+            roundIndex={roundIndex}
+            questionIndex={questionIndex}
             onChange={partProps.onChange}
           />
         </QuizshowInspectorSection>
@@ -305,11 +423,6 @@ export function QuizshowInspectorQuestion({
           <QuizshowInspectorScoring
             question={question}
             roundTimeLimitSeconds={round.settings.timeLimitSeconds}
-            closestHint={
-              isWide && question.type === "closest_number"
-                ? t("quizshow:questions.closest.hint")
-                : undefined
-            }
             onChange={partProps.onChange}
           />
         </QuizshowInspectorSection>
@@ -319,6 +432,7 @@ export function QuizshowInspectorQuestion({
         roundIndex={roundIndex}
         roundNumber={roundNumber}
         round={round}
+        questionIndex={questionIndex}
       />
       <QuizshowInspectorProblems problems={problems} />
     </>

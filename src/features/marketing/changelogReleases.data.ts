@@ -15,6 +15,13 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "24 Nov 2026": {
+    highlights: [
+      "pulse-live-tv-pairing",
+      "quiz-win-badges",
+      "pulse-live-practice-and-teams",
+    ],
+  },
   "23 Nov 2026": {
     highlights: [
       "community-badges",

@@ -1137,6 +1137,7 @@ export const settings: Catalog = {
   "dataExport.tag.communityBadges": "crachás e presentes de comunidades",
   "dataExport.tag.rsvpDetails": "detalhes das confirmações",
   "dataExport.tag.eventSettings": "definições de eventos",
+  "dataExport.tag.quizBadgeWins": "vitórias com crachás de quiz",
   "dataExport.tag.connectionNotes": "notas sobre as tuas conexões",
   "dataExport.tag.invitesSent": "convites que enviaste",
   "dataExport.tag.dismissedSuggestions": "sugestões afastadas",

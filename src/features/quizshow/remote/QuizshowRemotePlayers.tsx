@@ -1,82 +1,84 @@
 import { AnimatePresence } from "motion/react";
-import { useState, type FormEvent } from "react";
-import { FiEdit2, FiUserX } from "react-icons/fi";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { FiEdit2 } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { CollapseListItem } from "../../../shared/components/ui/CollapseListItem";
 import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
+import { Toggle } from "../../../shared/components/ui/Controls";
 import { IconButton } from "../../../shared/components/ui/IconButton";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   QUIZSHOW_LIMITS,
+  QUIZSHOW_OPEN_SESSION_STATUSES,
+  type QuizshowCursor,
   type QuizshowHostLobby,
   type QuizshowHostPlayer,
+  type QuizshowHostState,
   type QuizshowHostTeam,
+  type QuizshowPhase,
   type QuizshowPlayMode,
 } from "../../../shared/contracts/quizshow";
 import { QuizshowShape } from "../QuizshowShape";
+import { teamShapeLabel } from "../quizshowSwatches";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
+import { QuizshowStudioDarkStamp } from "../studio/QuizshowStudioDarkStamp";
 import {
   QuizshowRemoteErrorLine,
   QuizshowRemoteFade,
 } from "./QuizshowRemoteControls";
+import { QuizshowRemoteGameSettings } from "./QuizshowRemoteGameSettings";
+import { QuizshowRemotePlayerRow } from "./QuizshowRemotePlayerRow";
+import { isPlayerAwayAt, nextAwayFlipAt } from "./quizshowRemoteAway";
 import { useQuizshowHostCommand } from "./useQuizshowHostCommand";
 import styles from "./QuizshowRemote.module.css";
+import rosterStyles from "./QuizshowRemoteRoster.module.css";
 
-function PlayerTags({ player }: { player: QuizshowHostPlayer }) {
-  const { t } = useTranslation();
-  return (
-    <>
-      <QuizshowRemoteFade fadeKey={player.isCohostPlayer ? "cohost" : null}>
-        <span className={`${styles.tag} ${styles.tagAccent}`}>
-          {t("quizshow:remote.cohostTag")}
-        </span>
-      </QuizshowRemoteFade>
-      <QuizshowRemoteFade fadeKey={player.hasExtraTime ? "extraTime" : null}>
-        <span className={styles.tag}>{t("quizshow:remote.extraTimeTag")}</span>
-      </QuizshowRemoteFade>
-      <QuizshowRemoteFade fadeKey={player.hasUsedJoker ? "joker" : null}>
-        <span className={styles.tag}>{t("quizshow:remote.jokerTag")}</span>
-      </QuizshowRemoteFade>
-      <QuizshowRemoteFade fadeKey={player.isConnected ? null : "offline"}>
-        <span className={styles.tag}>{t("quizshow:remote.offlineTag")}</span>
-      </QuizshowRemoteFade>
-    </>
-  );
+const BLANK_NAME_ERROR_KEY = "quizshow:errors.text_blank";
+
+/** C6.14 and its amendment: a host move is refused while a question is in play, through its reveal and scores. */
+const NO_MOVE_PHASES: ReadonlySet<QuizshowPhase> = new Set([
+  "read",
+  "open",
+  "write",
+  "review",
+  "vote",
+  "reveal",
+  "scores",
+]);
+
+function canMovePlayersIn(cursor: QuizshowCursor): boolean {
+  const isOpenStatus =
+    cursor.status === "lobby" ||
+    cursor.status === "running" ||
+    cursor.status === "paused";
+  return isOpenStatus && !NO_MOVE_PHASES.has(cursor.phase);
 }
 
-function PlayerRow({
-  player,
-  onRemove,
-}: {
-  player: QuizshowHostPlayer;
-  onRemove: () => void;
-}) {
-  const { t } = useTranslation();
-  const format = useFormat();
-  const nameId = `quizshow-player-${player.playerId}`;
-  return (
-    <div className={styles.row}>
-      <div className={styles.rowBody}>
-        <p id={nameId} className={styles.rowText}>
-          {player.screenName}
-        </p>
-        <p className={styles.rowMeta}>
-          <PlayerTags player={player} />
-        </p>
-      </div>
-      <span className={styles.score}>{format.number(player.score)}</span>
-      <IconButton
-        tone="dark"
-        aria-label={t("quizshow:remote.remove")}
-        aria-describedby={nameId}
-        onClick={onRemove}
-      >
-        <FiUserX aria-hidden="true" fill="none" />
-      </IconButton>
-    </div>
-  );
+/**
+ * The server clock (`Date.now() + clockOffsetMs`) as of the last re-read. It
+ * re-reads once, at the moment the next offline player turns away (C6.2), and
+ * keeps no timer while nobody is waiting to.
+ */
+function useServerNowForAway(
+  players: QuizshowHostLobby["players"],
+  clockOffsetMs: number,
+): number {
+  const [clientNow, setClientNow] = useState(() => Date.now());
+  const serverNowMs = clientNow + clockOffsetMs;
+  const flipAt = nextAwayFlipAt(players, serverNowMs);
+  useEffect(() => {
+    if (flipAt === null) return undefined;
+    const delayMs = Math.max(0, flipAt - (Date.now() + clockOffsetMs));
+    const timeoutId = window.setTimeout(
+      () => setClientNow(Date.now()),
+      delayMs,
+    );
+    return () => window.clearTimeout(timeoutId);
+    // clientNow re-arms the timeout when a re-read lands a moment early.
+  }, [flipAt, clockOffsetMs, clientNow]);
+  return serverNowMs;
 }
 
 function TeamRow({
@@ -92,19 +94,29 @@ function TeamRow({
   const [draftName, setDraftName] = useState(team.name);
   // Its own command state, so a refused name shows inside this row's open form.
   const { run, isPending, lastErrorKey } = useQuizshowHostCommand(controller);
+  // A blank name is stopped here: the server drops it without an ack.
+  const [isBlankShown, setIsBlankShown] = useState(false);
+  const editButtonRef = useRef<HTMLButtonElement>(null);
   const isSaving = isPending("host:renameTeam");
   const nameId = `quizshow-team-${team.teamId}`;
   const inputId = `quizshow-team-name-${team.teamId}`;
 
+  const closeRename = () => {
+    setIsRenaming(false);
+    editButtonRef.current?.focus();
+  };
+
   const submitRename = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSaving) return;
-    void run("host:renameTeam", {
-      teamId: team.teamId,
-      name: draftName.trim(),
-    }).then((isDone) => {
-      if (isDone) setIsRenaming(false);
-    });
+    const name = draftName.trim();
+    setIsBlankShown(name === "");
+    if (name === "") return;
+    void run("host:renameTeam", { teamId: team.teamId, name }).then(
+      (isDone) => {
+        if (isDone) closeRename();
+      },
+    );
   };
 
   return (
@@ -113,7 +125,7 @@ function TeamRow({
         <QuizshowShape
           colorKey={team.colorKey}
           size="medium"
-          label={t(`quizshow:teams.shape.${team.colorKey}`)}
+          label={teamShapeLabel(team.colorKey, t)}
         />
         <div className={styles.rowBody}>
           <p id={nameId} className={styles.rowText}>
@@ -132,12 +144,14 @@ function TeamRow({
         </div>
         <span className={styles.score}>{format.number(team.score)}</span>
         <IconButton
+          ref={editButtonRef}
           tone="dark"
           aria-label={t("quizshow:remote.renameTeam")}
           aria-describedby={nameId}
           aria-expanded={isRenaming}
           onClick={() => {
             setDraftName(team.name);
+            setIsBlankShown(false);
             setIsRenaming((isOpen) => !isOpen);
           }}
         >
@@ -157,7 +171,10 @@ function TeamRow({
               maxLength={QUIZSHOW_LIMITS.teamNameMax}
               autoComplete="off"
               enterKeyHint="done"
-              onChange={(event) => setDraftName(event.target.value)}
+              onChange={(event) => {
+                setDraftName(event.target.value);
+                setIsBlankShown(false);
+              }}
             />
           </div>
           <Button
@@ -168,15 +185,13 @@ function TeamRow({
           >
             {t("quizshow:remote.renameSave")}
           </Button>
-          <Button
-            variant="stage-ghost"
-            size="md"
-            onClick={() => setIsRenaming(false)}
-          >
+          <Button variant="stage-ghost" size="md" onClick={closeRename}>
             {t("quizshow:common.cancel")}
           </Button>
           <div className={styles.formError}>
-            <QuizshowRemoteErrorLine errorKey={lastErrorKey} />
+            <QuizshowRemoteErrorLine
+              errorKey={isBlankShown ? BLANK_NAME_ERROR_KEY : lastErrorKey}
+            />
           </div>
         </form>
       </Collapse>
@@ -184,7 +199,58 @@ function TeamRow({
   );
 }
 
-/** Everyone in the game: tags, scores and Remove player; teams with Rename team in teams mode. */
+/** C6.14: Remove from the game, with "Let them join again" (off by default). */
+function RemovePlayerDialog({
+  player,
+  isPending,
+  onConfirm,
+  onClose,
+}: {
+  player: QuizshowHostPlayer | null;
+  isPending: boolean;
+  onConfirm: (canRejoin: boolean) => void;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  const [canRejoin, setCanRejoin] = useState(false);
+  const switchId = useId();
+  return (
+    <AnimatePresence onExitComplete={() => setCanRejoin(false)}>
+      {player !== null && (
+        <ConfirmDialog
+          key="quizshow-remote-remove"
+          open
+          onClose={onClose}
+          onConfirm={() => onConfirm(canRejoin)}
+          title={t("quizshow:remote.removeConfirmTitle", {
+            name: player.screenName,
+          })}
+          description={t(
+            canRejoin
+              ? "quizshow:remote.player.removeRejoinBody"
+              : "quizshow:remote.removeConfirmBody",
+          )}
+          confirmLabel={t("quizshow:remote.player.remove")}
+          cancelLabel={t("quizshow:common.cancel")}
+          tone="destructive"
+          loading={isPending}
+          initialFocus="cancel"
+        >
+          {/* The dialog portals to the body; the stamp keeps it in the remote's dark. */}
+          <QuizshowStudioDarkStamp />
+          <div className={rosterStyles.switchRow}>
+            <label htmlFor={switchId} className={rosterStyles.switchLabel}>
+              {t("quizshow:remote.player.allowRejoin")}
+            </label>
+            <Toggle id={switchId} checked={canRejoin} onChange={setCanRejoin} />
+          </div>
+        </ConfirmDialog>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/** Everyone in the game: game settings, teams with Rename team, and each player's row with its menu. */
 export function QuizshowRemotePlayers({
   controller,
   lobby,
@@ -198,16 +264,42 @@ export function QuizshowRemotePlayers({
   const { run, isPending, lastErrorKey } = useQuizshowHostCommand(controller);
   const [removingPlayer, setRemovingPlayer] =
     useState<QuizshowHostPlayer | null>(null);
+  const { session } = controller.state;
+  const hostSession: QuizshowHostState | null =
+    session?.role === "host" ? session : null;
+  const serverNowMs = useServerNowForAway(
+    lobby.players,
+    controller.clockOffsetMs,
+  );
+  const canMove = hostSession !== null && canMovePlayersIn(hostSession.cursor);
+  // Settings change a game still in play: an ended or abandoned session has none to change.
+  const settingsSession =
+    hostSession !== null &&
+    (QUIZSHOW_OPEN_SESSION_STATUSES as readonly string[]).includes(
+      hostSession.cursor.status,
+    )
+      ? hostSession
+      : null;
+  const teams = playMode === "teams" ? lobby.teams : [];
 
-  const confirmRemove = () => {
+  const confirmRemove = (canRejoin: boolean) => {
     if (removingPlayer === null) return;
-    void run("host:removePlayer", { playerId: removingPlayer.playerId }).then(
-      () => setRemovingPlayer(null),
-    );
+    void run("host:removePlayer", {
+      playerId: removingPlayer.playerId,
+      canRejoin,
+    }).then(() => setRemovingPlayer(null));
   };
 
   return (
     <div className={styles.stack}>
+      <Collapse isOpen={settingsSession !== null}>
+        {settingsSession !== null && (
+          <QuizshowRemoteGameSettings
+            controller={controller}
+            session={settingsSession}
+          />
+        )}
+      </Collapse>
       <QuizshowRemoteErrorLine errorKey={lastErrorKey} />
       <Collapse isOpen={playMode === "teams"}>
         <section
@@ -239,34 +331,26 @@ export function QuizshowRemotePlayers({
           <AnimatePresence initial={false}>
             {lobby.players.map((player) => (
               <CollapseListItem key={player.playerId}>
-                <PlayerRow
+                <QuizshowRemotePlayerRow
+                  controller={controller}
                   player={player}
-                  onRemove={() => setRemovingPlayer(player)}
+                  isAway={isPlayerAwayAt(player, serverNowMs)}
+                  teams={teams}
+                  maxTeamSize={hostSession?.maxTeamSize ?? null}
+                  canMove={canMove}
+                  onRemove={setRemovingPlayer}
                 />
               </CollapseListItem>
             ))}
           </AnimatePresence>
         </ul>
       </section>
-      <AnimatePresence>
-        {removingPlayer !== null && (
-          <ConfirmDialog
-            key="quizshow-remote-remove"
-            open
-            onClose={() => setRemovingPlayer(null)}
-            onConfirm={confirmRemove}
-            title={t("quizshow:remote.removeConfirmTitle", {
-              name: removingPlayer.screenName,
-            })}
-            description={t("quizshow:remote.removeConfirmBody")}
-            confirmLabel={t("quizshow:remote.remove")}
-            cancelLabel={t("quizshow:common.cancel")}
-            tone="destructive"
-            loading={isPending("host:removePlayer")}
-            initialFocus="cancel"
-          />
-        )}
-      </AnimatePresence>
+      <RemovePlayerDialog
+        player={removingPlayer}
+        isPending={isPending("host:removePlayer")}
+        onConfirm={confirmRemove}
+        onClose={() => setRemovingPlayer(null)}
+      />
     </div>
   );
 }

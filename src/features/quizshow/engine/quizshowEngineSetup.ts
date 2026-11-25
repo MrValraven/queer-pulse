@@ -10,16 +10,20 @@ import {
   QUIZSHOW_TIMED_PHASES,
   type QuizshowAckFailure,
   type QuizshowErrorCode,
+  type QuizshowLanguage,
+  type QuizshowLanguageMode,
   type QuizshowMe,
   type QuizshowOption,
   type QuizshowPhase,
   type QuizshowQuestion,
+  type QuizshowQuiz,
   type QuizshowRound,
   type QuizshowRoundKind,
   type QuizshowSessionStatus,
   type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
 import { hasAdultsRound } from "../api/quizshowDemoQuizzes";
+import { normaliseStoredQuiz } from "../quizshowNormalise";
 import {
   emptyWheelProgress,
   normaliseWheelRounds,
@@ -54,11 +58,93 @@ const OPEN_STATUSES: readonly QuizshowSessionStatus[] = [
   "paused",
 ];
 
-/** Codes whose refusal carries the current cursor. */
+/** Codes whose refusal carries the current cursor: the stale phase and every phase or status cause of contract 3.2. */
 const CURSOR_CODES: readonly QuizshowErrorCode[] = [
   "quizshow_stale_phase",
   "quizshow_command_not_allowed",
+  "quizshow_session_ended",
+  "quizshow_already_started",
+  "quizshow_session_not_started",
+  "quizshow_session_paused",
+  "quizshow_spin_not_available",
+  "quizshow_no_wheel_open",
+  "quizshow_no_timer_running",
+  "quizshow_already_revealed",
+  "quizshow_nothing_to_reveal",
+  "quizshow_nothing_to_skip",
+  "quizshow_review_not_open",
+  "quizshow_unhide_review_only",
+  "quizshow_author_removed",
+  "quizshow_favourite_not_available",
+  "quizshow_teams_off",
+  "quizshow_not_in_lobby",
+  "quizshow_move_during_question",
+  "quizshow_rescore_not_now",
+  "quizshow_adjust_not_now",
 ];
+
+/** Contract 3.1 verbatim: why a command that needs `required` cannot run in the session's status. */
+export function statusRefusalCode(
+  status: QuizshowSessionStatus,
+  required: "lobby" | "running" | "open",
+): QuizshowErrorCode {
+  if (status === "finished" || status === "abandoned") {
+    return "quizshow_session_ended";
+  }
+  if (required === "lobby") return "quizshow_already_started";
+  if (status === "lobby") return "quizshow_session_not_started";
+  return "quizshow_session_paused"; // required 'running', status 'paused'
+}
+
+/** Still playing: neither removed by a host nor gone with a leave (contract 6.14). */
+export function isActivePlayer(
+  player: Pick<QuizshowEnginePlayer, "isRemoved" | "leftAt">,
+): boolean {
+  return !player.isRemoved && player.leftAt === null;
+}
+
+/**
+ * No socket connected for at least `awayAfterMs` (contract 6.2). The browser
+ * has no sockets: `disconnectedAt === null` reads as connected, and the demo
+ * never sets it, so demo players never go away.
+ */
+export function isAwayAt(
+  player: Pick<QuizshowEnginePlayer, "disconnectedAt">,
+  now: number,
+): boolean {
+  return (
+    player.disconnectedAt !== null &&
+    now - player.disconnectedAt >= QUIZSHOW_LIMITS.awayAfterMs
+  );
+}
+
+/** Contract 6.12: the `read` length scales with the longest shown language, prompt plus options. */
+export function readPhaseMsFor(
+  question: Pick<QuizshowQuestion, "prompt" | "options">,
+  languages: QuizshowLanguageMode,
+  shownOptions?: readonly QuizshowOption[] | null,
+): number {
+  const shown: QuizshowLanguage[] =
+    languages === "both" ? ["en", "pt"] : [languages];
+  const characters = Math.max(
+    ...shown.map(
+      (language) =>
+        question.prompt[language].length +
+        (shownOptions ?? question.options).reduce(
+          (sum, option) => sum + option.text[language].length,
+          0,
+        ),
+    ),
+  );
+  return Math.min(
+    Math.max(
+      QUIZSHOW_LIMITS.readPhaseBaseMs +
+        QUIZSHOW_LIMITS.readPhaseMsPerChar * characters,
+      QUIZSHOW_LIMITS.readPhaseMinMs,
+    ),
+    QUIZSHOW_LIMITS.readPhaseMaxMs,
+  );
+}
 
 export function isOpenStatus(status: QuizshowSessionStatus): boolean {
   return OPEN_STATUSES.includes(status);
@@ -103,18 +189,40 @@ function shownOrderOptions(
   }));
 }
 
-/** A fresh session in the lobby at phase id `'0'`; order questions are shuffled once, here. */
-export function createQuizshowEngineState(
-  options: QuizshowEngineOptions,
-): QuizshowEngineState {
-  const random = quizshowRandomFrom(options.seed);
-  const clonedQuiz = structuredClone(options.quiz);
-  // Mirrors the server snapshot of a saved quiz: settings defaulted, wheel fields normalised.
-  const quiz = {
+/** The rematch's teams (contract 6.17): host-made, empty, with fresh ids. */
+function initialTeamsOf(
+  state: QuizshowEngineState,
+  initialTeams: QuizshowEngineOptions["initialTeams"],
+): QuizshowEngineTeam[] {
+  return (initialTeams ?? []).map((team) => ({
+    teamId: mintId(state, "team"),
+    name: team.name,
+    colorKey: team.colorKey,
+    score: 0,
+    hasUsedJoker: false,
+    jokerRoundIndex: null,
+    isHostMade: true,
+  }));
+}
+
+/**
+ * The quiz a session plays, as the server snapshot builds it: stored shapes
+ * through the contract 2.4 normaliser, settings defaulted, wheel fields
+ * normalised, and every order question shuffled once. Lobby creation and the
+ * lobby refresh (contract 6.10) both build it here.
+ */
+export function buildPlayableQuiz(
+  rawQuiz: QuizshowQuiz,
+  random: QuizshowRandom,
+): {
+  quiz: QuizshowQuiz;
+  shuffledOrderOptions: Record<string, QuizshowOption[]>;
+} {
+  const clonedQuiz = normaliseStoredQuiz(structuredClone(rawQuiz));
+  const quiz: QuizshowQuiz = {
     ...clonedQuiz,
     rounds: normaliseWheelRounds(clonedQuiz.rounds),
   };
-  const wheelProgress = emptyWheelProgress();
   const shuffledOrderOptions: Record<string, QuizshowOption[]> = {};
   for (const round of quiz.rounds) {
     for (const question of round.questions) {
@@ -126,7 +234,20 @@ export function createQuizshowEngineState(
       );
     }
   }
-  return {
+  return { quiz, shuffledOrderOptions };
+}
+
+/** A fresh session in the lobby at phase id `'0'`; order questions are shuffled once, here. */
+export function createQuizshowEngineState(
+  options: QuizshowEngineOptions,
+): QuizshowEngineState {
+  const random = quizshowRandomFrom(options.seed);
+  const { quiz, shuffledOrderOptions } = buildPlayableQuiz(
+    options.quiz,
+    random,
+  );
+  const wheelProgress = emptyWheelProgress();
+  const state: QuizshowEngineState = {
     sessionId: options.sessionId,
     eventSlug: options.eventSlug,
     eventTitle: options.eventTitle,
@@ -151,6 +272,9 @@ export function createQuizshowEngineState(
       pausedRemainingMs: null,
       pausedExtraTimeRemainingMs: null,
       isRestartRecovery: false,
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
       ...progressCursorFields(quiz.rounds, wheelProgress, "lobby"),
     },
     lastTransition: null,
@@ -167,7 +291,19 @@ export function createQuizshowEngineState(
     podium: null,
     idCounter: 0,
     randomState: random.state(),
+    isPractice: options.isPractice ?? false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    guestPushSentAt: null,
+    pairedDevices: [],
+    reactionCounts: {},
+    reactionBuckets: {},
+    adjustRequestIds: [],
+    sourceUpdatedAt: options.sourceUpdatedAt ?? options.quiz.updatedAt,
+    giving: options.giving ?? null,
   };
+  state.teams = initialTeamsOf(state, options.initialTeams);
+  return state;
 }
 
 export interface QuizshowCursorAdvance {
@@ -177,9 +313,15 @@ export interface QuizshowCursorAdvance {
   now: number;
   durationMs: number | null;
   extraTimeMs: number | null;
+  /** The talk beat's start in `read` (contract 6.20); null when left out. */
+  talkStartsAt?: number | null;
+  /** When the engine moves on by itself (contract 6.16); null when left out. */
+  autoAdvanceAt?: number | null;
+  /** Podium places shown (contract 6.7); null when left out. */
+  podiumRevealedCount?: number | null;
 }
 
-/** Moves to the next phase: a new phase id, the transition it came from, fresh deadlines, a cleared paused remainder and the four progress fields recounted; the status stays as set. Callers change `wheelProgress` first and call this last. */
+/** Moves to the next phase: a new phase id, the transition it came from, fresh deadlines, a cleared paused remainder, the talk, auto-advance and podium fields as given (null when left out, since each belongs to one phase) and the four progress fields recounted; the status stays as set. Callers change `wheelProgress` first and call this last. */
 export function advanceCursor(
   state: QuizshowEngineState,
   next: QuizshowCursorAdvance,
@@ -201,6 +343,9 @@ export function advanceCursor(
     pausedRemainingMs: null,
     pausedExtraTimeRemainingMs: null,
     isRestartRecovery: false,
+    talkStartsAt: next.talkStartsAt ?? null,
+    autoAdvanceAt: next.autoAdvanceAt ?? null,
+    podiumRevealedCount: next.podiumRevealedCount ?? null,
     ...progressCursorFields(state.quiz.rounds, state.wheelProgress, next.phase),
   };
 }
@@ -230,7 +375,7 @@ export function findTeam(
 export function activePlayers(
   state: QuizshowEngineState,
 ): QuizshowEnginePlayer[] {
-  return state.players.filter((player) => !player.isRemoved);
+  return state.players.filter(isActivePlayer);
 }
 
 /** The player behind an id while they are still in the session. */
@@ -240,7 +385,7 @@ export function activePlayerOf(
 ): QuizshowEnginePlayer | null {
   if (playerId === null) return null;
   const player = findPlayer(state, playerId);
-  return player !== undefined && !player.isRemoved ? player : null;
+  return player !== undefined && isActivePlayer(player) ? player : null;
 }
 
 /** Players eligible for the current question who are still in the session; [] with no current question. */
@@ -312,12 +457,12 @@ export function currentPlayContext(
   return { play, round, question };
 }
 
-/** MC options in authored order, order options in their shuffled order, null on every other type. */
+/** MC and poll options in authored order, order options in their shuffled order, null on every other type. */
 export function shownOptionsOf(
   state: QuizshowEngineState,
   question: QuizshowQuestion,
 ): QuizshowOption[] | null {
-  if (question.type === "multiple_choice") {
+  if (question.type === "multiple_choice" || question.type === "poll") {
     return question.options.map((option) => ({
       id: option.id,
       text: { ...option.text },
@@ -379,7 +524,7 @@ export function isJokerActiveFor(
   return holder !== null && holder.jokerRoundIndex === roundIndex;
 }
 
-/** Who competes: active players in solo play, teams in teams play (created order). */
+/** Who competes: active players in solo play, teams in teams play (created order); a team keeps its score when members leave. */
 export function entrantTotals(
   state: QuizshowEngineState,
 ): QuizshowEntrantTotal[] {
@@ -432,12 +577,28 @@ export function toMe(state: QuizshowEngineState, playerId: string): QuizshowMe {
   };
 }
 
-/** A refusal ack: the message is the code, and the two cursor codes carry a copy of the cursor. */
+export interface QuizshowAckFailureExtras {
+  /** Overrides the code list where the server's choice differs per command (`host:createTeams` refuses `quizshow_teams_off` with no cursor). */
+  withCursor?: boolean;
+  /** Only on `quizshow_screen_name_taken`. */
+  suggestedScreenName?: string | null;
+}
+
+/** A refusal ack: the message is the code; the stale phase and the phase or status causes carry a copy of the cursor. */
 export function ackFailure(
   code: QuizshowErrorCode,
   state: QuizshowEngineState,
+  extras: QuizshowAckFailureExtras = {},
 ): QuizshowAckFailure {
-  return CURSOR_CODES.includes(code)
+  const withCursor = extras.withCursor ?? CURSOR_CODES.includes(code);
+  const failure: QuizshowAckFailure = withCursor
     ? { ok: false, code, message: code, cursor: { ...state.cursor } }
     : { ok: false, code, message: code };
+  if (
+    extras.suggestedScreenName !== undefined &&
+    extras.suggestedScreenName !== null
+  ) {
+    failure.suggestedScreenName = extras.suggestedScreenName;
+  }
+  return failure;
 }

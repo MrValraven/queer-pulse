@@ -770,6 +770,7 @@ export const notifications: Catalog = {
   // sistema (sem autor); {badgeName} vem do payload.
   "type.badge_earned.text": "Ganhaste o crachá {badgeName}.",
   "type.badge_earned.meta": "Crachá ganho",
+  "type.badge_earned.quizText": "Ganhaste o crachá {badgeName} em {eventName}.",
   "type.community_badge_earned.text":
     "Ganhaste o crachá {badgeName} em {communityName}.",
   "type.community_badge_earned.meta": "Crachá da comunidade",

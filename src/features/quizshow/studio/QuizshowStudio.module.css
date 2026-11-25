@@ -1,8 +1,9 @@
 /* The studio: full screen and always dark (the root carries data-theme and
    data-qs-theme "dark", so every app and stage token inside reads dark).
-   Narrow first: one scrolling column of top bar, filmstrip rail, canvas and
-   inspector. From 1024px (64rem) a fixed grid: a 56px bar over a 240px rail,
-   the canvas and a 300px inspector. */
+   Narrow first: one scrolling column of top bar, the open lobby's strip,
+   filmstrip rail, canvas and inspector. From 1024px (64rem) a fixed grid: a
+   56px bar, the strip's own row (empty while no lobby line shows), then a
+   240px rail, the canvas and a 352px inspector. */
 
 .root {
   /* The sticky top bar's height; the inspector's own sticky headings sit under it. */
@@ -41,6 +42,11 @@
   overflow-x: clip;
   min-block-size: 100svh;
   min-block-size: 100dvh;
+}
+
+/* The open lobby's strip (item 18): a full-width row under the bar. */
+.lobbyStripCell {
+  min-inline-size: 0;
 }
 
 .canvasCell {
@@ -249,10 +255,11 @@
     display: grid;
     block-size: 100%;
     min-block-size: 0;
-    grid-template-columns: 15rem minmax(0, 1fr) 18.75rem;
-    grid-template-rows: 3.5rem minmax(0, 1fr);
+    grid-template-columns: 15rem minmax(0, 1fr) 22rem;
+    grid-template-rows: 3.5rem auto minmax(0, 1fr);
     grid-template-areas:
       "bar bar bar"
+      "strip strip strip"
       "rail canvas inspector";
   }
 
@@ -260,7 +267,12 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "bar"
+      "strip"
       "canvas";
+  }
+
+  .lobbyStripCell {
+    grid-area: strip;
   }
 
   .skeletonRail {
@@ -313,15 +325,17 @@
   }
 }
 
-/* 1024 to 1280: a slimmer rail and inspector, so the slide keeps a readable scale. */
+/* 1024 to 1280: a slimmer rail and inspector; the inspector keeps room for its
+   editor rows, and the slide is a preview here at either width. */
 @media (min-width: 64rem) and (max-width: 79.99rem) {
   .workspace {
-    grid-template-columns: 12.5rem minmax(0, 1fr) 16.25rem;
+    grid-template-columns: 12.5rem minmax(0, 1fr) 20rem;
   }
 }
 
-/* In the band the hint strip keeps to one line: "All shortcuts" stays in More. */
-@media (min-width: 64rem) and (max-width: 79.99rem) {
+/* Up to about 1344px the canvas is too narrow for the whole hint strip on one
+   line: "All shortcuts" stays in More. */
+@media (min-width: 64rem) and (max-width: 83.99rem) {
   .hint[data-hint="help"] {
     display: none;
   }

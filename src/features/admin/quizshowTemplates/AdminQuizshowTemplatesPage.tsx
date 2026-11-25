@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiLayers, FiPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -21,9 +20,10 @@ import {
   useCreateQuizshowTemplate,
   useQuizshowTemplateRows,
 } from "../../quizshow/api/useQuizshowTemplates";
-import { QuizshowPickerFade } from "../../quizshow/builder/QuizshowTemplatePicker";
+import { QuizshowPickerFade } from "../../quizshow/builder/QuizshowPickerFade";
 import { quizshowTemplateErrorKeyOf } from "../../quizshow/templates/quizshowTemplateErrors";
 import { AdminPageHeader, AdminPanel } from "../ui";
+import { useHeaderActionFold } from "../ui/adminListPageHelpers";
 import { AdminQuizshowTemplateRow } from "./AdminQuizshowTemplateRow";
 import {
   QUIZSHOW_TEMPLATES_HEADING_ID,
@@ -141,34 +141,6 @@ function useTemplateList(): TemplateList {
         ? "empty"
         : "list";
   return { templateRows, rows, bodyState };
-}
-
-interface HeaderActionFold {
-  isOpen: boolean;
-  /** True once the fold has finished, so the header drops its empty slot. */
-  isFolded: boolean;
-  isInitialSkipped: boolean;
-  markFolded: () => void;
-}
-
-/**
- * Folds the header action away and back. Once folded the slot leaves the
- * header, so the phone layout keeps no gap for it; a return grows it back in.
- */
-function useHeaderActionFold(isOpen: boolean): HeaderActionFold {
-  const [isFolded, setIsFolded] = useState(!isOpen);
-  const [hasReturned, setHasReturned] = useState(false);
-  // Adjusted during render: the slot must be back before the fold-in starts.
-  if (isOpen && isFolded) {
-    setIsFolded(false);
-    setHasReturned(true);
-  }
-  return {
-    isOpen,
-    isFolded,
-    isInitialSkipped: !hasReturned,
-    markFolded: () => setIsFolded(true),
-  };
 }
 
 function TemplatesBody({

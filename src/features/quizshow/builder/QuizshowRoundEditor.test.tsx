@@ -15,9 +15,18 @@ function renderEditor(
     isAdultsEvent?: boolean;
     kind?: "quiz" | "lie_detector" | "caption_this";
     withTwoQuestions?: boolean;
+    isFirstPlayableRow?: boolean;
+    isWarmUp?: boolean;
   } = {},
 ) {
   const round = newRound(options.kind ?? "quiz");
+  if (options.isWarmUp) {
+    round.settings = {
+      ...round.settings,
+      isWarmUp: true,
+      isJokerAllowed: false,
+    };
+  }
   if (options.withTwoQuestions) {
     round.questions.push({
       draftKey: "extra-question",
@@ -32,12 +41,13 @@ function renderEditor(
       round={round}
       roundIndex={0}
       isAdultsEvent={options.isAdultsEvent ?? false}
+      isFirstPlayableRow={options.isFirstPlayableRow ?? false}
       onChange={onChange}
       onChangeKind={onChangeKind}
     />,
     { wrapper: TestProviders },
   );
-  return { onChange, onChangeKind };
+  return { round, onChange, onChangeKind };
 }
 
 describe("QuizshowRoundEditor", () => {
@@ -136,5 +146,56 @@ describe("QuizshowRoundEditor", () => {
     expect(
       screen.getByRole("switch", { name: "Allow jokers" }),
     ).toBeInTheDocument();
+  });
+
+  it("shows the warm-up switch on the first playable row", async () => {
+    renderEditor({ kind: "quiz", isFirstPlayableRow: true });
+    expect(
+      await screen.findByRole("switch", { name: "Warm-up round" }),
+    ).toBeInTheDocument();
+  });
+
+  it("leaves the warm-up switch out of every other row", async () => {
+    renderEditor({ kind: "quiz", isFirstPlayableRow: false });
+    await screen.findByRole("switch", { name: "Allow jokers" });
+    expect(
+      screen.queryByRole("switch", { name: "Warm-up round" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("keeps the switch on a later row that still holds a warm-up", async () => {
+    renderEditor({ kind: "quiz", isFirstPlayableRow: false, isWarmUp: true });
+    const warmUpSwitch = await screen.findByRole("switch", {
+      name: "Warm-up round",
+    });
+    expect(warmUpSwitch).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("turns jokers off with the warm-up, as the save does", async () => {
+    const { round, onChange } = renderEditor({
+      kind: "quiz",
+      isFirstPlayableRow: true,
+    });
+    fireEvent.click(
+      await screen.findByRole("switch", { name: "Warm-up round" }),
+    );
+    expect(onChange).toHaveBeenCalledWith({
+      settings: { ...round.settings, isWarmUp: true, isJokerAllowed: false },
+    });
+  });
+
+  it("offers Talk it over on a quiz round only", async () => {
+    renderEditor({ kind: "quiz" });
+    expect(
+      await screen.findByRole("radiogroup", { name: "Talk it over" }),
+    ).toBeInTheDocument();
+  });
+
+  it("leaves Talk it over out of a party round", async () => {
+    renderEditor({ kind: "lie_detector" });
+    await screen.findByLabelText("Seconds to write");
+    expect(
+      screen.queryByRole("radiogroup", { name: "Talk it over" }),
+    ).not.toBeInTheDocument();
   });
 });

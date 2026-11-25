@@ -14,12 +14,14 @@ export type QuizshowEventSummaryTone = "live" | "ready" | "todo";
 /**
  * Where the event's game stands on the Manage tab: the open lobby or game,
  * else whether the saved quiz can open one. Null with no quiz yet, where the
- * card's heading already says so.
+ * card's heading already says so. A draft event (item 53) reads as one to
+ * publish once the quiz itself is ready.
  */
 export function summaryStatusOf(
   data: QuizshowQuizResponse,
   lobbyProblemCount: number,
   t: Translate,
+  isDraftEvent = false,
 ): { text: string; tone: QuizshowEventSummaryTone } | null {
   const { liveSession } = data;
   if (liveSession !== null) {
@@ -35,6 +37,9 @@ export function summaryStatusOf(
       text: t("quizshow:studio.problems.count", { count: lobbyProblemCount }),
       tone: "todo",
     };
+  }
+  if (isDraftEvent) {
+    return { text: t("quizshow:builder.draftEvent.line"), tone: "todo" };
   }
   return { text: t("quizshow:studio.problems.none"), tone: "ready" };
 }

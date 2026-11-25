@@ -1,8 +1,16 @@
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { Link, Route, Routes } from "react-router-dom";
 import QRCode from "qrcode";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MotionProvider } from "../../../app/providers/MotionProvider";
+import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContentLink";
 import { TestProviders } from "../../../test/TestProviders";
 import {
   QUIZSHOW_LIMITS,
@@ -21,12 +29,32 @@ import type { QuizshowScope } from "../quizshowScope";
 import { defaultGatheringSlug } from "../../gatherings/data";
 import { gatheringPath } from "../../gatherings/gatheringPaths";
 import { QUIZSHOW_DEMO_TICK_MS } from "../quizshow.constants";
-import { QUIZSHOW_SCREEN_ROUTE, quizshowScreenPath } from "../quizshowPaths";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
-import { QuizshowScreenPage } from "./QuizshowScreenPage";
+import {
+  QUIZSHOW_SCREEN_ROUTE,
+  QUIZSHOW_TV_LEAVE_STATE,
+  quizshowScreenPath,
+  quizshowTvPath,
+} from "../quizshowPaths";
+import { eventScope } from "../quizshowScope";
+import type {
+  QuizshowClientState,
+  QuizshowReactionBurst,
+} from "../realtime/quizshowClientStore";
+import type { QuizshowHostSession } from "./quizshowHostSession";
+import { QuizshowScreenPage, QuizshowScreenView } from "./QuizshowScreenPage";
 import { QuizshowScreenStage } from "./QuizshowScreenStage";
+import { QuizshowTvPage } from "./QuizshowTvPage";
+import { saveDeviceTicket } from "./quizshowDeviceTicket";
 
-const cueMock = vi.hoisted(() => ({ playQuizshowCue: vi.fn() }));
+const pairingApiMock = vi.hoisted(() => ({
+  startScreenPairing: vi.fn(),
+  startHelperPairing: vi.fn(),
+  claimPairing: vi.fn(),
+}));
+const cueMock = vi.hoisted(() => ({
+  playQuizshowCue: vi.fn(),
+  isAudioRunning: false,
+}));
 const liveMock = vi.hoisted(() => {
   const listeners = new Set<() => void>();
   return {
@@ -73,9 +101,11 @@ const sessionOverride = vi.hoisted(() => {
 vi.mock("../../../shared/components/ui/RollingNumber", () => ({
   RollingNumber: (props: { value: string }) => <span>{props.value}</span>,
 }));
+vi.mock("../api/quizshowPairing.api", () => pairingApiMock);
 vi.mock("../sound/quizshowCues", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../sound/quizshowCues")>()),
   playQuizshowCue: cueMock.playQuizshowCue,
+  isQuizshowAudioRunning: () => cueMock.isAudioRunning,
 }));
 vi.mock("../../../app/providers/DemoModeProvider", async (importOriginal) => {
   const actual =
@@ -185,6 +215,9 @@ function cursorWith(overrides: Partial<QuizshowCursor> = {}): QuizshowCursor {
     roundNumber: roundIndex === null ? 0 : roundIndex + 1,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
     ...overrides,
   };
 }
@@ -198,6 +231,8 @@ const ROUNDS: QuizshowRoundCard[] = [
     questionCount: 3,
     isJokerAllowed: true,
     isSpeedBonusOn: true,
+    isWarmUp: false,
+    talkSeconds: 0,
   },
   {
     roundIndex: 1,
@@ -207,6 +242,8 @@ const ROUNDS: QuizshowRoundCard[] = [
     questionCount: 2,
     isJokerAllowed: false,
     isSpeedBonusOn: false,
+    isWarmUp: false,
+    talkSeconds: 0,
   },
 ];
 
@@ -220,6 +257,10 @@ const QUIZ_QUESTION: QuizshowQuestionView = {
   mediaUrl: null,
   points: 1000,
   timeLimitSeconds: 20,
+  mediaAlt: { en: "", pt: "" },
+  mediaReveal: "instant",
+  numberUnit: { en: "", pt: "" },
+  readMs: 4000,
   options: [
     { id: "option-a", text: { en: "1959", pt: "1959" } },
     { id: "option-b", text: { en: "1969", pt: "1969" } },
@@ -255,6 +296,10 @@ function screenSession(
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor: cursorWith(),
     rounds: ROUNDS,
@@ -283,6 +328,15 @@ function clientState(session: QuizshowScreenState): QuizshowClientState {
     sessionEnd: null,
     isRemoved: false,
     pendingAnswer: null,
+    hasAttached: true,
+    retryCause: null,
+    rematch: null,
+    reactionBurst: null,
+    canRejoinAfterRemoval: false,
+    nightLog: [],
+    ownRanks: { previous: null, current: null },
+    ownRankSourceKey: null,
+    lastTeamName: null,
   };
 }
 
@@ -321,10 +375,12 @@ function revealSession(
     reveal: {
       phaseId,
       questionId: QUIZ_QUESTION.questionId,
-      correct: { type: "multiple_choice", correctIndex: 1 },
+      correct: { type: "multiple_choice", correctIndexes: [1] },
       answeredCount: 10,
       eligibleCount: 12,
       distribution: { kind: "options", counts: [2, 6, 1, 1] },
+      note: null,
+      wasCorrected: false,
     },
     ...overrides,
   });
@@ -378,6 +434,7 @@ function screenRoot(): HTMLElement {
 beforeEach(() => {
   window.localStorage.clear();
   cueMock.playQuizshowCue.mockReset();
+  cueMock.isAudioRunning = false;
   liveMock.isLive = false;
   liveMock.isOrganizer = true;
   liveMock.setQuiz({ liveSession: null, hasQuizFailed: false });
@@ -554,6 +611,8 @@ describe("QuizshowScreenStage", () => {
           correct: null,
           answeredCount: 2,
           eligibleCount: 12,
+          note: null,
+          wasCorrected: false,
           distribution: {
             kind: "votes",
             favouriteOptionId: "option-1",
@@ -614,12 +673,14 @@ describe("QuizshowScreenStage lobby on the TV", () => {
               name: "Quizzly Bears",
               colorKey: "circle",
               memberCount: 1,
+              isHostMade: false,
             },
             {
               teamId: "team-2",
               name: "Spill the Tea",
               colorKey: "triangle",
               memberCount: 1,
+              isHostMade: false,
             },
           ],
           playerCount: 2,
@@ -690,7 +751,7 @@ describe("QuizshowScreenStage lobby on the TV", () => {
     expect(screen.getByText("+8 more")).toBeInTheDocument();
   });
 
-  it("the teams lobby splits more than four teams into two columns", async () => {
+  it("the teams lobby splits three teams or more into two columns", async () => {
     const teamNames = [
       "Quizzly Bears",
       "Spill the Tea",
@@ -706,28 +767,102 @@ describe("QuizshowScreenStage lobby on the TV", () => {
         playMode: "teams",
         lobby: {
           players: [],
-          teams: teamNames.slice(0, teamCount).map((name, teamIndex) => ({
+          teams: [...Array(teamCount).keys()].map((teamIndex) => ({
             teamId: `team-${teamIndex + 1}`,
-            name,
+            name: teamNames[teamIndex] ?? `Team ${teamIndex + 1}`,
             colorKey: "circle" as const,
             memberCount: 2,
+            isHostMade: false,
           })),
           playerCount: teamCount * 2,
         },
       });
-    const fourTeamsRender = renderStage(teamsSession(4));
-    const fourthTeam = await screen.findByText("Queens of Trivia");
-    expect(fourthTeam.closest("ul")).toHaveAttribute("data-columns", "one");
-    fourTeamsRender.unmount();
+    const twoTeamsRender = renderStage(teamsSession(2));
+    const secondTeam = await screen.findByText("Spill the Tea");
+    expect(secondTeam.closest("ul")).toHaveAttribute("data-columns", "one");
+    twoTeamsRender.unmount();
 
-    renderStage(teamsSession(8));
+    const threeTeamsRender = renderStage(teamsSession(3));
+    const thirdTeam = await screen.findByText("Disco Inferno");
+    expect(thirdTeam.closest("ul")).toHaveAttribute("data-columns", "two");
+    threeTeamsRender.unmount();
+
+    const eightTeamsRender = renderStage(teamsSession(8));
     const eighthTeam = await screen.findByText("Tea Party");
     expect(eighthTeam.closest("ul")).toHaveAttribute("data-columns", "two");
+    expect(screen.queryByText(/more teams?$/)).not.toBeInTheDocument();
+    eightTeamsRender.unmount();
+
+    // A tall screen holds eight teams; the earliest fold into a line.
+    renderStage(teamsSession(10));
+    expect(await screen.findByText("Team 10")).toBeInTheDocument();
+    expect(screen.queryByText("Quizzly Bears")).not.toBeInTheDocument();
+    expect(screen.queryByText("Spill the Tea")).not.toBeInTheDocument();
+    expect(screen.getByText("+2 more teams")).toBeInTheDocument();
+  });
+});
+
+describe("QuizshowScreenStage answered count", () => {
+  /** The row that reads "3 of 12 answered", found by its line. */
+  function answeredRow(): HTMLElement | null {
+    const line = screen
+      .queryAllByText(/of 12 answered/)
+      .find((element) => element.tagName === "P");
+    return line?.parentElement ?? null;
+  }
+
+  it("keeps the count hidden while the question is read out and shows it once answers open", async () => {
+    const promptHeading = { level: 1, name: "Which year was Stonewall?" };
+    const readView = renderStage(openQuestionSession({ phase: "read" }));
+    await screen.findByRole("heading", promptHeading);
+    expect(answeredRow()).toHaveAttribute("aria-hidden", "true");
+    readView.unmount();
+
+    renderStage(openQuestionSession());
+    await screen.findByRole("heading", promptHeading);
+    expect(answeredRow()).not.toHaveAttribute("aria-hidden");
+  });
+});
+
+describe("QuizshowTvPage in demo", () => {
+  it("hides the pointer on the code screen after two still seconds", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    const view = render(
+      <TestProviders initialEntries={[quizshowTvPath()]}>
+        <QuizshowTvPage />
+      </TestProviders>,
+    );
+    const root = document.documentElement;
+    const attribute = "data-quizshow-pointer-still";
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    expect(root).toHaveAttribute(attribute, "true");
+    act(() => {
+      window.dispatchEvent(new Event("pointermove"));
+    });
+    expect(root).not.toHaveAttribute(attribute);
+    view.unmount();
+  });
+
+  it("shows the demo note and a way back to Pulse Live, with no code to enter", async () => {
+    render(
+      <TestProviders initialEntries={[quizshowTvPath()]}>
+        <QuizshowTvPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByText(/Pairing a screen needs the live app/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Back to Pulse Live" }),
+    ).toHaveAttribute("href", "/play");
+    expect(screen.queryByText(/enter this code/)).not.toBeInTheDocument();
   });
 });
 
 describe("QuizshowScreenStage party layouts on the TV", () => {
-  it("the party reveal shows the eight leading entries and folds the rest into a +N more line", async () => {
+  it("the party reveal shows the six leading entries a tall screen holds and folds the rest into a +N more line", async () => {
     const entries = [...Array(10).keys()].map((entryIndex) => ({
       optionId: `option-${entryIndex + 1}`,
       answerId: `answer-${entryIndex + 1}`,
@@ -746,6 +881,8 @@ describe("QuizshowScreenStage party layouts on the TV", () => {
           correct: null,
           answeredCount: 10,
           eligibleCount: 12,
+          note: null,
+          wasCorrected: false,
           distribution: {
             kind: "votes",
             favouriteOptionId: null,
@@ -755,10 +892,42 @@ describe("QuizshowScreenStage party layouts on the TV", () => {
       }),
     );
     expect(await screen.findByText("Caption number 10")).toBeInTheDocument();
-    expect(screen.getByText("Caption number 3")).toBeInTheDocument();
-    expect(screen.queryByText("Caption number 2")).not.toBeInTheDocument();
+    expect(screen.getByText("Caption number 5")).toBeInTheDocument();
+    expect(screen.queryByText("Caption number 4")).not.toBeInTheDocument();
     expect(screen.queryByText("Caption number 1")).not.toBeInTheDocument();
-    expect(screen.getByText("+2 more")).toBeInTheDocument();
+    expect(screen.getByText("+4 more")).toBeInTheDocument();
+  });
+
+  it("the reveal holds two rows when the practice badge and a two-language prompt share the screen", async () => {
+    const entries = [...Array(10).keys()].map((entryIndex) => ({
+      optionId: `option-${entryIndex + 1}`,
+      answerId: `answer-${entryIndex + 1}`,
+      text: `Caption number ${entryIndex + 1}`,
+      authorName: `Author ${entryIndex + 1}`,
+      isTruth: false,
+      voteCount: entryIndex + 1,
+      authorPoints: 0,
+    }));
+    renderStage(
+      partySession("reveal", {
+        isPractice: true,
+        screenLanguage: "both",
+        reveal: {
+          phaseId: "9",
+          questionId: PARTY_QUESTION.questionId,
+          correct: null,
+          answeredCount: 10,
+          eligibleCount: 12,
+          note: null,
+          wasCorrected: false,
+          distribution: { kind: "votes", favouriteOptionId: null, entries },
+        },
+      }),
+    );
+    expect(await screen.findByText("Caption number 10")).toBeInTheDocument();
+    expect(screen.getByText("Caption number 7")).toBeInTheDocument();
+    expect(screen.queryByText("Caption number 6")).not.toBeInTheDocument();
+    expect(screen.getByText("+6 more")).toBeInTheDocument();
   });
 
   it("the vote grid moves to six columns at 13 captions and to eight at 25", async () => {
@@ -886,6 +1055,20 @@ describe("QuizshowScreenStage party layouts on the TV", () => {
       voteRender.container.querySelector("img[data-size]"),
     ).toHaveAttribute("data-size", "compact");
   });
+
+  it("a picture without prompt text stays centred on its own card", () => {
+    const { container } = renderStage(
+      partySession("vote", {
+        question: {
+          ...PARTY_QUESTION,
+          prompt: { en: "", pt: "" },
+          mediaUrl: "https://example.test/picture.jpg",
+        },
+      }),
+    );
+    expect(container.querySelector('[data-has-prompt="false"]')).not.toBeNull();
+    expect(container.querySelector("h1")).toBeNull();
+  });
 });
 
 describe("QuizshowScreenStage", () => {
@@ -929,9 +1112,20 @@ describe("QuizshowScreenStage after the end", () => {
               podium: [],
               nextEvent: null,
               hasResults: false,
+              isPractice: false,
+              giving: null,
             },
             isRemoved: false,
             pendingAnswer: null,
+            hasAttached: true,
+            retryCause: null,
+            rematch: null,
+            reactionBurst: null,
+            canRejoinAfterRemoval: false,
+            nightLog: [],
+            ownRanks: { previous: null, current: null },
+            ownRankSourceKey: null,
+            lastTeamName: null,
           }}
           clockOffsetMs={0}
           size="screen"
@@ -947,13 +1141,15 @@ describe("QuizshowScreenStage after the end", () => {
 describe("QuizshowScreenPage controls", () => {
   it("starts dark and switches to light", async () => {
     renderPage();
-    const toggle = await screen.findByRole("button", { name: "Light screen" });
+    const toggle = await screen.findByRole("button", {
+      name: "Use a light screen",
+    });
     expect(screenRoot()).toHaveAttribute("data-theme", "dark");
     fireEvent.click(toggle);
     expect(screenRoot()).toHaveAttribute("data-theme", "light");
     expect(window.localStorage.getItem("quizshow:screenTheme")).toBe("light");
     expect(
-      screen.getByRole("button", { name: "Dark screen" }),
+      screen.getByRole("button", { name: "Use a dark screen" }),
     ).toBeInTheDocument();
   });
 
@@ -966,7 +1162,7 @@ describe("QuizshowScreenPage controls", () => {
     try {
       renderPage();
       fireEvent.click(
-        await screen.findByRole("button", { name: "Full screen" }),
+        await screen.findByRole("button", { name: "Go full screen" }),
       );
       expect(requestFullscreen).toHaveBeenCalledTimes(1);
 
@@ -1094,6 +1290,8 @@ describe("QuizshowScreenPage live", () => {
         playMode: "solo",
         playerCount: 3,
         startedAt: "2026-10-19T20:00:00.000Z",
+        isPractice: false,
+        isBehindQuiz: false,
       },
       hasQuizFailed: false,
     });
@@ -1146,6 +1344,8 @@ describe("QuizshowScreenPage live", () => {
         playMode: "solo",
         playerCount: 3,
         startedAt: "2026-10-19T20:00:00.000Z",
+        isPractice: false,
+        isBehindQuiz: false,
       },
       hasQuizFailed: false,
     });
@@ -1294,6 +1494,7 @@ const ROUND_SCORES: QuizshowScores = {
       colorKey: null,
       score: 2400,
       previousScore: 1400,
+      streak: 0,
     },
     {
       rank: 2,
@@ -1303,6 +1504,7 @@ const ROUND_SCORES: QuizshowScores = {
       colorKey: null,
       score: 1800,
       previousScore: 1200,
+      streak: 0,
     },
   ],
   entrantCount: 2,
@@ -1453,5 +1655,381 @@ describe("QuizshowScreenStage wheel", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("3 rounds to go")).toBeInTheDocument();
     expect(screen.queryByText("Wheel bonus")).not.toBeInTheDocument();
+  });
+});
+
+function renderMotionPage(path = quizshowScreenPath(defaultGatheringSlug)) {
+  return render(
+    <TestProviders initialEntries={[path]}>
+      <MotionProvider>
+        <Routes>
+          <Route
+            path={QUIZSHOW_SCREEN_ROUTE}
+            element={<QuizshowScreenPage />}
+          />
+        </Routes>
+      </MotionProvider>
+    </TestProviders>,
+  );
+}
+
+function burstOf(
+  counts: QuizshowReactionBurst["counts"],
+  sequence: number,
+): QuizshowClientState {
+  return {
+    ...clientState(screenSession()),
+    reactionBurst: { counts, sequence },
+  };
+}
+
+function floaterCount(): number {
+  return document.querySelectorAll("[data-reaction-floater]").length;
+}
+
+/** The view's session for a TV a remote paired, as the TV page builds it. */
+function pairedTvHostSession(): QuizshowHostSession {
+  return {
+    scope: eventScope(defaultGatheringSlug),
+    slug: defaultGatheringSlug,
+    eventTitle: null,
+    gameTitle: "",
+    isAdultsOnly: false,
+    backPath: quizshowTvPath(),
+    backLabelKey: "quizshow:tv.backToCode",
+    backState: QUIZSHOW_TV_LEAVE_STATE,
+    noGameKeys: {
+      screen: "quizshow:screen.noGame",
+      remote: "quizshow:remote.noGame",
+    },
+    isOrganizer: true,
+    isLoading: false,
+    sessionId: "session-1",
+    errorCode: null,
+    hasLoadFailed: false,
+    playMode: "solo",
+    deviceTicket: "ticket-1",
+  };
+}
+
+describe("QuizshowScreenPage on the venue TV", () => {
+  it("hides the pointer after two still seconds and shows it on movement", () => {
+    vi.useFakeTimers({
+      toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"],
+    });
+    const view = renderPage();
+    const root = document.documentElement;
+    const attribute = "data-quizshow-pointer-still";
+    act(() => {
+      vi.advanceTimersByTime(1999);
+    });
+    expect(root).not.toHaveAttribute(attribute);
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    // On <html>, so the portaled toolbar, chip and reactions hide it too.
+    expect(root).toHaveAttribute(attribute, "true");
+    act(() => {
+      window.dispatchEvent(new Event("pointermove"));
+    });
+    expect(root).not.toHaveAttribute(attribute);
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    expect(root).toHaveAttribute(attribute, "true");
+    view.unmount();
+    expect(root).not.toHaveAttribute(attribute);
+  });
+
+  it("shows Turn on sound until audio runs, and the tap turns the sound on", async () => {
+    renderMotionPage();
+    const chip = await screen.findByRole("button", { name: "Turn on sound" });
+    cueMock.isAudioRunning = true;
+    fireEvent.click(chip);
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("button", { name: "Turn on sound" }),
+      ).not.toBeInTheDocument();
+    });
+    expect(
+      screen.getByRole("button", { name: "Mute sounds" }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the sound level on this device", async () => {
+    const view = renderPage();
+    // One button names the level and steps to the next: Quiet, Normal, Venue.
+    const levelButton = await screen.findByRole("button", {
+      name: "Sound: Normal",
+    });
+    expect(levelButton).toHaveAccessibleDescription("Press to switch to Venue");
+    fireEvent.click(levelButton);
+    expect(window.localStorage.getItem("quizshow.soundLevel")).toBe("venue");
+    expect(
+      screen.getByRole("button", { name: "Sound: Venue" }),
+    ).toHaveAccessibleDescription("Press to switch to Quiet");
+    // A screen reader hears the new level after the press.
+    expect(
+      screen
+        .getAllByRole("status")
+        .some((statusLine) => statusLine.textContent === "Sound: Venue"),
+    ).toBe(true);
+    view.unmount();
+
+    renderPage();
+    const nextButton = await screen.findByRole("button", {
+      name: "Sound: Venue",
+    });
+    fireEvent.click(nextButton);
+    expect(window.localStorage.getItem("quizshow.soundLevel")).toBe("quiet");
+  });
+
+  it("marks <html> while Turn on sound shows, so the join chip climbs above it", async () => {
+    renderMotionPage();
+    const chip = await screen.findByRole("button", { name: "Turn on sound" });
+    const root = document.documentElement;
+    expect(root).toHaveAttribute("data-quizshow-sound-chip", "true");
+    cueMock.isAudioRunning = true;
+    fireEvent.click(chip);
+    await waitFor(() => {
+      expect(root).not.toHaveAttribute("data-quizshow-sound-chip");
+    });
+  });
+
+  it("floats the reactions behind the stage, inside the page", async () => {
+    sessionOverride.set(clientState(screenSession()));
+    renderPage();
+    await screen.findByRole("button", { name: "Hide reactions" });
+    act(() => {
+      sessionOverride.set(burstOf({ heart: 2 }, 1));
+    });
+    const floater = document.querySelector("[data-reaction-floater]");
+    expect(floater).not.toBeNull();
+    // In the page's slot before the main content, so the stage paints over it.
+    expect(screenRoot().contains(floater)).toBe(true);
+    expect(
+      document.getElementById(MAIN_CONTENT_ID)?.contains(floater) ?? false,
+    ).toBe(false);
+  });
+
+  it("floats at most 30 reactions at once", async () => {
+    sessionOverride.set(clientState(screenSession()));
+    renderPage();
+    await screen.findByRole("button", { name: "Hide reactions" });
+    act(() => {
+      sessionOverride.set(burstOf({ heart: 40, fire: 5 }, 1));
+    });
+    expect(floaterCount()).toBe(30);
+    expect(
+      document.querySelectorAll('[data-reaction-floater="fire"]'),
+    ).toHaveLength(5);
+    act(() => {
+      sessionOverride.set(burstOf({ clap: 3 }, 2));
+    });
+    expect(floaterCount()).toBe(30);
+  });
+
+  it("the Hide reactions switch hides them for this page load", async () => {
+    sessionOverride.set(clientState(screenSession()));
+    renderMotionPage();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Hide reactions" }),
+    );
+    await waitFor(() => {
+      expect(
+        document.querySelector("[data-quizshow-reactions]"),
+      ).not.toBeInTheDocument();
+    });
+    act(() => {
+      sessionOverride.set(burstOf({ heart: 4 }, 1));
+    });
+    expect(floaterCount()).toBe(0);
+    expect(
+      await screen.findByRole("button", { name: "Show reactions" }),
+    ).toBeInTheDocument();
+  });
+
+  it.each([
+    ["TOKEN_EXPIRED", "quizshow_device_ticket_expired"],
+    ["quizshow_device_unpaired", "quizshow_device_unpaired"],
+    ["quizshow_session_finished", "quizshow_session_finished"],
+  ] as const)(
+    "a paired TV refused with %s hears %s",
+    async (refusalCode, expectedCode) => {
+      const onSessionRefused = vi.fn();
+      sessionOverride.set({
+        ...clientState(screenSession()),
+        status: "refused",
+        refusalCode,
+      });
+      render(
+        <TestProviders>
+          <QuizshowScreenView
+            hostSession={pairedTvHostSession()}
+            onSessionRefused={onSessionRefused}
+          />
+        </TestProviders>,
+      );
+      await waitFor(() => {
+        expect(onSessionRefused).toHaveBeenCalledWith(expectedCode);
+      });
+    },
+  );
+});
+
+describe("QuizshowTvPage after a live game ends", () => {
+  const endedState = (): QuizshowClientState => ({
+    ...clientState(screenSession({ cursor: cursorWith({ phase: "ended" }) })),
+    status: "ended",
+    sessionEnd: {
+      sessionId: "session-1",
+      status: "finished",
+      podium: [],
+      nextEvent: null,
+      hasResults: false,
+      isPractice: true,
+      giving: null,
+    },
+  });
+
+  afterEach(() => {
+    window.sessionStorage.clear();
+    pairingApiMock.startScreenPairing.mockReset();
+    pairingApiMock.claimPairing.mockReset();
+  });
+
+  it("tells the TV view once the session ended", async () => {
+    const onSessionEnded = vi.fn();
+    sessionOverride.set(endedState());
+    render(
+      <TestProviders>
+        <QuizshowScreenView
+          hostSession={pairedTvHostSession()}
+          onSessionEnded={onSessionEnded}
+          aside={<span data-testid="next-code" />}
+        />
+      </TestProviders>,
+    );
+    await waitFor(() => {
+      expect(onSessionEnded).toHaveBeenCalled();
+    });
+    expect(screen.getByTestId("next-code")).toBeInTheDocument();
+  });
+
+  it("keeps the thank-you card, shows a fresh code beside it and moves to the session that code pairs", async () => {
+    liveMock.isLive = true;
+    saveDeviceTicket(
+      {
+        status: "paired",
+        deviceTicket: "ticket-1",
+        sessionId: "session-1",
+        kind: "event",
+        eventSlug: defaultGatheringSlug,
+        gameId: null,
+      },
+      "screen",
+    );
+    sessionOverride.set(endedState());
+    pairingApiMock.startScreenPairing.mockResolvedValue({
+      pairingId: "0f6c2a8e-3b1d-4c5a-9e7f-1a2b3c4d5e6f",
+      pairingCode: "472935",
+      pollToken: "p".repeat(43),
+      expiresAt: Date.now() + QUIZSHOW_LIMITS.pairingCodeTtlMs,
+    });
+    pairingApiMock.claimPairing.mockResolvedValue({
+      status: "paired",
+      deviceTicket: "ticket-2",
+      sessionId: "session-2",
+      kind: "event",
+      eventSlug: defaultGatheringSlug,
+      gameId: null,
+    });
+    render(
+      <TestProviders initialEntries={[quizshowTvPath()]}>
+        <QuizshowTvPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("heading", {
+        name: "Next game? Pair this screen again",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("Pairing code 4 7 2 9 3 5"),
+    ).toBeInTheDocument();
+
+    await waitFor(
+      () => {
+        expect(
+          window.sessionStorage.getItem("quizshow.devicePairing.last"),
+        ).toBe("session-2");
+      },
+      { timeout: QUIZSHOW_LIMITS.pairingPollMs * 2 },
+    );
+    expect(
+      window.sessionStorage.getItem("quizshow.deviceTicket.session-1"),
+    ).toBeNull();
+  });
+});
+
+describe("QuizshowScreenView refusal actions", () => {
+  function eventHostSession(): QuizshowHostSession {
+    return { ...pairedTvHostSession(), deviceTicket: null };
+  }
+
+  it("offers Sign in again for a lapsed sign-in, back to this page", async () => {
+    sessionOverride.set({
+      ...clientState(screenSession()),
+      status: "refused",
+      refusalCode: "UNAUTHORIZED",
+    });
+    render(
+      <TestProviders
+        initialEntries={["/gatherings/quiz-night/quizshow/screen"]}
+      >
+        <QuizshowScreenView hostSession={eventHostSession()} />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("link", { name: "Sign in again" }),
+    ).toHaveAttribute(
+      "href",
+      `/auth/sign-in?next=${encodeURIComponent("/gatherings/quiz-night/quizshow/screen")}`,
+    );
+  });
+
+  it("offers Reload the page for a server fault", async () => {
+    sessionOverride.set({
+      ...clientState(screenSession()),
+      status: "refused",
+      refusalCode: "SERVER_ERROR",
+    });
+    render(
+      <TestProviders>
+        <QuizshowScreenView hostSession={eventHostSession()} />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("button", { name: "Reload the page" }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the back control on a paired TV whose sign-in lapsed", async () => {
+    sessionOverride.set({
+      ...clientState(screenSession()),
+      status: "refused",
+      refusalCode: "UNAUTHORIZED",
+    });
+    render(
+      <TestProviders>
+        <QuizshowScreenView hostSession={pairedTvHostSession()} />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("link", { name: "Show a new code" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Sign in again" }),
+    ).not.toBeInTheDocument();
   });
 });

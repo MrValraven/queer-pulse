@@ -52,8 +52,16 @@ interface PickerProps<Value> {
 
 /** The refusal line under a field or picker: an icon and the reason. It
  *  folds in and out inside the field's own column, so nothing outside the
- *  fold can clip it, and it keeps its last words while it folds away. */
-function FieldError({ id, error }: { id: string; error: string | null }) {
+ *  fold can clip it, and it keeps its last words while it folds away.
+ *  Exported for other badge forms; point the group's `aria-describedby` at
+ *  `id` while `error` is set. */
+export function FieldError({
+  id,
+  error,
+}: {
+  id: string;
+  error: string | null;
+}) {
   const [shownError, setShownError] = useState(error);
   if (error !== null && error !== shownError) setShownError(error);
   return (
@@ -124,24 +132,27 @@ export function CommunityBadgeTextField({
   );
 }
 
-/** The 24 badge icons as one radio group, six to a row (four on a phone). */
+/** The 24 badge icons as one radio group, six to a row (four on a phone).
+ *  `label` names the group for another form (the quiz badge form, say). */
 export function CommunityBadgeIconPicker({
   value,
   onChange,
   error = null,
-}: PickerProps<CommunityBadgeIconKey>) {
+  label,
+}: PickerProps<CommunityBadgeIconKey> & { label?: string }) {
   const { t } = useTranslation();
   const labelId = useId();
   const errorId = useId();
+  const pickerLabel = label ?? t("communities:badges.form.icon");
   return (
     <div className={styles.picker}>
       <span id={labelId} className={styles.pickerLabel}>
-        {t("communities:badges.form.icon")}
+        {pickerLabel}
       </span>
       <RadioCardGroup
         value={value}
         onChange={onChange}
-        ariaLabel={t("communities:badges.form.icon")}
+        ariaLabel={pickerLabel}
         ariaLabelledBy={labelId}
         ariaDescribedBy={error === null ? undefined : errorId}
         className={styles.iconGrid}
@@ -166,30 +177,38 @@ export function CommunityBadgeIconPicker({
   );
 }
 
-/** The six badge colours as swatches: the chip's ground with its ink edge. */
+/** The six badge colours as swatches: the chip's ground with its ink edge.
+ *  `tints` narrows the swatches (the quiz badge form offers three) and
+ *  `label` names the group for another form. */
 export function CommunityBadgeTintPicker({
   value,
   onChange,
   error = null,
-}: PickerProps<CommunityFlairTint>) {
+  label,
+  tints = COMMUNITY_FLAIR_TINTS,
+}: PickerProps<CommunityFlairTint> & {
+  label?: string;
+  tints?: readonly CommunityFlairTint[];
+}) {
   const { t } = useTranslation();
   const labelId = useId();
   const errorId = useId();
+  const pickerLabel = label ?? t("communities:badges.form.tint");
   return (
     <div className={styles.picker}>
       <span id={labelId} className={styles.pickerLabel}>
-        {t("communities:badges.form.tint")}
+        {pickerLabel}
       </span>
       <RadioCardGroup
         value={value}
         onChange={onChange}
-        ariaLabel={t("communities:badges.form.tint")}
+        ariaLabel={pickerLabel}
         ariaLabelledBy={labelId}
         ariaDescribedBy={error === null ? undefined : errorId}
         className={styles.tintGrid}
         optionClassName={styles.tintOption}
         checkedClassName={styles.optionChecked}
-        options={COMMUNITY_FLAIR_TINTS.map((tint) => ({
+        options={tints.map((tint) => ({
           id: tint,
           render: (
             <>

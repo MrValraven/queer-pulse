@@ -7,9 +7,20 @@ export type StudioShortcutKey =
   | { kind: "delete" };
 
 export interface StudioShortcut {
-  id: "new" | "move" | "ends" | "duplicate" | "delete" | "save" | "help";
+  id:
+    | "new"
+    | "move"
+    | "ends"
+    | "duplicate"
+    | "delete"
+    | "undo"
+    | "redo"
+    | "save"
+    | "help";
   /** Pressed together, except `move` and `ends`, whose two keys are alternatives. */
   keys: readonly StudioShortcutKey[];
+  /** A second combination for the same action, drawn after "or" (redo's Ctrl+Y). */
+  alternativeKeys?: readonly StudioShortcutKey[];
   labelKey: string;
 }
 
@@ -42,6 +53,25 @@ export const STUDIO_SHORTCUTS: readonly StudioShortcut[] = [
     id: "delete",
     keys: [{ kind: "delete" }],
     labelKey: "quizshow:studio.shortcuts.delete",
+  },
+  {
+    id: "undo",
+    keys: [{ kind: "command" }, { kind: "text", text: "Z" }],
+    labelKey: "quizshow:studio.shortcuts.undo",
+  },
+  {
+    id: "redo",
+    keys: [
+      { kind: "text", text: "Shift" },
+      { kind: "command" },
+      { kind: "text", text: "Z" },
+    ],
+    // The Windows and Linux habit; it redoes on every platform (useStudioHistoryShortcuts).
+    alternativeKeys: [
+      { kind: "text", text: "Ctrl" },
+      { kind: "text", text: "Y" },
+    ],
+    labelKey: "quizshow:studio.shortcuts.redo",
   },
   {
     id: "save",

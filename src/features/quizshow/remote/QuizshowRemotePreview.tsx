@@ -27,7 +27,11 @@ function useCanvasScale() {
   return { frameRef: setFrame, scale };
 }
 
-/** Demo only: what the big screen shows right now, small and 16:9, above the controls. Null live. */
+/**
+ * What the big screen shows right now, small and 16:9, above the controls
+ * (item 50): the demo engine's screen state in demo, the host state with its
+ * host-only fields stripped live. Folds away while `state` is null.
+ */
 export function QuizshowRemotePreview({
   state,
   clockOffsetMs,

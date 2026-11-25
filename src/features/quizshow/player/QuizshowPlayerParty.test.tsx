@@ -9,7 +9,7 @@ import type {
   QuizshowQuestionView,
   QuizshowReveal,
 } from "../../../shared/contracts/quizshow";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import { createQuizshowClientState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowPartyReveal } from "./QuizshowPartyReveal";
 import { QuizshowPlayerParty } from "./QuizshowPlayerParty";
@@ -41,6 +41,10 @@ const QUESTION: QuizshowQuestionView = {
   mediaUrl: null,
   points: 1000,
   timeLimitSeconds: 60,
+  mediaAlt: { en: "", pt: "" },
+  mediaReveal: "instant",
+  numberUnit: { en: "", pt: "" },
+  readMs: 4000,
   options: null,
 };
 
@@ -61,6 +65,9 @@ function cursorIn(phase: QuizshowPhase): QuizshowCursor {
     roundNumber: 2,
     upNext: null,
     canSpinForNextRound: false,
+    talkStartsAt: null,
+    autoAdvanceAt: null,
+    podiumRevealedCount: null,
   };
 }
 
@@ -82,6 +89,10 @@ function stateIn(
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor: cursorIn(phase),
     rounds: [],
@@ -93,7 +104,8 @@ function stateIn(
     wheel: null,
     wheelBonus: null,
     role: "player",
-    lobby: { players: [], teams: [], playerCount: 4 },
+    lobby: { teams: [], playerCount: 4 },
+    answerCount: null,
     question: QUESTION,
     voteOptions: null,
     me: {
@@ -122,17 +134,13 @@ function controllerOf(
   session: QuizshowPlayerState,
   mocks: { submitAnswer?: unknown; send?: unknown } = {},
 ): QuizshowSessionController {
-  const state: QuizshowClientState = {
-    role: "player",
-    status: "attached",
-    refusalCode: null,
-    session,
-    sessionEnd: null,
-    isRemoved: false,
-    pendingAnswer: null,
-  };
   return {
-    state,
+    state: {
+      ...createQuizshowClientState("player"),
+      status: "attached",
+      hasAttached: true,
+      session,
+    },
     clockOffsetMs: 0,
     isDemo: true,
     send: mocks.send ?? vi.fn(),
@@ -193,6 +201,8 @@ const VOTE_REVEAL: QuizshowReveal = {
       },
     ],
   },
+  note: null,
+  wasCorrected: false,
 };
 
 /** The component's own alert. TestProviders also mounts the toast regions,
@@ -477,5 +487,120 @@ describe("party reveal order on the phone", () => {
       "Harvey Milk",
       "Gilbert Baker maybe",
     ]);
+  });
+});
+
+describe("party pictures, languages and place on the phone", () => {
+  const PICTURE_QUESTION: QuizshowQuestionView = {
+    ...QUESTION,
+    roundKind: "caption_this",
+    mediaUrl: "https://cdn.example.test/caption-picture.jpg",
+    mediaAlt: {
+      en: "A drag queen mid-split",
+      pt: "Uma drag a meio de uma espargata",
+    },
+  };
+
+  it("gives the party picture its alt text, plain in write and at the reveal", async () => {
+    const written = render(
+      <TestProviders>
+        <QuizshowPlayerParty
+          controller={controllerOf(
+            stateIn("write", { question: PICTURE_QUESTION }),
+          )}
+          question={PICTURE_QUESTION}
+          language="en"
+        />
+      </TestProviders>,
+    );
+    const picture = await screen.findByRole("img", {
+      name: "A drag queen mid-split",
+    });
+    expect(picture.style.filter).not.toContain("blur");
+    written.unmount();
+
+    render(
+      <TestProviders>
+        <QuizshowPartyReveal
+          state={stateIn("reveal", {
+            question: PICTURE_QUESTION,
+            reveal: VOTE_REVEAL,
+          })}
+          language="en"
+        />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("img", { name: "A drag queen mid-split" }),
+    ).toBeInTheDocument();
+  });
+
+  it("marks the party prompt with the language its words are in", async () => {
+    const portugueseOnly: QuizshowQuestionView = {
+      ...QUESTION,
+      prompt: { en: "", pt: "Quem criou a bandeira?" },
+    };
+    render(
+      <TestProviders>
+        <QuizshowPlayerParty
+          controller={controllerOf(
+            stateIn("write", { question: portugueseOnly }),
+          )}
+          question={portugueseOnly}
+          language="en"
+        />
+      </TestProviders>,
+    );
+    const heading = await screen.findByRole("heading", { level: 1 });
+    expect(within(heading).getByText("Quem criou a bandeira?")).toHaveAttribute(
+      "lang",
+      "pt",
+    );
+  });
+
+  it("says the place at a party reveal as an ordinal", async () => {
+    render(
+      <TestProviders>
+        <QuizshowPartyReveal
+          state={stateIn("reveal", {
+            reveal: VOTE_REVEAL,
+            myReveal: {
+              phaseId: "11",
+              questionId: "question-1",
+              hasAnswered: true,
+              ownAnswerId: "answer-mine",
+              isCorrect: null,
+              correctPositions: null,
+              pointsAwarded: 250,
+              streakBonus: 0,
+              isJokerActive: false,
+              streak: 0,
+              score: 250,
+              teamScore: null,
+              rank: 1,
+            },
+          })}
+          language="en"
+        />
+      </TestProviders>,
+    );
+    expect(await screen.findByText("You're 1st of 4")).toBeInTheDocument();
+  });
+
+  it("shows how many have answered under the locked caption once it is acked", async () => {
+    renderParty(
+      controllerOf(
+        stateIn("write", {
+          myAnswer: {
+            questionId: "question-1",
+            phaseId: "11",
+            payload: { type: "prompt", text: "Gilbert Baker maybe" },
+            receivedAt: 1,
+          },
+          answerCount: { count: 2, total: 4 },
+        }),
+      ),
+    );
+    expect(await screen.findByText("2 of 4 answered")).toBeInTheDocument();
   });
 });

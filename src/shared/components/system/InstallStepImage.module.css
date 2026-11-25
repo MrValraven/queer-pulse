@@ -1,0 +1,9 @@
+/* The screenshot carries its own rounded panels on a transparent ground, so
+   the image gets no border or shadow of its own. It shrinks with the text
+   column on narrow phones and keeps its ratio. */
+.image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-top: var(--gap-xs);
+}

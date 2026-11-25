@@ -5,6 +5,7 @@ import type { QuizshowLanguage } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowBlockedTip } from "../builder/QuizshowBlockedTip";
 import { useQuizshowBlockedTip } from "../builder/useQuizshowBlockedTip";
+import { QuizshowPracticeBadge } from "../stage/QuizshowPracticeBadge";
 import {
   quizshowScopeRemotePath,
   quizshowScopeScreenPath,
@@ -98,10 +99,12 @@ export function QuizshowStudioLivePill() {
         className={styles.livePill}
         aria-haspopup="menu"
         aria-expanded={menu.isOpen}
-        aria-label={t("quizshow:studio.live.pillLabel", {
-          status: statusLabel,
-          code: liveSession.joinCode,
-        })}
+        aria-label={t(
+          liveSession.isPractice
+            ? "quizshow:studio.live.pillLabelPractice"
+            : "quizshow:studio.live.pillLabel",
+          { status: statusLabel, code: liveSession.joinCode },
+        )}
         onClick={(event) => menu.toggleFrom(event.currentTarget)}
       >
         <span className={styles.liveDot} aria-hidden />
@@ -111,6 +114,12 @@ export function QuizshowStudioLivePill() {
         <span className={styles.liveCode} aria-hidden>
           {liveSession.joinCode}
         </span>
+        {liveSession.isPractice && (
+          <QuizshowPracticeBadge
+            tone="studio"
+            className={styles.livePractice}
+          />
+        )}
       </button>
       <QuizshowStudioMenu
         label={t("quizshow:live.title")}

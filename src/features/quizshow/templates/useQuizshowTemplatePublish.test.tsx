@@ -104,6 +104,11 @@ describe("useQuizshowTemplatePublish in demo mode", () => {
     expect(demoPublishTemplate).toHaveBeenCalledTimes(1);
     expect(cachedTemplate()?.publishedByName).toBe("Rui Marçal");
     expect(cachedTemplate()?.publishedAt).not.toBeNull();
+    // The status line's "Last published" reads the publish from the cache too.
+    expect(cachedTemplate()?.lastPublishedAt).toBe(
+      cachedTemplate()?.publishedAt,
+    );
+    expect(cachedTemplate()?.changeNote).toEqual({ en: "", pt: "" });
     expect(result.current.errorKey).toBeNull();
     expect(
       await screen.findByText("Template published. Hosts can pick it now"),

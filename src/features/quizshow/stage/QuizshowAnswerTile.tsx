@@ -5,9 +5,14 @@ import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { QuizshowTeamColorKey } from "../../../shared/contracts/quizshow";
+import type {
+  QuizshowScreenLanguage,
+  QuizshowTeamColorKey,
+  QuizshowText,
+} from "../../../shared/contracts/quizshow";
 import { QuizshowShape } from "../QuizshowShape";
 import { QUIZSHOW_SWATCHES } from "../quizshowSwatches";
+import { QuizshowStageText } from "./QuizshowStageText";
 import styles from "./QuizshowStage.module.css";
 import type { QuizshowStageSize } from "./quizshowText";
 
@@ -22,7 +27,14 @@ export interface QuizshowAnswerShare {
 interface QuizshowAnswerTileProps {
   colorKey: QuizshowTeamColorKey;
   letter: string;
+  /** The answer in one language: what the tile shows without `quizText`. */
   text: string;
+  /**
+   * The TV's answer as a quiz text in the screen language (C6.26): under
+   * 'both' the EN line, then the PT line smaller on the fill. Null or left
+   * out shows `text`.
+   */
+  quizText?: { text: QuizshowText; language: QuizshowScreenLanguage } | null;
   size: QuizshowStageSize;
   state: QuizshowAnswerTileState;
   onSelect?: () => void;
@@ -98,6 +110,7 @@ export function QuizshowAnswerTile({
   colorKey,
   letter,
   text,
+  quizText = null,
   size,
   state,
   onSelect,
@@ -129,7 +142,16 @@ export function QuizshowAnswerTile({
       <span className={styles.letter} aria-hidden="true">
         {letter}
       </span>
-      <span className={styles.tileText}>{text}</span>
+      {quizText === null ? (
+        <span className={styles.tileText}>{text}</span>
+      ) : (
+        <QuizshowStageText
+          text={quizText.text}
+          language={quizText.language}
+          className={styles.tileText}
+          secondaryClassName={styles.tileTextSecondary}
+        />
+      )}
       {shownShare !== null && <TileShareText share={shownShare} />}
       {/* The correct answer carries a check as well as its jade edge, so it never rests on colour. The caller's label names it. */}
       {state === "correct" && (

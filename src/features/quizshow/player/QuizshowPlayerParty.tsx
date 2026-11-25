@@ -10,18 +10,23 @@ import {
   type QuizshowPlayableRoundKind,
   type QuizshowQuestionView,
 } from "../../../shared/contracts/quizshow";
-import { quizshowErrorKeyOf } from "../api/quizshowErrors";
+import {
+  QUIZSHOW_TRANSPORT_TIMEOUT_KEY,
+  quizshowErrorKeyOf,
+} from "../api/quizshowErrors";
 import { isPlayerState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowCountdownBar } from "../stage/QuizshowCountdownBar";
+import { QuizshowStagePicture } from "../stage/QuizshowStagePicture";
+import { QuizshowStageText } from "../stage/QuizshowStageText";
 import { pickQuizshowText } from "../stage/quizshowText";
 import styles from "./QuizshowPlayer.module.css";
-import { partyHeadingOf } from "./quizshowPartyHeading";
 import {
   QuizshowLockedPanel,
   QuizshowLockedStatus,
   QuizshowWaitDots,
 } from "./QuizshowLockedPanel";
+import { answeredLineOf } from "./quizshowAnsweredLine";
 import { useAnswerSender } from "./useQuizshowAnswerSender";
 import { useIsAnswerHeld } from "./useIsAnswerHeld";
 import { useQuizshowHeadingFocus } from "./useQuizshowHeadingFocus";
@@ -61,6 +66,8 @@ function WriteForm({ controller, question, isHeld }: PartyInputProps) {
     controller,
     question.questionId,
   );
+  const { session } = controller.state;
+  const player = isPlayerState(session) ? session : null;
   const [draft, setDraft] = useState(() =>
     lockedPayload?.type === "prompt" ? lockedPayload.text : "",
   );
@@ -113,6 +120,7 @@ function WriteForm({ controller, question, isHeld }: PartyInputProps) {
         <QuizshowLockedPanel
           title={t("quizshow:player.answerLocked")}
           body={t("quizshow:player.waitingReview")}
+          answeredLine={answeredLineOf(player, question.questionId, t)}
         />
       </Collapse>
       <Alert errorKey={errorKey} />
@@ -145,9 +153,9 @@ function VoteList({ controller, question, isHeld }: PartyInputProps) {
         if (result.ok) return;
         setChosenOptionId(null);
         setErrorKey(
-          quizshowErrorKeyOf(
-            result.code === "transport_timeout" ? null : result.code,
-          ),
+          result.code === "transport_timeout"
+            ? QUIZSHOW_TRANSPORT_TIMEOUT_KEY
+            : quizshowErrorKeyOf(result.code),
         );
       });
   };
@@ -204,6 +212,21 @@ function VoteList({ controller, question, isHeld }: PartyInputProps) {
   );
 }
 
+/** A party heading: the prompt in its own `lang` (item 41), or the round kind's name when the
+ *  prompt is blank (a Caption This picture can stand on its own). */
+export function QuizshowPartyHeadingText({
+  question,
+  language,
+}: {
+  question: QuizshowQuestionView;
+  language: QuizshowLanguage;
+}) {
+  const { t } = useTranslation();
+  const prompt = pickQuizshowText(question.prompt, language).trim();
+  if (prompt === "") return t(`quizshow:kind.${question.roundKind}.name`);
+  return <QuizshowStageText text={question.prompt} language={language} />;
+}
+
 /** Party rounds on the phone: write, wait while the hosts check, then vote. */
 export function QuizshowPlayerParty({
   controller,
@@ -227,14 +250,11 @@ export function QuizshowPlayerParty({
   const headingRef = useQuizshowHeadingFocus(session?.cursor.phaseId ?? "");
   const isLateJoiner = player?.isEligibleForQuestion === false;
   const prompt = pickQuizshowText(question.prompt, language).trim();
-  let title = partyHeadingOf(question, language, t);
-  if (phase === "vote") {
-    title = t(
-      question.roundKind === "lie_detector"
-        ? "quizshow:player.voteLieDetectorTitle"
-        : "quizshow:player.voteTitle",
-    );
-  }
+  const voteTitle = t(
+    question.roundKind === "lie_detector"
+      ? "quizshow:player.voteLieDetectorTitle"
+      : "quizshow:player.voteTitle",
+  );
   return (
     <div
       className={styles.screenBody}
@@ -258,13 +278,30 @@ export function QuizshowPlayerParty({
       />
       <div className={styles.promptArea}>
         <h1 ref={headingRef} tabIndex={-1} className={styles.heading}>
-          {title}
+          {phase === "vote" ? (
+            voteTitle
+          ) : (
+            <QuizshowPartyHeadingText question={question} language={language} />
+          )}
         </h1>
         {phase === "vote" && prompt !== "" && (
-          <p className={styles.note}>{prompt}</p>
+          <QuizshowStageText
+            as="p"
+            className={styles.note}
+            text={question.prompt}
+            language={language}
+          />
         )}
+        {/* Party pictures show plain: the slow reveal is for quiz rounds (C6.23). */}
         {question.mediaUrl !== null && (
-          <img className={styles.media} src={question.mediaUrl} alt="" />
+          <QuizshowStagePicture
+            className={styles.picture}
+            mediaUrl={question.mediaUrl}
+            alt={question.mediaAlt}
+            language={language}
+            slowReveal={null}
+            clockOffsetMs={controller.clockOffsetMs}
+          />
         )}
       </div>
       {(phase === "write" || phase === "vote") && isLateJoiner && (

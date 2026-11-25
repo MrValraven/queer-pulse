@@ -297,16 +297,24 @@ export const system: Catalog = {
   "pwaPrompt.tabs.ios": "iPhone",
   "pwaPrompt.tabs.android": "Android",
   "pwaPrompt.tabs.desktop": "Desktop",
-  // iOS 26 Safari tucks Share behind the three-dot More button in its default
-  // compact layout; the other layouts, and Chrome, Edge and Firefox on iOS
-  // 16.4+, show Share in the toolbar or address bar. Step 1 covers both.
+  // iOS 26 Safari tucks Share behind its menu button (three dots or three
+  // lines, depending on the layout) in its default compact layout; the other
+  // layouts, and Chrome, Edge and Firefox on iOS 16.4+, show Share in the
+  // toolbar or address bar. Step 1 covers both. The stepNImage keys are the
+  // alt text for the Safari screenshot under each step (INSTALL_STEP_IMAGES).
   "pwaPrompt.instructions.ios.title": "iPhone & iPad · Safari, Chrome & more",
   "pwaPrompt.instructions.ios.step1":
-    "Tap <b>Share</b> in the toolbar, or tap the <b>three dots</b> first and then <b>Share</b>",
+    "Tap <b>Share</b> in the toolbar, or open the <b>menu</b> first (three dots or three lines) and then tap <b>Share</b>",
   "pwaPrompt.instructions.ios.step2":
-    "Tap <b>Add to Home Screen</b> <em>· scroll down the list if you don't see it</em>",
+    "Tap <b>Add to Home Screen</b> <em>· if you don't see it, tap View More or scroll down the list</em>",
   "pwaPrompt.instructions.ios.step3":
     "Keep <b>Open as Web App</b> on if you see it, then tap <b>Add</b>",
+  "pwaPrompt.instructions.ios.step1Image":
+    "Safari's address bar with the menu button circled, then its menu with Share circled",
+  "pwaPrompt.instructions.ios.step2Image":
+    "Safari's share sheet with View More circled, then the list with Add to Home Screen circled",
+  "pwaPrompt.instructions.ios.step3Image":
+    "The Add to Home Screen screen with Open as Web App switched on and the Add button circled",
   "pwaPrompt.instructions.android.title": "Android · Chrome & Samsung Internet",
   "pwaPrompt.instructions.android.step1":
     "Open the browser menu: the <b>three dots</b> in Chrome, the <b>three lines</b> in Samsung Internet",

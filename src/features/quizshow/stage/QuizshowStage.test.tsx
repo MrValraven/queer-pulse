@@ -13,6 +13,7 @@ import type {
   QuizshowQuestionView,
   QuizshowReveal,
   QuizshowRoundCard as QuizshowRoundCardData,
+  QuizshowScreenLanguage,
 } from "../../../shared/contracts/quizshow";
 import { QuizshowAnswerTile } from "./QuizshowAnswerTile";
 import { QuizshowConnectionBanner } from "./QuizshowConnectionBanner";
@@ -23,6 +24,7 @@ import { QuizshowPausedNote } from "./QuizshowPausedNote";
 import { QuizshowPodium } from "./QuizshowPodium";
 import { QuizshowRoundCard } from "./QuizshowRoundCard";
 import { optionLetter, pickQuizshowText } from "./quizshowText";
+import { tilesFor } from "../screen/quizshowScreenTileModel";
 import { useQuizshowCountdown } from "./useQuizshowCountdown";
 import { awaitCatalog } from "../../../test/awaitCatalog";
 
@@ -62,6 +64,10 @@ const QUESTION: QuizshowQuestionView = {
   mediaUrl: null,
   points: 1000,
   timeLimitSeconds: 20,
+  mediaAlt: { en: "", pt: "" },
+  mediaReveal: "instant",
+  numberUnit: { en: "", pt: "" },
+  readMs: 4000,
   options: [
     { id: "option-a", text: { en: "Rainbow", pt: "Arco-iris" } },
     { id: "option-b", text: { en: "Trans", pt: "Trans" } },
@@ -79,15 +85,21 @@ function revealWith(
     answeredCount: 5,
     eligibleCount: 6,
     distribution,
+    note: null,
+    wasCorrected: false,
   };
 }
 
-function renderDistribution(reveal: QuizshowReveal) {
+function renderDistribution(
+  reveal: QuizshowReveal,
+  question: QuizshowQuestionView = QUESTION,
+  language: QuizshowScreenLanguage = "en",
+) {
   return renderStage(
     <QuizshowDistribution
       reveal={reveal}
-      question={QUESTION}
-      language="en"
+      question={question}
+      language={language}
       size="screen"
     />,
   );
@@ -204,7 +216,7 @@ describe("quizshow stage distribution", () => {
     const { unmount } = renderDistribution(
       revealWith(
         { kind: "options", counts: [3, 1] },
-        { type: "multiple_choice", correctIndex: 0 },
+        { type: "multiple_choice", correctIndexes: [0] },
       ),
     );
     await awaitCatalog("quizshow");
@@ -246,18 +258,25 @@ describe("quizshow stage distribution", () => {
     order.unmount();
 
     const closest = renderDistribution(
-      revealWith({
-        kind: "closest",
-        closestValue: 1969,
-        closestNames: ["Sam", "Ro"],
-        withinBandCount: 2,
-      }),
+      revealWith(
+        {
+          kind: "closest",
+          closestValue: 1969,
+          closestNames: ["Sam", "Ro"],
+          withinBandCount: 2,
+        },
+        {
+          type: "closest_number",
+          value: 1970,
+          tolerance: { mode: "percent", amount: 10 },
+        },
+      ),
     );
     await awaitCatalog("quizshow");
     // A number under 10,000 prints bare, the way people write a year.
     expect(screen.getByText("Closest guess: 1969")).toBeInTheDocument();
     expect(screen.getByText("Closest: Sam, Ro")).toBeInTheDocument();
-    expect(screen.getByText("2 within 10%")).toBeInTheDocument();
+    expect(screen.getByText("2 inside the margin")).toBeInTheDocument();
     closest.unmount();
 
     renderDistribution(
@@ -293,6 +312,138 @@ describe("quizshow stage distribution", () => {
     expect(screen.getByText("3 votes")).toBeInTheDocument();
     expect(screen.getByText("The truth")).toBeInTheDocument();
     expect(screen.getByText("Hosts' favourite")).toBeInTheDocument();
+  });
+});
+
+describe("quizshow stage reveal content (items 1, 57, 64)", () => {
+  const THREE_OPTION_QUESTION: QuizshowQuestionView = {
+    ...QUESTION,
+    options: [
+      { id: "option-a", text: { en: "Rainbow", pt: "Arco-iris" } },
+      { id: "option-b", text: { en: "Trans", pt: "Trans" } },
+      { id: "option-c", text: { en: "Bi", pt: "Bi" } },
+    ],
+  };
+
+  it("marks both correct options when the key holds two", async () => {
+    const reveal = revealWith(
+      { kind: "options", counts: [3, 1, 1] },
+      { type: "multiple_choice", correctIndexes: [0, 2] },
+    );
+    const tiles = tilesFor(THREE_OPTION_QUESTION, reveal, "en", {
+      true: "True",
+      false: "False",
+    });
+    expect(tiles.map((tile) => tile.state)).toEqual([
+      "correct",
+      "dimmed",
+      "correct",
+    ]);
+    renderDistribution(reveal, THREE_OPTION_QUESTION);
+    await awaitCatalog("quizshow");
+    expect(screen.getAllByText("Correct answer")).toHaveLength(2);
+  });
+
+  it("shows a poll's counts with no option marked correct", async () => {
+    const pollQuestion: QuizshowQuestionView = {
+      ...THREE_OPTION_QUESTION,
+      type: "poll",
+    };
+    const reveal = revealWith({ kind: "options", counts: [2, 2, 1] }, null);
+    const tiles = tilesFor(pollQuestion, reveal, "en", {
+      true: "True",
+      false: "False",
+    });
+    expect(tiles.every((tile) => tile.state === "idle")).toBe(true);
+    renderDistribution(reveal, pollQuestion);
+    await awaitCatalog("quizshow");
+    expect(screen.getAllByTestId("rolling-number")).toHaveLength(3);
+    expect(screen.queryByText("Correct answer")).toBeNull();
+    expect(document.querySelector("[data-has-correct]")).toHaveAttribute(
+      "data-has-correct",
+      "false",
+    );
+  });
+
+  describe("closest-number margin copy", () => {
+    const CLOSEST_QUESTION: QuizshowQuestionView = {
+      ...QUESTION,
+      type: "closest_number",
+      options: null,
+      numberUnit: { en: "years", pt: "anos" },
+    };
+    const CLOSEST_DISTRIBUTION: QuizshowReveal["distribution"] = {
+      kind: "closest",
+      closestValue: 1972,
+      closestNames: ["Sam"],
+      withinBandCount: 3,
+    };
+
+    function renderClosest(
+      tolerance: { mode: "exact" | "absolute" | "percent"; amount: number },
+      question: QuizshowQuestionView = CLOSEST_QUESTION,
+    ) {
+      return renderDistribution(
+        revealWith(CLOSEST_DISTRIBUTION, {
+          type: "closest_number",
+          value: 1969,
+          tolerance,
+        }),
+        question,
+      );
+    }
+
+    it("names the margin with the unit", async () => {
+      renderClosest({ mode: "absolute", amount: 10 });
+      await awaitCatalog("quizshow");
+      expect(
+        screen.getByText("Within 10 years scores half"),
+      ).toBeInTheDocument();
+      expect(screen.getByText("3 inside the margin")).toBeInTheDocument();
+      // The unit follows the shown number too.
+      expect(screen.getByText("Closest guess: 1972 years")).toBeInTheDocument();
+    });
+
+    it("leaves the unit out when the question has none", async () => {
+      renderClosest(
+        { mode: "absolute", amount: 10 },
+        { ...CLOSEST_QUESTION, numberUnit: { en: "", pt: "" } },
+      );
+      await awaitCatalog("quizshow");
+      expect(screen.getByText("Within 10 scores half")).toBeInTheDocument();
+      expect(screen.getByText("Closest guess: 1972")).toBeInTheDocument();
+    });
+
+    it("names a percent margin", async () => {
+      renderClosest({ mode: "percent", amount: 10 });
+      await awaitCatalog("quizshow");
+      expect(screen.getByText("Within 10% scores half")).toBeInTheDocument();
+      expect(screen.getByText("3 inside the margin")).toBeInTheDocument();
+    });
+
+    it("shows no margin lines for an exact question", async () => {
+      renderClosest({ mode: "exact", amount: 0 });
+      await awaitCatalog("quizshow");
+      expect(screen.queryByText(/scores half/)).toBeNull();
+      expect(screen.queryByText(/inside the margin/)).toBeNull();
+      expect(screen.getByText("Closest: Sam")).toBeInTheDocument();
+    });
+  });
+
+  it("puts the PT line in its own lang element under Both", async () => {
+    renderDistribution(
+      revealWith(
+        { kind: "options", counts: [3, 1] },
+        { type: "multiple_choice", correctIndexes: [0] },
+      ),
+      QUESTION,
+      "both",
+    );
+    await awaitCatalog("quizshow");
+    expect(screen.getByText("Rainbow")).toHaveAttribute("lang", "en");
+    expect(screen.getByText("Arco-iris")).toHaveAttribute("lang", "pt");
+    // Equal in both languages: the text shows once.
+    expect(screen.getAllByText("Trans")).toHaveLength(1);
   });
 });
 
@@ -510,6 +661,9 @@ describe("quizshow stage pause", () => {
       roundNumber: roundIndex === null ? 0 : roundIndex + 1,
       upNext: null,
       canSpinForNextRound: false,
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
       ...overrides,
     };
   }
@@ -637,6 +791,7 @@ describe("quizshow stage standings", () => {
         colorKey: null,
         score: 1500,
         previousScore: 1000,
+        streak: 0,
       },
       {
         rank: 2,
@@ -646,6 +801,7 @@ describe("quizshow stage standings", () => {
         colorKey: "star",
         score: 900,
         previousScore: 900,
+        streak: 0,
       },
     ];
     renderStage(
@@ -675,7 +831,9 @@ describe("quizshow stage standings", () => {
       "true",
     );
   });
+});
 
+describe("quizshow stage podium", () => {
   describe("podium", () => {
     const entries: QuizshowPodiumEntry[] = [
       {
@@ -704,32 +862,133 @@ describe("quizshow stage standings", () => {
       },
     ];
 
-    function revealDelays(): Record<string, string | undefined> {
-      const delays: Record<string, string | undefined> = {};
+    function stepStates(): Record<string, string | undefined> {
+      const states: Record<string, string | undefined> = {};
       for (const step of document.querySelectorAll<HTMLElement>(
         "[data-place]",
       )) {
-        delays[step.dataset.place ?? ""] = step.dataset.revealDelay;
+        states[step.dataset.place ?? ""] = step.dataset.revealed;
       }
-      return delays;
+      return states;
     }
 
-    it("reveals the podium third, second, first", async () => {
+    it("draws every given place, listed 1, 2, 3", async () => {
       renderStage(<QuizshowPodium entries={entries} size="screen" />);
       await awaitCatalog("quizshow");
-      expect(revealDelays()).toEqual({ "3": "0", "2": "0.8", "1": "1.6" });
+      expect(stepStates()).toEqual({ "1": "true", "2": "true", "3": "true" });
+      expect(screen.getByText("Gold")).toBeInTheDocument();
       expect(
         screen.getAllByRole("listitem").map((item) => item.dataset.place),
       ).toEqual(["1", "2", "3"]);
     });
 
+    it("draws only the given places and the places to come as empty steps", async () => {
+      const bronzeOnly = entries.filter((entry) => entry.place === 3);
+      renderStage(<QuizshowPodium entries={bronzeOnly} size="screen" />);
+      await awaitCatalog("quizshow");
+      expect(screen.getByText("Bronze")).toBeInTheDocument();
+      expect(screen.queryByText("Silver")).not.toBeInTheDocument();
+      expect(screen.queryByText("Gold")).not.toBeInTheDocument();
+      expect(stepStates()).toEqual({ "1": "false", "2": "false", "3": "true" });
+    });
+
+    it("leaves out a place no entrant can reach", async () => {
+      renderStage(
+        <QuizshowPodium entries={[]} size="screen" entrantCount={2} />,
+      );
+      await awaitCatalog("quizshow");
+      expect(stepStates()).toEqual({ "1": "false", "2": "false" });
+    });
+
+    it("lays out two steps when a tie leaves 3rd unreachable", async () => {
+      const tiedSecond: QuizshowPodiumEntry[] = [
+        entries[0] as QuizshowPodiumEntry,
+        { ...(entries[1] as QuizshowPodiumEntry), entrantId: "b" },
+        {
+          ...(entries[1] as QuizshowPodiumEntry),
+          entrantId: "d",
+          name: "Tied",
+        },
+      ];
+      renderStage(<QuizshowPodium entries={tiedSecond} size="phone" />);
+      await awaitCatalog("quizshow");
+      expect(stepStates()).toEqual({ "1": "true", "2": "true" });
+      expect(
+        document.querySelector("[data-steps]")?.getAttribute("data-steps"),
+      ).toBe("2");
+      expect(
+        document.querySelector("[data-steps]")?.getAttribute("data-layout"),
+      ).toBe("second-first");
+    });
+
+    it("stands the winner left of 3rd when a tie on 1st skips 2nd", async () => {
+      const tiedFirst: QuizshowPodiumEntry[] = [
+        entries[0] as QuizshowPodiumEntry,
+        {
+          ...(entries[0] as QuizshowPodiumEntry),
+          entrantId: "d",
+          name: "Tied",
+        },
+        entries[2] as QuizshowPodiumEntry,
+      ];
+      renderStage(<QuizshowPodium entries={tiedFirst} size="screen" />, true);
+      await awaitCatalog("quizshow");
+      expect(stepStates()).toEqual({ "1": "true", "3": "true" });
+      const podiumList = document.querySelector("[data-steps]");
+      expect(podiumList?.getAttribute("data-steps")).toBe("2");
+      expect(podiumList?.getAttribute("data-layout")).toBe("first-third");
+    });
+
+    it("names no two-step layout while all three steps stand", async () => {
+      renderStage(<QuizshowPodium entries={entries} size="screen" />, true);
+      await awaitCatalog("quizshow");
+      const podiumList = document.querySelector("[data-steps]");
+      expect(podiumList?.getAttribute("data-steps")).toBe("3");
+      expect(podiumList?.hasAttribute("data-layout")).toBe(false);
+    });
+
+    it("lists the viewer first on a tied step past the name cap", async () => {
+      const crowdedSecond: QuizshowPodiumEntry[] = [
+        "Ana",
+        "Bo",
+        "Cleo",
+        "Dee",
+      ].map((name) => ({
+        place: 2,
+        kind: "player",
+        entrantId: `player-${name}`,
+        name,
+        colorKey: null,
+        score: 2000,
+      }));
+      renderStage(
+        <QuizshowPodium
+          entries={crowdedSecond}
+          size="phone"
+          highlightEntrantId="player-Dee"
+        />,
+        true,
+      );
+      await awaitCatalog("quizshow");
+      expect(
+        screen.getByText("Dee").closest('[aria-current="true"]'),
+      ).not.toBeNull();
+      expect(screen.queryByText("Cleo")).not.toBeInTheDocument();
+      expect(screen.getByText("+1 more")).toBeInTheDocument();
+    });
+
     it("shows all three at once with reduced motion", async () => {
       renderStage(<QuizshowPodium entries={entries} size="screen" />, true);
       await awaitCatalog("quizshow");
-      expect(revealDelays()).toEqual({ "3": "0", "2": "0", "1": "0" });
+      expect(stepStates()).toEqual({ "1": "true", "2": "true", "3": "true" });
+      expect(screen.getByText("Gold")).toBeInTheDocument();
+      expect(screen.getByText("Silver")).toBeInTheDocument();
+      expect(screen.getByText("Bronze")).toBeInTheDocument();
     });
   });
+});
 
+describe("quizshow stage round card and connection", () => {
   it("shows the round's content label and joker note", async () => {
     const round: QuizshowRoundCardData = {
       roundIndex: 5,
@@ -739,6 +998,8 @@ describe("quizshow stage standings", () => {
       questionCount: 5,
       isJokerAllowed: true,
       isSpeedBonusOn: false,
+      isWarmUp: false,
+      talkSeconds: 0,
     };
     renderStage(
       <QuizshowRoundCard
@@ -768,6 +1029,8 @@ describe("quizshow stage standings", () => {
       questionCount: 5,
       isJokerAllowed: false,
       isSpeedBonusOn: false,
+      isWarmUp: false,
+      talkSeconds: 0,
     };
     renderStage(
       <QuizshowRoundCard

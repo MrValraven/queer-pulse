@@ -5,6 +5,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RecognitionLevel } from "./api/recognition.adapters";
 import type { Badge } from "./badges.data";
 import { badgeDisplayMetaFor } from "./badgeCatalog.data";
+import { badgeCriteriaFor, badgeNameFor } from "./badgeDisplayText";
+import { isQuizBadge } from "./quizBadges";
 import { levelNameKeyFor } from "./levelLadder.data";
 import { BadgeMedallion } from "./BadgeMedallion";
 import styles from "./BadgesPage.module.css";
@@ -28,22 +30,20 @@ export function BadgeEarnMoment({
   level,
   onClose,
 }: BadgeEarnMomentProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const dialogRef = useDismiss(onClose);
   const titleId = useId();
   // The catalogue ships a stable id beside its English display words, so the
   // words resolve here rather than off the wire (see `badgeCatalog.data.ts`).
   // This modal always frames the badge as won, so the earned wording is the
   // right tense even for the momentum section's preview. An unmapped id keeps
-  // the server's own English.
+  // the server's own English. A quiz badge has one description for both tenses.
   // The ladder's words are owned by the frontend and keyed on the level
   // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
   // own English name.
   const levelNameKey = levelNameKeyFor(level.level);
   const displayMeta = badgeDisplayMetaFor(badge.key);
-  const { lead, last } = splitTitle(
-    displayMeta ? t(displayMeta.nameKey) : badge.name,
-  );
+  const { lead, last } = splitTitle(badgeNameFor(badge, t, language));
 
   return createPortal(
     <div
@@ -72,9 +72,9 @@ export function BadgeEarnMoment({
           <em>{last}</em>
         </h3>
         <p>
-          {displayMeta
+          {displayMeta && !isQuizBadge(badge)
             ? t(displayMeta.earnedContextKey)
-            : (badge.criteria ?? badge.when)}
+            : badgeCriteriaFor(badge, t, language)}
         </p>
         {badge.xpReward !== undefined && (
           <p>{t("members:badges.earn.body", { xp: badge.xpReward })}</p>

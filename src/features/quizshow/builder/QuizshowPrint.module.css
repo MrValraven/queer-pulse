@@ -1,0 +1,480 @@
+/* The printable host sheet and team answer sheets (item 62).
+   On screen: paper sheets on the cream page, with a toolbar holding the Print
+   button. On paper: A4, the sheets only, ink on white. The page root carries
+   data-theme="light", so the ink and line tokens stay dark on the paper in
+   both app themes. */
+
+.page {
+  min-height: 100dvh;
+  padding: var(--gap-lg) var(--gap-sm);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  width: min(100%, 52rem);
+  margin: 0 auto;
+}
+
+.main:focus {
+  outline: none;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.toolbarTitle {
+  flex: 1;
+  margin: 0;
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+.messageState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-lg);
+}
+
+.message {
+  max-width: 30ch;
+  margin: 0;
+  text-wrap: balance;
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  line-height: var(--lh-title);
+  text-align: center;
+}
+
+.spinnerSlot {
+  display: flex;
+  justify-content: center;
+  padding: var(--gap-lg) 0;
+}
+
+/* ── Sheets ── */
+
+.sheet,
+.answerPage {
+  padding: var(--gap-lg);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+.answerSheets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.sheetHeader,
+.answerHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sheetTitle {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+.line {
+  display: block;
+}
+
+.secondLine {
+  display: block;
+  color: var(--ink-60);
+  font-size: 0.92em;
+}
+
+.muted {
+  color: var(--ink-60);
+}
+
+.letter {
+  flex: none;
+  min-width: 1.5em;
+  font-weight: 700;
+}
+
+/* ── Host sheet ── */
+
+.hostRound {
+  margin-top: var(--gap-lg);
+}
+
+.roundTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  margin: 0 0 var(--gap-sm);
+  padding-bottom: var(--gap-xs);
+  border-bottom: 2px solid var(--line-strong);
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  line-height: var(--lh-title);
+}
+
+.roundNumber {
+  color: var(--ink);
+}
+
+.roundKind {
+  margin-left: auto;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 500;
+}
+
+.hostQuestions,
+.answerLines,
+.optionList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hostQuestion {
+  display: flex;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm) 0;
+  border-bottom: 1px solid var(--line);
+  break-inside: avoid;
+}
+
+.hostQuestion:last-child {
+  border-bottom: 0;
+}
+
+.questionNumber {
+  flex: none;
+  min-width: 2ch;
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--lh-title);
+}
+
+.hostBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.prompt {
+  font-size: var(--text-16);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.optionList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--text-body);
+}
+
+.optionItem {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+}
+
+/* MC: the right options read bold with a check, so the list alone answers it. */
+.optionCorrect {
+  font-weight: 700;
+}
+
+.optionCheck {
+  flex: none;
+  align-self: center;
+}
+
+.answerLetters {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.picture {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--icon-gap-inline);
+  color: var(--ink-60);
+  font-size: var(--text-caption);
+}
+
+.pictureIcon {
+  flex: none;
+  align-self: center;
+}
+
+.answerStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+}
+
+.fact {
+  display: contents;
+}
+
+.factLabel {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--icon-gap-inline);
+  color: var(--ink-60);
+  font-weight: 600;
+}
+
+.factValue {
+  margin: 0;
+  min-width: 0;
+}
+
+/* ── Answer sheets ── */
+
+.teamLine {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap-sm);
+  margin-top: var(--gap-sm);
+}
+
+.teamLabel {
+  flex: none;
+  font-size: var(--text-16);
+  font-weight: 600;
+}
+
+.writeLine {
+  flex: 1;
+  min-height: 1.75rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.answerLine {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap-sm);
+  padding: var(--gap-xs) 0;
+  break-inside: avoid;
+}
+
+.letterBoxes {
+  display: flex;
+  flex: 1;
+  gap: var(--gap-sm);
+}
+
+.letterBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-tag);
+  font-weight: 700;
+}
+
+/* True and False read as words, so their boxes grow to fit them. */
+.wordBox {
+  width: auto;
+  padding: 0 var(--gap-xs);
+}
+
+/* Print isolation, the studioOneSheet.print.css pattern. Every rule is scoped
+   to a document that holds this page ([data-quizshow-print]): Vite keeps a
+   lazy chunk's CSS after navigation, so a bare rule here would blank every
+   later print in the session, and a bare @page would override the card and
+   Economy sheets. The page prints on its own named page, which outranks their
+   unnamed @page rules for its pages only. */
+@media print {
+  /* Everything that is neither the page, nor inside it, nor a wrapper between
+     <body> and it, leaves the document: display none drops the boxes too, so
+     no blank sheet follows. */
+  body:has([data-quizshow-print])
+    *:not(
+      :has([data-quizshow-print]),
+      [data-quizshow-print],
+      [data-quizshow-print] *
+    ) {
+    display: none !important;
+  }
+
+  /* The surviving wrappers carry app-chrome spacing and the app theme's
+     ground; on paper they are pass-throughs. */
+  html:has([data-quizshow-print]),
+  body:has([data-quizshow-print]),
+  body :has([data-quizshow-print]) {
+    display: block !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+
+  body:has([data-quizshow-print]) {
+    page: quizshow-print;
+  }
+
+  /* Doubled attribute: outranks tools.print.css's absolute positioning and
+     cards.print.css's sheet layout for this page. */
+  [data-print-root][data-quizshow-print] {
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    background: none !important;
+    page: quizshow-print;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  [data-print-root][data-quizshow-print] > * {
+    break-after: auto;
+  }
+
+  /* Block flow on paper: the answer pages break by break-after, which flex
+     fragmentation does not honour in every engine. */
+  .main,
+  .answerSheets {
+    display: block;
+    gap: 0;
+    width: auto;
+  }
+
+  .toolbar,
+  .messageState {
+    display: none;
+  }
+
+  .sheet,
+  .answerPage {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  /* One round per page, so each team hands in one page per round. */
+  .answerPage {
+    break-after: page;
+  }
+
+  .answerPage:last-child {
+    break-after: auto;
+  }
+
+  .roundTitle {
+    break-after: avoid;
+  }
+
+  /* Compact answer page: a 20-question round (questionsPerRoundMax) fits one
+     A4 page with its team name line, at about 9mm a line. */
+  .answerHeader {
+    gap: 2mm;
+    margin-bottom: 3mm;
+  }
+
+  .answerPage .roundTitle {
+    margin-bottom: 2mm;
+    padding-bottom: 1.5mm;
+    font-size: var(--text-16);
+  }
+
+  .answerLine {
+    gap: 3mm;
+    padding: 1mm 0;
+  }
+
+  .answerLine .questionNumber {
+    font-size: var(--text-14);
+  }
+
+  .writeLine {
+    min-height: 7mm;
+  }
+
+  .letterBoxes {
+    gap: 3mm;
+  }
+
+  .letterBox {
+    width: 7mm;
+    height: 7mm;
+    font-size: var(--text-13);
+  }
+
+  .wordBox {
+    width: auto;
+    padding: 0 2mm;
+  }
+
+  @page quizshow-print {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+}

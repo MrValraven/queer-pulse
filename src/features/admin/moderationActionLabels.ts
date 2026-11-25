@@ -74,6 +74,18 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   quizshow_template_unpublished:
     "admin:moderation.action.quizshowTemplateUnpublished",
   quizshow_template_deleted: "admin:moderation.action.quizshowTemplateDeleted",
+  // Pulse Live quiz badges (C11)
+  quiz_badge_attached: "admin:moderation.action.quizBadgeAttached",
+  quiz_badge_detached: "admin:moderation.action.quizBadgeDetached",
+  quiz_badge_awarded_after_game:
+    "admin:moderation.action.quizBadgeAwardedAfterGame",
+  quiz_game_win_revoked: "admin:moderation.action.quizGameWinRevoked",
+  quiz_badge_definition_archived:
+    "admin:moderation.action.quizBadgeDefinitionArchived",
+  quiz_badge_definition_restored:
+    "admin:moderation.action.quizBadgeDefinitionRestored",
+  quiz_badge_definition_deleted:
+    "admin:moderation.action.quizBadgeDefinitionDeleted",
 };
 
 /** The moderator-facing label for one audit entry. An unmapped code falls

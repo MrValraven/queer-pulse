@@ -3,6 +3,7 @@ import {
   type QuizshowImportInput,
   type QuizshowImportSource,
   type QuizshowJoinInput,
+  type QuizshowJoinPreview,
   type QuizshowJoinResponse,
   type QuizshowLiveSessionRef,
   type QuizshowOpenSessionInput,
@@ -18,28 +19,48 @@ import {
   QUIZSHOW_DEMO_SESSION_ID,
 } from "../quizshow.constants";
 import { QUIZSHOW_DEMO_TEMPLATE_IDS } from "../demo/quizshowTemplates.data";
+import { normaliseStoredQuiz } from "../quizshowNormalise";
+import { demoResultsWinBadges } from "../winBadges/quizWinBadgesDemoStore";
+import { emitDemoRematch } from "./quizshowDemoBus";
 import {
+  demoEndGameSession,
   demoGameIdForSession,
+  demoGameJoinPreview,
   demoGameLiveSession,
   demoGameSourceCopy,
   demoGameSourcesForEvent,
   demoJoinGame,
+  demoSourceTemplateRef,
   resetQuizshowDemoGames,
 } from "./quizshowDemoGames";
 import {
+  demoAssertRematch,
   demoAssertShape,
+  demoClearSessionEnd,
   demoCompletenessProblems,
   demoDefaultQuizShape,
-  demoEventQuizzesBySlug,
+  demoEventImportSources,
+  demoEventQuizzes,
+  demoEndedCodeRefusal,
   demoEventSourceCopy,
+  demoImportResultOf,
+  demoJoinCodeFor,
+  demoLiveSessionRefOf,
+  demoOpenSettingsOf,
+  demoQuizChangedRefusal,
+  demoRecordCodeEnd,
+  demoRecordSessionEnd,
+  demoRefreshSession,
   demoRefusal,
   hasAdultsRound,
   quizFromInput,
+  resetDemoEventQuizzes,
+  resetDemoSessionEnds,
+  type DemoLiveSession,
   type DemoQuizBody,
   type DemoQuizCopy,
 } from "./quizshowDemoQuizzes";
 import {
-  QUIZSHOW_DEMO_IMPORT_SOURCES,
   QUIZSHOW_DEMO_LIVE_SLUG,
   QUIZSHOW_DEMO_RESULTS,
   QUIZSHOW_DEMO_RESULTS_SLUG,
@@ -59,25 +80,27 @@ const EVENT_ADULTS_CODE = "quizshow_adults_round_needs_adults_event";
 
 // Module scope on purpose: the demo keeps what a tab saved until it reloads.
 // The event quizzes live in quizshowDemoQuizzes.ts so the games store can copy them.
-const quizzesBySlug = demoEventQuizzesBySlug;
-const liveSessionsBySlug = new Map<string, QuizshowLiveSessionRef>();
+const liveSessionsBySlug = new Map<string, DemoLiveSession>();
 const deletedResultsSlugs = new Set<string>();
 let saveCounter = 0;
+let rematchCounter = 0;
 
 // A deleted template leaves its event copies intact and clears their source id, as the live foreign key does.
 onDemoTemplateDeleted((templateId) => {
-  for (const [slug, quiz] of quizzesBySlug) {
-    if (quiz.sourceTemplateId === templateId) {
-      quizzesBySlug.set(slug, { ...quiz, sourceTemplateId: null });
+  for (const record of demoEventQuizzes().values()) {
+    if (record.quiz.sourceTemplateId === templateId) {
+      record.quiz = { ...record.quiz, sourceTemplateId: null };
     }
   }
 });
 
 export function resetQuizshowDemoStore(): void {
-  quizzesBySlug.clear();
+  resetDemoEventQuizzes();
+  resetDemoSessionEnds();
   liveSessionsBySlug.clear();
   deletedResultsSlugs.clear();
   saveCounter = 0;
+  rematchCounter = 0;
   resetQuizshowDemoGames();
   resetQuizshowDemoTemplates();
 }
@@ -87,13 +110,30 @@ function hasKeptResults(slug: string): boolean {
 }
 
 function responseFor(slug: string): QuizshowQuizResponse {
-  const quiz = quizzesBySlug.get(slug) ?? null;
+  const record = demoEventQuizzes().get(slug) ?? null;
+  const liveSession = liveSessionsBySlug.get(slug) ?? null;
+  const quiz = record
+    ? normaliseStoredQuiz(structuredClone(record.quiz))
+    : null;
   return {
-    quiz,
+    quiz: quiz
+      ? {
+          ...quiz,
+          sourceTemplate: demoSourceTemplateRef(
+            quiz.sourceTemplateId,
+            record?.sourceTemplateCopiedAt ?? null,
+          ),
+        }
+      : null,
     problems: quiz ? demoCompletenessProblems(quiz) : [],
     isAdultsEvent: false,
-    liveSession: liveSessionsBySlug.get(slug) ?? null,
+    liveSession: liveSession
+      ? demoLiveSessionRefOf(liveSession, quiz?.updatedAt ?? null)
+      : null,
     hasResults: hasKeptResults(slug),
+    lastOpenSettings: record?.lastOpenSettings
+      ? { ...record.lastOpenSettings }
+      : null,
   };
 }
 
@@ -105,16 +145,20 @@ function nextIdPrefix(slug: string): string {
 function storeQuiz(
   slug: string,
   body: DemoQuizBody,
-  sourceTemplateId: string | null,
+  source: { sourceTemplateId: string | null; copiedAt: string | null },
+  updatedAt: string,
 ): void {
-  quizzesBySlug.set(
-    slug,
-    quizFromInput(body, {
+  const stored = demoEventQuizzes().get(slug);
+  demoEventQuizzes().set(slug, {
+    quiz: quizFromInput(body, {
       idPrefix: nextIdPrefix(slug),
-      updatedAt: new Date().toISOString(),
-      sourceTemplateId,
+      updatedAt,
+      sourceTemplateId: source.sourceTemplateId,
     }),
-  );
+    sourceTemplateCopiedAt:
+      source.sourceTemplateId === null ? null : source.copiedAt,
+    lastOpenSettings: stored?.lastOpenSettings ?? null,
+  });
 }
 
 function assertNoStructuralProblems(body: DemoQuizBody): void {
@@ -132,26 +176,49 @@ export function demoPutQuiz(
   slug: string,
   body: QuizshowQuizInput,
 ): QuizshowQuizResponse {
-  const stored = quizzesBySlug.get(slug);
-  if (body.expectedUpdatedAt !== (stored?.updatedAt ?? null)) {
-    throw demoRefusal(409, "quizshow_quiz_changed", {
-      updatedAt: stored?.updatedAt ?? null,
-    });
-  }
-  const { expectedUpdatedAt: unusedExpectedUpdatedAt, ...quizBody } = body;
-  void unusedExpectedUpdatedAt;
+  const stored = demoEventQuizzes().get(slug);
+  const { expectedUpdatedAt, ...quizBody } = body;
+  // The shape is checked before the token, as the backend validates the body first.
   assertNoStructuralProblems(quizBody);
-  storeQuiz(slug, quizBody, stored?.sourceTemplateId ?? null);
+  const storedUpdatedAt = stored?.quiz.updatedAt ?? null;
+  if (expectedUpdatedAt !== storedUpdatedAt) {
+    throw demoQuizChangedRefusal(storedUpdatedAt);
+  }
+  storeQuiz(
+    slug,
+    quizBody,
+    {
+      sourceTemplateId: stored?.quiz.sourceTemplateId ?? null,
+      copiedAt: stored?.sourceTemplateCopiedAt ?? null,
+    },
+    new Date().toISOString(),
+  );
   return responseFor(slug);
 }
 
+/** C6.28: replace (the default) swaps the event's quiz; append adds the chosen rows. */
 export function demoImportQuiz(
   slug: string,
   body: QuizshowImportInput,
 ): QuizshowQuizResponse {
   const copy = eventImportCopyOf(slug, body);
-  assertNoStructuralProblems(copy.body);
-  storeQuiz(slug, copy.body, copy.sourceTemplateId);
+  const stored = demoEventQuizzes().get(slug) ?? null;
+  const now = new Date().toISOString();
+  const imported = demoImportResultOf(
+    body,
+    copy,
+    { stored, keptTitle: null, assertAllowed: assertNoStructuralProblems },
+    now,
+  );
+  storeQuiz(
+    slug,
+    imported.body,
+    {
+      sourceTemplateId: imported.sourceTemplateId,
+      copiedAt: imported.sourceTemplateCopiedAt,
+    },
+    now,
+  );
   return responseFor(slug);
 }
 
@@ -173,52 +240,140 @@ export function demoImportSources(slug: string): {
 } {
   return {
     items: [
-      ...QUIZSHOW_DEMO_IMPORT_SOURCES.filter(
-        (source) => source.eventSlug !== slug,
-      ),
+      ...demoEventImportSources().filter((source) => source.eventSlug !== slug),
       ...demoGameSourcesForEvent(),
     ],
   };
 }
 
+/** A new event code for a rematch lobby: never a fixed demo code or the one it replaces. */
+function rematchJoinCodeOf(previousCode: string | null): string {
+  rematchCounter += 1;
+  const takenCodes = new Set([QUIZSHOW_DEMO_JOIN_CODE]);
+  if (previousCode !== null) takenCodes.add(previousCode);
+  return demoJoinCodeFor(
+    `${QUIZSHOW_DEMO_SESSION_ID}:rematch:${rematchCounter}`,
+    takenCodes,
+  );
+}
+
+/**
+ * Item 17: a practice lobby skips the kept-results replace and never notifies
+ * guests; the demo has no draft events to refuse. Item 38: a rematch keeps the
+ * demo session id, gets a new code and reaches a running demo engine through
+ * the demo bus. Item 52: the dialog's choices are kept on the quiz.
+ */
 export function demoOpenSession(
   slug: string,
   body: QuizshowOpenSessionInput,
 ): QuizshowOpenSessionResponse {
-  const quiz = quizzesBySlug.get(slug);
-  if (!quiz) throw demoRefusal(404, "quizshow_quiz_not_found");
-  const problems = demoCompletenessProblems(quiz);
+  const record = demoEventQuizzes().get(slug);
+  if (!record) throw demoRefusal(404, "quizshow_quiz_not_found");
+  const problems = demoCompletenessProblems(record.quiz);
   if (problems.length > 0) {
     throw demoRefusal(422, "quizshow_quiz_incomplete", { problems });
   }
-  if (liveSessionsBySlug.has(slug)) {
+  const rematchOfSessionId = body.rematchOfSessionId;
+  const openSession = liveSessionsBySlug.get(slug);
+  // Backend order: the open slot, then the rematch source, then kept results.
+  // The finished session a rematch replays no longer holds the open slot.
+  if (openSession && openSession.sessionId !== rematchOfSessionId) {
     throw demoRefusal(409, "quizshow_session_already_open", {
-      sessionId: QUIZSHOW_DEMO_SESSION_ID,
-      joinCode: QUIZSHOW_DEMO_JOIN_CODE,
+      sessionId: openSession.sessionId,
+      joinCode: openSession.joinCode,
     });
   }
-  if (hasKeptResults(slug)) {
+  if (rematchOfSessionId !== null) {
+    demoAssertRematch(rematchOfSessionId, QUIZSHOW_DEMO_SESSION_ID, Date.now());
+  }
+  if (!body.isPractice && hasKeptResults(slug)) {
     if (!body.shouldReplaceResults)
       throw demoRefusal(409, "quizshow_results_exist");
     deletedResultsSlugs.add(slug);
   }
+  const joinCode =
+    rematchOfSessionId === null
+      ? QUIZSHOW_DEMO_JOIN_CODE
+      : rematchJoinCodeOf(openSession?.joinCode ?? null);
   liveSessionsBySlug.set(slug, {
     sessionId: QUIZSHOW_DEMO_SESSION_ID,
-    joinCode: QUIZSHOW_DEMO_JOIN_CODE,
+    joinCode,
     status: "lobby",
     playMode: body.playMode,
     playerCount: 0,
     startedAt: new Date().toISOString(),
+    isPractice: body.isPractice,
+    sourceUpdatedAt: record.quiz.updatedAt,
+    isAdultsOnly: false,
+    quizTitle: record.quiz.title,
   });
+  record.lastOpenSettings = demoOpenSettingsOf(body);
+  if (rematchOfSessionId !== null) {
+    demoClearSessionEnd(rematchOfSessionId);
+    emitDemoRematch({
+      fromSessionId: rematchOfSessionId,
+      sessionId: QUIZSHOW_DEMO_SESSION_ID,
+      joinCode,
+      playMode: body.playMode,
+    });
+  }
   return {
     sessionId: QUIZSHOW_DEMO_SESSION_ID,
-    joinCode: QUIZSHOW_DEMO_JOIN_CODE,
-    isGuestPushSent: body.notifyGuests,
+    joinCode,
+    isGuestPushSent: body.notifyGuests && !body.isPractice,
   };
 }
 
+/**
+ * The open lobby of a demo event, or null: the twin of `demoGameLiveSession`.
+ * The demo engine reads `isPractice` and `joinCode` here, so a practice or
+ * rematch lobby opened from the store plays as one.
+ */
+export function demoEventLiveSession(
+  slug: string,
+): QuizshowLiveSessionRef | null {
+  const liveSession = liveSessionsBySlug.get(slug);
+  if (!liveSession) return null;
+  return demoLiveSessionRefOf(
+    liveSession,
+    demoEventQuizzes().get(slug)?.quiz.updatedAt ?? null,
+  );
+}
+
+/** C6.10 for an event's lobby; a demo event is never 18+. */
+export function demoRefreshLobby(slug: string): { isNoop: boolean } {
+  return demoRefreshSession(
+    liveSessionsBySlug.get(slug) ?? null,
+    demoEventQuizzes().get(slug)?.quiz ?? null,
+    false,
+  );
+}
+
+/**
+ * A demo session ended at `endedAtMs`: its open slot frees and a rematch can
+ * check its window (item 38). For the demo engine to call when a game
+ * finishes; the stores never see a demo game end on their own.
+ */
+export function demoEndSession(
+  sessionId: string,
+  endedAtMs: number = Date.now(),
+): void {
+  demoRecordSessionEnd(sessionId, endedAtMs);
+  for (const [slug, liveSession] of liveSessionsBySlug) {
+    if (liveSession.sessionId === sessionId) {
+      demoRecordCodeEnd(liveSession.joinCode, endedAtMs);
+      liveSessionsBySlug.delete(slug);
+    }
+  }
+  demoEndGameSession(sessionId, endedAtMs);
+}
+
+function normalisedJoinCodeOf(code: string): string {
+  return code.toUpperCase().replace(/[\s-]/g, "");
+}
+
 export function demoJoin(body: QuizshowJoinInput): QuizshowJoinResponse {
-  const normalizedCode = body.code.toUpperCase().replace(/[\s-]/g, "");
+  const normalizedCode = normalisedJoinCodeOf(body.code);
   if (!QUIZSHOW_JOIN_CODE_PATTERN.test(normalizedCode)) {
     throw demoRefusal(404, "quizshow_join_code_not_found");
   }
@@ -238,6 +393,35 @@ export function demoJoin(body: QuizshowJoinInput): QuizshowJoinResponse {
   };
 }
 
+/**
+ * C5.1 in demo, signed out: the quiz title of the lobby's snapshot and the
+ * status only. An open event lobby's code first, then an open game lobby's;
+ * a code whose lobby ended answers 410 inside `finishedCodeMemoryHours`; the
+ * fixed demo code is the demo event's, as its event card shows; 404 otherwise.
+ */
+export function demoJoinPreview(code: string): QuizshowJoinPreview {
+  const normalizedCode = normalisedJoinCodeOf(code);
+  if (!QUIZSHOW_JOIN_CODE_PATTERN.test(normalizedCode)) {
+    throw demoRefusal(404, "quizshow_join_code_not_found");
+  }
+  for (const liveSession of liveSessionsBySlug.values()) {
+    if (liveSession.joinCode === normalizedCode) {
+      return { quizTitle: liveSession.quizTitle, status: liveSession.status };
+    }
+  }
+  const gamePreview = demoGameJoinPreview(normalizedCode);
+  if (gamePreview) return gamePreview;
+  const endedCodeRefusal = demoEndedCodeRefusal(normalizedCode, Date.now());
+  if (endedCodeRefusal) throw endedCodeRefusal;
+  if (normalizedCode === QUIZSHOW_DEMO_JOIN_CODE) {
+    return {
+      quizTitle: demoQuizFor(QUIZSHOW_DEMO_LIVE_SLUG).title,
+      status: "lobby",
+    };
+  }
+  throw demoRefusal(404, "quizshow_join_code_not_found");
+}
+
 /** The play mode of the lobby a demo join landed in: the game's own lobby, else the event's. */
 export function demoJoinPlayMode(join: QuizshowJoinResponse): QuizshowPlayMode {
   const gameId = demoGameIdForSession(join.sessionId);
@@ -248,7 +432,10 @@ export function demoJoinPlayMode(join: QuizshowJoinResponse): QuizshowPlayMode {
 export function demoResults(slug: string): QuizshowResultsResponse {
   if (!hasKeptResults(slug))
     throw demoRefusal(404, "quizshow_results_not_found");
-  return structuredClone(QUIZSHOW_DEMO_RESULTS);
+  return {
+    ...structuredClone(QUIZSHOW_DEMO_RESULTS),
+    winBadges: demoResultsWinBadges(slug),
+  };
 }
 
 export function demoDeleteResults(slug: string): void {
@@ -259,8 +446,8 @@ export function demoDeleteResults(slug: string): void {
 
 /** The quiz a demo engine plays for this event: the one saved in this tab, else the Pride seed's quiz. */
 export function demoQuizFor(slug: string): QuizshowQuiz {
-  const stored = quizzesBySlug.get(slug);
-  if (stored) return structuredClone(stored);
+  const stored = demoEventQuizzes().get(slug);
+  if (stored) return normaliseStoredQuiz(structuredClone(stored.quiz));
   return quizFromInput(demoDefaultQuizShape(), {
     idPrefix: `demo-${QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory}`,
     updatedAt: DEFAULT_QUIZ_UPDATED_AT,

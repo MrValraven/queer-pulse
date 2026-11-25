@@ -20,6 +20,21 @@ export function SkeletonLine({
   );
 }
 
+/**
+ * A shimmer block sized entirely by the caller's class, for placeholders whose
+ * size follows breakpoints or the layout around them (a gallery photo that
+ * stretches to its row, a map band) where a fixed inline height cannot.
+ */
+export function SkeletonBlock({ className }: { className?: string }) {
+  return (
+    <div
+      className={[styles.shimmer, styles.line, className]
+        .filter(Boolean)
+        .join(" ")}
+    />
+  );
+}
+
 export function SkeletonAvatar({ size = 44 }: { size?: number }) {
   return (
     <div

@@ -5,14 +5,20 @@ import { TestProviders } from "../../../test/TestProviders";
 import { awaitCatalogUnderFakeTimers } from "../../../test/awaitCatalogUnderFakeTimers";
 import {
   QUIZSHOW_LIMITS,
+  type QuizshowCursor,
+  type QuizshowPodiumEntry,
+  type QuizshowRoundCard,
+  type QuizshowScreenState,
   type QuizshowWheelBonusView,
   type QuizshowWheelSlice,
   type QuizshowWheelSpin,
   type QuizshowWheelView,
 } from "../../../shared/contracts/quizshow";
 import { wheelSpinLandsAt } from "../quizshowWheel";
+import { createQuizshowClientState } from "../realtime/quizshowClientStore";
 import { QUIZSHOW_WHEEL_PANEL_DELAY_MS } from "../stage/quizshowWheelMotion";
 import type { QuizshowRoundKindRows } from "../stage/quizshowWheelCopy";
+import { QuizshowScreenStage } from "./QuizshowScreenStage";
 import { QuizshowScreenWheel } from "./QuizshowScreenWheel";
 import { QuizshowScreenWheelBonus } from "./QuizshowScreenWheelBonus";
 
@@ -425,5 +431,323 @@ describe("QuizshowScreenWheel landing", () => {
     expect(
       within(tied.container).getByText("+500 each to Ana and Bo for Music"),
     ).toBeInTheDocument();
+  });
+});
+
+/** A running screen session in `phase`, for the stage chrome below. */
+function stageSession(
+  cursorOverrides: Partial<QuizshowCursor>,
+  overrides: Partial<QuizshowScreenState> = {},
+): QuizshowScreenState {
+  return {
+    sessionId: "session-1",
+    eventSlug: "quiz-night",
+    eventTitle: "Quiz night",
+    kind: "event",
+    gameId: null,
+    isAdultsOnly: false,
+    joinCode: "QZ7KP4",
+    quizTitle: "Pride quiz",
+    languages: "en",
+    screenLanguage: "en",
+    playMode: "solo",
+    maxTeamSize: null,
+    isReviewOn: false,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
+    isScreenMuted: false,
+    cursor: {
+      phaseId: "20",
+      status: "running",
+      phase: "lobby",
+      roundIndex: null,
+      questionIndex: null,
+      roundCount: 2,
+      phaseStartedAt: NOW,
+      deadline: null,
+      extraTimeDeadline: null,
+      pausedRemainingMs: null,
+      pausedExtraTimeRemainingMs: null,
+      isRestartRecovery: false,
+      roundNumber: 2,
+      upNext: null,
+      canSpinForNextRound: false,
+      talkStartsAt: null,
+      autoAdvanceAt: null,
+      podiumRevealedCount: null,
+      ...cursorOverrides,
+    },
+    rounds: [],
+    round: null,
+    reveal: null,
+    scores: {
+      phaseId: "20",
+      scope: "round",
+      entries: [],
+      entrantCount: 3,
+    },
+    podium: null,
+    nextEvent: null,
+    role: "screen",
+    lobby: { players: [], teams: [], playerCount: 3 },
+    question: null,
+    answerCount: null,
+    voteOptions: null,
+    wheel: null,
+    wheelBonus: null,
+    ...overrides,
+  };
+}
+
+function stageTree(session: QuizshowScreenState) {
+  return (
+    <TestProviders>
+      <MotionProvider>
+        <QuizshowScreenStage
+          state={{
+            ...createQuizshowClientState("screen"),
+            status: "attached",
+            hasAttached: true,
+            session,
+          }}
+          clockOffsetMs={0}
+          size="screen"
+        />
+      </MotionProvider>
+    </TestProviders>
+  );
+}
+
+/** The session's rows as round cards: the wheel at 0, quiz rows 1 to 8 (as ROUNDS). */
+const STAGE_ROUNDS: QuizshowRoundCard[] = ROUNDS.map(
+  (row, roundIndex): QuizshowRoundCard => ({
+    roundIndex,
+    kind: row.kind,
+    title: { en: "", pt: "" },
+    contentLabel: "none",
+    questionCount: 8,
+    isJokerAllowed: false,
+    isSpeedBonusOn: false,
+    isWarmUp: false,
+    talkSeconds: 0,
+  }),
+);
+
+function wheelStageSession(isJoinLocked: boolean): QuizshowScreenState {
+  return stageSession(
+    { phase: "wheel", phaseId: "23", roundIndex: 0 },
+    { rounds: STAGE_ROUNDS, wheel: wheelOf(), isJoinLocked },
+  );
+}
+
+function joinChipOf(container: HTMLElement): HTMLElement | null {
+  return container.querySelector<HTMLElement>("[data-quizshow-join-chip]");
+}
+
+const PODIUM: Record<"gold" | "silver" | "bronze", QuizshowPodiumEntry> = {
+  gold: {
+    place: 1,
+    kind: "player",
+    entrantId: "player-gold",
+    name: "Gold",
+    colorKey: null,
+    score: 3000,
+  },
+  silver: {
+    place: 2,
+    kind: "player",
+    entrantId: "player-silver",
+    name: "Silver",
+    colorKey: null,
+    score: 2000,
+  },
+  bronze: {
+    place: 3,
+    kind: "player",
+    entrantId: "player-bronze",
+    name: "Bronze",
+    colorKey: null,
+    score: 1000,
+  },
+};
+
+function podiumSession(
+  revealedCount: number,
+  entries: QuizshowPodiumEntry[],
+): QuizshowScreenState {
+  return stageSession(
+    { phaseId: `podium-${revealedCount}`, phase: "podium", roundNumber: 2 },
+    { podium: entries },
+  );
+}
+
+function stepStatesOf(
+  container: HTMLElement,
+): Record<string, string | undefined> {
+  const states: Record<string, string | undefined> = {};
+  for (const step of container.querySelectorAll<HTMLElement>("[data-place]")) {
+    states[step.dataset.place ?? ""] = step.dataset.revealed;
+  }
+  return states;
+}
+
+function revealedPlacesOf(container: HTMLElement): string[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>('[data-revealed="true"]'),
+  ).map((step) => step.dataset.place ?? "");
+}
+
+describe("QuizshowScreenStage chrome", () => {
+  installFakeClock();
+
+  it("leaves the join chip out of the lobby", async () => {
+    const { container } = render(stageTree(stageSession({ phase: "lobby" })));
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(joinChipOf(container)).toBeNull();
+  });
+
+  it("shows the join chip with the code after the lobby, with the QR on a leaderboard", async () => {
+    const { container, rerender } = render(
+      stageTree(stageSession({ phase: "scores", phaseId: "21" })),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    const compactChip = joinChipOf(container);
+    expect(compactChip).not.toBeNull();
+    expect(
+      within(compactChip as HTMLElement).getByText("Join: QZ7KP4"),
+    ).toBeInTheDocument();
+    expect(compactChip).toHaveAttribute("data-expanded", "false");
+
+    rerender(
+      stageTree(
+        stageSession({ phase: "leaderboard", phaseId: "22", roundIndex: 0 }),
+      ),
+    );
+    expect(joinChipOf(container)).toHaveAttribute("data-expanded", "true");
+  });
+
+  it("says joining is closed while the join is locked", async () => {
+    const { container } = render(
+      stageTree(
+        stageSession(
+          { phase: "leaderboard", phaseId: "22", roundIndex: 0 },
+          { isJoinLocked: true },
+        ),
+      ),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    const chip = joinChipOf(container);
+    expect(chip).not.toBeNull();
+    expect(
+      within(chip as HTMLElement).getByText("Joining is closed"),
+    ).toBeInTheDocument();
+    expect(
+      within(chip as HTMLElement).queryByText("Join: QZ7KP4"),
+    ).not.toBeInTheDocument();
+    expect(chip).toHaveAttribute("data-expanded", "false");
+    // A leaderboard opens the chip; locked, the stage keeps it compact.
+    expect(
+      container.querySelector('[data-join-chip="compact"]'),
+    ).not.toBeNull();
+    expect(container.querySelector('[data-join-chip="expanded"]')).toBeNull();
+  });
+
+  it("keeps the chip out of the wheel, whose bar shows the code", async () => {
+    const { container } = render(stageTree(wheelStageSession(false)));
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(joinChipOf(container)).toBeNull();
+    expect(within(container).getByText("QZ7KP4")).toBeInTheDocument();
+  });
+
+  it("drops the code from the wheel bar and says joining is closed while locked", async () => {
+    const { container } = render(stageTree(wheelStageSession(true)));
+    await awaitCatalogUnderFakeTimers("quizshow");
+    const chip = joinChipOf(container);
+    expect(chip).not.toBeNull();
+    expect(
+      within(chip as HTMLElement).getByText("Joining is closed"),
+    ).toBeInTheDocument();
+    expect(within(container).queryByText("QZ7KP4")).not.toBeInTheDocument();
+    expect(within(container).queryByText(/Join at/)).not.toBeInTheDocument();
+  });
+
+  it("shows only the revealed podium places, the rest as empty steps", async () => {
+    const { container } = render(stageTree(podiumSession(1, [PODIUM.bronze])));
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(within(container).getByText("Bronze")).toBeInTheDocument();
+    expect(within(container).queryByText("Silver")).not.toBeInTheDocument();
+    expect(within(container).queryByText("Gold")).not.toBeInTheDocument();
+    expect(revealedPlacesOf(container)).toEqual(["3"]);
+    expect(
+      Array.from(container.querySelectorAll<HTMLElement>("[data-place]")).map(
+        (step) => step.dataset.place,
+      ),
+    ).toEqual(["1", "2", "3"]);
+  });
+
+  it("holds on the winner line before showing 1st place", async () => {
+    const { container, rerender } = render(
+      stageTree(podiumSession(2, [PODIUM.silver, PODIUM.bronze])),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(revealedPlacesOf(container)).toEqual(["2", "3"]);
+
+    rerender(
+      stageTree(podiumSession(3, [PODIUM.gold, PODIUM.silver, PODIUM.bronze])),
+    );
+    advance(QUIZSHOW_LIMITS.podiumWinnerHoldMs - 100);
+    expect(
+      within(container).getByText("And the winner is"),
+    ).toBeInTheDocument();
+    expect(within(container).queryByText("Gold")).not.toBeInTheDocument();
+    expect(revealedPlacesOf(container)).toEqual(["2", "3"]);
+
+    // The names then fade in through the presence swap; the step's own state
+    // flips at the end of the hold.
+    advance(200);
+    expect(revealedPlacesOf(container)).toEqual(["1", "2", "3"]);
+  });
+
+  it("keeps the empty 2nd step through the winner hold in a top tie", async () => {
+    const tiedGold: QuizshowPodiumEntry = {
+      ...PODIUM.gold,
+      entrantId: "player-gold-2",
+      name: "Gold too",
+    };
+    const { container, rerender } = render(
+      stageTree(podiumSession(1, [PODIUM.bronze])),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(stepStatesOf(container)).toEqual({
+      "1": "false",
+      "2": "false",
+      "3": "true",
+    });
+
+    rerender(
+      stageTree(podiumSession(2, [PODIUM.gold, tiedGold, PODIUM.bronze])),
+    );
+    advance(QUIZSHOW_LIMITS.podiumWinnerHoldMs - 100);
+    expect(
+      within(container).getByText("And the winner is"),
+    ).toBeInTheDocument();
+    expect(stepStatesOf(container)).toEqual({
+      "1": "false",
+      "2": "false",
+      "3": "true",
+    });
+  });
+
+  it("shows a podium that arrives complete at once", async () => {
+    const { container } = render(
+      stageTree(podiumSession(3, [PODIUM.gold, PODIUM.silver, PODIUM.bronze])),
+    );
+    await awaitCatalogUnderFakeTimers("quizshow");
+    expect(within(container).getByText("Gold")).toBeInTheDocument();
+    expect(
+      within(container).queryByText("And the winner is"),
+    ).not.toBeInTheDocument();
   });
 });

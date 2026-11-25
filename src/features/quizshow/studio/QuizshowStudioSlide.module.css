@@ -29,7 +29,7 @@
 }
 
 /* Nothing on the slide shrinks under its content: a slide too full for 720px
-   scrolls inside the canvas instead of overlapping. */
+   scrolls inside the canvas, so nothing overlaps. */
 .slide > * {
   flex-shrink: 0;
 }
@@ -364,6 +364,13 @@
   grid-template-columns: minmax(0, 1fr) 22rem;
 }
 
+/* The round title in the meta pill: the dot sits beside it, and a title in
+   both languages stacks its two lines (C6.26). */
+.pillTitle {
+  display: inline-flex;
+  align-items: center;
+}
+
 /* A dot between the parts of a meta pill. */
 .pillParts > * + *::before {
   display: inline-block;
@@ -576,6 +583,12 @@
   box-shadow: var(--qs-glow-jade);
 }
 
+/* A mark that would leave no option wrong: it says why and does nothing. */
+.mark[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .mark:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -670,6 +683,55 @@
   font-size: var(--text-40);
   font-weight: 600;
   line-height: var(--lh-title);
+}
+
+/* The right number and its unit on one line, the unit muted after it. */
+.answerBoxRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.answerBoxRow .answerBoxField {
+  flex: 1;
+  min-width: 0;
+}
+
+.answerBoxUnit {
+  flex-shrink: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-24);
+  font-weight: 600;
+}
+
+/* The unit's fold sits beside the number; it never shrinks under its word. */
+.answerBoxUnitPanel {
+  flex-shrink: 0;
+}
+
+/* ── Reveal note ("Fun fact"), under the answers ── */
+.note {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-sm);
+  max-width: 64ch;
+  margin: 0;
+  color: var(--qs-text-mute);
+  font-size: var(--text-18);
+  line-height: 1.4;
+}
+
+.noteLabel {
+  flex-shrink: 0;
+  font-size: var(--text-16);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.noteText {
+  min-width: 0;
 }
 
 /* ── Put in order ── */

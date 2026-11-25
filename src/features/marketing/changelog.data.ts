@@ -63,6 +63,72 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "quiz-win-badges",
+        category: "feature",
+        date: "24 Nov 2026",
+        ...entryKeys("quiz-win-badges"),
+      },
+      {
+        id: "pulse-live-tv-pairing",
+        category: "feature",
+        date: "24 Nov 2026",
+        ...entryKeys("pulse-live-tv-pairing"),
+      },
+      {
+        id: "pulse-live-studio-tools",
+        category: "feature",
+        date: "24 Nov 2026",
+        ...entryKeys("pulse-live-studio-tools"),
+      },
+      {
+        id: "pulse-live-practice-and-teams",
+        category: "feature",
+        date: "24 Nov 2026",
+        ...entryKeys("pulse-live-practice-and-teams"),
+      },
+      {
+        id: "pulse-live-giving-link",
+        category: "feature",
+        date: "24 Nov 2026",
+        ...entryKeys("pulse-live-giving-link"),
+      },
+      {
+        id: "pulse-live-steadier-nights",
+        category: "improvement",
+        date: "24 Nov 2026",
+        ...entryKeys("pulse-live-steadier-nights"),
+      },
+      {
+        id: "pulse-live-join-from-link",
+        category: "improvement",
+        date: "24 Nov 2026",
+        ...entryKeys("pulse-live-join-from-link"),
+      },
+      {
+        id: "community-insights-load-again",
+        category: "fix",
+        date: "24 Nov 2026",
+        ...entryKeys("community-insights-load-again"),
+      },
+      {
+        id: "iphone-install-screenshots",
+        category: "improvement",
+        date: "24 Nov 2026",
+        ...entryKeys("iphone-install-screenshots"),
+      },
+      {
+        id: "back-keeps-your-place",
+        category: "fix",
+        date: "24 Nov 2026",
+        ...entryKeys("back-keeps-your-place"),
+      },
+      {
+        id: "listing-page-skeleton",
+        category: "improvement",
+        date: "24 Nov 2026",
+        ...entryKeys("listing-page-skeleton"),
+      },
+      {
         id: "vj-default-cut",
         category: "improvement",
         date: "23 Nov 2026",

@@ -1,16 +1,26 @@
-import type {
-  QuizshowAnswerPayload,
-  QuizshowLobbyJoinInput,
-  QuizshowQuestion,
-  QuizshowQuiz,
-  QuizshowRound,
+import {
+  QUIZSHOW_CLOSEST_TOLERANCE_DEFAULT,
+  QUIZSHOW_LIMITS,
+  QUIZSHOW_REACTION_IDS,
+  QUIZSHOW_TEAM_COLOR_KEYS,
+  type QuizshowAnswerPayload,
+  type QuizshowClosestTolerance,
+  type QuizshowLobbyJoinInput,
+  type QuizshowPhase,
+  type QuizshowQuestion,
+  type QuizshowQuiz,
+  type QuizshowRound,
 } from "../../../shared/contracts/quizshow";
+import { foldNameKey, suggestedScreenNameFor } from "../quizshowNormalise";
+import { isReactionPhase } from "../stage/quizshowReactionRules";
+import { isActivePlayer } from "./quizshowEngineSetup";
 import type {
   QuizshowEngineAction,
   QuizshowEnginePlayer,
   QuizshowEngineState,
 } from "./quizshowEngineTypes";
 import { quizshowRandomFrom } from "./quizshowRandom";
+import { closestBandWidth } from "./quizshowScoring";
 import {
   QUIZSHOW_SIMULATED_PLAYERS,
   QUIZSHOW_SIMULATED_TEAMS,
@@ -25,6 +35,22 @@ export interface QuizshowBotState {
   plannedPhaseStartedAt: number | null;
   plans: Array<{ dueAt: number; action: QuizshowEngineAction }>;
   lobbyStartedAt: number;
+  /** How many teams the bots spread over in teams play. */
+  teamCount: number;
+  /** Each bot's reaction timing by member key: the last one sent and the next one due (null outside reaction phases). */
+  reactionsByMemberKey: Record<
+    string,
+    { lastSentAt: number | null; nextAt: number | null }
+  >;
+  /** A separate seeded stream for reactions, so time in the lobby never changes how bots answer, vote or play jokers. */
+  reactionRandomState: number;
+  /** Bots whose join was sent and did not land (a refusal); later bots join past them. */
+  attemptedJoinMemberKeys: string[];
+}
+
+export interface QuizshowBotOptions {
+  /** Teams the bots spread over in teams play; default the four simulated teams. */
+  teamCount?: number;
 }
 
 type BotRandom = ReturnType<typeof quizshowRandomFrom>;
@@ -37,16 +63,59 @@ interface ActiveBot {
 }
 
 const JOIN_GAP_MS = 700;
+/** Mixed into the seed for the reaction stream (MurmurHash2's multiplier). */
+const REACTION_SEED_MIX = 0x5bd1e995;
 const EARLIEST_ANSWER_MS = 1_200;
 const LATEST_ANSWER_SHARE = 0.95;
+/** A closest guess lands within this many band widths of the truth, so a band shows both outcomes. */
+const CLOSEST_SPREAD_BAND_WIDTHS = 3;
+/** With no band (exact, or a percent of 0), guesses spread over this share of the truth. */
+const CLOSEST_SPREAD_TRUTH_SHARE = 0.05;
+const CLOSEST_SPREAD_MIN = 5;
+/**
+ * Phases bots react in (contract 10 row 46): the shared reaction phases minus
+ * the round intro and the wheel, so the bots stay quiet while a round is
+ * introduced or the wheel turns.
+ */
+const BOT_QUIET_REACTION_PHASES: readonly QuizshowPhase[] = [
+  "round_intro",
+  "wheel",
+];
 
-export function createBotState(seed: number, now: number): QuizshowBotState {
+function isBotReactionPhase(phase: QuizshowPhase): boolean {
+  return isReactionPhase(phase) && !BOT_QUIET_REACTION_PHASES.includes(phase);
+}
+/** At most one reaction per bot in this window. */
+const BOT_REACTION_GAP_MS = 3_000;
+const BOT_REACTION_FIRST_DELAY_MS = 1_000;
+const BOT_REACTION_FIRST_SPREAD_MS = 4_000;
+const BOT_REACTION_NEXT_SPREAD_MS = 9_000;
+
+export function createBotState(
+  seed: number,
+  now: number,
+  options: QuizshowBotOptions = {},
+): QuizshowBotState {
+  const teamCountMax = Math.min(
+    QUIZSHOW_SIMULATED_PLAYERS.length,
+    QUIZSHOW_LIMITS.teamsPerSessionMax,
+  );
   return {
     randomState: seed >>> 0,
     plannedPhaseId: null,
     plannedPhaseStartedAt: null,
     plans: [],
     lobbyStartedAt: now,
+    teamCount: Math.min(
+      Math.max(
+        Math.round(options.teamCount ?? QUIZSHOW_SIMULATED_TEAMS.length),
+        1,
+      ),
+      teamCountMax,
+    ),
+    reactionsByMemberKey: {},
+    reactionRandomState: (seed ^ REACTION_SEED_MIX) >>> 0,
+    attemptedJoinMemberKeys: [],
   };
 }
 
@@ -59,6 +128,12 @@ export function planBotActions(
   const actions: QuizshowEngineAction[] = [];
   const joinAction = planNextJoin(botState, engine, now);
   if (joinAction) actions.push(joinAction);
+  const attemptedJoinMemberKeys =
+    joinAction?.type === "player"
+      ? [...botState.attemptedJoinMemberKeys, joinAction.memberKey]
+      : botState.attemptedJoinMemberKeys;
+  const reactions = planReactions(botState, engine, now);
+  actions.push(...reactions.actions);
 
   let plans = botState.plans;
   let plannedPhaseId = botState.plannedPhaseId;
@@ -94,6 +169,9 @@ export function planBotActions(
       plannedPhaseId,
       plannedPhaseStartedAt,
       plans,
+      reactionsByMemberKey: reactions.reactionsByMemberKey,
+      reactionRandomState: reactions.reactionRandomState,
+      attemptedJoinMemberKeys,
     },
     actions,
   };
@@ -104,25 +182,44 @@ function planNextJoin(
   engine: QuizshowEngineState,
   now: number,
 ): QuizshowEngineAction | null {
-  if (engine.cursor.phase !== "lobby") return null;
+  if (engine.cursor.phase !== "lobby" || engine.isJoinLocked) return null;
   const joinedKeys = new Set(engine.players.map((player) => player.memberKey));
-  const nextIndex = QUIZSHOW_SIMULATED_PLAYERS.findIndex(
-    (simulated) => !joinedKeys.has(simulated.memberKey),
-  );
-  const next = QUIZSHOW_SIMULATED_PLAYERS[nextIndex];
-  if (!next) return null;
-  if (now < botState.lobbyStartedAt + JOIN_GAP_MS * (nextIndex + 1)) {
-    return null;
+  const attemptedKeys = new Set(botState.attemptedJoinMemberKeys);
+  // A bot with no free name, or whose join was refused, is passed over.
+  for (const [nextIndex, next] of QUIZSHOW_SIMULATED_PLAYERS.entries()) {
+    if (joinedKeys.has(next.memberKey) || attemptedKeys.has(next.memberKey)) {
+      continue;
+    }
+    if (now < botState.lobbyStartedAt + JOIN_GAP_MS * (nextIndex + 1)) {
+      return null;
+    }
+    const screenName = freeScreenNameFor(engine, next.screenName);
+    if (screenName === null) continue;
+    return joinActionFor(engine, botState, next, nextIndex, screenName, now);
   }
+  return null;
+}
+
+function joinActionFor(
+  engine: QuizshowEngineState,
+  botState: QuizshowBotState,
+  next: QuizshowSimulatedPlayer,
+  nextIndex: number,
+  screenName: string,
+  now: number,
+): QuizshowEngineAction {
   return {
     type: "player",
     memberKey: next.memberKey,
     name: "lobby:join",
     payload: {
-      screenName: next.screenName,
+      screenName,
       isAvatarShown: false,
       hasExtraTime: next.hasExtraTime,
-      team: engine.playMode === "teams" ? teamChoiceFor(engine, next) : null,
+      team:
+        engine.playMode === "teams"
+          ? teamChoiceFor(engine, next, nextIndex, botState.teamCount)
+          : null,
       /** Simulated players confirm 18+ content, so they join an 18+ game too. */
       hasAcceptedAdultContent: true,
     },
@@ -130,31 +227,163 @@ function planNextJoin(
   };
 }
 
+/**
+ * The bot's own name when no other player of the session (active or left)
+ * holds its key (contract 6.13), else the first free numbered one; null when
+ * none is free.
+ */
+function freeScreenNameFor(
+  engine: QuizshowEngineState,
+  screenName: string,
+): string | null {
+  const takenNames = engine.players
+    .filter((player) => !player.isRemoved)
+    .map((player) => player.screenName);
+  const nameKey = foldNameKey(screenName);
+  const isTaken = takenNames.some((name) => foldNameKey(name) === nameKey);
+  return isTaken ? suggestedScreenNameFor(screenName, takenNames) : screenName;
+}
+
+/** The simulated team for a slot: the four templates, then each again with a number ("Spill the Tea 2"). */
+function slotTeamName(slot: number): string {
+  const templateCount = QUIZSHOW_SIMULATED_TEAMS.length;
+  const templateName =
+    QUIZSHOW_SIMULATED_TEAMS[slot % templateCount]?.name ?? "";
+  const repeatIndex = Math.floor(slot / templateCount);
+  return repeatIndex === 0
+    ? templateName
+    : `${templateName} ${repeatIndex + 1}`;
+}
+
+/**
+ * Spreads the bots over `teamCount` teams: a bot joins its slot's team when
+ * one holds that name (by `foldNameKey`), else an empty host-made team, else
+ * founds it with the template's colour when free or the first free of the 24
+ * keys, tier 1 first. With every key or the team limit used, it joins an
+ * existing team.
+ */
 function teamChoiceFor(
   engine: QuizshowEngineState,
   simulated: QuizshowSimulatedPlayer,
+  simulatedIndex: number,
+  teamCount: number,
 ): QuizshowLobbyJoinInput["team"] {
-  const template = QUIZSHOW_SIMULATED_TEAMS[simulated.teamIndex];
-  if (!template) return null;
-  const existing = engine.teams.find((team) => team.name === template.name);
+  const slot =
+    teamCount === QUIZSHOW_SIMULATED_TEAMS.length
+      ? simulated.teamIndex
+      : simulatedIndex % teamCount;
+  const name = slotTeamName(slot);
+  const nameKey = foldNameKey(name);
+  const existing = engine.teams.find(
+    (team) => foldNameKey(team.name) === nameKey,
+  );
   if (existing) return { teamId: existing.teamId };
-  return {
-    newTeam: {
-      name: template.name,
-      colorKey: template.colorKey,
-    },
-  };
+  // A table a host made and nobody sits at yet fills before bots found their own.
+  const emptyHostTeam = engine.teams.find(
+    (team) =>
+      team.isHostMade &&
+      !engine.players.some(
+        (player) => player.teamId === team.teamId && isActivePlayer(player),
+      ),
+  );
+  if (emptyHostTeam) return { teamId: emptyHostTeam.teamId };
+  const usedColorKeys = new Set(engine.teams.map((team) => team.colorKey));
+  const templateColorKey = QUIZSHOW_SIMULATED_TEAMS[slot]?.colorKey;
+  const colorKey =
+    templateColorKey !== undefined && !usedColorKeys.has(templateColorKey)
+      ? templateColorKey
+      : QUIZSHOW_TEAM_COLOR_KEYS.find((key) => !usedColorKeys.has(key));
+  const isTeamLimitReached =
+    engine.teams.length >= QUIZSHOW_LIMITS.teamsPerSessionMax;
+  if (colorKey === undefined || isTeamLimitReached) {
+    const fallback = engine.teams[slot % Math.max(engine.teams.length, 1)];
+    return fallback ? { teamId: fallback.teamId } : null;
+  }
+  return { newTeam: { name, colorKey } };
 }
 
 function activeBots(engine: QuizshowEngineState): ActiveBot[] {
   const bots: ActiveBot[] = [];
   QUIZSHOW_SIMULATED_PLAYERS.forEach((simulated, simulatedIndex) => {
     const enginePlayer = engine.players.find(
-      (player) => player.memberKey === simulated.memberKey && !player.isRemoved,
+      (player) =>
+        player.memberKey === simulated.memberKey && isActivePlayer(player),
     );
     if (enginePlayer) bots.push({ simulated, simulatedIndex, enginePlayer });
   });
   return bots;
+}
+
+/**
+ * Bots react in the lobby and around the scores (contract 10 row 46), each at
+ * most once per `BOT_REACTION_GAP_MS`. Outside those phases, after the end
+ * and while paused, nothing is sent; a bot's next reaction is planned again
+ * on the way back in.
+ */
+function planReactions(
+  botState: QuizshowBotState,
+  engine: QuizshowEngineState,
+  now: number,
+): {
+  reactionsByMemberKey: QuizshowBotState["reactionsByMemberKey"];
+  reactionRandomState: number;
+  actions: QuizshowEngineAction[];
+} {
+  const random = quizshowRandomFrom(botState.reactionRandomState);
+  const reactionsByMemberKey = { ...botState.reactionsByMemberKey };
+  const actions: QuizshowEngineAction[] = [];
+  const { phase, status } = engine.cursor;
+  const isReactionTime =
+    (status === "lobby" || status === "running") && isBotReactionPhase(phase);
+  if (engine.pausedAt !== null) {
+    return {
+      reactionsByMemberKey,
+      reactionRandomState: random.state(),
+      actions,
+    };
+  }
+  for (const { simulated } of activeBots(engine)) {
+    const timing = reactionsByMemberKey[simulated.memberKey] ?? {
+      lastSentAt: null,
+      nextAt: null,
+    };
+    if (!isReactionTime) {
+      reactionsByMemberKey[simulated.memberKey] = { ...timing, nextAt: null };
+      continue;
+    }
+    const earliestAt =
+      timing.lastSentAt === null
+        ? Number.NEGATIVE_INFINITY
+        : timing.lastSentAt + BOT_REACTION_GAP_MS;
+    if (timing.nextAt === null) {
+      const firstAt = Math.round(
+        now +
+          BOT_REACTION_FIRST_DELAY_MS +
+          random.next() * BOT_REACTION_FIRST_SPREAD_MS,
+      );
+      reactionsByMemberKey[simulated.memberKey] = {
+        ...timing,
+        nextAt: Math.max(firstAt, earliestAt),
+      };
+      continue;
+    }
+    if (now < timing.nextAt || now < earliestAt) continue;
+    const reactionId = pickFrom(QUIZSHOW_REACTION_IDS, random) ?? "heart";
+    actions.push({
+      type: "player",
+      memberKey: simulated.memberKey,
+      name: "reaction:send",
+      payload: { reactionId },
+      now,
+    });
+    reactionsByMemberKey[simulated.memberKey] = {
+      lastSentAt: now,
+      nextAt: Math.round(
+        now + BOT_REACTION_GAP_MS + random.next() * BOT_REACTION_NEXT_SPREAD_MS,
+      ),
+    };
+  }
+  return { reactionsByMemberKey, reactionRandomState: random.state(), actions };
 }
 
 function planPhase(
@@ -332,16 +561,26 @@ function quizAnswerPayload(
   const rollIsRight = () => random.next() < skill;
   switch (question.type) {
     case "multiple_choice": {
-      const keyIndex = question.answer?.correctIndex ?? 0;
-      if (rollIsRight() || question.options.length < 2) {
-        return { type: "multiple_choice", optionIndex: keyIndex };
-      }
-      const others = question.options
+      const correctIndexes = question.answer?.correctIndexes.length
+        ? question.answer.correctIndexes
+        : [0];
+      const rightIndex = pickFrom(correctIndexes, random) ?? 0;
+      const wrongIndexes = question.options
         .map((_option, optionIndex) => optionIndex)
-        .filter((optionIndex) => optionIndex !== keyIndex);
+        .filter((optionIndex) => !correctIndexes.includes(optionIndex));
+      if (rollIsRight() || wrongIndexes.length === 0) {
+        return { type: "multiple_choice", optionIndex: rightIndex };
+      }
       return {
         type: "multiple_choice",
-        optionIndex: pickFrom(others, random) ?? keyIndex,
+        optionIndex: pickFrom(wrongIndexes, random) ?? rightIndex,
+      };
+    }
+    case "poll": {
+      if (question.options.length === 0) return null;
+      return {
+        type: "poll",
+        optionIndex: random.integerBelow(question.options.length),
       };
     }
     case "true_false": {
@@ -349,10 +588,11 @@ function quizAnswerPayload(
       return { type: "true_false", isTrue: rollIsRight() ? key : !key };
     }
     case "type_answer": {
+      // A "both" screen reads English first, as the stage does.
+      const keyLanguage =
+        quiz.screenLanguage === "both" ? "en" : quiz.screenLanguage;
       const keyText =
-        question.answer?.text[quiz.screenLanguage] ||
-        question.answer?.text.en ||
-        "";
+        question.answer?.text[keyLanguage] || question.answer?.text.en || "";
       if (rollIsRight() && keyText)
         return { type: "type_answer", text: keyText };
       const wrong = pickFrom(
@@ -371,16 +611,36 @@ function quizAnswerPayload(
       };
     }
     case "closest_number": {
-      const key = question.answer?.value ?? 0;
-      const guess = key * (1 + (random.next() - 0.5) * 0.6 * (1.2 - skill));
+      const truth = question.answer?.value ?? 0;
+      const tolerance =
+        question.answer?.tolerance ?? QUIZSHOW_CLOSEST_TOLERANCE_DEFAULT;
+      const spread = closestGuessSpread(truth, tolerance);
+      const guess = truth + (random.next() - 0.5) * 2 * spread * (1.2 - skill);
       return {
         type: "closest_number",
-        value: Number.isInteger(key) ? Math.round(guess) : guess,
+        value: Number.isInteger(truth) ? Math.round(guess) : guess,
       };
     }
     default:
       return null;
   }
+}
+
+/**
+ * How far a guess may land from the truth: a few band widths, so some bots
+ * land in the band and some outside it; with no band, a small share of the
+ * truth, so one bot is closest and the rest are not.
+ */
+function closestGuessSpread(
+  truth: number,
+  tolerance: QuizshowClosestTolerance,
+): number {
+  const bandWidth = closestBandWidth(truth, tolerance);
+  if (bandWidth > 0) return bandWidth * CLOSEST_SPREAD_BAND_WIDTHS;
+  return Math.max(
+    Math.abs(truth) * CLOSEST_SPREAD_TRUTH_SHARE,
+    CLOSEST_SPREAD_MIN,
+  );
 }
 
 function swapNeighbours(orderedIds: readonly string[], random: BotRandom) {

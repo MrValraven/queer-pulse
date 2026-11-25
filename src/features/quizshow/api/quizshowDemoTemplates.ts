@@ -7,6 +7,7 @@ import {
   type QuizshowTemplateCardText,
   type QuizshowTemplateDetail,
   type QuizshowTemplateInput,
+  type QuizshowTemplatePreview,
   type QuizshowTemplateRow,
   type QuizshowTemplateStatus,
   type QuizshowText,
@@ -19,7 +20,12 @@ import {
   QUIZSHOW_DEMO_STAFF_NAME,
   QUIZSHOW_DEMO_TEMPLATE_SEEDS,
 } from "../demo/quizshowTemplates.data";
-import { playableRoundCount } from "../quizshowWheel";
+import type { QuizshowStoredQuizShape } from "../quizshowNormalise";
+import {
+  isWheelRoundKind,
+  playableRoundCount,
+  withWheelSettingsDefaults,
+} from "../quizshowWheel";
 import {
   demoAssertShape,
   demoBadRequest,
@@ -45,6 +51,12 @@ interface DemoTemplate {
   publishedAt: string | null;
   publishedByName: string | null;
   updatedByName: string | null;
+  /**
+   * Contract 6.25 `content_updated_at`: stamped by a publish and by a save while
+   * published; an unpublish keeps it. The detail reads it only while published.
+   */
+  contentUpdatedAt: string | null;
+  changeNote: QuizshowText;
   quiz: QuizshowQuiz;
 }
 
@@ -59,6 +71,8 @@ const NEW_TEMPLATE_QUIZ: DemoQuizBody = {
   rounds: [],
 };
 const COPY_SUFFIX: QuizshowText = { en: " (copy)", pt: " (cópia)" };
+/** Longest change note per language (contract 2.5: 0..300 each, after trim). */
+const CHANGE_NOTE_MAX = 300;
 
 // Module scope on purpose: the demo keeps what a tab saved until it reloads.
 const templatesById = new Map<string, DemoTemplate>();
@@ -82,9 +96,10 @@ export function resetQuizshowDemoTemplates(): void {
   saveCounter = 0;
 }
 
+/** Seeds arrive as stored shapes; quizFromInput runs them through the C2.4 normaliser. */
 function buildTemplateQuiz(
   templateId: string,
-  body: DemoQuizBody,
+  body: QuizshowStoredQuizShape,
   updatedAt: string,
 ): QuizshowQuiz {
   saveCounter += 1;
@@ -108,6 +123,8 @@ function templates(): Map<string, DemoTemplate> {
         publishedAt: seed.publishedAt,
         publishedByName: seed.publishedByName,
         updatedByName: seed.updatedByName,
+        contentUpdatedAt: seed.lastPublishedAt,
+        changeNote: { ...seed.changeNote },
         quiz: buildTemplateQuiz(seed.id, seed.quiz, seed.updatedAt),
       });
     }
@@ -128,6 +145,12 @@ function questionCountOf(quiz: QuizshowQuiz): number {
   );
 }
 
+/** The latest publish of a published template (the content stamp, else the publish date); null for a draft. */
+function lastPublishedAtOf(template: DemoTemplate): string | null {
+  if (template.publishedAt === null) return null;
+  return template.contentUpdatedAt ?? template.publishedAt;
+}
+
 function detailOf(template: DemoTemplate): QuizshowTemplateDetail {
   return structuredClone({
     id: template.id,
@@ -137,6 +160,8 @@ function detailOf(template: DemoTemplate): QuizshowTemplateDetail {
     publishedAt: template.publishedAt,
     publishedByName: template.publishedByName,
     quiz: template.quiz,
+    changeNote: template.changeNote,
+    lastPublishedAt: lastPublishedAtOf(template),
   });
 }
 
@@ -163,11 +188,13 @@ function cardOf(template: DemoTemplate): QuizshowTemplateCard {
     roundCount: playableRoundCount(template.quiz.rounds),
     questionCount: questionCountOf(template.quiz),
     hasAdultsRounds: hasAdultsRound(template.quiz),
+    // Cards list published templates only, so the stamp is always set here.
+    lastPublishedAt: lastPublishedAtOf(template) ?? "",
   };
 }
 
 function addTemplate(
-  fields: Omit<DemoTemplate, "id" | "quiz">,
+  fields: Omit<DemoTemplate, "id" | "quiz" | "contentUpdatedAt" | "changeNote">,
   quizBody: DemoQuizBody,
 ): DemoTemplate {
   templateCounter += 1;
@@ -175,6 +202,8 @@ function addTemplate(
   const template: DemoTemplate = {
     ...fields,
     id: templateId,
+    contentUpdatedAt: null,
+    changeNote: { en: "", pt: "" },
     quiz: buildTemplateQuiz(templateId, quizBody, new Date().toISOString()),
   };
   templates().set(templateId, template);
@@ -221,6 +250,19 @@ function trimmedTextOf(text: QuizshowText): QuizshowText {
   return { en: text.en.trim(), pt: text.pt.trim() };
 }
 
+/** The DTO limit: each trimmed language holds at most 300 characters. */
+function assertChangeNoteFits(changeNote: QuizshowText | null): void {
+  if (changeNote === null) return;
+  for (const language of ["en", "pt"] as const) {
+    // class-validator's MaxLength counts code points, so an emoji counts once.
+    if (Array.from(changeNote[language]).length > CHANGE_NOTE_MAX) {
+      throw demoBadRequest(
+        `changeNote.${language} must be shorter than or equal to ${CHANGE_NOTE_MAX} characters`,
+      );
+    }
+  }
+}
+
 export function demoPutTemplate(
   templateId: string,
   body: QuizshowTemplateInput,
@@ -230,6 +272,7 @@ export function demoPutTemplate(
   if (expectedUpdatedAt !== template.quiz.updatedAt) {
     throw demoRefusal(409, "quizshow_quiz_changed", {
       updatedAt: template.quiz.updatedAt,
+      updatedByName: template.updatedByName,
     });
   }
   const card: QuizshowTemplateCardText = {
@@ -243,6 +286,10 @@ export function demoPutTemplate(
   if (quizBody.title.length === 0) {
     throw demoBadRequest("quiz.title should not be empty");
   }
+  // An older staff page may leave the note out; the stored one stays (as live).
+  const changeNote: QuizshowText | null =
+    body.changeNote === undefined ? null : trimmedTextOf(body.changeNote);
+  assertChangeNoteFits(changeNote);
   demoAssertShape(quizBody, {
     isAdultsAllowed: true,
     adultsCode: "quizshow_quiz_invalid",
@@ -255,6 +302,10 @@ export function demoPutTemplate(
     new Date().toISOString(),
   );
   template.updatedByName = QUIZSHOW_DEMO_STAFF_NAME;
+  if (changeNote !== null) template.changeNote = changeNote;
+  if (template.publishedAt !== null) {
+    template.contentUpdatedAt = template.quiz.updatedAt;
+  }
   return detailOf(template);
 }
 
@@ -323,8 +374,10 @@ export function demoPublishTemplate(
   if (problems.length > 0) {
     throw demoRefusal(422, "quizshow_quiz_invalid", { problems });
   }
+  const publishedAt = new Date().toISOString();
   template.status = "published";
-  template.publishedAt = new Date().toISOString();
+  template.publishedAt = publishedAt;
+  template.contentUpdatedAt = publishedAt;
   template.publishedByName = QUIZSHOW_DEMO_STAFF_NAME;
   return detailOf(template);
 }
@@ -356,6 +409,40 @@ export function demoTemplateCards(): { items: QuizshowTemplateCard[] } {
     )
     .map(cardOf);
   return { items };
+}
+
+/**
+ * Contract 5.1 template preview: a published template's card and each row's
+ * prompts, with no options, answers or notes. A wheel row lists no prompts; a
+ * draft or unknown id refuses 404 quizshow_template_not_found.
+ */
+export function demoTemplatePreview(
+  templateId: string,
+): QuizshowTemplatePreview {
+  const template = templates().get(templateId);
+  if (!template || template.status !== "published") {
+    throw demoRefusal(404, "quizshow_template_not_found");
+  }
+  return structuredClone({
+    templateId: template.id,
+    title: template.card.title,
+    description: template.card.description,
+    languages: template.quiz.languages,
+    rounds: template.quiz.rounds.map((round, roundIndex) => ({
+      roundIndex,
+      kind: round.kind,
+      title: round.title,
+      questionCount: round.questions.length,
+      // A wheel row's stored slice count (null for Auto) for the round checklist, as the BE reads it.
+      sliceCount: isWheelRoundKind(round.kind)
+        ? withWheelSettingsDefaults(round.settings).sliceCount
+        : null,
+      contentLabel: round.contentLabel,
+      prompts: isWheelRoundKind(round.kind)
+        ? []
+        : round.questions.map((question) => question.prompt),
+    })),
+  });
 }
 
 /** A published template as an import source; a draft or unknown id refuses 404 quizshow_template_not_found. */

@@ -1,19 +1,38 @@
-import { useId } from "react";
+import { useId, useMemo, useRef } from "react";
+import { FiCopy } from "react-icons/fi";
+import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { FormField } from "../../../shared/components/ui/FormField";
 import { RadioCardGroup } from "../../../shared/components/ui/RadioCardGroup";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   QUIZSHOW_LIMITS,
-  type QuizshowLanguage,
   type QuizshowLanguageMode,
+  type QuizshowScreenLanguage,
 } from "../../../shared/contracts/quizshow";
 import { useQuizshowScopeKind } from "../quizshowScope";
+import {
+  hasEmptyPortuguese,
+  useQuizshowReviewMarks,
+  withEmptyPortugueseFilled,
+} from "./quizshowReviewMarks";
 import type { QuizshowDraftController } from "./useQuizshowDraft";
+import editorStyles from "./QuizshowQuestionEditor.module.css";
 import styles from "./QuizshowRounds.module.css";
 
 const LANGUAGE_MODES: readonly QuizshowLanguageMode[] = ["en", "pt", "both"];
-const SCREEN_LANGUAGES: readonly QuizshowLanguage[] = ["en", "pt"];
+/** The picker shows only while the quiz is in both languages, so it offers "Both" too (contract 6.26). */
+const SCREEN_LANGUAGES: readonly QuizshowScreenLanguage[] = [
+  "en",
+  "pt",
+  "both",
+];
+
+const SCREEN_LANGUAGE_LABEL_KEYS: Record<QuizshowScreenLanguage, string> = {
+  en: "quizshow:language.en",
+  pt: "quizshow:language.pt",
+  both: "quizshow:settings.screenLanguage.both",
+};
 
 export function QuizshowQuizSettings({
   controller,
@@ -30,14 +49,51 @@ export function QuizshowQuizSettings({
   const languagesLabelId = useId();
   const screenLabelId = useId();
   const screenHintId = useId();
+  const languagesGroupRef = useRef<HTMLDivElement | null>(null);
   const scopeKind = useQuizshowScopeKind();
   const isGame = scopeKind === "game";
-  const { draft, setQuizField } = controller;
+  const { draft, setQuizField, replaceDraft } = controller;
+  const { markFilled } = useQuizshowReviewMarks();
   const isTitleMissing = isTitleRequired && draft.title.trim() === "";
+  // Item 24: offered once the quiz is in both languages, while any PT text is still blank.
+  const hasFillablePortuguese = useMemo(
+    () => draft.languages === "both" && hasEmptyPortuguese(draft),
+    [draft],
+  );
+  const isFillShown = replaceDraft !== undefined && hasFillablePortuguese;
 
+  // One undo step for the whole fill; the copied texts carry a review mark until checked.
+  const handleFillPortuguese = () => {
+    if (replaceDraft === undefined) return;
+    const { draft: filledDraft, copiedTexts } =
+      withEmptyPortugueseFilled(draft);
+    if (copiedTexts.length === 0) return;
+    replaceDraft(filledDraft, "fillLanguage");
+    markFilled(copiedTexts);
+    // The button folds away once nothing is left to fill, so focus returns to the languages choice.
+    languagesGroupRef.current
+      ?.querySelector<HTMLElement>('[role="radio"][aria-checked="true"]')
+      ?.focus();
+  };
+
+  // "Both" needs both languages, so leaving them moves the screen to the one
+  // left, as the save would (contract 6.26).
+  // Both fields change in one edit, so one Undo takes the whole change back.
   const handleLanguages = (languages: QuizshowLanguageMode) => {
-    setQuizField("languages", languages);
-    if (languages !== "both") setQuizField("screenLanguage", languages);
+    if (replaceDraft === undefined) {
+      setQuizField("languages", languages);
+      if (languages !== "both") setQuizField("screenLanguage", languages);
+      return;
+    }
+    replaceDraft(
+      (current) => ({
+        ...current,
+        languages,
+        screenLanguage:
+          languages === "both" ? current.screenLanguage : languages,
+      }),
+      "fillLanguage",
+    );
   };
 
   return (
@@ -69,7 +125,7 @@ export function QuizshowQuizSettings({
           />
         </FormField>
       </div>
-      <div className={styles.fieldGroup}>
+      <div ref={languagesGroupRef} className={styles.fieldGroup}>
         <span id={languagesLabelId} className={styles.groupLabel}>
           {t("quizshow:settings.languages.label")}
         </span>
@@ -86,6 +142,18 @@ export function QuizshowQuizSettings({
           }))}
         />
       </div>
+      <Collapse isOpen={isFillShown}>
+        <div className={editorStyles.fillRow}>
+          <Button
+            variant="stage-ghost"
+            size="sm"
+            type="button"
+            onClick={handleFillPortuguese}
+          >
+            <FiCopy aria-hidden /> {t("quizshow:studio.fillPt")}
+          </Button>
+        </div>
+      </Collapse>
       <Collapse isOpen={draft.languages === "both"}>
         <div className={styles.fieldGroup}>
           <span id={screenLabelId} className={styles.groupLabel}>
@@ -104,7 +172,7 @@ export function QuizshowQuizSettings({
             onChange={(language) => setQuizField("screenLanguage", language)}
             options={SCREEN_LANGUAGES.map((language) => ({
               id: language,
-              render: t(`quizshow:language.${language}`),
+              render: t(SCREEN_LANGUAGE_LABEL_KEYS[language]),
             }))}
           />
         </div>

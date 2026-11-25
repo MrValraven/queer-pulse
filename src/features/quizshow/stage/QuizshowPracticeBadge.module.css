@@ -1,0 +1,40 @@
+/* The "Practice" pill (C6.9): the amber of --qs-low marks a session whose
+   scores are kept nowhere. Text and border share the token, so it flips with
+   the screen theme. One look, three sizes by where it sits. */
+.badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.3em 0.85em;
+  border: 1px solid color-mix(in srgb, var(--qs-low) 55%, transparent);
+  border-radius: var(--qs-radius-pill);
+  background: color-mix(in srgb, var(--qs-low) 12%, transparent);
+  color: var(--qs-low);
+  font-family: var(--sans);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.icon {
+  flex-shrink: 0;
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+/* The TV: read from across a room. */
+.stage {
+  font-size: calc(var(--text-screen-label) * 0.75);
+}
+
+.phone {
+  font-size: var(--text-12);
+}
+
+/* The studio's top bar and panels. */
+.studio {
+  font-size: var(--text-11);
+}

@@ -23,6 +23,7 @@ function storedQuiz(promptText: string, updatedAt: string): QuizshowQuiz {
     languages: "en",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt,
     rounds: [
       {
@@ -141,6 +142,7 @@ describe("a save answered while the host kept editing", () => {
       isAdultsEvent: false,
       liveSession: null,
       hasResults: false,
+      lastOpenSettings: null,
     };
     const scope = gameScope("game-1");
     const draft = {

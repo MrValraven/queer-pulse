@@ -6,6 +6,7 @@ import type {
 } from "../badges.data";
 import type { PerkGroup } from "../perks.data";
 import { badgeIconFor } from "../badgeIcons";
+import { quizBadgeIconNode } from "../quizBadgeIcon";
 import type { BadgeDTO, RecognitionDTO } from "./recognition.api";
 
 /** Level + progress, without the profile-owned fields (member name / join
@@ -77,7 +78,7 @@ export const emptyRecognition: Recognition = {
   xpLedger: [],
 };
 
-function badgeFromDto(b: BadgeDTO): Badge {
+export function badgeFromDto(b: BadgeDTO): Badge {
   return {
     key: b.key,
     category: b.cat,
@@ -85,13 +86,14 @@ function badgeFromDto(b: BadgeDTO): Badge {
     when: b.context,
     rarity: b.rarity,
     tint: b.tint,
-    icon: badgeIconFor(b.key),
+    icon: b.quiz ? quizBadgeIconNode(b.quiz.iconKey) : badgeIconFor(b.key),
     criteria: b.criteria,
     xpReward: b.xpReward,
     progress: b.progress,
     verifiedBy: b.verifiedBy,
     seasonal: b.seasonal,
     hiddenFromProfile: b.hiddenFromProfile ?? false,
+    quiz: b.quiz,
   };
 }
 

@@ -1,36 +1,30 @@
 import { useState } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiDisc } from "react-icons/fi";
+import { FiDisc, FiLock } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
   Avatar,
   Collapse,
   CollapseListItem,
-  QrCode,
 } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
-  QuizshowLanguage,
   QuizshowLobbyPlayer,
   QuizshowLobbyTeam,
   QuizshowRoundCard,
+  QuizshowScreenLanguage,
   QuizshowScreenState,
 } from "../../../shared/contracts/quizshow";
 import { useMediaQuery } from "../../../shared/hooks";
 import { appHost } from "../../../shared/lib/inviteUrl";
 import { QuizshowShape } from "../QuizshowShape";
-import { quizshowPlayUrl } from "../quizshowPaths";
 import { displayRoundNumber, isWheelRoundKind } from "../quizshowWheel";
-import { pickQuizshowText } from "../stage/quizshowText";
-import { EmphasisText } from "./QuizshowScreenChrome";
+import { QuizshowStageText } from "../stage/QuizshowStageText";
+import { EmphasisText, ScreenJoinQr } from "./QuizshowScreenChrome";
 import type { QuizshowScreenStageSize } from "./QuizshowScreenStage";
 import { SCREEN_EASE } from "./quizshowScreenMotion";
 import styles from "./QuizshowScreen.module.css";
 
-// A scanner needs dark-on-light polarity. Both channel tokens stay fixed in
-// either theme, so the code reads the same on the dark screen as on the light one.
-const QR_LIGHT_FILL = "rgb(var(--cream-rgb))";
-const QR_DARK_FILL = "rgb(var(--plum-rgb))";
 const QR_SIZES: Record<QuizshowScreenStageSize, number> = {
   screen: 480,
   preview: 96,
@@ -47,8 +41,31 @@ const SHOWN_PLAYERS_MAX = {
   preview: 12,
 } as const;
 const SHORT_SCREEN_QUERY = "(max-height: 50rem)";
-/** Up to four teams stack in one column; more split into two, so eight fit beside the code. */
-const TEAM_ROWS_ONE_COLUMN_MAX = 4;
+/** A short screen this narrow (1024x768) sets the teams in one column of
+ *  one-line rows (the CSS's matching query). */
+const NARROW_SCREEN_QUERY = "(max-width: 70rem)";
+/** One or two teams stack in one column; three to twelve split into two;
+ *  more (to 24, C6.11) into three. */
+const TEAM_ROWS_ONE_COLUMN_MAX = 2;
+const TEAM_ROWS_TWO_COLUMNS_MAX = 12;
+
+/** The newest teams that fit beside tonight's rounds; the earlier ones fold
+ *  into a "+N more teams" line. Tall (1080p): four rows of two. Short (720p,
+ *  the fixed canvas): three rows of two. Short and narrow (1024x768): four
+ *  one-line rows, so the "+N more teams" line still leaves the last round row
+ *  clear of the toolbar. */
+const SHOWN_TEAMS_MAX = {
+  tall: 8,
+  short: 6,
+  shortNarrow: 4,
+  preview: 6,
+} as const;
+
+function teamColumnsFor(teamCount: number): "one" | "two" | "three" {
+  if (teamCount <= TEAM_ROWS_ONE_COLUMN_MAX) return "one";
+  if (teamCount <= TEAM_ROWS_TWO_COLUMNS_MAX) return "two";
+  return "three";
+}
 
 /** A new chip pops in on a soft spring; reduced motion shows it at once. */
 const CHIP_SPRING = { type: "spring", stiffness: 520, damping: 26 } as const;
@@ -124,19 +141,26 @@ function RoundRow({
   round: QuizshowRoundCard;
   /** The played-count number; wheel rows never take one. */
   roundNumber: number;
-  language: QuizshowLanguage;
+  /** 'both': the EN title, then the PT one under it (C6.26). */
+  language: QuizshowScreenLanguage;
 }) {
   const { t } = useTranslation();
   // A fresh round has a blank title; it reads "Round N" until the host names it.
-  const pickedTitle = pickQuizshowText(round.title, language);
-  const roundTitle =
-    pickedTitle.trim() !== ""
-      ? pickedTitle
-      : t("quizshow:rounds.untitled", { number: roundNumber });
+  const hasTitle = round.title.en.trim() !== "" || round.title.pt.trim() !== "";
   return (
     <li className={styles.roundRow}>
       <span className={styles.roundNumber}>{roundNumber}</span>
-      <span className={styles.roundTitle}>{roundTitle}</span>
+      {hasTitle ? (
+        <QuizshowStageText
+          text={round.title}
+          language={language}
+          className={styles.roundTitle}
+        />
+      ) : (
+        <span className={styles.roundTitle}>
+          {t("quizshow:rounds.untitled", { number: roundNumber })}
+        </span>
+      )}
       <span className={styles.chip}>
         {t(`quizshow:kind.${round.kind}.name`)}
       </span>
@@ -190,6 +214,52 @@ function PlayerChipList({
   );
 }
 
+/**
+ * How to join: the QR, the site and the code. While joining is locked
+ * (C6.15) the code and QR fold away and the card shows a large lock with
+ * "Joining is closed".
+ */
+function LobbyJoinCard({
+  joinCode,
+  isJoinLocked,
+  size,
+}: {
+  joinCode: string;
+  isJoinLocked: boolean;
+  size: QuizshowScreenStageSize;
+}) {
+  const { t } = useTranslation();
+  return (
+    <section className={styles.lobbyJoin}>
+      <Collapse isOpen={!isJoinLocked} className={styles.lobbyJoinFold}>
+        <div className={styles.lobbyJoinBody}>
+          <ScreenJoinQr
+            joinCode={joinCode}
+            pixelSize={QR_SIZES[size]}
+            className={styles.qr}
+          />
+          <p className={styles.joinAt}>
+            {t("quizshow:screen.joinAt", { host: appHost() })}
+          </p>
+          <p className={styles.codeLabel}>{t("quizshow:screen.joinCode")}</p>
+          <p className={styles.joinCode} data-quizshow-join-code="">
+            {joinCode}
+          </p>
+        </div>
+      </Collapse>
+      {/* Locked: the card holds one large lock and the line, centred. */}
+      <Collapse isOpen={isJoinLocked} className={styles.lobbyJoinFold}>
+        <p className={styles.joiningClosed}>
+          <span className={styles.joiningClosedIcon} aria-hidden="true">
+            <FiLock fill="none" focusable="false" />
+          </span>
+          {t("quizshow:screen.joiningClosed")}
+        </p>
+      </Collapse>
+    </section>
+  );
+}
+
 interface QuizshowScreenLobbyProps {
   session: QuizshowScreenState;
   size: QuizshowScreenStageSize;
@@ -212,39 +282,39 @@ export function QuizshowScreenLobby({
   // Solo: the count is the chips' own list, so the line and the chips always agree.
   const playerCount = isTeams ? lobby.playerCount : lobby.players.length;
   const isShortScreen = useMediaQuery(SHORT_SCREEN_QUERY);
+  const isNarrowScreen = useMediaQuery(NARROW_SCREEN_QUERY);
+  const isShort = isShortScreen || isFixedCanvas;
   let shownPlayersMax: number = SHOWN_PLAYERS_MAX.preview;
+  let shownTeamsMax: number = SHOWN_TEAMS_MAX.preview;
   if (size === "screen") {
-    shownPlayersMax =
-      isShortScreen || isFixedCanvas
-        ? SHOWN_PLAYERS_MAX.short
-        : SHOWN_PLAYERS_MAX.tall;
+    shownPlayersMax = isShort
+      ? SHOWN_PLAYERS_MAX.short
+      : SHOWN_PLAYERS_MAX.tall;
+    shownTeamsMax = SHOWN_TEAMS_MAX.tall;
+    if (isShort) {
+      // The fixed canvas is 1280 wide whatever the window, so never narrow.
+      shownTeamsMax =
+        isNarrowScreen && !isFixedCanvas
+          ? SHOWN_TEAMS_MAX.shortNarrow
+          : SHOWN_TEAMS_MAX.short;
+    }
   }
   const shownPlayers = lobby.players.slice(-shownPlayersMax);
   const earlierPlayerCount = lobby.players.length - shownPlayers.length;
+  const shownTeams = lobby.teams.slice(-shownTeamsMax);
+  const earlierTeamCount = lobby.teams.length - shownTeams.length;
   return (
     <div
       className={styles.lobby}
       data-join-hidden={isJoinHidden ? "true" : undefined}
+      data-teams={isTeams ? "true" : undefined}
     >
       {!isJoinHidden && (
-        <section className={styles.lobbyJoin}>
-          <QrCode
-            className={styles.qr}
-            url={quizshowPlayUrl(joinCode)}
-            ariaLabel={t("quizshow:screen.qrLabel")}
-            size={QR_SIZES[size]}
-            lightFill={QR_LIGHT_FILL}
-            darkFill={QR_DARK_FILL}
-            hasLightPlate
-          />
-          <p className={styles.joinAt}>
-            {t("quizshow:screen.joinAt", { host: appHost() })}
-          </p>
-          <p className={styles.codeLabel}>{t("quizshow:screen.joinCode")}</p>
-          <p className={styles.joinCode} data-quizshow-join-code="">
-            {joinCode}
-          </p>
-        </section>
+        <LobbyJoinCard
+          joinCode={joinCode}
+          isJoinLocked={session.isJoinLocked}
+          size={size}
+        />
       )}
       <section className={styles.lobbyRoster}>
         <div className={styles.lobbyPeople}>
@@ -259,20 +329,25 @@ export function QuizshowScreenLobby({
           </p>
           {/* Teams: one row per team with its member count. Solo: the player chips. */}
           <Collapse isOpen={isTeams}>
-            <ul
-              className={styles.teamList}
-              data-columns={
-                lobby.teams.length > TEAM_ROWS_ONE_COLUMN_MAX ? "two" : "one"
-              }
-            >
-              <AnimatePresence initial={false}>
-                {lobby.teams.map((team) => (
-                  <CollapseListItem key={team.teamId}>
-                    <TeamRow team={team} />
-                  </CollapseListItem>
-                ))}
-              </AnimatePresence>
-            </ul>
+            <div className={styles.lobbyPlayers}>
+              <ul
+                className={styles.teamList}
+                data-columns={teamColumnsFor(shownTeams.length)}
+              >
+                <AnimatePresence initial={false}>
+                  {shownTeams.map((team) => (
+                    <CollapseListItem key={team.teamId}>
+                      <TeamRow team={team} />
+                    </CollapseListItem>
+                  ))}
+                </AnimatePresence>
+              </ul>
+              <Collapse isOpen={earlierTeamCount > 0}>
+                <p className={styles.playerCount}>
+                  {t("quizshow:screen.moreTeams", { count: earlierTeamCount })}
+                </p>
+              </Collapse>
+            </div>
           </Collapse>
           <Collapse isOpen={!isTeams}>
             <div className={styles.lobbyPlayers}>

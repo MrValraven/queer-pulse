@@ -5,7 +5,9 @@ import {
   type ClipboardEvent,
   type KeyboardEvent,
 } from "react";
+import { QUIZSHOW_JOIN_CODE_PATTERN } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { normaliseJoinCode } from "../quizshowPaths";
 import styles from "./QuizshowCodeCells.module.css";
 
 export const QUIZSHOW_CODE_CELL_COUNT = 6;
@@ -32,19 +34,42 @@ function typedIntoCell(rawValue: string, oldCharacter: string): string {
     : typed.slice(0, oldIndex) + typed.slice(oldIndex + 1);
 }
 
+/**
+ * What a paste puts in the cells. A whole valid join code (after
+ * `normaliseJoinCode`) joins at once; anything else fills the cells as letters
+ * and digits and waits for the Join button. Null when nothing usable was pasted.
+ */
+function pastedCodeOf(
+  rawText: string,
+): { code: string; isValidCode: boolean } | null {
+  const normalisedCode = normaliseJoinCode(rawText);
+  if (QUIZSHOW_JOIN_CODE_PATTERN.test(normalisedCode)) {
+    return { code: normalisedCode, isValidCode: true };
+  }
+  const pasted = codeCharactersOf(rawText);
+  if (pasted === "") return null;
+  return {
+    code: pasted.slice(0, QUIZSHOW_CODE_CELL_COUNT),
+    isValidCode: false,
+  };
+}
+
 interface QuizshowCodeCellsProps {
-  /** The code typed so far, at most six characters, no gaps. */
+  /** The code typed so far: at most six characters, filled from the first cell. */
   value: string;
   onChange: (nextValue: string) => void;
   /** The catalog-resolved error under the cells, if any. */
   errorText?: string;
   /** Bumped on every refused submit: focus returns to the first empty cell and the error is read again. */
   submitAttempt?: number;
+  /** Called when typing fills the sixth cell, and on a paste that normalises to a valid join code (item 32). */
+  onComplete?: (code: string) => void;
 }
 
 /**
  * The join code as six cells. Typing moves on to the next cell, Backspace on an
- * empty cell goes back, and a paste fills every cell from the first. The group
+ * empty cell goes back, and a paste fills every cell from the first. A full
+ * code (the sixth character typed, or a valid code pasted) calls `onComplete`. The group
  * carries the field's name and each cell names its place in the code.
  */
 export function QuizshowCodeCells({
@@ -52,6 +77,7 @@ export function QuizshowCodeCells({
   onChange,
   errorText,
   submitAttempt = 0,
+  onComplete,
 }: QuizshowCodeCellsProps) {
   const { t } = useTranslation();
   const firstCellId = useId();
@@ -111,6 +137,7 @@ export function QuizshowCodeCells({
       value.slice(startIndex + typed.length)
     ).slice(0, QUIZSHOW_CODE_CELL_COUNT);
     commit(nextValue, startIndex + typed.length);
+    if (nextValue.length === QUIZSHOW_CODE_CELL_COUNT) onComplete?.(nextValue);
   }
 
   /** Backspace on an empty cell: step back and clear the one before. */
@@ -136,10 +163,10 @@ export function QuizshowCodeCells({
 
   function pasteCode(event: ClipboardEvent<HTMLInputElement>) {
     event.preventDefault();
-    const pasted = codeCharactersOf(event.clipboardData.getData("text"));
-    if (pasted === "") return;
-    const nextValue = pasted.slice(0, QUIZSHOW_CODE_CELL_COUNT);
-    commit(nextValue, nextValue.length);
+    const pasted = pastedCodeOf(event.clipboardData.getData("text"));
+    if (pasted === null) return;
+    commit(pasted.code, pasted.code.length);
+    if (pasted.isValidCode) onComplete?.(pasted.code);
   }
 
   function handleKey(

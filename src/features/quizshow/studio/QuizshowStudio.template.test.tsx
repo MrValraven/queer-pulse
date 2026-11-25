@@ -80,6 +80,7 @@ function seedStoredPicture(templateId: string): void {
   demoPutTemplate(templateId, {
     card: detail.card,
     staffNotes: detail.staffNotes,
+    changeNote: { en: "", pt: "" },
     quiz: {
       expectedUpdatedAt: quiz.updatedAt,
       title: quiz.title,
@@ -401,9 +402,7 @@ describe("QuizshowStudio on the Lisbon template with a wheel", () => {
       return header;
     });
     expect(
-      await within(wheelCard).findByText(
-        "Wheel · picks the next round · 4 slices",
-      ),
+      await within(wheelCard).findByText("Wheel · 4 slices"),
     ).toBeInTheDocument();
 
     // Row 2 is the Icons round, the first with a +500 bonus.

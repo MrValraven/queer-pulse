@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Route, Routes, useLocation } from "react-router-dom";
@@ -10,6 +11,7 @@ import { ApiError } from "../../../shared/api/client";
 import {
   demoCreateGame,
   demoDeleteGame,
+  demoGetGame,
   demoListGames,
   demoPutGame,
 } from "../api/quizshowDemoGames";
@@ -63,7 +65,7 @@ async function findGameTitleFields(): Promise<HTMLElement[]> {
   return screen.findAllByLabelText("Game title");
 }
 
-function renderGamePage(entry: string) {
+function renderGamePage(entry: string, extraProbe?: ReactNode) {
   return render(
     <TestProviders initialEntries={[entry]}>
       {/* Mirrors App.tsx, so an unsaved changes guard asks in a dialog. */}
@@ -82,6 +84,7 @@ function renderGamePage(entry: string) {
         </Routes>
       </LeaveConfirmProvider>
       <LocationProbe />
+      {extraProbe}
     </TestProviders>,
   );
 }
@@ -143,6 +146,9 @@ describe("QuizshowGamePage", () => {
       await screen.findByRole("menuitem", { name: "Duplicate game" }),
     ).toBeTruthy();
     expect(screen.queryByRole("menuitem", { name: "Show results" })).toBeNull();
+    expect(
+      screen.queryByRole("menuitem", { name: "Duplicate and open" }),
+    ).toBeNull();
   });
 
   it("duplicates the game and opens the copy", async () => {
@@ -306,5 +312,152 @@ describe("QuizshowGamePage", () => {
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByText(SOURCES_LEAD)).toBeNull();
     expect(currentLocation()).toBe(quizshowGamePath(blankGame.gameId));
+  });
+});
+
+describe("QuizshowGamePage Duplicate and open", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("leads More with Duplicate and open on a game with kept results", async () => {
+    const user = userEvent.setup();
+    renderGamePage(quizshowGamePath(GAME_ID));
+
+    await user.click(
+      await screen.findByRole("button", { name: "More actions" }),
+    );
+
+    const pageItems = (await screen.findAllByRole("menuitem"))
+      .map((item) => item.textContent ?? "")
+      .filter((label) =>
+        ["Duplicate and open", "Show results", "Duplicate game"].includes(
+          label,
+        ),
+      );
+    expect(pageItems).toEqual([
+      "Duplicate and open",
+      "Show results",
+      "Duplicate game",
+    ]);
+  });
+
+  it("duplicates and opens the copy's lobby dialog once from the results panel", async () => {
+    const user = userEvent.setup();
+    renderGamePage(quizshowGamePath(GAME_ID));
+
+    await chooseMoreAction(user, "Show results");
+    const panel = await screen.findByRole("dialog", {
+      name: "Pulse Live results",
+    });
+    await user.click(
+      await within(panel).findByRole("button", { name: "Duplicate and open" }),
+    );
+
+    expect(await screen.findByText("Game duplicated")).toBeTruthy();
+    const copyId = demoListGames().games[0]?.id ?? "";
+    expect(copyId).not.toBe(GAME_ID);
+    // The copy's page opens the open-lobby dialog and takes ?start=open off the address.
+    expect(
+      await screen.findByRole("dialog", { name: "Open the lobby" }),
+    ).toBeTruthy();
+    await waitFor(() =>
+      expect(currentLocation()).toBe(quizshowGamePath(copyId)),
+    );
+
+    await user.keyboard("{Escape}");
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Open the lobby" }),
+      ).toBeNull(),
+    );
+    expect(currentLocation()).toBe(quizshowGamePath(copyId));
+  });
+
+  it("navigates to the copy with ?start=open", async () => {
+    const user = userEvent.setup();
+    const visitedSearches: string[] = [];
+    function SearchRecorder() {
+      const location = useLocation();
+      if (visitedSearches.at(-1) !== location.search) {
+        visitedSearches.push(location.search);
+      }
+      return null;
+    }
+    renderGamePage(quizshowGamePath(GAME_ID), <SearchRecorder />);
+
+    await chooseMoreAction(user, "Duplicate and open");
+
+    await waitFor(() => expect(visitedSearches).toContain("?start=open"));
+  });
+
+  it("carries an unsaved edit into the copy when Duplicate and open runs from the panel", async () => {
+    const user = userEvent.setup();
+    renderGamePage(quizshowGamePath(GAME_ID));
+    const [titleField] = await findGameTitleFields();
+    if (!titleField) throw new Error("The studio shows no title field");
+    await user.type(titleField, " live");
+
+    await chooseMoreAction(user, "Show results");
+    const panel = await screen.findByRole("dialog", {
+      name: "Pulse Live results",
+    });
+    await user.click(
+      await within(panel).findByRole("button", { name: "Duplicate and open" }),
+    );
+
+    expect(await screen.findByText("Game duplicated")).toBeTruthy();
+    const copyId = demoListGames().games[0]?.id ?? "";
+    expect(copyId).not.toBe(GAME_ID);
+    // The panel landed the studio's save first, so the copy holds the edit.
+    expect(demoGetGame(copyId).quiz?.title).toBe(`${GAME_TITLE} live`);
+    expect(demoGetGame(GAME_ID).quiz?.title).toBe(`${GAME_TITLE} live`);
+  });
+});
+
+describe("QuizshowGamePage results recap", () => {
+  beforeEach(() => {
+    resetQuizshowDemoStore();
+  });
+
+  it("selects the question from Edit this question and closes the panel", async () => {
+    const user = userEvent.setup();
+    const savedPrompt =
+      demoGetGame(GAME_ID).quiz?.rounds[1]?.questions[0]?.prompt.en ?? "";
+    renderGamePage(quizshowGamePath(GAME_ID));
+
+    await chooseMoreAction(user, "Show results");
+    const panel = await screen.findByRole("dialog", {
+      name: "Pulse Live results",
+    });
+    await user.click(
+      await within(panel).findByRole("button", { name: "Show recap" }),
+    );
+    const promptText = await within(panel).findByText(savedPrompt);
+    const row = promptText.closest("li");
+    if (!row) throw new Error("The recap shows no row for the question");
+    await user.click(
+      await within(row).findByRole("link", { name: "Edit this question" }),
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Pulse Live results" }),
+      ).toBeNull(),
+    );
+    // The studio selected it in place: the address keeps no focus params.
+    expect(currentLocation()).toBe(quizshowGamePath(GAME_ID));
+    await waitFor(() =>
+      expect(
+        document
+          .querySelector('[data-round-index="1"][data-question-index="0"]')
+          ?.getAttribute("aria-current"),
+      ).toBe("true"),
+    );
   });
 });

@@ -7,10 +7,10 @@ import { RollingNumber } from "../../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
-  QuizshowLanguage,
   QuizshowQuestionView,
   QuizshowReveal,
   QuizshowPartyRevealEntry,
+  QuizshowScreenLanguage,
 } from "../../../shared/contracts/quizshow";
 import { QuizshowShape, type QuizshowShapeSize } from "../QuizshowShape";
 import {
@@ -18,11 +18,17 @@ import {
   trueFalseSwatchFor,
   type QuizshowSwatch,
 } from "../quizshowSwatches";
+import {
+  closestBandCopyOf,
+  numberWithUnit,
+} from "../screen/quizshowScreenTileModel";
 import styles from "./QuizshowStage.module.css";
+import { QuizshowStageText } from "./QuizshowStageText";
 import { orderRevealEntries } from "./quizshowRevealOrder";
 import {
   optionLetter,
   pickQuizshowText,
+  primaryLanguageOf,
   quizshowAnswerNumberFormatter,
   type QuizshowStageSize,
 } from "./quizshowText";
@@ -30,7 +36,8 @@ import {
 interface QuizshowDistributionProps {
   reveal: QuizshowReveal;
   question: QuizshowQuestionView;
-  language: QuizshowLanguage;
+  /** 'both' shows each option's EN line with the PT line under it (C6.26). */
+  language: QuizshowScreenLanguage;
   size: QuizshowStageSize;
   /** Party reveals only: how many entries to list before a "+N more" line. Every entry shows when unset. */
   maxEntries?: number;
@@ -39,7 +46,7 @@ interface QuizshowDistributionProps {
 interface BarRowProps {
   /** The option letter, or null for True and False. */
   letter: string | null;
-  label: string;
+  label: ReactNode;
   shape: QuizshowSwatch;
   shapeSize: QuizshowShapeSize;
   count: number;
@@ -106,11 +113,9 @@ function BarRow({
       <span className={styles.barBody}>
         <span className={styles.barLabel}>
           {letter !== null && (
-            <>
-              <span className={styles.barLetter}>{letter}</span>{" "}
-            </>
+            <span className={styles.barLetter}>{letter}</span>
           )}
-          {label}
+          <span className={styles.barText}>{label}</span>
         </span>
         <span className={styles.barTrack} style={barStyle} aria-hidden="true">
           <m.span
@@ -284,6 +289,113 @@ function NoteLines({ lines }: { lines: string[] }) {
   );
 }
 
+/**
+ * Multiple choice and poll: one bar per option. Every option in the key gets
+ * the correct mark (C6.22); a poll has no key, so no bar is marked and none
+ * dims. Option texts follow the screen language, both lines under Both.
+ */
+function OptionBars({
+  reveal,
+  counts,
+  question,
+  language,
+  shapeSize,
+}: {
+  reveal: QuizshowReveal;
+  counts: number[];
+  question: QuizshowQuestionView;
+  language: QuizshowScreenLanguage;
+  shapeSize: QuizshowShapeSize;
+}) {
+  const maxCount = Math.max(0, ...counts);
+  const correct = reveal.correct;
+  const correctIndexes =
+    correct?.type === "multiple_choice" ? correct.correctIndexes : [];
+  return (
+    <BarChart reveal={reveal} hasCorrect={correctIndexes.length > 0}>
+      {counts.map((count, optionIndex) => {
+        const option = question.options?.[optionIndex];
+        return (
+          <BarRow
+            key={option?.id ?? optionIndex}
+            letter={optionLetter(optionIndex)}
+            label={
+              option ? (
+                <QuizshowStageText text={option.text} language={language} />
+              ) : (
+                ""
+              )
+            }
+            shape={answerSwatchFor(optionIndex)}
+            shapeSize={shapeSize}
+            count={count}
+            maxCount={maxCount}
+            answeredCount={reveal.answeredCount}
+            isCorrect={correctIndexes.includes(optionIndex)}
+          />
+        );
+      })}
+    </BarChart>
+  );
+}
+
+/**
+ * Closest number: the closest guess with the question's unit, who guessed
+ * it, then the half-points rule from the question's margin (C6.1) and how
+ * many landed inside it. An exact question has no margin, so it shows
+ * neither of the last two.
+ */
+function ClosestLines({
+  distribution,
+  correct,
+  question,
+  language,
+}: {
+  distribution: Extract<QuizshowReveal["distribution"], { kind: "closest" }>;
+  correct: QuizshowReveal["correct"];
+  question: QuizshowQuestionView;
+  language: QuizshowScreenLanguage;
+}) {
+  const { t } = useTranslation();
+  const format = useFormat();
+  const leadLanguage = primaryLanguageOf(language);
+  const formatAnswer = quizshowAnswerNumberFormatter(format.number);
+  const lines: string[] = [];
+  if (distribution.closestValue !== null) {
+    const valueWithUnit = numberWithUnit(
+      formatAnswer(distribution.closestValue),
+      question.numberUnit,
+    );
+    lines.push(
+      t("quizshow:stage.closestValue", { value: valueWithUnit[leadLanguage] }),
+    );
+  }
+  if (distribution.closestNames.length > 0) {
+    lines.push(
+      t("quizshow:stage.closestNames", {
+        names: distribution.closestNames.join(", "),
+      }),
+    );
+  }
+  const band =
+    correct?.type === "closest_number"
+      ? closestBandCopyOf(
+          correct.tolerance,
+          format.number(correct.tolerance.amount),
+          pickQuizshowText(question.numberUnit, leadLanguage),
+        )
+      : null;
+  if (band !== null) {
+    lines.push(
+      t(band.key, band.values),
+      t("quizshow:stage.withinMargin", {
+        count: distribution.withinBandCount,
+      }),
+    );
+  }
+  return <NoteLines lines={lines} />;
+}
+
 export function QuizshowDistribution({
   reveal,
   question,
@@ -292,34 +404,19 @@ export function QuizshowDistribution({
   maxEntries,
 }: QuizshowDistributionProps) {
   const { t } = useTranslation();
-  const format = useFormat();
   const { distribution, correct } = reveal;
   const shapeSize = SHAPE_SIZES[size];
   let body;
 
   if (distribution.kind === "options") {
-    const maxCount = Math.max(0, ...distribution.counts);
-    const correctIndex =
-      correct?.type === "multiple_choice" ? correct.correctIndex : null;
     body = (
-      <BarChart reveal={reveal} hasCorrect={correctIndex !== null}>
-        {distribution.counts.map((count, optionIndex) => {
-          const option = question.options?.[optionIndex];
-          return (
-            <BarRow
-              key={option?.id ?? optionIndex}
-              letter={optionLetter(optionIndex)}
-              label={option ? pickQuizshowText(option.text, language) : ""}
-              shape={answerSwatchFor(optionIndex)}
-              shapeSize={shapeSize}
-              count={count}
-              maxCount={maxCount}
-              answeredCount={reveal.answeredCount}
-              isCorrect={correctIndex === optionIndex}
-            />
-          );
-        })}
-      </BarChart>
+      <OptionBars
+        reveal={reveal}
+        counts={distribution.counts}
+        question={question}
+        language={language}
+        shapeSize={shapeSize}
+      />
     );
   } else if (distribution.kind === "true_false") {
     const maxCount = Math.max(distribution.trueCount, distribution.falseCount);
@@ -375,27 +472,14 @@ export function QuizshowDistribution({
       />
     );
   } else if (distribution.kind === "closest") {
-    const lines: string[] = [];
-    if (distribution.closestValue !== null) {
-      lines.push(
-        t("quizshow:stage.closestValue", {
-          value: quizshowAnswerNumberFormatter(format.number)(
-            distribution.closestValue,
-          ),
-        }),
-      );
-    }
-    if (distribution.closestNames.length > 0) {
-      lines.push(
-        t("quizshow:stage.closestNames", {
-          names: distribution.closestNames.join(", "),
-        }),
-      );
-    }
-    lines.push(
-      t("quizshow:stage.withinBand", { count: distribution.withinBandCount }),
+    body = (
+      <ClosestLines
+        distribution={distribution}
+        correct={correct}
+        question={question}
+        language={language}
+      />
     );
-    body = <NoteLines lines={lines} />;
   } else {
     body = (
       <VoteEntryList distribution={distribution} maxEntries={maxEntries} />

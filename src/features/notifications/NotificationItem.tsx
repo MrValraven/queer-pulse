@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import { FadeIn, IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { linkToPath } from "../../app/routeMap";
+import { linkToPath, routes } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { studioKeys } from "../studio/api/studioQueryKeys";
 import { communityBadgeRowVerbKey } from "./communityBadgeNotifications";
@@ -31,6 +31,17 @@ const DISMISS_LABEL_KEYS = {
 
 /** What the row's X does, which sets its accessible name. */
 export type NotificationDismissAction = keyof typeof DISMISS_LABEL_KEYS;
+
+/** The verb a badge row's overlay link names: a community badge opens its
+ *  sheet, and a platform or quiz badge opens the Badges page drawer. */
+function badgeRowVerbKey(sourceHref: string | undefined): string | undefined {
+  return (
+    communityBadgeRowVerbKey(sourceHref) ??
+    (sourceHref?.startsWith(`${routes.badges}?badge=`)
+      ? "notifications:actions.openBadges"
+      : undefined)
+  );
+}
 
 /** Closes a spoken phrase with a full stop unless it already ends a sentence. */
 function asSentence(phrase: string): string {
@@ -124,9 +135,9 @@ export function NotificationItem({
       ? notification.text
       : notification.meta
   }${othersLabel ? ` ${othersLabel}` : ""}`;
-  // A community badge row opens the sheet, so its link names that verb and its
-  // sentence takes a full stop only when the copy lacks one.
-  const badgeVerbKey = communityBadgeRowVerbKey(notification.sourceHref);
+  // A badge row opens the sheet or the Badges drawer, so its link names that
+  // verb and its sentence takes a full stop only when the copy lacks one.
+  const badgeVerbKey = badgeRowVerbKey(notification.sourceHref);
   const rowLabel = `${unreadLabel ? `${unreadLabel}. ` : ""}${
     badgeVerbKey ? asSentence(spokenText) : `${spokenText}.`
   }${spokenReason} ${t(

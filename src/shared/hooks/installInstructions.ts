@@ -61,3 +61,43 @@ export function getInstallStepKeys(
   if (!isInAppBrowser || !inAppStepKey) return stepKeys;
   return [inAppStepKey, ...stepKeys];
 }
+
+/**
+ * A Safari screenshot shown under an install step. The files live in
+ * `public/install-steps/` as `<baseName>-en.webp` and `<baseName>-pt.webp`,
+ * saved at 2x, so `width` and `height` are the CSS size (half the pixels).
+ */
+export interface InstallStepScreenshot {
+  baseName: string;
+  width: number;
+  height: number;
+  altKey: string;
+}
+
+/**
+ * The screenshot for each step that has one, keyed by step key. Only the
+ * iPhone steps have pictures; Android, desktop and the in-app browser step
+ * look up nothing and render text alone.
+ */
+export const INSTALL_STEP_IMAGES: Partial<
+  Record<string, InstallStepScreenshot>
+> = {
+  "system:pwaPrompt.instructions.ios.step1": {
+    baseName: "ios-step1",
+    width: 207,
+    height: 184,
+    altKey: "system:pwaPrompt.instructions.ios.step1Image",
+  },
+  "system:pwaPrompt.instructions.ios.step2": {
+    baseName: "ios-step2",
+    width: 306,
+    height: 200,
+    altKey: "system:pwaPrompt.instructions.ios.step2Image",
+  },
+  "system:pwaPrompt.instructions.ios.step3": {
+    baseName: "ios-step3",
+    width: 332,
+    height: 224,
+    altKey: "system:pwaPrompt.instructions.ios.step3Image",
+  },
+};

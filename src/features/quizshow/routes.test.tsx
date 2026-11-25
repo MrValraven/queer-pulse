@@ -8,9 +8,13 @@ import {
   quizshowGamePath,
   quizshowGameRemotePath,
   quizshowGameScreenPath,
+  quizshowHelperPairPath,
+  quizshowHelperRemotePath,
   quizshowPlayPath,
+  quizshowPrintPath,
   quizshowRemotePath,
   quizshowScreenPath,
+  quizshowTvPath,
 } from "./quizshowPaths";
 import { quizshowRoutes } from "./routes";
 import { gatheringShortId } from "../gatherings/gatheringPaths";
@@ -93,6 +97,51 @@ vi.mock("./remote/QuizshowGameRemotePage", async () => {
     return createElement("p", null, `game remote ${gameId}`);
   }
   return { QuizshowGameRemotePage };
+});
+
+vi.mock("./screen/QuizshowTvPage", async () => {
+  const { createElement } = await import("react");
+  function QuizshowTvPage() {
+    return createElement("p", null, "tv pairing page");
+  }
+  return { QuizshowTvPage };
+});
+vi.mock("./remote/QuizshowHelperPairPage", async () => {
+  const { createElement } = await import("react");
+  function QuizshowHelperPairPage() {
+    return createElement("p", null, "helper pairing page");
+  }
+  return { QuizshowHelperPairPage };
+});
+vi.mock("./remote/QuizshowHelperRemotePage", async () => {
+  const { createElement, useState } = await import("react");
+  const { useParams } = await import("react-router-dom");
+  function QuizshowHelperRemotePage() {
+    const { sessionId } = useParams();
+    const [mountNumber] = useState(() => {
+      mountCounter.count += 1;
+      return mountCounter.count;
+    });
+    return createElement(
+      "p",
+      null,
+      `helper remote ${sessionId} mount ${mountNumber}`,
+    );
+  }
+  return { QuizshowHelperRemotePage };
+});
+vi.mock("./builder/QuizshowPrintPage", async () => {
+  const { createElement } = await import("react");
+  const { useParams } = await import("react-router-dom");
+  function QuizshowEventPrintPage() {
+    const { slug } = useParams();
+    return createElement("p", null, `event print ${slug}`);
+  }
+  function QuizshowGamePrintPage() {
+    const { gameId } = useParams();
+    return createElement("p", null, `game print ${gameId}`);
+  }
+  return { QuizshowEventPrintPage, QuizshowGamePrintPage };
 });
 
 function renderRoutes(startPath: string) {
@@ -179,5 +228,44 @@ describe("quizshowRoutes", () => {
     renderRoutes(quizshowPlayPath("QG4MW8"));
     expect(await screen.findByText("play QG4MW8 mount 1")).toBeInTheDocument();
     expect(screen.queryByText(/^game /)).not.toBeInTheDocument();
+  });
+
+  it("routes the TV pairing page at /play/tv ahead of the join page", async () => {
+    renderRoutes(quizshowTvPath());
+    expect(await screen.findByText("tv pairing page")).toBeInTheDocument();
+    expect(screen.queryByText(/^play /)).not.toBeInTheDocument();
+  });
+
+  it("routes the helper pairing page at /play/remote", async () => {
+    renderRoutes(quizshowHelperPairPath());
+    expect(await screen.findByText("helper pairing page")).toBeInTheDocument();
+    expect(screen.queryByText(/^play /)).not.toBeInTheDocument();
+  });
+
+  it("remounts the helper remote when the session changes", async () => {
+    const goTo = renderRoutes(quizshowHelperRemotePath("session-one"));
+    expect(
+      await screen.findByText("helper remote session-one mount 1"),
+    ).toBeInTheDocument();
+
+    goTo(quizshowHelperRemotePath("session-two"));
+    expect(
+      await screen.findByText("helper remote session-two mount 2"),
+    ).toBeInTheDocument();
+  });
+
+  it("routes an event's print sheet and a game's print sheet", async () => {
+    renderRoutes(
+      quizshowPrintPath({ kind: "event", eventSlug: "pride-brunch" }, "host"),
+    );
+    expect(
+      await screen.findByText(`event print ${eventParamOf("pride-brunch")}`),
+    ).toBeInTheDocument();
+    cleanup();
+
+    renderRoutes(
+      quizshowPrintPath({ kind: "game", gameId: "game-one" }, "answers"),
+    );
+    expect(await screen.findByText("game print game-one")).toBeInTheDocument();
   });
 });

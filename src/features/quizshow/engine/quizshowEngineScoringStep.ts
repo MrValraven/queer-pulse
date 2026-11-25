@@ -1,10 +1,11 @@
 /**
- * Pulse Live demo engine scoring: scores a question once at reveal, keeps team
- * points in step, withdraws a hidden answer's points and pays the host's
- * favourite. The arithmetic is quizshowScoring.ts; this module only applies it
+ * Pulse Live demo engine scoring: scores a question once at reveal, rescores
+ * it after a host correction, keeps team points in step, withdraws a hidden
+ * answer's points and pays the host's favourite. The arithmetic is quizshowScoring.ts; this module only applies it
  * to the engine state, as the backend's phases module does.
  */
 import type {
+  QuizshowAnswerKeyView,
   QuizshowAnswerPayload,
   QuizshowWheelBonusView,
 } from "../../../shared/contracts/quizshow";
@@ -19,23 +20,30 @@ import {
   wheelBonusWinnerIds,
 } from "./quizshowScoring";
 import {
+  currentPlayContext,
   eligiblePlayersNow,
   entrantTotals,
   extraTimeMs,
   findPlayer,
   findTeam,
+  isActivePlayer,
   isJokerActiveFor,
   isPartyRoundKind,
   openLimitMs,
+  questionAt,
   roundAt,
+  type QuizshowEngineContext,
   type QuizshowPlayContext,
 } from "./quizshowEngineSetup";
 import type {
   QuizshowEngineAnswer,
+  QuizshowEngineEffect,
+  QuizshowEnginePlayer,
   QuizshowEngineQuestionPlay,
   QuizshowEngineState,
   QuizshowEngineVoteOption,
 } from "./quizshowEngineTypes";
+import { toAnswerKeyView } from "./quizshowEngineViews";
 
 export function answerOf(
   play: QuizshowEngineQuestionPlay,
@@ -81,17 +89,44 @@ function addQuestionPoints(
   if (reveal !== undefined) reveal.pointsAwarded += delta;
 }
 
+/** The key the night judges by: a host correction when one was made, else the authored key (C6.4). */
+export function effectiveAnswerKey(
+  state: QuizshowEngineState,
+  play: QuizshowEngineQuestionPlay,
+): QuizshowAnswerKeyView | null {
+  if (play.keyOverride !== null) return play.keyOverride;
+  const round = roundAt(state, play.roundIndex);
+  const question = questionAt(state, play.roundIndex, play.questionIndex);
+  return round === null || question === null
+    ? null
+    : toAnswerKeyView(round, question);
+}
+
+/**
+ * Judges every eligible answer against the effective key and the texts a
+ * host accepted. A prompt scores nobody; a poll is never judged; a warm-up
+ * round judges but awards 0 and keeps streaks. The first scoring records each
+ * eligible player's streak so a rescore can restore it. `scoredPlayers`
+ * defaults to the eligible players active now; a rescore passes its own set.
+ */
 function scoreQuizQuestion(
   state: QuizshowEngineState,
   { play, round, question }: QuizshowPlayContext,
+  scoredPlayers: readonly QuizshowEnginePlayer[] = eligiblePlayersNow(state),
 ): void {
-  const eligiblePlayers = eligiblePlayersNow(state);
+  if (Object.keys(play.streakBeforeByPlayer).length === 0) {
+    for (const player of scoredPlayers) {
+      play.streakBeforeByPlayer[player.playerId] = player.streak;
+    }
+  }
+  const answerKey = effectiveAnswerKey(state, play);
   const limitMs = openLimitMs(round, question);
   const closestOutcomes =
-    question.type === "closest_number" && question.answer !== null
+    answerKey?.type === "closest_number"
       ? closestNumberOutcomes(
-          question.answer.value,
-          eligiblePlayers.flatMap((player) => {
+          answerKey.value,
+          answerKey.tolerance,
+          scoredPlayers.flatMap((player) => {
             const payload = answerOf(play, player.playerId)?.payload;
             return payload?.type === "closest_number"
               ? [{ playerId: player.playerId, value: payload.value }]
@@ -99,14 +134,17 @@ function scoreQuizQuestion(
           }),
         )
       : null;
-  for (const player of eligiblePlayers) {
+  for (const player of scoredPlayers) {
     const answer = answerOf(play, player.playerId) ?? null;
     const isJokerActive = isJokerActiveFor(
       state,
       player.playerId,
       play.roundIndex,
     );
-    if (question.answer === null || question.type === "prompt") {
+    if (
+      question.type === "prompt" ||
+      (answerKey === null && question.type !== "poll")
+    ) {
       play.pointsByPlayer[player.playerId] = 0;
       play.myReveals[player.playerId] = {
         questionId: play.questionId,
@@ -123,6 +161,9 @@ function scoreQuizQuestion(
     const payload: QuizshowAnswerPayload | null = answer?.payload ?? null;
     const score = scoreQuizAnswer({
       question,
+      answerKey,
+      acceptedTexts: play.acceptedTexts,
+      isWarmUp: round.settings.isWarmUp,
       payload,
       elapsedMs: answer?.elapsedMs ?? 0,
       limitMs: play.extraTimePlayerIds.includes(player.playerId)
@@ -160,16 +201,15 @@ function scorePartyQuestion(
   );
   const optionOfVote = (optionId: string): QuizshowEngineVoteOption | null =>
     countedOptions.find((option) => option.optionId === optionId) ?? null;
-  // Votes from a voter removed before the reveal count for nobody.
+  // A vote stops counting once its voter is no longer active: removed by a
+  // host, removed with rejoin, or gone with a leave (contract 6.14).
   const votesReceivedBy = (playerId: string): number =>
     play.votes.filter((vote) => {
       const option = optionOfVote(vote.optionId);
-      const isVoterRemoved =
-        findPlayer(state, vote.voterPlayerId)?.isRemoved === true;
+      const voter = findPlayer(state, vote.voterPlayerId);
+      const isVoterGone = voter !== undefined && !isActivePlayer(voter);
       return (
-        option !== null &&
-        !isVoterRemoved &&
-        authorIdOf(play, option) === playerId
+        option !== null && !isVoterGone && authorIdOf(play, option) === playerId
       );
     }).length;
   const isLieDetector = round.kind === "lie_detector";
@@ -279,6 +319,87 @@ export function scoreQuestionOnce(
   }
   applyTeamPoints(state, play);
   play.isScored = true;
+}
+
+/**
+ * Who a rescore covers: exactly the players the first scoring judged (the
+ * keys of `streakBeforeByPlayer`) whose row a host did not remove, each with
+ * the streak they had before it. A player who left after the reveal is
+ * included and gets the corrected points and streak; one who left before it
+ * was never judged and stays out; a host-removed player keeps their score.
+ */
+function rescoredPlayersOf(
+  state: QuizshowEngineState,
+  play: QuizshowEngineQuestionPlay,
+): Array<{ player: QuizshowEnginePlayer; streakBefore: number }> {
+  return Object.entries(play.streakBeforeByPlayer).flatMap(
+    ([playerId, streakBefore]) => {
+      const player = findPlayer(state, playerId);
+      return player === undefined || player.isRemoved
+        ? []
+        : [{ player, streakBefore }];
+    },
+  );
+}
+
+/** After a correction no player or team total goes below 0. */
+function clampScoresAtZero(state: QuizshowEngineState): void {
+  for (const player of state.players) player.score = Math.max(player.score, 0);
+  for (const team of state.teams) team.score = Math.max(team.score, 0);
+}
+
+/**
+ * C6.4 step 4 on the question in play, over `rescoredPlayersOf`: takes back
+ * what it paid, restores each streak from before its first scoring, judges again against the effective
+ * key and the accepted texts (a joker doubles the corrected points as before),
+ * moves each team by the difference so host adjustments stay, clamps every
+ * player and team total at 0, and marks the reveal corrected. In `scores` the frame totals become the corrected ones, so
+ * the count-up still starts from the totals before the question. The accept
+ * command adds `typed_answers_changed` itself.
+ */
+export function rescoreQuestion(
+  context: QuizshowEngineContext,
+): QuizshowEngineEffect[] {
+  const { state } = context;
+  const playContext = currentPlayContext(state);
+  const { play } = playContext;
+  const rescored = rescoredPlayersOf(state, play);
+  for (const { player, streakBefore } of rescored) {
+    player.score -= play.pointsByPlayer[player.playerId] ?? 0;
+    player.streak = streakBefore;
+    delete play.pointsByPlayer[player.playerId];
+  }
+  scoreQuizQuestion(
+    state,
+    playContext,
+    rescored.map(({ player }) => player),
+  );
+  applyTeamPoints(state, play);
+  clampScoresAtZero(state);
+  play.wasCorrected = true;
+  const isInScores = state.cursor.phase === "scores";
+  if (isInScores) {
+    state.scoresAtLastFrame = Object.fromEntries(
+      entrantTotals(state).map((entrant) => [entrant.entrantId, entrant.score]),
+    );
+  }
+  // Frames go to players still playing; one who left has no socket to read them.
+  const activeScoredPlayerIds = eligiblePlayersNow(state).map(
+    (player) => player.playerId,
+  );
+  const effects: QuizshowEngineEffect[] = [
+    {
+      kind: "reveal_updated",
+      playerIds: activeScoredPlayerIds,
+      scope: "everyone",
+    },
+  ];
+  if (isInScores) effects.push({ kind: "scores_shown" });
+  effects.push(
+    { kind: "lobby_changed" },
+    { kind: "me_changed", playerIds: activeScoredPlayerIds },
+  );
+  return effects;
 }
 
 /** A hidden answer of a scored question: its author loses what it earned and the team average follows. */

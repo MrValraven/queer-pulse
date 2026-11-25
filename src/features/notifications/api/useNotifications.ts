@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
-import type { TFunction } from "../../../shared/i18n/types";
+import type { Language, TFunction } from "../../../shared/i18n/types";
 import {
   getNotificationsPage,
   type NotificationDTO,
@@ -44,7 +44,11 @@ export interface LiveNotificationsPage {
  *  row was unread without building the rows. */
 export interface DemoNotificationsPage {
   source: "demo";
-  buildNotifications: (t: TFunction, fmt: Formatters) => Notification[];
+  buildNotifications: (
+    t: TFunction,
+    fmt: Formatters,
+    language?: Language,
+  ) => Notification[];
   unreadIds: readonly Notification["id"][];
   total: number;
   page: number;
@@ -59,12 +63,13 @@ function notificationsPageToViews(
   t: TFunction,
   fmt: Formatters,
   unreadOnly: boolean,
+  language: Language,
 ): Notification[] {
   if (page.source === "demo") {
     // A row hidden from the bell this session stays hidden (and read) across
     // every rebuild of the mock. See `demoHiddenFromBellIds`.
     const rows = page
-      .buildNotifications(t, fmt)
+      .buildNotifications(t, fmt, language)
       .map((notification) =>
         demoHiddenFromBellIds.has(notification.id)
           ? { ...notification, isHiddenFromBell: true, unread: false }
@@ -79,7 +84,7 @@ function notificationsPageToViews(
   // differs from an ordinary one only by this count, and the row component is
   // what renders it.
   return page.items.map((dto) => ({
-    ...notificationDtoToView(dto, t, fmt),
+    ...notificationDtoToView(dto, t, fmt, language),
     otherActorCount: dto.otherActorCount ?? 0,
   }));
 }
@@ -146,9 +151,9 @@ export function useNotifications(unreadOnly = false): NotificationsResult {
   const items = useMemo(
     () =>
       (pages ?? []).flatMap((page) =>
-        notificationsPageToViews(page, t, fmt, unreadOnly),
+        notificationsPageToViews(page, t, fmt, unreadOnly, language),
       ),
-    [pages, t, fmt, unreadOnly],
+    [pages, t, fmt, unreadOnly, language],
   );
   return {
     items,

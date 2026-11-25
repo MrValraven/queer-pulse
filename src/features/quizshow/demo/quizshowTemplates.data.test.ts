@@ -1,7 +1,11 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { defaultRoundSettings } from "../builder/quizshowDraft";
-import { quizshowProblemsFor } from "../builder/quizshowValidation";
+import {
+  isStructuralProblem,
+  quizshowProblemsFor,
+} from "../builder/quizshowValidation";
+import { normaliseStoredQuizShape } from "../quizshowNormalise";
 import {
   isQuizRoundKind,
   isWheelRoundKind,
@@ -41,9 +45,10 @@ const SHAPE_BY_TEMPLATE_ID: Record<
     roundCount: 3,
     questionCount: 15,
   },
+  // A demo-only warm-up round of two questions opens this seed (contract 10, row 46).
   [QUIZSHOW_DEMO_TEMPLATE_IDS.portugueseQueerCulture]: {
-    roundCount: 3,
-    questionCount: 15,
+    roundCount: 4,
+    questionCount: 17,
   },
   [QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision]: { roundCount: 3, questionCount: 15 },
   [QUIZSHOW_DEMO_TEMPLATE_IDS.dragHerstory]: {
@@ -123,9 +128,9 @@ describe("quizshow demo templates", () => {
     ]);
   });
 
-  it("gives every settings literal all eight fields", () => {
+  it("gives every settings literal all ten fields", () => {
     const expectedKeys = Object.keys(defaultRoundSettings()).sort();
-    expect(expectedKeys).toHaveLength(8);
+    expect(expectedKeys).toHaveLength(10);
     for (const seed of QUIZSHOW_DEMO_TEMPLATE_SEEDS) {
       for (const round of seed.quiz.rounds) {
         expect(Object.keys(round.settings).sort()).toEqual(expectedKeys);
@@ -135,19 +140,33 @@ describe("quizshow demo templates", () => {
 
   it("passes the local checks for every published seed", () => {
     for (const seed of publishedSeeds()) {
-      expect(quizshowProblemsFor(seed.quiz, { isAdultsEvent: true })).toEqual(
-        [],
-      );
+      expect(
+        quizshowProblemsFor(normaliseStoredQuizShape(seed.quiz), {
+          isAdultsEvent: true,
+        }),
+      ).toEqual([]);
     }
   });
 
-  it("moves all 83 source comments into staff notes", () => {
+  it("leaves no structural problem in any seed, the draft included", () => {
+    for (const seed of QUIZSHOW_DEMO_TEMPLATE_SEEDS) {
+      const structuralCodes = quizshowProblemsFor(
+        normaliseStoredQuizShape(seed.quiz),
+        { isAdultsEvent: true },
+      )
+        .map((problem) => problem.code)
+        .filter((code) => isStructuralProblem(code));
+      expect(structuralCodes).toEqual([]);
+    }
+  });
+
+  it("moves all 83 source comments into staff notes, plus the two warm-up lines", () => {
     const sourceLinePattern = /^Round \d+, question \d+: \S/;
     // Only the five original seeds: the wheel packs carry their own source lines.
     const sourceLineCount = PUBLISHED_TEMPLATE_IDS.map(templateSeedById)
       .flatMap((seed) => seed.staffNotes.split("\n"))
       .filter((line) => sourceLinePattern.test(line)).length;
-    expect(sourceLineCount).toBe(83);
+    expect(sourceLineCount).toBe(85);
     expect(readFileSync(DATA_FILE_PATH, "utf8")).not.toContain("// Source:");
   });
 
@@ -280,6 +299,129 @@ describe("quizshow demo wheel packs", () => {
         questions.filter((question) => question.mediaRef !== null),
       ).toEqual([]);
       expect(JSON.stringify(wheelPack)).not.toMatch(DASH_PATTERN);
+    }
+  });
+});
+
+/** Every seed's quiz read as v2 (contract 2.4), with each round beside its questions. */
+function normalisedSeedQuestions() {
+  return QUIZSHOW_DEMO_TEMPLATE_SEEDS.flatMap((seed) =>
+    normaliseStoredQuizShape(seed.quiz).rounds.flatMap((round) =>
+      round.questions.map((question) => ({ seed, round, question })),
+    ),
+  );
+}
+
+describe("quizshow demo templates v2 content", () => {
+  it("uses an absolute margin on every closest question about a year, wheel packs included", () => {
+    const yearQuestions = normalisedSeedQuestions().filter(
+      ({ question }) =>
+        question.type === "closest_number" &&
+        question.answer !== null &&
+        question.answer.value >= 1900 &&
+        question.answer.value <= 2100,
+    );
+    expect(yearQuestions.length).toBeGreaterThan(0);
+    for (const { question } of yearQuestions) {
+      if (question.type !== "closest_number" || question.answer === null) {
+        throw new Error("expected a closest number question with an answer");
+      }
+      expect(question.answer.tolerance).toEqual({
+        mode: "absolute",
+        amount: question.answer.value >= 1990 ? 5 : 10,
+      });
+    }
+  });
+
+  it("shows each tolerance mode at least once across the seeds", () => {
+    const modes = new Set(
+      normalisedSeedQuestions().flatMap(({ question }) =>
+        question.type === "closest_number" && question.answer !== null
+          ? [question.answer.tolerance.mode]
+          : [],
+      ),
+    );
+    expect([...modes].sort()).toEqual(["absolute", "exact", "percent"]);
+  });
+
+  it("holds a picture alt text, a reveal note and two right options", () => {
+    const questions = normalisedSeedQuestions().map(({ question }) => question);
+    expect(
+      questions.some(
+        (question) =>
+          question.mediaRef !== null &&
+          question.mediaAlt.en !== "" &&
+          question.mediaAlt.pt !== "",
+      ),
+    ).toBe(true);
+    expect(
+      questions.some(
+        (question) =>
+          question.revealNote.en !== "" && question.revealNote.pt !== "",
+      ),
+    ).toBe(true);
+    expect(
+      questions.some(
+        (question) =>
+          question.type === "multiple_choice" &&
+          question.answer !== null &&
+          question.answer.correctIndexes.length === 2,
+      ),
+    ).toBe(true);
+  });
+
+  it("holds a poll and a slowly revealed picture in quiz rounds", () => {
+    const quizRoundQuestions = normalisedSeedQuestions().filter(
+      ({ seed, round }) =>
+        seed.status === "published" && isQuizRoundKind(round.kind),
+    );
+    expect(
+      quizRoundQuestions.some(({ question }) => question.type === "poll"),
+    ).toBe(true);
+    expect(
+      quizRoundQuestions.some(
+        ({ question }) =>
+          question.mediaReveal === "slow" && question.mediaRef !== null,
+      ),
+    ).toBe(true);
+  });
+
+  it("opens one published template with a warm-up round that takes no jokers", () => {
+    const warmUpSeeds = publishedSeeds().filter((seed) =>
+      seed.quiz.rounds.some((round) => round.settings.isWarmUp === true),
+    );
+    expect(warmUpSeeds).toHaveLength(1);
+    const { rounds } = itemAt(warmUpSeeds, 0).quiz;
+    const firstPlayableRound = rounds.find(
+      (round) => !isWheelRoundKind(round.kind),
+    );
+    expect(firstPlayableRound?.kind).toBe("quiz");
+    expect(firstPlayableRound?.settings).toMatchObject({
+      isWarmUp: true,
+      isJokerAllowed: false,
+    });
+  });
+
+  it("gives one quiz round 20 seconds of team talk", () => {
+    const talkRounds = publishedSeeds().flatMap((seed) =>
+      seed.quiz.rounds.filter((round) => round.settings.talkSeconds === 20),
+    );
+    expect(talkRounds).toHaveLength(1);
+    expect(itemAt(talkRounds, 0).kind).toBe("quiz");
+  });
+
+  it("marks the Eurovision template as updated after the demo copies of it", () => {
+    const eurovision = templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision);
+    expect(eurovision.lastPublishedAt).toBe("2026-11-20T10:00:00.000Z");
+    expect(eurovision.changeNote.en).not.toBe("");
+    expect(eurovision.changeNote.pt).not.toBe("");
+    for (const seed of QUIZSHOW_DEMO_TEMPLATE_SEEDS) {
+      if (seed.status === "draft") {
+        expect(seed.lastPublishedAt).toBeNull();
+      } else if (seed.id !== QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision) {
+        expect(seed.lastPublishedAt).toBe(seed.publishedAt);
+        expect(seed.changeNote).toEqual({ en: "", pt: "" });
+      }
     }
   });
 });

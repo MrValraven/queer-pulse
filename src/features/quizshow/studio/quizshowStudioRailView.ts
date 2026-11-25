@@ -6,8 +6,10 @@ import {
   type QuizshowPlayableRoundKind,
   type QuizshowQuestionInput,
   type QuizshowRoundKind,
+  type QuizshowScreenLanguage,
   type QuizshowText,
 } from "../../../shared/contracts/quizshow";
+import { correctIndexesOf } from "../builder/quizshowDraft";
 import type { QuizshowLocalProblem } from "../builder/quizshowValidation";
 
 /** The answer layout a thumbnail sketches under its prompt. */
@@ -34,6 +36,7 @@ export function thumbnailLayoutOf(
 ): StudioThumbnailLayout {
   switch (question.type) {
     case "multiple_choice":
+    case "poll":
       return "choice";
     case "true_false":
       return "truth";
@@ -51,30 +54,34 @@ export function thumbnailLayoutOf(
 }
 
 /**
- * How many answer cells the miniature draws, and which one is right (or -1).
- * Multiple choice shows its own options; true or false shows two.
+ * How many answer cells the miniature draws, and which ones are right.
+ * Multiple choice shows its own options with every correct one marked; a
+ * poll shows its options with none marked; true or false shows two.
  */
 export function thumbnailCellsOf(question: QuizshowQuestionInput): {
   count: number;
-  correctIndex: number;
+  correctIndexes: readonly number[];
 } {
   if (question.type === "multiple_choice") {
     return {
       count: Math.max(question.options.length, 2),
-      correctIndex: question.answer?.correctIndex ?? -1,
+      correctIndexes: correctIndexesOf(question),
     };
   }
+  if (question.type === "poll") {
+    return { count: Math.max(question.options.length, 2), correctIndexes: [] };
+  }
   if (question.type === "true_false") {
-    if (question.answer === null) return { count: 2, correctIndex: -1 };
-    return { count: 2, correctIndex: question.answer.isTrue ? 0 : 1 };
+    if (question.answer === null) return { count: 2, correctIndexes: [] };
+    return { count: 2, correctIndexes: [question.answer.isTrue ? 0 : 1] };
   }
   if (question.type === "order") {
     return {
       count: Math.min(Math.max(question.options.length, 2), 4),
-      correctIndex: -1,
+      correctIndexes: [],
     };
   }
-  return { count: 0, correctIndex: -1 };
+  return { count: 0, correctIndexes: [] };
 }
 
 /** The text in the language the host types in, else the other one, trimmed. */
@@ -82,9 +89,35 @@ export function shownTextOf(
   text: QuizshowText,
   viewLanguage: QuizshowLanguage,
 ): string {
+  return shownTextWithLanguageOf(text, viewLanguage).text;
+}
+
+/**
+ * `shownTextOf` with the language the words are actually in, so read-only
+ * quiz text can carry `lang` (item 41). Both blank answers the view language.
+ */
+export function shownTextWithLanguageOf(
+  text: QuizshowText,
+  viewLanguage: QuizshowLanguage,
+): { text: string; language: QuizshowLanguage } {
   const otherLanguage: QuizshowLanguage = viewLanguage === "en" ? "pt" : "en";
   const viewText = text[viewLanguage].trim();
-  return viewText.length > 0 ? viewText : text[otherLanguage].trim();
+  if (viewText.length > 0) return { text: viewText, language: viewLanguage };
+  const otherText = text[otherLanguage].trim();
+  return otherText.length > 0
+    ? { text: otherText, language: otherLanguage }
+    : { text: "", language: viewLanguage };
+}
+
+/**
+ * The language read-only text on a slide is drawn in: both lines when the
+ * quiz shows both on the TV (C6.26), else the language the host types in.
+ */
+export function slideTextLanguageOf(
+  screenLanguage: QuizshowScreenLanguage,
+  viewLanguage: QuizshowLanguage,
+): QuizshowScreenLanguage {
+  return screenLanguage === "both" ? "both" : viewLanguage;
 }
 
 /** One key per round (questionIndex null) or question, for the problem dots. */

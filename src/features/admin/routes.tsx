@@ -18,6 +18,18 @@ const AdminQuizshowTemplatePage = lazyNamed(
   () => import("./quizshowTemplates/AdminQuizshowTemplatePage"),
   "AdminQuizshowTemplatePage",
 );
+const AdminQuizBadgesPage = lazyNamed(
+  () => import("./quizBadges/AdminQuizBadgesPage"),
+  "AdminQuizBadgesPage",
+);
+const AdminQuizEventsPage = lazyNamed(
+  () => import("./quizBadges/AdminQuizEventsPage"),
+  "AdminQuizEventsPage",
+);
+const AdminQuizEventBadgesPage = lazyNamed(
+  () => import("./quizBadges/AdminQuizEventBadgesPage"),
+  "AdminQuizEventBadgesPage",
+);
 const AdminMarketingVideosPage = lazyNamed(
   () => import("./marketingVideos/AdminMarketingVideosPage"),
   "AdminMarketingVideosPage",
@@ -355,7 +367,8 @@ function publicFaceRoutes() {
   );
 }
 
-/** Pulse Live quiz templates: the list and the studio for one template. For
+/** Pulse Live quiz templates (the list and the studio for one template), the
+ *  win badge library, the events list and one event's badge setup. For
  *  moderators and admins with Pulse Live access; `AppRoutes` sends staff
  *  without that access away before these mount. */
 function quizshowTemplateRoutes() {
@@ -368,6 +381,18 @@ function quizshowTemplateRoutes() {
       <Route
         path={routes.adminQuizshowTemplate}
         element={<AdminQuizshowTemplatePage />}
+      />
+      <Route
+        path={routes.adminQuizshowBadges}
+        element={<AdminQuizBadgesPage />}
+      />
+      <Route
+        path={routes.adminQuizshowEvents}
+        element={<AdminQuizEventsPage />}
+      />
+      <Route
+        path={routes.adminQuizshowEventBadges}
+        element={<AdminQuizEventBadgesPage />}
       />
     </>
   );

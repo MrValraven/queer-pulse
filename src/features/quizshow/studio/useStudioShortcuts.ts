@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { STUDIO_NATIVE_UNDO_ATTRIBUTE } from "../shared/quizshowNativeUndo";
 
 export interface StudioShortcutHandlers {
   /** N: a new question after the selected one. */
@@ -173,6 +174,79 @@ export function useStudioShortcuts(handlers: StudioShortcutHandlers): void {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.isComposing) return;
       const handler = handlerFor(event, handlersRef.current);
+      if (handler === null) return;
+      event.preventDefault();
+      handler();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
+}
+
+/** Item 20: the draft's undo and redo keys. */
+export interface StudioHistoryShortcutHandlers {
+  /** Cmd/Ctrl+Z. */
+  onUndo: () => void;
+  /** Shift+Cmd/Ctrl+Z, or Ctrl+Y. */
+  onRedo: () => void;
+}
+
+/** A dialog's own element, inside or over the studio (the studio root itself excepted). */
+const DIALOG_ELEMENT_SELECTOR = `[role="dialog"], [role="alertdialog"], [aria-modal="true"]:not([${STUDIO_ROOT_ATTRIBUTE}])`;
+
+/** Which history key this press is; null for any other key. */
+function historyKeyOf(event: KeyboardEvent): "undo" | "redo" | null {
+  if (!hasCommandKey(event)) return null;
+  const key = event.key.toLowerCase();
+  if (key === "z") return event.shiftKey ? "redo" : "undo";
+  const isCtrlY =
+    key === "y" && event.ctrlKey && !event.metaKey && !event.shiftKey;
+  return isCtrlY ? "redo" : null;
+}
+
+/**
+ * The handler for an undo or redo press, or null when the studio leaves it
+ * alone: only with focus inside the studio root (or on the page body), and
+ * never while a dialog is open, so a dialog's own fields keep their native
+ * undo. Text fields of the studio count too (the draft is their history),
+ * except inside a part marked `STUDIO_NATIVE_UNDO_ATTRIBUTE`.
+ */
+function historyHandlerFor(
+  event: KeyboardEvent,
+  handlers: StudioHistoryShortcutHandlers,
+): (() => void) | null {
+  const historyKey = historyKeyOf(event);
+  if (historyKey === null || isDialogOpen()) return null;
+  const element = elementOf(event.target);
+  const isInStudio =
+    isOnBody(element) ||
+    (element?.closest(`[${STUDIO_ROOT_ATTRIBUTE}]`) ?? null) !== null;
+  if (!isInStudio || element?.closest(DIALOG_ELEMENT_SELECTOR)) return null;
+  if (element?.closest(`[${STUDIO_NATIVE_UNDO_ATTRIBUTE}]`)) return null;
+  return historyKey === "undo" ? handlers.onUndo : handlers.onRedo;
+}
+
+/**
+ * Cmd/Ctrl+Z undoes the last draft change; Shift+Cmd/Ctrl+Z and Ctrl+Y redo
+ * it. The press is always prevented once it counts, so a controlled input
+ * never runs a half native undo of its own. Null handlers turn the keys off
+ * (the studio is still loading).
+ */
+export function useStudioHistoryShortcuts(
+  handlers: StudioHistoryShortcutHandlers | null,
+): void {
+  const handlersRef = useRef(handlers);
+  useEffect(() => {
+    handlersRef.current = handlers;
+  }, [handlers]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const current = handlersRef.current;
+      if (current === null || event.defaultPrevented || event.isComposing) {
+        return;
+      }
+      const handler = historyHandlerFor(event, current);
       if (handler === null) return;
       event.preventDefault();
       handler();

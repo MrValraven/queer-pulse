@@ -11,18 +11,24 @@ import {
   blankDraft,
   changeQuestionType,
   changeRoundKind,
+  closestToleranceOf,
   defaultRoundSettings,
   draftFromQuiz,
   draftToInput,
   duplicateQuestionAt,
   isDraftDirty,
+  isLastWrongOption,
+  isQuestionTypeChangeLossy,
   mintOptionId,
   moveItem,
   newQuestion,
   newRound,
   newWheel,
   removeAt,
+  withClosestTolerance,
+  withCorrectOptionToggled,
   withNewQuestion,
+  withOptionRemoved,
   type QuizshowDraft,
 } from "./quizshowDraft";
 
@@ -47,6 +53,10 @@ function storedOrderQuestion(): QuizshowQuestion {
     type: "order",
     prompt: { en: "Sort them", pt: "Ordena" },
     mediaRef: "uploads/photo.jpg",
+    mediaAlt: blankText,
+    mediaReveal: "instant",
+    revealNote: blankText,
+    numberUnit: blankText,
     timeLimitSeconds: null,
     points: 1000,
     options: [
@@ -65,6 +75,7 @@ function storedQuiz(): QuizshowQuiz {
     languages: "both",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt: "2026-10-19T10:00:00.000Z",
     rounds: [
       {
@@ -143,6 +154,8 @@ describe("quizshowDraft", () => {
       wheelBonus: 0,
       wheelPick: "round",
       sliceCount: null,
+      isWarmUp: false,
+      talkSeconds: 0,
     });
   });
 
@@ -202,7 +215,7 @@ describe("quizshowDraft", () => {
       prompt: { en: "Hello", pt: "Ola" },
       mediaRef: "uploads/x.jpg",
       points: 2000,
-      answer: { correctIndex: 2 },
+      answer: { correctIndexes: [2] },
     } as ReturnType<typeof newQuestion>;
     const changed = changeQuestionType(original, "true_false", "quiz");
     expect(changed.type).toBe("true_false");
@@ -335,8 +348,8 @@ describe("quizshowDraft final fixes", () => {
     expect(blankDraft().languages).toBe("en");
   });
 
-  it("returns all eight settings with the wheel defaults", () => {
-    expect(Object.keys(defaultRoundSettings())).toHaveLength(8);
+  it("returns all ten settings with the wheel defaults", () => {
+    expect(Object.keys(defaultRoundSettings())).toHaveLength(10);
     expect(defaultRoundSettings()).toMatchObject({
       wheelBonus: 0,
       wheelPick: "round",
@@ -464,5 +477,251 @@ describe("quizshowDraft final fixes", () => {
     };
     expect(isDraftDirty(draftWithBonusOutside, baseline)).toBe(false);
     expect(at(draftWithBonusOutside.rounds, 0).settings.wheelBonus).toBe(500);
+  });
+});
+
+type MultipleChoiceQuestion = Extract<
+  QuizshowQuestionInput,
+  { type: "multiple_choice" }
+>;
+
+function filledOptions(texts: readonly string[]): QuizshowOption[] {
+  return texts.map((text, optionIndex) => ({
+    id: String.fromCharCode(97 + optionIndex),
+    text: { en: text, pt: text },
+  }));
+}
+
+function multipleChoiceWith(
+  texts: readonly string[],
+  correctIndexes: number[] | null,
+): MultipleChoiceQuestion {
+  return {
+    ...newQuestion("multiple_choice", "quiz"),
+    prompt: { en: "Which?", pt: "Qual?" },
+    options: filledOptions(texts),
+    answer: correctIndexes === null ? null : { correctIndexes },
+  };
+}
+
+describe("quizshowDraft Pulse Live v2 model", () => {
+  it("hydrates a legacy multiple choice and closest number question", () => {
+    // Stored before v2: one correct index and none of the margin, note, unit or alt fields.
+    const legacyMultipleChoice = {
+      id: "question-mc",
+      mediaUrl: null,
+      type: "multiple_choice",
+      prompt: { en: "Pick", pt: "Escolhe" },
+      mediaRef: null,
+      timeLimitSeconds: null,
+      points: 1000,
+      options: filledOptions(["One", "Two", "Three"]),
+      answer: { correctIndex: 1 },
+      acceptedAnswers: [],
+    };
+    const legacyClosest = {
+      id: "question-closest",
+      mediaUrl: null,
+      type: "closest_number",
+      prompt: { en: "When?", pt: "Quando?" },
+      mediaRef: null,
+      timeLimitSeconds: null,
+      points: 1000,
+      options: [],
+      answer: { value: 1969 },
+      acceptedAnswers: [],
+    };
+    const legacyQuiz = {
+      ...storedQuiz(),
+      rounds: [
+        {
+          ...at(storedQuiz().rounds, 0),
+          settings: {
+            timeLimitSeconds: 20,
+            isSpeedBonusOn: true,
+            isJokerAllowed: true,
+            writeSeconds: 60,
+            voteSeconds: 30,
+            wheelBonus: 0,
+            wheelPick: "round",
+            sliceCount: null,
+          },
+          questions: [legacyMultipleChoice, legacyClosest],
+        },
+      ],
+    } as unknown as QuizshowQuiz;
+    const draft = draftFromQuiz(legacyQuiz);
+    const round = at(draft.rounds, 0);
+    expect(round.settings).toMatchObject({ isWarmUp: false, talkSeconds: 0 });
+    const multipleChoice = at(round.questions, 0).question;
+    expect(multipleChoice.answer).toEqual({ correctIndexes: [1] });
+    expect(multipleChoice).toMatchObject({
+      mediaAlt: blankText,
+      mediaReveal: "instant",
+      revealNote: blankText,
+      numberUnit: blankText,
+    });
+    const closest = at(round.questions, 1).question;
+    expect(closest.answer).toEqual({
+      value: 1969,
+      tolerance: { mode: "absolute", amount: 10 },
+    });
+    // Hydrating the hydrated quiz again changes nothing.
+    expect(isDraftDirty(draftFromQuiz(legacyQuiz), draft)).toBe(false);
+  });
+
+  it("fills the v2 fields on every new question and starts a poll with two blank options", () => {
+    const question = newQuestion("type_answer", "quiz");
+    expect(question).toMatchObject({
+      mediaAlt: blankText,
+      mediaReveal: "instant",
+      revealNote: blankText,
+      numberUnit: blankText,
+    });
+    const poll = newQuestion("poll", "quiz");
+    expect(poll.answer).toBeNull();
+    expect(poll.options).toHaveLength(2);
+    expect(newQuestion("closest_number", "quiz").answer).toBeNull();
+    expect(closestToleranceOf(newQuestion("closest_number", "quiz"))).toEqual({
+      mode: "exact",
+      amount: 0,
+    });
+  });
+
+  it("keeps the options when multiple choice turns into a poll and back", () => {
+    const original = {
+      ...multipleChoiceWith(["Red", "Blue", "Green"], [1]),
+      revealNote: { en: "Fun", pt: "Giro" },
+    };
+    const poll = changeQuestionType(original, "poll", "quiz");
+    expect(poll.type).toBe("poll");
+    expect(poll.options).toEqual(original.options);
+    expect(poll.answer).toBeNull();
+    expect(poll.revealNote).toEqual({ en: "Fun", pt: "Giro" });
+
+    const backToChoice = changeQuestionType(poll, "multiple_choice", "quiz");
+    expect(backToChoice.options).toEqual(original.options);
+    expect(backToChoice.answer).toEqual({ correctIndexes: [0] });
+  });
+
+  it("pads multiple choice options to the order minimum and trims order items to the choice maximum", () => {
+    const twoOptions = multipleChoiceWith(["First", "Second"], null);
+    const order = changeQuestionType(twoOptions, "order", "quiz");
+    expect(order.type).toBe("order");
+    expect(optionsOf(order).map((option) => option.text.en)).toEqual([
+      "First",
+      "Second",
+      "",
+    ]);
+    expect(new Set(optionsOf(order).map((option) => option.id)).size).toBe(3);
+
+    const fiveItems: QuizshowQuestionInput = {
+      ...newQuestion("order", "quiz"),
+      options: filledOptions(["A", "B", "C", "D", "E"]),
+    };
+    const choice = changeQuestionType(fiveItems, "multiple_choice", "quiz");
+    expect(optionsOf(choice).map((option) => option.text.en)).toEqual([
+      "A",
+      "B",
+      "C",
+      "D",
+    ]);
+    expect(choice.answer).toBeNull();
+  });
+
+  it("calls a type change lossy only when an option with text or a set answer would go", () => {
+    const marked = multipleChoiceWith(["Red", "Blue"], [0]);
+    expect(isQuestionTypeChangeLossy(marked, "poll")).toBe(false);
+    expect(isQuestionTypeChangeLossy(marked, "order")).toBe(true);
+    expect(isQuestionTypeChangeLossy(marked, "true_false")).toBe(true);
+    expect(isQuestionTypeChangeLossy(marked, "multiple_choice")).toBe(false);
+
+    const unmarked = multipleChoiceWith(["Red", "Blue"], null);
+    expect(isQuestionTypeChangeLossy(unmarked, "order")).toBe(false);
+    expect(isQuestionTypeChangeLossy(unmarked, "true_false")).toBe(true);
+    expect(
+      isQuestionTypeChangeLossy(
+        newQuestion("multiple_choice", "quiz"),
+        "true_false",
+      ),
+    ).toBe(false);
+
+    const fiveItems: QuizshowQuestionInput = {
+      ...newQuestion("order", "quiz"),
+      options: filledOptions(["A", "B", "C", "D", "E"]),
+    };
+    expect(isQuestionTypeChangeLossy(fiveItems, "multiple_choice")).toBe(true);
+    const fourItems: QuizshowQuestionInput = {
+      ...fiveItems,
+      options: filledOptions(["A", "B", "C", "D"]),
+    };
+    expect(isQuestionTypeChangeLossy(fourItems, "poll")).toBe(false);
+
+    const answeredTrueFalse: QuizshowQuestionInput = {
+      ...newQuestion("true_false", "quiz"),
+      answer: { isTrue: true },
+    };
+    expect(isQuestionTypeChangeLossy(answeredTrueFalse, "type_answer")).toBe(
+      true,
+    );
+    expect(
+      isQuestionTypeChangeLossy(newQuestion("true_false", "quiz"), "order"),
+    ).toBe(false);
+  });
+
+  it("marks several options correct and always leaves one wrong", () => {
+    let question = multipleChoiceWith(["A", "B", "C"], null);
+    question = withCorrectOptionToggled(question, 2);
+    question = withCorrectOptionToggled(question, 0);
+    expect(question.answer).toEqual({ correctIndexes: [0, 2] });
+    expect(isLastWrongOption(question, 1)).toBe(true);
+    expect(withCorrectOptionToggled(question, 1)).toBe(question);
+
+    question = withCorrectOptionToggled(question, 2);
+    question = withCorrectOptionToggled(question, 0);
+    expect(question.answer).toBeNull();
+  });
+
+  it("moves the marks down when an option before them is removed", () => {
+    const question = multipleChoiceWith(["A", "B", "C", "D"], [1, 3]);
+    const removed = withOptionRemoved(question, 0);
+    expect(removed.options.map((option) => option.id)).toEqual(["b", "c", "d"]);
+    expect(removed.answer).toEqual({ correctIndexes: [0, 2] });
+    expect(withOptionRemoved(removed, 0).answer).toEqual({
+      correctIndexes: [1],
+    });
+  });
+
+  it("sets the margin only on a question that has a number", () => {
+    const closest = newQuestion("closest_number", "quiz");
+    const margin = { mode: "absolute" as const, amount: 5 };
+    expect(withClosestTolerance(closest, margin)).toBe(closest);
+    const withNumber = {
+      ...closest,
+      answer: { value: 10, tolerance: { mode: "exact" as const, amount: 0 } },
+    };
+    expect(withClosestTolerance(withNumber, margin).answer).toEqual({
+      value: 10,
+      tolerance: margin,
+    });
+  });
+});
+
+describe("quizshowDraft marks read only valid indexes", () => {
+  it("counts unique in-range marks and drops the rest on any toggle", () => {
+    // An import can carry an index past the options or the same one twice.
+    const imported = multipleChoiceWith(["A", "B", "C"], [0, 0, 7]);
+    expect(isLastWrongOption(imported, 1)).toBe(false);
+    const toggled = withCorrectOptionToggled(imported, 1);
+    expect(toggled.answer).toEqual({ correctIndexes: [0, 1] });
+    expect(isLastWrongOption(toggled, 2)).toBe(true);
+  });
+
+  it("keeps the marks inside the options after a removal", () => {
+    const imported = multipleChoiceWith(["A", "B", "C"], [2, 9]);
+    expect(withOptionRemoved(imported, 0).answer).toEqual({
+      correctIndexes: [1],
+    });
+    expect(withOptionRemoved(imported, 2).answer).toBeNull();
   });
 });

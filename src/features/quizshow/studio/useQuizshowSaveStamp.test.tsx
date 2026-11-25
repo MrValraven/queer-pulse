@@ -44,6 +44,7 @@ function storedQuiz(promptText: string, updatedAt: string): QuizshowQuiz {
     languages: "en",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt,
     rounds: [
       {
@@ -65,6 +66,7 @@ function responseOf(quiz: QuizshowQuiz): QuizshowQuizResponse {
     isAdultsEvent: false,
     liveSession: null,
     hasResults: false,
+    lastOpenSettings: null,
   };
 }
 

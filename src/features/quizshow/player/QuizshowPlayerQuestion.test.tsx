@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
@@ -7,7 +7,7 @@ import type {
   QuizshowPlayerState,
   QuizshowQuestionView,
 } from "../../../shared/contracts/quizshow";
-import type { QuizshowClientState } from "../realtime/quizshowClientStore";
+import { createQuizshowClientState } from "../realtime/quizshowClientStore";
 import type { QuizshowSessionController } from "../realtime/useQuizshowSession";
 import { QuizshowPlayerQuestion } from "./QuizshowPlayerQuestion";
 
@@ -27,6 +27,9 @@ const CURSOR: QuizshowCursor = {
   roundNumber: 1,
   upNext: null,
   canSpinForNextRound: false,
+  talkStartsAt: null,
+  autoAdvanceAt: null,
+  podiumRevealedCount: null,
 };
 
 function questionOf(
@@ -45,6 +48,10 @@ function questionOf(
     mediaUrl: null,
     points: 1000,
     timeLimitSeconds: 20,
+    mediaAlt: { en: "", pt: "" },
+    mediaReveal: "instant",
+    numberUnit: { en: "", pt: "" },
+    readMs: 4000,
     options: [
       { id: "a", text: { en: "Stonewall", pt: "Stonewall" } },
       { id: "b", text: { en: "Compton", pt: "Compton" } },
@@ -72,6 +79,10 @@ function playerStateOf(
     playMode: "solo",
     maxTeamSize: null,
     isReviewOn: true,
+    isPractice: false,
+    isJoinLocked: false,
+    isAutoAdvanceOn: false,
+    giving: null,
     isScreenMuted: false,
     cursor: CURSOR,
     rounds: [],
@@ -83,7 +94,8 @@ function playerStateOf(
     wheel: null,
     wheelBonus: null,
     role: "player",
-    lobby: { players: [], teams: [], playerCount: 3 },
+    lobby: { teams: [], playerCount: 3 },
+    answerCount: null,
     question,
     voteOptions: null,
     me: {
@@ -112,17 +124,13 @@ function controllerOf(
   session: QuizshowPlayerState,
   submitAnswer = vi.fn(() => new Promise<never>(() => undefined)),
 ): QuizshowSessionController {
-  const state: QuizshowClientState = {
-    role: "player",
-    status: "attached",
-    refusalCode: null,
-    session,
-    sessionEnd: null,
-    isRemoved: false,
-    pendingAnswer: null,
-  };
   return {
-    state,
+    state: {
+      ...createQuizshowClientState("player"),
+      status: "attached",
+      hasAttached: true,
+      session,
+    },
     clockOffsetMs: 0,
     isDemo: true,
     send: vi.fn(),
@@ -345,5 +353,130 @@ describe("QuizshowPlayerQuestion", () => {
     expect(sendButton).toHaveAttribute("aria-disabled", "true");
     await user.click(sendButton);
     expect(submitAnswer).not.toHaveBeenCalled();
+  });
+});
+
+describe("QuizshowPlayerQuestion poll, unit, picture and answer count", () => {
+  it("sends a poll pick with its own payload type", async () => {
+    const question = questionOf({ type: "poll" });
+    const submitAnswer = vi.fn(() => new Promise<never>(() => undefined));
+    renderQuestion(
+      controllerOf(playerStateOf(question), submitAnswer),
+      question,
+    );
+    const user = userEvent.setup();
+    await user.click(
+      await screen.findByRole("button", { name: "Answer B, Diamond: Compton" }),
+    );
+    expect(submitAnswer).toHaveBeenCalledWith({
+      questionId: "question-1",
+      payload: { type: "poll", optionIndex: 1 },
+    });
+  });
+
+  it("shows the closest-number unit beside the field and names it", async () => {
+    const question = questionOf({
+      type: "closest_number",
+      options: null,
+      numberUnit: { en: "years", pt: "anos" },
+    });
+    renderQuestion(controllerOf(playerStateOf(question)), question);
+    const numberInput = await screen.findByLabelText("Your number");
+    expect(screen.getByText("years")).toHaveAttribute("lang", "en");
+    expect(numberInput).toHaveAccessibleDescription("years");
+  });
+
+  it("leaves the unit out when the question has none", async () => {
+    const question = questionOf({ type: "closest_number", options: null });
+    renderQuestion(controllerOf(playerStateOf(question)), question);
+    const numberInput = await screen.findByLabelText("Your number");
+    expect(numberInput).not.toHaveAttribute("aria-describedby");
+  });
+
+  it("gives the picture the question's alt text", async () => {
+    const question = questionOf({
+      mediaUrl: "https://example.test/flag.png",
+      mediaAlt: { en: "A rainbow flag", pt: "Uma bandeira arco-íris" },
+    });
+    renderQuestion(controllerOf(playerStateOf(question)), question);
+    expect(
+      await screen.findByRole("img", { name: "A rainbow flag" }),
+    ).toBeInTheDocument();
+  });
+
+  it("marks the prompt with the language its words are in", async () => {
+    const question = questionOf({
+      prompt: { en: "", pt: "Onde comecaram os motins?" },
+    });
+    renderQuestion(controllerOf(playerStateOf(question)), question);
+    const heading = await screen.findByRole("heading", { level: 1 });
+    expect(
+      within(heading).getByText("Onde comecaram os motins?"),
+    ).toHaveAttribute("lang", "pt");
+  });
+
+  it("shows how many have answered once the player's own answer is acked", async () => {
+    const question = questionOf();
+    const session = playerStateOf(question, {
+      myAnswer: {
+        questionId: "question-1",
+        phaseId: "7",
+        payload: { type: "multiple_choice", optionIndex: 0 },
+        receivedAt: 1,
+      },
+      answerCount: { count: 3, total: 5 },
+    });
+    renderQuestion(controllerOf(session), question);
+    expect(await screen.findByText("3 of 5 answered")).toBeInTheDocument();
+  });
+
+  it("holds the answered count back until the ack, and while the count is unknown", async () => {
+    const user = userEvent.setup();
+    const question = questionOf();
+    const pending = renderQuestion(
+      controllerOf(
+        playerStateOf(question, { answerCount: { count: 3, total: 5 } }),
+      ),
+      question,
+    );
+    await user.click(
+      await screen.findByRole("button", {
+        name: "Answer A, Triangle: Stonewall",
+      }),
+    );
+    expect(screen.queryByText("3 of 5 answered")).toBeNull();
+    pending.unmount();
+
+    renderQuestion(
+      controllerOf(
+        playerStateOf(question, {
+          myAnswer: {
+            questionId: "question-1",
+            phaseId: "7",
+            payload: { type: "multiple_choice", optionIndex: 0 },
+            receivedAt: 1,
+          },
+        }),
+      ),
+      question,
+    );
+    await screen.findAllByText("Answer locked");
+    expect(screen.queryByText(/answered$/)).toBeNull();
+  });
+});
+
+describe("QuizshowPlayerQuestion typed answer lock", () => {
+  it("lets go of the typed field and folds the send button away once locked", async () => {
+    const user = userEvent.setup();
+    const question = questionOf({ type: "type_answer", options: null });
+    renderQuestion(controllerOf(playerStateOf(question)), question);
+    const field = await screen.findByLabelText("Your answer");
+    await user.type(field, "Marsha");
+    expect(field).toHaveFocus();
+    await user.click(screen.getByRole("button", { name: "Send answer" }));
+    await waitFor(() => expect(field).not.toHaveFocus());
+    await waitFor(() =>
+      expect(screen.queryByRole("button", { name: "Send answer" })).toBeNull(),
+    );
   });
 });

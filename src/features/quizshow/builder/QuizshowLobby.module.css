@@ -369,6 +369,12 @@
   color: var(--ink);
 }
 
+/* The practice pill reads --qs-low, a stage token; on the cream panel it
+   takes the app's amber ink, which flips with the app theme. */
+.practiceBadge {
+  --qs-low: var(--amber-ink);
+}
+
 .code {
   font-family: var(--mono);
   font-size: var(--text-title);

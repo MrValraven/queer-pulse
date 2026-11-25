@@ -27,6 +27,10 @@ export interface QuizshowTemplateMeta {
   status: QuizshowTemplateStatus;
   publishedAt: string | null;
   publishedByName: string | null;
+  /** The staff note of the latest publish (contract 6.25); '' both when none. */
+  changeNote: QuizshowText;
+  /** The latest publish, moved by a save while published; null for a draft. */
+  lastPublishedAt: string | null;
 }
 
 /** A template read as the builder's quiz response, with its card and notes beside it. */
@@ -39,6 +43,8 @@ export interface QuizshowTemplateQuizResponse extends QuizshowQuizResponse {
 export interface QuizshowTemplateFields {
   card: QuizshowTemplateCardText;
   staffNotes: string;
+  /** Sent on every save, so the stored change note stays unless staff edit it. */
+  changeNote: QuizshowText;
 }
 
 /** Each card field names the text and the language it reads. */
@@ -90,6 +96,7 @@ export function quizResponseOfTemplate(
     isAdultsEvent: true,
     liveSession: null,
     hasResults: false,
+    lastOpenSettings: null,
     template: {
       id: detail.id,
       card: detail.card,
@@ -97,6 +104,8 @@ export function quizResponseOfTemplate(
       status: detail.status,
       publishedAt: detail.publishedAt,
       publishedByName: detail.publishedByName,
+      changeNote: detail.changeNote,
+      lastPublishedAt: detail.lastPublishedAt,
     },
   };
 }

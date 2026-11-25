@@ -42,10 +42,14 @@ const CHOICE_QUESTION: QuizshowQuestion = {
     { id: "a", text: bilingual("First") },
     { id: "b", text: bilingual("Second") },
   ],
-  answer: { correctIndex: 1 },
+  answer: { correctIndexes: [1] },
   acceptedAnswers: [],
   mediaRef: null,
   mediaUrl: null,
+  mediaAlt: { en: "", pt: "" },
+  mediaReveal: "instant",
+  revealNote: { en: "", pt: "" },
+  numberUnit: { en: "", pt: "" },
   timeLimitSeconds: null,
   points: 1000,
 };
@@ -66,6 +70,8 @@ function roundOf(
       writeSeconds: 60,
       voteSeconds: 30,
       ...QUIZSHOW_WHEEL_SETTINGS_DEFAULTS,
+      isWarmUp: false,
+      talkSeconds: 0,
     },
     questions: [{ ...CHOICE_QUESTION, id: `${id}-question` }],
   };
@@ -77,6 +83,7 @@ function quizOf(rounds: QuizshowRound[]): QuizshowQuiz {
     languages: "both",
     screenLanguage: "en",
     sourceTemplateId: null,
+    sourceTemplate: null,
     updatedAt: "2026-10-20T00:00:00.000Z",
     rounds,
   };

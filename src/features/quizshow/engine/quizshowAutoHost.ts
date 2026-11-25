@@ -1,4 +1,6 @@
 import { wheelSpinLandsAt } from "../quizshowWheel";
+import { isActivePlayer } from "./quizshowEngineSetup";
+import { podiumStepsOf } from "./quizshowEngineTransitions";
 import type {
   QuizshowEngineAction,
   QuizshowEngineState,
@@ -11,7 +13,8 @@ export const QUIZSHOW_AUTO_HOST_DELAYS_MS = {
   scores: 4_000,
   leaderboard: 5_000,
   review: 2_500,
-  podium: 9_000,
+  podium: 9_000, // once every place is shown: the finish
+  podiumStep: 2_500, // in `podium` while a place is still hidden: host:next reveals the next one (contract 6.7)
   ended: 12_000,
   wheelBeforeSpin: 2_500, // in `wheel` with no spin: host:spin this long after phaseStartedAt
   wheelAfterLanding: 3_000, // in `wheel` with a landed spin: host:next this long after wheelSpinLandsAt
@@ -30,6 +33,16 @@ function hostCommand(
   };
 }
 
+/** A place still hidden: the next step after 2.5 s. Every place shown: the finish, as before steps. */
+function podiumDelayMs(engine: QuizshowEngineState): number {
+  const revealedCount = engine.cursor.podiumRevealedCount;
+  const hasHiddenPlace =
+    revealedCount !== null && revealedCount < podiumStepsOf(engine).length;
+  return hasHiddenPlace
+    ? QUIZSHOW_AUTO_HOST_DELAYS_MS.podiumStep
+    : QUIZSHOW_AUTO_HOST_DELAYS_MS.podium;
+}
+
 /** What a human host would press next, or null while the clock or the players decide. */
 export function planAutoHostAction(
   engine: QuizshowEngineState,
@@ -39,7 +52,7 @@ export function planAutoHostAction(
   if (engine.pausedAt !== null) return null;
   const { phase, phaseStartedAt } = engine.cursor;
   if (phase === "lobby") {
-    const present = engine.players.filter((player) => !player.isRemoved);
+    const present = engine.players.filter(isActivePlayer);
     if (present.length === 0 || present.length < options.expectedPlayerCount) {
       return null;
     }
@@ -55,8 +68,11 @@ export function planAutoHostAction(
     case "reveal":
     case "scores":
     case "leaderboard":
-    case "podium":
       return elapsed >= QUIZSHOW_AUTO_HOST_DELAYS_MS[phase]
+        ? hostCommand(engine, "host:next", now)
+        : null;
+    case "podium":
+      return elapsed >= podiumDelayMs(engine)
         ? hostCommand(engine, "host:next", now)
         : null;
     case "review":

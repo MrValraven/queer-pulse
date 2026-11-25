@@ -309,6 +309,9 @@ export function detailToGathering(
     // The gathering has been called off (PRD-181). Without this the detail
     // page rendered a live-looking RSVP button that the server answered 400.
     ...(dto.status === "cancelled" ? { cancelled: true } : {}),
+    // A draft the host has not published: the Live game tab offers a
+    // practice lobby only (Pulse Live item 53).
+    ...(dto.status === "draft" ? { isDraft: true } : {}),
     // ── Online gatherings (PRD-182) ──────────────────────────────────────
     // `isOnline` comes off the DTO rather than being inferred from the `hood`
     // string, which is now a translated label. `onlineUrl` is gated by the

@@ -1,7 +1,8 @@
-import type {
-  QuizshowLeaderboardEntry,
-  QuizshowPlayerState,
-  QuizshowScores,
+import {
+  QUIZSHOW_LIMITS,
+  type QuizshowLeaderboardEntry,
+  type QuizshowPlayerState,
+  type QuizshowScores,
 } from "../../../shared/contracts/quizshow";
 
 /**
@@ -34,6 +35,48 @@ export function phoneScoresOf(
     colorKey: team?.colorKey ?? null,
     score: myScores.score,
     previousScore: myScores.previousScore,
+    // The phone knows only its own streak, also in teams play.
+    streak: me.streak,
   };
   return { ...scores, entries: [...scores.entries, ownEntry] };
+}
+
+/** Positive = places gained, negative = places lost since the previous own rank (item 14); null without a previous rank or with no change. */
+export function placesMovedOf(ownRanks: {
+  previous: number | null;
+  current: number | null;
+}): number | null {
+  const { previous, current } = ownRanks;
+  if (previous === null || current === null || previous === current)
+    return null;
+  return previous - current;
+}
+
+/** "120 points behind Alex": the entry ranked just above the player's entrant in `scores`, when in the top 10 and not first; null otherwise. */
+export function gapAheadOf(
+  scores: QuizshowScores | null,
+  ownEntrantId: string | null,
+  ownScore: number,
+): { points: number; name: string } | null {
+  if (scores === null || ownEntrantId === null) return null;
+  const ownEntry = scores.entries.find(
+    (entry) => entry.entrantId === ownEntrantId,
+  );
+  if (ownEntry === undefined) return null;
+  // The rank decides the top 10, so an own row phoneScoresOf appended below it never counts.
+  const isInTopRanks = ownEntry.rank <= QUIZSHOW_LIMITS.leaderboardTopCount;
+  if (!isInTopRanks || ownEntry.rank === 1) return null;
+  const entriesAbove = scores.entries.filter(
+    (entry) => entry.rank < ownEntry.rank,
+  );
+  const entryAhead = entriesAbove.reduce<QuizshowLeaderboardEntry | null>(
+    (closest, entry) =>
+      closest === null || entry.rank > closest.rank ? entry : closest,
+    null,
+  );
+  if (entryAhead === null) return null;
+  return {
+    points: Math.max(0, entryAhead.score - ownScore),
+    name: entryAhead.name,
+  };
 }

@@ -12,7 +12,7 @@ import {
   contextMenuPointOf,
   isContextMenuKey,
   isPartyRoundKind,
-  shownTextOf,
+  shownTextWithLanguageOf,
   STUDIO_PRESS_FOCUS,
   thumbnailCellsOf,
   thumbnailLayoutOf,
@@ -22,7 +22,7 @@ import type { StudioRailMenuOpenMode } from "./quizshowStudioRailMenus";
 import { STUDIO_THUMBNAIL_ATTRIBUTE } from "./useStudioShortcuts";
 import styles from "./QuizshowStudioRail.module.css";
 
-/** The answer layout under the prompt: a sketch of the slide's tiles, the right one in jade. */
+/** The answer layout under the prompt: a sketch of the slide's tiles, every right one in jade. */
 function QuizshowStudioThumbnailSketch({
   question,
   roundKind,
@@ -31,12 +31,12 @@ function QuizshowStudioThumbnailSketch({
   roundKind: QuizshowRoundKind;
 }) {
   const layout = thumbnailLayoutOf(question, roundKind);
-  const { count, correctIndex } = thumbnailCellsOf(question);
+  const { count, correctIndexes } = thumbnailCellsOf(question);
   const cells = Array.from({ length: count }, (_unused, cellIndex) => (
     <span
       key={cellIndex}
       className={styles.cell}
-      data-correct={cellIndex === correctIndex || undefined}
+      data-correct={correctIndexes.includes(cellIndex) || undefined}
     />
   ));
   return (
@@ -79,7 +79,7 @@ export interface QuizshowStudioThumbnailProps {
  * One question in the rail: a CSS miniature of its 16:9 velvet slide (the
  * number, two lines of prompt and a sketch of its answer layout), a problem
  * dot, and a "..." menu. Memoised, and cheap enough that a rail of 200 stays
- * smooth: no stage render, no motion of its own.
+ * smooth: it renders no stage and runs no motion of its own.
  */
 function QuizshowStudioThumbnailBase({
   draftQuestion,
@@ -100,8 +100,12 @@ function QuizshowStudioThumbnailBase({
   const problemId = useId();
   const { question } = draftQuestion;
   const number = questionIndex + 1;
-  const prompt = shownTextOf(question.prompt, viewLanguage);
+  const { text: prompt, language: promptLanguage } = shownTextWithLanguageOf(
+    question.prompt,
+    viewLanguage,
+  );
   const isParty = isPartyRoundKind(roundKind);
+  const isPoll = question.type === "poll";
   // A blank prompt shows what the slide is, quietly: its type, or its party game.
   const shownPrompt =
     prompt ||
@@ -110,9 +114,15 @@ function QuizshowStudioThumbnailBase({
         ? `quizshow:kind.${roundKind}.name`
         : `quizshow:type.${question.type}`,
     );
-  const label = prompt
+  // A poll says so in its name, as its tag says so on the miniature.
+  let label = prompt
     ? t("quizshow:studio.rail.questionLabel", { number, prompt })
     : t("quizshow:questions.untitled", { number });
+  if (isPoll) {
+    label = prompt
+      ? t("quizshow:studio.rail.pollLabel", { number, prompt })
+      : t("quizshow:studio.rail.pollUntitled", { number });
+  }
   const menuLabel = t("quizshow:studio.rail.questionMenu", { number });
   return (
     <div
@@ -171,9 +181,18 @@ function QuizshowStudioThumbnailBase({
         <span className={styles.mini} aria-hidden>
           <span className={styles.head}>
             <span className={styles.number}>{number}</span>
+            {isPoll && (
+              <span className={styles.number}>
+                {t("quizshow:studio.pollTag")}
+              </span>
+            )}
             {hasProblem && <span className={styles.dot} />}
           </span>
-          <span className={styles.prompt} data-empty={!prompt || undefined}>
+          <span
+            className={styles.prompt}
+            data-empty={!prompt || undefined}
+            lang={prompt ? promptLanguage : undefined}
+          >
             {shownPrompt}
           </span>
           <QuizshowStudioThumbnailSketch

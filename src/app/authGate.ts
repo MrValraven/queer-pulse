@@ -89,9 +89,21 @@ const GATED_PATTERNS: string[] = [
   "/create-gathering",
   // The month page (`/create-gathering/month`). matchPath reads the bare pattern as exact.
   "/create-gathering/*",
-  // Pulse Live's player screen (quizshow), members only. The presenter and the remote sit under /gatherings/* above.
+  // Pulse Live (quizshow). `/play` itself, My games (`/play/games`, its
+  // game pages and their print sheets) and the helper remote (`/play/remote`
+  // and `/play/remote/:sessionId`) are members only; the presenter, the remote
+  // and the print sheet of an event sit under /gatherings/* above. The join
+  // page `/play/:code` and the TV pairing page `/play/tv` are deliberately
+  // absent: a signed-out guest or a TV with no account opens them (the join
+  // page shows its own pre-sign-in card). No wildcard on `/play`, because
+  // matchPath reads the bare pattern as exact and `/play/*` would gate both.
+  // A new static `/play/<segment>` must be added here (and to
+  // scripts/publicPaths.mjs) or be deliberately public.
   "/play",
-  "/play/*",
+  "/play/games",
+  "/play/games/*",
+  "/play/remote",
+  "/play/remote/*",
   // A guest community's collab invite (`/collab-invites/:inviteId`), read
   // and answered by that community's owners, co-owners and mods.
   "/collab-invites",
@@ -260,7 +272,8 @@ export function isComingSoonLink(href: string): boolean {
 // Pulse Live (quizshow) stays out of COMING_SOON_PATTERNS: it is gated per
 // viewer in `app/routes.tsx` (`useIsQuizshowVisible`, after the sign-in gate),
 // so members holding the early-access grant reach hosting before launch.
-// Playing (`/play` and `/play/:code`) stays open to every signed-in member.
+// Playing (`/play`, `/play/:code`, the TV page `/play/tv` and the helper remote
+// `/play/remote`) stays open to every signed-in member.
 const QUIZSHOW_HOSTING_PATTERNS: string[] = [
   "/play/games",
   "/play/games/*",
@@ -269,26 +282,33 @@ const QUIZSHOW_HOSTING_PATTERNS: string[] = [
 
 /**
  * True for the Pulse Live (quizshow) hosting paths: My games and the game pages
- * under `/play/games`, and the presenter screen and remote under an event.
- * `AppRoutes` sends a signed-in viewer for whom `useIsQuizshowVisible` is false
- * from these to the roadmap. `/play` and `/play/:code` are not hosting paths, so
- * any signed-in member plays; signed out, the sign-in gate (GATED_PATTERNS)
- * answers first.
+ * under `/play/games` (print sheets included), and the presenter screen, remote
+ * and print sheet under an event. `AppRoutes` sends a signed-in viewer for whom
+ * `useIsQuizshowVisible` is false from these to the roadmap. `/play`,
+ * `/play/:code`, `/play/tv` and the helper remote under `/play/remote` are not
+ * hosting paths, so any signed-in member plays or helps; signed out, only
+ * `/play/:code` and `/play/tv` stay reachable and the sign-in gate
+ * (GATED_PATTERNS) answers first for the rest.
  */
 export function isQuizshowHostingPath(pathname: string): boolean {
   return matchesAny(pathname, QUIZSHOW_HOSTING_PATTERNS);
 }
 
-// The Pulse Live staff console: the quiz templates list and one template.
+// The Pulse Live staff console: the quiz templates list and one template, the
+// win badge library, the events list and one event's badge setup.
 // Also listed in MOD_ACCESSIBLE_ADMIN_PATTERNS below.
 const QUIZSHOW_STAFF_PATTERNS: string[] = [
   routes.adminQuizshowTemplates,
   `${routes.adminQuizshowTemplates}/*`,
+  routes.adminQuizshowBadges,
+  routes.adminQuizshowEvents,
+  `${routes.adminQuizshowEvents}/*`,
 ];
 
 /**
  * True for the Pulse Live staff pages: the quiz templates list and a single
- * template. The role gate admits moderators and admins there first; then
+ * template, the win badge library, the events list and one event's badge
+ * setup. The role gate admits moderators and admins there first; then
  * `AppRoutes` sends staff for whom `useIsQuizshowVisible` is false to their
  * landing page (admins to the admin home, moderators to the queues console),
  * as the backend `@Feature('quizshow')` guard would refuse every read.

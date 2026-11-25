@@ -6,6 +6,8 @@ import {
   type BadgeVisibilityDTO,
   type PerkClaimDTO,
 } from "./recognition.api";
+import { isQuizBadgeKey } from "../../../shared/contracts/quizWinBadges";
+import { demoSetQuizBadgeHidden } from "../../quizshow/winBadges/quizWinBadgesDemoStore";
 
 /**
  * Claim an unlocked perk (`POST /me/recognition/perks/:key/claim`).
@@ -65,11 +67,17 @@ export function useSetBadgeVisibility() {
     // The caller toasts the cause itself; the global toast would double it.
     meta: { silentError: true },
     mutationFn: async ({ badgeKey, hiddenFromProfile }) => {
-      if (demoMode) return undefined;
+      if (demoMode) {
+        // A quiz badge's switch lives in the demo store, so the next read and
+        // the other-viewer projection agree.
+        if (isQuizBadgeKey(badgeKey)) {
+          demoSetQuizBadgeHidden(badgeKey, hiddenFromProfile);
+        }
+        return undefined;
+      }
       return setBadgeVisibility(badgeKey, hiddenFromProfile);
     },
     onSuccess: () => {
-      if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: ["recognition"] });
     },
   });

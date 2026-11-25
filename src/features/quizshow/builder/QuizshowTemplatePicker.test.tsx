@@ -31,6 +31,7 @@ const FAMILY_CARD: QuizshowTemplateCard = {
   roundCount: 3,
   questionCount: 15,
   hasAdultsRounds: false,
+  lastPublishedAt: "2026-11-01T00:00:00.000Z",
 };
 
 const ADULTS_CARD: QuizshowTemplateCard = {
@@ -41,6 +42,7 @@ const ADULTS_CARD: QuizshowTemplateCard = {
   roundCount: 2,
   questionCount: 8,
   hasAdultsRounds: true,
+  lastPublishedAt: "2026-11-01T00:00:00.000Z",
 };
 
 function listedCards(items: QuizshowTemplateCard[]): TemplateCardsResult {
@@ -122,19 +124,113 @@ describe("QuizshowTemplatePicker", () => {
     expect(onPick).toHaveBeenCalledWith(ADULTS_CARD);
   });
 
-  it("says when our team has published no templates yet", async () => {
+  it("says when our team has published no templates yet and offers the other two starts", async () => {
+    mocks.templateCards = listedCards([]);
+    const onStartBlank = vi.fn();
+    const onCopyFromEvent = vi.fn();
+    render(
+      <TestProviders>
+        <QuizshowTemplatePicker
+          isOpen
+          isAdultsAllowed={false}
+          onClose={() => undefined}
+          onPick={() => undefined}
+          onStartBlank={onStartBlank}
+          onCopyFromEvent={onCopyFromEvent}
+        />
+      </TestProviders>,
+    );
+
+    const dialog = await screen.findByRole("dialog");
+    await awaitCatalog("quizshow");
+
+    expect(
+      within(dialog).getByRole("heading", { name: "No templates yet" }),
+    ).toBeTruthy();
+    expect(
+      within(dialog).getByText("Our team publishes checked quizzes here"),
+    ).toBeTruthy();
+    expect(
+      within(dialog).queryByRole("button", { name: /^Use this template/ }),
+    ).toBeNull();
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Start from a blank quiz" }),
+    );
+    expect(onStartBlank).toHaveBeenCalledTimes(1);
+    expect(onCopyFromEvent).not.toHaveBeenCalled();
+
+    await userEvent.click(
+      within(dialog).getByRole("button", { name: "Copy from another event" }),
+    );
+    expect(onCopyFromEvent).toHaveBeenCalledTimes(1);
+    expect(onStartBlank).toHaveBeenCalledTimes(1);
+  });
+
+  it("offers copying from another quiz when the target is a game, and drops the header line", async () => {
+    mocks.templateCards = listedCards([]);
+    render(
+      <TestProviders>
+        <QuizshowTemplatePicker
+          isOpen
+          isGameScope
+          isAdultsAllowed={false}
+          onClose={() => undefined}
+          onPick={() => undefined}
+          onCopyFromEvent={() => undefined}
+        />
+      </TestProviders>,
+    );
+
+    const dialog = await screen.findByRole("dialog");
+    await awaitCatalog("quizshow");
+
+    expect(
+      within(dialog).getByRole("button", { name: "Copy from another quiz" }),
+    ).toBeTruthy();
+    expect(
+      within(dialog).queryByRole("button", { name: "Copy from another event" }),
+    ).toBeNull();
+    // An empty gallery copies nothing, so the line about copying folds away.
+    expect(
+      within(dialog).getByText(/Everything copies into your quiz/).className,
+    ).toMatch(/pickerSubHidden/);
+  });
+
+  it("leaves out an empty state action whose handler is left out", async () => {
     mocks.templateCards = listedCards([]);
     renderPicker(false);
 
     const dialog = await screen.findByRole("dialog");
+    await awaitCatalog("quizshow");
 
     expect(
-      await within(dialog).findByText(
-        "Our team hasn't published any templates yet",
-      ),
+      within(dialog).getByRole("heading", { name: "No templates yet" }),
     ).toBeTruthy();
     expect(
-      within(dialog).queryByRole("button", { name: /^Use this template/ }),
+      within(dialog).queryByRole("button", { name: "Start from a blank quiz" }),
+    ).toBeNull();
+    expect(
+      within(dialog).queryByRole("button", { name: "Copy from another event" }),
+    ).toBeNull();
+  });
+
+  it("keeps the empty state away while the templates load", async () => {
+    mocks.templateCards = {
+      data: undefined,
+      error: null,
+      isError: false,
+      isFetching: true,
+      refetch: vi.fn(() => Promise.resolve()),
+    };
+    renderPicker(false);
+
+    const dialog = await screen.findByRole("dialog");
+    await awaitCatalog("quizshow");
+
+    expect(within(dialog).queryByText("No templates yet")).toBeNull();
+    expect(
+      within(dialog).queryByRole("button", { name: "Start from a blank quiz" }),
     ).toBeNull();
   });
 
@@ -159,6 +255,7 @@ describe("QuizshowTemplatePicker", () => {
         "Quiz templates need Pulse Live access, and this account doesn't have it yet",
       ),
     ).toBeTruthy();
+    expect(within(dialog).queryByText("No templates yet")).toBeNull();
     await userEvent.click(
       within(dialog).getByRole("button", { name: "Try again" }),
     );
@@ -203,5 +300,38 @@ describe("QuizshowTemplatePicker", () => {
         "Our server hit a problem. Try again in a moment",
       ),
     ).toBeTruthy();
+  });
+});
+
+describe("QuizshowTemplatePicker adding rounds with 18+ off", () => {
+  beforeEach(() => {
+    mocks.templateCards = listedCards([FAMILY_CARD, ADULTS_CARD]);
+  });
+
+  it("keeps Add rounds open on a template with adults rounds, since its checklist holds only those rows", async () => {
+    render(
+      <TestProviders>
+        <QuizshowTemplatePicker
+          isOpen
+          isAdultsAllowed={false}
+          mode="append"
+          onClose={() => undefined}
+          onPick={() => undefined}
+          onAppend={() => undefined}
+        />
+      </TestProviders>,
+    );
+
+    const dialog = await screen.findByRole("dialog");
+    await awaitCatalog("quizshow");
+    const adultsRow = within(dialog).getByText("After dark").closest("li");
+    if (!adultsRow) throw new Error("no adults template row");
+    const addButton = within(adultsRow).getByRole("button", {
+      name: /^Add rounds from this template/,
+    });
+
+    expect(addButton).not.toHaveAttribute("aria-disabled", "true");
+    expect(addButton.getAttribute("aria-describedby")).toBeNull();
+    expect(within(adultsRow).getByText("Has adults rounds")).toBeTruthy();
   });
 });

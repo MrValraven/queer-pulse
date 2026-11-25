@@ -4,7 +4,11 @@ import type {
   QuizshowJoinResponse,
   QuizshowPodiumEntry,
 } from "../../../shared/contracts/quizshow";
-import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
+import {
+  QUIZSHOW_TRANSPORT_TIMEOUT_KEY,
+  quizshowErrorCodeOf,
+  quizshowErrorKeyOf,
+} from "../api/quizshowErrors";
 import {
   isPlayerState,
   type QuizshowClientState,
@@ -77,11 +81,12 @@ export function usePlayJoin(
   };
 }
 
-/** The copy key of any send failure; a lost connection gets the generic line. */
+/** The copy key of any send failure; an ack that never came back says the game did not answer in time. */
 export function sendFailureKeyOf(
   code: QuizshowErrorCode | "transport_timeout",
 ) {
-  return quizshowErrorKeyOf(code === "transport_timeout" ? null : code);
+  if (code === "transport_timeout") return QUIZSHOW_TRANSPORT_TIMEOUT_KEY;
+  return quizshowErrorKeyOf(code);
 }
 
 export interface QuizshowFinalPlace {

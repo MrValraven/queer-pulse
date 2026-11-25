@@ -1,5 +1,8 @@
 import { createElement, useRef, type ReactNode } from "react";
-import type { QuizshowRoundKind } from "../../../shared/contracts/quizshow";
+import type {
+  QuizshowLiveSessionRef,
+  QuizshowRoundKind,
+} from "../../../shared/contracts/quizshow";
 import { useUnsavedChangesGuard } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { QuizshowSaveConflictDialog } from "../builder/QuizshowSaveConflictDialog";
@@ -28,6 +31,22 @@ const TITLE_MISSING_PROBLEM: QuizshowLocalProblem = {
   questionIndex: null,
   language: null,
 };
+
+/** Which lobby line the save status shows (item 18, C6.10): a lobby behind the saved quiz, a refused refresh of it, or a game already playing. */
+export type QuizshowStudioLobbyLineKind = "behind" | "refused" | "nextGame";
+
+/** The lobby line for the quiz read's live session; null when none shows. Pure. */
+export function lobbyLineKindOf(
+  liveSession: QuizshowLiveSessionRef | null,
+  isRefused: boolean,
+): QuizshowStudioLobbyLineKind | null {
+  if (liveSession === null) return null;
+  if (liveSession.status === "running" || liveSession.status === "paused") {
+    return "nextGame";
+  }
+  if (!liveSession.isBehindQuiz) return null;
+  return isRefused ? "refused" : "behind";
+}
 
 /** The studio's top-bar status, reason and Save action from the hook's state and the save's own. */
 function shownStatusOf(input: {
@@ -232,6 +251,7 @@ export function useStudioSave(input: {
       onLoadTheirs: () => void saving.loadTheirs(),
       onSaveMine: () => saving.saveMine({ shouldKeepKeys: true }),
       onClose: saving.closeConflict,
+      changedBy: saving.conflictDetails,
       // The dialog portals to the body; the stamp keeps it in the studio's dark.
       children: createElement(QuizshowStudioDarkStamp),
     }),

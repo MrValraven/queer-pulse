@@ -266,7 +266,10 @@ function podiumEntryOf(
   step: QuizshowEngineStep,
   entrantName: string,
 ): QuizshowPodiumEntry {
-  const [podium] = podiumsIn(screenFramesOf(step));
+  // The podium opens with every place hidden from the screen (contract 6.7); the hosts get every entry.
+  const [podium] = podiumsIn(
+    framesForViewer(step.frames, { role: "host", playerId: null }),
+  );
   const entry = podium?.entries.find(
     (candidate) => candidate.name === entrantName,
   );
@@ -534,7 +537,7 @@ function spinOf(state: QuizshowEngineState): QuizshowWheelSpin {
   return spin;
 }
 
-/** `host:spin`, then where it lands: read from the drawn slices and the spin, never assumed. */
+/** `host:spin`, then where it lands: read from the drawn slices and the spin itself. */
 function landSpin(state: QuizshowEngineState, now: number): LandedSpin {
   const step = hostCommand(state, "host:spin", now);
   const wheel = step.state.wheelProgress.wheel;
@@ -1872,10 +1875,10 @@ function runSpinRefusalsNight(): void {
   const clock = createNightClock();
   const soloQuiz = wheelTestQuiz([wheelTestRound("only", "Only round", 1)]);
   const lobby = joinedNight(soloQuiz, "solo", SOLO_MEMBERS);
-  const notAllowed = "quizshow_command_not_allowed";
+  const notAllowed = "quizshow_spin_not_available";
 
-  // Every phase of a plain night without a wheel.
-  expectSpinRefused(lobby, notAllowed, clock());
+  // Every phase of a plain night without a wheel; the lobby has not started yet (contract 3.2).
+  expectSpinRefused(lobby, "quizshow_session_not_started", clock());
   const introStep = hostCommand(lobby, "host:start", clock());
   expectSpinRefused(introStep.state, notAllowed, clock());
   const readStep = hostCommand(introStep.state, "host:next", clock());

@@ -6,7 +6,11 @@ import type {
   QuizshowHostVoteOptions,
   QuizshowLobby,
   QuizshowPhase,
+  QuizshowPlayerLobby,
   QuizshowPlayerState,
+  QuizshowPodiumFrame,
+  QuizshowReactionsFrame,
+  QuizshowRematch,
   QuizshowScreenState,
   QuizshowSessionEnd,
   QuizshowSessionState,
@@ -16,8 +20,14 @@ import type {
   QuizshowAnswerHiddenFrame,
   QuizshowPhaseChangeFrame,
   QuizshowHostQuestionView,
+  QuizshowQuestionView,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowServerFrame } from "./quizshowFrames";
+import {
+  withNightEntry,
+  type QuizshowNightEntry,
+  type QuizshowNightEntryUpdate,
+} from "./quizshowNightLog";
 
 export type QuizshowConnectionStatus =
   "connecting" | "attached" | "reconnecting" | "refused" | "ended";
@@ -28,6 +38,22 @@ export interface QuizshowPendingAnswer {
   payload: QuizshowAnswerPayload;
 }
 
+/** Why the socket is retrying (item 42). */
+export type QuizshowRetryCause =
+  "UNAUTHORIZED" | "RATE_LIMITED" | "SERVER_ERROR" | "offline";
+
+export interface QuizshowReactionBurst {
+  counts: QuizshowReactionsFrame["counts"];
+  /** Grows by 1 per `reactions` frame, so a view can tell two equal windows apart. */
+  sequence: number;
+}
+
+/** Own rank from the latest `reveal:mine` or `scores:mine` and the one before it (item 14). */
+export interface QuizshowOwnRanks {
+  previous: number | null;
+  current: number | null;
+}
+
 export interface QuizshowClientState {
   role: QuizshowAttachRole;
   status: QuizshowConnectionStatus;
@@ -36,6 +62,24 @@ export interface QuizshowClientState {
   sessionEnd: QuizshowSessionEnd | null;
   isRemoved: boolean;
   pendingAnswer: QuizshowPendingAnswer | null;
+  /** True once any attach ack succeeded on this store (item 42). */
+  hasAttached: boolean;
+  /** Why the socket is retrying; null when unknown or attached (item 42). */
+  retryCause: QuizshowRetryCause | null;
+  /** The old session's rematch (item 38); null until `session:rematch`. */
+  rematch: QuizshowRematch | null;
+  /** The latest `reactions` window (item 46); screen and host only. */
+  reactionBurst: QuizshowReactionBurst | null;
+  /** `player:removed.canRejoin` (item 34); false otherwise. */
+  canRejoinAfterRemoval: boolean;
+  /** The player's night, memory only (item 15). Empty for screen and host. */
+  nightLog: QuizshowNightEntry[];
+  /** Own rank now and the one before it, memory only (item 14). */
+  ownRanks: QuizshowOwnRanks;
+  /** Which question (or scores phase) set `ownRanks.current`, so a correction of it replaces the rank without a shift. */
+  ownRankSourceKey: string | null;
+  /** The player's team name when the session ended (item 38); null in solo. */
+  lastTeamName: string | null;
 }
 
 export type QuizshowClientAction =
@@ -45,6 +89,8 @@ export type QuizshowClientAction =
       payload: {
         status: QuizshowConnectionStatus;
         refusalCode: QuizshowClientState["refusalCode"];
+        /** Absent keeps the current cause. */
+        retryCause?: QuizshowRetryCause | null;
       };
     }
   | { event: "local:pendingAnswer"; payload: QuizshowPendingAnswer | null }
@@ -64,6 +110,15 @@ export function createQuizshowClientState(
     sessionEnd: null,
     isRemoved: false,
     pendingAnswer: null,
+    hasAttached: false,
+    retryCause: null,
+    rematch: null,
+    reactionBurst: null,
+    canRejoinAfterRemoval: false,
+    nightLog: [],
+    ownRanks: { previous: null, current: null },
+    ownRankSourceKey: null,
+    lastTeamName: null,
   };
 }
 
@@ -198,6 +253,7 @@ function applyNewPhase(
       answerCount: null,
       voteOptions: keptVoteOptions ? session.voteOptions : null,
       reviewList: phase === "review" ? session.reviewList : null,
+      typedAnswers: phase === "scores" ? session.typedAnswers : null,
     };
   }
   const question = frame.question;
@@ -217,6 +273,7 @@ function applyNewPhase(
     ...session,
     ...shared,
     question,
+    answerCount: null,
     voteOptions: keptVoteOptions ? session.voteOptions : null,
     myScores: isScoresOfPhase(session.myScores, frame.cursor)
       ? session.myScores
@@ -242,11 +299,46 @@ function applyPhaseChange(
 
 function applyLobby(
   session: QuizshowSessionState,
-  lobby: QuizshowLobby | QuizshowHostLobby,
+  lobby: QuizshowLobby | QuizshowPlayerLobby | QuizshowHostLobby,
 ): QuizshowSessionState {
   if (session.role === "host")
     return { ...session, lobby: lobby as QuizshowHostLobby };
-  return { ...session, lobby: lobby };
+  if (session.role === "screen")
+    return { ...session, lobby: lobby as QuizshowLobby };
+  // Players keep teams and a count only (W2), even from a server that still sends the roster.
+  const playerLobby: QuizshowPlayerLobby = {
+    teams: lobby.teams,
+    playerCount: lobby.playerCount,
+  };
+  return { ...session, lobby: playerLobby };
+}
+
+/** The podium frame's places, with its count mirrored on the cursor (D16); the frame's phase id already matched. */
+function applyPodium(
+  session: QuizshowSessionState,
+  frame: QuizshowPodiumFrame,
+): QuizshowSessionState {
+  return {
+    ...session,
+    podium: frame.entries,
+    cursor: { ...session.cursor, podiumRevealedCount: frame.revealedCount },
+  };
+}
+
+function applyHostOnlyFrame(
+  session: QuizshowHostState,
+  action: QuizshowClientAction,
+): QuizshowHostState {
+  switch (action.event) {
+    case "review:list":
+      return { ...session, reviewList: action.payload };
+    case "typed:answers":
+      return { ...session, typedAnswers: action.payload };
+    case "devices:update":
+      return { ...session, pairedDevices: action.payload.devices };
+    default:
+      return session;
+  }
 }
 
 function applyPlayerFrame(
@@ -286,7 +378,6 @@ function applyDataFrame(
     case "lobby:update":
       return applyLobby(session, action.payload);
     case "answer:count":
-      if (session.role === "player") return session;
       return {
         ...session,
         answerCount: {
@@ -295,9 +386,17 @@ function applyDataFrame(
         },
       };
     case "review:list":
+    case "typed:answers":
+    case "devices:update":
       return session.role === "host"
-        ? { ...session, reviewList: action.payload }
+        ? applyHostOnlyFrame(session, action)
         : session;
+    case "session:flags":
+      return {
+        ...session,
+        isJoinLocked: action.payload.isJoinLocked,
+        isAutoAdvanceOn: action.payload.isAutoAdvanceOn,
+      };
     case "vote:options":
       return {
         ...session,
@@ -310,7 +409,7 @@ function applyDataFrame(
     case "scores":
       return { ...session, scores: action.payload };
     case "podium":
-      return { ...session, podium: action.payload.entries };
+      return applyPodium(session, action.payload);
     case "screen:muted":
       return session.role === "player"
         ? session
@@ -374,6 +473,8 @@ function applySessionState(
     ...state,
     session: normalisedSession,
     status: "attached",
+    // The demo engine attaches through session:state alone, with no local:status.
+    hasAttached: true,
     sessionEnd: null,
     pendingAnswer: isPlayerState(normalisedSession)
       ? clearedPending(state.pendingAnswer, normalisedSession)
@@ -396,6 +497,8 @@ function applySessionEnd(
           cursor: { ...session.cursor, status: end.status, phase: "ended" },
           podium: end.podium,
           nextEvent: end.nextEvent,
+          // The live session:state carries null until the ended phase (item 66).
+          giving: end.giving,
         }
       : null,
   };
@@ -413,13 +516,26 @@ function isPendingPassedBy(
   return isOtherPhase || isOtherQuestion;
 }
 
+/** A host correction in `scores` re-sends `reveal` and `reveal:mine` stamped with the reveal phase id (item 5). */
+function isCorrectionInScores(
+  session: QuizshowSessionState,
+  action: QuizshowClientAction,
+): boolean {
+  if (action.event !== "reveal" && action.event !== "reveal:mine") return false;
+  return (
+    session.cursor.phase === "scores" &&
+    action.payload.questionId === session.question?.questionId
+  );
+}
+
 function applyWhileAttached(
   state: QuizshowClientState,
   session: QuizshowSessionState,
   action: QuizshowClientAction,
 ): QuizshowClientState {
   const phaseId = phaseIdOf(action);
-  if (phaseId !== null && phaseId !== session.cursor.phaseId) return state;
+  const isStalePhase = phaseId !== null && phaseId !== session.cursor.phaseId;
+  if (isStalePhase && !isCorrectionInScores(session, action)) return state;
   const nextSession = applyDataFrame(session, action);
   const isAckForPending =
     action.event === "answer:ack" &&
@@ -452,17 +568,46 @@ function isSettledBy(
   return isSamePending || isQuestionChanged;
 }
 
-export function applyQuizshowFrame(
+function applyStatus(
+  state: QuizshowClientState,
+  payload: Extract<QuizshowClientAction, { event: "local:status" }>["payload"],
+): QuizshowClientState {
+  return {
+    ...state,
+    status: payload.status,
+    refusalCode: payload.refusalCode,
+    hasAttached: state.hasAttached || payload.status === "attached",
+    retryCause:
+      payload.retryCause === undefined ? state.retryCause : payload.retryCause,
+  };
+}
+
+/** The rematch frame reaches the old session's rooms, also after `session:end`. */
+function applyRematch(
+  state: QuizshowClientState,
+  rematch: QuizshowRematch,
+): QuizshowClientState {
+  const isOtherSession =
+    state.session !== null && state.session.sessionId !== rematch.fromSessionId;
+  return isOtherSession ? state : { ...state, rematch };
+}
+
+function applyReactions(
+  state: QuizshowClientState,
+  frame: QuizshowReactionsFrame,
+): QuizshowClientState {
+  if (state.role === "player") return state;
+  const sequence = (state.reactionBurst?.sequence ?? 0) + 1;
+  return { ...state, reactionBurst: { counts: frame.counts, sequence } };
+}
+
+function reduceQuizshowFrame(
   state: QuizshowClientState,
   action: QuizshowClientAction,
 ): QuizshowClientState {
   switch (action.event) {
     case "local:status":
-      return {
-        ...state,
-        status: action.payload.status,
-        refusalCode: action.payload.refusalCode,
-      };
+      return applyStatus(state, action.payload);
     case "local:pendingAnswer":
       return { ...state, pendingAnswer: action.payload };
     case "local:reset":
@@ -476,10 +621,267 @@ export function applyQuizshowFrame(
     case "session:end":
       return applySessionEnd(state, action.payload);
     case "player:removed":
-      return { ...state, isRemoved: true, status: "ended" };
+      return {
+        ...state,
+        isRemoved: true,
+        status: "ended",
+        canRejoinAfterRemoval: action.payload.canRejoin === true,
+      };
+    case "device:unpaired":
+      return {
+        ...state,
+        status: "refused",
+        refusalCode: "quizshow_device_unpaired",
+      };
+    case "session:rematch":
+      return applyRematch(state, action.payload);
+    case "reactions":
+      return applyReactions(state, action.payload);
     default:
       return state.session
         ? applyWhileAttached(state, state.session, action)
         : state;
   }
+}
+
+/** The round card's warm-up flag for the question's round, read when the question arrives. */
+function isWarmUpQuestion(
+  session: QuizshowPlayerState,
+  question: QuizshowQuestionView,
+): boolean {
+  const card =
+    session.round?.roundIndex === question.roundIndex
+      ? session.round
+      : session.rounds.find(
+          (round) => round.roundIndex === question.roundIndex,
+        );
+  return card?.isWarmUp ?? false;
+}
+
+/** What the session says about its quiz-round question; party questions and wheel steps are not logged. */
+function nightUpdateOf(
+  session: QuizshowPlayerState,
+): QuizshowNightEntryUpdate | null {
+  const question = session.question;
+  if (question === null || question.roundKind !== "quiz") return null;
+  const questionId = question.questionId;
+  const reveal =
+    session.reveal?.questionId === questionId ? session.reveal : null;
+  return {
+    questionId,
+    roundIndex: question.roundIndex,
+    questionIndex: question.questionIndex,
+    question,
+    myAnswer:
+      session.myAnswer?.questionId === questionId
+        ? session.myAnswer
+        : undefined,
+    myReveal:
+      session.myReveal?.questionId === questionId
+        ? session.myReveal
+        : undefined,
+    // A rescored reveal overwrites the key and the note.
+    correct: reveal === null ? undefined : reveal.correct,
+    note: reveal === null ? undefined : reveal.note,
+  };
+}
+
+function isNightEntryCurrent(
+  entry: QuizshowNightEntry,
+  update: QuizshowNightEntryUpdate,
+): boolean {
+  return (Object.keys(update) as Array<keyof QuizshowNightEntry>).every(
+    (key) => update[key] === undefined || update[key] === entry[key],
+  );
+}
+
+function rememberedNightLog(
+  log: QuizshowNightEntry[],
+  session: QuizshowPlayerState,
+  isRestartReplayed: boolean,
+): QuizshowNightEntry[] {
+  const sessionUpdate = nightUpdateOf(session);
+  if (sessionUpdate === null) return log;
+  // A restart replay drops the question's answers, so the entry drops them too.
+  const update: QuizshowNightEntryUpdate = isRestartReplayed
+    ? { ...sessionUpdate, myAnswer: null, myReveal: null }
+    : sessionUpdate;
+  if (update.question === undefined) return log;
+  const entry = log.find(
+    (candidate) => candidate.questionId === update.questionId,
+  );
+  if (entry === undefined)
+    return withNightEntry(log, {
+      ...update,
+      isWarmUp: isWarmUpQuestion(session, update.question),
+    });
+  return isNightEntryCurrent(entry, update) ? log : withNightEntry(log, update);
+}
+
+interface QuizshowRankMemory {
+  ownRanks: QuizshowOwnRanks;
+  ownRankSourceKey: string | null;
+}
+
+/**
+ * A rank from the source that set `current` (a rescore or a host adjustment
+ * re-sending it) replaces `current` and keeps `previous`, so "Up N places"
+ * still reads the move since the last question; the same source re-sending
+ * an equal rank changes nothing. Any rank from another source moves `current`
+ * into `previous`, an equal one too: the move is always since the last
+ * source, so an unchanged rank at a later reveal or leaderboard says no move.
+ */
+function rememberedRank(
+  memory: QuizshowRankMemory,
+  rank: number,
+  sourceKey: string,
+): QuizshowRankMemory {
+  const { ownRanks } = memory;
+  if (sourceKey === memory.ownRankSourceKey) {
+    if (rank === ownRanks.current) return memory;
+    return {
+      ownRanks: { previous: ownRanks.previous, current: rank },
+      ownRankSourceKey: sourceKey,
+    };
+  }
+  return {
+    ownRanks: { previous: ownRanks.current, current: rank },
+    ownRankSourceKey: sourceKey,
+  };
+}
+
+/** `scores:mine` in `scores` belongs to the question just revealed; elsewhere to its own phase. */
+function scoresSourceKeyOf(
+  session: QuizshowPlayerState,
+  phaseId: string,
+): string {
+  const questionId = session.question?.questionId;
+  return session.cursor.phase === "scores" && questionId !== undefined
+    ? `question:${questionId}`
+    : `phase:${phaseId}`;
+}
+
+/**
+ * Whether the question a rank came from scores nothing: a warm-up question or
+ * a poll. Its rank is everyone's starting tie, so remembering it would read
+ * the first scored reveal as a fall (item 14).
+ */
+function isUnscoredQuestion(
+  session: QuizshowPlayerState,
+  questionId: string,
+): boolean {
+  const question = session.question;
+  if (question === null || question.questionId !== questionId) return false;
+  return question.type === "poll" || isWarmUpQuestion(session, question);
+}
+
+/** Ranks from a `reveal:mine` or `scores:mine` the session took in since `previous` (also through session:state). */
+function rememberedRanks(
+  memory: QuizshowRankMemory,
+  previous: QuizshowPlayerState | null,
+  session: QuizshowPlayerState,
+): QuizshowRankMemory {
+  let ranks = memory;
+  const { myReveal, myScores } = session;
+  if (
+    myReveal !== null &&
+    myReveal !== previous?.myReveal &&
+    !isUnscoredQuestion(session, myReveal.questionId)
+  )
+    ranks = rememberedRank(
+      ranks,
+      myReveal.rank,
+      `question:${myReveal.questionId}`,
+    );
+  const scoresSourceKey =
+    myScores === null ? null : scoresSourceKeyOf(session, myScores.phaseId);
+  // The scores right after a warm-up question or a poll belong to it, so they skip too.
+  const isScoresOfUnscoredQuestion =
+    scoresSourceKey !== null &&
+    session.question !== null &&
+    scoresSourceKey === `question:${session.question.questionId}` &&
+    isUnscoredQuestion(session, session.question.questionId);
+  if (
+    myScores !== null &&
+    scoresSourceKey !== null &&
+    myScores !== previous?.myScores &&
+    !isScoresOfUnscoredQuestion
+  )
+    ranks = rememberedRank(ranks, myScores.rank, scoresSourceKey);
+  return ranks;
+}
+
+/** Kept in step with the player's team while the session runs; held once it ended. */
+function rememberedTeamName(
+  state: QuizshowClientState,
+  session: QuizshowPlayerState,
+): string | null {
+  if (state.sessionEnd !== null) return state.lastTeamName;
+  const teamId = session.me?.teamId ?? null;
+  if (teamId === null) return null;
+  const team = session.lobby.teams.find(
+    (candidate) => candidate.teamId === teamId,
+  );
+  // A lobby:update can trail the me:update that moved the player.
+  return team?.name ?? state.lastTeamName;
+}
+
+/** A session:state for another session starts the memory again from nothing. */
+function memoryBaseOf(
+  previousState: QuizshowClientState,
+  state: QuizshowClientState,
+  session: QuizshowPlayerState,
+): QuizshowClientState {
+  const isOtherSession =
+    previousState.session !== null &&
+    previousState.session.sessionId !== session.sessionId;
+  if (!isOtherSession) return state;
+  const empty = createQuizshowClientState(state.role);
+  return {
+    ...state,
+    nightLog: empty.nightLog,
+    ownRanks: empty.ownRanks,
+    ownRankSourceKey: empty.ownRankSourceKey,
+    lastTeamName: empty.lastTeamName,
+  };
+}
+
+/** R2 (items 14, 15, 38): the player's memory of the night, read from the session after each frame. Memory only: nothing is stored or sent. */
+function withPlayerMemory(
+  previousState: QuizshowClientState,
+  state: QuizshowClientState,
+  action: QuizshowClientAction,
+): QuizshowClientState {
+  const session = state.session;
+  if (session === previousState.session || !isPlayerState(session))
+    return state;
+  if (state.role !== "player") return state;
+  const base = memoryBaseOf(previousState, state, session);
+  const previousSession =
+    base === state && isPlayerState(previousState.session)
+      ? previousState.session
+      : null;
+  const isRestartReplayed =
+    action.event === "phase:change" &&
+    previousSession !== null &&
+    isRestartReplay(previousSession, action.payload);
+  const ranks = rememberedRanks(
+    { ownRanks: base.ownRanks, ownRankSourceKey: base.ownRankSourceKey },
+    previousSession,
+    session,
+  );
+  return {
+    ...base,
+    nightLog: rememberedNightLog(base.nightLog, session, isRestartReplayed),
+    ownRanks: ranks.ownRanks,
+    ownRankSourceKey: ranks.ownRankSourceKey,
+    lastTeamName: rememberedTeamName(base, session),
+  };
+}
+
+export function applyQuizshowFrame(
+  state: QuizshowClientState,
+  action: QuizshowClientAction,
+): QuizshowClientState {
+  return withPlayerMemory(state, reduceQuizshowFrame(state, action), action);
 }

@@ -3,6 +3,7 @@ import { AnimatePresence } from "motion/react";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { QuizshowDraft } from "./quizshowDraft";
+import type { QuizshowDryRunSlice } from "./quizshowDryRunQuiz";
 import type { QuizshowLocalProblem } from "./quizshowValidation";
 import { QuizshowBlockedTip } from "./QuizshowBlockedTip";
 import { useQuizshowBlockedTip } from "./useQuizshowBlockedTip";
@@ -13,16 +14,31 @@ import styles from "./QuizshowLobby.module.css";
 /** A tooltip stays short: the first few problems, then a count of the rest. */
 const TIP_PROBLEM_LIMIT = 3;
 
-/** Plays the draft with pretend players; blocked while the draft has problems (the questions need answers to play). */
+/** The button's words: the whole draft, one round, or one round from a question on (item 21). */
+function labelKeyOf(slice: QuizshowDryRunSlice | undefined): string {
+  if (slice === undefined) return "quizshow:dryRun.open";
+  return slice.fromQuestionIndex === undefined
+    ? "quizshow:dryRun.tryRound"
+    : "quizshow:dryRun.tryFromQuestion";
+}
+
+/**
+ * Plays the draft, or one slice of it, with pretend players; blocked while
+ * what it plays has problems (the questions need answers to play).
+ */
 export function QuizshowTryItButton({
   draft,
   pickedPreviewUrls,
   problems,
+  slice,
   appearance = "default",
 }: {
   draft: QuizshowDraft;
   pickedPreviewUrls: ReadonlyMap<string, string>;
+  /** What blocks it: the draft's problems, or for a slice `sliceProblemsOf(dryRunProblems, draft, slice)` over the studio's own `dryRunProblems`. */
   problems: readonly QuizshowLocalProblem[];
+  /** Try this round or Try from this question; left out, the whole draft. */
+  slice?: QuizshowDryRunSlice;
   /** `studio` is the glass stage button for the dark studio's top bar, with the blocking problems in a tooltip. */
   appearance?: "default" | "studio";
 }) {
@@ -46,7 +62,7 @@ export function QuizshowTryItButton({
           else if (isStudio) tip.pin();
         }}
       >
-        {t("quizshow:dryRun.open")}
+        {t(labelKeyOf(slice))}
       </Button>
       {isStudio ? (
         isBlocked && (
@@ -83,6 +99,7 @@ export function QuizshowTryItButton({
             key="quizshow-dry-run"
             draft={draft}
             pickedPreviewUrls={pickedPreviewUrls}
+            slice={slice}
             onClose={() => setIsDryRunOpen(false)}
           />
         )}

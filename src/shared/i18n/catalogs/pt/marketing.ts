@@ -3541,6 +3541,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-11-24.headline":
+    "O Pulse Live liga-se à TV, ganha lobbies de treino e crachás de vitória, e os anúncios carregam no lugar.",
   "changelog.releases.2026-11-23.headline":
     "Crachás nas comunidades, saída rápida em todas as páginas e mais privacidade para todas as pessoas.",
   "changelog.releases.2026-11-22.headline":
@@ -3924,6 +3926,50 @@ export const marketing: Catalog = {
     "Cria uma comunidade no telemóvel em três passos",
   "changelog.entries.quick-start-community.body":
     "Dás-lhe um nome, dizes para quem é e abres, e uma lista na página mostra o que juntar a seguir.",
+  "changelog.entries.quiz-win-badges.title":
+    "Quem vence as noites de quiz oficiais ganha crachás",
+  "changelog.entries.quiz-win-badges.body":
+    "A nossa equipa associa crachás aos quizzes de um evento, e quem vence encontra-os na página de crachás.",
+  "changelog.entries.pulse-live-tv-pairing.title":
+    "Emparelha o ecrã grande com um código",
+  "changelog.entries.pulse-live-tv-pairing.body":
+    "Abre /play/tv em qualquer TV e escreve o código no comando; quem ajuda apresenta a partir do telemóvel.",
+  "changelog.entries.pulse-live-studio-tools.title":
+    "Cria quizzes mais depressa no estúdio",
+  "changelog.entries.pulse-live-studio-tools.body":
+    "Cola perguntas ou importa um CSV, experimenta uma ronda sozinha e imprime as folhas de quem apresenta e de respostas.",
+  "changelog.entries.pulse-live-practice-and-teams.title":
+    "Ensaia num lobby de treino",
+  "changelog.entries.pulse-live-practice-and-teams.body":
+    "Os jogos de treino não guardam resultados, as equipas têm tempo para conversar e um aquecimento pode abrir a noite.",
+  "changelog.entries.pulse-live-giving-link.title":
+    "Convida quem joga a contribuir no fim",
+  "changelog.entries.pulse-live-giving-link.body":
+    "Quando a comunidade do evento aceita donativos, o ecrã final leva toda a gente à página de contribuições.",
+  "changelog.entries.pulse-live-steadier-nights.title":
+    "Jogos ao vivo estáveis em Wi-Fi cheio",
+  "changelog.entries.pulse-live-steadier-nights.body":
+    "Os telemóveis voltam a ligar sozinhos depois de uma falha ou atualização, e cada recusa diz o motivo.",
+  "changelog.entries.pulse-live-join-from-link.title":
+    "Entra num jogo direto pelo link",
+  "changelog.entries.pulse-live-join-from-link.body":
+    "Sem sessão iniciada, o link mostra o nome e o estado do jogo, com um toque para entrar e jogar.",
+  "changelog.entries.community-insights-load-again.title":
+    "O painel da comunidade volta a abrir",
+  "changelog.entries.community-insights-load-again.body":
+    "As contagens de membros e as tendências semanais voltam a carregar para quem gere uma comunidade.",
+  "changelog.entries.iphone-install-screenshots.title":
+    "Os passos para instalar no iPhone têm capturas de ecrã",
+  "changelog.entries.iphone-install-screenshots.body":
+    "Cada passo mostra os ecrãs do Safari na tua língua, com o sítio onde tens de tocar assinalado.",
+  "changelog.entries.back-keeps-your-place.title":
+    "Voltar atrás guarda o teu sítio",
+  "changelog.entries.back-keeps-your-place.body":
+    "Ao voltares atrás, ficas onde deixaste a página, mesmo em listas longas que demoram a encher.",
+  "changelog.entries.listing-page-skeleton.title":
+    "Vê os anúncios a ganhar forma ao carregar",
+  "changelog.entries.listing-page-skeleton.body":
+    "Ao abrires um anúncio, vês o contorno da página enquanto carrega, e ele aparece com as fotografias todas prontas.",
   "changelog.entries.vj-default-cut.title": "Os ecrãs VJ cortam por defeito",
   "changelog.entries.vj-default-cut.body":
     "Um espetáculo novo troca de clip na hora, e os fades e outras transições ficam a um toque no comando.",
@@ -11410,12 +11456,7 @@ export const marketing: Catalog = {
   "directory.detail.visitWebsite": "Visitar o site",
   "directory.detail.getInTouch": "Entrar em contacto",
   "directory.detail.claimsFiledLink": "Ver os pedidos que enviaste",
-  "directory.detail.loader.ariaLabel": "A abrir este espaço",
-  "directory.detail.loader.title": "A abrir este espaço",
-  "directory.detail.loader.caption": "Vale a pena ver tudo de uma vez.",
-  "directory.detail.loader.steps.fetchingListing": "A encontrar o anúncio",
-  "directory.detail.loader.steps.preparingDetails": "A organizar os detalhes",
-  "directory.detail.loader.steps.loadingPhotos": "A trazer as fotografias",
+  "directory.detail.loadingLabel": "A carregar o anúncio",
   "directory.detail.notFound.title": "Não encontrámos este espaço",
   "directory.detail.notFound.body":
     "Este anúncio pode ter sido removido, ou o link pode estar desatualizado. Todos os outros sítios que nos recebem de braços abertos continuam no diretório.",

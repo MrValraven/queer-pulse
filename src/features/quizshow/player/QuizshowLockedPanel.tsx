@@ -1,6 +1,7 @@
 import { m } from "motion/react";
 import { FiCheck } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { Collapse } from "../../../shared/components/ui";
 import styles from "./QuizshowPlayer.module.css";
 
 const WAIT_DOT_KEYS = ["first", "second", "third"] as const;
@@ -31,14 +32,18 @@ export function QuizshowWaitDots() {
   );
 }
 
-/** The answer is in: a jade check, the words, and a calm wait. No count, since players hold none.
+/** The answer is in: a jade check, the words, and a calm wait. Once the answer is acked
+ *  and the game's count is known, a third line says how many have answered (item 48).
  *  Pair it with `QuizshowLockedStatus`, which is mounted before the lock and so is always announced. */
 export function QuizshowLockedPanel({
   title,
   body,
+  answeredLine = null,
 }: {
   title: string;
   body: string;
+  /** "9 of 14 answered"; null hides the line. */
+  answeredLine?: string | null;
 }) {
   return (
     // The caller keeps a persistent status region that says the lock; this panel is for the eye.
@@ -46,10 +51,13 @@ export function QuizshowLockedPanel({
       <span className={styles.lockedMark} aria-hidden="true">
         <FiCheck fill="none" />
       </span>
-      <span className={styles.lockedText}>
+      <div className={styles.lockedText}>
         <span className={styles.lockedTitle}>{title}</span>
         <span className={styles.lockedBody}>{body}</span>
-      </span>
+        <Collapse isOpen={answeredLine !== null}>
+          <span className={styles.answeredLine}>{answeredLine ?? ""}</span>
+        </Collapse>
+      </div>
       <QuizshowWaitDots />
     </div>
   );

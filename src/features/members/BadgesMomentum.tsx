@@ -8,10 +8,8 @@ import type {
 } from "./api/recognition.adapters";
 import type { Badge, BadgeDrawerEntry } from "./badges.data";
 import { xpSourceMetaFor } from "./xpBreakdown.data";
-import {
-  badgeCategoryLabelKeyFor,
-  badgeDisplayMetaFor,
-} from "./badgeCatalog.data";
+import { badgeCategoryLabelKeyFor } from "./badgeCatalog.data";
+import { badgeCriteriaFor, badgeNameFor } from "./badgeDisplayText";
 import { closestToEarning, progressPercent } from "./badgeSelectors";
 import { BadgeMedallion } from "./BadgeMedallion";
 import { BadgeEarnMoment } from "./BadgeEarnMoment";
@@ -40,7 +38,7 @@ export function BadgesMomentum({
   level,
   onOpenBadge,
 }: BadgesMomentumProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [previewBadge, setPreviewBadge] = useState<Badge | null>(null);
   const nearest = closestToEarning(lockedBadges, mutedCategories).slice(
     0,
@@ -92,11 +90,9 @@ export function BadgesMomentum({
                 : badge.tint === "accent"
                   ? styles.tCoral
                   : styles.tPlum;
-            // Display words resolve from the stable id (see
-            // `badgeCatalog.data.ts`) rather than off the wire. Every card
+            // Display words resolve in `badgeDisplayText.ts`. Every card
             // here is a locked badge, so "what it takes" is the right tense;
             // an unmapped id or category keeps the server's own English.
-            const displayMeta = badgeDisplayMetaFor(badge.key);
             const categoryLabelKey = badgeCategoryLabelKeyFor(badge.category);
             return (
               <article key={badge.key} className={`${styles.nx} ${tint}`}>
@@ -123,15 +119,11 @@ export function BadgesMomentum({
                           ? t(categoryLabelKey)
                           : badge.category}
                       </span>
-                      <h3>
-                        {displayMeta ? t(displayMeta.nameKey) : badge.name}
-                      </h3>
+                      <h3>{badgeNameFor(badge, t, language)}</h3>
                     </span>
                   </span>
                   <span className={styles.nxCrit}>
-                    {displayMeta
-                      ? t(displayMeta.lockedContextKey)
-                      : (badge.criteria ?? badge.when)}
+                    {badgeCriteriaFor(badge, t, language)}
                   </span>
                   {badge.progress && (
                     <span className={styles.nxProg}>

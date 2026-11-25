@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import type {
   QuizshowLanguage,
   QuizshowPlayableRoundKind,
+  QuizshowQuestionType,
   QuizshowQuizResponse,
 } from "../../../shared/contracts/quizshow";
 import type { QuizshowImportPicker } from "../builder/QuizshowImportButtons";
@@ -80,6 +81,26 @@ export interface QuizshowStudioActions {
   ) => void;
   /** Moves a round; the selection follows it. */
   moveRound: (fromIndex: number, toIndex: number) => void;
+  /**
+   * Additive (item 51). Moves a question to the end of another round of the
+   * same kind with room, and selects it there; a no-op when it does not fit.
+   */
+  moveQuestionToRound?: (
+    fromRoundIndex: number,
+    questionIndex: number,
+    toRoundIndex: number,
+  ) => void;
+  /**
+   * Additive. Changes a question's type after the host confirmed what it
+   * removes, then shows "Changed to Poll" with Undo in the removal toast's
+   * slot: one studio toast at a time, and Cmd/Ctrl+Z taking the change back
+   * takes the toast down too.
+   */
+  changeQuestionTypeWithUndo?: (
+    roundIndex: number,
+    questionIndex: number,
+    nextType: QuizshowQuestionType,
+  ) => void;
 }
 
 /** Additive. What the canvas's start panel needs (an empty event or game quiz). */
@@ -108,6 +129,16 @@ export interface QuizshowStudioSlideEditing {
   isEditable: boolean;
   /** The canvas's scale of its 1280x720 slide (the canvas calls this as it measures). */
   reportCanvasScale: (scale: number) => void;
+}
+
+/**
+ * Additive. The paths Cmd/Ctrl+Z and Shift+Cmd/Ctrl+Z take, for the More
+ * menu's Undo and Redo: undo also takes down the removal toast whose own
+ * Undo would have nothing left to take back.
+ */
+export interface QuizshowStudioHistory {
+  undo: () => void;
+  redo: () => void;
 }
 
 export interface QuizshowStudioContextValue {
@@ -150,6 +181,8 @@ export interface QuizshowStudioContextValue {
   start: QuizshowStudioStart;
   /** Additive. Whether the host types on the slide (see QuizshowStudioSlideEditing). */
   slideEditing: QuizshowStudioSlideEditing;
+  /** Additive. The keyboard undo and redo; null while the draft has no history (the keys are off then too). */
+  history: QuizshowStudioHistory | null;
 }
 
 export const QuizshowStudioContext =
